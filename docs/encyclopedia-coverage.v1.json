@@ -44,13 +44,13 @@
     "items": {
       "records": 13183,
       "translated_effects": {
-        "observed": 2230,
+        "observed": 4300,
         "total": 13183,
         "basis": "records with a supported natural-language effect summary"
       },
       "noncard_records": 12171,
       "noncard_translated_effects": {
-        "observed": 1692,
+        "observed": 3665,
         "total": 12171,
         "basis": "non-card item records with a supported natural-language effect summary"
       },
@@ -72,12 +72,12 @@
       "verified_quest_reward_sources": 40,
       "script_grant_clues": 1956,
       "script_consumption_clues": 2186,
-      "items_linked_to_reviewed_exchange": 285
+      "items_linked_to_reviewed_exchange": 302
     },
     "cards": {
       "records": 1012,
       "translated_effects": {
-        "observed": 538,
+        "observed": 635,
         "total": 1012,
         "basis": "card records with a supported natural-language effect summary"
       },
@@ -91,7 +91,7 @@
     "combos_and_groups": {
       "combos": 436,
       "translated_combo_effects": {
-        "observed": 249,
+        "observed": 269,
         "total": 436,
         "basis": "distinct combo records with translated script summaries"
       },
@@ -155,13 +155,14 @@
         "basis": "declarations whose map identifier resolves in the static map index"
       },
       "literal_shop_offers": 1854,
-      "reviewed_exchange_records": 74,
+      "reviewed_exchange_records": 87,
       "reviewed_service_roles": {
-        "count": 68,
+        "count": 81,
         "evidence_state": "conditional",
         "basis": "distinct service roles cited by source-reviewed exchange records"
       },
       "literal_service_call_clues": 107,
+      "reviewed_service_call_clues": 107,
       "reviewed_service_records": {
         "count": 14,
         "of_indexed_call_clues": 107,
@@ -203,8 +204,9 @@
         "basis": "configured weapon damage size table covering three target sizes and documented weapon types"
       }
     },
+    "unit_dispositions": {},
     "crafting_and_mechanics": {
-      "production_and_conversion_recipes": 483,
+      "production_and_conversion_recipes": 919,
       "refinement_weapon_levels": 4
     }
   }

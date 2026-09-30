@@ -4,6 +4,8 @@
 
 **Driver:** Qwen3 works in bounded source-grounded units, validates each one, commits it, and resumes from a durable ledger. It may publish a claim after the gates below succeed; routine per-record human approval is not required. Attribute model-assisted reviews honestly. Ask a person only for an inaccessible source or live session, or a real product decision.
 
+**Active queue (2026-09-30):** `tools/encyclopedia_unit.py` runs this plan one unit at a time. It holds the queue (`docs/plans/encyclopedia-unit-queue.json`, built from loaded source in the order of [encyclopedia-completion-plan.md](encyclopedia-completion-plan.md)), writes one packet per unit, validates drafts, records an independent verifier's verdict, runs the exporters and the Rust parse test, and commits. A local model follows [encyclopedia-procedures.md](encyclopedia-procedures.md) and does not read this file. The repeat loop below is the rule the tool implements; read it when changing the tool. `tools/encyclopedia_loop.py` only proves braced one-item exchanges and its queue is empty. E7 stays blocked until the user ends the live-test deferral.
+
 ## Setup and current baseline
 
 As of 2026-09-28, E0–E7 are partial. The roadmap and coverage inventory hold current counts and open fields; do not create a new permanent denominator. The reviewed data produced before this loop was committed in `korangar` as `63879756`.
@@ -40,6 +42,7 @@ Reviewed claims are hand-maintained JSON under `tools/`; exporters validate them
 | E6 bosses | `tools/boss_behavior_reviews.json` | `export_boss_behavior_reviews.py` | `docs/boss-behavior.v1.json` |
 | E6 scripted spawns | `tools/scripted_spawn_reviews.json` | `export_scripted_spawn_reviews.py` | `docs/scripted-spawn-reviews.v1.json` |
 | E6 map flags | `tools/map_runtime_flag_reviews.json` | `export_map_flags.py` | `docs/map-flags.v1.json` |
+| Any: unknown, absent, configured, or not applicable | `tools/encyclopedia_dispositions.json` | `tools/export_encyclopedia_dispositions.py` | `docs/encyclopedia-dispositions.v1.json` |
 | E0 coverage | — | `export_encyclopedia_coverage.py` | `docs/encyclopedia-coverage.v1.json` |
 
 Before adding the first entry to a review file in a session, read two or three existing entries in it and copy their exact shape (source path, line anchors, quoted text, conditions, unknowns). The exporter's `validate_sources`-style checks are the citation validator; a claim that does not pass them is not accepted.
@@ -54,7 +57,7 @@ Checks, in this order:
 
 Use [`encyclopedia-qwen3-progress.json`](encyclopedia-qwen3-progress.json) as the resume ledger. Update it after each accepted unit by writing the whole file and confirming it still parses (`python3 -m json.tool`). Keep a concise per-unit journal at `docs/plans/encyclopedia-qwen3-journal.md` with evidence, decision, coverage delta, checks, unresolved questions, and next action. Keep large raw model responses in a staging area outside the repository.
 
-At every session start, read this plan, the roadmap, coverage inventory, [data contract](../specs/encyclopedia-data.md), ledger, generated coverage, loaded-script manifest, and Git status of both repositories. **If the loaded-script manifest does not exist yet, the next unit is `E0-loaded-source-manifest`; it creates the manifest and dirty-file digests that every later staleness check depends on.** Judge staleness by the digests of cited source files, not by repository heads: a commit that only touches `docs/plans/`, `QWEN.md`, or review files does not make any unit stale. Reopen any unit whose cited source changed. Never claim coverage of unloaded scripts, live SQL, runtime state, or a client session based on a static scan.
+A person or a strong model changing the tool or the queue reads this plan, the roadmap, coverage inventory, [data contract](../specs/encyclopedia-data.md), ledger, generated coverage, loaded-script manifest, and Git status of both repositories. A local model running units reads only its packet; that reading list would fill its context before the unit starts. **If the loaded-script manifest does not exist yet, the next unit is `E0-loaded-source-manifest`; it creates the manifest and dirty-file digests that every later staleness check depends on.** Judge staleness by the digests of cited source files, not by repository heads: a commit that only touches `docs/plans/`, `QWEN.md`, or review files does not make any unit stale. Reopen any unit whose cited source changed. Never claim coverage of unloaded scripts, live SQL, runtime state, or a client session based on a static scan.
 
 Unit states are `todo`, `active`, `done`, `blocked`, and `stale`. A blocker names the missing input, its effect, and the condition that would unblock it. A blocked unit does not stop other units. Record `attempts` on a unit; after **two** attempts that end without an accepted result, mark it `blocked` with a diagnostic and move on.
 
@@ -78,11 +81,11 @@ repeat:
      Save the draft to staging before step 6.
   5. Validate schema, IDs, loaded scope, exact citations/quotes, revision/digest,
      links, and all stated conditions mechanically.
-  6. Independent reread: with the draft set aside (a subagent or fresh session
-     if available), reread the source for costs, rewards, failure paths,
-     prerequisites, random outcomes, timers and exceptions, and write down what
-     it establishes. Only then compare with the draft; correct or downgrade
-     every claim the reread does not support.
+  6. Independent reread: a separate, fresh session (not a subagent) runs
+     `encyclopedia_unit.py verify`, which shows only the source and the draft's
+     claims. It judges each claim and lists omissions: costs, rewards, failure
+     paths, prerequisites, random outcomes, timers and exceptions. The drafter
+     corrects or downgrades every claim it does not support.
   7. Edit the review file (see the Tools table), run the exporter, then
      export_supported_data.py and its --check, and cargo test if Rust or a
      generated file's shape changed. Inspect the generated claims. Compare with
@@ -119,20 +122,4 @@ At the end of each session, print the ledger location, completed units, commits,
 
 ## Paste into Qwen3 Code
 
-```text
-Work in the korangar repository you were launched from (Hercules is ../Hercules)
-on the Adventure Guide encyclopedia. Read docs/plans/encyclopedia-local-model-plan.md
-in full, then docs/plans/encyclopedia-roadmap.md, docs/plans/encyclopedia-coverage.md,
-docs/specs/encyclopedia-data.md and docs/plans/encyclopedia-qwen3-progress.json.
-Follow the repeat loop across all E0–E7 packages, starting with the ledger's
-next_action. Edit review files under tools/, never generated docs/*.v1.json, and
-use the plan's Tools table for which exporter and checks to run. Never edit
-Hercules config and never commit in Hercules. Cite exact loaded
-Hercules source, stable IDs, conditions and source revision/digest for every
-claim. Leave unsupported facts visibly unknown. Finish one bounded unit,
-validate it, run export_supported_data.py --check, checkpoint the ledger and
-journal, then commit only that unit's files before moving on. After two failed
-attempts on a unit, mark it blocked and move on. Continue from the ledger across
-sessions. Stop only when the full exit rule is met or no runnable task remains
-because of a recorded blocker. Report the precise next action at every checkpoint.
-```
+Qwen3 sessions use the two prompts in [encyclopedia-procedures.md](encyclopedia-procedures.md): a drafter session and a separate verifier session. They do not read this plan, the roadmap, or the coverage inventory; the unit packet carries what a unit needs. A person runs the one-time setup in that file first.

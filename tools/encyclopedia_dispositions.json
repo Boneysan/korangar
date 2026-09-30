@@ -1,0 +1,5 @@
+{
+  "schema_version": 1,
+  "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
+  "entries": []
+}

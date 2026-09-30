@@ -44,6 +44,7 @@ EXPORTERS = (
     "export_scripted_spawn_reviews.py",
     "export_quest_reference.py",
     "export_skill_formula_reviews.py",
+    "export_encyclopedia_dispositions.py",
     "generate_navigation_graph.py",
     "export_encyclopedia_coverage.py",
 )

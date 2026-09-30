@@ -37,3 +37,6 @@ __pycache__/
 tools/packaging/windows/VC_redist.x64.exe
 korangar.log
 korangar.log.previous
+
+# Encyclopedia unit drafts, packets, and verdicts (tools/encyclopedia_unit.py)
+/.encyclopedia-staging/

@@ -33,6 +33,7 @@ VERSIONED = {
     "boss_behavior": ROOT / "docs" / "boss-behavior.v1.json",
     "skill_formula_reviews": ROOT / "docs" / "skill-formula-reviews.v1.json",
     "scripted_spawn_reviews": ROOT / "docs" / "scripted-spawn-reviews.v1.json",
+    "dispositions": ROOT / "docs" / "encyclopedia-dispositions.v1.json",
 }
 
 class EvidenceState(str, Enum):
@@ -205,6 +206,7 @@ def build_report() -> dict:
             "reviewed_exchange_records": len(exchanges),
             "reviewed_service_roles": {"count": len(reviewed_service_roles), "evidence_state": "conditional", "basis": "distinct service roles cited by source-reviewed exchange records"},
             "literal_service_call_clues": len(npc_service_clues),
+            "reviewed_service_call_clues": sum(clue.get("status") == "reviewed_service_call" for clue in npc_service_clues),
             "reviewed_service_records": {"count": len(npc_service_reviews), "of_indexed_call_clues": len(npc_service_clues), "basis": "source-reviewed service records (storage/kafra/refine-UI/repair/divorce/reset/navigation); one record may cover several indexed call-site clues, e.g. the shared Kafra function"},
         },
         "maps_and_rules": {
@@ -218,6 +220,7 @@ def build_report() -> dict:
             "element_matchup_tables": dimension(sum(str(rule.get("id", "")).startswith("element-matchup-") for rule in rules), 10, "complete defender-element tables with four defense levels and ten attacking elements"),
             "weapon_size_adjustment_tables": dimension(sum(rule.get("id") == "weapon-size-adjustments" for rule in rules), 1, "configured weapon damage size table covering three target sizes and documented weapon types"),
         },
+        "unit_dispositions": dict(data["dispositions"].get("counts", {})),
         "crafting_and_mechanics": {
             "production_and_conversion_recipes": len(recipes),
             "refinement_weapon_levels": len(refine.get("weapon_levels", [])),

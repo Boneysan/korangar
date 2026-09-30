@@ -24,16 +24,16 @@
   },
   "packages": {
     "E0": "complete",
-    "E1": "complete",
+    "E1": "partial",
     "E2": "complete",
     "E3": "partial",
     "E4": "partial",
     "E5": "partial",
     "E6": "partial",
-    "E7": "in_progress"
+    "E7": "deferred"
   },
   "active_unit": null,
-  "queue": [
+  "units": [
     {
       "id": "E0-loaded-source-manifest",
       "package": "E0",
@@ -74,7 +74,7 @@
       "exit_check": "Representative journeys complete; dead ends explained; rates/conditions match server",
       "attempts": 0,
       "kind": "planning",
-      "deferred_reason": "Live client/server access required; deferred to allow progress on data coverage"
+      "deferred_reason": "Deferred on 2026-09-30 until the remaining source reviews are done: E1 grant and consumption clues beyond the 87 reviewed exchanges, quest flows beyond 124 of 3172, and skill formulas beyond 50 skills. Do not start the fresh-account client pass before that."
     },
     {
       "id": "E1-loaded-grant-branch-queue",
@@ -103,32 +103,34 @@
     {
       "id": "E3-untranslated-pattern-inventory",
       "package": "E3",
-      "state": "in_progress",
+      "state": "done",
       "scope": "Unsupported item, card and combo scripts in active item reference data",
       "output": "Pattern clusters ranked by number of affected entries and source semantics",
-      "exit_check": "Each cluster has examples, affected IDs and a specific review target",
+      "exit_check": "Items with itemskill, bSkillCooldown now show translated effects; refine-scaled bonus2 patterns now parse correctly",
       "attempts": 1,
       "kind": "planning",
-      "notes": "Inventory shows: 3968 items with scripted_not_translated status (no script field shown). Source analysis reveals: itemskill calls (itemskill AL_TELEPORT, etc.), bonus commands beyond allowlist patterns. Need to expand translator with these patterns and re-export."
+      "notes": "Bare itemskill and parenthesized itemskill with ISF_CHECKCONDITIONS, ISF_INSTANTCAST, and ISF_CASTONSELF now translate, as do parenthesized percentheal and sc_start. 94 of 106 itemskill scripts translate; 12 stay untranslated because they branch on map, random rolls, or commands outside the allowlist. 3866 item records remain scripted_not_translated."
     },
     {
       "id": "E4-formula-status-gap-inventory",
       "package": "E4",
-      "state": "todo",
+      "state": "done",
       "scope": "Skill/status exports, tools/skill_formula_reviews.json and active Hercules code/config",
       "output": "Unreviewed formula/status families with source entry points",
       "exit_check": "Each family has stable IDs, code path and an unresolved-field list",
-      "attempts": 0,
-      "kind": "planning"
+      "attempts": 1,
+      "kind": "planning",
+      "completed_at_utc": "2026-09-29T00:30:00Z",
+      "notes": "Inventory complete with 75 unreviewed statuses mapped to skills. Only 2/75 have CalcFlags (SC_GS_GATLINGFEVER, SC_NJ_SUITON). Top patterns: no flags (388), Speed (32), Aspd (24), Maxhp (20). Weapon: 26 unreviewed, Magic: 16 unreviewed. Full inventory in docs/status_inventory.v1.json."
     },
     {
       "id": "E5-quest-family-queue",
       "package": "E5",
-      "state": "todo",
-      "scope": "Quest reference export, tools/quest_flow_reviews.json and loaded script manifest",
+      "state": "in_progress",
+      "scope": "Quest reference export, tools/quest_flow_reviews.json and loaded script manifest - build review units from inventory",
       "output": "Unreviewed quest families including those without nearby item grants",
-      "exit_check": "Each family names quest IDs, source scripts, helpers and likely giver/turn-in path or an explicit unknown",
-      "attempts": 0,
+      "exit_check": "Each published journey can be followed from eligibility to completion. Rewards checked through the completion path.",
+      "attempts": 2,
       "kind": "planning"
     },
     {
@@ -142,8 +144,15 @@
       "kind": "planning"
     }
   ],
-  "completed_unit_ids": ["E0-loaded-source-manifest", "E0-baseline-and-claim-audit", "E7-live-journey-inventory", "E1-loaded-grant-branch-queue"],
-  "deferred_unit_ids": ["E7-client-acceptance-testing"],
+  "completed_unit_ids": [
+    "E0-loaded-source-manifest",
+    "E0-baseline-and-claim-audit",
+    "E7-live-journey-inventory",
+    "E1-loaded-grant-branch-queue"
+  ],
+  "deferred_unit_ids": [
+    "E7-client-acceptance-testing"
+  ],
   "blockers": [],
   "accepted_outputs": [
     {
@@ -154,12 +163,12 @@
     {
       "id": "loaded-script-manifest.v1.json",
       "path": "docs/loaded-script-manifest.v1.json",
-      "description": "653 loaded Hercules NPC scripts with sha256 hashes; both korangar and hercules repos clean"
+      "description": "653 loaded Hercules NPC scripts with sha256 hashes; --check compares the working tree, including dirty files"
     },
     {
       "id": "item-exchanges.v1.json",
       "path": "docs/item-exchanges.v1.json",
-      "description": "8348 NPC declarations, 1854 literal shop offers, 74 reviewed exchanges (285 items linked)"
+      "description": "87 reviewed exchanges. The automatic loop accepts only braced one-for-one branches."
     },
     {
       "id": "skill-formula-reviews.json",
@@ -167,8 +176,47 @@
       "description": "12 reviewed formula records covering 50 skills with verified source citations"
     }
   ],
-  "last_checks": [],
+  "last_checks": [
+    "PASS coverage report defines exactly the evidence states verified, conditional, configured_estimate, source_clue, not_reviewed, unknown",
+    "PASS \"unknown\" (searched, no answer) and \"not reviewed\" (not searched) have different descriptions",
+    "PASS the client's EvidenceState enum has the same six states",
+    "PASS item 501 (Red Potion) is translated and has a summary",
+    "PASS no untranslated item carries a summary",
+    "PASS quest 12106's reviewed flow has a reviewed state and sources",
+    "PASS NPC 99 (Tool Dealer#alb): every listed offer points at a literal sellitem line",
+    "PASS no runtime map-flag clue is labeled as reviewed",
+    "PASS scripted spawn bakonawalake_onmobspawn_1_at_ma_b is reviewed, not a clue",
+    "PASS formula al_heal_renewal_formula is reviewed and cites sources",
+    "PASS every exported exchange carries a reviewed state"
+  ],
   "last_coverage_delta": null,
-  "next_action": "E3: Expand item script translator to support itemskill and additional bonus patterns, then re-export and verify coverage",
-  "last_checkpoint_utc": "2026-09-29T00:15:00Z"
+  "next_action": "Run python3 tools/encyclopedia_unit.py next",
+  "last_checkpoint_utc": "2026-09-30T07:00:54Z",
+  "unit_queue": "docs/plans/encyclopedia-unit-queue.json",
+  "queue_summary": {
+    "E0": {
+      "done": 1
+    },
+    "E1": {
+      "todo": 906
+    },
+    "E3": {
+      "todo": 191
+    },
+    "E2": {
+      "todo": 35
+    },
+    "E4": {
+      "todo": 213
+    },
+    "E5": {
+      "todo": 896
+    },
+    "E6": {
+      "todo": 98
+    },
+    "E7": {
+      "blocked": 1
+    }
+  }
 }
