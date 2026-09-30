@@ -76001,6 +76001,56 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_brasilis_angelo_br_branch_for_44_78",
+      "unit": "E1-brasilis_angelo_br_branch_for_44",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Angelo#br"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem White_Potion,2; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_brasilis.txt",
+          "lines": [
+            78
+          ],
+          "required_source_literals": [
+            "if (.@rand > 4 && .@rand < 9) getitem White_Potion,2;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_brasilis_angelo_br_branch_for_44_79",
+      "unit": "E1-brasilis_angelo_br_branch_for_44",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Angelo#br"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Seed_Of_Yggdrasil,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_brasilis.txt",
+          "lines": [
+            79
+          ],
+          "required_source_literals": [
+            "else if (.@rand > 8) getitem Seed_Of_Yggdrasil,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
