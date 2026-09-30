@@ -62351,6 +62351,206 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_moc_prydb1_alcouskou_branch_for_42_85",
+      "unit": "E1-moc_prydb1_alcouskou_branch_for_42",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Alcouskou"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Fine_Grit,5; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/skills/thief_skills.txt",
+          "lines": [
+            85
+          ],
+          "required_source_literals": [
+            "delitem Fine_Grit,5;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_moc_prydb1_alcouskou_branch_for_42_173",
+      "unit": "E1-moc_prydb1_alcouskou_branch_for_42",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Alcouskou"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Leather_Bag_Of_Infinity,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/skills/thief_skills.txt",
+          "lines": [
+            173
+          ],
+          "required_source_literals": [
+            "delitem Leather_Bag_Of_Infinity,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_moc_prydb1_alcouskou_branch_for_42_195",
+      "unit": "E1-moc_prydb1_alcouskou_branch_for_42",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Alcouskou"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Grasshoppers_Leg,20; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/skills/thief_skills.txt",
+          "lines": [
+            195
+          ],
+          "required_source_literals": [
+            "delitem Grasshoppers_Leg,20;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_moc_prydb1_alcouskou_branch_for_42_285",
+      "unit": "E1-moc_prydb1_alcouskou_branch_for_42",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Alcouskou"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Zargon,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/skills/thief_skills.txt",
+          "lines": [
+            285
+          ],
+          "required_source_literals": [
+            "delitem Zargon,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_moc_prydb1_alcouskou_branch_for_42_286",
+      "unit": "E1-moc_prydb1_alcouskou_branch_for_42",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Alcouskou"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Bears_Foot,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/skills/thief_skills.txt",
+          "lines": [
+            286
+          ],
+          "required_source_literals": [
+            "delitem Bears_Foot,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_moc_prydb1_alcouskou_branch_for_42_287",
+      "unit": "E1-moc_prydb1_alcouskou_branch_for_42",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Alcouskou"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Spawn,5; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/skills/thief_skills.txt",
+          "lines": [
+            287
+          ],
+          "required_source_literals": [
+            "delitem Spawn,5;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_moc_prydb1_alcouskou_branch_for_42_368",
+      "unit": "E1-moc_prydb1_alcouskou_branch_for_42",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Alcouskou"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Garlet,2; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/skills/thief_skills.txt",
+          "lines": [
+            368
+          ],
+          "required_source_literals": [
+            "delitem Garlet,2;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_moc_prydb1_alcouskou_branch_for_42_369",
+      "unit": "E1-moc_prydb1_alcouskou_branch_for_42",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Alcouskou"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Scell,2; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/skills/thief_skills.txt",
+          "lines": [
+            369
+          ],
+          "required_source_literals": [
+            "delitem Scell,2;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
