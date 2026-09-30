@@ -11,7 +11,7 @@
     "E2_conditional": 1,
     "E2_verified": 236,
     "E3_unknown": 973,
-    "E4_unknown": 37
+    "E4_unknown": 38
   },
   "entries": [
     {
@@ -97717,6 +97717,33 @@
           ],
           "required_source_literals": [
             "case GS_TRIPLEACTION:"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e4_hfli_moon_formula",
+      "unit": "E4-hfli-moon",
+      "package": "E4",
+      "subject": {
+        "kind": "skill",
+        "ids": [
+          8009
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted case is the ratio site for these skills; this record does not reduce it to a worked example.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "src/map/battle.c",
+          "lines": [
+            2535
+          ],
+          "required_source_literals": [
+            "case HFLI_MOON: //[orn]"
           ]
         }
       ],
