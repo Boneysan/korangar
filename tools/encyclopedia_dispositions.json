@@ -12201,6 +12201,106 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prt_church_priest_praupin_branch_for_42_138",
+      "unit": "E1-prt_church_priest_praupin_branch_for_42",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Priest Praupin"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Receipt_01,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/first_class/tu_acolyte.txt",
+          "lines": [
+            138
+          ],
+          "required_source_literals": [
+            "delitem Receipt_01,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prt_church_priest_praupin_branch_for_42_140",
+      "unit": "E1-prt_church_priest_praupin_branch_for_42",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Priest Praupin"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Wand,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/first_class/tu_acolyte.txt",
+          "lines": [
+            140
+          ],
+          "required_source_literals": [
+            "getitem Wand,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prt_church_priest_praupin_branch_for_42_143",
+      "unit": "E1-prt_church_priest_praupin_branch_for_42",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Priest Praupin"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Receipt_01,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/first_class/tu_acolyte.txt",
+          "lines": [
+            143
+          ],
+          "required_source_literals": [
+            "delitem Receipt_01,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prt_church_priest_praupin_branch_for_42_145",
+      "unit": "E1-prt_church_priest_praupin_branch_for_42",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Priest Praupin"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Flail,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/first_class/tu_acolyte.txt",
+          "lines": [
+            145
+          ],
+          "required_source_literals": [
+            "getitem Flail,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
