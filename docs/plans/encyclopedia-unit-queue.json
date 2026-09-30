@@ -68488,7 +68488,7 @@
       "package": "E4",
       "kind": "e4_formula",
       "tier": "strong",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "skill_names": [
@@ -68507,7 +68507,25 @@
       ],
       "size_lines": 7,
       "reason": "skillratio case with branches or preprocessor blocks",
-      "history": []
+      "history": [
+        "2026-09-30T21:55:34Z activated",
+        "2026-09-30T21:55:35Z validated",
+        "2026-09-30T21:55:35Z verified: 1 claims supported",
+        "2026-09-30T21:55:58Z accepted",
+        "2026-09-30T21:55:58Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "66540eeb2a8f71ca7e6fa0b650cfcd467ef12b14b1b18440b186c5aa737e72df",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E4-rk-sonicwave",
