@@ -111485,6 +111485,87 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_18854_script_untranslated",
+      "unit": "E3-unknown-bonus-bmaxsprate-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          18854
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 18854 is not summarized: the translator does not interpret the quoted statement (bonus bMaxSPrate (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            138415
+          ],
+          "required_source_literals": [
+            "Script: <\" bonus bMaxSPrate,5+(getrefine()/2); \">"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_24050_script_untranslated",
+      "unit": "E3-unknown-bonus-bmaxsprate-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          24050
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 24050 is not summarized: the translator does not interpret the quoted statement (bonus bMaxSPrate (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            151224
+          ],
+          "required_source_literals": [
+            "bonus bMaxSPrate,((getrefine()>=9)?2:(getrefine()>=7)?1:0);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_24080_script_untranslated",
+      "unit": "E3-unknown-bonus-bmaxsprate-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          24080
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 24080 is not summarized: the translator does not interpret the quoted statement (bonus bMaxSPrate (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            151675
+          ],
+          "required_source_literals": [
+            "Script: <\" bonus bMaxSPrate,(getrefine()>=7?2:1); \">"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
