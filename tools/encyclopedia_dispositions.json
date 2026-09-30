@@ -71701,6 +71701,31 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_iz_ac02_mage_chuck_ac_branch_for_9299_9457",
+      "unit": "E1-iz_ac02_mage_chuck_ac_branch_for_9299",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Mage Chuck#ac"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Mage_Manual,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            9457
+          ],
+          "required_source_literals": [
+            "getitem(Mage_Manual, 1); // Mage_Manual"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }

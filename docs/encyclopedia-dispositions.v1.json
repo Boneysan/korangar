@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 2863,
+    "E1_unknown": 2864,
     "E1_verified": 1
   },
   "entries": [
@@ -20254,6 +20254,31 @@
           ],
           "required_source_literals": [
             "getitem(Cargo_Free_Ticket, 1); // Cargo_Free_Ticket"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_iz_ac02_mage_chuck_ac_branch_for_9299_9457",
+      "unit": "E1-iz_ac02_mage_chuck_ac_branch_for_9299",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Mage Chuck#ac"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Mage_Manual,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            9457
+          ],
+          "required_source_literals": [
+            "getitem(Mage_Manual, 1); // Mage_Manual"
           ]
         }
       ],
