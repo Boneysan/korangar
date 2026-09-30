@@ -66726,6 +66726,31 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_job_gun_auto_anvil_1_branch_for_114_146",
+      "unit": "E1-job_gun_auto_anvil_1_branch_for_114",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Auto Anvil#1"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Steel_Article_,5; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/2e/rebellion.txt",
+          "lines": [
+            146
+          ],
+          "required_source_literals": [
+            "delitem(Steel_Article_, 5);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
