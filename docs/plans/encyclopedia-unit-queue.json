@@ -33023,7 +33023,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Tribal Chief Paiko#dew",
@@ -33042,7 +33042,25 @@
       ],
       "size_lines": 298,
       "reason": "refused by the braced one-item prover: switch",
-      "history": []
+      "history": [
+        "2026-09-30T19:00:27Z activated",
+        "2026-09-30T19:00:27Z validated",
+        "2026-09-30T19:00:27Z verified: 7 claims supported",
+        "2026-09-30T19:00:59Z accepted",
+        "2026-09-30T19:00:59Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "48af5fdfd62edd48b24f361c4ff688bd0bde5c21a769e3bb52749151267db4b0",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-dew_fild01_jaty_tribe_warrior_dew_branch_for_539",

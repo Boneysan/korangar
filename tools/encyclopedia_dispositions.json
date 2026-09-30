@@ -76676,6 +76676,181 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_dew_in01_tribal_chief_paiko_dew_branch_for_240_334",
+      "unit": "E1-dew_in01_tribal_chief_paiko_dew_branch_for_240",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Tribal Chief Paiko#dew"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Cendrawasih_F,15; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_dewata.txt",
+          "lines": [
+            334
+          ],
+          "required_source_literals": [
+            "delitem Cendrawasih_F,15;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_dew_in01_tribal_chief_paiko_dew_branch_for_240_400",
+      "unit": "E1-dew_in01_tribal_chief_paiko_dew_branch_for_240",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Tribal Chief Paiko#dew"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Satay,2; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_dewata.txt",
+          "lines": [
+            400
+          ],
+          "required_source_literals": [
+            "getitem Satay,2;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_dew_in01_tribal_chief_paiko_dew_branch_for_240_418",
+      "unit": "E1-dew_in01_tribal_chief_paiko_dew_branch_for_240",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Tribal Chief Paiko#dew"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Satay,2; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_dewata.txt",
+          "lines": [
+            418
+          ],
+          "required_source_literals": [
+            "getitem Satay,2;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_dew_in01_tribal_chief_paiko_dew_branch_for_240_440",
+      "unit": "E1-dew_in01_tribal_chief_paiko_dew_branch_for_240",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Tribal Chief Paiko#dew"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Satay,2; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_dewata.txt",
+          "lines": [
+            440
+          ],
+          "required_source_literals": [
+            "getitem Satay,2;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_dew_in01_tribal_chief_paiko_dew_branch_for_240_460",
+      "unit": "E1-dew_in01_tribal_chief_paiko_dew_branch_for_240",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Tribal Chief Paiko#dew"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Satay,2; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_dewata.txt",
+          "lines": [
+            460
+          ],
+          "required_source_literals": [
+            "getitem Satay,2;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_dew_in01_tribal_chief_paiko_dew_branch_for_240_497",
+      "unit": "E1-dew_in01_tribal_chief_paiko_dew_branch_for_240",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Tribal Chief Paiko#dew"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Jaty_C,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_dewata.txt",
+          "lines": [
+            497
+          ],
+          "required_source_literals": [
+            "getitem Jaty_C,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_dew_in01_tribal_chief_paiko_dew_branch_for_240_498",
+      "unit": "E1-dew_in01_tribal_chief_paiko_dew_branch_for_240",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Tribal Chief Paiko#dew"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Satay,5; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_dewata.txt",
+          "lines": [
+            498
+          ],
+          "required_source_literals": [
+            "getitem Satay,5;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
