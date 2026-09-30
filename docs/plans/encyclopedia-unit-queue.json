@@ -10573,7 +10573,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "strong",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Research Official#ep131",
@@ -10592,7 +10592,25 @@
       ],
       "size_lines": 503,
       "reason": "refused by the braced one-item prover: braceless",
-      "history": []
+      "history": [
+        "2026-09-30T15:33:31Z activated",
+        "2026-09-30T15:33:32Z validated",
+        "2026-09-30T15:33:32Z verified: 2 claims supported",
+        "2026-09-30T15:33:55Z accepted",
+        "2026-09-30T15:33:55Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "bb62c7681251ed0e25a06073ecf1961b5f7c63d08c0d0e07763b2518f21df25b",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-mid_camp_ryosen_ep131_rhea01_branch_for_5501",

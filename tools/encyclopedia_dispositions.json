@@ -27876,6 +27876,56 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mid_campin_research_official_ep131_branch_for_4997_5110",
+      "unit": "E1-mid_campin_research_official_ep131_branch_for_4997",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Research Official#ep131"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Invite_To_Meeting,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_1.txt",
+          "lines": [
+            5110
+          ],
+          "required_source_literals": [
+            "delitem Invite_To_Meeting,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mid_campin_research_official_ep131_branch_for_4997_5418",
+      "unit": "E1-mid_campin_research_official_ep131_branch_for_4997",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Research Official#ep131"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem First_Aid_Kit,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_1.txt",
+          "lines": [
+            5418
+          ],
+          "required_source_literals": [
+            "getitem First_Aid_Kit,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
