@@ -12801,6 +12801,156 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_moc_fild18_trace_of_battle_15_branch_for_937_994",
+      "unit": "E1-moc_fild18_trace_of_battle_15_branch_for_937",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Trace of Battle#15"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Green_Potion,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/first_class/tu_ma_th01.txt",
+          "lines": [
+            994
+          ],
+          "required_source_literals": [
+            "delitem Green_Potion,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_moc_fild18_trace_of_battle_15_branch_for_937_1032",
+      "unit": "E1-moc_fild18_trace_of_battle_15_branch_for_937",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Trace of Battle#15"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Green_Herb,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/first_class/tu_ma_th01.txt",
+          "lines": [
+            1032
+          ],
+          "required_source_literals": [
+            "delitem Green_Herb,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_moc_fild18_trace_of_battle_15_branch_for_937_1033",
+      "unit": "E1-moc_fild18_trace_of_battle_15_branch_for_937",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Trace of Battle#15"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Red_Gemstone,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/first_class/tu_ma_th01.txt",
+          "lines": [
+            1033
+          ],
+          "required_source_literals": [
+            "delitem Red_Gemstone,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_moc_fild18_trace_of_battle_15_branch_for_937_1148",
+      "unit": "E1-moc_fild18_trace_of_battle_15_branch_for_937",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Trace of Battle#15"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Green_Potion,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/first_class/tu_ma_th01.txt",
+          "lines": [
+            1148
+          ],
+          "required_source_literals": [
+            "delitem Green_Potion,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_moc_fild18_trace_of_battle_15_branch_for_937_1186",
+      "unit": "E1-moc_fild18_trace_of_battle_15_branch_for_937",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Trace of Battle#15"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Green_Herb,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/first_class/tu_ma_th01.txt",
+          "lines": [
+            1186
+          ],
+          "required_source_literals": [
+            "delitem Green_Herb,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_moc_fild18_trace_of_battle_15_branch_for_937_1187",
+      "unit": "E1-moc_fild18_trace_of_battle_15_branch_for_937",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Trace of Battle#15"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Red_Gemstone,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/first_class/tu_ma_th01.txt",
+          "lines": [
+            1187
+          ],
+          "required_source_literals": [
+            "delitem Red_Gemstone,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
