@@ -72651,6 +72651,31 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ecl_in01_armor_merchant_naphara_e_branch_for_850_885",
+      "unit": "E1-ecl_in01_armor_merchant_naphara_e_branch_for_850",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Armor Merchant Naphara#e"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Splendide_Coin,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/merchants/coin_exchange.txt",
+          "lines": [
+            885
+          ],
+          "required_source_literals": [
+            "delitem Splendide_Coin,10; //Splendide_Coin"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
