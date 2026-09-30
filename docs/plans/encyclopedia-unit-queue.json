@@ -13686,7 +13686,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Turtle Pillar#tur",
@@ -13705,7 +13705,25 @@
       ],
       "size_lines": 99,
       "reason": "refused by the braced one-item prover: switch",
-      "history": []
+      "history": [
+        "2026-09-30T16:02:29Z activated",
+        "2026-09-30T16:02:29Z validated",
+        "2026-09-30T16:02:29Z verified: 10 claims supported",
+        "2026-09-30T16:02:53Z accepted",
+        "2026-09-30T16:02:53Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "8662c13eaed3342b1ed1c952bc24f27f59a647fc40c9721b8fcce0f6655f3949",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-tur_dun04_turtle_statue_tur_branch_for_1929",

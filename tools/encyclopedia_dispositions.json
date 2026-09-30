@@ -34601,6 +34601,256 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_tur_dun02_turtle_pillar_tur_branch_for_1688_1729",
+      "unit": "E1-tur_dun02_turtle_pillar_tur_branch_for_1688",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Turtle Pillar#tur"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Animal_Blood,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_alberta.txt",
+          "lines": [
+            1729
+          ],
+          "required_source_literals": [
+            "getitem Animal_Blood,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_tur_dun02_turtle_pillar_tur_branch_for_1688_1734",
+      "unit": "E1-tur_dun02_turtle_pillar_tur_branch_for_1688",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Turtle Pillar#tur"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Red_Gemstone,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_alberta.txt",
+          "lines": [
+            1734
+          ],
+          "required_source_literals": [
+            "getitem Red_Gemstone,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_tur_dun02_turtle_pillar_tur_branch_for_1688_1739",
+      "unit": "E1-tur_dun02_turtle_pillar_tur_branch_for_1688",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Turtle Pillar#tur"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Red_Frame,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_alberta.txt",
+          "lines": [
+            1739
+          ],
+          "required_source_literals": [
+            "getitem Red_Frame,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_tur_dun02_turtle_pillar_tur_branch_for_1688_1744",
+      "unit": "E1-tur_dun02_turtle_pillar_tur_branch_for_1688",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Turtle Pillar#tur"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Red_Muffler,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_alberta.txt",
+          "lines": [
+            1744
+          ],
+          "required_source_literals": [
+            "getitem Red_Muffler,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_tur_dun02_turtle_pillar_tur_branch_for_1688_1749",
+      "unit": "E1-tur_dun02_turtle_pillar_tur_branch_for_1688",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Turtle Pillar#tur"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Red_Jewel,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_alberta.txt",
+          "lines": [
+            1749
+          ],
+          "required_source_literals": [
+            "getitem Red_Jewel,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_tur_dun02_turtle_pillar_tur_branch_for_1688_1754",
+      "unit": "E1-tur_dun02_turtle_pillar_tur_branch_for_1688",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Turtle Pillar#tur"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Red_Gemstone,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_alberta.txt",
+          "lines": [
+            1754
+          ],
+          "required_source_literals": [
+            "getitem Red_Gemstone,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_tur_dun02_turtle_pillar_tur_branch_for_1688_1759",
+      "unit": "E1-tur_dun02_turtle_pillar_tur_branch_for_1688",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Turtle Pillar#tur"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Red_Gemstone,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_alberta.txt",
+          "lines": [
+            1759
+          ],
+          "required_source_literals": [
+            "getitem Red_Gemstone,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_tur_dun02_turtle_pillar_tur_branch_for_1688_1764",
+      "unit": "E1-tur_dun02_turtle_pillar_tur_branch_for_1688",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Turtle Pillar#tur"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Red_Gemstone,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_alberta.txt",
+          "lines": [
+            1764
+          ],
+          "required_source_literals": [
+            "getitem Red_Gemstone,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_tur_dun02_turtle_pillar_tur_branch_for_1688_1769",
+      "unit": "E1-tur_dun02_turtle_pillar_tur_branch_for_1688",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Turtle Pillar#tur"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Red_Gemstone,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_alberta.txt",
+          "lines": [
+            1769
+          ],
+          "required_source_literals": [
+            "getitem Red_Gemstone,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_tur_dun02_turtle_pillar_tur_branch_for_1688_1774",
+      "unit": "E1-tur_dun02_turtle_pillar_tur_branch_for_1688",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Turtle Pillar#tur"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Red_Jewel,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_alberta.txt",
+          "lines": [
+            1774
+          ],
+          "required_source_literals": [
+            "getitem Red_Jewel,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
