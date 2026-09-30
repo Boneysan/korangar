@@ -80026,6 +80026,31 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ecl_fild01_pa0829etranexteriotouch_branch_for_11343_11460",
+      "unit": "E1-ecl_fild01_pa0829etranexteriotouch_branch_for_11343",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "#pa0829EtranExterioTouch"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Old_Left_Lapine,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "lines": [
+            11460
+          ],
+          "required_source_literals": [
+            "getitem Old_Left_Lapine,1; //Old_Left_Lapine"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
