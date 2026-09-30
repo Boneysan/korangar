@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 937,
+    "E1_unknown": 953,
     "E1_verified": 1
   },
   "entries": [
@@ -15654,6 +15654,406 @@
           ],
           "required_source_literals": [
             "getitem Arrow,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_ledrion_payon_relayledrion_branch_for_36_147",
+      "unit": "E1-payon_ledrion_payon_relayledrion_branch_for_36",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Ledrion#payon::RelayLedrion"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Mission_Certificate8,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/partyrelay.txt",
+          "lines": [
+            147
+          ],
+          "required_source_literals": [
+            "delitem Mission_Certificate8,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_ledrion_payon_relayledrion_branch_for_36_149",
+      "unit": "E1-payon_ledrion_payon_relayledrion_branch_for_36",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Ledrion#payon::RelayLedrion"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Old_Blue_Box,3; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/partyrelay.txt",
+          "lines": [
+            149
+          ],
+          "required_source_literals": [
+            "getitem Old_Blue_Box,3;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_ledrion_payon_relayledrion_branch_for_36_150",
+      "unit": "E1-payon_ledrion_payon_relayledrion_branch_for_36",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Ledrion#payon::RelayLedrion"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Old_Violet_Box,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/partyrelay.txt",
+          "lines": [
+            150
+          ],
+          "required_source_literals": [
+            "getitem Old_Violet_Box,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_ledrion_payon_relayledrion_branch_for_36_151",
+      "unit": "E1-payon_ledrion_payon_relayledrion_branch_for_36",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Ledrion#payon::RelayLedrion"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Mission_Certificate9,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/partyrelay.txt",
+          "lines": [
+            151
+          ],
+          "required_source_literals": [
+            "getitem Mission_Certificate9,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_ledrion_payon_relayledrion_branch_for_36_196",
+      "unit": "E1-payon_ledrion_payon_relayledrion_branch_for_36",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Ledrion#payon::RelayLedrion"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Mission_Certificate4,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/partyrelay.txt",
+          "lines": [
+            196
+          ],
+          "required_source_literals": [
+            "delitem Mission_Certificate4,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_ledrion_payon_relayledrion_branch_for_36_198",
+      "unit": "E1-payon_ledrion_payon_relayledrion_branch_for_36",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Ledrion#payon::RelayLedrion"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Gift_Box,3; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/partyrelay.txt",
+          "lines": [
+            198
+          ],
+          "required_source_literals": [
+            "getitem Gift_Box,3;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_ledrion_payon_relayledrion_branch_for_36_199",
+      "unit": "E1-payon_ledrion_payon_relayledrion_branch_for_36",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Ledrion#payon::RelayLedrion"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Old_Blue_Box,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/partyrelay.txt",
+          "lines": [
+            199
+          ],
+          "required_source_literals": [
+            "getitem Old_Blue_Box,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_ledrion_payon_relayledrion_branch_for_36_200",
+      "unit": "E1-payon_ledrion_payon_relayledrion_branch_for_36",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Ledrion#payon::RelayLedrion"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Mission_Certificate5,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/partyrelay.txt",
+          "lines": [
+            200
+          ],
+          "required_source_literals": [
+            "getitem Mission_Certificate5,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_ledrion_payon_relayledrion_branch_for_36_263",
+      "unit": "E1-payon_ledrion_payon_relayledrion_branch_for_36",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Ledrion#payon::RelayLedrion"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Mission_Certificate1,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/partyrelay.txt",
+          "lines": [
+            263
+          ],
+          "required_source_literals": [
+            "getitem Mission_Certificate1,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_ledrion_payon_relayledrion_branch_for_36_80",
+      "unit": "E1-payon_ledrion_payon_relayledrion_branch_for_36",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Ledrion#payon::RelayLedrion"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Mission_Certificate12,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/partyrelay.txt",
+          "lines": [
+            80
+          ],
+          "required_source_literals": [
+            "delitem Mission_Certificate12,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_ledrion_payon_relayledrion_branch_for_36_82",
+      "unit": "E1-payon_ledrion_payon_relayledrion_branch_for_36",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Ledrion#payon::RelayLedrion"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Gift_Box,6; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/partyrelay.txt",
+          "lines": [
+            82
+          ],
+          "required_source_literals": [
+            "getitem Gift_Box,6;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_ledrion_payon_relayledrion_branch_for_36_83",
+      "unit": "E1-payon_ledrion_payon_relayledrion_branch_for_36",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Ledrion#payon::RelayLedrion"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Old_Blue_Box,3; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/partyrelay.txt",
+          "lines": [
+            83
+          ],
+          "required_source_literals": [
+            "getitem Old_Blue_Box,3;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_ledrion_payon_relayledrion_branch_for_36_85",
+      "unit": "E1-payon_ledrion_payon_relayledrion_branch_for_36",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Ledrion#payon::RelayLedrion"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Sabbath,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/partyrelay.txt",
+          "lines": [
+            85
+          ],
+          "required_source_literals": [
+            "getitem Sabbath,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_ledrion_payon_relayledrion_branch_for_36_88",
+      "unit": "E1-payon_ledrion_payon_relayledrion_branch_for_36",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Ledrion#payon::RelayLedrion"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Slaughter,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/partyrelay.txt",
+          "lines": [
+            88
+          ],
+          "required_source_literals": [
+            "getitem Slaughter,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_ledrion_payon_relayledrion_branch_for_36_91",
+      "unit": "E1-payon_ledrion_payon_relayledrion_branch_for_36",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Ledrion#payon::RelayLedrion"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Quadrille,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/partyrelay.txt",
+          "lines": [
+            91
+          ],
+          "required_source_literals": [
+            "getitem Quadrille,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_ledrion_payon_relayledrion_branch_for_36_94",
+      "unit": "E1-payon_ledrion_payon_relayledrion_branch_for_36",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Ledrion#payon::RelayLedrion"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Old_Violet_Box,3; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/partyrelay.txt",
+          "lines": [
+            94
+          ],
+          "required_source_literals": [
+            "getitem Old_Violet_Box,3;"
           ]
         }
       ],
