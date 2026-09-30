@@ -67376,6 +67376,206 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_job3_guil01_daora_3rdgc02_branch_for_263_285",
+      "unit": "E1-job3_guil01_daora_3rdgc02_branch_for_263",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Daora#3rdgc02"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Tropical_Sograt,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-1/guillotine_cross.txt",
+          "lines": [
+            285
+          ],
+          "required_source_literals": [
+            "getitem Tropical_Sograt,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_job3_guil01_daora_3rdgc02_branch_for_263_295",
+      "unit": "E1-job3_guil01_daora_3rdgc02_branch_for_263",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Daora#3rdgc02"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Vermilion_The_Beach,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-1/guillotine_cross.txt",
+          "lines": [
+            295
+          ],
+          "required_source_literals": [
+            "getitem Vermilion_The_Beach,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_job3_guil01_daora_3rdgc02_branch_for_263_740",
+      "unit": "E1-job3_guil01_daora_3rdgc02_branch_for_263",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Daora#3rdgc02"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Milk,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-1/guillotine_cross.txt",
+          "lines": [
+            740
+          ],
+          "required_source_literals": [
+            "getitem Milk,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_job3_guil01_daora_3rdgc02_branch_for_263_780",
+      "unit": "E1-job3_guil01_daora_3rdgc02_branch_for_263",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Daora#3rdgc02"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Tropical_Sograt,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-1/guillotine_cross.txt",
+          "lines": [
+            780
+          ],
+          "required_source_literals": [
+            "getitem Tropical_Sograt,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_job3_guil01_daora_3rdgc02_branch_for_263_790",
+      "unit": "E1-job3_guil01_daora_3rdgc02_branch_for_263",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Daora#3rdgc02"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Vermilion_The_Beach,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-1/guillotine_cross.txt",
+          "lines": [
+            790
+          ],
+          "required_source_literals": [
+            "getitem Vermilion_The_Beach,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_job3_guil01_daora_3rdgc02_branch_for_263_807",
+      "unit": "E1-job3_guil01_daora_3rdgc02_branch_for_263",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Daora#3rdgc02"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Milk,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-1/guillotine_cross.txt",
+          "lines": [
+            807
+          ],
+          "required_source_literals": [
+            "getitem Milk,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_job3_guil01_daora_3rdgc02_branch_for_263_842",
+      "unit": "E1-job3_guil01_daora_3rdgc02_branch_for_263",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Daora#3rdgc02"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Tropical_Sograt,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-1/guillotine_cross.txt",
+          "lines": [
+            842
+          ],
+          "required_source_literals": [
+            "getitem Tropical_Sograt,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_job3_guil01_daora_3rdgc02_branch_for_263_852",
+      "unit": "E1-job3_guil01_daora_3rdgc02_branch_for_263",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Daora#3rdgc02"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Vermilion_The_Beach,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-1/guillotine_cross.txt",
+          "lines": [
+            852
+          ],
+          "required_source_literals": [
+            "getitem Vermilion_The_Beach,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }

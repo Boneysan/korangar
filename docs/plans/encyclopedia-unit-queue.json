@@ -28123,7 +28123,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "strong",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Daora#3rdgc02",
@@ -28142,7 +28142,25 @@
       ],
       "size_lines": 603,
       "reason": "refused by the braced one-item prover: braceless",
-      "history": []
+      "history": [
+        "2026-09-30T18:15:17Z activated",
+        "2026-09-30T18:15:18Z validated",
+        "2026-09-30T18:15:18Z verified: 8 claims supported",
+        "2026-09-30T18:15:41Z accepted",
+        "2026-09-30T18:15:41Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "a9cc807a448976f7f6344979eb8e5a94c77c38a0096ce41a997477835972acc2",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-job3_guil01_mayshell_3rdgc03_branch_for_867",
