@@ -176,6 +176,31 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_hugel_toairplane_hugel_branch_for_32_42",
+      "unit": "E1-hugel_toairplane_hugel_branch_for_32",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "toairplane#hugel"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Free_Flying_Ship_Ticket,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/airports/hugel.txt",
+          "lines": [
+            42
+          ],
+          "required_source_literals": [
+            "delitem Free_Flying_Ship_Ticket,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
