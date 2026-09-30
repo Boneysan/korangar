@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 2445,
+    "E1_unknown": 2450,
     "E1_verified": 1
   },
   "entries": [
@@ -40204,6 +40204,131 @@
           ],
           "required_source_literals": [
             "getitem Poring_Coin,1; // Poring_Coin"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prontera_aelle_qsk_dan02_branch_for_424_588",
+      "unit": "E1-prontera_aelle_qsk_dan02_branch_for_424",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Aelle#qsk_dan02"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Alchol,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/skills/dancer_skills.txt",
+          "lines": [
+            588
+          ],
+          "required_source_literals": [
+            "delitem Alchol,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prontera_aelle_qsk_dan02_branch_for_424_589",
+      "unit": "E1-prontera_aelle_qsk_dan02_branch_for_424",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Aelle#qsk_dan02"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Apple,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/skills/dancer_skills.txt",
+          "lines": [
+            589
+          ],
+          "required_source_literals": [
+            "delitem Apple,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prontera_aelle_qsk_dan02_branch_for_424_590",
+      "unit": "E1-prontera_aelle_qsk_dan02_branch_for_424",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Aelle#qsk_dan02"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Banana,3; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/skills/dancer_skills.txt",
+          "lines": [
+            590
+          ],
+          "required_source_literals": [
+            "delitem Banana,3;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prontera_aelle_qsk_dan02_branch_for_424_591",
+      "unit": "E1-prontera_aelle_qsk_dan02_branch_for_424",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Aelle#qsk_dan02"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Well_Baked_Cookie,5; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/skills/dancer_skills.txt",
+          "lines": [
+            591
+          ],
+          "required_source_literals": [
+            "delitem Well_Baked_Cookie,5;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prontera_aelle_qsk_dan02_branch_for_424_592",
+      "unit": "E1-prontera_aelle_qsk_dan02_branch_for_424",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Aelle#qsk_dan02"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem White_Platter,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/skills/dancer_skills.txt",
+          "lines": [
+            592
+          ],
+          "required_source_literals": [
+            "delitem White_Platter,1;"
           ]
         }
       ],
