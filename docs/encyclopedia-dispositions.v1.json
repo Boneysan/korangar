@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 2175,
+    "E1_unknown": 2176,
     "E1_verified": 1
   },
   "entries": [
@@ -3604,6 +3604,31 @@
           ],
           "required_source_literals": [
             "delitem Bunch_Of_Flowers,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_aldebaran_lady_megin_branch_for_2474_2671",
+      "unit": "E1-aldebaran_lady_megin_branch_for_2474",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Lady#megin"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Old_Blue_Box,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/megingard_seal.txt",
+          "lines": [
+            2671
+          ],
+          "required_source_literals": [
+            "getitem Old_Blue_Box,1; // Old_Blue_Box"
           ]
         }
       ],

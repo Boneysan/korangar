@@ -54501,6 +54501,31 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_aldebaran_lady_megin_branch_for_2474_2671",
+      "unit": "E1-aldebaran_lady_megin_branch_for_2474",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Lady#megin"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Old_Blue_Box,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/megingard_seal.txt",
+          "lines": [
+            2671
+          ],
+          "required_source_literals": [
+            "getitem Old_Blue_Box,1; // Old_Blue_Box"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }

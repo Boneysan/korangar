@@ -23346,7 +23346,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Lady#megin",
@@ -23365,7 +23365,25 @@
       ],
       "size_lines": 248,
       "reason": "refused by the braced one-item prover: braceless",
-      "history": []
+      "history": [
+        "2026-09-30T17:31:10Z activated",
+        "2026-09-30T17:31:11Z validated",
+        "2026-09-30T17:31:11Z verified: 1 claims supported",
+        "2026-09-30T17:31:34Z accepted",
+        "2026-09-30T17:31:34Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "445f0cd1d32fc09423e45e7cc0cbd1531d8f6c8f9f20aa8a6d37eb12c966d38d",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-prontera_tialfi_branch_for_41",
