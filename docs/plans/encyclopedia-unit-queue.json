@@ -20453,7 +20453,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Old Soldier",
@@ -20472,7 +20472,25 @@
       ],
       "size_lines": 296,
       "reason": "refused by the braced one-item prover: braceless",
-      "history": []
+      "history": [
+        "2026-09-30T17:04:31Z activated",
+        "2026-09-30T17:04:32Z validated",
+        "2026-09-30T17:04:32Z verified: 12 claims supported",
+        "2026-09-30T17:04:55Z accepted",
+        "2026-09-30T17:04:55Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "ce75fe32063f5266ab1838bcaa9bca7a945b20944d5722058f55c1029b7efd50",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-in_rogue_rogue_agent_branch_for_11744",

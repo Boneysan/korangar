@@ -48926,6 +48926,306 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prontera_old_soldier_branch_for_11018_11188",
+      "unit": "E1-prontera_old_soldier_branch_for_11018",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Old Soldier"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Unlucky_Emerald,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_nameless.txt",
+          "lines": [
+            11188
+          ],
+          "required_source_literals": [
+            "delitem Unlucky_Emerald,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prontera_old_soldier_branch_for_11018_11190",
+      "unit": "E1-prontera_old_soldier_branch_for_11018",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Old Soldier"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Old_Blue_Box,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_nameless.txt",
+          "lines": [
+            11190
+          ],
+          "required_source_literals": [
+            "getitem Old_Blue_Box,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prontera_old_soldier_branch_for_11018_11192",
+      "unit": "E1-prontera_old_soldier_branch_for_11018",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Old Soldier"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Yggdrasilberry,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_nameless.txt",
+          "lines": [
+            11192
+          ],
+          "required_source_literals": [
+            "if (BaseLevel < 66) getitem Yggdrasilberry,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prontera_old_soldier_branch_for_11018_11199",
+      "unit": "E1-prontera_old_soldier_branch_for_11018",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Old Soldier"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Old_Violet_Box,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_nameless.txt",
+          "lines": [
+            11199
+          ],
+          "required_source_literals": [
+            "else getitem Old_Violet_Box,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prontera_old_soldier_branch_for_11018_11201",
+      "unit": "E1-prontera_old_soldier_branch_for_11018",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Old Soldier"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Yggdrasilberry,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_nameless.txt",
+          "lines": [
+            11201
+          ],
+          "required_source_literals": [
+            "if (BaseLevel < 66) getitem Yggdrasilberry,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prontera_old_soldier_branch_for_11018_11208",
+      "unit": "E1-prontera_old_soldier_branch_for_11018",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Old Soldier"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Old_Violet_Box,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_nameless.txt",
+          "lines": [
+            11208
+          ],
+          "required_source_literals": [
+            "else getitem Old_Violet_Box,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prontera_old_soldier_branch_for_11018_11243",
+      "unit": "E1-prontera_old_soldier_branch_for_11018",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Old Soldier"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Unlucky_Emerald,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_nameless.txt",
+          "lines": [
+            11243
+          ],
+          "required_source_literals": [
+            "delitem Unlucky_Emerald,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prontera_old_soldier_branch_for_11018_11245",
+      "unit": "E1-prontera_old_soldier_branch_for_11018",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Old Soldier"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Old_Blue_Box,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_nameless.txt",
+          "lines": [
+            11245
+          ],
+          "required_source_literals": [
+            "getitem Old_Blue_Box,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prontera_old_soldier_branch_for_11018_11247",
+      "unit": "E1-prontera_old_soldier_branch_for_11018",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Old Soldier"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Yggdrasilberry,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_nameless.txt",
+          "lines": [
+            11247
+          ],
+          "required_source_literals": [
+            "if (BaseLevel < 66) getitem Yggdrasilberry,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prontera_old_soldier_branch_for_11018_11254",
+      "unit": "E1-prontera_old_soldier_branch_for_11018",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Old Soldier"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Old_Violet_Box,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_nameless.txt",
+          "lines": [
+            11254
+          ],
+          "required_source_literals": [
+            "else getitem Old_Violet_Box,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prontera_old_soldier_branch_for_11018_11256",
+      "unit": "E1-prontera_old_soldier_branch_for_11018",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Old Soldier"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Yggdrasilberry,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_nameless.txt",
+          "lines": [
+            11256
+          ],
+          "required_source_literals": [
+            "if (BaseLevel < 66) getitem Yggdrasilberry,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prontera_old_soldier_branch_for_11018_11263",
+      "unit": "E1-prontera_old_soldier_branch_for_11018",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Old Soldier"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Old_Violet_Box,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_nameless.txt",
+          "lines": [
+            11263
+          ],
+          "required_source_literals": [
+            "else getitem Old_Violet_Box,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
