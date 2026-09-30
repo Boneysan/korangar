@@ -63001,6 +63001,156 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prt_in_archeologist_sign_branch_for_89_310",
+      "unit": "E1-prt_in_archeologist_sign_branch_for_89",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Archeologist#sign"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Part_Of_Stars_Sob,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/the_sign_quest.txt",
+          "lines": [
+            310
+          ],
+          "required_source_literals": [
+            "getitem Part_Of_Stars_Sob,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prt_in_archeologist_sign_branch_for_89_571",
+      "unit": "E1-prt_in_archeologist_sign_branch_for_89",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Archeologist#sign"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem The_Sign,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/the_sign_quest.txt",
+          "lines": [
+            571
+          ],
+          "required_source_literals": [
+            "delitem The_Sign,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prt_in_archeologist_sign_branch_for_89_678",
+      "unit": "E1-prt_in_archeologist_sign_branch_for_89",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Archeologist#sign"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem The_Sign,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/the_sign_quest.txt",
+          "lines": [
+            678
+          ],
+          "required_source_literals": [
+            "getitem The_Sign,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prt_in_archeologist_sign_branch_for_89_745",
+      "unit": "E1-prt_in_archeologist_sign_branch_for_89",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Archeologist#sign"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Stars_Sob,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/the_sign_quest.txt",
+          "lines": [
+            745
+          ],
+          "required_source_literals": [
+            "delitem Stars_Sob,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prt_in_archeologist_sign_branch_for_89_748",
+      "unit": "E1-prt_in_archeologist_sign_branch_for_89",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Archeologist#sign"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Old_Violet_Box,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/the_sign_quest.txt",
+          "lines": [
+            748
+          ],
+          "required_source_literals": [
+            "getitem Old_Violet_Box,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prt_in_archeologist_sign_branch_for_89_762",
+      "unit": "E1-prt_in_archeologist_sign_branch_for_89",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Archeologist#sign"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Stars_Sob,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/the_sign_quest.txt",
+          "lines": [
+            762
+          ],
+          "required_source_literals": [
+            "delitem Stars_Sob,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }

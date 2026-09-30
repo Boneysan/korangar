@@ -25415,7 +25415,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "strong",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Archeologist#sign",
@@ -25434,7 +25434,26 @@
       ],
       "size_lines": 699,
       "reason": "refused by the braced one-item prover: braceless",
-      "history": []
+      "history": [
+        "2026-09-30T17:50:06Z activated",
+        "2026-09-30T17:50:06Z validated",
+        "2026-09-30T17:50:07Z verified: 6 claims supported",
+        "2026-09-30T17:50:30Z accepted",
+        "2026-09-30T17:50:30Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "fd43cac31c44b8e6ee6fd2d76128cb879e2bcad19bec44839a7b400624bddf59",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "audit": "due",
+      "commit": "committed"
     },
     {
       "id": "E1-prt_in_maid_sign2_branch_for_984",
