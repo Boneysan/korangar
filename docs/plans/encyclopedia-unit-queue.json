@@ -204,7 +204,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Airport Staff#lhz_air1a::lhz_airport1",
@@ -223,7 +223,25 @@
       ],
       "size_lines": 41,
       "reason": "refused by the braced one-item prover: menu",
-      "history": []
+      "history": [
+        "2026-09-30T13:57:38Z activated",
+        "2026-09-30T13:57:38Z validated",
+        "2026-09-30T13:57:38Z verified: 1 claims supported",
+        "2026-09-30T13:58:08Z accepted",
+        "2026-09-30T13:58:08Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "3d401b0eed9f77857163d937aef0968c66a952caeb71c75090e3afee8ef1b3cb",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-ra_fild12_toairplane_rachel_branch_for_34",
