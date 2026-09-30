@@ -69551,6 +69551,81 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_glast_01_memory_of_king_schmidtz_branch_for_356_447",
+      "unit": "E1-glast_01_memory_of_king_schmidtz_branch_for_356",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Memory of King Schmidtz"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem King_Shield,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-2/royal_guard.txt",
+          "lines": [
+            447
+          ],
+          "required_source_literals": [
+            "delitem King_Shield,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_glast_01_memory_of_king_schmidtz_branch_for_356_450",
+      "unit": "E1-glast_01_memory_of_king_schmidtz_branch_for_356",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Memory of King Schmidtz"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Schmidt_Helm,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-2/royal_guard.txt",
+          "lines": [
+            450
+          ],
+          "required_source_literals": [
+            "getitem Schmidt_Helm,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_glast_01_memory_of_king_schmidtz_branch_for_356_451",
+      "unit": "E1-glast_01_memory_of_king_schmidtz_branch_for_356",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Memory of King Schmidtz"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Green_Apple_Ring,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-2/royal_guard.txt",
+          "lines": [
+            451
+          ],
+          "required_source_literals": [
+            "getitem Green_Apple_Ring,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
