@@ -129927,6 +129927,330 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2069_npc_battleground_tierra_tierra01_txt_94",
+      "unit": "E5-chain-2069",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2069
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 2069; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/battleground/tierra/tierra01.txt",
+          "lines": [
+            94
+          ],
+          "required_source_literals": [
+            "setquest 2069;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2069_npc_battleground_tierra_tierra01_txt_103",
+      "unit": "E5-chain-2069",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2069
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 2069; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/battleground/tierra/tierra01.txt",
+          "lines": [
+            103
+          ],
+          "required_source_literals": [
+            "setquest 2069;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2069_npc_battleground_tierra_tierra01_txt_654",
+      "unit": "E5-chain-2069",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2069
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 2069; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/battleground/tierra/tierra01.txt",
+          "lines": [
+            654
+          ],
+          "required_source_literals": [
+            "setquest 2069;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2069_npc_battleground_tierra_tierra01_txt_661",
+      "unit": "E5-chain-2069",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2069
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 2069; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/battleground/tierra/tierra01.txt",
+          "lines": [
+            661
+          ],
+          "required_source_literals": [
+            "setquest 2069;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2069_npc_battleground_tierra_tierra02_txt_94",
+      "unit": "E5-chain-2069",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2069
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 2069; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/battleground/tierra/tierra02.txt",
+          "lines": [
+            94
+          ],
+          "required_source_literals": [
+            "setquest 2069;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2069_npc_battleground_tierra_tierra02_txt_103",
+      "unit": "E5-chain-2069",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2069
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 2069; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/battleground/tierra/tierra02.txt",
+          "lines": [
+            103
+          ],
+          "required_source_literals": [
+            "setquest 2069;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2069_npc_battleground_tierra_tierra02_txt_654",
+      "unit": "E5-chain-2069",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2069
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 2069; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/battleground/tierra/tierra02.txt",
+          "lines": [
+            654
+          ],
+          "required_source_literals": [
+            "setquest 2069;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2069_npc_battleground_tierra_tierra02_txt_661",
+      "unit": "E5-chain-2069",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2069
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 2069; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/battleground/tierra/tierra02.txt",
+          "lines": [
+            661
+          ],
+          "required_source_literals": [
+            "setquest 2069;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2069_npc_battleground_tierra_tierra_enter_txt_68",
+      "unit": "E5-chain-2069",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2069
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 2069; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/battleground/tierra/tierra_enter.txt",
+          "lines": [
+            68
+          ],
+          "required_source_literals": [
+            "erasequest 2069;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2069_npc_battleground_tierra_tierra_enter_txt_128",
+      "unit": "E5-chain-2069",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2069
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 2069; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/battleground/tierra/tierra_enter.txt",
+          "lines": [
+            128
+          ],
+          "required_source_literals": [
+            "erasequest 2069;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2069_npc_battleground_tierra_tierra_enter_txt_285",
+      "unit": "E5-chain-2069",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2069
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 2069; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/battleground/tierra/tierra_enter.txt",
+          "lines": [
+            285
+          ],
+          "required_source_literals": [
+            "erasequest 2069;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2069_npc_battleground_tierra_tierra_enter_txt_345",
+      "unit": "E5-chain-2069",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2069
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 2069; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/battleground/tierra/tierra_enter.txt",
+          "lines": [
+            345
+          ],
+          "required_source_literals": [
+            "erasequest 2069;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
