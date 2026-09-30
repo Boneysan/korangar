@@ -125733,6 +125733,33 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e4_pa_pressure_formula",
+      "unit": "E4-pa-pressure",
+      "package": "E4",
+      "subject": {
+        "kind": "skill",
+        "ids": [
+          367
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted case is the ratio site for these skills; this record does not reduce it to a worked example.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "src/map/battle.c",
+          "lines": [
+            1742
+          ],
+          "required_source_literals": [
+            "case PA_PRESSURE:"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
