@@ -48476,6 +48476,106 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_gooho_ahn_branch_for_7832_7908",
+      "unit": "E1-payon_gooho_ahn_branch_for_7832",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Gooho Ahn"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Live_Coal,20; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_nameless.txt",
+          "lines": [
+            7908
+          ],
+          "required_source_literals": [
+            "delitem Live_Coal,20;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_gooho_ahn_branch_for_7832_7909",
+      "unit": "E1-payon_gooho_ahn_branch_for_7832",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Gooho Ahn"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Alchol,2; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_nameless.txt",
+          "lines": [
+            7909
+          ],
+          "required_source_literals": [
+            "delitem Alchol,2;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_gooho_ahn_branch_for_7832_7910",
+      "unit": "E1-payon_gooho_ahn_branch_for_7832",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Gooho Ahn"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Matchstick,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_nameless.txt",
+          "lines": [
+            7910
+          ],
+          "required_source_literals": [
+            "delitem Matchstick,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_gooho_ahn_branch_for_7832_7911",
+      "unit": "E1-payon_gooho_ahn_branch_for_7832",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Gooho Ahn"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Burning_Heart,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_nameless.txt",
+          "lines": [
+            7911
+          ],
+          "required_source_literals": [
+            "delitem Burning_Heart,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
