@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 2643,
+    "E1_unknown": 2645,
     "E1_verified": 1
   },
   "entries": [
@@ -55104,6 +55104,56 @@
           ],
           "required_source_literals": [
             "getitem Branch,1; // Branch"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_sign01_fountain_sign_branch_for_12195_12229",
+      "unit": "E1-que_sign01_fountain_sign_branch_for_12195",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Fountain#sign"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Empty_Bottle,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/the_sign_quest.txt",
+          "lines": [
+            12229
+          ],
+          "required_source_literals": [
+            "delitem Empty_Bottle,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_sign01_fountain_sign_branch_for_12195_12230",
+      "unit": "E1-que_sign01_fountain_sign_branch_for_12195",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Fountain#sign"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Water_Of_Darkness,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/the_sign_quest.txt",
+          "lines": [
+            12230
+          ],
+          "required_source_literals": [
+            "getitem Water_Of_Darkness,1;"
           ]
         }
       ],
