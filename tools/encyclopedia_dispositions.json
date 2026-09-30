@@ -30226,6 +30226,56 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mid_camp_expedition_messenger_branch_for_9827_9901",
+      "unit": "E1-mid_camp_expedition_messenger_branch_for_9827",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Expedition Messenger"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Expedition_Report,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_1.txt",
+          "lines": [
+            9901
+          ],
+          "required_source_literals": [
+            "delitem Expedition_Report,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mid_camp_expedition_messenger_branch_for_9827_9957",
+      "unit": "E1-mid_camp_expedition_messenger_branch_for_9827",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Expedition Messenger"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Expedition_Report,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_1.txt",
+          "lines": [
+            9957
+          ],
+          "required_source_literals": [
+            "delitem Expedition_Report,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
