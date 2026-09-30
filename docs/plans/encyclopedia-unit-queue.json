@@ -33773,7 +33773,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Bouy#13_3",
@@ -33792,7 +33792,25 @@
       ],
       "size_lines": 122,
       "reason": "refused by the braced one-item prover: menu",
-      "history": []
+      "history": [
+        "2026-09-30T19:07:24Z activated",
+        "2026-09-30T19:07:24Z validated",
+        "2026-09-30T19:07:24Z verified: 1 claims supported",
+        "2026-09-30T19:07:47Z accepted",
+        "2026-09-30T19:07:47Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "937c1a2a6c9eb5e274e7e77aaa3d266980f08273caa62d4f9a9256b25bfb9b84",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-dic_in01_adventurer_clerk_ep133_branch_for_6760",

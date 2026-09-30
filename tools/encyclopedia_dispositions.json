@@ -78176,6 +78176,31 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_dic_in01_bouy_13_3_branch_for_5990_6054",
+      "unit": "E1-dic_in01_bouy_13_3_branch_for_5990",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Bouy#13_3"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Small_Bradium,30; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_dicastes.txt",
+          "lines": [
+            6054
+          ],
+          "required_source_literals": [
+            "delitem Small_Bradium,30;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
