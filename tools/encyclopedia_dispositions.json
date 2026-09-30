@@ -113795,6 +113795,374 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_merchants_shops_txt_288_288",
+      "unit": "E2-npc-merchants-shops-txt-288",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Armor Dealer#ayo"
+      },
+      "result": "verified",
+      "statement": "Armor Dealer#ayo is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/merchants/shops.txt",
+          "lines": [
+            288,
+            289,
+            290,
+            291,
+            292,
+            293,
+            294,
+            295,
+            296,
+            297,
+            298,
+            299,
+            300,
+            301,
+            302
+          ],
+          "required_source_literals": [
+            "ayo_in01,90,160,1\ttrader\tArmor Dealer#ayo\t4_M_THAIOLD,{",
+            "OnInit:",
+            "sellitem Bandana;",
+            "sellitem Sandals;",
+            "sellitem Shoes;",
+            "sellitem Hood;",
+            "sellitem Muffler;",
+            "sellitem Guard;",
+            "sellitem Buckler;",
+            "sellitem Adventure_Suit;",
+            "sellitem Silk_Robe;",
+            "sellitem Silver_Robe;",
+            "sellitem Wooden_Mail;",
+            "sellitem Belt;",
+            "}"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_merchants_shops_txt_288_305",
+      "unit": "E2-npc-merchants-shops-txt-288",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Tool Dealer#bra"
+      },
+      "result": "verified",
+      "statement": "Tool Dealer#bra is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/merchants/shops.txt",
+          "lines": [
+            305,
+            306,
+            307,
+            308,
+            309,
+            310,
+            311,
+            312,
+            313,
+            314
+          ],
+          "required_source_literals": [
+            "brasilis,252,257,3\ttrader\tTool Dealer#bra\t4_F_BRZ_WOMAN,{",
+            "OnInit:",
+            "sellitem Center_Potion;",
+            "sellitem Awakening_Potion;",
+            "sellitem Wing_Of_Fly;",
+            "sellitem Wing_Of_Butterfly;",
+            "sellitem Spectacles;",
+            "sellitem Booby_Trap;",
+            "sellitem Leaf_Of_Yggdrasil;",
+            "}"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_merchants_shops_txt_288_316",
+      "unit": "E2-npc-merchants-shops-txt-288",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Weapon Dealer#bra"
+      },
+      "result": "verified",
+      "statement": "Weapon Dealer#bra is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/merchants/shops.txt",
+          "lines": [
+            316,
+            317,
+            318,
+            319,
+            320,
+            321,
+            322,
+            323
+          ],
+          "required_source_literals": [
+            "brasilis,244,243,3\ttrader\tWeapon Dealer#bra\t4_M_BRZ_MAN2,{",
+            "OnInit:",
+            "sellitem Pike;",
+            "sellitem Partizan;",
+            "sellitem Hammer;",
+            "sellitem Chain;",
+            "sellitem Coward;",
+            "}"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_merchants_shops_txt_288_325",
+      "unit": "E2-npc-merchants-shops-txt-288",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Pet Groomer#bra"
+      },
+      "result": "verified",
+      "statement": "Pet Groomer#bra is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/merchants/shops.txt",
+          "lines": [
+            325,
+            326,
+            327,
+            328,
+            329
+          ],
+          "required_source_literals": [
+            "brasilis,201,309,3\ttrader\tPet Groomer#bra\t4_M_BRZ_MAN1,{",
+            "OnInit:",
+            "sellitem Pet_Food;",
+            "sellitem Pet_Incubator;",
+            "}"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_merchants_shops_txt_288_331",
+      "unit": "E2-npc-merchants-shops-txt-288",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Fruit Gardener#bra"
+      },
+      "result": "verified",
+      "statement": "Fruit Gardener#bra is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/merchants/shops.txt",
+          "lines": [
+            331,
+            332,
+            333,
+            334,
+            335,
+            336
+          ],
+          "required_source_literals": [
+            "brasilis,221,128,3\ttrader\tFruit Gardener#bra\t4_M_BRZ_MAN2,{",
+            "OnInit:",
+            "sellitem Coconut;",
+            "sellitem Banana;",
+            "sellitem Asai_Fruit;",
+            "}"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_merchants_shops_txt_288_339",
+      "unit": "E2-npc-merchants-shops-txt-288",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Armor Dealer#cmd"
+      },
+      "result": "verified",
+      "statement": "Armor Dealer#cmd is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/merchants/shops.txt",
+          "lines": [
+            339,
+            340,
+            341,
+            342,
+            343,
+            344,
+            345,
+            346,
+            347,
+            348,
+            349,
+            350,
+            351,
+            352,
+            353,
+            354,
+            355,
+            356
+          ],
+          "required_source_literals": [
+            "cmd_in01,117,165,4\ttrader\tArmor Dealer#cmd\t4W_F_01,{",
+            "OnInit:",
+            "sellitem Cap;",
+            "sellitem Helm;",
+            "sellitem Buckler;",
+            "sellitem Shield;",
+            "sellitem Boots;",
+            "sellitem Muffler;",
+            "sellitem Manteau;",
+            "sellitem Adventure_Suit;",
+            "sellitem Silk_Robe;",
+            "sellitem Mantle;",
+            "sellitem Coat;",
+            "sellitem Thief_Clothes;",
+            "sellitem Padded_Armor;",
+            "sellitem Chain_Mail;",
+            "sellitem Plate_Armor;",
+            "}"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_merchants_shops_txt_288_358",
+      "unit": "E2-npc-merchants-shops-txt-288",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Weapon Dealer#cmd"
+      },
+      "result": "verified",
+      "statement": "Weapon Dealer#cmd is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/merchants/shops.txt",
+          "lines": [
+            358,
+            359,
+            360,
+            361,
+            362,
+            363,
+            364,
+            365,
+            366,
+            367,
+            368,
+            369,
+            370,
+            371,
+            372
+          ],
+          "required_source_literals": [
+            "cmd_in01,128,165,2\ttrader\tWeapon Dealer#cmd\t1_M_03,{",
+            "OnInit:",
+            "sellitem Violin;",
+            "sellitem Mandolin;",
+            "sellitem Lute;",
+            "sellitem Harp;",
+            "sellitem Guh_Moon_Goh;",
+            "sellitem Guitar;",
+            "sellitem Rope;",
+            "sellitem Line;",
+            "sellitem Wire;",
+            "sellitem Tail;",
+            "sellitem Whip;",
+            "sellitem Rante;",
+            "}"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_merchants_shops_txt_288_374",
+      "unit": "E2-npc-merchants-shops-txt-288",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Tool Dealer#cmd"
+      },
+      "result": "verified",
+      "statement": "Tool Dealer#cmd is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/merchants/shops.txt",
+          "lines": [
+            374,
+            375,
+            376,
+            377,
+            378,
+            379,
+            380,
+            381,
+            382,
+            383,
+            384,
+            385,
+            386,
+            387,
+            388
+          ],
+          "required_source_literals": [
+            "cmd_in01,79,182,5\ttrader\tTool Dealer#cmd\t4_M_01,{",
+            "OnInit:",
+            "sellitem Iron_Arrow;",
+            "sellitem Red_Potion;",
+            "sellitem Orange_Potion;",
+            "sellitem Yellow_Potion;",
+            "sellitem White_Potion;",
+            "sellitem Center_Potion;",
+            "sellitem Awakening_Potion;",
+            "sellitem Berserk_Potion;",
+            "sellitem Wing_Of_Fly;",
+            "sellitem Wing_Of_Butterfly;",
+            "sellitem Spectacles;",
+            "sellitem Booby_Trap;",
+            "}"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
