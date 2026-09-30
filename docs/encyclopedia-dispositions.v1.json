@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 2459,
+    "E1_unknown": 2462,
     "E1_verified": 1
   },
   "entries": [
@@ -2104,6 +2104,81 @@
           ],
           "required_source_literals": [
             "delitem Banana,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_alberta_necko_branch_for_42_103",
+      "unit": "E1-alberta_necko_branch_for_42",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Necko"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Scarlet_Jewel,7; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/skills/merchant_skills.txt",
+          "lines": [
+            103
+          ],
+          "required_source_literals": [
+            "delitem Scarlet_Jewel,7;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_alberta_necko_branch_for_42_104",
+      "unit": "E1-alberta_necko_branch_for_42",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Necko"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Banana_Juice,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/skills/merchant_skills.txt",
+          "lines": [
+            104
+          ],
+          "required_source_literals": [
+            "delitem Banana_Juice,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_alberta_necko_branch_for_42_105",
+      "unit": "E1-alberta_necko_branch_for_42",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Necko"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Mushroom_Spore,50; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/skills/merchant_skills.txt",
+          "lines": [
+            105
+          ],
+          "required_source_literals": [
+            "delitem Mushroom_Spore,50;"
           ]
         }
       ],
