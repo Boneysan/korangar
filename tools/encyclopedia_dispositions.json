@@ -45351,6 +45351,131 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mosk_fild01_aged_stranger_npc_branch_for_1201_1469",
+      "unit": "E1-mosk_fild01_aged_stranger_npc_branch_for_1201",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Aged Stranger#npc"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Log,30; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_moscovia.txt",
+          "lines": [
+            1469
+          ],
+          "required_source_literals": [
+            "delitem Log,30;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mosk_fild01_aged_stranger_npc_branch_for_1201_1470",
+      "unit": "E1-mosk_fild01_aged_stranger_npc_branch_for_1201",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Aged Stranger#npc"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Tough_Vines,20; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_moscovia.txt",
+          "lines": [
+            1470
+          ],
+          "required_source_literals": [
+            "delitem Tough_Vines,20;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mosk_fild01_aged_stranger_npc_branch_for_1201_1471",
+      "unit": "E1-mosk_fild01_aged_stranger_npc_branch_for_1201",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Aged Stranger#npc"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Goats_Horn,20; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_moscovia.txt",
+          "lines": [
+            1471
+          ],
+          "required_source_literals": [
+            "delitem Goats_Horn,20;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mosk_fild01_aged_stranger_npc_branch_for_1201_1472",
+      "unit": "E1-mosk_fild01_aged_stranger_npc_branch_for_1201",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Aged Stranger#npc"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Sea_Otter_Leather,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_moscovia.txt",
+          "lines": [
+            1472
+          ],
+          "required_source_literals": [
+            "delitem Sea_Otter_Leather,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mosk_fild01_aged_stranger_npc_branch_for_1201_1519",
+      "unit": "E1-mosk_fild01_aged_stranger_npc_branch_for_1201",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Aged Stranger#npc"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem GUSLI,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_moscovia.txt",
+          "lines": [
+            1519
+          ],
+          "required_source_literals": [
+            "getitem GUSLI, 1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
