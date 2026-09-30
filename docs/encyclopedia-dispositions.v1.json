@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 596,
+    "E1_unknown": 601,
     "E1_verified": 1
   },
   "entries": [
@@ -6004,6 +6004,131 @@
           ],
           "required_source_literals": [
             "delitem Sparkling_Dust,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_kh_school_beautiful_lady_kh6_branch_for_3213_3289",
+      "unit": "E1-kh_school_beautiful_lady_kh6_branch_for_3213",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Beautiful Lady#kh6"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Red_Key_Card,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/kiel_hyre_quest.txt",
+          "lines": [
+            3289
+          ],
+          "required_source_literals": [
+            "getitem Red_Key_Card,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_kh_school_beautiful_lady_kh6_branch_for_3213_3333",
+      "unit": "E1-kh_school_beautiful_lady_kh6_branch_for_3213",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Beautiful Lady#kh6"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Steel_Piece,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/kiel_hyre_quest.txt",
+          "lines": [
+            3333
+          ],
+          "required_source_literals": [
+            "delitem Steel_Piece,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_kh_school_beautiful_lady_kh6_branch_for_3213_3354",
+      "unit": "E1-kh_school_beautiful_lady_kh6_branch_for_3213",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Beautiful Lady#kh6"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Yellow_Key_Card,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/kiel_hyre_quest.txt",
+          "lines": [
+            3354
+          ],
+          "required_source_literals": [
+            "delitem Yellow_Key_Card,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_kh_school_beautiful_lady_kh6_branch_for_3213_3355",
+      "unit": "E1-kh_school_beautiful_lady_kh6_branch_for_3213",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Beautiful Lady#kh6"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Blue_Key_Card,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/kiel_hyre_quest.txt",
+          "lines": [
+            3355
+          ],
+          "required_source_literals": [
+            "delitem Blue_Key_Card,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_kh_school_beautiful_lady_kh6_branch_for_3213_3356",
+      "unit": "E1-kh_school_beautiful_lady_kh6_branch_for_3213",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Beautiful Lady#kh6"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Red_Key_Card,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/kiel_hyre_quest.txt",
+          "lines": [
+            3356
+          ],
+          "required_source_literals": [
+            "delitem Red_Key_Card,1;"
           ]
         }
       ],
