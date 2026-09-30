@@ -84276,6 +84276,31 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ma_fild01_black_bamboo_malaya_branch_for_1505_1524",
+      "unit": "E1-ma_fild01_black_bamboo_malaya_branch_for_1505",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Black Bamboo#malaya"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Sharp_Bamboo,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malaya.txt",
+          "lines": [
+            1524
+          ],
+          "required_source_literals": [
+            "getitem Sharp_Bamboo, 1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
