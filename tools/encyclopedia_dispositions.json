@@ -17351,6 +17351,506 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_niflheim_hein_lv4_branch_for_2634_2697",
+      "unit": "E1-niflheim_hein_lv4_branch_for_2634",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Hein#lv4"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Edge,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/lvl4_weapon_quest.txt",
+          "lines": [
+            2697
+          ],
+          "required_source_literals": [
+            "getitem Edge,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_niflheim_hein_lv4_branch_for_2634_2701",
+      "unit": "E1-niflheim_hein_lv4_branch_for_2634",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Hein#lv4"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Dragon_Slayer,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/lvl4_weapon_quest.txt",
+          "lines": [
+            2701
+          ],
+          "required_source_literals": [
+            "getitem Dragon_Slayer,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_niflheim_hein_lv4_branch_for_2634_2715",
+      "unit": "E1-niflheim_hein_lv4_branch_for_2634",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Hein#lv4"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Excalibur,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/lvl4_weapon_quest.txt",
+          "lines": [
+            2715
+          ],
+          "required_source_literals": [
+            "getitem Excalibur,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_niflheim_hein_lv4_branch_for_2634_2719",
+      "unit": "E1-niflheim_hein_lv4_branch_for_2634",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Hein#lv4"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Schweizersabel,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/lvl4_weapon_quest.txt",
+          "lines": [
+            2719
+          ],
+          "required_source_literals": [
+            "getitem Schweizersabel,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_niflheim_hein_lv4_branch_for_2634_2784",
+      "unit": "E1-niflheim_hein_lv4_branch_for_2634",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Hein#lv4"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Turquoise,30; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/lvl4_weapon_quest.txt",
+          "lines": [
+            2784
+          ],
+          "required_source_literals": [
+            "delitem Turquoise,30;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_niflheim_hein_lv4_branch_for_2634_2785",
+      "unit": "E1-niflheim_hein_lv4_branch_for_2634",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Hein#lv4"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Biotite,30; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/lvl4_weapon_quest.txt",
+          "lines": [
+            2785
+          ],
+          "required_source_literals": [
+            "delitem Biotite,30;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_niflheim_hein_lv4_branch_for_2634_2786",
+      "unit": "E1-niflheim_hein_lv4_branch_for_2634",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Hein#lv4"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Rose_Quartz,30; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/lvl4_weapon_quest.txt",
+          "lines": [
+            2786
+          ],
+          "required_source_literals": [
+            "delitem Rose_Quartz,30;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_niflheim_hein_lv4_branch_for_2634_2789",
+      "unit": "E1-niflheim_hein_lv4_branch_for_2634",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Hein#lv4"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Citrine,30; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/lvl4_weapon_quest.txt",
+          "lines": [
+            2789
+          ],
+          "required_source_literals": [
+            "delitem Citrine,30;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_niflheim_hein_lv4_branch_for_2634_2790",
+      "unit": "E1-niflheim_hein_lv4_branch_for_2634",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Hein#lv4"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Pyroxene,30; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/lvl4_weapon_quest.txt",
+          "lines": [
+            2790
+          ],
+          "required_source_literals": [
+            "delitem Pyroxene,30;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_niflheim_hein_lv4_branch_for_2634_2791",
+      "unit": "E1-niflheim_hein_lv4_branch_for_2634",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Hein#lv4"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Phlogopite,30; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/lvl4_weapon_quest.txt",
+          "lines": [
+            2791
+          ],
+          "required_source_literals": [
+            "delitem Phlogopite,30;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_niflheim_hein_lv4_branch_for_2634_2798",
+      "unit": "E1-niflheim_hein_lv4_branch_for_2634",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Hein#lv4"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Turquoise,30; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/lvl4_weapon_quest.txt",
+          "lines": [
+            2798
+          ],
+          "required_source_literals": [
+            "delitem Turquoise,30;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_niflheim_hein_lv4_branch_for_2634_2801",
+      "unit": "E1-niflheim_hein_lv4_branch_for_2634",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Hein#lv4"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Citrine,30; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/lvl4_weapon_quest.txt",
+          "lines": [
+            2801
+          ],
+          "required_source_literals": [
+            "delitem Citrine,30;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_niflheim_hein_lv4_branch_for_2634_2806",
+      "unit": "E1-niflheim_hein_lv4_branch_for_2634",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Hein#lv4"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Biotite,30; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/lvl4_weapon_quest.txt",
+          "lines": [
+            2806
+          ],
+          "required_source_literals": [
+            "delitem Biotite,30;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_niflheim_hein_lv4_branch_for_2634_2809",
+      "unit": "E1-niflheim_hein_lv4_branch_for_2634",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Hein#lv4"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Pyroxene,30; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/lvl4_weapon_quest.txt",
+          "lines": [
+            2809
+          ],
+          "required_source_literals": [
+            "delitem Pyroxene,30;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_niflheim_hein_lv4_branch_for_2634_2814",
+      "unit": "E1-niflheim_hein_lv4_branch_for_2634",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Hein#lv4"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Rose_Quartz,30; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/lvl4_weapon_quest.txt",
+          "lines": [
+            2814
+          ],
+          "required_source_literals": [
+            "delitem Rose_Quartz,30;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_niflheim_hein_lv4_branch_for_2634_2817",
+      "unit": "E1-niflheim_hein_lv4_branch_for_2634",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Hein#lv4"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Phlogopite,30; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/lvl4_weapon_quest.txt",
+          "lines": [
+            2817
+          ],
+          "required_source_literals": [
+            "delitem Phlogopite,30;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_niflheim_hein_lv4_branch_for_2634_2928",
+      "unit": "E1-niflheim_hein_lv4_branch_for_2634",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Hein#lv4"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Hammer_Of_Blacksmith,2; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/lvl4_weapon_quest.txt",
+          "lines": [
+            2928
+          ],
+          "required_source_literals": [
+            "delitem Hammer_Of_Blacksmith,2;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_niflheim_hein_lv4_branch_for_2634_2929",
+      "unit": "E1-niflheim_hein_lv4_branch_for_2634",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Hein#lv4"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Emperium_Anvil,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/lvl4_weapon_quest.txt",
+          "lines": [
+            2929
+          ],
+          "required_source_literals": [
+            "delitem Emperium_Anvil,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_niflheim_hein_lv4_branch_for_2634_2930",
+      "unit": "E1-niflheim_hein_lv4_branch_for_2634",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Hein#lv4"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Illusion_Flower,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/lvl4_weapon_quest.txt",
+          "lines": [
+            2930
+          ],
+          "required_source_literals": [
+            "delitem Illusion_Flower,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_niflheim_hein_lv4_branch_for_2634_2931",
+      "unit": "E1-niflheim_hein_lv4_branch_for_2634",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Hein#lv4"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Gold,20; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/lvl4_weapon_quest.txt",
+          "lines": [
+            2931
+          ],
+          "required_source_literals": [
+            "delitem Gold,20;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
