@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 1700,
+    "E1_unknown": 1706,
     "E1_verified": 1
   },
   "entries": [
@@ -42479,6 +42479,156 @@
           ],
           "required_source_literals": [
             "delitem Rosimier_Key,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_yuno_pre_mr_president_branch_for_7712_7910",
+      "unit": "E1-yuno_pre_mr_president_branch_for_7712",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Mr. President"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem File01,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_lighthalzen.txt",
+          "lines": [
+            7910
+          ],
+          "required_source_literals": [
+            "getitem File01,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_yuno_pre_mr_president_branch_for_7712_7965",
+      "unit": "E1-yuno_pre_mr_president_branch_for_7712",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Mr. President"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem 7343,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_lighthalzen.txt",
+          "lines": [
+            7965
+          ],
+          "required_source_literals": [
+            "delitem 7343,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_yuno_pre_mr_president_branch_for_7712_8310",
+      "unit": "E1-yuno_pre_mr_president_branch_for_7712",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Mr. President"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem 7344,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_lighthalzen.txt",
+          "lines": [
+            8310
+          ],
+          "required_source_literals": [
+            "delitem 7344,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_yuno_pre_mr_president_branch_for_7712_8370",
+      "unit": "E1-yuno_pre_mr_president_branch_for_7712",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Mr. President"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem 7343,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_lighthalzen.txt",
+          "lines": [
+            8370
+          ],
+          "required_source_literals": [
+            "delitem 7343,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_yuno_pre_mr_president_branch_for_7712_8600",
+      "unit": "E1-yuno_pre_mr_president_branch_for_7712",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Mr. President"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem File01,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_lighthalzen.txt",
+          "lines": [
+            8600
+          ],
+          "required_source_literals": [
+            "delitem File01,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_yuno_pre_mr_president_branch_for_7712_8602",
+      "unit": "E1-yuno_pre_mr_president_branch_for_7712",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Mr. President"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem 617,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_lighthalzen.txt",
+          "lines": [
+            8602
+          ],
+          "required_source_literals": [
+            "getitem 617,1;"
           ]
         }
       ],
