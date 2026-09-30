@@ -380,7 +380,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Croix Vintenar#b01_b",
@@ -399,7 +399,25 @@
       ],
       "size_lines": 51,
       "reason": "refused by the braced one-item prover: multi-item",
-      "history": []
+      "history": [
+        "2026-09-30T13:59:19Z activated",
+        "2026-09-30T13:59:19Z validated",
+        "2026-09-30T13:59:19Z verified: 4 claims supported",
+        "2026-09-30T13:59:43Z accepted",
+        "2026-09-30T13:59:43Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "2fa3838234919248c75a7eefdc1e58660d805898789b6a2fd6d42406bb1e0ea2",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-bat_b01_vintenar_bat_b01_aover_branch_for_595",

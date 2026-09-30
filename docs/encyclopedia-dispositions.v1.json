@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 10,
+    "E1_unknown": 14,
     "E1_verified": 1
   },
   "entries": [
@@ -179,6 +179,106 @@
             "if (Zeny >= 1200) {",
             "Zeny -= 1200;",
             "warp \"airport\",148,51;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_bat_b01_croix_vintenar_b01_b_branch_for_463_474",
+      "unit": "E1-bat_b01_croix_vintenar_b01_b_branch_for_463",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Croix Vintenar#b01_b"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem BF_Badge2,9; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/battleground/flavius/flavius01.txt",
+          "lines": [
+            474
+          ],
+          "required_source_literals": [
+            "getitem BF_Badge2,9;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_bat_b01_croix_vintenar_b01_b_branch_for_463_482",
+      "unit": "E1-bat_b01_croix_vintenar_b01_b_branch_for_463",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Croix Vintenar#b01_b"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem BF_Badge2,.@medal_gap; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/battleground/flavius/flavius01.txt",
+          "lines": [
+            482
+          ],
+          "required_source_literals": [
+            "getitem BF_Badge2,.@medal_gap;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_bat_b01_croix_vintenar_b01_b_branch_for_463_494",
+      "unit": "E1-bat_b01_croix_vintenar_b01_b_branch_for_463",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Croix Vintenar#b01_b"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem BF_Badge2,3; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/battleground/flavius/flavius01.txt",
+          "lines": [
+            494
+          ],
+          "required_source_literals": [
+            "getitem BF_Badge2,3;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_bat_b01_croix_vintenar_b01_b_branch_for_463_502",
+      "unit": "E1-bat_b01_croix_vintenar_b01_b_branch_for_463",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Croix Vintenar#b01_b"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem BF_Badge2,.@medal_gap; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/battleground/flavius/flavius01.txt",
+          "lines": [
+            502
+          ],
+          "required_source_literals": [
+            "getitem BF_Badge2,.@medal_gap;"
           ]
         }
       ],
