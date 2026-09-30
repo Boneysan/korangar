@@ -60801,6 +60801,56 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_morocc_in_bartender_bard_qskill_branch_for_1174_1214",
+      "unit": "E1-morocc_in_bartender_bard_qskill_branch_for_1174",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Bartender#bard_qskill"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Tropical_Sograt,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/skills/bard_skills.txt",
+          "lines": [
+            1214
+          ],
+          "required_source_literals": [
+            "getitem Tropical_Sograt,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_morocc_in_bartender_bard_qskill_branch_for_1174_1244",
+      "unit": "E1-morocc_in_bartender_bard_qskill_branch_for_1174",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Bartender#bard_qskill"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Vermilion_The_Beach,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/skills/bard_skills.txt",
+          "lines": [
+            1244
+          ],
+          "required_source_literals": [
+            "getitem Vermilion_The_Beach,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }

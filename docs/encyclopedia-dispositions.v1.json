@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 2427,
+    "E1_unknown": 2429,
     "E1_verified": 1
   },
   "entries": [
@@ -27554,6 +27554,56 @@
           ],
           "required_source_literals": [
             "getitem Fish_On_Head,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_morocc_in_bartender_bard_qskill_branch_for_1174_1214",
+      "unit": "E1-morocc_in_bartender_bard_qskill_branch_for_1174",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Bartender#bard_qskill"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Tropical_Sograt,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/skills/bard_skills.txt",
+          "lines": [
+            1214
+          ],
+          "required_source_literals": [
+            "getitem Tropical_Sograt,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_morocc_in_bartender_bard_qskill_branch_for_1174_1244",
+      "unit": "E1-morocc_in_bartender_bard_qskill_branch_for_1174",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Bartender#bard_qskill"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Vermilion_The_Beach,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/skills/bard_skills.txt",
+          "lines": [
+            1244
+          ],
+          "required_source_literals": [
+            "getitem Vermilion_The_Beach,1;"
           ]
         }
       ],
