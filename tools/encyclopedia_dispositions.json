@@ -137136,6 +137136,33 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_8042_npc_quests_quests_airship_txt_3651",
+      "unit": "E5-chain-8042",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8042
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 8042; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_airship.txt",
+          "lines": [
+            3651
+          ],
+          "required_source_literals": [
+            "changequest(8042, 8043);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
