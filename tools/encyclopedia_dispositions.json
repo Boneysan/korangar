@@ -126980,6 +126980,33 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e4_cr_shieldboomerang_formula",
+      "unit": "E4-cr-shieldboomerang",
+      "package": "E4",
+      "subject": {
+        "kind": "skill",
+        "ids": [
+          251
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted case is the ratio site for these skills; this record does not reduce it to a worked example.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "src/map/battle.c",
+          "lines": [
+            2235
+          ],
+          "required_source_literals": [
+            "case CR_SHIELDBOOMERANG:"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
