@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 523,
+    "E1_unknown": 526,
     "E1_verified": 1
   },
   "entries": [
@@ -10829,6 +10829,81 @@
           ],
           "required_source_literals": [
             "delitem Diamond_Ring,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prt_in_aigie_branch_for_968_1001",
+      "unit": "E1-prt_in_aigie_branch_for_968",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Aigie"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Red_Potion,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/first_class/tu_merchant.txt",
+          "lines": [
+            1001
+          ],
+          "required_source_literals": [
+            "getitem Red_Potion,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prt_in_aigie_branch_for_968_1046",
+      "unit": "E1-prt_in_aigie_branch_for_968",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Aigie"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Red_Potion,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/first_class/tu_merchant.txt",
+          "lines": [
+            1046
+          ],
+          "required_source_literals": [
+            "getitem Red_Potion,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prt_in_aigie_branch_for_968_1091",
+      "unit": "E1-prt_in_aigie_branch_for_968",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Aigie"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Novice_Potion,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/first_class/tu_merchant.txt",
+          "lines": [
+            1091
+          ],
+          "required_source_literals": [
+            "getitem Novice_Potion,10;"
           ]
         }
       ],

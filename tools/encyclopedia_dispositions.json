@@ -13201,6 +13201,81 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prt_in_aigie_branch_for_968_1001",
+      "unit": "E1-prt_in_aigie_branch_for_968",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Aigie"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Red_Potion,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/first_class/tu_merchant.txt",
+          "lines": [
+            1001
+          ],
+          "required_source_literals": [
+            "getitem Red_Potion,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prt_in_aigie_branch_for_968_1046",
+      "unit": "E1-prt_in_aigie_branch_for_968",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Aigie"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Red_Potion,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/first_class/tu_merchant.txt",
+          "lines": [
+            1046
+          ],
+          "required_source_literals": [
+            "getitem Red_Potion,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prt_in_aigie_branch_for_968_1091",
+      "unit": "E1-prt_in_aigie_branch_for_968",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Aigie"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Novice_Potion,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/first_class/tu_merchant.txt",
+          "lines": [
+            1091
+          ],
+          "required_source_literals": [
+            "getitem Novice_Potion,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
