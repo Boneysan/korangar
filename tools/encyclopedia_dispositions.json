@@ -15651,6 +15651,31 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_yuno_fild09_wooden_board_kh_branch_for_5547_5575",
+      "unit": "E1-yuno_fild09_wooden_board_kh_branch_for_5547",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Wooden Board#kh"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Man_Portrait,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/kiel_hyre_quest.txt",
+          "lines": [
+            5575
+          ],
+          "required_source_literals": [
+            "getitem Man_Portrait,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
