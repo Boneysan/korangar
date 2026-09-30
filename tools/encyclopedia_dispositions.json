@@ -69376,6 +69376,31 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_yuno_mr_click_job_min_branch_for_852_951",
+      "unit": "E1-yuno_mr_click_job_min_branch_for_852",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Mr. Click#job_min"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Mins_Picture,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-2/minstrel.txt",
+          "lines": [
+            951
+          ],
+          "required_source_literals": [
+            "getitem Mins_Picture,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
