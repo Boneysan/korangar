@@ -2511,3 +2511,11 @@ Read the [loop plan](encyclopedia-local-model-plan.md) and [resume ledger](encyc
 - Checks: validate; verifier: all claims supported; export_supported_data.py: passed; export_supported_data.py --check: passed.
 - Files: docs/encyclopedia-coverage.v1.json, docs/encyclopedia-dispositions.v1.json, docs/plans/encyclopedia-qwen3-journal.md, docs/plans/encyclopedia-qwen3-progress.json, docs/plans/encyclopedia-unit-queue.json, tools/encyclopedia_dispositions.json.
 - Not verified: the Guide screen for these records (E7 live pass).
+
+## 2026-09-30 E1-tur_dun04_turtle_statue_tur_branch_for_1929 — accepted
+
+- Kind e1_exchange, package E1, model grok-4.7, attempts 0.
+- Reviews: none. Dispositions: 5 (e1_tur_dun04_turtle_statue_tur_branch_for_1929_1958, e1_tur_dun04_turtle_statue_tur_branch_for_1929_1964, e1_tur_dun04_turtle_statue_tur_branch_for_1929_1970, e1_tur_dun04_turtle_statue_tur_branch_for_1929_1976, e1_tur_dun04_turtle_statue_tur_branch_for_1929_1983).
+- Checks: validate; verifier: all claims supported; export_supported_data.py: passed; export_supported_data.py --check: passed; cargo test versioned_reference_data_loads_and_reconciles_all_links: passed.
+- Files: docs/encyclopedia-coverage.v1.json, docs/encyclopedia-dispositions.v1.json, docs/plans/encyclopedia-qwen3-journal.md, docs/plans/encyclopedia-qwen3-progress.json, docs/plans/encyclopedia-unit-queue.json, tools/encyclopedia_dispositions.json.
+- Not verified: the Guide screen for these records (E7 live pass).

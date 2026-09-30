@@ -34851,6 +34851,131 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_tur_dun04_turtle_statue_tur_branch_for_1929_1958",
+      "unit": "E1-tur_dun04_turtle_statue_tur_branch_for_1929",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Turtle Statue#tur"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Gift_Box,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_alberta.txt",
+          "lines": [
+            1958
+          ],
+          "required_source_literals": [
+            "getitem Gift_Box,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_tur_dun04_turtle_statue_tur_branch_for_1929_1964",
+      "unit": "E1-tur_dun04_turtle_statue_tur_branch_for_1929",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Turtle Statue#tur"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Old_Card_Album,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_alberta.txt",
+          "lines": [
+            1964
+          ],
+          "required_source_literals": [
+            "getitem Old_Card_Album,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_tur_dun04_turtle_statue_tur_branch_for_1929_1970",
+      "unit": "E1-tur_dun04_turtle_statue_tur_branch_for_1929",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Turtle Statue#tur"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Old_Violet_Box,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_alberta.txt",
+          "lines": [
+            1970
+          ],
+          "required_source_literals": [
+            "getitem Old_Violet_Box,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_tur_dun04_turtle_statue_tur_branch_for_1929_1976",
+      "unit": "E1-tur_dun04_turtle_statue_tur_branch_for_1929",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Turtle Statue#tur"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Old_Violet_Box,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_alberta.txt",
+          "lines": [
+            1976
+          ],
+          "required_source_literals": [
+            "getitem Old_Violet_Box,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_tur_dun04_turtle_statue_tur_branch_for_1929_1983",
+      "unit": "E1-tur_dun04_turtle_statue_tur_branch_for_1929",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Turtle Statue#tur"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Branch_Of_Dead_Tree,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_alberta.txt",
+          "lines": [
+            1983
+          ],
+          "required_source_literals": [
+            "getitem Branch_Of_Dead_Tree,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
