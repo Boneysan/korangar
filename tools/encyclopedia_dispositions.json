@@ -77926,6 +77926,31 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_dic_in01_minister_ahat_ep133_21_branch_for_1523_1794",
+      "unit": "E1-dic_in01_minister_ahat_ep133_21_branch_for_1523",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Minister Ahat#ep133_21"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Bradium_Brooch,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_dicastes.txt",
+          "lines": [
+            1794
+          ],
+          "required_source_literals": [
+            "getitem Bradium_Brooch,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
