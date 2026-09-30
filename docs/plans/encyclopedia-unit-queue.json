@@ -20189,7 +20189,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Louis",
@@ -20208,7 +20208,25 @@
       ],
       "size_lines": 119,
       "reason": "refused by the braced one-item prover: multi-item",
-      "history": []
+      "history": [
+        "2026-09-30T17:02:07Z activated",
+        "2026-09-30T17:02:08Z validated",
+        "2026-09-30T17:02:08Z verified: 1 claims supported",
+        "2026-09-30T17:02:31Z accepted",
+        "2026-09-30T17:02:31Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "88d488fefbdf0e1d887aaac1da02994c2ec4a030f8e87ded9e5ed42c3e586847",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-z_agit_martha_branch_for_9045",
