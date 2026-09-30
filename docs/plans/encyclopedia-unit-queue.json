@@ -71512,7 +71512,7 @@
       "package": "E4",
       "kind": "e4_formula",
       "tier": "strong",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "skill_names": [
@@ -71531,7 +71531,25 @@
       ],
       "size_lines": 10,
       "reason": "skillratio case with branches or preprocessor blocks",
-      "history": []
+      "history": [
+        "2026-09-30T22:21:32Z activated",
+        "2026-09-30T22:21:33Z validated",
+        "2026-09-30T22:21:33Z verified: 1 claims supported",
+        "2026-09-30T22:21:56Z accepted",
+        "2026-09-30T22:21:57Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "b725de63efa8b65f3c9ea7ba05eeb0565468903e8fc017be3c8ea920153e7cd9",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E4-rl-h-mine",
