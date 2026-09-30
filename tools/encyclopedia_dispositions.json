@@ -47851,6 +47851,31 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ra_in01_mealconversation_trigger_branch_for_289_439",
+      "unit": "E1-ra_in01_mealconversation_trigger_branch_for_289",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "MealConversation Trigger"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Vit_Dish02,4; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_nameless.txt",
+          "lines": [
+            439
+          ],
+          "required_source_literals": [
+            "getitem Vit_Dish02,4;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
