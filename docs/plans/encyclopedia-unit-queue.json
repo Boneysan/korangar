@@ -31589,7 +31589,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Master Craftsman Gyo#arm",
@@ -31608,7 +31608,22 @@
       ],
       "size_lines": 182,
       "reason": "refused by the braced one-item prover: braceless",
-      "history": []
+      "history": [
+        "2026-09-30T18:47:13Z activated",
+        "2026-09-30T18:47:13Z validated",
+        "2026-09-30T18:47:13Z verified: 0 claims supported",
+        "2026-09-30T18:47:36Z accepted",
+        "2026-09-30T18:47:36Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "9ca5ab03bc3883d3e08209395d661993183e0d0c5a9c8b2c5252b1a226ec4223",
+      "accepted_files": [
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-que_ng_master_craftsman_ki_weap_branch_for_218",
