@@ -8,7 +8,7 @@
     "E1_not_applicable": 1,
     "E1_unknown": 3464,
     "E1_verified": 1,
-    "E3_unknown": 914
+    "E3_unknown": 917
   },
   "entries": [
     {
@@ -92002,6 +92002,33 @@
       "reviewed_on": "2026-09-30"
     },
     {
+      "id": "item_1697_script_untranslated",
+      "unit": "E3-unknown-bonus-blongatkrate-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          1697
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 1697 is not summarized: the translator does not interpret the quoted statement (bonus bLongAtkRate (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            18835
+          ],
+          "required_source_literals": [
+            "bonus bLongAtkRate, getrefine() / 2;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
       "id": "item_1723_script_untranslated",
       "unit": "E3-unknown-bonus-bdef-expression",
       "package": "E3",
@@ -96261,6 +96288,33 @@
           ],
           "required_source_literals": [
             "Script: <\" if (getrefine()>=8) { bonus bVariableCastrate,-5-((getrefine()>=9)?getrefine():0); } \">"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_22036_script_untranslated",
+      "unit": "E3-unknown-bonus-blongatkrate-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          22036
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 22036 is not summarized: the translator does not interpret the quoted statement (bonus bLongAtkRate (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            148671
+          ],
+          "required_source_literals": [
+            "Script: <\" bonus bLongAtkRate,5+((getrefine()>=8)?getrefine():0); \">"
           ]
         }
       ],
@@ -107223,6 +107277,33 @@
           ],
           "required_source_literals": [
             "Script: <\" bonus bMaxHP,200*(readparam(bVit)/10); \">"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_4593_script_untranslated",
+      "unit": "E3-unknown-bonus-blongatkrate-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          4593
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 4593 is not summarized: the translator does not interpret the quoted statement (bonus bLongAtkRate (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            48800
+          ],
+          "required_source_literals": [
+            "Script: <\" bonus bLongAtkRate,1*(readparam(bDex)/10); \">"
           ]
         }
       ],
