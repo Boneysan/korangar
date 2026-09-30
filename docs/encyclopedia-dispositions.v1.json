@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 1289,
+    "E1_unknown": 1290,
     "E1_verified": 1
   },
   "entries": [
@@ -12579,6 +12579,31 @@
           ],
           "required_source_literals": [
             "getitem Strawberry_Cake,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mid_camp_schwartzvalt_mechanic_1_branch_for_3509_3700",
+      "unit": "E1-mid_camp_schwartzvalt_mechanic_1_branch_for_3509",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Schwartzvalt Mechanic#1"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Ring_Of_Wise_King,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_2.txt",
+          "lines": [
+            3700
+          ],
+          "required_source_literals": [
+            "getitem Ring_Of_Wise_King,1;"
           ]
         }
       ],
