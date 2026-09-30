@@ -51726,6 +51726,56 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ra_in01_upset_looking_bard_sch_branch_for_1197_1344",
+      "unit": "E1-ra_in01_upset_looking_bard_sch_branch_for_1197",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Upset Looking Bard#sch"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Violin,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_veins.txt",
+          "lines": [
+            1344
+          ],
+          "required_source_literals": [
+            "delitem Violin,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ra_in01_upset_looking_bard_sch_branch_for_1197_1345",
+      "unit": "E1-ra_in01_upset_looking_bard_sch_branch_for_1197",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Upset Looking Bard#sch"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Megaphone,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_veins.txt",
+          "lines": [
+            1345
+          ],
+          "required_source_literals": [
+            "delitem Megaphone,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
