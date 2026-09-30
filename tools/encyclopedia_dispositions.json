@@ -31801,6 +31801,31 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_spl_in02_arc_ep13md_l02_branch_for_2365_2459",
+      "unit": "E1-spl_in02_arc_ep13md_l02_branch_for_2365",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Arc#ep13md_l02"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Splendide_Coin,25; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_2.txt",
+          "lines": [
+            2459
+          ],
+          "required_source_literals": [
+            "getitem Splendide_Coin,25;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
