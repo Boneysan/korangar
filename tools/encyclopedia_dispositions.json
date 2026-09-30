@@ -49276,6 +49276,381 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_geffen_rogue_guild_agent_nd1_branch_for_12079_12160",
+      "unit": "E1-geffen_rogue_guild_agent_nd1_branch_for_12079",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Rogue Guild Agent#nd1"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Pumpkin_Head,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_nameless.txt",
+          "lines": [
+            12160
+          ],
+          "required_source_literals": [
+            "delitem Pumpkin_Head,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_geffen_rogue_guild_agent_nd1_branch_for_12079_12161",
+      "unit": "E1-geffen_rogue_guild_agent_nd1_branch_for_12079",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Rogue Guild Agent#nd1"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Horseshoe,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_nameless.txt",
+          "lines": [
+            12161
+          ],
+          "required_source_literals": [
+            "delitem Horseshoe,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_geffen_rogue_guild_agent_nd1_branch_for_12079_12162",
+      "unit": "E1-geffen_rogue_guild_agent_nd1_branch_for_12079",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Rogue Guild Agent#nd1"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Petite_DiablOfs_Horn,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_nameless.txt",
+          "lines": [
+            12162
+          ],
+          "required_source_literals": [
+            "delitem Petite_DiablOfs_Horn,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_geffen_rogue_guild_agent_nd1_branch_for_12079_12163",
+      "unit": "E1-geffen_rogue_guild_agent_nd1_branch_for_12079",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Rogue Guild Agent#nd1"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Golden_Hair,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_nameless.txt",
+          "lines": [
+            12163
+          ],
+          "required_source_literals": [
+            "delitem Golden_Hair,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_geffen_rogue_guild_agent_nd1_branch_for_12079_12164",
+      "unit": "E1-geffen_rogue_guild_agent_nd1_branch_for_12079",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Rogue Guild Agent#nd1"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Transparent_Cloth,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_nameless.txt",
+          "lines": [
+            12164
+          ],
+          "required_source_literals": [
+            "delitem Transparent_Cloth,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_geffen_rogue_guild_agent_nd1_branch_for_12079_12319",
+      "unit": "E1-geffen_rogue_guild_agent_nd1_branch_for_12079",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Rogue Guild Agent#nd1"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Pumpkin_Head,2; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_nameless.txt",
+          "lines": [
+            12319
+          ],
+          "required_source_literals": [
+            "delitem Pumpkin_Head,2;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_geffen_rogue_guild_agent_nd1_branch_for_12079_12320",
+      "unit": "E1-geffen_rogue_guild_agent_nd1_branch_for_12079",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Rogue Guild Agent#nd1"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Horseshoe,3; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_nameless.txt",
+          "lines": [
+            12320
+          ],
+          "required_source_literals": [
+            "delitem Horseshoe,3;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_geffen_rogue_guild_agent_nd1_branch_for_12079_12321",
+      "unit": "E1-geffen_rogue_guild_agent_nd1_branch_for_12079",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Rogue Guild Agent#nd1"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Petite_DiablOfs_Horn,2; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_nameless.txt",
+          "lines": [
+            12321
+          ],
+          "required_source_literals": [
+            "delitem Petite_DiablOfs_Horn,2;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_geffen_rogue_guild_agent_nd1_branch_for_12079_12322",
+      "unit": "E1-geffen_rogue_guild_agent_nd1_branch_for_12079",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Rogue Guild Agent#nd1"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Golden_Hair,3; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_nameless.txt",
+          "lines": [
+            12322
+          ],
+          "required_source_literals": [
+            "delitem Golden_Hair,3;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_geffen_rogue_guild_agent_nd1_branch_for_12079_12323",
+      "unit": "E1-geffen_rogue_guild_agent_nd1_branch_for_12079",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Rogue Guild Agent#nd1"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Transparent_Cloth,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_nameless.txt",
+          "lines": [
+            12323
+          ],
+          "required_source_literals": [
+            "delitem Transparent_Cloth,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_geffen_rogue_guild_agent_nd1_branch_for_12079_12380",
+      "unit": "E1-geffen_rogue_guild_agent_nd1_branch_for_12079",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Rogue Guild Agent#nd1"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Pumpkin_Head,2; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_nameless.txt",
+          "lines": [
+            12380
+          ],
+          "required_source_literals": [
+            "delitem Pumpkin_Head,2;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_geffen_rogue_guild_agent_nd1_branch_for_12079_12381",
+      "unit": "E1-geffen_rogue_guild_agent_nd1_branch_for_12079",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Rogue Guild Agent#nd1"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Horseshoe,3; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_nameless.txt",
+          "lines": [
+            12381
+          ],
+          "required_source_literals": [
+            "delitem Horseshoe,3;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_geffen_rogue_guild_agent_nd1_branch_for_12079_12382",
+      "unit": "E1-geffen_rogue_guild_agent_nd1_branch_for_12079",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Rogue Guild Agent#nd1"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Petite_DiablOfs_Horn,2; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_nameless.txt",
+          "lines": [
+            12382
+          ],
+          "required_source_literals": [
+            "delitem Petite_DiablOfs_Horn,2;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_geffen_rogue_guild_agent_nd1_branch_for_12079_12383",
+      "unit": "E1-geffen_rogue_guild_agent_nd1_branch_for_12079",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Rogue Guild Agent#nd1"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Golden_Hair,3; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_nameless.txt",
+          "lines": [
+            12383
+          ],
+          "required_source_literals": [
+            "delitem Golden_Hair,3;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_geffen_rogue_guild_agent_nd1_branch_for_12079_12384",
+      "unit": "E1-geffen_rogue_guild_agent_nd1_branch_for_12079",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Rogue Guild Agent#nd1"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Transparent_Cloth,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_nameless.txt",
+          "lines": [
+            12384
+          ],
+          "required_source_literals": [
+            "delitem Transparent_Cloth,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
