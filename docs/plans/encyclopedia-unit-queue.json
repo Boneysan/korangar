@@ -63776,7 +63776,7 @@
       "package": "E4",
       "kind": "e4_formula",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "skill_names": [
@@ -63810,7 +63810,25 @@
       ],
       "size_lines": 81,
       "reason": "single skillratio expression",
-      "history": []
+      "history": [
+        "2026-09-30T21:15:39Z activated",
+        "2026-09-30T21:15:39Z validated",
+        "2026-09-30T21:15:39Z verified: 1 claims supported",
+        "2026-09-30T21:16:03Z accepted",
+        "2026-09-30T21:16:04Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "a8ffbed176a78c57ccdb89a797de235aef87c2ba3e78f92f4a33a7f9458fa2a1",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E4-gn-crazyweed-atk",
