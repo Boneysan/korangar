@@ -27209,7 +27209,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Hugin's Butler",
@@ -27228,7 +27228,22 @@
       ],
       "size_lines": 82,
       "reason": "refused by the braced one-item prover: switch",
-      "history": []
+      "history": [
+        "2026-09-30T18:06:44Z activated",
+        "2026-09-30T18:06:44Z validated",
+        "2026-09-30T18:06:45Z verified: 0 claims supported",
+        "2026-09-30T18:07:08Z accepted",
+        "2026-09-30T18:07:08Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "c2cc937d7ae16ec06610725ff833a8bb09db5ecb4600a811349dfb84bbc58045",
+      "accepted_files": [
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-glast_01_white_knight_1a_branch_for_2741",
