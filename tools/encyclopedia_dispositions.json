@@ -8026,6 +8026,206 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prt_in_jovovich_branch_for_38_123",
+      "unit": "E1-prt_in_jovovich_branch_for_38",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Jovovich"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Lemon_Dyestuffs,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/merchants/hair_dyer.txt",
+          "lines": [
+            123
+          ],
+          "required_source_literals": [
+            "case 1: delitem Lemon_Dyestuffs,1; break;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prt_in_jovovich_branch_for_38_124",
+      "unit": "E1-prt_in_jovovich_branch_for_38",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Jovovich"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Cobaltblue_Dyestuffs,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/merchants/hair_dyer.txt",
+          "lines": [
+            124
+          ],
+          "required_source_literals": [
+            "case 2: delitem Cobaltblue_Dyestuffs,1; break; //Violet_Dyestuffs"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prt_in_jovovich_branch_for_38_125",
+      "unit": "E1-prt_in_jovovich_branch_for_38",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Jovovich"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Orange_Dyestuffs,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/merchants/hair_dyer.txt",
+          "lines": [
+            125
+          ],
+          "required_source_literals": [
+            "case 3: delitem Orange_Dyestuffs,1; break;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prt_in_jovovich_branch_for_38_126",
+      "unit": "E1-prt_in_jovovich_branch_for_38",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Jovovich"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Darkgreen_Dyestuffs,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/merchants/hair_dyer.txt",
+          "lines": [
+            126
+          ],
+          "required_source_literals": [
+            "case 4: delitem Darkgreen_Dyestuffs,1; break;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prt_in_jovovich_branch_for_38_127",
+      "unit": "E1-prt_in_jovovich_branch_for_38",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Jovovich"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Violet_Dyestuffs,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/merchants/hair_dyer.txt",
+          "lines": [
+            127
+          ],
+          "required_source_literals": [
+            "case 5: delitem Violet_Dyestuffs,1; break; //Cobaltblue_Dyestuffs"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prt_in_jovovich_branch_for_38_128",
+      "unit": "E1-prt_in_jovovich_branch_for_38",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Jovovich"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem White_Dyestuffs,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/merchants/hair_dyer.txt",
+          "lines": [
+            128
+          ],
+          "required_source_literals": [
+            "case 6: delitem White_Dyestuffs,1; break;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prt_in_jovovich_branch_for_38_129",
+      "unit": "E1-prt_in_jovovich_branch_for_38",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Jovovich"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Black_Dyestuffs,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/merchants/hair_dyer.txt",
+          "lines": [
+            129
+          ],
+          "required_source_literals": [
+            "case 7: delitem Black_Dyestuffs,1; break;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prt_in_jovovich_branch_for_38_130",
+      "unit": "E1-prt_in_jovovich_branch_for_38",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Jovovich"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Scarlet_Dyestuffs,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/merchants/hair_dyer.txt",
+          "lines": [
+            130
+          ],
+          "required_source_literals": [
+            "case 8: delitem Scarlet_Dyestuffs,1; break;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
