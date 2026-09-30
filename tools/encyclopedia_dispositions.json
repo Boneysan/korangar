@@ -84301,6 +84301,131 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_malaya_collection_dealer_woeon_branch_for_1544_1630",
+      "unit": "E1-malaya_collection_dealer_woeon_branch_for_1544",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Collection Dealer Woeon"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Blue_Gemstone,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malaya.txt",
+          "lines": [
+            1630
+          ],
+          "required_source_literals": [
+            "delitem Blue_Gemstone, 1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_malaya_collection_dealer_woeon_branch_for_1544_1631",
+      "unit": "E1-malaya_collection_dealer_woeon_branch_for_1544",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Collection Dealer Woeon"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Holy_Water,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malaya.txt",
+          "lines": [
+            1631
+          ],
+          "required_source_literals": [
+            "delitem Holy_Water, 1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_malaya_collection_dealer_woeon_branch_for_1544_1664",
+      "unit": "E1-malaya_collection_dealer_woeon_branch_for_1544",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Collection Dealer Woeon"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Soul_Protection,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malaya.txt",
+          "lines": [
+            1664
+          ],
+          "required_source_literals": [
+            "delitem Soul_Protection, 1; // Soul_Protection"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_malaya_collection_dealer_woeon_branch_for_1544_1740",
+      "unit": "E1-malaya_collection_dealer_woeon_branch_for_1544",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Collection Dealer Woeon"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Jejellopy,countitem(Jejellopy; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malaya.txt",
+          "lines": [
+            1740
+          ],
+          "required_source_literals": [
+            "delitem Jejellopy, countitem(Jejellopy);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_malaya_collection_dealer_woeon_branch_for_1544_1744",
+      "unit": "E1-malaya_collection_dealer_woeon_branch_for_1544",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Collection Dealer Woeon"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Lesser_Agimat,2; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malaya.txt",
+          "lines": [
+            1744
+          ],
+          "required_source_literals": [
+            "getitem Lesser_Agimat, 2; // Lesser_Agimat"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
