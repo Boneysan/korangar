@@ -8601,6 +8601,181 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_lhz_in02_hair_dresser_li_branch_for_747_1106",
+      "unit": "E1-lhz_in02_hair_dresser_li_branch_for_747",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Hair Dresser#li"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Counteragent,3; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/merchants/hair_style.txt",
+          "lines": [
+            1106
+          ],
+          "required_source_literals": [
+            "delitem Counteragent,3;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_lhz_in02_hair_dresser_li_branch_for_747_1107",
+      "unit": "E1-lhz_in02_hair_dresser_li_branch_for_747",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Hair Dresser#li"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Mixture,3; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/merchants/hair_style.txt",
+          "lines": [
+            1107
+          ],
+          "required_source_literals": [
+            "delitem Mixture,3;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_lhz_in02_hair_dresser_li_branch_for_747_1108",
+      "unit": "E1-lhz_in02_hair_dresser_li_branch_for_747",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Hair Dresser#li"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Danggie,100; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/merchants/hair_style.txt",
+          "lines": [
+            1108
+          ],
+          "required_source_literals": [
+            "delitem Danggie,100;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_lhz_in02_hair_dresser_li_branch_for_747_1109",
+      "unit": "E1-lhz_in02_hair_dresser_li_branch_for_747",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Hair Dresser#li"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Short_Daenggie,100; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/merchants/hair_style.txt",
+          "lines": [
+            1109
+          ],
+          "required_source_literals": [
+            "delitem Short_Daenggie,100;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_lhz_in02_hair_dresser_li_branch_for_747_1110",
+      "unit": "E1-lhz_in02_hair_dresser_li_branch_for_747",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Hair Dresser#li"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Long_Hair,100; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/merchants/hair_style.txt",
+          "lines": [
+            1110
+          ],
+          "required_source_literals": [
+            "delitem Long_Hair,100;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_lhz_in02_hair_dresser_li_branch_for_747_1111",
+      "unit": "E1-lhz_in02_hair_dresser_li_branch_for_747",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Hair Dresser#li"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Golden_Hair,100; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/merchants/hair_style.txt",
+          "lines": [
+            1111
+          ],
+          "required_source_literals": [
+            "delitem Golden_Hair,100;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_lhz_in02_hair_dresser_li_branch_for_747_1112",
+      "unit": "E1-lhz_in02_hair_dresser_li_branch_for_747",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Hair Dresser#li"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Glossy_Hair,100; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/merchants/hair_style.txt",
+          "lines": [
+            1112
+          ],
+          "required_source_literals": [
+            "delitem Glossy_Hair,100;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
