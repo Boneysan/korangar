@@ -33684,7 +33684,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "BK#ep133_18",
@@ -33703,7 +33703,25 @@
       ],
       "size_lines": 251,
       "reason": "refused by the braced one-item prover: braceless",
-      "history": []
+      "history": [
+        "2026-09-30T19:06:36Z activated",
+        "2026-09-30T19:06:36Z validated",
+        "2026-09-30T19:06:36Z verified: 3 claims supported",
+        "2026-09-30T19:06:59Z accepted",
+        "2026-09-30T19:06:59Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "674a6e87dd9f31c43003817106d4b7222bf851d9ac41e1734178e0375440e72e",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-dic_in01_frede_13_3_in_branch_for_5068",
