@@ -29402,7 +29402,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "????#keybox04",
@@ -29421,7 +29421,25 @@
       ],
       "size_lines": 58,
       "reason": "refused by the braced one-item prover: menu",
-      "history": []
+      "history": [
+        "2026-09-30T18:26:53Z activated",
+        "2026-09-30T18:26:53Z validated",
+        "2026-09-30T18:26:53Z verified: 4 claims supported",
+        "2026-09-30T18:27:17Z accepted",
+        "2026-09-30T18:27:17Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "e2ba19a28568d64de47a63cbf74f61be594b11915dcd18bb6e07bdb7d23b71c4",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-gef_tower_karacas_branch_for_149",

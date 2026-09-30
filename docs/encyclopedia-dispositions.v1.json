@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 2790,
+    "E1_unknown": 2794,
     "E1_verified": 1
   },
   "entries": [
@@ -20654,6 +20654,106 @@
           ],
           "required_source_literals": [
             "getitem Mirth_Key,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_job3_sha01_keybox04_branch_for_2229_2256",
+      "unit": "E1-job3_sha01_keybox04_branch_for_2229",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "????#keybox04"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Cheat_Key,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-2/shadow_chaser.txt",
+          "lines": [
+            2256
+          ],
+          "required_source_literals": [
+            "delitem Cheat_Key,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_job3_sha01_keybox04_branch_for_2229_2257",
+      "unit": "E1-job3_sha01_keybox04_branch_for_2229",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "????#keybox04"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Virtual_Key,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-2/shadow_chaser.txt",
+          "lines": [
+            2257
+          ],
+          "required_source_literals": [
+            "delitem Virtual_Key,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_job3_sha01_keybox04_branch_for_2229_2258",
+      "unit": "E1-job3_sha01_keybox04_branch_for_2229",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "????#keybox04"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Mirth_Key,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-2/shadow_chaser.txt",
+          "lines": [
+            2258
+          ],
+          "required_source_literals": [
+            "delitem Mirth_Key,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_job3_sha01_keybox04_branch_for_2229_2260",
+      "unit": "E1-job3_sha01_keybox04_branch_for_2229",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "????#keybox04"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Master_Brush,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-2/shadow_chaser.txt",
+          "lines": [
+            2260
+          ],
+          "required_source_literals": [
+            "getitem Master_Brush,1;"
           ]
         }
       ],
