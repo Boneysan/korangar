@@ -12,7 +12,7 @@
     "E2_verified": 236,
     "E3_unknown": 973,
     "E4_unknown": 213,
-    "E5_unknown": 435
+    "E5_unknown": 438
   },
   "entries": [
     {
@@ -106418,6 +106418,87 @@
           ],
           "required_source_literals": [
             "changequest 17003,17004;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_17004_npc_quests_quests_nameless_txt_473",
+      "unit": "E5-chain-17004",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          17004
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 17004; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_nameless.txt",
+          "lines": [
+            473
+          ],
+          "required_source_literals": [
+            "changequest 17004,17005;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_17004_npc_quests_quests_nameless_txt_517",
+      "unit": "E5-chain-17004",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          17006
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 17006; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_nameless.txt",
+          "lines": [
+            517
+          ],
+          "required_source_literals": [
+            "changequest 17006,17007;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_17004_npc_quests_quests_nameless_txt_613",
+      "unit": "E5-chain-17004",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          17009
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 17009; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_nameless.txt",
+          "lines": [
+            613
+          ],
+          "required_source_literals": [
+            "changequest 17009,17010;"
           ]
         }
       ],
