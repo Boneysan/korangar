@@ -10476,6 +10476,431 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_pay_fild08_mysterious_man_magum_branch_for_275_775",
+      "unit": "E1-pay_fild08_mysterious_man_magum_branch_for_275",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Mysterious Man#magum"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Young_Twig,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/doomed_swords.txt",
+          "lines": [
+            775
+          ],
+          "required_source_literals": [
+            "delitem Young_Twig,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_pay_fild08_mysterious_man_magum_branch_for_275_776",
+      "unit": "E1-pay_fild08_mysterious_man_magum_branch_for_275",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Mysterious Man#magum"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Lokis_Whispers,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/doomed_swords.txt",
+          "lines": [
+            776
+          ],
+          "required_source_literals": [
+            "delitem Lokis_Whispers,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_pay_fild08_mysterious_man_magum_branch_for_275_777",
+      "unit": "E1-pay_fild08_mysterious_man_magum_branch_for_275",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Mysterious Man#magum"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Mothers_Nightmare,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/doomed_swords.txt",
+          "lines": [
+            777
+          ],
+          "required_source_literals": [
+            "delitem Mothers_Nightmare,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_pay_fild08_mysterious_man_magum_branch_for_275_778",
+      "unit": "E1-pay_fild08_mysterious_man_magum_branch_for_275",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Mysterious Man#magum"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Foolishness_Of_Blind,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/doomed_swords.txt",
+          "lines": [
+            778
+          ],
+          "required_source_literals": [
+            "delitem Foolishness_Of_Blind,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_pay_fild08_mysterious_man_magum_branch_for_275_779",
+      "unit": "E1-pay_fild08_mysterious_man_magum_branch_for_275",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Mysterious Man#magum"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Emperium,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/doomed_swords.txt",
+          "lines": [
+            779
+          ],
+          "required_source_literals": [
+            "delitem Emperium,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_pay_fild08_mysterious_man_magum_branch_for_275_780",
+      "unit": "E1-pay_fild08_mysterious_man_magum_branch_for_275",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Mysterious Man#magum"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Mysteltainn_,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/doomed_swords.txt",
+          "lines": [
+            780
+          ],
+          "required_source_literals": [
+            "getitem Mysteltainn_,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_pay_fild08_mysterious_man_magum_branch_for_275_980",
+      "unit": "E1-pay_fild08_mysterious_man_magum_branch_for_275",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Mysterious Man#magum"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Ogre_Tooth,100; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/doomed_swords.txt",
+          "lines": [
+            980
+          ],
+          "required_source_literals": [
+            "delitem Ogre_Tooth,100;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_pay_fild08_mysterious_man_magum_branch_for_275_981",
+      "unit": "E1-pay_fild08_mysterious_man_magum_branch_for_275",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Mysterious Man#magum"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Cardinal_Jewel_,5; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/doomed_swords.txt",
+          "lines": [
+            981
+          ],
+          "required_source_literals": [
+            "delitem Cardinal_Jewel_,5;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_pay_fild08_mysterious_man_magum_branch_for_275_982",
+      "unit": "E1-pay_fild08_mysterious_man_magum_branch_for_275",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Mysterious Man#magum"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Blade_Lost_In_Darkness,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/doomed_swords.txt",
+          "lines": [
+            982
+          ],
+          "required_source_literals": [
+            "delitem Blade_Lost_In_Darkness,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_pay_fild08_mysterious_man_magum_branch_for_275_983",
+      "unit": "E1-pay_fild08_mysterious_man_magum_branch_for_275",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Mysterious Man#magum"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Old_Hilt,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/doomed_swords.txt",
+          "lines": [
+            983
+          ],
+          "required_source_literals": [
+            "delitem Old_Hilt,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_pay_fild08_mysterious_man_magum_branch_for_275_984",
+      "unit": "E1-pay_fild08_mysterious_man_magum_branch_for_275",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Mysterious Man#magum"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Emperium,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/doomed_swords.txt",
+          "lines": [
+            984
+          ],
+          "required_source_literals": [
+            "delitem Emperium,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_pay_fild08_mysterious_man_magum_branch_for_275_985",
+      "unit": "E1-pay_fild08_mysterious_man_magum_branch_for_275",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Mysterious Man#magum"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Grimtooth_,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/doomed_swords.txt",
+          "lines": [
+            985
+          ],
+          "required_source_literals": [
+            "getitem Grimtooth_,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_pay_fild08_mysterious_man_magum_branch_for_275_1123",
+      "unit": "E1-pay_fild08_mysterious_man_magum_branch_for_275",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Mysterious Man#magum"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Executioners_Mitten,2; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/doomed_swords.txt",
+          "lines": [
+            1123
+          ],
+          "required_source_literals": [
+            "delitem Executioners_Mitten,2;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_pay_fild08_mysterious_man_magum_branch_for_275_1124",
+      "unit": "E1-pay_fild08_mysterious_man_magum_branch_for_275",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Mysterious Man#magum"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Bloody_Edge,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/doomed_swords.txt",
+          "lines": [
+            1124
+          ],
+          "required_source_literals": [
+            "delitem Bloody_Edge,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_pay_fild08_mysterious_man_magum_branch_for_275_1125",
+      "unit": "E1-pay_fild08_mysterious_man_magum_branch_for_275",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Mysterious Man#magum"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Frozen_Heart,3; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/doomed_swords.txt",
+          "lines": [
+            1125
+          ],
+          "required_source_literals": [
+            "delitem Frozen_Heart,3;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_pay_fild08_mysterious_man_magum_branch_for_275_1126",
+      "unit": "E1-pay_fild08_mysterious_man_magum_branch_for_275",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Mysterious Man#magum"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Amulet,50; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/doomed_swords.txt",
+          "lines": [
+            1126
+          ],
+          "required_source_literals": [
+            "delitem Amulet,50;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_pay_fild08_mysterious_man_magum_branch_for_275_1127",
+      "unit": "E1-pay_fild08_mysterious_man_magum_branch_for_275",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Mysterious Man#magum"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Executioner_,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/doomed_swords.txt",
+          "lines": [
+            1127
+          ],
+          "required_source_literals": [
+            "getitem Executioner_,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }

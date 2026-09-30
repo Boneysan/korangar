@@ -5402,7 +5402,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "strong",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Mysterious Man#magum",
@@ -5421,7 +5421,25 @@
       ],
       "size_lines": 927,
       "reason": "refused by the braced one-item prover: switch",
-      "history": []
+      "history": [
+        "2026-09-30T14:46:14Z activated",
+        "2026-09-30T14:46:15Z validated",
+        "2026-09-30T14:46:15Z verified: 17 claims supported",
+        "2026-09-30T14:46:38Z accepted",
+        "2026-09-30T14:46:38Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "62619c0c5f838c145908f9c53c1a5fd5da12ff544809d38c2d01f479b4edd6f2",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-mjolnir_02_middle_aged_man_magum1_branch_for_41",
