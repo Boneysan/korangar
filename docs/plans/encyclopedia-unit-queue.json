@@ -1477,7 +1477,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Utan Kid#1",
@@ -1496,7 +1496,22 @@
       ],
       "size_lines": 75,
       "reason": "refused by the braced one-item prover: menu",
-      "history": []
+      "history": [
+        "2026-09-30T14:09:11Z activated",
+        "2026-09-30T14:09:12Z validated",
+        "2026-09-30T14:09:12Z verified: 0 claims supported",
+        "2026-09-30T14:09:35Z accepted",
+        "2026-09-30T14:09:35Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "b5e21fcb636d0fb8b148641076897634ec7ada4554808ea2bc214c6d08f9c25e",
+      "accepted_files": [
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-yuno_juno_granny_juno_branch_for_74",
