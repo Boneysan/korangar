@@ -74001,6 +74001,506 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_moc_para01_administrator_michael_branch_for_1790_1823",
+      "unit": "E1-moc_para01_administrator_michael_branch_for_1790",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Administrator Michael"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Para_Team_Hat,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/eden_quests.txt",
+          "lines": [
+            1823
+          ],
+          "required_source_literals": [
+            "getitem Para_Team_Hat,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_moc_para01_administrator_michael_branch_for_1790_1824",
+      "unit": "E1-moc_para01_administrator_michael_branch_for_1790",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Administrator Michael"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Para_Team_Manteau,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/eden_quests.txt",
+          "lines": [
+            1824
+          ],
+          "required_source_literals": [
+            "getitem Para_Team_Manteau,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_moc_para01_administrator_michael_branch_for_1790_1825",
+      "unit": "E1-moc_para01_administrator_michael_branch_for_1790",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Administrator Michael"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Para_Team_Boots1,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/eden_quests.txt",
+          "lines": [
+            1825
+          ],
+          "required_source_literals": [
+            "getitem Para_Team_Boots1,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_moc_para01_administrator_michael_branch_for_1790_1826",
+      "unit": "E1-moc_para01_administrator_michael_branch_for_1790",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Administrator Michael"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Para_Team_Uniform1,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/eden_quests.txt",
+          "lines": [
+            1826
+          ],
+          "required_source_literals": [
+            "getitem Para_Team_Uniform1,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_moc_para01_administrator_michael_branch_for_1790_1888",
+      "unit": "E1-moc_para01_administrator_michael_branch_for_1790",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Administrator Michael"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem P_Dagger1,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/eden_quests.txt",
+          "lines": [
+            1888
+          ],
+          "required_source_literals": [
+            "getitem P_Dagger1,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_moc_para01_administrator_michael_branch_for_1790_1889",
+      "unit": "E1-moc_para01_administrator_michael_branch_for_1790",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Administrator Michael"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Para_Team_Boots2,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/eden_quests.txt",
+          "lines": [
+            1889
+          ],
+          "required_source_literals": [
+            "getitem Para_Team_Boots2,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_moc_para01_administrator_michael_branch_for_1790_1890",
+      "unit": "E1-moc_para01_administrator_michael_branch_for_1790",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Administrator Michael"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Para_Team_Uniform2,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/eden_quests.txt",
+          "lines": [
+            1890
+          ],
+          "required_source_literals": [
+            "getitem Para_Team_Uniform2,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_moc_para01_administrator_michael_branch_for_1790_1895",
+      "unit": "E1-moc_para01_administrator_michael_branch_for_1790",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Administrator Michael"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Para_Team_Hat,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/eden_quests.txt",
+          "lines": [
+            1895
+          ],
+          "required_source_literals": [
+            "getitem Para_Team_Hat,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_moc_para01_administrator_michael_branch_for_1790_1896",
+      "unit": "E1-moc_para01_administrator_michael_branch_for_1790",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Administrator Michael"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Para_Team_Manteau,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/eden_quests.txt",
+          "lines": [
+            1896
+          ],
+          "required_source_literals": [
+            "getitem Para_Team_Manteau,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_moc_para01_administrator_michael_branch_for_1790_1958",
+      "unit": "E1-moc_para01_administrator_michael_branch_for_1790",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Administrator Michael"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Para_Team_Boots3,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/eden_quests.txt",
+          "lines": [
+            1958
+          ],
+          "required_source_literals": [
+            "getitem Para_Team_Boots3,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_moc_para01_administrator_michael_branch_for_1790_1959",
+      "unit": "E1-moc_para01_administrator_michael_branch_for_1790",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Administrator Michael"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Para_Team_Uniform3,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/eden_quests.txt",
+          "lines": [
+            1959
+          ],
+          "required_source_literals": [
+            "getitem Para_Team_Uniform3,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_moc_para01_administrator_michael_branch_for_1790_1965",
+      "unit": "E1-moc_para01_administrator_michael_branch_for_1790",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Administrator Michael"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Para_Team_Hat,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/eden_quests.txt",
+          "lines": [
+            1965
+          ],
+          "required_source_literals": [
+            "getitem Para_Team_Hat,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_moc_para01_administrator_michael_branch_for_1790_1966",
+      "unit": "E1-moc_para01_administrator_michael_branch_for_1790",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Administrator Michael"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Para_Team_Manteau,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/eden_quests.txt",
+          "lines": [
+            1966
+          ],
+          "required_source_literals": [
+            "getitem Para_Team_Manteau,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_moc_para01_administrator_michael_branch_for_1790_2065",
+      "unit": "E1-moc_para01_administrator_michael_branch_for_1790",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Administrator Michael"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Para_Team_Hat,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/eden_quests.txt",
+          "lines": [
+            2065
+          ],
+          "required_source_literals": [
+            "delitem Para_Team_Hat,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_moc_para01_administrator_michael_branch_for_1790_2112",
+      "unit": "E1-moc_para01_administrator_michael_branch_for_1790",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Administrator Michael"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Para_Team_Boots2,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/eden_quests.txt",
+          "lines": [
+            2112
+          ],
+          "required_source_literals": [
+            "getitem Para_Team_Boots2,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_moc_para01_administrator_michael_branch_for_1790_2113",
+      "unit": "E1-moc_para01_administrator_michael_branch_for_1790",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Administrator Michael"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Para_Team_Uniform2,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/eden_quests.txt",
+          "lines": [
+            2113
+          ],
+          "required_source_literals": [
+            "getitem Para_Team_Uniform2,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_moc_para01_administrator_michael_branch_for_1790_2119",
+      "unit": "E1-moc_para01_administrator_michael_branch_for_1790",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Administrator Michael"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Para_Team_Boots3,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/eden_quests.txt",
+          "lines": [
+            2119
+          ],
+          "required_source_literals": [
+            "getitem Para_Team_Boots3,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_moc_para01_administrator_michael_branch_for_1790_2120",
+      "unit": "E1-moc_para01_administrator_michael_branch_for_1790",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Administrator Michael"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Para_Team_Uniform3,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/eden_quests.txt",
+          "lines": [
+            2120
+          ],
+          "required_source_literals": [
+            "getitem Para_Team_Uniform3,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_moc_para01_administrator_michael_branch_for_1790_2128",
+      "unit": "E1-moc_para01_administrator_michael_branch_for_1790",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Administrator Michael"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Para_Team_Hat,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/eden_quests.txt",
+          "lines": [
+            2128
+          ],
+          "required_source_literals": [
+            "getitem Para_Team_Hat,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_moc_para01_administrator_michael_branch_for_1790_2129",
+      "unit": "E1-moc_para01_administrator_michael_branch_for_1790",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Administrator Michael"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Para_Team_Manteau,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/eden_quests.txt",
+          "lines": [
+            2129
+          ],
+          "required_source_literals": [
+            "getitem Para_Team_Manteau,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }

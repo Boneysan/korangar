@@ -32100,7 +32100,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Administrator Michael",
@@ -32119,7 +32119,25 @@
       ],
       "size_lines": 362,
       "reason": "refused by the braced one-item prover: braceless",
-      "history": []
+      "history": [
+        "2026-09-30T18:52:01Z activated",
+        "2026-09-30T18:52:01Z validated",
+        "2026-09-30T18:52:01Z verified: 20 claims supported",
+        "2026-09-30T18:52:24Z accepted",
+        "2026-09-30T18:52:24Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "ad06b7b63f96702ad2a2cca75b2ce99d290c6b0d2a039bf270f3e31be3b5a75e",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-um_fild01_instructor_romeo_2nd02_branch_for_2965",
