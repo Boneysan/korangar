@@ -66126,6 +66126,56 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_niflheim_cursed_soul_branch_for_11666_11741",
+      "unit": "E1-niflheim_cursed_soul_branch_for_11666",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "#Cursed Soul"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Witchs_Spell_Book,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/the_sign_quest.txt",
+          "lines": [
+            11741
+          ],
+          "required_source_literals": [
+            "getitem Witchs_Spell_Book,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_niflheim_cursed_soul_branch_for_11666_11746",
+      "unit": "E1-niflheim_cursed_soul_branch_for_11666",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "#Cursed Soul"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Witchs_Spell_Book,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/the_sign_quest.txt",
+          "lines": [
+            11746
+          ],
+          "required_source_literals": [
+            "getitem Witchs_Spell_Book,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
