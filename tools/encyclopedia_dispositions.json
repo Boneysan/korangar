@@ -5801,6 +5801,31 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prt_castle_patron_knight_branch_for_820_929",
+      "unit": "E1-prt_castle_patron_knight_branch_for_820",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Patron Knight"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Holy_Water,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/crusader.txt",
+          "lines": [
+            929
+          ],
+          "required_source_literals": [
+            "delitem Holy_Water, 1; //Holy Water"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
