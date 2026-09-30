@@ -52753,7 +52753,7 @@
       "package": "E3",
       "kind": "e3_dispose",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "key": "bonus2 bMagicAtkEle (expression)",
@@ -52857,7 +52857,25 @@
       ],
       "size_lines": 7,
       "reason": "7 item script(s) first stop at `bonus2 bMagicAtkEle (expression)`, which is control flow or undocumented",
-      "history": []
+      "history": [
+        "2026-09-30T20:18:21Z activated",
+        "2026-09-30T20:18:21Z validated",
+        "2026-09-30T20:18:21Z verification not required: tool-drafted, no behavior claim",
+        "2026-09-30T20:18:45Z accepted",
+        "2026-09-30T20:18:45Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "be66ed98b1222b7d75f88cbe90f0be5fa749885a419fdb2b55d56fc9c33d02ba",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E3-unknown-bonus2-bskillatk-expression",

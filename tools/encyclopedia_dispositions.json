@@ -108785,6 +108785,195 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_4597_script_untranslated",
+      "unit": "E3-unknown-bonus2-bmagicatkele-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          4597
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 4597 is not summarized: the translator does not interpret the quoted statement (bonus2 bMagicAtkEle (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            48845
+          ],
+          "required_source_literals": [
+            "bonus2 bMagicAtkEle,Ele_Water,(getrefine()>=9)?10:5;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_4598_script_untranslated",
+      "unit": "E3-unknown-bonus2-bmagicatkele-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          4598
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 4598 is not summarized: the translator does not interpret the quoted statement (bonus2 bMagicAtkEle (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            48858
+          ],
+          "required_source_literals": [
+            "bonus2 bMagicAtkEle,Ele_Ghost,(getrefine()>=9)?10:5;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_4599_script_untranslated",
+      "unit": "E3-unknown-bonus2-bmagicatkele-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          4599
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 4599 is not summarized: the translator does not interpret the quoted statement (bonus2 bMagicAtkEle (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            48871
+          ],
+          "required_source_literals": [
+            "bonus2 bMagicAtkEle,Ele_Fire,(getrefine()>=9)?10:5;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_4600_script_untranslated",
+      "unit": "E3-unknown-bonus2-bmagicatkele-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          4600
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 4600 is not summarized: the translator does not interpret the quoted statement (bonus2 bMagicAtkEle (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            48884
+          ],
+          "required_source_literals": [
+            "bonus2 bMagicAtkEle,Ele_Earth,(getrefine()>=9)?10:5;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_4629_script_untranslated",
+      "unit": "E3-unknown-bonus2-bmagicatkele-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          4629
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 4629 is not summarized: the translator does not interpret the quoted statement (bonus2 bMagicAtkEle (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            49098
+          ],
+          "required_source_literals": [
+            "bonus2 bMagicAtkEle,Ele_Earth,(getrefine()*3);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_4657_script_untranslated",
+      "unit": "E3-unknown-bonus2-bmagicatkele-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          4657
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 4657 is not summarized: the translator does not interpret the quoted statement (bonus2 bMagicAtkEle (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            49463
+          ],
+          "required_source_literals": [
+            "bonus2 bMagicAtkEle,Ele_Fire,3+(getrefine()*3);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_420066_script_untranslated",
+      "unit": "E3-unknown-bonus2-bmagicatkele-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          420066
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 420066 is not summarized: the translator does not interpret the quoted statement (bonus2 bMagicAtkEle (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            164138
+          ],
+          "required_source_literals": [
+            "bonus2(bMagicAtkEle, Ele_All, 7);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
