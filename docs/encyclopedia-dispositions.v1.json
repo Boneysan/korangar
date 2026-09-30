@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 2952,
+    "E1_unknown": 2954,
     "E1_verified": 1
   },
   "entries": [
@@ -33404,6 +33404,56 @@
           ],
           "required_source_literals": [
             "delitem Screw,20;// Screw"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_moc_para01_mission_71_85_branch_for_37_197",
+      "unit": "E1-moc_para01_mission_71_85_branch_for_37",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Mission [71 - 85]"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Festival_Mask,30; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/71-85.txt",
+          "lines": [
+            197
+          ],
+          "required_source_literals": [
+            "if (.@quest == 5057) delitem Festival_Mask,30;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_moc_para01_mission_71_85_branch_for_37_224",
+      "unit": "E1-moc_para01_mission_71_85_branch_for_37",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Mission [71 - 85]"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Festival_Mask,30; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/71-85.txt",
+          "lines": [
+            224
+          ],
+          "required_source_literals": [
+            "if (.@quest == 5057) delitem Festival_Mask,30;"
           ]
         }
       ],
