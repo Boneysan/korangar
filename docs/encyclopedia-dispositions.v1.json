@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 2893,
+    "E1_unknown": 2901,
     "E1_verified": 1
   },
   "entries": [
@@ -8929,6 +8929,206 @@
           ],
           "required_source_literals": [
             "getitem BF_Badge2,.@medal_gap;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_beach_dun2_fishing_novice_sp2_branch_for_79_566",
+      "unit": "E1-beach_dun2_fishing_novice_sp2_branch_for_79",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Fishing Novice#sp2"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Undershirt,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/supernovice_ex.txt",
+          "lines": [
+            566
+          ],
+          "required_source_literals": [
+            "if (EXSUPNOV_Q_ == 3) getitem Undershirt,1; // Undershirt"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_beach_dun2_fishing_novice_sp2_branch_for_79_568",
+      "unit": "E1-beach_dun2_fishing_novice_sp2_branch_for_79",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Fishing Novice#sp2"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Novice_Armlet,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/supernovice_ex.txt",
+          "lines": [
+            568
+          ],
+          "required_source_literals": [
+            "getitem Novice_Armlet,1; // Novice Armlet [1]"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_beach_dun2_fishing_novice_sp2_branch_for_79_569",
+      "unit": "E1-beach_dun2_fishing_novice_sp2_branch_for_79",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Fishing Novice#sp2"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Novice_Shield,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/supernovice_ex.txt",
+          "lines": [
+            569
+          ],
+          "required_source_literals": [
+            "getitem Novice_Shield,1; // Novice Shield [1]"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_beach_dun2_fishing_novice_sp2_branch_for_79_570",
+      "unit": "E1-beach_dun2_fishing_novice_sp2_branch_for_79",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Fishing Novice#sp2"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Novice_Shoes,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/supernovice_ex.txt",
+          "lines": [
+            570
+          ],
+          "required_source_literals": [
+            "getitem Novice_Shoes,1; // Novice Shoes [1]"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_beach_dun2_fishing_novice_sp2_branch_for_79_571",
+      "unit": "E1-beach_dun2_fishing_novice_sp2_branch_for_79",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Fishing Novice#sp2"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Super_Novice_Hat_,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/supernovice_ex.txt",
+          "lines": [
+            571
+          ],
+          "required_source_literals": [
+            "getitem Super_Novice_Hat_,1; // Super Novice Hat [1]"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_beach_dun2_fishing_novice_sp2_branch_for_79_572",
+      "unit": "E1-beach_dun2_fishing_novice_sp2_branch_for_79",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Fishing Novice#sp2"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Novice_Manteau,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/supernovice_ex.txt",
+          "lines": [
+            572
+          ],
+          "required_source_literals": [
+            "getitem Novice_Manteau,1; // Novice Manteau [1]"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_beach_dun2_fishing_novice_sp2_branch_for_79_573",
+      "unit": "E1-beach_dun2_fishing_novice_sp2_branch_for_79",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Fishing Novice#sp2"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Novice_Breast,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/supernovice_ex.txt",
+          "lines": [
+            573
+          ],
+          "required_source_literals": [
+            "getitem Novice_Breast,1; // Novice Breastplate [1]"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_beach_dun2_fishing_novice_sp2_branch_for_79_575",
+      "unit": "E1-beach_dun2_fishing_novice_sp2_branch_for_79",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Fishing Novice#sp2"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Novice_Breast,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/supernovice_ex.txt",
+          "lines": [
+            575
+          ],
+          "required_source_literals": [
+            "else getitem Novice_Breast,1; // Novice Breastplate [1]"
           ]
         }
       ],
