@@ -79951,6 +79951,81 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ecl_tdun01_pa0829etraninterio_branch_for_11120_11300",
+      "unit": "E1-ecl_tdun01_pa0829etraninterio_branch_for_11120",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "#pa0829EtranInterio"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Golden_Leaf,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "lines": [
+            11300
+          ],
+          "required_source_literals": [
+            "delitem Golden_Leaf,1; //Golden_Leaf"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ecl_tdun01_pa0829etraninterio_branch_for_11120_11301",
+      "unit": "E1-ecl_tdun01_pa0829etraninterio_branch_for_11120",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "#pa0829EtranInterio"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Old_Left_Lapine,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "lines": [
+            11301
+          ],
+          "required_source_literals": [
+            "delitem Old_Left_Lapine,1; //Old_Left_Lapine"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ecl_tdun01_pa0829etraninterio_branch_for_11120_11304",
+      "unit": "E1-ecl_tdun01_pa0829etraninterio_branch_for_11120",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "#pa0829EtranInterio"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Ettlang_Keepsake,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "lines": [
+            11304
+          ],
+          "required_source_literals": [
+            "getitem Ettlang_Keepsake,1; //Ettlang_Keepsake"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
