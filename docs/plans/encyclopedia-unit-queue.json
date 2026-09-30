@@ -22996,7 +22996,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Bajin",
@@ -23015,7 +23015,25 @@
       ],
       "size_lines": 127,
       "reason": "refused by the braced one-item prover: braceless",
-      "history": []
+      "history": [
+        "2026-09-30T17:27:58Z activated",
+        "2026-09-30T17:27:59Z validated",
+        "2026-09-30T17:27:59Z verified: 7 claims supported",
+        "2026-09-30T17:28:22Z accepted",
+        "2026-09-30T17:28:22Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "0ac64df3f2128f636da642c5a0d89394c66bc094509fd2cd8d2ae9b829683a8c",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-yuno_sage_yklah_juno_branch_for_735",

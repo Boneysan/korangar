@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 2110,
+    "E1_unknown": 2117,
     "E1_verified": 1
   },
   "entries": [
@@ -50276,6 +50276,181 @@
           "path": "npc/quests/quests_yuno.txt",
           "lines": [
             545
+          ],
+          "required_source_literals": [
+            "delitem Oridecon_Stone,3;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_yuno_in01_bajin_branch_for_571_667",
+      "unit": "E1-yuno_in01_bajin_branch_for_571",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Bajin"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Mixture,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_yuno.txt",
+          "lines": [
+            667
+          ],
+          "required_source_literals": [
+            "delitem Mixture,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_yuno_in01_bajin_branch_for_571_668",
+      "unit": "E1-yuno_in01_bajin_branch_for_571",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Bajin"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Portable_Furnace,5; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_yuno.txt",
+          "lines": [
+            668
+          ],
+          "required_source_literals": [
+            "delitem Portable_Furnace,5;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_yuno_in01_bajin_branch_for_571_669",
+      "unit": "E1-yuno_in01_bajin_branch_for_571",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Bajin"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Coal,5; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_yuno.txt",
+          "lines": [
+            669
+          ],
+          "required_source_literals": [
+            "delitem Coal,5;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_yuno_in01_bajin_branch_for_571_670",
+      "unit": "E1-yuno_in01_bajin_branch_for_571",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Bajin"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Burn_Tree,5; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_yuno.txt",
+          "lines": [
+            670
+          ],
+          "required_source_literals": [
+            "delitem Burn_Tree,5;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_yuno_in01_bajin_branch_for_571_671",
+      "unit": "E1-yuno_in01_bajin_branch_for_571",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Bajin"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Fine_Sand,5; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_yuno.txt",
+          "lines": [
+            671
+          ],
+          "required_source_literals": [
+            "delitem Fine_Sand,5;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_yuno_in01_bajin_branch_for_571_672",
+      "unit": "E1-yuno_in01_bajin_branch_for_571",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Bajin"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Elunium_Stone,3; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_yuno.txt",
+          "lines": [
+            672
+          ],
+          "required_source_literals": [
+            "delitem Elunium_Stone,3;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_yuno_in01_bajin_branch_for_571_673",
+      "unit": "E1-yuno_in01_bajin_branch_for_571",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Bajin"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Oridecon_Stone,3; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_yuno.txt",
+          "lines": [
+            673
           ],
           "required_source_literals": [
             "delitem Oridecon_Stone,3;"
