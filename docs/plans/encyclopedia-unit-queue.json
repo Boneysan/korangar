@@ -56857,7 +56857,7 @@
       "package": "E3",
       "kind": "e3_dispose",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "key": "bonus2 bSPRegenRate (expression)",
@@ -56883,7 +56883,25 @@
       ],
       "size_lines": 1,
       "reason": "1 item script(s) first stop at `bonus2 bSPRegenRate (expression)`, which is control flow or undocumented",
-      "history": []
+      "history": [
+        "2026-09-30T20:41:59Z activated",
+        "2026-09-30T20:41:59Z validated",
+        "2026-09-30T20:41:59Z verification not required: tool-drafted, no behavior claim",
+        "2026-09-30T20:42:22Z accepted",
+        "2026-09-30T20:42:22Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "a68e5f9bb3fc85e2946455fa64d3aa1a4679979b16cac244a157b87f96a0b09c",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E3-unknown-bonus3-baddeffonskill-expression",

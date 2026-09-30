@@ -8,7 +8,7 @@
     "E1_not_applicable": 1,
     "E1_unknown": 3464,
     "E1_verified": 1,
-    "E3_unknown": 969
+    "E3_unknown": 970
   },
   "entries": [
     {
@@ -110058,6 +110058,33 @@
           ],
           "required_source_literals": [
             "Script: <\" bonus2 bHPRegenRate, (getrefine() >= 7) ? 100 : 50, 5000; \">"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_4979_script_untranslated",
+      "unit": "E3-unknown-bonus2-bspregenrate-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          4979
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 4979 is not summarized: the translator does not interpret the quoted statement (bonus2 bSPRegenRate (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            52750
+          ],
+          "required_source_literals": [
+            "Script: <\" bonus2 bSPRegenRate, (getrefine() >= 7) ? 5 : 3, 500; \">"
           ]
         }
       ],
