@@ -44551,6 +44551,256 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_morocc_chief_balrog_branch_for_1280_1477",
+      "unit": "E1-morocc_chief_balrog_branch_for_1280",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Chief Balrog"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Live_Coal,30; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_morocc.txt",
+          "lines": [
+            1477
+          ],
+          "required_source_literals": [
+            "delitem Live_Coal,30;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_morocc_chief_balrog_branch_for_1280_1502",
+      "unit": "E1-morocc_chief_balrog_branch_for_1280",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Chief Balrog"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Ice_Heart,50; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_morocc.txt",
+          "lines": [
+            1502
+          ],
+          "required_source_literals": [
+            "delitem Ice_Heart,50;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_morocc_chief_balrog_branch_for_1280_1503",
+      "unit": "E1-morocc_chief_balrog_branch_for_1280",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Chief Balrog"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Continental_Guard_Paper,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_morocc.txt",
+          "lines": [
+            1503
+          ],
+          "required_source_literals": [
+            "getitem Continental_Guard_Paper,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_morocc_chief_balrog_branch_for_1280_1614",
+      "unit": "E1-morocc_chief_balrog_branch_for_1280",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Chief Balrog"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Morroc_Skin,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_morocc.txt",
+          "lines": [
+            1614
+          ],
+          "required_source_literals": [
+            "delitem Morroc_Skin,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_morocc_chief_balrog_branch_for_1280_1637",
+      "unit": "E1-morocc_chief_balrog_branch_for_1280",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Chief Balrog"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Morroc_Seal,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_morocc.txt",
+          "lines": [
+            1637
+          ],
+          "required_source_literals": [
+            "getitem Morroc_Seal,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_morocc_chief_balrog_branch_for_1280_1669",
+      "unit": "E1-morocc_chief_balrog_branch_for_1280",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Chief Balrog"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Morroc_Charm_Stone,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_morocc.txt",
+          "lines": [
+            1669
+          ],
+          "required_source_literals": [
+            "getitem Morroc_Charm_Stone,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_morocc_chief_balrog_branch_for_1280_1701",
+      "unit": "E1-morocc_chief_balrog_branch_for_1280",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Chief Balrog"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Morroc_Ring,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_morocc.txt",
+          "lines": [
+            1701
+          ],
+          "required_source_literals": [
+            "getitem Morroc_Ring,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_morocc_chief_balrog_branch_for_1280_1749",
+      "unit": "E1-morocc_chief_balrog_branch_for_1280",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Chief Balrog"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Morroc_Seal,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_morocc.txt",
+          "lines": [
+            1749
+          ],
+          "required_source_literals": [
+            "getitem Morroc_Seal,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_morocc_chief_balrog_branch_for_1280_1781",
+      "unit": "E1-morocc_chief_balrog_branch_for_1280",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Chief Balrog"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Morroc_Charm_Stone,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_morocc.txt",
+          "lines": [
+            1781
+          ],
+          "required_source_literals": [
+            "getitem Morroc_Charm_Stone,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_morocc_chief_balrog_branch_for_1280_1813",
+      "unit": "E1-morocc_chief_balrog_branch_for_1280",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Chief Balrog"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Morroc_Ring,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_morocc.txt",
+          "lines": [
+            1813
+          ],
+          "required_source_literals": [
+            "getitem Morroc_Ring,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
