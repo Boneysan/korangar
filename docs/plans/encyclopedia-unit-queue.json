@@ -52624,7 +52624,7 @@
       "package": "E3",
       "kind": "e3_dispose",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "key": "bonus bUseSPrate (expression)",
@@ -52728,7 +52728,25 @@
       ],
       "size_lines": 7,
       "reason": "7 item script(s) first stop at `bonus bUseSPrate (expression)`, which is control flow or undocumented",
-      "history": []
+      "history": [
+        "2026-09-30T20:17:57Z activated",
+        "2026-09-30T20:17:58Z validated",
+        "2026-09-30T20:17:58Z verification not required: tool-drafted, no behavior claim",
+        "2026-09-30T20:18:21Z accepted",
+        "2026-09-30T20:18:21Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "09250d64a5384a91d434ec8e589dd49b7012353ccb273b2d5286ef1c9bb01ea6",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E3-unknown-bonus2-bmagicatkele-expression",
