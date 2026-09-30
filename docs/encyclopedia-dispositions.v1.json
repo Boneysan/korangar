@@ -10,7 +10,8 @@
     "E1_verified": 1,
     "E2_conditional": 1,
     "E2_verified": 236,
-    "E3_unknown": 973
+    "E3_unknown": 973,
+    "E4_unknown": 1
   },
   "entries": [
     {
@@ -97495,6 +97496,33 @@
           ],
           "required_source_literals": [
             "// getrandgroupitem(IG_PrizeOfHero, 1);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e4_wz_frostnova_formula",
+      "unit": "E4-wz-frostnova",
+      "package": "E4",
+      "subject": {
+        "kind": "skill",
+        "ids": [
+          88
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted case is the ratio site for these skills; this record does not reduce it to a worked example.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "src/map/battle.c",
+          "lines": [
+            1705
+          ],
+          "required_source_literals": [
+            "case WZ_FROSTNOVA:"
           ]
         }
       ],
