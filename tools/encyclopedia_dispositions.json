@@ -7801,6 +7801,81 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_aldeba_in_tzerero_sn_branch_for_42_58",
+      "unit": "E1-aldeba_in_tzerero_sn_branch_for_42",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Tzerero#sn"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Sticky_Mucus,30; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/novice/supernovice.txt",
+          "lines": [
+            58
+          ],
+          "required_source_literals": [
+            "delitem Sticky_Mucus,30;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_aldeba_in_tzerero_sn_branch_for_42_59",
+      "unit": "E1-aldeba_in_tzerero_sn_branch_for_42",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Tzerero#sn"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Resin,30; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/novice/supernovice.txt",
+          "lines": [
+            59
+          ],
+          "required_source_literals": [
+            "delitem Resin,30;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_aldeba_in_tzerero_sn_branch_for_42_80",
+      "unit": "E1-aldeba_in_tzerero_sn_branch_for_42",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Tzerero#sn"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem G_Strings,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/novice/supernovice.txt",
+          "lines": [
+            80
+          ],
+          "required_source_literals": [
+            "getitem G_Strings,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
