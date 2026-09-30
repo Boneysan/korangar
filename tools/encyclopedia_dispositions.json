@@ -112295,6 +112295,60 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_4313_script_untranslated",
+      "unit": "E3-unknown-bonus4-bautospellwhenhit-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          4313
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 4313 is not summarized: the translator does not interpret the quoted statement (bonus4 bAutoSpellWhenHit (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            45147
+          ],
+          "required_source_literals": [
+            "Script: <\" bonus4 bAutoSpellWhenHit,WZ_QUAGMIRE,1+4*(getskilllv(WZ_QUAGMIRE)==5),50,0; \">"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_18891_script_untranslated",
+      "unit": "E3-unknown-bonus4-bautospellwhenhit-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          18891
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 18891 is not summarized: the translator does not interpret the quoted statement (bonus4 bAutoSpellWhenHit (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            138680
+          ],
+          "required_source_literals": [
+            "bonus4 bAutoSpellWhenHit,SN_WINDWALK,5,100+(getrefine()*30),0;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }

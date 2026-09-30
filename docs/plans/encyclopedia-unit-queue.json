@@ -55811,7 +55811,7 @@
       "package": "E3",
       "kind": "e3_dispose",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "key": "bonus4 bAutoSpellWhenHit (expression)",
@@ -55850,7 +55850,25 @@
       ],
       "size_lines": 2,
       "reason": "2 item script(s) first stop at `bonus4 bAutoSpellWhenHit (expression)`, which is control flow or undocumented",
-      "history": []
+      "history": [
+        "2026-09-30T20:33:58Z activated",
+        "2026-09-30T20:33:59Z validated",
+        "2026-09-30T20:33:59Z verification not required: tool-drafted, no behavior claim",
+        "2026-09-30T20:34:22Z accepted",
+        "2026-09-30T20:34:22Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "072482fdd050d7c23ade84adf73b6b78769543fd1cfa6403a7484aec4612b8e3",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E3-unknown-bonus5-bautospell-expression",
