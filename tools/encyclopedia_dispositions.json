@@ -41801,6 +41801,31 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_hugel_booboo_the_cow_branch_for_7502_7559",
+      "unit": "E1-hugel_booboo_the_cow_branch_for_7502",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Booboo the Cow"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Center_Potion,3; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_hugel.txt",
+          "lines": [
+            7559
+          ],
+          "required_source_literals": [
+            "delitem Center_Potion,3;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
