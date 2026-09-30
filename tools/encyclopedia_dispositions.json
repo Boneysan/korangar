@@ -139350,6 +139350,114 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_11046_npc_quests_quests_louyang_txt_1896",
+      "unit": "E5-chain-11046",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          11046
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 11046; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_louyang.txt",
+          "lines": [
+            1896
+          ],
+          "required_source_literals": [
+            "changequest 11046,11051;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_11046_npc_quests_quests_louyang_txt_1900",
+      "unit": "E5-chain-11046",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          11047
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 11047; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_louyang.txt",
+          "lines": [
+            1900
+          ],
+          "required_source_literals": [
+            "changequest 11047,11052;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_11046_npc_quests_quests_louyang_txt_1904",
+      "unit": "E5-chain-11046",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          11048
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 11048; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_louyang.txt",
+          "lines": [
+            1904
+          ],
+          "required_source_literals": [
+            "changequest 11048,11053;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_11046_npc_quests_quests_louyang_txt_1908",
+      "unit": "E5-chain-11046",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          11049
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 11049; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_louyang.txt",
+          "lines": [
+            1908
+          ],
+          "required_source_literals": [
+            "changequest 11049,11054;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
