@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 3438,
+    "E1_unknown": 3454,
     "E1_verified": 1
   },
   "entries": [
@@ -46804,6 +46804,406 @@
           ],
           "required_source_literals": [
             "getitem Ring_Of_Lope,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mora_raffle_researcher_ep14_branch_for_2539_2740",
+      "unit": "E1-mora_raffle_researcher_ep14_branch_for_2539",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Raffle Researcher#ep14"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Research_Tool_Bag,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_mora.txt",
+          "lines": [
+            2740
+          ],
+          "required_source_literals": [
+            "delitem Research_Tool_Bag,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mora_raffle_researcher_ep14_branch_for_2539_2742",
+      "unit": "E1-mora_raffle_researcher_ep14_branch_for_2539",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Raffle Researcher#ep14"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Mora_Coin,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_mora.txt",
+          "lines": [
+            2742
+          ],
+          "required_source_literals": [
+            "getitem Mora_Coin,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mora_raffle_researcher_ep14_branch_for_2539_2873",
+      "unit": "E1-mora_raffle_researcher_ep14_branch_for_2539",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Raffle Researcher#ep14"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Empty_Cylinder,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_mora.txt",
+          "lines": [
+            2873
+          ],
+          "required_source_literals": [
+            "getitem Empty_Cylinder,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mora_raffle_researcher_ep14_branch_for_2539_2906",
+      "unit": "E1-mora_raffle_researcher_ep14_branch_for_2539",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Raffle Researcher#ep14"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Bathtub_R_Sample,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_mora.txt",
+          "lines": [
+            2906
+          ],
+          "required_source_literals": [
+            "delitem Bathtub_R_Sample,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mora_raffle_researcher_ep14_branch_for_2539_2907",
+      "unit": "E1-mora_raffle_researcher_ep14_branch_for_2539",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Raffle Researcher#ep14"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Mora_Coin,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_mora.txt",
+          "lines": [
+            2907
+          ],
+          "required_source_literals": [
+            "getitem Mora_Coin,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mora_raffle_researcher_ep14_branch_for_2539_2993",
+      "unit": "E1-mora_raffle_researcher_ep14_branch_for_2539",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Raffle Researcher#ep14"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Mora_Coin,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_mora.txt",
+          "lines": [
+            2993
+          ],
+          "required_source_literals": [
+            "getitem Mora_Coin,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mora_raffle_researcher_ep14_branch_for_2539_3077",
+      "unit": "E1-mora_raffle_researcher_ep14_branch_for_2539",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Raffle Researcher#ep14"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Empty_Cylinder,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_mora.txt",
+          "lines": [
+            3077
+          ],
+          "required_source_literals": [
+            "getitem Empty_Cylinder,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mora_raffle_researcher_ep14_branch_for_2539_3108",
+      "unit": "E1-mora_raffle_researcher_ep14_branch_for_2539",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Raffle Researcher#ep14"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Puddle_R_Sample,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_mora.txt",
+          "lines": [
+            3108
+          ],
+          "required_source_literals": [
+            "delitem Puddle_R_Sample,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mora_raffle_researcher_ep14_branch_for_2539_3110",
+      "unit": "E1-mora_raffle_researcher_ep14_branch_for_2539",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Raffle Researcher#ep14"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Empty_Cylinder,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_mora.txt",
+          "lines": [
+            3110
+          ],
+          "required_source_literals": [
+            "getitem Empty_Cylinder,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mora_raffle_researcher_ep14_branch_for_2539_3136",
+      "unit": "E1-mora_raffle_researcher_ep14_branch_for_2539",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Raffle Researcher#ep14"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Puddle_R_Sample,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_mora.txt",
+          "lines": [
+            3136
+          ],
+          "required_source_literals": [
+            "delitem Puddle_R_Sample,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mora_raffle_researcher_ep14_branch_for_2539_3138",
+      "unit": "E1-mora_raffle_researcher_ep14_branch_for_2539",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Raffle Researcher#ep14"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Empty_Cylinder,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_mora.txt",
+          "lines": [
+            3138
+          ],
+          "required_source_literals": [
+            "getitem Empty_Cylinder,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mora_raffle_researcher_ep14_branch_for_2539_3168",
+      "unit": "E1-mora_raffle_researcher_ep14_branch_for_2539",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Raffle Researcher#ep14"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Puddle_R_Sample,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_mora.txt",
+          "lines": [
+            3168
+          ],
+          "required_source_literals": [
+            "delitem Puddle_R_Sample,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mora_raffle_researcher_ep14_branch_for_2539_3170",
+      "unit": "E1-mora_raffle_researcher_ep14_branch_for_2539",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Raffle Researcher#ep14"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Empty_Cylinder,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_mora.txt",
+          "lines": [
+            3170
+          ],
+          "required_source_literals": [
+            "getitem Empty_Cylinder,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mora_raffle_researcher_ep14_branch_for_2539_3209",
+      "unit": "E1-mora_raffle_researcher_ep14_branch_for_2539",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Raffle Researcher#ep14"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Puddle_R_Sample,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_mora.txt",
+          "lines": [
+            3209
+          ],
+          "required_source_literals": [
+            "delitem Puddle_R_Sample,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mora_raffle_researcher_ep14_branch_for_2539_3211",
+      "unit": "E1-mora_raffle_researcher_ep14_branch_for_2539",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Raffle Researcher#ep14"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Mora_Coin,4; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_mora.txt",
+          "lines": [
+            3211
+          ],
+          "required_source_literals": [
+            "getitem Mora_Coin,4;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mora_raffle_researcher_ep14_branch_for_2539_3341",
+      "unit": "E1-mora_raffle_researcher_ep14_branch_for_2539",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Raffle Researcher#ep14"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Mora_Coin,30; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_mora.txt",
+          "lines": [
+            3341
+          ],
+          "required_source_literals": [
+            "getitem Mora_Coin,30;"
           ]
         }
       ],
