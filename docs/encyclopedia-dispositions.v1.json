@@ -12,7 +12,7 @@
     "E2_verified": 236,
     "E3_unknown": 973,
     "E4_unknown": 213,
-    "E5_unknown": 28
+    "E5_unknown": 32
   },
   "entries": [
     {
@@ -103772,6 +103772,114 @@
           ],
           "required_source_literals": [
             "erasequest 2070;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_60200_npc_instances_endlesstower_txt_295",
+      "unit": "E5-chain-60200",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          60200
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 60200; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/instances/EndlessTower.txt",
+          "lines": [
+            295
+          ],
+          "required_source_literals": [
+            "erasequest(60200);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_60200_npc_instances_endlesstower_txt_296",
+      "unit": "E5-chain-60200",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          60201
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 60201; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/instances/EndlessTower.txt",
+          "lines": [
+            296
+          ],
+          "required_source_literals": [
+            "erasequest(60201);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_60200_npc_instances_endlesstower_txt_310",
+      "unit": "E5-chain-60200",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          60200
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 60200; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/instances/EndlessTower.txt",
+          "lines": [
+            310
+          ],
+          "required_source_literals": [
+            "setquest(60200);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_60200_npc_instances_endlesstower_txt_311",
+      "unit": "E5-chain-60200",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          60201
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 60201; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/instances/EndlessTower.txt",
+          "lines": [
+            311
+          ],
+          "required_source_literals": [
+            "setquest(60201);"
           ]
         }
       ],
