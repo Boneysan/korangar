@@ -72676,6 +72676,31 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ecl_in01_slot_expert_nattuer_ecl_branch_for_909_952",
+      "unit": "E1-ecl_in01_slot_expert_nattuer_ecl_branch_for_909",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Slot Expert Nattuer#ecl"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Splendide_Coin,5; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/merchants/coin_exchange.txt",
+          "lines": [
+            952
+          ],
+          "required_source_literals": [
+            "delitem Splendide_Coin,5; //Splendide_Coin"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
