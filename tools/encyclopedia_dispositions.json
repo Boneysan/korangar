@@ -27151,6 +27151,131 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mid_camp_marian_ep13bs_branch_for_1984_2016",
+      "unit": "E1-mid_camp_marian_ep13bs_branch_for_1984",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Marian#ep13bs"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Chocolate_Pie,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_1.txt",
+          "lines": [
+            2016
+          ],
+          "required_source_literals": [
+            "getitem Chocolate_Pie,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mid_camp_marian_ep13bs_branch_for_1984_2035",
+      "unit": "E1-mid_camp_marian_ep13bs_branch_for_1984",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Marian#ep13bs"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Chocolate_Pie,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_1.txt",
+          "lines": [
+            2035
+          ],
+          "required_source_literals": [
+            "getitem Chocolate_Pie,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mid_camp_marian_ep13bs_branch_for_1984_2087",
+      "unit": "E1-mid_camp_marian_ep13bs_branch_for_1984",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Marian#ep13bs"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Supply_Box,3; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_1.txt",
+          "lines": [
+            2087
+          ],
+          "required_source_literals": [
+            "getitem Supply_Box,3;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mid_camp_marian_ep13bs_branch_for_1984_2088",
+      "unit": "E1-mid_camp_marian_ep13bs_branch_for_1984",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Marian#ep13bs"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Chocolate_Pie,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_1.txt",
+          "lines": [
+            2088
+          ],
+          "required_source_literals": [
+            "getitem Chocolate_Pie,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mid_camp_marian_ep13bs_branch_for_1984_2106",
+      "unit": "E1-mid_camp_marian_ep13bs_branch_for_1984",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Marian#ep13bs"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Supply_Box,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_1.txt",
+          "lines": [
+            2106
+          ],
+          "required_source_literals": [
+            "getitem Supply_Box,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
