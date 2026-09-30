@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 1283,
+    "E1_unknown": 1287,
     "E1_verified": 1
   },
   "entries": [
@@ -12279,6 +12279,106 @@
           ],
           "required_source_literals": [
             "getitem Letter_From_Otto,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mid_camp_pet_breeder_ep13_eden01_branch_for_3039_3107",
+      "unit": "E1-mid_camp_pet_breeder_ep13_eden01_branch_for_3039",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Pet Breeder#ep13_eden01"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Treasure_Box,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_2.txt",
+          "lines": [
+            3107
+          ],
+          "required_source_literals": [
+            "getitem Treasure_Box,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mid_camp_pet_breeder_ep13_eden01_branch_for_3039_3141",
+      "unit": "E1-mid_camp_pet_breeder_ep13_eden01_branch_for_3039",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Pet Breeder#ep13_eden01"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Egg_Of_Draco,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_2.txt",
+          "lines": [
+            3141
+          ],
+          "required_source_literals": [
+            "delitem Egg_Of_Draco,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mid_camp_pet_breeder_ep13_eden01_branch_for_3039_3146",
+      "unit": "E1-mid_camp_pet_breeder_ep13_eden01_branch_for_3039",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Pet Breeder#ep13_eden01"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Splendide_Coin,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_2.txt",
+          "lines": [
+            3146
+          ],
+          "required_source_literals": [
+            "getitem Splendide_Coin,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mid_camp_pet_breeder_ep13_eden01_branch_for_3039_3147",
+      "unit": "E1-mid_camp_pet_breeder_ep13_eden01_branch_for_3039",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Pet Breeder#ep13_eden01"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Manuk_Coin,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_2.txt",
+          "lines": [
+            3147
+          ],
+          "required_source_literals": [
+            "getitem Manuk_Coin,1;"
           ]
         }
       ],
