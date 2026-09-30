@@ -9268,7 +9268,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Sakjul",
@@ -9287,7 +9287,25 @@
       ],
       "size_lines": 113,
       "reason": "refused by the braced one-item prover: menu",
-      "history": []
+      "history": [
+        "2026-09-30T15:21:27Z activated",
+        "2026-09-30T15:21:27Z validated",
+        "2026-09-30T15:21:28Z verified: 7 claims supported",
+        "2026-09-30T15:21:51Z accepted",
+        "2026-09-30T15:21:51Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "246ebd10350ac32ae2e44b99542012a08765429b781b3087dda541854e64dfd1",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-hugel_ghenirhemin_branch_for_222",

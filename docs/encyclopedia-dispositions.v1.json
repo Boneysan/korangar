@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 882,
+    "E1_unknown": 889,
     "E1_verified": 1
   },
   "entries": [
@@ -18579,6 +18579,181 @@
           ],
           "required_source_literals": [
             "delitem Valkyrie_Gift,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_rachel_sakjul_branch_for_107_139",
+      "unit": "E1-rachel_sakjul_branch_for_107",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Sakjul"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Beret,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2006_headgears.txt",
+          "lines": [
+            139
+          ],
+          "required_source_literals": [
+            "delitem Beret,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_rachel_sakjul_branch_for_107_140",
+      "unit": "E1-rachel_sakjul_branch_for_107",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Sakjul"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Soft_Feather,100; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2006_headgears.txt",
+          "lines": [
+            140
+          ],
+          "required_source_literals": [
+            "delitem Soft_Feather,100;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_rachel_sakjul_branch_for_107_141",
+      "unit": "E1-rachel_sakjul_branch_for_107",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Sakjul"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem White_Dyestuffs,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2006_headgears.txt",
+          "lines": [
+            141
+          ],
+          "required_source_literals": [
+            "delitem White_Dyestuffs,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_rachel_sakjul_branch_for_107_163",
+      "unit": "E1-rachel_sakjul_branch_for_107",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Sakjul"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Beret,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2006_headgears.txt",
+          "lines": [
+            163
+          ],
+          "required_source_literals": [
+            "delitem Beret,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_rachel_sakjul_branch_for_107_164",
+      "unit": "E1-rachel_sakjul_branch_for_107",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Sakjul"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Soft_Feather,100; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2006_headgears.txt",
+          "lines": [
+            164
+          ],
+          "required_source_literals": [
+            "delitem Soft_Feather,100;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_rachel_sakjul_branch_for_107_165",
+      "unit": "E1-rachel_sakjul_branch_for_107",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Sakjul"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem White_Dyestuffs,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2006_headgears.txt",
+          "lines": [
+            165
+          ],
+          "required_source_literals": [
+            "delitem White_Dyestuffs,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_rachel_sakjul_branch_for_107_166",
+      "unit": "E1-rachel_sakjul_branch_for_107",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Sakjul"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Feather_Beret,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2006_headgears.txt",
+          "lines": [
+            166
+          ],
+          "required_source_literals": [
+            "getitem Feather_Beret,1;"
           ]
         }
       ],
