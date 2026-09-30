@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 174,
+    "E1_unknown": 183,
     "E1_verified": 1
   },
   "entries": [
@@ -2579,6 +2579,231 @@
           ],
           "required_source_literals": [
             "delitem Cyfar,5;\t// Cyfar"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_gef_tower_wizard_guildsman_branch_for_46_216",
+      "unit": "E1-gef_tower_wizard_guildsman_branch_for_46",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Wizard Guildsman"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Red_Gemstone,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-1/wizard.txt",
+          "lines": [
+            216
+          ],
+          "required_source_literals": [
+            "delitem Red_Gemstone,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_gef_tower_wizard_guildsman_branch_for_46_217",
+      "unit": "E1-gef_tower_wizard_guildsman_branch_for_46",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Wizard Guildsman"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Blue_Gemstone,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-1/wizard.txt",
+          "lines": [
+            217
+          ],
+          "required_source_literals": [
+            "delitem Blue_Gemstone,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_gef_tower_wizard_guildsman_branch_for_46_218",
+      "unit": "E1-gef_tower_wizard_guildsman_branch_for_46",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Wizard Guildsman"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Yellow_Gemstone,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-1/wizard.txt",
+          "lines": [
+            218
+          ],
+          "required_source_literals": [
+            "delitem Yellow_Gemstone,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_gef_tower_wizard_guildsman_branch_for_46_254",
+      "unit": "E1-gef_tower_wizard_guildsman_branch_for_46",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Wizard Guildsman"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Crystal_Blue,5; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-1/wizard.txt",
+          "lines": [
+            254
+          ],
+          "required_source_literals": [
+            "delitem Crystal_Blue,5;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_gef_tower_wizard_guildsman_branch_for_46_255",
+      "unit": "E1-gef_tower_wizard_guildsman_branch_for_46",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Wizard Guildsman"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Yellow_Live,5; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-1/wizard.txt",
+          "lines": [
+            255
+          ],
+          "required_source_literals": [
+            "delitem Yellow_Live,5;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_gef_tower_wizard_guildsman_branch_for_46_256",
+      "unit": "E1-gef_tower_wizard_guildsman_branch_for_46",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Wizard Guildsman"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Boody_Red,5; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-1/wizard.txt",
+          "lines": [
+            256
+          ],
+          "required_source_literals": [
+            "delitem Boody_Red,5;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_gef_tower_wizard_guildsman_branch_for_46_257",
+      "unit": "E1-gef_tower_wizard_guildsman_branch_for_46",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Wizard Guildsman"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Wind_Of_Verdure,5; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-1/wizard.txt",
+          "lines": [
+            257
+          ],
+          "required_source_literals": [
+            "delitem Wind_Of_Verdure,5;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_gef_tower_wizard_guildsman_branch_for_46_306",
+      "unit": "E1-gef_tower_wizard_guildsman_branch_for_46",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Wizard Guildsman"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Apple_Juice,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-1/wizard.txt",
+          "lines": [
+            306
+          ],
+          "required_source_literals": [
+            "delitem Apple_Juice,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_gef_tower_wizard_guildsman_branch_for_46_454",
+      "unit": "E1-gef_tower_wizard_guildsman_branch_for_46",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Wizard Guildsman"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Blue_Potion,6; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-1/wizard.txt",
+          "lines": [
+            454
+          ],
+          "required_source_literals": [
+            "getitem Blue_Potion,6;"
           ]
         }
       ],

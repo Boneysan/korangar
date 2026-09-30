@@ -2909,7 +2909,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "strong",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Wizard Guildsman",
@@ -2928,7 +2928,25 @@
       ],
       "size_lines": 418,
       "reason": "refused by the braced one-item prover: braceless",
-      "history": []
+      "history": [
+        "2026-09-30T14:23:18Z activated",
+        "2026-09-30T14:23:18Z validated",
+        "2026-09-30T14:23:18Z verified: 9 claims supported",
+        "2026-09-30T14:23:41Z accepted",
+        "2026-09-30T14:23:41Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "8096b6c3701900f1a2d0f73079744dea546c1732a95c9b8dd533c6556cb1fcfb",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-gef_tower_gloomy_wizard_branch_for_465",
