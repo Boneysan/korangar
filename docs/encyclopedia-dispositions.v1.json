@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 754,
+    "E1_unknown": 764,
     "E1_verified": 1
   },
   "entries": [
@@ -4779,6 +4779,256 @@
           ],
           "required_source_literals": [
             "getitem Blue_Potion,6;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_geffen_argen_1_branch_for_123_196",
+      "unit": "E1-geffen_argen_1_branch_for_123",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Argen#1"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Star_Dust,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2004_headgears.txt",
+          "lines": [
+            196
+          ],
+          "required_source_literals": [
+            "delitem Star_Dust,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_geffen_argen_1_branch_for_123_197",
+      "unit": "E1-geffen_argen_1_branch_for_123",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Argen#1"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Ectoplasm,400; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2004_headgears.txt",
+          "lines": [
+            197
+          ],
+          "required_source_literals": [
+            "delitem Ectoplasm,400;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_geffen_argen_1_branch_for_123_198",
+      "unit": "E1-geffen_argen_1_branch_for_123",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Argen#1"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Crossed_Hair_Band,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2004_headgears.txt",
+          "lines": [
+            198
+          ],
+          "required_source_literals": [
+            "getitem Crossed_Hair_Band,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_geffen_argen_1_branch_for_123_236",
+      "unit": "E1-geffen_argen_1_branch_for_123",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Argen#1"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Alchol,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2004_headgears.txt",
+          "lines": [
+            236
+          ],
+          "required_source_literals": [
+            "delitem Alchol,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_geffen_argen_1_branch_for_123_237",
+      "unit": "E1-geffen_argen_1_branch_for_123",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Argen#1"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Rotten_Bandage,500; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2004_headgears.txt",
+          "lines": [
+            237
+          ],
+          "required_source_literals": [
+            "delitem Rotten_Bandage,500;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_geffen_argen_1_branch_for_123_238",
+      "unit": "E1-geffen_argen_1_branch_for_123",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Argen#1"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Plaster,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2004_headgears.txt",
+          "lines": [
+            238
+          ],
+          "required_source_literals": [
+            "getitem Plaster,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_geffen_argen_1_branch_for_123_266",
+      "unit": "E1-geffen_argen_1_branch_for_123",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Argen#1"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Centimental_Flower,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2004_headgears.txt",
+          "lines": [
+            266
+          ],
+          "required_source_literals": [
+            "delitem Centimental_Flower,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_geffen_argen_1_branch_for_123_267",
+      "unit": "E1-geffen_argen_1_branch_for_123",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Argen#1"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Steel,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2004_headgears.txt",
+          "lines": [
+            267
+          ],
+          "required_source_literals": [
+            "delitem Steel,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_geffen_argen_1_branch_for_123_269",
+      "unit": "E1-geffen_argen_1_branch_for_123",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Argen#1"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Flower_Hairpin,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2004_headgears.txt",
+          "lines": [
+            269
+          ],
+          "required_source_literals": [
+            "getitem Flower_Hairpin,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_geffen_argen_1_branch_for_123_270",
+      "unit": "E1-geffen_argen_1_branch_for_123",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Argen#1"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Stem,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2004_headgears.txt",
+          "lines": [
+            270
+          ],
+          "required_source_literals": [
+            "getitem Stem,1;"
           ]
         }
       ],
