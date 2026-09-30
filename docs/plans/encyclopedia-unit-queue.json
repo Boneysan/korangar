@@ -26738,7 +26738,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "sign_w6",
@@ -26757,7 +26757,23 @@
       ],
       "size_lines": 23,
       "reason": "refused by the braced one-item prover: braceless",
-      "history": []
+      "history": [
+        "2026-09-30T18:02:20Z activated",
+        "2026-09-30T18:02:21Z validated",
+        "2026-09-30T18:02:21Z verified: 0 claims supported",
+        "2026-09-30T18:02:44Z accepted",
+        "2026-09-30T18:02:44Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "c096a93d003302c8731e666d085f3fe3dfdbbfee6e2d1b349229cfc3fb561049",
+      "accepted_files": [
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "audit": "due",
+      "commit": "committed"
     },
     {
       "id": "E1-dewata_lazy_young_man_dew_branch_for_188",
