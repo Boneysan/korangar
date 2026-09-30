@@ -21720,7 +21720,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Man Stuck in Ice#cave",
@@ -21739,7 +21739,25 @@
       ],
       "size_lines": 342,
       "reason": "refused by the braced one-item prover: multi-item",
-      "history": []
+      "history": [
+        "2026-09-30T17:16:14Z activated",
+        "2026-09-30T17:16:14Z validated",
+        "2026-09-30T17:16:15Z verified: 4 claims supported",
+        "2026-09-30T17:16:38Z accepted",
+        "2026-09-30T17:16:38Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "c5077c928e26a6522431d1e948ba15c1c36551c06395a8b13e9f68fba4fce03a",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-rachel_hamion_aru_branch_for_3240",

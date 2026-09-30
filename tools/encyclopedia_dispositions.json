@@ -50826,6 +50826,106 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ice_dun02_man_stuck_in_ice_cave_branch_for_2877_3198",
+      "unit": "E1-ice_dun02_man_stuck_in_ice_cave_branch_for_2877",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Man Stuck in Ice#cave"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Hammer_Of_Wind,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_rachel.txt",
+          "lines": [
+            3198
+          ],
+          "required_source_literals": [
+            "delitem Hammer_Of_Wind,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ice_dun02_man_stuck_in_ice_cave_branch_for_2877_3199",
+      "unit": "E1-ice_dun02_man_stuck_in_ice_cave_branch_for_2877",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Man Stuck in Ice#cave"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Magic_Necklace,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_rachel.txt",
+          "lines": [
+            3199
+          ],
+          "required_source_literals": [
+            "delitem Magic_Necklace,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ice_dun02_man_stuck_in_ice_cave_branch_for_2877_3200",
+      "unit": "E1-ice_dun02_man_stuck_in_ice_cave_branch_for_2877",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Man Stuck in Ice#cave"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Magic_Necklace_,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_rachel.txt",
+          "lines": [
+            3200
+          ],
+          "required_source_literals": [
+            "getitem Magic_Necklace_,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ice_dun02_man_stuck_in_ice_cave_branch_for_2877_3201",
+      "unit": "E1-ice_dun02_man_stuck_in_ice_cave_branch_for_2877",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Man Stuck in Ice#cave"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Ice_Particle,4; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_rachel.txt",
+          "lines": [
+            3201
+          ],
+          "required_source_literals": [
+            "getitem Ice_Particle,4;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
