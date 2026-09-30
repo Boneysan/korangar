@@ -9076,6 +9076,31 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_ripped_cabus_gympass_branch_for_38_98",
+      "unit": "E1-payon_ripped_cabus_gympass_branch_for_38",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Ripped Cabus#GymPass"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Max_Weight_Up_Scroll,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/other/gympass.txt",
+          "lines": [
+            98
+          ],
+          "required_source_literals": [
+            "delitem Max_Weight_Up_Scroll,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
