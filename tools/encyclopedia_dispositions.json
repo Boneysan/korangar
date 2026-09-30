@@ -33201,6 +33201,56 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_airplane_hallen_yusa_branch_for_2757_2965",
+      "unit": "E1-airplane_hallen_yusa_branch_for_2757",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Hallen#yusa"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Red_Potion,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_airship.txt",
+          "lines": [
+            2965
+          ],
+          "required_source_literals": [
+            "getitem(Red_Potion, 1);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_airplane_hallen_yusa_branch_for_2757_3161",
+      "unit": "E1-airplane_hallen_yusa_branch_for_2757",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Hallen#yusa"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Red_Potion,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_airship.txt",
+          "lines": [
+            3161
+          ],
+          "required_source_literals": [
+            "getitem(Red_Potion, 1);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }

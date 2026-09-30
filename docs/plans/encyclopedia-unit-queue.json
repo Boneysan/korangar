@@ -13383,7 +13383,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "strong",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Hallen#yusa",
@@ -13402,7 +13402,25 @@
       ],
       "size_lines": 432,
       "reason": "refused by the braced one-item prover: switch",
-      "history": []
+      "history": [
+        "2026-09-30T15:59:42Z activated",
+        "2026-09-30T15:59:42Z validated",
+        "2026-09-30T15:59:42Z verified: 2 claims supported",
+        "2026-09-30T16:00:06Z accepted",
+        "2026-09-30T16:00:06Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "204df0e9faf4c59fdeeaed5c8da0ace8280c103289cc0b6126a88b6735fcb33e",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-alberta_elin_branch_for_48",
