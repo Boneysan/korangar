@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 332,
+    "E1_unknown": 339,
     "E1_verified": 1
   },
   "entries": [
@@ -179,6 +179,181 @@
             "if (Zeny >= 1200) {",
             "Zeny -= 1200;",
             "warp \"airport\",148,51;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_alberta_in_hair_dresser_branch_for_41_536",
+      "unit": "E1-alberta_in_hair_dresser_branch_for_41",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Hair Dresser"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Counteragent,3; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/merchants/hair_style.txt",
+          "lines": [
+            536
+          ],
+          "required_source_literals": [
+            "delitem Counteragent,3;\t// Counteragent"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_alberta_in_hair_dresser_branch_for_41_537",
+      "unit": "E1-alberta_in_hair_dresser_branch_for_41",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Hair Dresser"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Mixture,3; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/merchants/hair_style.txt",
+          "lines": [
+            537
+          ],
+          "required_source_literals": [
+            "delitem Mixture,3;\t// Mixture"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_alberta_in_hair_dresser_branch_for_41_538",
+      "unit": "E1-alberta_in_hair_dresser_branch_for_41",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Hair Dresser"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Danggie,100; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/merchants/hair_style.txt",
+          "lines": [
+            538
+          ],
+          "required_source_literals": [
+            "delitem Danggie,100;\t// Danggie"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_alberta_in_hair_dresser_branch_for_41_539",
+      "unit": "E1-alberta_in_hair_dresser_branch_for_41",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Hair Dresser"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Short_Daenggie,100; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/merchants/hair_style.txt",
+          "lines": [
+            539
+          ],
+          "required_source_literals": [
+            "delitem Short_Daenggie,100;\t// Short_Daenggie"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_alberta_in_hair_dresser_branch_for_41_540",
+      "unit": "E1-alberta_in_hair_dresser_branch_for_41",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Hair Dresser"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Long_Hair,100; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/merchants/hair_style.txt",
+          "lines": [
+            540
+          ],
+          "required_source_literals": [
+            "delitem Long_Hair,100;\t// Long_Hair"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_alberta_in_hair_dresser_branch_for_41_541",
+      "unit": "E1-alberta_in_hair_dresser_branch_for_41",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Hair Dresser"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Golden_Hair,100; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/merchants/hair_style.txt",
+          "lines": [
+            541
+          ],
+          "required_source_literals": [
+            "delitem Golden_Hair,100;\t// Golden_Hair"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_alberta_in_hair_dresser_branch_for_41_542",
+      "unit": "E1-alberta_in_hair_dresser_branch_for_41",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Hair Dresser"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Glossy_Hair,100; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/merchants/hair_style.txt",
+          "lines": [
+            542
+          ],
+          "required_source_literals": [
+            "delitem Glossy_Hair,100;\t// Glossy_Hair"
           ]
         }
       ],
