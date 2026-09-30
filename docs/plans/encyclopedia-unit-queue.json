@@ -3659,7 +3659,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "strong",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "History Professor#sa",
@@ -3678,7 +3678,25 @@
       ],
       "size_lines": 440,
       "reason": "refused by the braced one-item prover: switch",
-      "history": []
+      "history": [
+        "2026-09-30T14:30:13Z activated",
+        "2026-09-30T14:30:13Z validated",
+        "2026-09-30T14:30:13Z verified: 6 claims supported",
+        "2026-09-30T14:30:36Z accepted",
+        "2026-09-30T14:30:36Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "5a555a19f988d83e1c770c46ea80f65def5cc336833adee6c05af5abaca4f734",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-yuno_in03_biology_professor_sa_branch_for_1710",
