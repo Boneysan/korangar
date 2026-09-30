@@ -118015,6 +118015,342 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_merchants_shops_txt_1406_1406",
+      "unit": "E2-npc-merchants-shops-txt-1406",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Tool Dealer#nif"
+      },
+      "result": "verified",
+      "statement": "Tool Dealer#nif is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/merchants/shops.txt",
+          "lines": [
+            1406,
+            1407,
+            1408,
+            1409,
+            1410,
+            1411,
+            1412,
+            1413,
+            1414,
+            1415,
+            1416
+          ],
+          "required_source_literals": [
+            "nif_in,145,23,1\ttrader\tTool Dealer#nif\t4_NFCOFFIN,{",
+            "OnInit:",
+            "sellitem Pumpkin;",
+            "sellitem Pumpkin_Head;",
+            "sellitem Tree_Root;",
+            "sellitem Goats_Horn;",
+            "sellitem Pet_Food;",
+            "sellitem Poison_Powder;",
+            "sellitem Single_Cell;",
+            "sellitem Mementos;",
+            "}"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_merchants_shops_txt_1406_1419",
+      "unit": "E2-npc-merchants-shops-txt-1406",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Weapon Dealer#pay"
+      },
+      "result": "verified",
+      "statement": "Weapon Dealer#pay is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/merchants/shops.txt",
+          "lines": [
+            1419,
+            1420,
+            1421,
+            1422,
+            1423,
+            1424,
+            1425,
+            1426,
+            1427,
+            1428,
+            1429,
+            1430,
+            1431,
+            1432,
+            1433,
+            1434,
+            1435,
+            1436,
+            1437
+          ],
+          "required_source_literals": [
+            "payon_in01,15,119,0\ttrader\tWeapon Dealer#pay\t1_F_ORIENT_03,{",
+            "OnInit:",
+            "sellitem Arrow;",
+            "sellitem Silver_Arrow;",
+            "sellitem Sword;",
+            "sellitem Falchion;",
+            "sellitem Blade;",
+            "sellitem Knife;",
+            "sellitem Cutter;",
+            "sellitem Main_Gauche;",
+            "sellitem Rod;",
+            "sellitem Bow;",
+            "sellitem Composite_Bow;",
+            "sellitem Great_Bow;",
+            "sellitem CrossBow;",
+            "sellitem Arbalest;",
+            "sellitem Kakkung;",
+            "sellitem Hunter_Bow;",
+            "}"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_merchants_shops_txt_1406_1439",
+      "unit": "E2-npc-merchants-shops-txt-1406",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Weapon Dealer#pay2"
+      },
+      "result": "verified",
+      "statement": "Weapon Dealer#pay2 is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/merchants/shops.txt",
+          "lines": [
+            1439,
+            1440,
+            1441,
+            1442,
+            1443
+          ],
+          "required_source_literals": [
+            "payon_in01,5,129,7\ttrader\tWeapon Dealer#pay2\t4_F_KID2,{",
+            "OnInit:",
+            "sellitem Town_Sword;",
+            "sellitem Cinquedea;",
+            "}"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_merchants_shops_txt_1406_1445",
+      "unit": "E2-npc-merchants-shops-txt-1406",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Armor Dealer#pay"
+      },
+      "result": "verified",
+      "statement": "Armor Dealer#pay is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/merchants/shops.txt",
+          "lines": [
+            1445,
+            1446,
+            1447,
+            1448,
+            1449,
+            1450,
+            1451,
+            1452,
+            1453,
+            1454,
+            1455,
+            1456,
+            1457,
+            1458,
+            1459,
+            1460,
+            1461,
+            1462,
+            1463,
+            1464,
+            1465,
+            1466
+          ],
+          "required_source_literals": [
+            "payon_in01,7,119,2\ttrader\tArmor Dealer#pay\t1_F_ORIENT_02,{",
+            "OnInit:",
+            "sellitem Sandals;",
+            "sellitem Shoes;",
+            "sellitem Boots;",
+            "sellitem Hood;",
+            "sellitem Muffler;",
+            "sellitem Manteau;",
+            "sellitem Ribbon;",
+            "sellitem Bandana;",
+            "sellitem Eye_Bandage;",
+            "sellitem Cotton_Shirt;",
+            "sellitem Leather_Jacket;",
+            "sellitem Adventure_Suit;",
+            "sellitem Silk_Robe;",
+            "sellitem Wooden_Mail;",
+            "sellitem Silver_Robe;",
+            "sellitem Mantle;",
+            "sellitem Coat;",
+            "sellitem Tights;",
+            "sellitem Novice_Armlet;",
+            "}"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_merchants_shops_txt_1406_1469",
+      "unit": "E2-npc-merchants-shops-txt-1406",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Vendor from Milk Ranch#p"
+      },
+      "result": "verified",
+      "statement": "Vendor from Milk Ranch#p is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/merchants/shops.txt",
+          "lines": [
+            1469,
+            1470,
+            1471,
+            1472
+          ],
+          "required_source_literals": [
+            "prontera,73,134,0\ttrader\tVendor from Milk Ranch#p\t4_F_01,{",
+            "OnInit:",
+            "sellitem Milk;",
+            "}"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_merchants_shops_txt_1406_1474",
+      "unit": "E2-npc-merchants-shops-txt-1406",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Fruit Gardener#prt"
+      },
+      "result": "verified",
+      "statement": "Fruit Gardener#prt is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/merchants/shops.txt",
+          "lines": [
+            1474,
+            1475,
+            1476,
+            1477,
+            1478
+          ],
+          "required_source_literals": [
+            "prontera,104,49,0\ttrader\tFruit Gardener#prt\t8_F,{",
+            "OnInit:",
+            "sellitem Apple;",
+            "sellitem Banana;",
+            "}"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_merchants_shops_txt_1406_1480",
+      "unit": "E2-npc-merchants-shops-txt-1406",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Butcher#prt"
+      },
+      "result": "verified",
+      "statement": "Butcher#prt is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/merchants/shops.txt",
+          "lines": [
+            1480,
+            1481,
+            1482,
+            1483,
+            1484
+          ],
+          "required_source_literals": [
+            "prontera,64,125,0\ttrader\tButcher#prt\t4_M_BARBER,{",
+            "OnInit:",
+            "sellitem Meat;",
+            "sellitem Monsters_Feed;",
+            "}"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_merchants_shops_txt_1406_1486",
+      "unit": "E2-npc-merchants-shops-txt-1406",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Flower Girl#prt"
+      },
+      "result": "verified",
+      "statement": "Flower Girl#prt is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/merchants/shops.txt",
+          "lines": [
+            1486,
+            1487,
+            1488,
+            1489,
+            1490
+          ],
+          "required_source_literals": [
+            "prontera,58,182,0\ttrader\tFlower Girl#prt\t4W_KID,{",
+            "OnInit:",
+            "sellitem Flower;",
+            "sellitem Bunch_Of_Flowers;",
+            "}"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
