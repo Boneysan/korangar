@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 1560,
+    "E1_unknown": 1563,
     "E1_verified": 1
   },
   "entries": [
@@ -9579,6 +9579,81 @@
           ],
           "required_source_literals": [
             "getitem Golden_Anvil,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ein_in01_zelmeto_branch_for_1969_2069",
+      "unit": "E1-ein_in01_zelmeto_branch_for_1969",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Zelmeto"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Tube,20; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_ein.txt",
+          "lines": [
+            2069
+          ],
+          "required_source_literals": [
+            "delitem Tube,20;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ein_in01_zelmeto_branch_for_1969_2070",
+      "unit": "E1-ein_in01_zelmeto_branch_for_1969",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Zelmeto"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Screw,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_ein.txt",
+          "lines": [
+            2070
+          ],
+          "required_source_literals": [
+            "delitem Screw,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ein_in01_zelmeto_branch_for_1969_2071",
+      "unit": "E1-ein_in01_zelmeto_branch_for_1969",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Zelmeto"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Old_Steel_Plate,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_ein.txt",
+          "lines": [
+            2071
+          ],
+          "required_source_literals": [
+            "delitem Old_Steel_Plate,10;"
           ]
         }
       ],

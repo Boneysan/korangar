@@ -14873,7 +14873,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "strong",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Zelmeto",
@@ -14892,7 +14892,26 @@
       ],
       "size_lines": 623,
       "reason": "refused by the braced one-item prover: braceless",
-      "history": []
+      "history": [
+        "2026-09-30T16:13:24Z activated",
+        "2026-09-30T16:13:24Z validated",
+        "2026-09-30T16:13:24Z verified: 3 claims supported",
+        "2026-09-30T16:13:47Z accepted",
+        "2026-09-30T16:13:47Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "b43d7bed95684e6701c07a1fade212683bf31bba17cb7516466ef67799ad9a88",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "audit": "due",
+      "commit": "committed"
     },
     {
       "id": "E1-ein_in01_calla_ein_branch_for_4350",
