@@ -69801,6 +69801,31 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_job3_sha01_keybox01_branch_for_1943_1997",
+      "unit": "E1-job3_sha01_keybox01_branch_for_1943",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "????#keybox01"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Cheat_Key,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-2/shadow_chaser.txt",
+          "lines": [
+            1997
+          ],
+          "required_source_literals": [
+            "getitem Cheat_Key,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
