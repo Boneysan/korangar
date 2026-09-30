@@ -8,7 +8,7 @@
     "E1_not_applicable": 1,
     "E1_unknown": 3464,
     "E1_verified": 1,
-    "E2_verified": 24,
+    "E2_verified": 32,
     "E3_unknown": 973
   },
   "entries": [
@@ -87513,6 +87513,456 @@
             "sellitem Wing_Of_Fly;",
             "sellitem Wing_Of_Butterfly;",
             "sellitem Spectacles;",
+            "sellitem Booby_Trap;",
+            "}"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_merchants_shops_txt_390_390",
+      "unit": "E2-npc-merchants-shops-txt-390",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Souvenir Vendor#cmd"
+      },
+      "result": "verified",
+      "statement": "Souvenir Vendor#cmd is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/merchants/shops.txt",
+          "lines": [
+            390,
+            391,
+            392,
+            393,
+            394
+          ],
+          "required_source_literals": [
+            "comodo,296,125,4\ttrader\tSouvenir Vendor#cmd\t4W_F_01,{",
+            "OnInit:",
+            "sellitem Clam_Shell;",
+            "sellitem Crap_Shell;",
+            "}"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_merchants_shops_txt_390_396",
+      "unit": "E2-npc-merchants-shops-txt-390",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Tool Dealer#cmd2"
+      },
+      "result": "verified",
+      "statement": "Tool Dealer#cmd2 is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/merchants/shops.txt",
+          "lines": [
+            396,
+            397,
+            398,
+            399,
+            400,
+            401,
+            402,
+            403,
+            404,
+            405,
+            406,
+            407,
+            408,
+            409
+          ],
+          "required_source_literals": [
+            "cmd_fild07,257,126,5\ttrader\tTool Dealer#cmd2\t4_M_01,{",
+            "OnInit:",
+            "sellitem Iron_Arrow;",
+            "sellitem Red_Potion;",
+            "sellitem Orange_Potion;",
+            "sellitem Yellow_Potion;",
+            "sellitem White_Potion;",
+            "sellitem Center_Potion;",
+            "sellitem Awakening_Potion;",
+            "sellitem Wing_Of_Fly;",
+            "sellitem Wing_Of_Butterfly;",
+            "sellitem Spectacles;",
+            "sellitem Booby_Trap;",
+            "}"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_merchants_shops_txt_390_411",
+      "unit": "E2-npc-merchants-shops-txt-390",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Weapon Dealer#cmd2"
+      },
+      "result": "verified",
+      "statement": "Weapon Dealer#cmd2 is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/merchants/shops.txt",
+          "lines": [
+            411,
+            412,
+            413,
+            414,
+            415,
+            416,
+            417,
+            418,
+            419,
+            420,
+            421,
+            422
+          ],
+          "required_source_literals": [
+            "cmd_fild07,250,98,2\ttrader\tWeapon Dealer#cmd2\t1_M_03,{",
+            "OnInit:",
+            "sellitem Javelin;",
+            "sellitem Spear;",
+            "sellitem Pike;",
+            "sellitem Guisarme;",
+            "sellitem Glaive;",
+            "sellitem Partizan;",
+            "sellitem Trident;",
+            "sellitem Halberd;",
+            "sellitem Lance;",
+            "}"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_merchants_shops_txt_390_424",
+      "unit": "E2-npc-merchants-shops-txt-390",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Armor Dealer#cmd2"
+      },
+      "result": "verified",
+      "statement": "Armor Dealer#cmd2 is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/merchants/shops.txt",
+          "lines": [
+            424,
+            425,
+            426,
+            427,
+            428,
+            429,
+            430,
+            431,
+            432,
+            433,
+            434,
+            435,
+            436,
+            437,
+            438,
+            439,
+            440,
+            441
+          ],
+          "required_source_literals": [
+            "cmd_fild07,277,85,4\ttrader\tArmor Dealer#cmd2\t4W_F_01,{",
+            "OnInit:",
+            "sellitem Cap;",
+            "sellitem Helm;",
+            "sellitem Buckler;",
+            "sellitem Shield;",
+            "sellitem Boots;",
+            "sellitem Muffler;",
+            "sellitem Manteau;",
+            "sellitem Adventure_Suit;",
+            "sellitem Silk_Robe;",
+            "sellitem Mantle;",
+            "sellitem Coat;",
+            "sellitem Thief_Clothes;",
+            "sellitem Padded_Armor;",
+            "sellitem Chain_Mail;",
+            "sellitem Plate_Armor;",
+            "}"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_merchants_shops_txt_390_444",
+      "unit": "E2-npc-merchants-shops-txt-390",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "One Hand Weapon Dealer"
+      },
+      "result": "verified",
+      "statement": "One Hand Weapon Dealer is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/merchants/shops.txt",
+          "lines": [
+            444,
+            445,
+            446,
+            447,
+            448,
+            449,
+            450,
+            451,
+            452,
+            453,
+            454,
+            455,
+            456,
+            457,
+            458,
+            459,
+            460,
+            461,
+            462,
+            463,
+            464,
+            465,
+            466,
+            467,
+            468,
+            469,
+            470,
+            471,
+            472,
+            473,
+            474,
+            475,
+            476,
+            477,
+            478,
+            479,
+            480,
+            481,
+            482
+          ],
+          "required_source_literals": [
+            "ein_in01,106,27,4\ttrader\tOne Hand Weapon Dealer\t4_F_EINWOMAN,{",
+            "OnInit:",
+            "sellitem Sword;",
+            "sellitem Falchion;",
+            "sellitem Blade;",
+            "sellitem Lapier;",
+            "sellitem Scimiter;",
+            "sellitem Tsurugi;",
+            "sellitem Ring_Pommel_Saber;",
+            "sellitem Haedonggum;",
+            "sellitem Saber;",
+            "sellitem Flamberge;",
+            "sellitem Knife;",
+            "sellitem Cutter;",
+            "sellitem Main_Gauche;",
+            "sellitem Dirk;",
+            "sellitem Dagger;",
+            "sellitem Stiletto;",
+            "sellitem Gladius;",
+            "sellitem Damascus;",
+            "sellitem Axe;",
+            "sellitem Javelin;",
+            "sellitem Spear;",
+            "sellitem Pike;",
+            "sellitem Club;",
+            "sellitem Mace;",
+            "sellitem Smasher;",
+            "sellitem Flail;",
+            "sellitem Morning_Star;",
+            "sellitem Sword_Mace;",
+            "sellitem Chain;",
+            "sellitem Stunner;",
+            "sellitem Waghnakh;",
+            "sellitem Knuckle_Duster;",
+            "sellitem Hora;",
+            "sellitem Fist;",
+            "sellitem Claw;",
+            "sellitem Finger;",
+            "}"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_merchants_shops_txt_390_484",
+      "unit": "E2-npc-merchants-shops-txt-390",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Two Hand Weapon Dealer"
+      },
+      "result": "verified",
+      "statement": "Two Hand Weapon Dealer is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/merchants/shops.txt",
+          "lines": [
+            484,
+            485,
+            486,
+            487,
+            488,
+            489,
+            490,
+            491,
+            492,
+            493,
+            494,
+            495,
+            496,
+            497,
+            498,
+            499,
+            500,
+            501,
+            502,
+            503,
+            504
+          ],
+          "required_source_literals": [
+            "ein_in01,109,27,4\ttrader\tTwo Hand Weapon Dealer\t4_F_EINWOMAN,{",
+            "OnInit:",
+            "sellitem Katana;",
+            "sellitem Slayer;",
+            "sellitem Bastard_Sword;",
+            "sellitem Two_Hand_Sword;",
+            "sellitem Broad_Sword;",
+            "sellitem Battle_Axe;",
+            "sellitem Hammer;",
+            "sellitem Buster;",
+            "sellitem Two_Handed_Axe;",
+            "sellitem Lance;",
+            "sellitem Guisarme;",
+            "sellitem Glaive;",
+            "sellitem Partizan;",
+            "sellitem Trident;",
+            "sellitem Halberd;",
+            "sellitem Jur;",
+            "sellitem Katar;",
+            "sellitem Jamadhar;",
+            "}"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_merchants_shops_txt_390_506",
+      "unit": "E2-npc-merchants-shops-txt-390",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Weapon Dealer#ein"
+      },
+      "result": "verified",
+      "statement": "Weapon Dealer#ein is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/merchants/shops.txt",
+          "lines": [
+            506,
+            507,
+            508,
+            509,
+            510,
+            511,
+            512
+          ],
+          "required_source_literals": [
+            "ein_in01,119,26,4\ttrader\tWeapon Dealer#ein\t4_M_EINMAN,{",
+            "OnInit:",
+            "sellitem Kindling_Dagger;",
+            "sellitem Obsidian_Dagger;",
+            "sellitem Fishermans_Dagger;",
+            "sellitem Jujube_Dagger;",
+            "}"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_merchants_shops_txt_390_514",
+      "unit": "E2-npc-merchants-shops-txt-390",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Tool Dealer#ein"
+      },
+      "result": "verified",
+      "statement": "Tool Dealer#ein is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/merchants/shops.txt",
+          "lines": [
+            514,
+            515,
+            516,
+            517,
+            518,
+            519,
+            520,
+            521,
+            522,
+            523,
+            524,
+            525,
+            526,
+            527,
+            528,
+            529,
+            530
+          ],
+          "required_source_literals": [
+            "ein_in01,189,15,1\ttrader\tTool Dealer#ein\t4_F_EINWOMAN,{",
+            "OnInit:",
+            "sellitem Arrow;",
+            "sellitem Fire_Arrow;",
+            "sellitem Silver_Arrow;",
+            "sellitem Spectacles;",
+            "sellitem Red_Potion;",
+            "sellitem Orange_Potion;",
+            "sellitem Yellow_Potion;",
+            "sellitem White_Potion;",
+            "sellitem Green_Potion;",
+            "sellitem Center_Potion;",
+            "sellitem Awakening_Potion;",
+            "sellitem Wing_Of_Fly;",
+            "sellitem Wing_Of_Butterfly;",
             "sellitem Booby_Trap;",
             "}"
           ]
