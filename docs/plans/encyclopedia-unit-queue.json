@@ -62482,7 +62482,7 @@
       "package": "E4",
       "kind": "e4_formula",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "skill_names": [
@@ -62603,7 +62603,25 @@
       ],
       "size_lines": 383,
       "reason": "single skillratio expression",
-      "history": []
+      "history": [
+        "2026-09-30T21:05:36Z activated",
+        "2026-09-30T21:05:37Z validated",
+        "2026-09-30T21:05:37Z verified: 1 claims supported",
+        "2026-09-30T21:06:01Z accepted",
+        "2026-09-30T21:06:01Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "27d91333dba71e6a8ab1617699e1c470f08e9bacc1f0766f45cc37dbe5e738b3",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E4-npc-earthquake",
