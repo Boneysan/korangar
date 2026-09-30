@@ -25504,7 +25504,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Rogue#sign",
@@ -25523,7 +25523,25 @@
       ],
       "size_lines": 330,
       "reason": "refused by the braced one-item prover: braceless",
-      "history": []
+      "history": [
+        "2026-09-30T17:50:55Z activated",
+        "2026-09-30T17:50:55Z validated",
+        "2026-09-30T17:50:55Z verified: 22 claims supported",
+        "2026-09-30T17:51:19Z accepted",
+        "2026-09-30T17:51:19Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "c10f76b81626665db470ae37e8100ba7111513778ba975dfe7243978fd54824f",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-payon_in03_daewoon_sign_branch_for_1885",

@@ -63176,6 +63176,556 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_morocc_in_rogue_sign_branch_for_1223_1305",
+      "unit": "E1-morocc_in_rogue_sign_branch_for_1223",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Rogue#sign"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Fluff,100; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/the_sign_quest.txt",
+          "lines": [
+            1305
+          ],
+          "required_source_literals": [
+            "delitem Fluff,100;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_morocc_in_rogue_sign_branch_for_1223_1307",
+      "unit": "E1-morocc_in_rogue_sign_branch_for_1223",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Rogue#sign"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Poison_Spore,50; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/the_sign_quest.txt",
+          "lines": [
+            1307
+          ],
+          "required_source_literals": [
+            "delitem Poison_Spore,50;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_morocc_in_rogue_sign_branch_for_1223_1309",
+      "unit": "E1-morocc_in_rogue_sign_branch_for_1223",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Rogue#sign"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Scorpions_Tail,30; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/the_sign_quest.txt",
+          "lines": [
+            1309
+          ],
+          "required_source_literals": [
+            "delitem Scorpions_Tail,30;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_morocc_in_rogue_sign_branch_for_1223_1311",
+      "unit": "E1-morocc_in_rogue_sign_branch_for_1223",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Rogue#sign"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Rotten_Bandage,20; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/the_sign_quest.txt",
+          "lines": [
+            1311
+          ],
+          "required_source_literals": [
+            "delitem Rotten_Bandage,20;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_morocc_in_rogue_sign_branch_for_1223_1313",
+      "unit": "E1-morocc_in_rogue_sign_branch_for_1223",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Rogue#sign"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Petite_DiablOfs_Horn,15; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/the_sign_quest.txt",
+          "lines": [
+            1313
+          ],
+          "required_source_literals": [
+            "delitem Petite_DiablOfs_Horn,15;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_morocc_in_rogue_sign_branch_for_1223_1315",
+      "unit": "E1-morocc_in_rogue_sign_branch_for_1223",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Rogue#sign"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Coral_Reef,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/the_sign_quest.txt",
+          "lines": [
+            1315
+          ],
+          "required_source_literals": [
+            "delitem Coral_Reef,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_morocc_in_rogue_sign_branch_for_1223_1337",
+      "unit": "E1-morocc_in_rogue_sign_branch_for_1223",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Rogue#sign"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Poison_Spore,50; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/the_sign_quest.txt",
+          "lines": [
+            1337
+          ],
+          "required_source_literals": [
+            "delitem Poison_Spore,50;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_morocc_in_rogue_sign_branch_for_1223_1339",
+      "unit": "E1-morocc_in_rogue_sign_branch_for_1223",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Rogue#sign"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Scorpions_Tail,30; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/the_sign_quest.txt",
+          "lines": [
+            1339
+          ],
+          "required_source_literals": [
+            "delitem Scorpions_Tail,30;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_morocc_in_rogue_sign_branch_for_1223_1341",
+      "unit": "E1-morocc_in_rogue_sign_branch_for_1223",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Rogue#sign"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Rotten_Bandage,20; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/the_sign_quest.txt",
+          "lines": [
+            1341
+          ],
+          "required_source_literals": [
+            "delitem Rotten_Bandage,20;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_morocc_in_rogue_sign_branch_for_1223_1343",
+      "unit": "E1-morocc_in_rogue_sign_branch_for_1223",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Rogue#sign"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Petite_DiablOfs_Horn,15; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/the_sign_quest.txt",
+          "lines": [
+            1343
+          ],
+          "required_source_literals": [
+            "delitem Petite_DiablOfs_Horn,15;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_morocc_in_rogue_sign_branch_for_1223_1345",
+      "unit": "E1-morocc_in_rogue_sign_branch_for_1223",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Rogue#sign"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Coral_Reef,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/the_sign_quest.txt",
+          "lines": [
+            1345
+          ],
+          "required_source_literals": [
+            "delitem Coral_Reef,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_morocc_in_rogue_sign_branch_for_1223_1368",
+      "unit": "E1-morocc_in_rogue_sign_branch_for_1223",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Rogue#sign"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Scorpions_Tail,30; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/the_sign_quest.txt",
+          "lines": [
+            1368
+          ],
+          "required_source_literals": [
+            "delitem Scorpions_Tail,30;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_morocc_in_rogue_sign_branch_for_1223_1370",
+      "unit": "E1-morocc_in_rogue_sign_branch_for_1223",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Rogue#sign"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Rotten_Bandage,20; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/the_sign_quest.txt",
+          "lines": [
+            1370
+          ],
+          "required_source_literals": [
+            "delitem Rotten_Bandage,20;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_morocc_in_rogue_sign_branch_for_1223_1372",
+      "unit": "E1-morocc_in_rogue_sign_branch_for_1223",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Rogue#sign"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Petite_DiablOfs_Horn,15; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/the_sign_quest.txt",
+          "lines": [
+            1372
+          ],
+          "required_source_literals": [
+            "delitem Petite_DiablOfs_Horn,15;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_morocc_in_rogue_sign_branch_for_1223_1374",
+      "unit": "E1-morocc_in_rogue_sign_branch_for_1223",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Rogue#sign"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Coral_Reef,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/the_sign_quest.txt",
+          "lines": [
+            1374
+          ],
+          "required_source_literals": [
+            "delitem Coral_Reef,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_morocc_in_rogue_sign_branch_for_1223_1396",
+      "unit": "E1-morocc_in_rogue_sign_branch_for_1223",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Rogue#sign"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Rotten_Bandage,20; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/the_sign_quest.txt",
+          "lines": [
+            1396
+          ],
+          "required_source_literals": [
+            "delitem Rotten_Bandage,20;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_morocc_in_rogue_sign_branch_for_1223_1398",
+      "unit": "E1-morocc_in_rogue_sign_branch_for_1223",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Rogue#sign"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Petite_DiablOfs_Horn,15; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/the_sign_quest.txt",
+          "lines": [
+            1398
+          ],
+          "required_source_literals": [
+            "delitem Petite_DiablOfs_Horn,15;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_morocc_in_rogue_sign_branch_for_1223_1400",
+      "unit": "E1-morocc_in_rogue_sign_branch_for_1223",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Rogue#sign"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Coral_Reef,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/the_sign_quest.txt",
+          "lines": [
+            1400
+          ],
+          "required_source_literals": [
+            "delitem Coral_Reef,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_morocc_in_rogue_sign_branch_for_1223_1422",
+      "unit": "E1-morocc_in_rogue_sign_branch_for_1223",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Rogue#sign"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Petite_DiablOfs_Horn,15; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/the_sign_quest.txt",
+          "lines": [
+            1422
+          ],
+          "required_source_literals": [
+            "delitem Petite_DiablOfs_Horn,15;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_morocc_in_rogue_sign_branch_for_1223_1424",
+      "unit": "E1-morocc_in_rogue_sign_branch_for_1223",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Rogue#sign"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Coral_Reef,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/the_sign_quest.txt",
+          "lines": [
+            1424
+          ],
+          "required_source_literals": [
+            "delitem Coral_Reef,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_morocc_in_rogue_sign_branch_for_1223_1451",
+      "unit": "E1-morocc_in_rogue_sign_branch_for_1223",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Rogue#sign"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Coral_Reef,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/the_sign_quest.txt",
+          "lines": [
+            1451
+          ],
+          "required_source_literals": [
+            "delitem Coral_Reef,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_morocc_in_rogue_sign_branch_for_1223_1529",
+      "unit": "E1-morocc_in_rogue_sign_branch_for_1223",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Rogue#sign"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Part_Of_Stars_Sob,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/the_sign_quest.txt",
+          "lines": [
+            1529
+          ],
+          "required_source_literals": [
+            "getitem Part_Of_Stars_Sob,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
