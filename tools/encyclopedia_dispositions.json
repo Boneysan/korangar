@@ -37076,6 +37076,106 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ayo_in01_cook_ayo_branch_for_2181_2281",
+      "unit": "E1-ayo_in01_cook_ayo_branch_for_2181",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Cook#ayo"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Prawn,20; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_ayothaya.txt",
+          "lines": [
+            2281
+          ],
+          "required_source_literals": [
+            "delitem Prawn,20;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ayo_in01_cook_ayo_branch_for_2181_2373",
+      "unit": "E1-ayo_in01_cook_ayo_branch_for_2181",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Cook#ayo"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Lemon,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_ayothaya.txt",
+          "lines": [
+            2373
+          ],
+          "required_source_literals": [
+            "delitem Lemon,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ayo_in01_cook_ayo_branch_for_2181_2427",
+      "unit": "E1-ayo_in01_cook_ayo_branch_for_2181",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Cook#ayo"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Chilli,30; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_ayothaya.txt",
+          "lines": [
+            2427
+          ],
+          "required_source_literals": [
+            "delitem Chilli,30;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ayo_in01_cook_ayo_branch_for_2181_2474",
+      "unit": "E1-ayo_in01_cook_ayo_branch_for_2181",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Cook#ayo"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Tomyumkung,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_ayothaya.txt",
+          "lines": [
+            2474
+          ],
+          "required_source_literals": [
+            "getitem Tomyumkung,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
