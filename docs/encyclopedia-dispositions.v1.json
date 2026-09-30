@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 1417,
+    "E1_unknown": 1445,
     "E1_verified": 1
   },
   "entries": [
@@ -3354,6 +3354,706 @@
           ],
           "required_source_literals": [
             "delitem Jellopy,300;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ama_in01_sushi_master_ama_branch_for_792_1013",
+      "unit": "E1-ama_in01_sushi_master_ama_branch_for_792",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Sushi Master#ama"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Heart_Of_Mermaid,100; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_amatsu.txt",
+          "lines": [
+            1013
+          ],
+          "required_source_literals": [
+            "delitem Heart_Of_Mermaid,100;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ama_in01_sushi_master_ama_branch_for_792_1016",
+      "unit": "E1-ama_in01_sushi_master_ama_branch_for_792",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Sushi Master#ama"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Sasimi,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_amatsu.txt",
+          "lines": [
+            1016
+          ],
+          "required_source_literals": [
+            "getitem Sasimi,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ama_in01_sushi_master_ama_branch_for_792_1045",
+      "unit": "E1-ama_in01_sushi_master_ama_branch_for_792",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Sushi Master#ama"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Heart_Of_Mermaid,20; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_amatsu.txt",
+          "lines": [
+            1045
+          ],
+          "required_source_literals": [
+            "delitem Heart_Of_Mermaid,20;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ama_in01_sushi_master_ama_branch_for_792_1046",
+      "unit": "E1-ama_in01_sushi_master_ama_branch_for_792",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Sushi Master#ama"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Shusi,20; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_amatsu.txt",
+          "lines": [
+            1046
+          ],
+          "required_source_literals": [
+            "getitem Shusi,20;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ama_in01_sushi_master_ama_branch_for_792_1051",
+      "unit": "E1-ama_in01_sushi_master_ama_branch_for_792",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Sushi Master#ama"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Heart_Of_Mermaid,20; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_amatsu.txt",
+          "lines": [
+            1051
+          ],
+          "required_source_literals": [
+            "delitem Heart_Of_Mermaid,20;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ama_in01_sushi_master_ama_branch_for_792_1052",
+      "unit": "E1-ama_in01_sushi_master_ama_branch_for_792",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Sushi Master#ama"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Fish_Slice,20; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_amatsu.txt",
+          "lines": [
+            1052
+          ],
+          "required_source_literals": [
+            "getitem Fish_Slice,20;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ama_in01_sushi_master_ama_branch_for_792_1057",
+      "unit": "E1-ama_in01_sushi_master_ama_branch_for_792",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Sushi Master#ama"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Heart_Of_Mermaid,20; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_amatsu.txt",
+          "lines": [
+            1057
+          ],
+          "required_source_literals": [
+            "delitem Heart_Of_Mermaid,20;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ama_in01_sushi_master_ama_branch_for_792_1058",
+      "unit": "E1-ama_in01_sushi_master_ama_branch_for_792",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Sushi Master#ama"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Shusi,20; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_amatsu.txt",
+          "lines": [
+            1058
+          ],
+          "required_source_literals": [
+            "getitem Shusi,20;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ama_in01_sushi_master_ama_branch_for_792_1063",
+      "unit": "E1-ama_in01_sushi_master_ama_branch_for_792",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Sushi Master#ama"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Heart_Of_Mermaid,20; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_amatsu.txt",
+          "lines": [
+            1063
+          ],
+          "required_source_literals": [
+            "delitem Heart_Of_Mermaid,20;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ama_in01_sushi_master_ama_branch_for_792_1064",
+      "unit": "E1-ama_in01_sushi_master_ama_branch_for_792",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Sushi Master#ama"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Fish_Slice,20; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_amatsu.txt",
+          "lines": [
+            1064
+          ],
+          "required_source_literals": [
+            "getitem Fish_Slice,20;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ama_in01_sushi_master_ama_branch_for_792_1069",
+      "unit": "E1-ama_in01_sushi_master_ama_branch_for_792",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Sushi Master#ama"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Heart_Of_Mermaid,20; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_amatsu.txt",
+          "lines": [
+            1069
+          ],
+          "required_source_literals": [
+            "delitem Heart_Of_Mermaid,20;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ama_in01_sushi_master_ama_branch_for_792_1070",
+      "unit": "E1-ama_in01_sushi_master_ama_branch_for_792",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Sushi Master#ama"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Fish_Slice,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_amatsu.txt",
+          "lines": [
+            1070
+          ],
+          "required_source_literals": [
+            "getitem Fish_Slice,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ama_in01_sushi_master_ama_branch_for_792_1071",
+      "unit": "E1-ama_in01_sushi_master_ama_branch_for_792",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Sushi Master#ama"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Shusi,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_amatsu.txt",
+          "lines": [
+            1071
+          ],
+          "required_source_literals": [
+            "getitem Shusi,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ama_in01_sushi_master_ama_branch_for_792_1131",
+      "unit": "E1-ama_in01_sushi_master_ama_branch_for_792",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Sushi Master#ama"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Shusi,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_amatsu.txt",
+          "lines": [
+            1131
+          ],
+          "required_source_literals": [
+            "getitem Shusi,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ama_in01_sushi_master_ama_branch_for_792_1144",
+      "unit": "E1-ama_in01_sushi_master_ama_branch_for_792",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Sushi Master#ama"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Shusi,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_amatsu.txt",
+          "lines": [
+            1144
+          ],
+          "required_source_literals": [
+            "getitem Shusi,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ama_in01_sushi_master_ama_branch_for_792_1172",
+      "unit": "E1-ama_in01_sushi_master_ama_branch_for_792",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Sushi Master#ama"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Fish_Slice,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_amatsu.txt",
+          "lines": [
+            1172
+          ],
+          "required_source_literals": [
+            "getitem Fish_Slice,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ama_in01_sushi_master_ama_branch_for_792_1185",
+      "unit": "E1-ama_in01_sushi_master_ama_branch_for_792",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Sushi Master#ama"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Fish_Slice,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_amatsu.txt",
+          "lines": [
+            1185
+          ],
+          "required_source_literals": [
+            "getitem Fish_Slice,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ama_in01_sushi_master_ama_branch_for_792_827",
+      "unit": "E1-ama_in01_sushi_master_ama_branch_for_792",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Sushi Master#ama"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Candy,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_amatsu.txt",
+          "lines": [
+            827
+          ],
+          "required_source_literals": [
+            "delitem Candy,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ama_in01_sushi_master_ama_branch_for_792_828",
+      "unit": "E1-ama_in01_sushi_master_ama_branch_for_792",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Sushi Master#ama"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Fish_Slice,15; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_amatsu.txt",
+          "lines": [
+            828
+          ],
+          "required_source_literals": [
+            "getitem Fish_Slice,15;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ama_in01_sushi_master_ama_branch_for_792_859",
+      "unit": "E1-ama_in01_sushi_master_ama_branch_for_792",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Sushi Master#ama"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Crap_Shell,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_amatsu.txt",
+          "lines": [
+            859
+          ],
+          "required_source_literals": [
+            "delitem Crap_Shell,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ama_in01_sushi_master_ama_branch_for_792_860",
+      "unit": "E1-ama_in01_sushi_master_ama_branch_for_792",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Sushi Master#ama"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Shusi,20; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_amatsu.txt",
+          "lines": [
+            860
+          ],
+          "required_source_literals": [
+            "getitem Shusi,20;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ama_in01_sushi_master_ama_branch_for_792_891",
+      "unit": "E1-ama_in01_sushi_master_ama_branch_for_792",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Sushi Master#ama"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Conch,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_amatsu.txt",
+          "lines": [
+            891
+          ],
+          "required_source_literals": [
+            "delitem Conch,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ama_in01_sushi_master_ama_branch_for_792_892",
+      "unit": "E1-ama_in01_sushi_master_ama_branch_for_792",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Sushi Master#ama"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Shusi,30; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_amatsu.txt",
+          "lines": [
+            892
+          ],
+          "required_source_literals": [
+            "getitem Shusi,30;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ama_in01_sushi_master_ama_branch_for_792_923",
+      "unit": "E1-ama_in01_sushi_master_ama_branch_for_792",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Sushi Master#ama"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Fish_Tail,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_amatsu.txt",
+          "lines": [
+            923
+          ],
+          "required_source_literals": [
+            "delitem Fish_Tail,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ama_in01_sushi_master_ama_branch_for_792_924",
+      "unit": "E1-ama_in01_sushi_master_ama_branch_for_792",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Sushi Master#ama"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Fish_Slice,20; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_amatsu.txt",
+          "lines": [
+            924
+          ],
+          "required_source_literals": [
+            "getitem Fish_Slice,20;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ama_in01_sushi_master_ama_branch_for_792_925",
+      "unit": "E1-ama_in01_sushi_master_ama_branch_for_792",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Sushi Master#ama"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Shusi,30; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_amatsu.txt",
+          "lines": [
+            925
+          ],
+          "required_source_literals": [
+            "getitem Shusi,30;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ama_in01_sushi_master_ama_branch_for_792_954",
+      "unit": "E1-ama_in01_sushi_master_ama_branch_for_792",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Sushi Master#ama"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem White_Platter,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_amatsu.txt",
+          "lines": [
+            954
+          ],
+          "required_source_literals": [
+            "delitem White_Platter,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ama_in01_sushi_master_ama_branch_for_792_957",
+      "unit": "E1-ama_in01_sushi_master_ama_branch_for_792",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Sushi Master#ama"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Shusi,20; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_amatsu.txt",
+          "lines": [
+            957
+          ],
+          "required_source_literals": [
+            "getitem Shusi,20;"
           ]
         }
       ],
