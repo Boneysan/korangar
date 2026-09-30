@@ -30901,6 +30901,106 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_job01_bar_master_moc2_01_branch_for_12022_12073",
+      "unit": "E1-que_job01_bar_master_moc2_01_branch_for_12022",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Bar Master#moc2_01"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Tropical_Sograt,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_1.txt",
+          "lines": [
+            12073
+          ],
+          "required_source_literals": [
+            "getitem Tropical_Sograt,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_job01_bar_master_moc2_01_branch_for_12022_12091",
+      "unit": "E1-que_job01_bar_master_moc2_01_branch_for_12022",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Bar Master#moc2_01"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Tropical_Sograt,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_1.txt",
+          "lines": [
+            12091
+          ],
+          "required_source_literals": [
+            "getitem Tropical_Sograt,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_job01_bar_master_moc2_01_branch_for_12022_12117",
+      "unit": "E1-que_job01_bar_master_moc2_01_branch_for_12022",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Bar Master#moc2_01"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Vermilion_The_Beach,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_1.txt",
+          "lines": [
+            12117
+          ],
+          "required_source_literals": [
+            "getitem Vermilion_The_Beach,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_job01_bar_master_moc2_01_branch_for_12022_12134",
+      "unit": "E1-que_job01_bar_master_moc2_01_branch_for_12022",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Bar Master#moc2_01"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Vermilion_The_Beach,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_1.txt",
+          "lines": [
+            12134
+          ],
+          "required_source_literals": [
+            "getitem Vermilion_The_Beach,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
