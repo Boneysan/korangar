@@ -42151,6 +42151,31 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_lhz_cube_box_cube1_branch_for_1572_1687",
+      "unit": "E1-lhz_cube_box_cube1_branch_for_1572",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Box#cube1"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Lab_Passport,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_lighthalzen.txt",
+          "lines": [
+            1687
+          ],
+          "required_source_literals": [
+            "getitem Lab_Passport,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }

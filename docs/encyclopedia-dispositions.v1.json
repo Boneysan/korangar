@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 1681,
+    "E1_unknown": 1682,
     "E1_verified": 1
   },
   "entries": [
@@ -17379,6 +17379,31 @@
           ],
           "required_source_literals": [
             "delitem Free_Flying_Ship_Ticket,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_lhz_cube_box_cube1_branch_for_1572_1687",
+      "unit": "E1-lhz_cube_box_cube1_branch_for_1572",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Box#cube1"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Lab_Passport,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_lighthalzen.txt",
+          "lines": [
+            1687
+          ],
+          "required_source_literals": [
+            "getitem Lab_Passport,1;"
           ]
         }
       ],
