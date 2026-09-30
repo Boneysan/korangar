@@ -131709,6 +131709,249 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2028_npc_jobs_2_2_alchemist_txt_225",
+      "unit": "E5-chain-2028",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2028
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 2028; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/alchemist.txt",
+          "lines": [
+            225
+          ],
+          "required_source_literals": [
+            "setquest 2028;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2028_npc_jobs_2_2_alchemist_txt_230",
+      "unit": "E5-chain-2028",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2029
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 2029; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/alchemist.txt",
+          "lines": [
+            230
+          ],
+          "required_source_literals": [
+            "setquest 2029;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2028_npc_jobs_2_2_alchemist_txt_235",
+      "unit": "E5-chain-2028",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2030
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 2030; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/alchemist.txt",
+          "lines": [
+            235
+          ],
+          "required_source_literals": [
+            "setquest 2030;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2028_npc_jobs_2_2_alchemist_txt_279",
+      "unit": "E5-chain-2028",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2028
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 2028; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/alchemist.txt",
+          "lines": [
+            279
+          ],
+          "required_source_literals": [
+            "changequest 2028,2031;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2028_npc_jobs_2_2_alchemist_txt_282",
+      "unit": "E5-chain-2028",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2029
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 2029; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/alchemist.txt",
+          "lines": [
+            282
+          ],
+          "required_source_literals": [
+            "changequest 2029,2031;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2028_npc_jobs_2_2_alchemist_txt_285",
+      "unit": "E5-chain-2028",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2030
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 2030; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/alchemist.txt",
+          "lines": [
+            285
+          ],
+          "required_source_literals": [
+            "changequest 2030,2031;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2028_npc_jobs_2_2_alchemist_txt_315",
+      "unit": "E5-chain-2028",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2028
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 2028; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/alchemist.txt",
+          "lines": [
+            315
+          ],
+          "required_source_literals": [
+            "changequest 2028,2031;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2028_npc_jobs_2_2_alchemist_txt_318",
+      "unit": "E5-chain-2028",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2029
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 2029; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/alchemist.txt",
+          "lines": [
+            318
+          ],
+          "required_source_literals": [
+            "changequest 2029,2031;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2028_npc_jobs_2_2_alchemist_txt_321",
+      "unit": "E5-chain-2028",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2030
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 2030; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/alchemist.txt",
+          "lines": [
+            321
+          ],
+          "required_source_literals": [
+            "changequest 2030,2031;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
