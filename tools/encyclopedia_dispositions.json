@@ -137163,6 +137163,87 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_10080_npc_quests_quests_alberta_txt_2893",
+      "unit": "E5-chain-10080",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          10082
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 10082; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_alberta.txt",
+          "lines": [
+            2893
+          ],
+          "required_source_literals": [
+            "changequest 10082,10083;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_10080_npc_quests_quests_alberta_txt_2919",
+      "unit": "E5-chain-10080",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          10081
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 10081; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_alberta.txt",
+          "lines": [
+            2919
+          ],
+          "required_source_literals": [
+            "changequest 10081,10082;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_10080_npc_quests_quests_alberta_txt_2968",
+      "unit": "E5-chain-10080",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          10080
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 10080; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_alberta.txt",
+          "lines": [
+            2968
+          ],
+          "required_source_literals": [
+            "changequest 10080,10081;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
