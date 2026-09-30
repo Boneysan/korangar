@@ -74851,6 +74851,131 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_moc_para01_tutorial_instructor_branch_for_35_532",
+      "unit": "E1-moc_para01_tutorial_instructor_branch_for_35",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Tutorial Instructor"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Jellopy,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/eden_tutorial.txt",
+          "lines": [
+            532
+          ],
+          "required_source_literals": [
+            "delitem Jellopy,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_moc_para01_tutorial_instructor_branch_for_35_536",
+      "unit": "E1-moc_para01_tutorial_instructor_branch_for_35",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Tutorial Instructor"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Tutorial_Mattle,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/eden_tutorial.txt",
+          "lines": [
+            536
+          ],
+          "required_source_literals": [
+            "getitem Tutorial_Mattle,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_moc_para01_tutorial_instructor_branch_for_35_537",
+      "unit": "E1-moc_para01_tutorial_instructor_branch_for_35",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Tutorial Instructor"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Tutorial_Mattle_,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/eden_tutorial.txt",
+          "lines": [
+            537
+          ],
+          "required_source_literals": [
+            "getitem Tutorial_Mattle_,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_moc_para01_tutorial_instructor_branch_for_35_571",
+      "unit": "E1-moc_para01_tutorial_instructor_branch_for_35",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Tutorial Instructor"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem 15033,2; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/eden_tutorial.txt",
+          "lines": [
+            571
+          ],
+          "required_source_literals": [
+            "delitem 15033,2;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_moc_para01_tutorial_instructor_branch_for_35_572",
+      "unit": "E1-moc_para01_tutorial_instructor_branch_for_35",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Tutorial Instructor"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem 15034,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/eden_tutorial.txt",
+          "lines": [
+            572
+          ],
+          "required_source_literals": [
+            "delitem 15034,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }

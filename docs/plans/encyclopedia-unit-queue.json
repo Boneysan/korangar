@@ -32276,7 +32276,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "strong",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Tutorial Instructor",
@@ -32295,7 +32295,25 @@
       ],
       "size_lines": 556,
       "reason": "refused by the braced one-item prover: switch",
-      "history": []
+      "history": [
+        "2026-09-30T18:53:38Z activated",
+        "2026-09-30T18:53:38Z validated",
+        "2026-09-30T18:53:38Z verified: 5 claims supported",
+        "2026-09-30T18:54:01Z accepted",
+        "2026-09-30T18:54:01Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "13fee1b30e85d427ec6a760a8ed67b39095009ba663c71b23348662051c44198",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-moc_para01_tutorial_goal_branch_for_592",
