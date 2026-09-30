@@ -37380,7 +37380,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Fallen Angel#mal",
@@ -37399,7 +37399,25 @@
       ],
       "size_lines": 175,
       "reason": "refused by the braced one-item prover: braceless",
-      "history": []
+      "history": [
+        "2026-09-30T19:40:39Z activated",
+        "2026-09-30T19:40:40Z validated",
+        "2026-09-30T19:40:40Z verified: 1 claims supported",
+        "2026-09-30T19:41:03Z accepted",
+        "2026-09-30T19:41:03Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "5cf1b75c4e146ba00eb4bc72d07a54ba08ff7e425a148490c0df63cb0cd86b08",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-malaya_rodel_the_guard_malaya_branch_for_44",
