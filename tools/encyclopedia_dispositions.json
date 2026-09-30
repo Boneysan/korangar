@@ -76276,6 +76276,81 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_brasilis_candy_maker_branch_for_375_446",
+      "unit": "E1-brasilis_candy_maker_branch_for_375",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Candy Maker"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Guarana_Fruit,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_brasilis.txt",
+          "lines": [
+            446
+          ],
+          "required_source_literals": [
+            "delitem Guarana_Fruit,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_brasilis_candy_maker_branch_for_375_468",
+      "unit": "E1-brasilis_candy_maker_branch_for_375",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Candy Maker"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Guarana_Candy,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_brasilis.txt",
+          "lines": [
+            468
+          ],
+          "required_source_literals": [
+            "getitem Guarana_Candy,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_brasilis_candy_maker_branch_for_375_490",
+      "unit": "E1-brasilis_candy_maker_branch_for_375",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Candy Maker"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Guarana_Candy,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_brasilis.txt",
+          "lines": [
+            490
+          ],
+          "required_source_literals": [
+            "getitem Guarana_Candy,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
