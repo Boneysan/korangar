@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 902,
+    "E1_unknown": 905,
     "E1_verified": 1
   },
   "entries": [
@@ -14379,6 +14379,81 @@
           ],
           "required_source_literals": [
             "getitem Grimtooth_,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_chungwolmang_branch_for_578_681",
+      "unit": "E1-payon_chungwolmang_branch_for_578",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Chungwolmang"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Log,500; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2006_headgears.txt",
+          "lines": [
+            681
+          ],
+          "required_source_literals": [
+            "delitem Log,500;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_chungwolmang_branch_for_578_682",
+      "unit": "E1-payon_chungwolmang_branch_for_578",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Chungwolmang"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Flexible_String,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2006_headgears.txt",
+          "lines": [
+            682
+          ],
+          "required_source_literals": [
+            "delitem Flexible_String,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_chungwolmang_branch_for_578_745",
+      "unit": "E1-payon_chungwolmang_branch_for_578",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Chungwolmang"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Four_Leaf_Clover,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2006_headgears.txt",
+          "lines": [
+            745
+          ],
+          "required_source_literals": [
+            "delitem Four_Leaf_Clover,1;"
           ]
         }
       ],
