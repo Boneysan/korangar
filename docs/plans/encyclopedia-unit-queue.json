@@ -22511,7 +22511,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Thin-Faced Bard#sch",
@@ -22530,7 +22530,25 @@
       ],
       "size_lines": 266,
       "reason": "refused by the braced one-item prover: menu",
-      "history": []
+      "history": [
+        "2026-09-30T17:23:25Z activated",
+        "2026-09-30T17:23:25Z validated",
+        "2026-09-30T17:23:25Z verified: 1 claims supported",
+        "2026-09-30T17:23:58Z accepted",
+        "2026-09-30T17:23:58Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "02ec621ec441e3519f24e35877759909a16af64b134901c76fc49fa344f33ad2",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-veins_lockenlock_branch_for_3521",
