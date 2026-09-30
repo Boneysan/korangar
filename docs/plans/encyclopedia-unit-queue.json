@@ -2439,7 +2439,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Wickebine#BLS",
@@ -2458,7 +2458,22 @@
       ],
       "size_lines": 100,
       "reason": "refused by the braced one-item prover: menu",
-      "history": []
+      "history": [
+        "2026-09-30T14:18:56Z activated",
+        "2026-09-30T14:18:56Z validated",
+        "2026-09-30T14:18:56Z verified: 0 claims supported",
+        "2026-09-30T14:19:19Z accepted",
+        "2026-09-30T14:19:19Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "20056f4f45e3bc5205df97d589c911de356fb6a8f982a390cf8d94c7f5503fb2",
+      "accepted_files": [
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-lighthalzen_krongast_bls_branch_for_1126",
