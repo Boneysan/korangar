@@ -27949,7 +27949,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Valkyrie#arch_02",
@@ -27968,7 +27968,25 @@
       ],
       "size_lines": 36,
       "reason": "refused by the braced one-item prover: multi-item",
-      "history": []
+      "history": [
+        "2026-09-30T18:13:41Z activated",
+        "2026-09-30T18:13:41Z validated",
+        "2026-09-30T18:13:42Z verified: 2 claims supported",
+        "2026-09-30T18:14:05Z accepted",
+        "2026-09-30T18:14:05Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "31f5a82e9ae19e6ca2086010aca8d62f4aa898c346569051731115b99bb559ff",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-job3_arch02_arch_end_branch_for_1187",

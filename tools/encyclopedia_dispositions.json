@@ -67151,6 +67151,56 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_job3_arch02_valkyrie_arch_02_branch_for_1150_1158",
+      "unit": "E1-job3_arch02_valkyrie_arch_02_branch_for_1150",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Valkyrie#arch_02"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Broken_Horn_Pipe,2; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-1/archbishop.txt",
+          "lines": [
+            1158
+          ],
+          "required_source_literals": [
+            "getitem Broken_Horn_Pipe,2;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_job3_arch02_valkyrie_arch_02_branch_for_1150_1181",
+      "unit": "E1-job3_arch02_valkyrie_arch_02_branch_for_1150",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Valkyrie#arch_02"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Will_Of_Exhausted_Angel,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-1/archbishop.txt",
+          "lines": [
+            1181
+          ],
+          "required_source_literals": [
+            "getitem Will_Of_Exhausted_Angel,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
