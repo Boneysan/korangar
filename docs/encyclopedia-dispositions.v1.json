@@ -8,7 +8,7 @@
     "E1_not_applicable": 1,
     "E1_unknown": 3464,
     "E1_verified": 1,
-    "E3_unknown": 703
+    "E3_unknown": 715
   },
   "entries": [
     {
@@ -97672,6 +97672,276 @@
       "reviewed_on": "2026-09-30"
     },
     {
+      "id": "item_24186_script_untranslated",
+      "unit": "E3-unknown-bonus2-baddele-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          24186
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 24186 is not summarized: the translator does not interpret the quoted statement (bonus2 bAddEle (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            152829
+          ],
+          "required_source_literals": [
+            "bonus2 bAddEle,Ele_Neutral,1+(getrefine()/2);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_24187_script_untranslated",
+      "unit": "E3-unknown-bonus2-baddele-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          24187
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 24187 is not summarized: the translator does not interpret the quoted statement (bonus2 bAddEle (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            152841
+          ],
+          "required_source_literals": [
+            "bonus2 bAddEle,Ele_Dark,1+(getrefine()/2);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_24188_script_untranslated",
+      "unit": "E3-unknown-bonus2-baddele-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          24188
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 24188 is not summarized: the translator does not interpret the quoted statement (bonus2 bAddEle (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            152853
+          ],
+          "required_source_literals": [
+            "bonus2 bAddEle,Ele_Water,1+(getrefine()/2);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_24189_script_untranslated",
+      "unit": "E3-unknown-bonus2-baddele-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          24189
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 24189 is not summarized: the translator does not interpret the quoted statement (bonus2 bAddEle (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            152865
+          ],
+          "required_source_literals": [
+            "bonus2 bAddEle,Ele_Earth,1+(getrefine()/2);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_24190_script_untranslated",
+      "unit": "E3-unknown-bonus2-baddele-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          24190
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 24190 is not summarized: the translator does not interpret the quoted statement (bonus2 bAddEle (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            152877
+          ],
+          "required_source_literals": [
+            "bonus2 bAddEle,Ele_Fire,1+(getrefine()/2);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_24191_script_untranslated",
+      "unit": "E3-unknown-bonus2-baddele-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          24191
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 24191 is not summarized: the translator does not interpret the quoted statement (bonus2 bAddEle (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            152889
+          ],
+          "required_source_literals": [
+            "bonus2 bAddEle,Ele_Wind,1+(getrefine()/2);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_24192_script_untranslated",
+      "unit": "E3-unknown-bonus2-baddele-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          24192
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 24192 is not summarized: the translator does not interpret the quoted statement (bonus2 bAddEle (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            152901
+          ],
+          "required_source_literals": [
+            "bonus2 bAddEle,Ele_Poison,1+(getrefine()/2);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_24193_script_untranslated",
+      "unit": "E3-unknown-bonus2-baddele-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          24193
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 24193 is not summarized: the translator does not interpret the quoted statement (bonus2 bAddEle (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            152913
+          ],
+          "required_source_literals": [
+            "bonus2 bAddEle,Ele_Holy,1+(getrefine()/2);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_24194_script_untranslated",
+      "unit": "E3-unknown-bonus2-baddele-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          24194
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 24194 is not summarized: the translator does not interpret the quoted statement (bonus2 bAddEle (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            152925
+          ],
+          "required_source_literals": [
+            "bonus2 bAddEle,Ele_Ghost,1+(getrefine()/2);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_24195_script_untranslated",
+      "unit": "E3-unknown-bonus2-baddele-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          24195
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 24195 is not summarized: the translator does not interpret the quoted statement (bonus2 bAddEle (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            152937
+          ],
+          "required_source_literals": [
+            "bonus2 bAddEle,Ele_Undead,1+(getrefine()/2);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
       "id": "item_24198_script_untranslated",
       "unit": "E3-unknown-control",
       "package": "E3",
@@ -101182,6 +101452,33 @@
       "reviewed_on": "2026-09-30"
     },
     {
+      "id": "item_4481_script_untranslated",
+      "unit": "E3-unknown-bonus2-baddele-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          4481
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 4481 is not summarized: the translator does not interpret the quoted statement (bonus2 bAddEle (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            47286
+          ],
+          "required_source_literals": [
+            "bonus2 bAddEle,Ele_Fire,((getrefine()>14)?35:25);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
       "id": "item_4482_script_untranslated",
       "unit": "E3-unknown-control",
       "package": "E3",
@@ -104118,6 +104415,33 @@
           ],
           "required_source_literals": [
             "bonus3(bSubDefEle, Ele_Holy, -20, 3);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_5508_script_untranslated",
+      "unit": "E3-unknown-bonus2-baddele-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          5508
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 5508 is not summarized: the translator does not interpret the quoted statement (bonus2 bAddEle (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            61762
+          ],
+          "required_source_literals": [
+            "bonus2(bAddEle, Ele_Water, 5);"
           ]
         }
       ],

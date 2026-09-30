@@ -50815,7 +50815,7 @@
       "package": "E3",
       "kind": "e3_dispose",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "key": "bonus2 bAddEle (expression)",
@@ -50984,7 +50984,25 @@
       ],
       "size_lines": 12,
       "reason": "12 item script(s) first stop at `bonus2 bAddEle (expression)`, which is control flow or undocumented",
-      "history": []
+      "history": [
+        "2026-09-30T20:13:34Z activated",
+        "2026-09-30T20:13:35Z validated",
+        "2026-09-30T20:13:35Z verification not required: tool-drafted, no behavior claim",
+        "2026-09-30T20:13:58Z accepted",
+        "2026-09-30T20:13:58Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "d97041f0d46fa8fc6197e60a25e9fa4a9f040a519b2b0a6b3135c86d0456a28f",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E3-unknown-bonus2-bignoredefrate-expression",
