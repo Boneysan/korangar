@@ -27167,7 +27167,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Hugin#ghinstance",
@@ -27186,7 +27186,23 @@
       ],
       "size_lines": 124,
       "reason": "refused by the braced one-item prover: braceless",
-      "history": []
+      "history": [
+        "2026-09-30T18:06:20Z activated",
+        "2026-09-30T18:06:20Z validated",
+        "2026-09-30T18:06:20Z verified: 0 claims supported",
+        "2026-09-30T18:06:44Z accepted",
+        "2026-09-30T18:06:44Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "0402c804e5b0ffc90fcce8b9207976f07d3e6137639296eaf0c5ee215f43a124",
+      "accepted_files": [
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "audit": "due",
+      "commit": "committed"
     },
     {
       "id": "E1-glast_01_hugin_s_butler_branch_for_2281",
