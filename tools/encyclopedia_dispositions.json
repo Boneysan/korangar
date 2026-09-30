@@ -67201,6 +67201,156 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_job3_arch02_arch_end_branch_for_1187_1221",
+      "unit": "E1-job3_arch02_arch_end_branch_for_1187",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "#arch_end"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Will_Of_Exhausted_Angel,countitem(Will_Of_Exhausted_Angel; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-1/archbishop.txt",
+          "lines": [
+            1221
+          ],
+          "required_source_literals": [
+            "delitem Will_Of_Exhausted_Angel,countitem(Will_Of_Exhausted_Angel);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_job3_arch02_arch_end_branch_for_1187_1222",
+      "unit": "E1-job3_arch02_arch_end_branch_for_1187",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "#arch_end"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Broken_Horn_Pipe,countitem(Broken_Horn_Pipe; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-1/archbishop.txt",
+          "lines": [
+            1222
+          ],
+          "required_source_literals": [
+            "delitem Broken_Horn_Pipe,countitem(Broken_Horn_Pipe);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_job3_arch02_arch_end_branch_for_1187_1306",
+      "unit": "E1-job3_arch02_arch_end_branch_for_1187",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "#arch_end"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Will_Of_Exhausted_Angel,countitem(Will_Of_Exhausted_Angel; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-1/archbishop.txt",
+          "lines": [
+            1306
+          ],
+          "required_source_literals": [
+            "delitem Will_Of_Exhausted_Angel,countitem(Will_Of_Exhausted_Angel);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_job3_arch02_arch_end_branch_for_1187_1307",
+      "unit": "E1-job3_arch02_arch_end_branch_for_1187",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "#arch_end"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Broken_Horn_Pipe,countitem(Broken_Horn_Pipe; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-1/archbishop.txt",
+          "lines": [
+            1307
+          ],
+          "required_source_literals": [
+            "delitem Broken_Horn_Pipe,countitem(Broken_Horn_Pipe);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_job3_arch02_arch_end_branch_for_1187_1310",
+      "unit": "E1-job3_arch02_arch_end_branch_for_1187",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "#arch_end"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Mitra,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-1/archbishop.txt",
+          "lines": [
+            1310
+          ],
+          "required_source_literals": [
+            "getitem Mitra,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_job3_arch02_arch_end_branch_for_1187_1311",
+      "unit": "E1-job3_arch02_arch_end_branch_for_1187",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "#arch_end"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Green_Apple_Ring,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-1/archbishop.txt",
+          "lines": [
+            1311
+          ],
+          "required_source_literals": [
+            "getitem Green_Apple_Ring,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
