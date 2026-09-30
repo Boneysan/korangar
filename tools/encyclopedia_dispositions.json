@@ -69351,6 +69351,31 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_tha_scene01_min_receipt_branch_for_729_752",
+      "unit": "E1-tha_scene01_min_receipt_branch_for_729",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "#min_receipt"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Mins_Receipt,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-2/minstrel.txt",
+          "lines": [
+            752
+          ],
+          "required_source_literals": [
+            "getitem Mins_Receipt,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
