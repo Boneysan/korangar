@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 1947,
+    "E1_unknown": 1952,
     "E1_verified": 1
   },
   "entries": [
@@ -1954,6 +1954,131 @@
           ],
           "required_source_literals": [
             "getitem Buy_Market_Permit,5; //Buy_Stall_Permit"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_alberta_in_shaman_branch_for_10402_10626",
+      "unit": "E1-alberta_in_shaman_branch_for_10402",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Shaman"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Boody_Red,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_nameless.txt",
+          "lines": [
+            10626
+          ],
+          "required_source_literals": [
+            "delitem Boody_Red,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_alberta_in_shaman_branch_for_10402_10627",
+      "unit": "E1-alberta_in_shaman_branch_for_10402",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Shaman"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Crystal_Blue,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_nameless.txt",
+          "lines": [
+            10627
+          ],
+          "required_source_literals": [
+            "delitem Crystal_Blue,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_alberta_in_shaman_branch_for_10402_10628",
+      "unit": "E1-alberta_in_shaman_branch_for_10402",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Shaman"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Wind_Of_Verdure,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_nameless.txt",
+          "lines": [
+            10628
+          ],
+          "required_source_literals": [
+            "delitem Wind_Of_Verdure,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_alberta_in_shaman_branch_for_10402_10629",
+      "unit": "E1-alberta_in_shaman_branch_for_10402",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Shaman"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Witherless_Rose,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_nameless.txt",
+          "lines": [
+            10629
+          ],
+          "required_source_literals": [
+            "delitem Witherless_Rose,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_alberta_in_shaman_branch_for_10402_10630",
+      "unit": "E1-alberta_in_shaman_branch_for_10402",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Shaman"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Holy_Water,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_nameless.txt",
+          "lines": [
+            10630
+          ],
+          "required_source_literals": [
+            "delitem Holy_Water,1;"
           ]
         }
       ],
