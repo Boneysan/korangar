@@ -2521,7 +2521,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Talpiz#BLS",
@@ -2540,7 +2540,22 @@
       ],
       "size_lines": 73,
       "reason": "refused by the braced one-item prover: menu",
-      "history": []
+      "history": [
+        "2026-09-30T14:19:43Z activated",
+        "2026-09-30T14:19:43Z validated",
+        "2026-09-30T14:19:43Z verified: 0 claims supported",
+        "2026-09-30T14:20:06Z accepted",
+        "2026-09-30T14:20:07Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "095eb3dcc237f7f107904378c0294be53e09b9b67afa53e37e191f67235bdefc",
+      "accepted_files": [
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-hugel_bismarc_bls_branch_for_1278",
