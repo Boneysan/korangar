@@ -12201,7 +12201,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "???#ep13mdf03",
@@ -12220,7 +12220,25 @@
       ],
       "size_lines": 54,
       "reason": "refused by the braced one-item prover: loop-or-random",
-      "history": []
+      "history": [
+        "2026-09-30T15:48:51Z activated",
+        "2026-09-30T15:48:51Z validated",
+        "2026-09-30T15:48:52Z verified: 3 claims supported",
+        "2026-09-30T15:49:15Z accepted",
+        "2026-09-30T15:49:15Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "e8660a3e3f82e0f456496f76b97ddb9b2e4673423d34bf1f9ffc2542baf237a9",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-manuk_manuk_galtun_ep13_2day_branch_for_2706",
