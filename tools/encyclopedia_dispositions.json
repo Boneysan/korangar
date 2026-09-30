@@ -85351,6 +85351,31 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_malaya_young_fortune_teller_branch_for_6123_6180",
+      "unit": "E1-malaya_young_fortune_teller_branch_for_6123",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Young Fortune Teller"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Tikbalang_Belt,7; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malaya.txt",
+          "lines": [
+            6180
+          ],
+          "required_source_literals": [
+            "getitem Tikbalang_Belt,7;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
