@@ -2601,6 +2601,56 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_umbala_utan_kid_um_branch_for_258_297",
+      "unit": "E1-umbala_utan_kid_um_branch_for_258",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Utan Kid#um"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Meat,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/cities/umbala.txt",
+          "lines": [
+            297
+          ],
+          "required_source_literals": [
+            "getitem Meat,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_umbala_utan_kid_um_branch_for_258_358",
+      "unit": "E1-umbala_utan_kid_um_branch_for_258",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Utan Kid#um"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Meat,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/cities/umbala.txt",
+          "lines": [
+            358
+          ],
+          "required_source_literals": [
+            "getitem Meat,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
