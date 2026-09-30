@@ -16981,7 +16981,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "strong",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Ordinary Man",
@@ -17000,7 +17000,25 @@
       ],
       "size_lines": 697,
       "reason": "refused by the braced one-item prover: braceless",
-      "history": []
+      "history": [
+        "2026-09-30T16:32:42Z activated",
+        "2026-09-30T16:32:42Z validated",
+        "2026-09-30T16:32:43Z verified: 5 claims supported",
+        "2026-09-30T16:33:06Z accepted",
+        "2026-09-30T16:33:06Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "53dd0a594b49bcfe975edca8d5a9890ffaa2934179b8fd99cb01791a31811785",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-yuno_pre_mr_president_branch_for_7712",
