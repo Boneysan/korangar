@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 2120,
+    "E1_unknown": 2123,
     "E1_verified": 1
   },
   "entries": [
@@ -52854,6 +52854,81 @@
           ],
           "required_source_literals": [
             "delitem Valkyrie_Gift,1; //Valkyrie's_Gift"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_yuno_sage_syklah_juno_branch_for_936_992",
+      "unit": "E1-yuno_sage_syklah_juno_branch_for_936",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Sage Syklah#juno"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Stone,5; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_yuno.txt",
+          "lines": [
+            992
+          ],
+          "required_source_literals": [
+            "delitem Stone,5;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_yuno_sage_syklah_juno_branch_for_936_993",
+      "unit": "E1-yuno_sage_syklah_juno_branch_for_936",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Sage Syklah#juno"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Stone_Heart,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_yuno.txt",
+          "lines": [
+            993
+          ],
+          "required_source_literals": [
+            "delitem Stone_Heart,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_yuno_sage_syklah_juno_branch_for_936_994",
+      "unit": "E1-yuno_sage_syklah_juno_branch_for_936",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Sage Syklah#juno"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Red_Herb,20; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_yuno.txt",
+          "lines": [
+            994
+          ],
+          "required_source_literals": [
+            "delitem Red_Herb,20;"
           ]
         }
       ],
