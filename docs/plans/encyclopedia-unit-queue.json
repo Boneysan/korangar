@@ -70188,7 +70188,7 @@
       "package": "E4",
       "kind": "e4_formula",
       "tier": "strong",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "skill_names": [
@@ -70212,7 +70212,25 @@
       ],
       "size_lines": 30,
       "reason": "skillratio case with branches or preprocessor blocks",
-      "history": []
+      "history": [
+        "2026-09-30T22:10:14Z activated",
+        "2026-09-30T22:10:15Z validated",
+        "2026-09-30T22:10:15Z verified: 1 claims supported",
+        "2026-09-30T22:10:38Z accepted",
+        "2026-09-30T22:10:38Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "28815dbb6263fe7fa7077ff24a74268dca6db22d594f3eb89c8ef11b0381f17f",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E4-lg-rayofgenesis-b",
