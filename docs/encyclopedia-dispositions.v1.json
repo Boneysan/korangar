@@ -8,7 +8,7 @@
     "E1_not_applicable": 1,
     "E1_unknown": 3464,
     "E1_verified": 1,
-    "E3_unknown": 949
+    "E3_unknown": 951
   },
   "entries": [
     {
@@ -103774,6 +103774,33 @@
       "reviewed_on": "2026-09-30"
     },
     {
+      "id": "item_28306_script_untranslated",
+      "unit": "E3-unknown-bonus5-bautospell-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          28306
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 28306 is not summarized: the translator does not interpret the quoted statement (bonus5 bAutoSpell (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            156180
+          ],
+          "required_source_literals": [
+            "bonus5 bAutoSpell,CG_TAROTCARD,5,100,BF_WEAPON|BF_MAGIC,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
       "id": "item_28332_script_untranslated",
       "unit": "E3-unknown-control-autobonus",
       "package": "E3",
@@ -111867,6 +111894,33 @@
           ],
           "required_source_literals": [
             "bonus2 bHPRegenRate,(MaxHp/100),10000;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_5891_script_untranslated",
+      "unit": "E3-unknown-bonus5-bautospell-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          5891
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 5891 is not summarized: the translator does not interpret the quoted statement (bonus5 bAutoSpell (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            67973
+          ],
+          "required_source_literals": [
+            "bonus5 bAutoSpell,DC_SCREAM,5,50,BF_WEAPON|BF_MAGIC,0; /* Custom - TWRO */"
           ]
         }
       ],
