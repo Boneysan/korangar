@@ -27685,7 +27685,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Elwin Conick#2",
@@ -27704,7 +27704,25 @@
       ],
       "size_lines": 101,
       "reason": "refused by the braced one-item prover: menu",
-      "history": []
+      "history": [
+        "2026-09-30T18:11:08Z activated",
+        "2026-09-30T18:11:08Z validated",
+        "2026-09-30T18:11:08Z verified: 6 claims supported",
+        "2026-09-30T18:11:31Z accepted",
+        "2026-09-30T18:11:32Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "5c8ab494fc0496e5cb18af1d7b563b3a36164ec657d635233ca3a925ec7cc8af",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-job_gun_elwin_conick_3_branch_for_705",
