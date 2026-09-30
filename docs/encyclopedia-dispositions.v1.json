@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 2865,
+    "E1_unknown": 2866,
     "E1_verified": 1
   },
   "entries": [
@@ -20304,6 +20304,31 @@
           ],
           "required_source_literals": [
             "getitem(Merchant_Manual, 1); // Merchant_Manual"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_iz_ac02_steward_aydin_ac_branch_for_10080_10127",
+      "unit": "E1-iz_ac02_steward_aydin_ac_branch_for_10080",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Steward Aydin#ac"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Old_Equipment_Box,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            10127
+          ],
+          "required_source_literals": [
+            "getitem(Old_Equipment_Box, 1); // Old_Equipment_Box"
           ]
         }
       ],
