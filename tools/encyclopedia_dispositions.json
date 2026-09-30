@@ -78501,6 +78501,31 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ecl_in04_mark_esha_ep14_2in2_branch_for_2840_2956",
+      "unit": "E1-ecl_in04_mark_esha_ep14_2in2_branch_for_2840",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Mark Esha#ep14_2in2"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Oliver_Wolf_Hood,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "lines": [
+            2956
+          ],
+          "required_source_literals": [
+            "getitem(Oliver_Wolf_Hood, 1);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
