@@ -78576,6 +78576,281 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_eclage_wuhari_eclbig_branch_for_3258_3371",
+      "unit": "E1-eclage_wuhari_eclbig_branch_for_3258",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Wuhari#eclbig"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Younger_Bro_Letter,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "lines": [
+            3371
+          ],
+          "required_source_literals": [
+            "getitem Younger_Bro_Letter,1; //Younger_Bro_Letter"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_eclage_wuhari_eclbig_branch_for_3258_3407",
+      "unit": "E1-eclage_wuhari_eclbig_branch_for_3258",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Wuhari#eclbig"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Younger_Bro_Letter,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "lines": [
+            3407
+          ],
+          "required_source_literals": [
+            "getitem Younger_Bro_Letter,1; //Younger_Bro_Letter"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_eclage_wuhari_eclbig_branch_for_3258_3435",
+      "unit": "E1-eclage_wuhari_eclbig_branch_for_3258",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Wuhari#eclbig"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Younger_Bro_Letter,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "lines": [
+            3435
+          ],
+          "required_source_literals": [
+            "getitem Younger_Bro_Letter,1; //Younger_Bro_Letter"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_eclage_wuhari_eclbig_branch_for_3258_3601",
+      "unit": "E1-eclage_wuhari_eclbig_branch_for_3258",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Wuhari#eclbig"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Stained_Research_Book,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "lines": [
+            3601
+          ],
+          "required_source_literals": [
+            "delitem Stained_Research_Book,1; //Stained_Research_Book"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_eclage_wuhari_eclbig_branch_for_3258_3824",
+      "unit": "E1-eclage_wuhari_eclbig_branch_for_3258",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Wuhari#eclbig"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Piece_Of_Lapine_Wing,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "lines": [
+            3824
+          ],
+          "required_source_literals": [
+            "delitem Piece_Of_Lapine_Wing,1; //Piece_Of_Lapine_Wing"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_eclage_wuhari_eclbig_branch_for_3258_3825",
+      "unit": "E1-eclage_wuhari_eclbig_branch_for_3258",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Wuhari#eclbig"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Firm_Hair,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "lines": [
+            3825
+          ],
+          "required_source_literals": [
+            "delitem Firm_Hair,1; //Firm_Hair"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_eclage_wuhari_eclbig_branch_for_3258_3828",
+      "unit": "E1-eclage_wuhari_eclbig_branch_for_3258",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Wuhari#eclbig"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Karvodailnirol,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "lines": [
+            3828
+          ],
+          "required_source_literals": [
+            "delitem Karvodailnirol,1; //Karvodailnirol"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_eclage_wuhari_eclbig_branch_for_3258_3829",
+      "unit": "E1-eclage_wuhari_eclbig_branch_for_3258",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Wuhari#eclbig"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Purified_Bradium,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "lines": [
+            3829
+          ],
+          "required_source_literals": [
+            "delitem Purified_Bradium,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_eclage_wuhari_eclbig_branch_for_3258_3830",
+      "unit": "E1-eclage_wuhari_eclbig_branch_for_3258",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Wuhari#eclbig"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Rune_Of_Darkness,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "lines": [
+            3830
+          ],
+          "required_source_literals": [
+            "delitem Rune_Of_Darkness,1; //Rune_Of_Darkness"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_eclage_wuhari_eclbig_branch_for_3258_3831",
+      "unit": "E1-eclage_wuhari_eclbig_branch_for_3258",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Wuhari#eclbig"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Bloody_Rune,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "lines": [
+            3831
+          ],
+          "required_source_literals": [
+            "delitem Bloody_Rune,1; //Bloody_Rune"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_eclage_wuhari_eclbig_branch_for_3258_3835",
+      "unit": "E1-eclage_wuhari_eclbig_branch_for_3258",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Wuhari#eclbig"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Splendide_Coin,5; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "lines": [
+            3835
+          ],
+          "required_source_literals": [
+            "getitem Splendide_Coin,5; //Splendide_Coin"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
