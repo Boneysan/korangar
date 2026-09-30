@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 614,
+    "E1_unknown": 616,
     "E1_verified": 1
   },
   "entries": [
@@ -15454,6 +15454,56 @@
           ],
           "required_source_literals": [
             "getitem Delivery_Box,1; //Delivery_Package"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_yuno_old_lady_kh_branch_for_5002_5092",
+      "unit": "E1-yuno_old_lady_kh_branch_for_5002",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Old Lady#kh"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Rosimier_Key,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/kiel_hyre_quest.txt",
+          "lines": [
+            5092
+          ],
+          "required_source_literals": [
+            "getitem Rosimier_Key,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_yuno_old_lady_kh_branch_for_5002_5154",
+      "unit": "E1-yuno_old_lady_kh_branch_for_5002",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Old Lady#kh"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Rosimier_Key,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/kiel_hyre_quest.txt",
+          "lines": [
+            5154
+          ],
+          "required_source_literals": [
+            "delitem Rosimier_Key,1;"
           ]
         }
       ],

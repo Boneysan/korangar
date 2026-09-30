@@ -7386,7 +7386,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Old Lady#kh",
@@ -7405,7 +7405,25 @@
       ],
       "size_lines": 163,
       "reason": "refused by the braced one-item prover: braceless",
-      "history": []
+      "history": [
+        "2026-09-30T15:04:14Z activated",
+        "2026-09-30T15:04:14Z validated",
+        "2026-09-30T15:04:14Z verified: 2 claims supported",
+        "2026-09-30T15:04:37Z accepted",
+        "2026-09-30T15:04:37Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "c5a2f470e0f0d255a9ec324a866815561828f63ab8538c150f231d43f4bad455",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-kh_rossi_table_khr2_branch_for_5187",
