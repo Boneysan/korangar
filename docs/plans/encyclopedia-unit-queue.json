@@ -68400,7 +68400,7 @@
       "package": "E4",
       "kind": "e4_formula",
       "tier": "strong",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "skill_names": [
@@ -68419,7 +68419,25 @@
       ],
       "size_lines": 5,
       "reason": "skillratio case with branches or preprocessor blocks",
-      "history": []
+      "history": [
+        "2026-09-30T21:54:46Z activated",
+        "2026-09-30T21:54:46Z validated",
+        "2026-09-30T21:54:46Z verified: 1 claims supported",
+        "2026-09-30T21:55:10Z accepted",
+        "2026-09-30T21:55:10Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "b4a6b82e3a4250635464959de254e8048e83489612686bae63c2800502ceec76",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E4-gs-spreadattack",
