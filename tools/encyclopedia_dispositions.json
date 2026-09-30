@@ -48201,6 +48201,81 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_moc_ruins_ibrahim_branch_for_4659_4954",
+      "unit": "E1-moc_ruins_ibrahim_branch_for_4659",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Ibrahim"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Diamond_Of_Ruin,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_nameless.txt",
+          "lines": [
+            4954
+          ],
+          "required_source_literals": [
+            "delitem Diamond_Of_Ruin,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_moc_ruins_ibrahim_branch_for_4659_4964",
+      "unit": "E1-moc_ruins_ibrahim_branch_for_4659",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Ibrahim"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Crystal_Jewel__,2; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_nameless.txt",
+          "lines": [
+            4964
+          ],
+          "required_source_literals": [
+            "getitem Crystal_Jewel__,2;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_moc_ruins_ibrahim_branch_for_4659_4965",
+      "unit": "E1-moc_ruins_ibrahim_branch_for_4659",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Ibrahim"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Old_Blue_Box,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_nameless.txt",
+          "lines": [
+            4965
+          ],
+          "required_source_literals": [
+            "getitem Old_Blue_Box,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }

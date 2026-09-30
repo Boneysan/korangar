@@ -19880,7 +19880,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "strong",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Ibrahim",
@@ -19899,7 +19899,25 @@
       ],
       "size_lines": 524,
       "reason": "refused by the braced one-item prover: switch",
-      "history": []
+      "history": [
+        "2026-09-30T16:59:20Z activated",
+        "2026-09-30T16:59:20Z validated",
+        "2026-09-30T16:59:20Z verified: 3 claims supported",
+        "2026-09-30T16:59:44Z accepted",
+        "2026-09-30T16:59:44Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "e426b34fd5f92e3efa0ce90ed2632db5bf408ebad38e2e02b4318c1cb33582a6",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-payon_kimeunbang_branch_for_5345",
