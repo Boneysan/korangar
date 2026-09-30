@@ -11176,6 +11176,256 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_morocc_young_man_magum1_branch_for_816_914",
+      "unit": "E1-morocc_young_man_magum1_branch_for_816",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Young Man#magum1"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Bloody_Edge,9; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/doomed_swords_quest.txt",
+          "lines": [
+            914
+          ],
+          "required_source_literals": [
+            "delitem Bloody_Edge,9;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_morocc_young_man_magum1_branch_for_816_915",
+      "unit": "E1-morocc_young_man_magum1_branch_for_816",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Young Man#magum1"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Blade_Lost_In_Darkness,6; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/doomed_swords_quest.txt",
+          "lines": [
+            915
+          ],
+          "required_source_literals": [
+            "delitem Blade_Lost_In_Darkness,6;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_morocc_young_man_magum1_branch_for_816_916",
+      "unit": "E1-morocc_young_man_magum1_branch_for_816",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Young Man#magum1"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Cardinal_Jewel,9; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/doomed_swords_quest.txt",
+          "lines": [
+            916
+          ],
+          "required_source_literals": [
+            "delitem Cardinal_Jewel,9;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_morocc_young_man_magum1_branch_for_816_917",
+      "unit": "E1-morocc_young_man_magum1_branch_for_816",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Young Man#magum1"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Lokis_Whispers,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/doomed_swords_quest.txt",
+          "lines": [
+            917
+          ],
+          "required_source_literals": [
+            "delitem Lokis_Whispers,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_morocc_young_man_magum1_branch_for_816_1000",
+      "unit": "E1-morocc_young_man_magum1_branch_for_816",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Young Man#magum1"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Grimtooth_,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/doomed_swords_quest.txt",
+          "lines": [
+            1000
+          ],
+          "required_source_literals": [
+            "getitem Grimtooth_,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_morocc_young_man_magum1_branch_for_816_1005",
+      "unit": "E1-morocc_young_man_magum1_branch_for_816",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Young Man#magum1"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Mysteltainn_,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/doomed_swords_quest.txt",
+          "lines": [
+            1005
+          ],
+          "required_source_literals": [
+            "getitem Mysteltainn_,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_morocc_young_man_magum1_branch_for_816_1010",
+      "unit": "E1-morocc_young_man_magum1_branch_for_816",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Young Man#magum1"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Executioner_,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/doomed_swords_quest.txt",
+          "lines": [
+            1010
+          ],
+          "required_source_literals": [
+            "getitem Executioner_,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_morocc_young_man_magum1_branch_for_816_1016",
+      "unit": "E1-morocc_young_man_magum1_branch_for_816",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Young Man#magum1"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Grimtooth_,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/doomed_swords_quest.txt",
+          "lines": [
+            1016
+          ],
+          "required_source_literals": [
+            "getitem Grimtooth_,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_morocc_young_man_magum1_branch_for_816_1021",
+      "unit": "E1-morocc_young_man_magum1_branch_for_816",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Young Man#magum1"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Mysteltainn_,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/doomed_swords_quest.txt",
+          "lines": [
+            1021
+          ],
+          "required_source_literals": [
+            "getitem Mysteltainn_,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_morocc_young_man_magum1_branch_for_816_1026",
+      "unit": "E1-morocc_young_man_magum1_branch_for_816",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Young Man#magum1"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Executioner_,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/doomed_swords_quest.txt",
+          "lines": [
+            1026
+          ],
+          "required_source_literals": [
+            "getitem Executioner_,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
