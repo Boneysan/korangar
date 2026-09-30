@@ -976,6 +976,156 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_bat_b02_vintenar_bat_b02_aover_branch_for_595_607",
+      "unit": "E1-bat_b02_vintenar_bat_b02_aover_branch_for_595",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Vintenar#bat_b02_aover"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem BF_Badge2,9; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/battleground/flavius/flavius02.txt",
+          "lines": [
+            607
+          ],
+          "required_source_literals": [
+            "getitem BF_Badge2,9;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_bat_b02_vintenar_bat_b02_aover_branch_for_595_615",
+      "unit": "E1-bat_b02_vintenar_bat_b02_aover_branch_for_595",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Vintenar#bat_b02_aover"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem BF_Badge2,.@medal_gap; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/battleground/flavius/flavius02.txt",
+          "lines": [
+            615
+          ],
+          "required_source_literals": [
+            "getitem BF_Badge2,.@medal_gap;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_bat_b02_vintenar_bat_b02_aover_branch_for_595_627",
+      "unit": "E1-bat_b02_vintenar_bat_b02_aover_branch_for_595",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Vintenar#bat_b02_aover"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem BF_Badge2,3; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/battleground/flavius/flavius02.txt",
+          "lines": [
+            627
+          ],
+          "required_source_literals": [
+            "getitem BF_Badge2,3;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_bat_b02_vintenar_bat_b02_aover_branch_for_595_635",
+      "unit": "E1-bat_b02_vintenar_bat_b02_aover_branch_for_595",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Vintenar#bat_b02_aover"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem BF_Badge2,.@medal_gap; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/battleground/flavius/flavius02.txt",
+          "lines": [
+            635
+          ],
+          "required_source_literals": [
+            "getitem BF_Badge2,.@medal_gap;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_bat_b02_vintenar_bat_b02_aover_branch_for_595_647",
+      "unit": "E1-bat_b02_vintenar_bat_b02_aover_branch_for_595",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Vintenar#bat_b02_aover"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem BF_Badge2,3; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/battleground/flavius/flavius02.txt",
+          "lines": [
+            647
+          ],
+          "required_source_literals": [
+            "getitem BF_Badge2,3;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_bat_b02_vintenar_bat_b02_aover_branch_for_595_655",
+      "unit": "E1-bat_b02_vintenar_bat_b02_aover_branch_for_595",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Vintenar#bat_b02_aover"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem BF_Badge2,.@medal_gap; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/battleground/flavius/flavius02.txt",
+          "lines": [
+            655
+          ],
+          "required_source_literals": [
+            "getitem BF_Badge2,.@medal_gap;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
