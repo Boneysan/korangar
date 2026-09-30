@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 475,
+    "E1_unknown": 483,
     "E1_verified": 1
   },
   "entries": [
@@ -4429,6 +4429,206 @@
           ],
           "required_source_literals": [
             "getitem Golden_Anvil,1; // Golden_Anvil"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_geffen_sage_welshyun_hellion_branch_for_1910_2031",
+      "unit": "E1-geffen_sage_welshyun_hellion_branch_for_1910",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Sage Welshyun#hellion"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem White_Potion,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/eye_of_hellion.txt",
+          "lines": [
+            2031
+          ],
+          "required_source_literals": [
+            "delitem White_Potion,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_geffen_sage_welshyun_hellion_branch_for_1910_2118",
+      "unit": "E1-geffen_sage_welshyun_hellion_branch_for_1910",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Sage Welshyun#hellion"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Blue_Gemstone,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/eye_of_hellion.txt",
+          "lines": [
+            2118
+          ],
+          "required_source_literals": [
+            "delitem Blue_Gemstone,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_geffen_sage_welshyun_hellion_branch_for_1910_2120",
+      "unit": "E1-geffen_sage_welshyun_hellion_branch_for_1910",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Sage Welshyun#hellion"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Piece_Of_Slate_4,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/eye_of_hellion.txt",
+          "lines": [
+            2120
+          ],
+          "required_source_literals": [
+            "getitem Piece_Of_Slate_4,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_geffen_sage_welshyun_hellion_branch_for_1910_2191",
+      "unit": "E1-geffen_sage_welshyun_hellion_branch_for_1910",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Sage Welshyun#hellion"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Piece_Of_Slate_1,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/eye_of_hellion.txt",
+          "lines": [
+            2191
+          ],
+          "required_source_literals": [
+            "delitem Piece_Of_Slate_1,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_geffen_sage_welshyun_hellion_branch_for_1910_2192",
+      "unit": "E1-geffen_sage_welshyun_hellion_branch_for_1910",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Sage Welshyun#hellion"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Piece_Of_Slate_2,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/eye_of_hellion.txt",
+          "lines": [
+            2192
+          ],
+          "required_source_literals": [
+            "delitem Piece_Of_Slate_2,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_geffen_sage_welshyun_hellion_branch_for_1910_2193",
+      "unit": "E1-geffen_sage_welshyun_hellion_branch_for_1910",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Sage Welshyun#hellion"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Piece_Of_Slate_3,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/eye_of_hellion.txt",
+          "lines": [
+            2193
+          ],
+          "required_source_literals": [
+            "delitem Piece_Of_Slate_3,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_geffen_sage_welshyun_hellion_branch_for_1910_2194",
+      "unit": "E1-geffen_sage_welshyun_hellion_branch_for_1910",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Sage Welshyun#hellion"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Piece_Of_Slate_4,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/eye_of_hellion.txt",
+          "lines": [
+            2194
+          ],
+          "required_source_literals": [
+            "delitem Piece_Of_Slate_4,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_geffen_sage_welshyun_hellion_branch_for_1910_2196",
+      "unit": "E1-geffen_sage_welshyun_hellion_branch_for_1910",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Sage Welshyun#hellion"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Slate,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/eye_of_hellion.txt",
+          "lines": [
+            2196
+          ],
+          "required_source_literals": [
+            "getitem Slate,1;"
           ]
         }
       ],
