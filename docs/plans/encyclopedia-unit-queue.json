@@ -64466,7 +64466,7 @@
       "package": "E4",
       "kind": "e4_formula",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "skill_names": [
@@ -64485,7 +64485,25 @@
       ],
       "size_lines": 3,
       "reason": "single skillratio expression",
-      "history": []
+      "history": [
+        "2026-09-30T21:21:50Z activated",
+        "2026-09-30T21:21:51Z validated",
+        "2026-09-30T21:21:51Z verified: 1 claims supported",
+        "2026-09-30T21:22:14Z accepted",
+        "2026-09-30T21:22:14Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "bff503ef1f16f14d76083e8a8226166ebd61e748545ecf899e62e21007749910",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E4-rl-mass-spiral",
