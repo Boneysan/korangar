@@ -41001,6 +41001,31 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_lhz_in01_a_pile_of_paper_branch_for_4096_4105",
+      "unit": "E1-lhz_in01_a_pile_of_paper_branch_for_4096",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "A Pile of Paper"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem File01,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_hugel.txt",
+          "lines": [
+            4105
+          ],
+          "required_source_literals": [
+            "getitem File01,1; //File folder"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
