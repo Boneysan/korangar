@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 1445,
+    "E1_unknown": 1446,
     "E1_verified": 1
   },
   "entries": [
@@ -4054,6 +4054,31 @@
           ],
           "required_source_literals": [
             "getitem Shusi,20;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ama_in02_soldier_ama2_branch_for_1456_1477",
+      "unit": "E1-ama_in02_soldier_ama2_branch_for_1456",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Soldier#ama2"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Lords_Passable_Ticket,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_amatsu.txt",
+          "lines": [
+            1477
+          ],
+          "required_source_literals": [
+            "getitem Lords_Passable_Ticket,1;"
           ]
         }
       ],
