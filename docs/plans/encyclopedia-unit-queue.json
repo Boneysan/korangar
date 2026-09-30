@@ -469,7 +469,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Vintenar#bat_b01_bover",
@@ -488,7 +488,25 @@
       ],
       "size_lines": 79,
       "reason": "refused by the braced one-item prover: multi-item",
-      "history": []
+      "history": [
+        "2026-09-30T14:00:06Z activated",
+        "2026-09-30T14:00:07Z validated",
+        "2026-09-30T14:00:07Z verified: 6 claims supported",
+        "2026-09-30T14:00:30Z accepted",
+        "2026-09-30T14:00:30Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "45647399dfb0f635de06dcfd2914769e91ed55964f8422497d946dad6c32424b",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-bat_b02_guillaume_vintenar_b02_a_branch_for_411",
