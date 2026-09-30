@@ -79301,6 +79301,231 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ecl_in02_eirinn_nk_branch_for_7974_8033",
+      "unit": "E1-ecl_in02_eirinn_nk_branch_for_7974",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Eirinn#nk"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Green_Herb,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "lines": [
+            8033
+          ],
+          "required_source_literals": [
+            "delitem Green_Herb,10; //Green_Herb"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ecl_in02_eirinn_nk_branch_for_7974_8036",
+      "unit": "E1-ecl_in02_eirinn_nk_branch_for_7974",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Eirinn#nk"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Snow_Flip,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "lines": [
+            8036
+          ],
+          "required_source_literals": [
+            "getitem Snow_Flip,1; //Snow_Flip"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ecl_in02_eirinn_nk_branch_for_7974_8037",
+      "unit": "E1-ecl_in02_eirinn_nk_branch_for_7974",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Eirinn#nk"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Peony_Mommy,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "lines": [
+            8037
+          ],
+          "required_source_literals": [
+            "getitem Peony_Mommy,1; //Peony_Mommy"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ecl_in02_eirinn_nk_branch_for_7974_8038",
+      "unit": "E1-ecl_in02_eirinn_nk_branch_for_7974",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Eirinn#nk"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Slapping_Herb,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "lines": [
+            8038
+          ],
+          "required_source_literals": [
+            "getitem Slapping_Herb,1; //Slapping_Herb"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ecl_in02_eirinn_nk_branch_for_7974_8039",
+      "unit": "E1-ecl_in02_eirinn_nk_branch_for_7974",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Eirinn#nk"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Yggdrasil_Dust,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "lines": [
+            8039
+          ],
+          "required_source_literals": [
+            "getitem Yggdrasil_Dust,1; //Yggdrasil_Dust"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ecl_in02_eirinn_nk_branch_for_7974_8147",
+      "unit": "E1-ecl_in02_eirinn_nk_branch_for_7974",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Eirinn#nk"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Stem,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "lines": [
+            8147
+          ],
+          "required_source_literals": [
+            "delitem Stem,1; //Stem"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ecl_in02_eirinn_nk_branch_for_7974_8148",
+      "unit": "E1-ecl_in02_eirinn_nk_branch_for_7974",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Eirinn#nk"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Green_Herb,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "lines": [
+            8148
+          ],
+          "required_source_literals": [
+            "delitem Green_Herb,1; //Green_Herb"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ecl_in02_eirinn_nk_branch_for_7974_8151",
+      "unit": "E1-ecl_in02_eirinn_nk_branch_for_7974",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Eirinn#nk"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Weeds,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "lines": [
+            8151
+          ],
+          "required_source_literals": [
+            "getitem Weeds,1; //Weeds"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ecl_in02_eirinn_nk_branch_for_7974_8183",
+      "unit": "E1-ecl_in02_eirinn_nk_branch_for_7974",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Eirinn#nk"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Weeds,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "lines": [
+            8183
+          ],
+          "required_source_literals": [
+            "getitem Weeds,1; //Weeds"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
