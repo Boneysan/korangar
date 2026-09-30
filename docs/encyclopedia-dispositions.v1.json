@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 2855,
+    "E1_unknown": 2860,
     "E1_verified": 1
   },
   "entries": [
@@ -19929,6 +19929,131 @@
           ],
           "required_source_literals": [
             "getitem(Apple, 10); // Apple"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_iz_ac02_guild_staff_ac_branch_for_8217_8311",
+      "unit": "E1-iz_ac02_guild_staff_ac_branch_for_8217",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Guild Staff#ac"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Novice_Revolver,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            8311
+          ],
+          "required_source_literals": [
+            "getitem(Novice_Revolver, 1); // Novice_Revolver"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_iz_ac02_guild_staff_ac_branch_for_8217_8323",
+      "unit": "E1-iz_ac02_guild_staff_ac_branch_for_8217",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Guild Staff#ac"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Novice_Rifle,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            8323
+          ],
+          "required_source_literals": [
+            "getitem(Novice_Rifle, 1); // Novice_Rifle"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_iz_ac02_guild_staff_ac_branch_for_8217_8335",
+      "unit": "E1-iz_ac02_guild_staff_ac_branch_for_8217",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Guild Staff#ac"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Novice_Shotgun,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            8335
+          ],
+          "required_source_literals": [
+            "getitem(Novice_Shotgun, 1); // Novice_Shotgun"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_iz_ac02_guild_staff_ac_branch_for_8217_8347",
+      "unit": "E1-iz_ac02_guild_staff_ac_branch_for_8217",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Guild Staff#ac"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Novice_Gatling,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            8347
+          ],
+          "required_source_literals": [
+            "getitem(Novice_Gatling, 1); // Novice_Gatling"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_iz_ac02_guild_staff_ac_branch_for_8217_8359",
+      "unit": "E1-iz_ac02_guild_staff_ac_branch_for_8217",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Guild Staff#ac"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Novice_Grenade_Launcher,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            8359
+          ],
+          "required_source_literals": [
+            "getitem(Novice_Grenade_Launcher, 1); // Novice_Grenade_Launcher"
           ]
         }
       ],
