@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 1913,
+    "E1_unknown": 1916,
     "E1_verified": 1
   },
   "entries": [
@@ -40779,6 +40779,81 @@
           ],
           "required_source_literals": [
             "getitem Vit_Dish02,4;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ra_temple_niren_ss_branch_for_1527_1715",
+      "unit": "E1-ra_temple_niren_ss_branch_for_1527",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Niren#ss"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Research_Note,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_nameless.txt",
+          "lines": [
+            1715
+          ],
+          "required_source_literals": [
+            "delitem Research_Note,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ra_temple_niren_ss_branch_for_1527_2070",
+      "unit": "E1-ra_temple_niren_ss_branch_for_1527",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Niren#ss"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem File02,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_nameless.txt",
+          "lines": [
+            2070
+          ],
+          "required_source_literals": [
+            "getitem File02,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ra_temple_niren_ss_branch_for_1527_2138",
+      "unit": "E1-ra_temple_niren_ss_branch_for_1527",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Niren#ss"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem File02,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_nameless.txt",
+          "lines": [
+            2138
+          ],
+          "required_source_literals": [
+            "delitem File02,1;"
           ]
         }
       ],
