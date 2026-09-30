@@ -67526,7 +67526,7 @@
       "package": "E4",
       "kind": "e4_formula",
       "tier": "strong",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "skill_names": [
@@ -67550,7 +67550,25 @@
       ],
       "size_lines": 36,
       "reason": "skillratio case with branches or preprocessor blocks",
-      "history": []
+      "history": [
+        "2026-09-30T21:47:43Z activated",
+        "2026-09-30T21:47:43Z validated",
+        "2026-09-30T21:47:44Z verified: 1 claims supported",
+        "2026-09-30T21:48:07Z accepted",
+        "2026-09-30T21:48:07Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "b2b1c66d92b729c6b41939a87030e619da421570a8af8688060fba13a803ee81",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E4-mo-combofinish",
