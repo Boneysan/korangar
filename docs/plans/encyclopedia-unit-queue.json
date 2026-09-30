@@ -27294,7 +27294,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Khalitzburg Knight#1a",
@@ -27313,7 +27313,25 @@
       ],
       "size_lines": 32,
       "reason": "refused by the braced one-item prover: switch",
-      "history": []
+      "history": [
+        "2026-09-30T18:07:32Z activated",
+        "2026-09-30T18:07:32Z validated",
+        "2026-09-30T18:07:32Z verified: 1 claims supported",
+        "2026-09-30T18:07:55Z accepted",
+        "2026-09-30T18:07:56Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "0cd04ed9226a55c5b249925a77ccc91877a1ad8a83a138ffdac472ef1f364ea8",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-lhz_cube_sorcerer_bio4reward_branch_for_688",

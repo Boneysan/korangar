@@ -66451,6 +66451,31 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_glast_01_khalitzburg_knight_1a_branch_for_2774_2802",
+      "unit": "E1-glast_01_khalitzburg_knight_1a_branch_for_2774",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Khalitzburg Knight#1a"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Khali_Knightage_Card,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/instances/OldGlastHeim.txt",
+          "lines": [
+            2802
+          ],
+          "required_source_literals": [
+            "getitem(Khali_Knightage_Card, 1);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
