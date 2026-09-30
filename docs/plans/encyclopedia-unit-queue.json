@@ -36110,7 +36110,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "strong",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Biscuit#mal",
@@ -36129,7 +36129,25 @@
       ],
       "size_lines": 429,
       "reason": "refused by the braced one-item prover: braceless",
-      "history": []
+      "history": [
+        "2026-09-30T19:28:52Z activated",
+        "2026-09-30T19:28:53Z validated",
+        "2026-09-30T19:28:53Z verified: 4 claims supported",
+        "2026-09-30T19:29:16Z accepted",
+        "2026-09-30T19:29:16Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "46c63548ecf92174857360b288890b22c9d17d515756f540f542c7781ac024b7",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-mal_in02_cleaning_staff_mal_branch_for_2440",

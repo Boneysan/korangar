@@ -81551,6 +81551,106 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mal_dun01_biscuit_mal_branch_for_2010_2373",
+      "unit": "E1-mal_dun01_biscuit_mal_branch_for_2010",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Biscuit#mal"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Egrade_Coin,100; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malangdo.txt",
+          "lines": [
+            2373
+          ],
+          "required_source_literals": [
+            "getitem Egrade_Coin,100;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mal_dun01_biscuit_mal_branch_for_2010_2374",
+      "unit": "E1-mal_dun01_biscuit_mal_branch_for_2010",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Biscuit#mal"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Malang_Sp_Can,20; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malangdo.txt",
+          "lines": [
+            2374
+          ],
+          "required_source_literals": [
+            "getitem Malang_Sp_Can,20;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mal_dun01_biscuit_mal_branch_for_2010_2419",
+      "unit": "E1-mal_dun01_biscuit_mal_branch_for_2010",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Biscuit#mal"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Delicious_Jelly,30; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malangdo.txt",
+          "lines": [
+            2419
+          ],
+          "required_source_literals": [
+            "delitem Delicious_Jelly,30;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mal_dun01_biscuit_mal_branch_for_2010_2426",
+      "unit": "E1-mal_dun01_biscuit_mal_branch_for_2010",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Biscuit#mal"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Egrade_Coin,5; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malangdo.txt",
+          "lines": [
+            2426
+          ],
+          "required_source_literals": [
+            "getitem Egrade_Coin,5;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
