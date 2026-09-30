@@ -8136,7 +8136,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "strong",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Kayron#lv4",
@@ -8155,7 +8155,25 @@
       ],
       "size_lines": 443,
       "reason": "refused by the braced one-item prover: switch",
-      "history": []
+      "history": [
+        "2026-09-30T15:10:59Z activated",
+        "2026-09-30T15:10:59Z validated",
+        "2026-09-30T15:10:59Z verified: 20 claims supported",
+        "2026-09-30T15:11:22Z accepted",
+        "2026-09-30T15:11:22Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "125c5ba9d6c168c69461d226af9338ce11bf47df8c548361c92989bda4943862",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-niflheim_reyghema_lv4_branch_for_2155",
