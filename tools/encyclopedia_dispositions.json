@@ -7876,6 +7876,56 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_valkyrie_valkyrie_branch_for_42_163",
+      "unit": "E1-valkyrie_valkyrie_branch_for_42",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Valkyrie#"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Knife_,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/valkyrie.txt",
+          "lines": [
+            163
+          ],
+          "required_source_literals": [
+            "getitem Knife_,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_valkyrie_valkyrie_branch_for_42_164",
+      "unit": "E1-valkyrie_valkyrie_branch_for_42",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Valkyrie#"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Cotton_Shirt_,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/valkyrie.txt",
+          "lines": [
+            164
+          ],
+          "required_source_literals": [
+            "getitem Cotton_Shirt_,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }

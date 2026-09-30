@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 310,
+    "E1_unknown": 312,
     "E1_verified": 1
   },
   "entries": [
@@ -6754,6 +6754,56 @@
           ],
           "required_source_literals": [
             "getitem Meat,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_valkyrie_valkyrie_branch_for_42_163",
+      "unit": "E1-valkyrie_valkyrie_branch_for_42",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Valkyrie#"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Knife_,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/valkyrie.txt",
+          "lines": [
+            163
+          ],
+          "required_source_literals": [
+            "getitem Knife_,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_valkyrie_valkyrie_branch_for_42_164",
+      "unit": "E1-valkyrie_valkyrie_branch_for_42",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Valkyrie#"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Cotton_Shirt_,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/valkyrie.txt",
+          "lines": [
+            164
+          ],
+          "required_source_literals": [
+            "getitem Cotton_Shirt_,1;"
           ]
         }
       ],
