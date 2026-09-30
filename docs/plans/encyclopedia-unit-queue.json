@@ -13512,7 +13512,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Cherokee",
@@ -13531,7 +13531,22 @@
       ],
       "size_lines": 43,
       "reason": "refused by the braced one-item prover: switch",
-      "history": []
+      "history": [
+        "2026-09-30T16:00:54Z activated",
+        "2026-09-30T16:00:54Z validated",
+        "2026-09-30T16:00:54Z verified: 0 claims supported",
+        "2026-09-30T16:01:17Z accepted",
+        "2026-09-30T16:01:17Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "7b9e4ffde3b6c19f1eecf189fa20d6755ebec14ea6083fd92642d9722ecae8c8",
+      "accepted_files": [
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-alberta_stylish_merchant_new30_branch_for_520",
