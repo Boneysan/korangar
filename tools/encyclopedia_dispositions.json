@@ -111323,6 +111323,87 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_20788_script_untranslated",
+      "unit": "E3-unknown-bonus-bflee2-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          20788
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 20788 is not summarized: the translator does not interpret the quoted statement (bonus bFlee2 (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            147575
+          ],
+          "required_source_literals": [
+            "bonus bFlee2,getrefine()/3;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_20789_script_untranslated",
+      "unit": "E3-unknown-bonus-bflee2-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          20789
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 20789 is not summarized: the translator does not interpret the quoted statement (bonus bFlee2 (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            147595
+          ],
+          "required_source_literals": [
+            "bonus bFlee2, getrefine() / 3;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_20790_script_untranslated",
+      "unit": "E3-unknown-bonus-bflee2-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          20790
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 20790 is not summarized: the translator does not interpret the quoted statement (bonus bFlee2 (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            147616
+          ],
+          "required_source_literals": [
+            "bonus bFlee2, getrefine() / 2;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
