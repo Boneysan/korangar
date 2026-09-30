@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 2591,
+    "E1_unknown": 2603,
     "E1_verified": 1
   },
   "entries": [
@@ -26904,6 +26904,306 @@
           ],
           "required_source_literals": [
             "getitem Expedition_Report,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mjo_dun02_flaming_spirit_man_branch_for_7157_7182",
+      "unit": "E1-mjo_dun02_flaming_spirit_man_branch_for_7157",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Flaming Spirit Man"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Iron_Ore,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/the_sign_quest.txt",
+          "lines": [
+            7182
+          ],
+          "required_source_literals": [
+            "delitem Iron_Ore,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mjo_dun02_flaming_spirit_man_branch_for_7157_7276",
+      "unit": "E1-mjo_dun02_flaming_spirit_man_branch_for_7157",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Flaming Spirit Man"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Picture_Letter,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/the_sign_quest.txt",
+          "lines": [
+            7276
+          ],
+          "required_source_literals": [
+            "delitem Picture_Letter,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mjo_dun02_flaming_spirit_man_branch_for_7157_7277",
+      "unit": "E1-mjo_dun02_flaming_spirit_man_branch_for_7157",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Flaming Spirit Man"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Part_Of_Stars_Sob,7; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/the_sign_quest.txt",
+          "lines": [
+            7277
+          ],
+          "required_source_literals": [
+            "delitem Part_Of_Stars_Sob,7;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mjo_dun02_flaming_spirit_man_branch_for_7157_7344",
+      "unit": "E1-mjo_dun02_flaming_spirit_man_branch_for_7157",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Flaming Spirit Man"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Portable_Furnace,5; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/the_sign_quest.txt",
+          "lines": [
+            7344
+          ],
+          "required_source_literals": [
+            "delitem Portable_Furnace,5;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mjo_dun02_flaming_spirit_man_branch_for_7157_7345",
+      "unit": "E1-mjo_dun02_flaming_spirit_man_branch_for_7157",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Flaming Spirit Man"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Oridecon_Hammer,2; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/the_sign_quest.txt",
+          "lines": [
+            7345
+          ],
+          "required_source_literals": [
+            "delitem Oridecon_Hammer,2;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mjo_dun02_flaming_spirit_man_branch_for_7157_7348",
+      "unit": "E1-mjo_dun02_flaming_spirit_man_branch_for_7157",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Flaming Spirit Man"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Wellbeing_Letter,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/the_sign_quest.txt",
+          "lines": [
+            7348
+          ],
+          "required_source_literals": [
+            "getitem Wellbeing_Letter,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mjo_dun02_flaming_spirit_man_branch_for_7157_7384",
+      "unit": "E1-mjo_dun02_flaming_spirit_man_branch_for_7157",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Flaming Spirit Man"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Stars_Sob,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/the_sign_quest.txt",
+          "lines": [
+            7384
+          ],
+          "required_source_literals": [
+            "getitem Stars_Sob,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mjo_dun02_flaming_spirit_man_branch_for_7157_7501",
+      "unit": "E1-mjo_dun02_flaming_spirit_man_branch_for_7157",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Flaming Spirit Man"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Golden_Anvil,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/the_sign_quest.txt",
+          "lines": [
+            7501
+          ],
+          "required_source_literals": [
+            "if (countitem(Golden_Anvil) > 0) delitem Golden_Anvil,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mjo_dun02_flaming_spirit_man_branch_for_7157_7502",
+      "unit": "E1-mjo_dun02_flaming_spirit_man_branch_for_7157",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Flaming Spirit Man"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Emperium_Anvil,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/the_sign_quest.txt",
+          "lines": [
+            7502
+          ],
+          "required_source_literals": [
+            "else if (countitem(Emperium_Anvil) > 0) delitem Emperium_Anvil,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mjo_dun02_flaming_spirit_man_branch_for_7157_7504",
+      "unit": "E1-mjo_dun02_flaming_spirit_man_branch_for_7157",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Flaming Spirit Man"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Stars_Sob,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/the_sign_quest.txt",
+          "lines": [
+            7504
+          ],
+          "required_source_literals": [
+            "getitem Stars_Sob,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mjo_dun02_flaming_spirit_man_branch_for_7157_7562",
+      "unit": "E1-mjo_dun02_flaming_spirit_man_branch_for_7157",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Flaming Spirit Man"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem The_Sign,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/the_sign_quest.txt",
+          "lines": [
+            7562
+          ],
+          "required_source_literals": [
+            "delitem The_Sign,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mjo_dun02_flaming_spirit_man_branch_for_7157_7657",
+      "unit": "E1-mjo_dun02_flaming_spirit_man_branch_for_7157",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Flaming Spirit Man"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem The_Sign_,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/the_sign_quest.txt",
+          "lines": [
+            7657
+          ],
+          "required_source_literals": [
+            "getitem The_Sign_,1;"
           ]
         }
       ],
