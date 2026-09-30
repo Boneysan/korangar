@@ -18516,7 +18516,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Pub Owner#mos",
@@ -18535,7 +18535,25 @@
       ],
       "size_lines": 162,
       "reason": "refused by the braced one-item prover: braceless",
-      "history": []
+      "history": [
+        "2026-09-30T16:46:50Z activated",
+        "2026-09-30T16:46:50Z validated",
+        "2026-09-30T16:46:50Z verified: 3 claims supported",
+        "2026-09-30T16:47:14Z accepted",
+        "2026-09-30T16:47:14Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "a2e09c9a4bea1ecfc91f992ab93da4f1d8287ffd5f0c8cebbf6eae5eaec10f3f",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-mosk_in_victor_mos_branch_for_3542",

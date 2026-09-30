@@ -45651,6 +45651,81 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mosk_in_pub_owner_mos_branch_for_3379_3438",
+      "unit": "E1-mosk_in_pub_owner_mos_branch_for_3379",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Pub Owner#mos"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Milk,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_moscovia.txt",
+          "lines": [
+            3438
+          ],
+          "required_source_literals": [
+            "if (!.@j) getitem Milk,1; else getitem Apple_Juice,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mosk_in_pub_owner_mos_branch_for_3379_3501",
+      "unit": "E1-mosk_in_pub_owner_mos_branch_for_3379",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Pub Owner#mos"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Milk,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_moscovia.txt",
+          "lines": [
+            3501
+          ],
+          "required_source_literals": [
+            "getitem Milk,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mosk_in_pub_owner_mos_branch_for_3379_3515",
+      "unit": "E1-mosk_in_pub_owner_mos_branch_for_3379",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Pub Owner#mos"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Apple_Juice,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_moscovia.txt",
+          "lines": [
+            3515
+          ],
+          "required_source_literals": [
+            "getitem Apple_Juice,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
