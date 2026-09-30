@@ -65508,7 +65508,7 @@
       "package": "E4",
       "kind": "e4_formula",
       "tier": "strong",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "skill_names": [
@@ -65527,7 +65527,25 @@
       ],
       "size_lines": 4,
       "reason": "skillratio case with branches or preprocessor blocks",
-      "history": []
+      "history": [
+        "2026-09-30T21:30:40Z activated",
+        "2026-09-30T21:30:40Z validated",
+        "2026-09-30T21:30:40Z verified: 1 claims supported",
+        "2026-09-30T21:31:04Z accepted",
+        "2026-09-30T21:31:04Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "35f5f81dfb7d8a5d852ae32c0ffa8a2f3132bef88fb80005ddf51c31d81aa9be",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E4-npc-energydrain",
