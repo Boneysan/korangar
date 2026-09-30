@@ -36276,6 +36276,31 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ama_in02_soldier_ama10_branch_for_1647_1722",
+      "unit": "E1-ama_in02_soldier_ama10_branch_for_1647",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Soldier#ama10"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Lords_Passable_Ticket,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_amatsu.txt",
+          "lines": [
+            1722
+          ],
+          "required_source_literals": [
+            "delitem Lords_Passable_Ticket,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
