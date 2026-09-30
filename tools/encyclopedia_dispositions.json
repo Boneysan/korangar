@@ -42201,6 +42201,31 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_lighthalzen_maku_branch_for_2536_2714",
+      "unit": "E1-lighthalzen_maku_branch_for_2536",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Maku"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Friends_Diary,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_lighthalzen.txt",
+          "lines": [
+            2714
+          ],
+          "required_source_literals": [
+            "delitem Friends_Diary,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }

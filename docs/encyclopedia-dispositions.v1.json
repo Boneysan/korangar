@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 1683,
+    "E1_unknown": 1684,
     "E1_verified": 1
   },
   "entries": [
@@ -18279,6 +18279,31 @@
           ],
           "required_source_literals": [
             "getitem Speed_Up_Potion,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_lighthalzen_maku_branch_for_2536_2714",
+      "unit": "E1-lighthalzen_maku_branch_for_2536",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Maku"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Friends_Diary,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_lighthalzen.txt",
+          "lines": [
+            2714
+          ],
+          "required_source_literals": [
+            "delitem Friends_Diary,1;"
           ]
         }
       ],
