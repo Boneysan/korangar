@@ -78351,6 +78351,106 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_eclage_yube_ep14_2_branch_for_1369_1521",
+      "unit": "E1-eclage_yube_ep14_2_branch_for_1369",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Yube#ep14_2"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Dustball,128; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "lines": [
+            1521
+          ],
+          "required_source_literals": [
+            "delitem Dustball,128; //Dustball"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_eclage_yube_ep14_2_branch_for_1369_1523",
+      "unit": "E1-eclage_yube_ep14_2_branch_for_1369",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Yube#ep14_2"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Birthday_Candle,128; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "lines": [
+            1523
+          ],
+          "required_source_literals": [
+            "getitem Birthday_Candle,128; //Birthday_Candle"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_eclage_yube_ep14_2_branch_for_1369_1616",
+      "unit": "E1-eclage_yube_ep14_2_branch_for_1369",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Yube#ep14_2"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Dustball,.@input; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "lines": [
+            1616
+          ],
+          "required_source_literals": [
+            "delitem Dustball,.@input; //Dustball"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_eclage_yube_ep14_2_branch_for_1369_1617",
+      "unit": "E1-eclage_yube_ep14_2_branch_for_1369",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Yube#ep14_2"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Birthday_Candle,.@input; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "lines": [
+            1617
+          ],
+          "required_source_literals": [
+            "getitem Birthday_Candle,.@input; //Birthday_Candle"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
