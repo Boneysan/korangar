@@ -132600,6 +132600,60 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_3028_npc_jobs_2_2_monk_txt_1983",
+      "unit": "E5-chain-3028",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          3028
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 3028; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/monk.txt",
+          "lines": [
+            1983
+          ],
+          "required_source_literals": [
+            "changequest 3028,3027;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_3028_npc_jobs_2_2_monk_txt_2004",
+      "unit": "E5-chain-3028",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          3028
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 3028; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/monk.txt",
+          "lines": [
+            2004
+          ],
+          "required_source_literals": [
+            "changequest 3028,3029;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
