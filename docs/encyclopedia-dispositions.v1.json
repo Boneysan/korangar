@@ -5,6 +5,7 @@
   "mode": "renewal",
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
+    "E1_not_applicable": 1,
     "E1_unknown": 2,
     "E1_verified": 1
   },
@@ -134,6 +135,50 @@
             "else if (checkweight(Apple,.@input) == 0) {",
             "Zeny -= .@pay;",
             "getitem Apple,.@input;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "airport_airport_staff_boarding",
+      "unit": "E1-airport_airport_staff_airport1a_airport1_branch_for_32",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Airport Staff#airport1a"
+      },
+      "result": "not_applicable",
+      "statement": "Boarding consumes one Free_Flying_Ship_Ticket or 1,200 zeny and warps the player to airport 148,51, and it grants no item.",
+      "conditions": [
+        "The player must choose Board the Airship and then Yes.",
+        "When countitem(Free_Flying_Ship_Ticket) is above 0, the script removes 1 ticket and warps.",
+        "Otherwise Zeny >= 1200 removes 1,200 zeny and warps; a smaller balance closes with no change.",
+        "Cancel or No closes with no item or zeny change."
+      ],
+      "sources": [
+        {
+          "path": "npc/airports/einbroch.txt",
+          "lines": [
+            40,
+            48,
+            49,
+            50,
+            51,
+            54,
+            55,
+            56
+          ],
+          "required_source_literals": [
+            "if (select(\"Board the Airship\", \"Cancel\") == 1) {",
+            "if (select(\"Yes\", \"No\") == 1) {",
+            "if (countitem(Free_Flying_Ship_Ticket) > 0) {",
+            "delitem Free_Flying_Ship_Ticket,1;",
+            "warp \"airport\",148,51;",
+            "if (Zeny >= 1200) {",
+            "Zeny -= 1200;",
+            "warp \"airport\",148,51;"
           ]
         }
       ],
