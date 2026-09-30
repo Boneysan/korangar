@@ -50576,6 +50576,31 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prt_church_father_bamph_branch_for_2174_2272",
+      "unit": "E1-prt_church_father_bamph_branch_for_2174",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Father Bamph"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Leather_Pouch,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_prontera.txt",
+          "lines": [
+            2272
+          ],
+          "required_source_literals": [
+            "delitem Leather_Pouch,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
