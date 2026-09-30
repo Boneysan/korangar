@@ -8,7 +8,7 @@
     "E1_not_applicable": 1,
     "E1_unknown": 3464,
     "E1_verified": 1,
-    "E2_verified": 72,
+    "E2_verified": 80,
     "E3_unknown": 973
   },
   "entries": [
@@ -86731,6 +86731,312 @@
           ],
           "required_source_literals": [
             "getitem Forbidden_Secret_Art,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_merchants_shops_txt_1003_1003",
+      "unit": "E2-npc-merchants-shops-txt-1003",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Jeweler#lhz"
+      },
+      "result": "verified",
+      "statement": "Jeweler#lhz is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/merchants/shops.txt",
+          "lines": [
+            1003,
+            1004,
+            1005,
+            1006,
+            1007,
+            1008,
+            1009,
+            1010,
+            1011,
+            1012
+          ],
+          "required_source_literals": [
+            "lhz_in02,105,21,3\ttrader\tJeweler#lhz\t4_F_02,{",
+            "OnInit:",
+            "sellitem Azure_Jewel;",
+            "sellitem Cardinal_Jewel;",
+            "sellitem Blue_Jewel;",
+            "sellitem Golden_Jewel;",
+            "sellitem Bluish_Green_Jewel;",
+            "sellitem Crystal_Jewel;",
+            "sellitem Diamond_Ring;",
+            "}"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_merchants_shops_txt_1003_1014",
+      "unit": "E2-npc-merchants-shops-txt-1003",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Vegetable Gardener#lhz2"
+      },
+      "result": "verified",
+      "statement": "Vegetable Gardener#lhz2 is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/merchants/shops.txt",
+          "lines": [
+            1014,
+            1015,
+            1016,
+            1017,
+            1018,
+            1019
+          ],
+          "required_source_literals": [
+            "lhz_in02,17,220,5\ttrader\tVegetable Gardener#lhz2\t4_F_02,{",
+            "OnInit:",
+            "sellitem Carrot;",
+            "sellitem Sweet_Potato;",
+            "sellitem Pumpkin;",
+            "}"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_merchants_shops_txt_1003_1021",
+      "unit": "E2-npc-merchants-shops-txt-1003",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Fruit Gardener#lhz2"
+      },
+      "result": "verified",
+      "statement": "Fruit Gardener#lhz2 is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/merchants/shops.txt",
+          "lines": [
+            1021,
+            1022,
+            1023,
+            1024,
+            1025
+          ],
+          "required_source_literals": [
+            "lhz_in02,21,220,5\ttrader\tFruit Gardener#lhz2\t8_F,{",
+            "OnInit:",
+            "sellitem Apple;",
+            "sellitem Banana;",
+            "}"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_merchants_shops_txt_1003_1027",
+      "unit": "E2-npc-merchants-shops-txt-1003",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Butcher#lhz"
+      },
+      "result": "verified",
+      "statement": "Butcher#lhz is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/merchants/shops.txt",
+          "lines": [
+            1027,
+            1028,
+            1029,
+            1030
+          ],
+          "required_source_literals": [
+            "lhz_in02,32,219,5\ttrader\tButcher#lhz\t1_M_JOBGUIDER,{",
+            "OnInit:",
+            "sellitem Meat;",
+            "}"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_merchants_shops_txt_1003_1032",
+      "unit": "E2-npc-merchants-shops-txt-1003",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Gift Merchant#lhz"
+      },
+      "result": "verified",
+      "statement": "Gift Merchant#lhz is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/merchants/shops.txt",
+          "lines": [
+            1032,
+            1033,
+            1034,
+            1035,
+            1036,
+            1037,
+            1038,
+            1039
+          ],
+          "required_source_literals": [
+            "lhz_in02,38,145,5\ttrader\tGift Merchant#lhz\t4_F_02,{",
+            "OnInit:",
+            "sellitem Red_Frame;",
+            "sellitem Blue_Porcelain;",
+            "sellitem White_Platter;",
+            "sellitem Black_Ladle;",
+            "sellitem Glass_Bead;",
+            "}"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_merchants_shops_txt_1003_1041",
+      "unit": "E2-npc-merchants-shops-txt-1003",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Wedding Shop Dealer#lhz"
+      },
+      "result": "verified",
+      "statement": "Wedding Shop Dealer#lhz is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/merchants/shops.txt",
+          "lines": [
+            1041,
+            1042,
+            1043,
+            1044,
+            1045,
+            1046,
+            1047,
+            1048
+          ],
+          "required_source_literals": [
+            "lhz_in02,47,148,3\ttrader\tWedding Shop Dealer#lhz\t1_F_LIBRARYGIRL,{",
+            "OnInit:",
+            "sellitem Bunch_Of_Flowers;",
+            "sellitem Wedding_Bouquet;",
+            "sellitem Wedding_Dress;",
+            "sellitem Wedding_Veil;",
+            "sellitem Tuxedo;",
+            "}"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_merchants_shops_txt_1003_1050",
+      "unit": "E2-npc-merchants-shops-txt-1003",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Tool Dealer#lhz"
+      },
+      "result": "verified",
+      "statement": "Tool Dealer#lhz is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/merchants/shops.txt",
+          "lines": [
+            1050,
+            1051,
+            1052,
+            1053,
+            1054,
+            1055,
+            1056,
+            1057,
+            1058,
+            1059,
+            1060,
+            1061,
+            1062,
+            1063
+          ],
+          "required_source_literals": [
+            "lhz_in02,31,145,4\ttrader\tTool Dealer#lhz\t4_F_01,{",
+            "OnInit:",
+            "sellitem Spectacles;",
+            "sellitem Yellow_Potion;",
+            "sellitem White_Potion;",
+            "sellitem Green_Potion;",
+            "sellitem Berserk_Potion;",
+            "sellitem Awakening_Potion;",
+            "sellitem Wing_Of_Fly;",
+            "sellitem Wing_Of_Butterfly;",
+            "sellitem Booby_Trap;",
+            "sellitem Leaf_Of_Yggdrasil;",
+            "sellitem Iron_Arrow;",
+            "}"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_merchants_shops_txt_1003_1065",
+      "unit": "E2-npc-merchants-shops-txt-1003",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Doll Supplier#lhz"
+      },
+      "result": "verified",
+      "statement": "Doll Supplier#lhz is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/merchants/shops.txt",
+          "lines": [
+            1065,
+            1066,
+            1067,
+            1068,
+            1069,
+            1070
+          ],
+          "required_source_literals": [
+            "lhz_in02,85,216,5\ttrader\tDoll Supplier#lhz\t4_F_LGTGIRL,{",
+            "OnInit:",
+            "sellitem Stuffed_Doll;",
+            "sellitem Poring_Doll;",
+            "sellitem Chonchon_Doll;",
+            "}"
           ]
         }
       ],
