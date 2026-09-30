@@ -31547,7 +31547,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Expert Flute Crafter",
@@ -31566,7 +31566,23 @@
       ],
       "size_lines": 51,
       "reason": "refused by the braced one-item prover: switch",
-      "history": []
+      "history": [
+        "2026-09-30T18:46:49Z activated",
+        "2026-09-30T18:46:49Z validated",
+        "2026-09-30T18:46:49Z verified: 0 claims supported",
+        "2026-09-30T18:47:12Z accepted",
+        "2026-09-30T18:47:13Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "8d4a56d172166de1c351beab0eb321ef3f5cbdd82445a1814fef5a12893890a7",
+      "accepted_files": [
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "audit": "due",
+      "commit": "committed"
     },
     {
       "id": "E1-que_ng_master_craftsman_gyo_arm_branch_for_35",
