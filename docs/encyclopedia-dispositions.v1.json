@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 107,
+    "E1_unknown": 112,
     "E1_verified": 1
   },
   "entries": [
@@ -254,6 +254,131 @@
           ],
           "required_source_literals": [
             "delitem Pickaxe,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_arug_que01_pierrot_pier_aru_gd_branch_for_498_1019",
+      "unit": "E1-arug_que01_pierrot_pier_aru_gd_branch_for_498",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Pierrot Pier#aru_gd"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Glitering_PaperB,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/events/gdevent_aru.txt",
+          "lines": [
+            1019
+          ],
+          "required_source_literals": [
+            "delitem Glitering_PaperB,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_arug_que01_pierrot_pier_aru_gd_branch_for_498_705",
+      "unit": "E1-arug_que01_pierrot_pier_aru_gd_branch_for_498",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Pierrot Pier#aru_gd"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Glitering_PaperB,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/events/gdevent_aru.txt",
+          "lines": [
+            705
+          ],
+          "required_source_literals": [
+            "delitem Glitering_PaperB,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_arug_que01_pierrot_pier_aru_gd_branch_for_498_807",
+      "unit": "E1-arug_que01_pierrot_pier_aru_gd_branch_for_498",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Pierrot Pier#aru_gd"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Pierre_Treasurebox,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/events/gdevent_aru.txt",
+          "lines": [
+            807
+          ],
+          "required_source_literals": [
+            "getitem Pierre_Treasurebox,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_arug_que01_pierrot_pier_aru_gd_branch_for_498_845",
+      "unit": "E1-arug_que01_pierrot_pier_aru_gd_branch_for_498",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Pierrot Pier#aru_gd"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Glitering_PaperB,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/events/gdevent_aru.txt",
+          "lines": [
+            845
+          ],
+          "required_source_literals": [
+            "delitem Glitering_PaperB,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_arug_que01_pierrot_pier_aru_gd_branch_for_498_956",
+      "unit": "E1-arug_que01_pierrot_pier_aru_gd_branch_for_498",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Pierrot Pier#aru_gd"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Glitering_PaperB,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/events/gdevent_aru.txt",
+          "lines": [
+            956
+          ],
+          "required_source_literals": [
+            "delitem Glitering_PaperB,1;"
           ]
         }
       ],
