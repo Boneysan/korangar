@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 124,
+    "E1_unknown": 129,
     "E1_verified": 1
   },
   "entries": [
@@ -2529,6 +2529,131 @@
           ],
           "required_source_literals": [
             "getitem Hood,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prt_monk_rust_blackhand_edq_branch_for_260_285",
+      "unit": "E1-prt_monk_rust_blackhand_edq_branch_for_260",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Rust Blackhand#edq"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Bapho_Doll,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/instances/SealedShrine.txt",
+          "lines": [
+            285
+          ],
+          "required_source_literals": [
+            "delitem(Bapho_Doll, 1);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prt_monk_rust_blackhand_edq_branch_for_260_286",
+      "unit": "E1-prt_monk_rust_blackhand_edq_branch_for_260",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Rust Blackhand#edq"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Magestic_Goat,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/instances/SealedShrine.txt",
+          "lines": [
+            286
+          ],
+          "required_source_literals": [
+            "delitem(Magestic_Goat, 1);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prt_monk_rust_blackhand_edq_branch_for_260_287",
+      "unit": "E1-prt_monk_rust_blackhand_edq_branch_for_260",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Rust Blackhand#edq"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Dark_Crystal,30; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/instances/SealedShrine.txt",
+          "lines": [
+            287
+          ],
+          "required_source_literals": [
+            "delitem(Dark_Crystal, 30);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prt_monk_rust_blackhand_edq_branch_for_260_288",
+      "unit": "E1-prt_monk_rust_blackhand_edq_branch_for_260",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Rust Blackhand#edq"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Dark_Debris,50; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/instances/SealedShrine.txt",
+          "lines": [
+            288
+          ],
+          "required_source_literals": [
+            "delitem(Dark_Debris, 50);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prt_monk_rust_blackhand_edq_branch_for_260_291",
+      "unit": "E1-prt_monk_rust_blackhand_edq_branch_for_260",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Rust Blackhand#edq"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem L_Magestic_Goat,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/instances/SealedShrine.txt",
+          "lines": [
+            291
+          ],
+          "required_source_literals": [
+            "getitem(L_Magestic_Goat, 1);"
           ]
         }
       ],
