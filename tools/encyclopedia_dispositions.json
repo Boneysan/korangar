@@ -4226,6 +4226,81 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_hu_in01_hunter_guildsman_hnt_branch_for_68_168",
+      "unit": "E1-hu_in01_hunter_guildsman_hnt_branch_for_68",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Hunter Guildsman#hnt"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Penetration,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-1/hunter.txt",
+          "lines": [
+            168
+          ],
+          "required_source_literals": [
+            "delitem Penetration,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_hu_in01_hunter_guildsman_hnt_branch_for_68_183",
+      "unit": "E1-hu_in01_hunter_guildsman_hnt_branch_for_68",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Hunter Guildsman#hnt"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Hunter_Bow,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-1/hunter.txt",
+          "lines": [
+            183
+          ],
+          "required_source_literals": [
+            "getitem Hunter_Bow,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_hu_in01_hunter_guildsman_hnt_branch_for_68_185",
+      "unit": "E1-hu_in01_hunter_guildsman_hnt_branch_for_68",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Hunter Guildsman#hnt"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem CrossBow,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-1/hunter.txt",
+          "lines": [
+            185
+          ],
+          "required_source_literals": [
+            "getitem CrossBow,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
