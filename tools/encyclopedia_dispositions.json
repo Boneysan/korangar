@@ -15526,6 +15526,31 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_kh_rossi_table_khr2_branch_for_5187_5208",
+      "unit": "E1-kh_rossi_table_khr2_branch_for_5187",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Table#khr2"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Family_Portrait,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/kiel_hyre_quest.txt",
+          "lines": [
+            5208
+          ],
+          "required_source_literals": [
+            "getitem Family_Portrait,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
