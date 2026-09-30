@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 1321,
+    "E1_unknown": 1323,
     "E1_verified": 1
   },
   "entries": [
@@ -179,6 +179,56 @@
             "if (Zeny >= 1200) {",
             "Zeny -= 1200;",
             "warp \"airport\",148,51;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_airplane_airship_captain_03_branch_for_2311_2697",
+      "unit": "E1-airplane_airship_captain_03_branch_for_2311",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Airship Captain#03"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Will_Of_Darkness,2; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_airship.txt",
+          "lines": [
+            2697
+          ],
+          "required_source_literals": [
+            "delitem(Will_Of_Darkness, 2);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_airplane_airship_captain_03_branch_for_2311_2698",
+      "unit": "E1-airplane_airship_captain_03_branch_for_2311",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Airship Captain#03"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Prickly_Fruit,2; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_airship.txt",
+          "lines": [
+            2698
+          ],
+          "required_source_literals": [
+            "delitem(Prickly_Fruit, 2);"
           ]
         }
       ],
