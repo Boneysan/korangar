@@ -18560,7 +18560,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Victor#mos",
@@ -18579,7 +18579,25 @@
       ],
       "size_lines": 190,
       "reason": "refused by the braced one-item prover: loop-or-random",
-      "history": []
+      "history": [
+        "2026-09-30T16:47:14Z activated",
+        "2026-09-30T16:47:14Z validated",
+        "2026-09-30T16:47:14Z verified: 3 claims supported",
+        "2026-09-30T16:47:38Z accepted",
+        "2026-09-30T16:47:38Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "5b9825b6c9578f322ce847a25f16a95898ec38790a58f32129d547508b2d455e",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-mosk_dun03_bubbling_swamp_mos1_branch_for_3763",

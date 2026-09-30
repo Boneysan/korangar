@@ -45726,6 +45726,81 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mosk_in_victor_mos_branch_for_3542_3706",
+      "unit": "E1-mosk_in_victor_mos_branch_for_3542",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Victor#mos"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Sticky_Herb,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_moscovia.txt",
+          "lines": [
+            3706
+          ],
+          "required_source_literals": [
+            "delitem Sticky_Herb,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mosk_in_victor_mos_branch_for_3542_3707",
+      "unit": "E1-mosk_in_victor_mos_branch_for_3542",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Victor#mos"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Medicine_Bowl,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_moscovia.txt",
+          "lines": [
+            3707
+          ],
+          "required_source_literals": [
+            "delitem Medicine_Bowl,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mosk_in_victor_mos_branch_for_3542_3710",
+      "unit": "E1-mosk_in_victor_mos_branch_for_3542",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Victor#mos"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem High_Strength_Adhesive,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_moscovia.txt",
+          "lines": [
+            3710
+          ],
+          "required_source_literals": [
+            "getitem High_Strength_Adhesive,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
