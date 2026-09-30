@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 1657,
+    "E1_unknown": 1659,
     "E1_verified": 1
   },
   "entries": [
@@ -13304,6 +13304,56 @@
           ],
           "required_source_literals": [
             "getitem Old_Blue_Box,1; //Old Blue Box"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_hugel_erjan_branch_for_6054_6114",
+      "unit": "E1-hugel_erjan_branch_for_6054",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Erjan"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem White_Platter,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_hugel.txt",
+          "lines": [
+            6114
+          ],
+          "required_source_literals": [
+            "delitem White_Platter,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_hugel_erjan_branch_for_6054_6115",
+      "unit": "E1-hugel_erjan_branch_for_6054",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Erjan"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Fish_Ball_Soup,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_hugel.txt",
+          "lines": [
+            6115
+          ],
+          "required_source_literals": [
+            "delitem Fish_Ball_Soup,1;"
           ]
         }
       ],

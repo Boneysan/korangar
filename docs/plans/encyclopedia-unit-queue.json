@@ -16143,7 +16143,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Erjan",
@@ -16162,7 +16162,25 @@
       ],
       "size_lines": 84,
       "reason": "refused by the braced one-item prover: multi-item",
-      "history": []
+      "history": [
+        "2026-09-30T16:25:07Z activated",
+        "2026-09-30T16:25:07Z validated",
+        "2026-09-30T16:25:07Z verified: 2 claims supported",
+        "2026-09-30T16:25:30Z accepted",
+        "2026-09-30T16:25:30Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "6e7c0d6497852a491f9ad8fe1f11f2056f6504047d5ad1248bd16a2b8f457d56",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-odin_tem01_young_man_hu_quest_branch_for_6616",
