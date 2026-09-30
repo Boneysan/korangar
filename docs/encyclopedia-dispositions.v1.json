@@ -8,7 +8,7 @@
     "E1_not_applicable": 1,
     "E1_unknown": 3464,
     "E1_verified": 1,
-    "E3_unknown": 951
+    "E3_unknown": 952
   },
   "entries": [
     {
@@ -90510,6 +90510,33 @@
           ],
           "required_source_literals": [
             "if (getrefine()>=7) {"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_15121_script_untranslated",
+      "unit": "E3-unknown-todo",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          15121
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 15121 is not summarized: the translator does not interpret the quoted statement (//TODO:).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            125831
+          ],
+          "required_source_literals": [
+            "//TODO: Confirm the real rate and additional MAtk"
           ]
         }
       ],
