@@ -3976,6 +3976,81 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ein_in01_guildsman_bls_branch_for_47_278",
+      "unit": "E1-ein_in01_guildsman_bls_branch_for_47",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Guildsman#BLS"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Hammer_Of_Blacksmith,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-1/blacksmith.txt",
+          "lines": [
+            278
+          ],
+          "required_source_literals": [
+            "delitem Hammer_Of_Blacksmith,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ein_in01_guildsman_bls_branch_for_47_287",
+      "unit": "E1-ein_in01_guildsman_bls_branch_for_47",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Guildsman#BLS"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Steel,30; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-1/blacksmith.txt",
+          "lines": [
+            287
+          ],
+          "required_source_literals": [
+            "getitem Steel,30;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ein_in01_guildsman_bls_branch_for_47_289",
+      "unit": "E1-ein_in01_guildsman_bls_branch_for_47",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Guildsman#BLS"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Steel,5; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-1/blacksmith.txt",
+          "lines": [
+            289
+          ],
+          "required_source_literals": [
+            "getitem Steel,5;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
