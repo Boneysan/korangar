@@ -12334,7 +12334,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Laphine Craftsman#ep13",
@@ -12353,7 +12353,25 @@
       ],
       "size_lines": 115,
       "reason": "refused by the braced one-item prover: menu",
-      "history": []
+      "history": [
+        "2026-09-30T15:50:03Z activated",
+        "2026-09-30T15:50:04Z validated",
+        "2026-09-30T15:50:04Z verified: 3 claims supported",
+        "2026-09-30T15:50:27Z accepted",
+        "2026-09-30T15:50:27Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "9c733325d8406b8b92dbbfb3f6deb863056d4cf6a1559e54dc835da4bff31746",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-mid_camp_pet_breeder_ep13_eden01_branch_for_3039",
