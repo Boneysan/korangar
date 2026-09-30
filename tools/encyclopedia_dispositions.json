@@ -112565,6 +112565,33 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_4594_script_untranslated",
+      "unit": "E3-unknown-bonus-bcritatkrate-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          4594
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 4594 is not summarized: the translator does not interpret the quoted statement (bonus bCritAtkRate (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            48810
+          ],
+          "required_source_literals": [
+            "Script: <\" bonus bCritAtkRate,2*(readparam(bLuk)/10); \">"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }

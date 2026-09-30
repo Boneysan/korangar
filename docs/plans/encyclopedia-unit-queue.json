@@ -56245,7 +56245,7 @@
       "package": "E3",
       "kind": "e3_dispose",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "key": "bonus bCritAtkRate (expression)",
@@ -56271,7 +56271,25 @@
       ],
       "size_lines": 1,
       "reason": "1 item script(s) first stop at `bonus bCritAtkRate (expression)`, which is control flow or undocumented",
-      "history": []
+      "history": [
+        "2026-09-30T20:37:10Z activated",
+        "2026-09-30T20:37:10Z validated",
+        "2026-09-30T20:37:10Z verification not required: tool-drafted, no behavior claim",
+        "2026-09-30T20:37:34Z accepted",
+        "2026-09-30T20:37:34Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "1d94a9cc6a0774301f35770c2e0d3ca17d864911dcfd9d900769ba210fbc38f5",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E3-unknown-bonus-bdefele-expression",
