@@ -12,7 +12,7 @@
     "E2_verified": 236,
     "E3_unknown": 973,
     "E4_unknown": 213,
-    "E5_unknown": 430
+    "E5_unknown": 431
   },
   "entries": [
     {
@@ -114761,6 +114761,33 @@
           ],
           "required_source_literals": [
             "changequest(8159, 8160);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_8161_npc_quests_quests_moscovia_txt_11235",
+      "unit": "E5-chain-8161",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8161
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 8161; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_moscovia.txt",
+          "lines": [
+            11235
+          ],
+          "required_source_literals": [
+            "changequest(8161, 8162);"
           ]
         }
       ],
