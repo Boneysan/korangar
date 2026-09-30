@@ -78451,6 +78451,31 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ecl_in04_oliver_ep14_2_branch_for_2569_2652",
+      "unit": "E1-ecl_in04_oliver_ep14_2_branch_for_2569",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Oliver#ep14_2"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Pile_Of_Acorn,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "lines": [
+            2652
+          ],
+          "required_source_literals": [
+            "delitem Pile_Of_Acorn,1; //Pile_Of_Acorn"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
