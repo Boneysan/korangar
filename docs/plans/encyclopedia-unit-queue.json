@@ -31115,7 +31115,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Keeper of Secrets#pa082",
@@ -31134,7 +31134,23 @@
       ],
       "size_lines": 120,
       "reason": "refused by the braced one-item prover: braceless",
-      "history": []
+      "history": [
+        "2026-09-30T18:42:39Z activated",
+        "2026-09-30T18:42:39Z validated",
+        "2026-09-30T18:42:40Z verified: 0 claims supported",
+        "2026-09-30T18:43:03Z accepted",
+        "2026-09-30T18:43:03Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "44fbe3ed40acaa5681fda182847dc978175cd7cef51bb559a4211354426791dd",
+      "accepted_files": [
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "audit": "due",
+      "commit": "committed"
     },
     {
       "id": "E1-mora_master_of_relics_pa0829_branch_for_159",
