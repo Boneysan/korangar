@@ -4926,6 +4926,231 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_alde_alche_studying_man_am_branch_for_921_1214",
+      "unit": "E1-alde_alche_studying_man_am_branch_for_921",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Studying Man#am"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Illusion_Flower,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/alchemist.txt",
+          "lines": [
+            1214
+          ],
+          "required_source_literals": [
+            "delitem Illusion_Flower,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_alde_alche_studying_man_am_branch_for_921_1245",
+      "unit": "E1-alde_alche_studying_man_am_branch_for_921",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Studying Man#am"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Medicine_Bowl,3; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/alchemist.txt",
+          "lines": [
+            1245
+          ],
+          "required_source_literals": [
+            "delitem Medicine_Bowl,3;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_alde_alche_studying_man_am_branch_for_921_1246",
+      "unit": "E1-alde_alche_studying_man_am_branch_for_921",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Studying Man#am"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Empty_Bottle,3; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/alchemist.txt",
+          "lines": [
+            1246
+          ],
+          "required_source_literals": [
+            "delitem Empty_Bottle,3;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_alde_alche_studying_man_am_branch_for_921_1247",
+      "unit": "E1-alde_alche_studying_man_am_branch_for_921",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Studying Man#am"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Red_Herb,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/alchemist.txt",
+          "lines": [
+            1247
+          ],
+          "required_source_literals": [
+            "delitem Red_Herb,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_alde_alche_studying_man_am_branch_for_921_1248",
+      "unit": "E1-alde_alche_studying_man_am_branch_for_921",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Studying Man#am"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Yellow_Herb,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/alchemist.txt",
+          "lines": [
+            1248
+          ],
+          "required_source_literals": [
+            "delitem Yellow_Herb,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_alde_alche_studying_man_am_branch_for_921_1249",
+      "unit": "E1-alde_alche_studying_man_am_branch_for_921",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Studying Man#am"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem White_Herb,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/alchemist.txt",
+          "lines": [
+            1249
+          ],
+          "required_source_literals": [
+            "delitem White_Herb,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_alde_alche_studying_man_am_branch_for_921_1397",
+      "unit": "E1-alde_alche_studying_man_am_branch_for_921",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Studying Man#am"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Red_Potion,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/alchemist.txt",
+          "lines": [
+            1397
+          ],
+          "required_source_literals": [
+            "getitem Red_Potion,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_alde_alche_studying_man_am_branch_for_921_1398",
+      "unit": "E1-alde_alche_studying_man_am_branch_for_921",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Studying Man#am"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Yellow_Potion,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/alchemist.txt",
+          "lines": [
+            1398
+          ],
+          "required_source_literals": [
+            "getitem Yellow_Potion,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_alde_alche_studying_man_am_branch_for_921_1399",
+      "unit": "E1-alde_alche_studying_man_am_branch_for_921",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Studying Man#am"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem White_Potion,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/alchemist.txt",
+          "lines": [
+            1399
+          ],
+          "required_source_literals": [
+            "getitem White_Potion,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }

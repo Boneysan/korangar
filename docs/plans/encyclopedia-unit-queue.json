@@ -3130,7 +3130,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "strong",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Studying Man#am",
@@ -3149,7 +3149,25 @@
       ],
       "size_lines": 562,
       "reason": "refused by the braced one-item prover: switch",
-      "history": []
+      "history": [
+        "2026-09-30T14:25:17Z activated",
+        "2026-09-30T14:25:17Z validated",
+        "2026-09-30T14:25:17Z verified: 9 claims supported",
+        "2026-09-30T14:25:40Z accepted",
+        "2026-09-30T14:25:40Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "00ab0bd2ef5922ab918f12e3c87700e8a4f59b3eef8d8409f27be9e5d915a7e2",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-alde_alche_master_alchemist_am_branch_for_1767",
