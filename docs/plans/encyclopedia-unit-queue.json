@@ -21323,7 +21323,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "strong",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Historian#prt02",
@@ -21342,7 +21342,25 @@
       ],
       "size_lines": 433,
       "reason": "refused by the braced one-item prover: braceless",
-      "history": []
+      "history": [
+        "2026-09-30T17:12:38Z activated",
+        "2026-09-30T17:12:38Z validated",
+        "2026-09-30T17:12:38Z verified: 3 claims supported",
+        "2026-09-30T17:13:01Z accepted",
+        "2026-09-30T17:13:01Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "d4ba5672db3a06199fab4f6d5fe87781497e46456f7107186f020f87690eb94b",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-mjolnir_01_exhausted_looking_woman_branch_for_1757",
