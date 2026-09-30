@@ -51576,6 +51576,31 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_umbala_unpc_branch_for_1298_1314",
+      "unit": "E1-umbala_unpc_branch_for_1298",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "#unpc"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Leaf_Of_Yggdrasil,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_umbala.txt",
+          "lines": [
+            1314
+          ],
+          "required_source_literals": [
+            "getitem Leaf_Of_Yggdrasil,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
