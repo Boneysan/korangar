@@ -64109,7 +64109,7 @@
       "package": "E4",
       "kind": "e4_formula",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "skill_names": [
@@ -64130,7 +64130,25 @@
       ],
       "size_lines": 4,
       "reason": "single skillratio expression",
-      "history": []
+      "history": [
+        "2026-09-30T21:18:28Z activated",
+        "2026-09-30T21:18:28Z validated",
+        "2026-09-30T21:18:29Z verified: 1 claims supported",
+        "2026-09-30T21:18:52Z accepted",
+        "2026-09-30T21:18:52Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "f8de4b9ede769eb4d91a8ead615e2b86f2f5e0d9e27012e0439c4eb445d6b209",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E4-el-stone-hammer",
