@@ -123981,6 +123981,35 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e4_el_fire_bomb_formula",
+      "unit": "E4-el-fire-bomb",
+      "package": "E4",
+      "subject": {
+        "kind": "skill",
+        "ids": [
+          8426,
+          8430,
+          8436
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted case is the ratio site for these skills; this record does not reduce it to a worked example.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "src/map/battle.c",
+          "lines": [
+            2031
+          ],
+          "required_source_literals": [
+            "case EL_FIRE_BOMB:"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }

@@ -62079,7 +62079,7 @@
       "package": "E4",
       "kind": "e4_formula",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "skill_names": [
@@ -62102,7 +62102,25 @@
       ],
       "size_lines": 5,
       "reason": "single skillratio expression",
-      "history": []
+      "history": [
+        "2026-09-30T21:01:52Z activated",
+        "2026-09-30T21:01:52Z validated",
+        "2026-09-30T21:01:52Z verified: 1 claims supported",
+        "2026-09-30T21:02:15Z accepted",
+        "2026-09-30T21:02:15Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "022df592a5d585441427054ba5c8d562e99ae251f48c24579664131b486b8524",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E4-el-fire-wave",
