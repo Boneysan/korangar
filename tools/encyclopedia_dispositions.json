@@ -13701,6 +13701,556 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_ng_garrison_branch_for_39_175",
+      "unit": "E1-que_ng_garrison_branch_for_39",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Garrison"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem 999,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/gunslinger_quests.txt",
+          "lines": [
+            175
+          ],
+          "required_source_literals": [
+            "delitem 999,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_ng_garrison_branch_for_39_176",
+      "unit": "E1-que_ng_garrison_branch_for_39",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Garrison"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem 1011,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/gunslinger_quests.txt",
+          "lines": [
+            176
+          ],
+          "required_source_literals": [
+            "delitem 1011,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_ng_garrison_branch_for_39_177",
+      "unit": "E1-que_ng_garrison_branch_for_39",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Garrison"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem 7317,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/gunslinger_quests.txt",
+          "lines": [
+            177
+          ],
+          "required_source_literals": [
+            "delitem 7317,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_ng_garrison_branch_for_39_178",
+      "unit": "E1-que_ng_garrison_branch_for_39",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Garrison"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem 985,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/gunslinger_quests.txt",
+          "lines": [
+            178
+          ],
+          "required_source_literals": [
+            "delitem 985,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_ng_garrison_branch_for_39_179",
+      "unit": "E1-que_ng_garrison_branch_for_39",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Garrison"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem 1003,30; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/gunslinger_quests.txt",
+          "lines": [
+            179
+          ],
+          "required_source_literals": [
+            "delitem 1003,30;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_ng_garrison_branch_for_39_232",
+      "unit": "E1-que_ng_garrison_branch_for_39",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Garrison"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem 13104,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/gunslinger_quests.txt",
+          "lines": [
+            232
+          ],
+          "required_source_literals": [
+            "delitem 13104,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_ng_garrison_branch_for_39_233",
+      "unit": "E1-que_ng_garrison_branch_for_39",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Garrison"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem 13105,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/gunslinger_quests.txt",
+          "lines": [
+            233
+          ],
+          "required_source_literals": [
+            "getitem 13105,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_ng_garrison_branch_for_39_248",
+      "unit": "E1-que_ng_garrison_branch_for_39",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Garrison"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem 13104,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/gunslinger_quests.txt",
+          "lines": [
+            248
+          ],
+          "required_source_literals": [
+            "delitem 13104, 1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_ng_garrison_branch_for_39_249",
+      "unit": "E1-que_ng_garrison_branch_for_39",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Garrison"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem 13105,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/gunslinger_quests.txt",
+          "lines": [
+            249
+          ],
+          "required_source_literals": [
+            "getitem 13105, 1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_ng_garrison_branch_for_39_323",
+      "unit": "E1-que_ng_garrison_branch_for_39",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Garrison"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Oridecon,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/gunslinger_quests.txt",
+          "lines": [
+            323
+          ],
+          "required_source_literals": [
+            "delitem Oridecon,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_ng_garrison_branch_for_39_324",
+      "unit": "E1-que_ng_garrison_branch_for_39",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Garrison"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Elunium,3; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/gunslinger_quests.txt",
+          "lines": [
+            324
+          ],
+          "required_source_literals": [
+            "delitem Elunium,3;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_ng_garrison_branch_for_39_325",
+      "unit": "E1-que_ng_garrison_branch_for_39",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Garrison"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Steel,50; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/gunslinger_quests.txt",
+          "lines": [
+            325
+          ],
+          "required_source_literals": [
+            "delitem Steel,50;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_ng_garrison_branch_for_39_326",
+      "unit": "E1-que_ng_garrison_branch_for_39",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Garrison"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Coal,50; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/gunslinger_quests.txt",
+          "lines": [
+            326
+          ],
+          "required_source_literals": [
+            "delitem Coal,50;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_ng_garrison_branch_for_39_327",
+      "unit": "E1-que_ng_garrison_branch_for_39",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Garrison"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Screw,20; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/gunslinger_quests.txt",
+          "lines": [
+            327
+          ],
+          "required_source_literals": [
+            "delitem Screw,20; //Rusty Screw"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_ng_garrison_branch_for_39_329",
+      "unit": "E1-que_ng_garrison_branch_for_39",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Garrison"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem The_Garrison,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/gunslinger_quests.txt",
+          "lines": [
+            329
+          ],
+          "required_source_literals": [
+            "getitem The_Garrison,1; //Garrison"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_ng_garrison_branch_for_39_382",
+      "unit": "E1-que_ng_garrison_branch_for_39",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Garrison"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem 999,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/gunslinger_quests.txt",
+          "lines": [
+            382
+          ],
+          "required_source_literals": [
+            "delitem 999, 10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_ng_garrison_branch_for_39_383",
+      "unit": "E1-que_ng_garrison_branch_for_39",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Garrison"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem 1011,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/gunslinger_quests.txt",
+          "lines": [
+            383
+          ],
+          "required_source_literals": [
+            "delitem 1011, 10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_ng_garrison_branch_for_39_384",
+      "unit": "E1-que_ng_garrison_branch_for_39",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Garrison"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem 7317,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/gunslinger_quests.txt",
+          "lines": [
+            384
+          ],
+          "required_source_literals": [
+            "delitem 7317, 10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_ng_garrison_branch_for_39_385",
+      "unit": "E1-que_ng_garrison_branch_for_39",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Garrison"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem 985,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/gunslinger_quests.txt",
+          "lines": [
+            385
+          ],
+          "required_source_literals": [
+            "delitem 985, 1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_ng_garrison_branch_for_39_386",
+      "unit": "E1-que_ng_garrison_branch_for_39",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Garrison"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem 1003,30; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/gunslinger_quests.txt",
+          "lines": [
+            386
+          ],
+          "required_source_literals": [
+            "delitem 1003, 30;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_ng_garrison_branch_for_39_387",
+      "unit": "E1-que_ng_garrison_branch_for_39",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Garrison"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem 13104,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/gunslinger_quests.txt",
+          "lines": [
+            387
+          ],
+          "required_source_literals": [
+            "delitem 13104, 1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_ng_garrison_branch_for_39_388",
+      "unit": "E1-que_ng_garrison_branch_for_39",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Garrison"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem 13105,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/gunslinger_quests.txt",
+          "lines": [
+            388
+          ],
+          "required_source_literals": [
+            "getitem 13105, 1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
