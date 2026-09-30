@@ -51076,6 +51076,56 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ice_dun03_blazing_fire_ice2_branch_for_3541_3555",
+      "unit": "E1-ice_dun03_blazing_fire_ice2_branch_for_3541",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Blazing Fire#ice2"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Ice_Particle,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_rachel.txt",
+          "lines": [
+            3555
+          ],
+          "required_source_literals": [
+            "delitem Ice_Particle,1; //Freezing Snow Powder"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ice_dun03_blazing_fire_ice2_branch_for_3541_3566",
+      "unit": "E1-ice_dun03_blazing_fire_ice2_branch_for_3541",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Blazing Fire#ice2"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Ice_Scale,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_rachel.txt",
+          "lines": [
+            3566
+          ],
+          "required_source_literals": [
+            "delitem Ice_Scale,1; //Ice Scale"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
