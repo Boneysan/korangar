@@ -9651,6 +9651,31 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_poring_w02_deviling_guardian_wop_dd_branch_for_1561_1573",
+      "unit": "E1-poring_w02_deviling_guardian_wop_dd_branch_for_1561",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Deviling Guardian#wop_dd"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem War_Badge,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/other/poring_war.txt",
+          "lines": [
+            1573
+          ],
+          "required_source_literals": [
+            "delitem War_Badge,1; // War_Badge"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
