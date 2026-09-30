@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 1527,
+    "E1_unknown": 1541,
     "E1_verified": 1
   },
   "entries": [
@@ -9579,6 +9579,356 @@
           ],
           "required_source_literals": [
             "getitem Golden_Anvil,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_einbech_cavitar_branch_for_58_101",
+      "unit": "E1-einbech_cavitar_branch_for_58",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Cavitar"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Coal,3; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_ein.txt",
+          "lines": [
+            101
+          ],
+          "required_source_literals": [
+            "delitem Coal,3;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_einbech_cavitar_branch_for_58_102",
+      "unit": "E1-einbech_cavitar_branch_for_58",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Cavitar"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Large_Jellopy,40; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_ein.txt",
+          "lines": [
+            102
+          ],
+          "required_source_literals": [
+            "delitem Large_Jellopy,40;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_einbech_cavitar_branch_for_58_103",
+      "unit": "E1-einbech_cavitar_branch_for_58",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Cavitar"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Emveretarcon,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_ein.txt",
+          "lines": [
+            103
+          ],
+          "required_source_literals": [
+            "delitem Emveretarcon,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_einbech_cavitar_branch_for_58_104",
+      "unit": "E1-einbech_cavitar_branch_for_58",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Cavitar"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Zargon,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_ein.txt",
+          "lines": [
+            104
+          ],
+          "required_source_literals": [
+            "delitem Zargon,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_einbech_cavitar_branch_for_58_106",
+      "unit": "E1-einbech_cavitar_branch_for_58",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Cavitar"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Oridecon_Hammer,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_ein.txt",
+          "lines": [
+            106
+          ],
+          "required_source_literals": [
+            "getitem Oridecon_Hammer,1; // Oridecon"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_einbech_cavitar_branch_for_58_283",
+      "unit": "E1-einbech_cavitar_branch_for_58",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Cavitar"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Phlogopite,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_ein.txt",
+          "lines": [
+            283
+          ],
+          "required_source_literals": [
+            "getitem Phlogopite,1; // Phlogopite"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_einbech_cavitar_branch_for_58_286",
+      "unit": "E1-einbech_cavitar_branch_for_58",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Cavitar"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Agate,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_ein.txt",
+          "lines": [
+            286
+          ],
+          "required_source_literals": [
+            "getitem Agate,1; // Agate"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_einbech_cavitar_branch_for_58_289",
+      "unit": "E1-einbech_cavitar_branch_for_58",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Cavitar"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Rose_Quartz,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_ein.txt",
+          "lines": [
+            289
+          ],
+          "required_source_literals": [
+            "getitem Rose_Quartz,1; // Rose_Quartz"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_einbech_cavitar_branch_for_58_292",
+      "unit": "E1-einbech_cavitar_branch_for_58",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Cavitar"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Turquoise,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_ein.txt",
+          "lines": [
+            292
+          ],
+          "required_source_literals": [
+            "getitem Turquoise,1; // Turquoise"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_einbech_cavitar_branch_for_58_295",
+      "unit": "E1-einbech_cavitar_branch_for_58",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Cavitar"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Citrine,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_ein.txt",
+          "lines": [
+            295
+          ],
+          "required_source_literals": [
+            "getitem Citrine,1; // Citrine"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_einbech_cavitar_branch_for_58_298",
+      "unit": "E1-einbech_cavitar_branch_for_58",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Cavitar"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Pyroxene,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_ein.txt",
+          "lines": [
+            298
+          ],
+          "required_source_literals": [
+            "getitem Pyroxene,1; // Pyroxene"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_einbech_cavitar_branch_for_58_301",
+      "unit": "E1-einbech_cavitar_branch_for_58",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Cavitar"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Olivine,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_ein.txt",
+          "lines": [
+            301
+          ],
+          "required_source_literals": [
+            "getitem Olivine,1; // Olivine"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_einbech_cavitar_branch_for_58_361",
+      "unit": "E1-einbech_cavitar_branch_for_58",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Cavitar"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Phracon,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_ein.txt",
+          "lines": [
+            361
+          ],
+          "required_source_literals": [
+            "getitem Phracon,1; // Phracon"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_einbech_cavitar_branch_for_58_415",
+      "unit": "E1-einbech_cavitar_branch_for_58",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Cavitar"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Phracon,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_ein.txt",
+          "lines": [
+            415
+          ],
+          "required_source_literals": [
+            "getitem Phracon,1; // Phracon"
           ]
         }
       ],
