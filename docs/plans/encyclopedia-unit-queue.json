@@ -34434,7 +34434,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "A Laphine corpse#eclbig",
@@ -34453,7 +34453,25 @@
       ],
       "size_lines": 58,
       "reason": "refused by the braced one-item prover: multi-item",
-      "history": []
+      "history": [
+        "2026-09-30T19:13:25Z activated",
+        "2026-09-30T19:13:25Z validated",
+        "2026-09-30T19:13:25Z verified: 3 claims supported",
+        "2026-09-30T19:13:49Z accepted",
+        "2026-09-30T19:13:49Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "01f6ece79de9776b728d313dd7e09773c678995862ccb08805606544b58c8c2b",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-ecl_in04_daughter_luen_eclage_branch_for_5302",

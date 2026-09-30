@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 3155,
+    "E1_unknown": 3158,
     "E1_verified": 1
   },
   "entries": [
@@ -13304,6 +13304,81 @@
           ],
           "required_source_literals": [
             "getitem Sapa_Feat_Cert,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ecl_fild01_a_laphine_corpse_eclbig_branch_for_4718_4744",
+      "unit": "E1-ecl_fild01_a_laphine_corpse_eclbig_branch_for_4718",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "A Laphine corpse#eclbig"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Piece_Of_Lapine_Wing,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "lines": [
+            4744
+          ],
+          "required_source_literals": [
+            "getitem Piece_Of_Lapine_Wing,1; //Piece_Of_Lapine_Wing"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ecl_fild01_a_laphine_corpse_eclbig_branch_for_4718_4756",
+      "unit": "E1-ecl_fild01_a_laphine_corpse_eclbig_branch_for_4718",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "A Laphine corpse#eclbig"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Piece_Of_Lapine_Wing,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "lines": [
+            4756
+          ],
+          "required_source_literals": [
+            "getitem Piece_Of_Lapine_Wing,1; //Piece_Of_Lapine_Wing"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ecl_fild01_a_laphine_corpse_eclbig_branch_for_4718_4770",
+      "unit": "E1-ecl_fild01_a_laphine_corpse_eclbig_branch_for_4718",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "A Laphine corpse#eclbig"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Firm_Hair,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "lines": [
+            4770
+          ],
+          "required_source_literals": [
+            "getitem Firm_Hair,1; //Firm_Hair"
           ]
         }
       ],
