@@ -20894,7 +20894,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "#Piano",
@@ -20913,7 +20913,25 @@
       ],
       "size_lines": 32,
       "reason": "refused by the braced one-item prover: multi-item",
-      "history": []
+      "history": [
+        "2026-09-30T17:08:39Z activated",
+        "2026-09-30T17:08:39Z validated",
+        "2026-09-30T17:08:39Z verified: 1 claims supported",
+        "2026-09-30T17:09:02Z accepted",
+        "2026-09-30T17:09:02Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "458e25d8c52f22dc507aab68b673bcf6019c220b377aa9bde8011404e181b354",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-prt_in_erious_nif_branch_for_309",

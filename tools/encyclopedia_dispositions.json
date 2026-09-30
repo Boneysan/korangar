@@ -50051,6 +50051,31 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_nif_in_piano_branch_for_229_248",
+      "unit": "E1-nif_in_piano_branch_for_229",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "#Piano"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Piano_Keyboard,6; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_niflheim.txt",
+          "lines": [
+            248
+          ],
+          "required_source_literals": [
+            "delitem Piano_Keyboard,6;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
