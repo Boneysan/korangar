@@ -116685,6 +116685,372 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_merchants_shops_txt_1072_1072",
+      "unit": "E2-npc-merchants-shops-txt-1072",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Toy Supplier#lhz"
+      },
+      "result": "verified",
+      "statement": "Toy Supplier#lhz is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/merchants/shops.txt",
+          "lines": [
+            1072,
+            1073,
+            1074,
+            1075,
+            1076,
+            1077,
+            1078
+          ],
+          "required_source_literals": [
+            "lhz_in02,87,208,3\ttrader\tToy Supplier#lhz\t4_M_PIERROT,{",
+            "OnInit:",
+            "sellitem Spinning_Eyes;",
+            "sellitem Eye_Bandage;",
+            "sellitem Luxury_Sunglasses;",
+            "sellitem Granpa_Beard;",
+            "}"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_merchants_shops_txt_1072_1080",
+      "unit": "E2-npc-merchants-shops-txt-1072",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Tool Dealer#lhz2"
+      },
+      "result": "verified",
+      "statement": "Tool Dealer#lhz2 is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/merchants/shops.txt",
+          "lines": [
+            1080,
+            1081,
+            1082,
+            1083,
+            1084,
+            1085,
+            1086,
+            1087,
+            1088,
+            1089,
+            1090,
+            1091
+          ],
+          "required_source_literals": [
+            "lhz_in03,239,106,5\ttrader\tTool Dealer#lhz2\t4_F_EINWOMAN,{",
+            "OnInit:",
+            "sellitem Red_Potion;",
+            "sellitem Orange_Potion;",
+            "sellitem Green_Potion;",
+            "sellitem Center_Potion;",
+            "sellitem Awakening_Potion;",
+            "sellitem Wing_Of_Fly;",
+            "sellitem Wing_Of_Butterfly;",
+            "sellitem Booby_Trap;",
+            "sellitem Spectacles;",
+            "}"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_merchants_shops_txt_1072_1093",
+      "unit": "E2-npc-merchants-shops-txt-1072",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Arrow Merchant#lhz"
+      },
+      "result": "verified",
+      "statement": "Arrow Merchant#lhz is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/merchants/shops.txt",
+          "lines": [
+            1093,
+            1094,
+            1095,
+            1096,
+            1097,
+            1098,
+            1099
+          ],
+          "required_source_literals": [
+            "lhz_in03,258,101,3\ttrader\tArrow Merchant#lhz\t4_M_EINMAN,{",
+            "OnInit:",
+            "sellitem Arrow;",
+            "sellitem Iron_Arrow;",
+            "sellitem Fire_Arrow;",
+            "sellitem Silver_Arrow;",
+            "}"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_merchants_shops_txt_1072_1101",
+      "unit": "E2-npc-merchants-shops-txt-1072",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Merchant#lhz"
+      },
+      "result": "verified",
+      "statement": "Merchant#lhz is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/merchants/shops.txt",
+          "lines": [
+            1101,
+            1102,
+            1103,
+            1104,
+            1105,
+            1106,
+            1107
+          ],
+          "required_source_literals": [
+            "lhz_in03,249,24,4\ttrader\tMerchant#lhz\t4_M_EINMAN,{",
+            "OnInit:",
+            "sellitem Scell;",
+            "sellitem Garlet;",
+            "sellitem Zargon;",
+            "sellitem Monsters_Feed;",
+            "}"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_merchants_shops_txt_1072_1110",
+      "unit": "E2-npc-merchants-shops-txt-1072",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Armor Dealer#lou"
+      },
+      "result": "verified",
+      "statement": "Armor Dealer#lou is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/merchants/shops.txt",
+          "lines": [
+            1110,
+            1111,
+            1112,
+            1113,
+            1114,
+            1115,
+            1116,
+            1117,
+            1118,
+            1119,
+            1120,
+            1121,
+            1122,
+            1123,
+            1124
+          ],
+          "required_source_literals": [
+            "lou_in02,121,182,5\ttrader\tArmor Dealer#lou\t4_F_CHNWOMAN,{",
+            "OnInit:",
+            "sellitem Bandana;",
+            "sellitem Sandals;",
+            "sellitem Shoes;",
+            "sellitem Hood;",
+            "sellitem Muffler;",
+            "sellitem Guard;",
+            "sellitem Buckler;",
+            "sellitem Adventure_Suit;",
+            "sellitem Silk_Robe;",
+            "sellitem Silver_Robe;",
+            "sellitem Wooden_Mail;",
+            "sellitem Belt;",
+            "}"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_merchants_shops_txt_1072_1126",
+      "unit": "E2-npc-merchants-shops-txt-1072",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Weapon Dealer#lou"
+      },
+      "result": "verified",
+      "statement": "Weapon Dealer#lou is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/merchants/shops.txt",
+          "lines": [
+            1126,
+            1127,
+            1128,
+            1129,
+            1130,
+            1131,
+            1132,
+            1133,
+            1134,
+            1135,
+            1136,
+            1137,
+            1138
+          ],
+          "required_source_literals": [
+            "lou_in02,130,182,5\ttrader\tWeapon Dealer#lou\t4_M_CHNMAN,{",
+            "OnInit:",
+            "sellitem Main_Gauche;",
+            "sellitem Stiletto;",
+            "sellitem Blade;",
+            "sellitem Ring_Pommel_Saber;",
+            "sellitem Katana;",
+            "sellitem Bastard_Sword;",
+            "sellitem Pike;",
+            "sellitem Partizan;",
+            "sellitem Hammer;",
+            "sellitem Chain;",
+            "}"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_merchants_shops_txt_1072_1140",
+      "unit": "E2-npc-merchants-shops-txt-1072",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Tool Dealer#lou"
+      },
+      "result": "verified",
+      "statement": "Tool Dealer#lou is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/merchants/shops.txt",
+          "lines": [
+            1140,
+            1141,
+            1142,
+            1143,
+            1144,
+            1145,
+            1146,
+            1147,
+            1148,
+            1149,
+            1150,
+            1151,
+            1152,
+            1153,
+            1154,
+            1155
+          ],
+          "required_source_literals": [
+            "lou_in02,239,176,5\ttrader\tTool Dealer#lou\t4_F_CHNWOMAN,{",
+            "OnInit:",
+            "sellitem Arrow;",
+            "sellitem Iron_Arrow;",
+            "sellitem Spectacles;",
+            "sellitem Red_Potion;",
+            "sellitem Orange_Potion;",
+            "sellitem Yellow_Potion;",
+            "sellitem White_Potion;",
+            "sellitem Green_Potion;",
+            "sellitem Center_Potion;",
+            "sellitem Awakening_Potion;",
+            "sellitem Wing_Of_Fly;",
+            "sellitem Wing_Of_Butterfly;",
+            "sellitem Booby_Trap;",
+            "}"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_merchants_shops_txt_1072_1158",
+      "unit": "E2-npc-merchants-shops-txt-1072",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Tool Dealer#xmas"
+      },
+      "result": "verified",
+      "statement": "Tool Dealer#xmas is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/merchants/shops.txt",
+          "lines": [
+            1158,
+            1159,
+            1160,
+            1161,
+            1162,
+            1163,
+            1164,
+            1165,
+            1166,
+            1167,
+            1168,
+            1169,
+            1170,
+            1171
+          ],
+          "required_source_literals": [
+            "xmas_in,40,38,5\ttrader\tTool Dealer#xmas\t4_M_01,{",
+            "OnInit:",
+            "sellitem Red_Potion;",
+            "sellitem Orange_Potion;",
+            "sellitem Yellow_Potion;",
+            "sellitem White_Potion;",
+            "sellitem Green_Potion;",
+            "sellitem Center_Potion;",
+            "sellitem Awakening_Potion;",
+            "sellitem Wing_Of_Fly;",
+            "sellitem Wing_Of_Butterfly;",
+            "sellitem Spectacles;",
+            "sellitem Leaf_Of_Yggdrasil;",
+            "}"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
