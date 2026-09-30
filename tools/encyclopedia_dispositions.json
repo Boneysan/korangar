@@ -42251,6 +42251,31 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_yuno_in04_book_lhz_branch_for_3353_3362",
+      "unit": "E1-yuno_in04_book_lhz_branch_for_3353",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Book#lhz"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Friends_Diary,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_lighthalzen.txt",
+          "lines": [
+            3362
+          ],
+          "required_source_literals": [
+            "getitem Friends_Diary,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
