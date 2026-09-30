@@ -32576,6 +32576,81 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_spl_in01_high_laphine_grenouille_branch_for_5451_5574",
+      "unit": "E1-spl_in01_high_laphine_grenouille_branch_for_5451",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "High Laphine#grenouille"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Flower_Of_Alfheim,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_2.txt",
+          "lines": [
+            5574
+          ],
+          "required_source_literals": [
+            "delitem Flower_Of_Alfheim,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_spl_in01_high_laphine_grenouille_branch_for_5451_5627",
+      "unit": "E1-spl_in01_high_laphine_grenouille_branch_for_5451",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "High Laphine#grenouille"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Spirit_Of_Alfheim,5; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_2.txt",
+          "lines": [
+            5627
+          ],
+          "required_source_literals": [
+            "getitem Spirit_Of_Alfheim,5;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_spl_in01_high_laphine_grenouille_branch_for_5451_5652",
+      "unit": "E1-spl_in01_high_laphine_grenouille_branch_for_5451",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "High Laphine#grenouille"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Splendide_Coin,3; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_2.txt",
+          "lines": [
+            5652
+          ],
+          "required_source_literals": [
+            "getitem Splendide_Coin,3;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
