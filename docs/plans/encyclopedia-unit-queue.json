@@ -70143,7 +70143,7 @@
       "package": "E4",
       "kind": "e4_formula",
       "tier": "strong",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "skill_names": [
@@ -70162,7 +70162,26 @@
       ],
       "size_lines": 4,
       "reason": "skillratio case with branches or preprocessor blocks",
-      "history": []
+      "history": [
+        "2026-09-30T22:09:50Z activated",
+        "2026-09-30T22:09:51Z validated",
+        "2026-09-30T22:09:51Z verified: 1 claims supported",
+        "2026-09-30T22:10:14Z accepted",
+        "2026-09-30T22:10:14Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "9897eced11634bd1320e1ce646bed1cfaebf4f0873f6c0271ff6fb395c54a713",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "audit": "due",
+      "commit": "committed"
     },
     {
       "id": "E4-lg-overbrand-brandish",
