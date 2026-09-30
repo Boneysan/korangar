@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 3248,
+    "E1_unknown": 3250,
     "E1_verified": 1
   },
   "entries": [
@@ -33454,6 +33454,56 @@
           ],
           "required_source_literals": [
             "getitem Ancient_Grudge,7;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mal_in02_geologist_mali_mal_branch_for_967_1118",
+      "unit": "E1-mal_in02_geologist_mali_mal_branch_for_967",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Geologist Mali#mal"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Egrade_Coin,20; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malangdo.txt",
+          "lines": [
+            1118
+          ],
+          "required_source_literals": [
+            "getitem Egrade_Coin,20;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mal_in02_geologist_mali_mal_branch_for_967_1131",
+      "unit": "E1-mal_in02_geologist_mali_mal_branch_for_967",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Geologist Mali#mal"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Egrade_Coin,4; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malangdo.txt",
+          "lines": [
+            1131
+          ],
+          "required_source_literals": [
+            "getitem Egrade_Coin,4;"
           ]
         }
       ],

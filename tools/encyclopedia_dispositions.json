@@ -81326,6 +81326,56 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mal_in02_geologist_mali_mal_branch_for_967_1118",
+      "unit": "E1-mal_in02_geologist_mali_mal_branch_for_967",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Geologist Mali#mal"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Egrade_Coin,20; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malangdo.txt",
+          "lines": [
+            1118
+          ],
+          "required_source_literals": [
+            "getitem Egrade_Coin,20;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mal_in02_geologist_mali_mal_branch_for_967_1131",
+      "unit": "E1-mal_in02_geologist_mali_mal_branch_for_967",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Geologist Mali#mal"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Egrade_Coin,4; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malangdo.txt",
+          "lines": [
+            1131
+          ],
+          "required_source_literals": [
+            "getitem Egrade_Coin,4;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
