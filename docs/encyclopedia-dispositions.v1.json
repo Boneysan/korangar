@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 208,
+    "E1_unknown": 213,
     "E1_verified": 1
   },
   "entries": [
@@ -229,6 +229,131 @@
           ],
           "required_source_literals": [
             "delitem Hammer_Of_Blacksmith,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_alde_alche_chief_researcher_am_branch_for_1955_2130",
+      "unit": "E1-alde_alche_chief_researcher_am_branch_for_1955",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Chief Researcher#am"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Mixture,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/alchemist.txt",
+          "lines": [
+            2130
+          ],
+          "required_source_literals": [
+            "getitem Mixture,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_alde_alche_chief_researcher_am_branch_for_1955_2131",
+      "unit": "E1-alde_alche_chief_researcher_am_branch_for_1955",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Chief Researcher#am"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Burn_Tree,5; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/alchemist.txt",
+          "lines": [
+            2131
+          ],
+          "required_source_literals": [
+            "getitem Burn_Tree,5;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_alde_alche_chief_researcher_am_branch_for_1955_2132",
+      "unit": "E1-alde_alche_chief_researcher_am_branch_for_1955",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Chief Researcher#am"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Fine_Sand,5; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/alchemist.txt",
+          "lines": [
+            2132
+          ],
+          "required_source_literals": [
+            "getitem Fine_Sand,5;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_alde_alche_chief_researcher_am_branch_for_1955_2133",
+      "unit": "E1-alde_alche_chief_researcher_am_branch_for_1955",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Chief Researcher#am"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Oridecon_Stone,3; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/alchemist.txt",
+          "lines": [
+            2133
+          ],
+          "required_source_literals": [
+            "getitem Oridecon_Stone,3;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_alde_alche_chief_researcher_am_branch_for_1955_2134",
+      "unit": "E1-alde_alche_chief_researcher_am_branch_for_1955",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Chief Researcher#am"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Elunium_Stone,3; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/alchemist.txt",
+          "lines": [
+            2134
+          ],
+          "required_source_literals": [
+            "getitem Elunium_Stone,3;"
           ]
         }
       ],
