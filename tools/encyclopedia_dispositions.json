@@ -115303,6 +115303,380 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_merchants_shops_txt_713_713",
+      "unit": "E2-npc-merchants-shops-txt-713",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Bow Dealer#hu"
+      },
+      "result": "verified",
+      "statement": "Bow Dealer#hu is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/merchants/shops.txt",
+          "lines": [
+            713,
+            714,
+            715,
+            716,
+            717,
+            718,
+            719
+          ],
+          "required_source_literals": [
+            "hu_in01,100,390,3\ttrader\tBow Dealer#hu\t4_M_04,{",
+            "OnInit:",
+            "sellitem Bow;",
+            "sellitem Great_Bow;",
+            "sellitem Hunter_Bow;",
+            "sellitem Kakkung;",
+            "}"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_merchants_shops_txt_713_721",
+      "unit": "E2-npc-merchants-shops-txt-713",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Weapon Dealer#hu"
+      },
+      "result": "verified",
+      "statement": "Weapon Dealer#hu is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/merchants/shops.txt",
+          "lines": [
+            721,
+            722,
+            723,
+            724,
+            725,
+            726,
+            727
+          ],
+          "required_source_literals": [
+            "hu_in01,94,390,3\ttrader\tWeapon Dealer#hu\t4_M_HUMAN_01,{",
+            "OnInit:",
+            "sellitem Katana;",
+            "sellitem Bastard_Sword;",
+            "sellitem Hammer;",
+            "sellitem Knife;",
+            "}"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_merchants_shops_txt_713_729",
+      "unit": "E2-npc-merchants-shops-txt-713",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Armor Dealer#hu"
+      },
+      "result": "verified",
+      "statement": "Armor Dealer#hu is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/merchants/shops.txt",
+          "lines": [
+            729,
+            730,
+            731,
+            732,
+            733,
+            734,
+            735,
+            736,
+            737,
+            738,
+            739,
+            740
+          ],
+          "required_source_literals": [
+            "hu_in01,94,313,3\ttrader\tArmor Dealer#hu\t4_M_04,{",
+            "OnInit:",
+            "sellitem Goggle;",
+            "sellitem Circlet;",
+            "sellitem Cap;",
+            "sellitem Guard;",
+            "sellitem Buckler;",
+            "sellitem Sandals;",
+            "sellitem Hood;",
+            "sellitem Mantle;",
+            "sellitem Shield;",
+            "}"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_merchants_shops_txt_713_743",
+      "unit": "E2-npc-merchants-shops-txt-713",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Weapon Dealer#iz"
+      },
+      "result": "verified",
+      "statement": "Weapon Dealer#iz is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/merchants/shops.txt",
+          "lines": [
+            743,
+            744,
+            745,
+            746,
+            747,
+            748,
+            749,
+            750,
+            751,
+            752,
+            753,
+            754,
+            755,
+            756,
+            757,
+            758,
+            759,
+            760,
+            761
+          ],
+          "required_source_literals": [
+            "izlude_in,60,127,4\ttrader\tWeapon Dealer#iz\t1_F_MARIA,{",
+            "OnInit:",
+            "sellitem Arrow;",
+            "sellitem Silver_Arrow;",
+            "sellitem Bow;",
+            "sellitem Rod;",
+            "sellitem Knife;",
+            "sellitem Cutter;",
+            "sellitem Main_Gauche;",
+            "sellitem Sword;",
+            "sellitem Falchion;",
+            "sellitem Blade;",
+            "sellitem Katana;",
+            "sellitem Slayer;",
+            "sellitem Bastard_Sword;",
+            "sellitem Two_Hand_Sword;",
+            "sellitem Broad_Sword;",
+            "sellitem Axe;",
+            "}"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_merchants_shops_txt_713_763",
+      "unit": "E2-npc-merchants-shops-txt-713",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Armor Dealer#iz"
+      },
+      "result": "verified",
+      "statement": "Armor Dealer#iz is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/merchants/shops.txt",
+          "lines": [
+            763,
+            764,
+            765,
+            766,
+            767,
+            768,
+            769,
+            770,
+            771,
+            772,
+            773,
+            774,
+            775,
+            776,
+            777,
+            778,
+            779,
+            780,
+            781,
+            782
+          ],
+          "required_source_literals": [
+            "izlude_in,70,127,4\ttrader\tArmor Dealer#iz\t1_M_SIZ,{",
+            "OnInit:",
+            "sellitem Buckler;",
+            "sellitem Shield;",
+            "sellitem Shoes;",
+            "sellitem Boots;",
+            "sellitem Muffler;",
+            "sellitem Manteau;",
+            "sellitem Cap;",
+            "sellitem Helm;",
+            "sellitem Leather_Jacket;",
+            "sellitem Adventure_Suit;",
+            "sellitem Wooden_Mail;",
+            "sellitem Mantle;",
+            "sellitem Coat;",
+            "sellitem Padded_Armor;",
+            "sellitem Chain_Mail;",
+            "sellitem Plate_Armor;",
+            "sellitem Novice_Armlet;",
+            "}"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_merchants_shops_txt_713_785",
+      "unit": "E2-npc-merchants-shops-txt-713",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Ice Cream Guy#ja"
+      },
+      "result": "verified",
+      "statement": "Ice Cream Guy#ja is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/merchants/shops.txt",
+          "lines": [
+            785,
+            786,
+            787,
+            788,
+            789,
+            790,
+            791,
+            792,
+            793,
+            794
+          ],
+          "required_source_literals": [
+            "jawaii,186,174,3\ttrader\tIce Cream Guy#ja\t4_M_03,{",
+            "OnInit:",
+            "sellitem Ice_Cream;",
+            "sellitem Ice_Cream;",
+            "sellitem Ice_Cream;",
+            "sellitem Ice_Cream;",
+            "sellitem Ice_Cream;",
+            "sellitem Ice_Cream;",
+            "sellitem Ice_Cream;",
+            "}"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_merchants_shops_txt_713_797",
+      "unit": "E2-npc-merchants-shops-txt-713",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Tool Dealer#yuno"
+      },
+      "result": "verified",
+      "statement": "Tool Dealer#yuno is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/merchants/shops.txt",
+          "lines": [
+            797,
+            798,
+            799,
+            800,
+            801,
+            802,
+            803,
+            804,
+            805,
+            806,
+            807,
+            808,
+            809,
+            810
+          ],
+          "required_source_literals": [
+            "yuno,218,97,5\ttrader\tTool Dealer#yuno\t4_M_02,{",
+            "OnInit:",
+            "sellitem Arrow;",
+            "sellitem Spectacles;",
+            "sellitem Red_Potion;",
+            "sellitem Orange_Potion;",
+            "sellitem Yellow_Potion;",
+            "sellitem White_Potion;",
+            "sellitem Green_Potion;",
+            "sellitem Center_Potion;",
+            "sellitem Awakening_Potion;",
+            "sellitem Wing_Of_Fly;",
+            "sellitem Wing_Of_Butterfly;",
+            "}"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_merchants_shops_txt_713_812",
+      "unit": "E2-npc-merchants-shops-txt-713",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Tool Dealer#yuno1"
+      },
+      "result": "verified",
+      "statement": "Tool Dealer#yuno1 is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/merchants/shops.txt",
+          "lines": [
+            812,
+            813,
+            814,
+            815,
+            816,
+            817
+          ],
+          "required_source_literals": [
+            "yuno,226,107,5\ttrader\tTool Dealer#yuno1\t4_M_01,{",
+            "OnInit:",
+            "sellitem Scell;",
+            "sellitem Garlet;",
+            "sellitem Zargon;",
+            "}"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
