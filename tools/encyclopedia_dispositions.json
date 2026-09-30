@@ -102980,6 +102980,546 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_1600_script_untranslated",
+      "unit": "E3-unknown-bonus-bmatk-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          1600
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 1600 is not summarized: the translator does not interpret the quoted statement (bonus bMatk (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            16333
+          ],
+          "required_source_literals": [
+            "bonus bMatk,((min(getrefine(),15)) ** (2));"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_1670_script_untranslated",
+      "unit": "E3-unknown-bonus-bmatk-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          1670
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 1670 is not summarized: the translator does not interpret the quoted statement (bonus bMatk (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            18411
+          ],
+          "required_source_literals": [
+            "bonus bMatk,30*(getrefine()/3);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_1680_script_untranslated",
+      "unit": "E3-unknown-bonus-bmatk-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          1680
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 1680 is not summarized: the translator does not interpret the quoted statement (bonus bMatk (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            18481
+          ],
+          "required_source_literals": [
+            "bonus bMatk,((min(getrefine(),15)) ** (2));"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_2015_script_untranslated",
+      "unit": "E3-unknown-bonus-bmatk-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          2015
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 2015 is not summarized: the translator does not interpret the quoted statement (bonus bMatk (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            24007
+          ],
+          "required_source_literals": [
+            "bonus bMatk,(getrefine()*10);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_2025_script_untranslated",
+      "unit": "E3-unknown-bonus-bmatk-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          2025
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 2025 is not summarized: the translator does not interpret the quoted statement (bonus bMatk (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            24319
+          ],
+          "required_source_literals": [
+            "bonus bMatk,((min(getrefine(),15)) ** (2));"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_2026_script_untranslated",
+      "unit": "E3-unknown-bonus-bmatk-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          2026
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 2026 is not summarized: the translator does not interpret the quoted statement (bonus bMatk (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            24346
+          ],
+          "required_source_literals": [
+            "bonus bMatk,((min(getrefine(),15)) ** (2));"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_2918_script_untranslated",
+      "unit": "E3-unknown-bonus-bmatk-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          2918
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 2918 is not summarized: the translator does not interpret the quoted statement (bonus bMatk (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            40735
+          ],
+          "required_source_literals": [
+            "bonus bMatk,(readparam(bInt)/10);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_2924_script_untranslated",
+      "unit": "E3-unknown-bonus-bmatk-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          2924
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 2924 is not summarized: the translator does not interpret the quoted statement (bonus bMatk (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            40851
+          ],
+          "required_source_literals": [
+            "bonus bMatk,(readparam(bInt)/10);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_4556_script_untranslated",
+      "unit": "E3-unknown-bonus-bmatk-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          4556
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 4556 is not summarized: the translator does not interpret the quoted statement (bonus bMatk (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            48265
+          ],
+          "required_source_literals": [
+            "bonus bMatk,(getrefine()*5);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_4596_script_untranslated",
+      "unit": "E3-unknown-bonus-bmatk-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          4596
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 4596 is not summarized: the translator does not interpret the quoted statement (bonus bMatk (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            48833
+          ],
+          "required_source_literals": [
+            "Script: <\" bonus bMatk,5*(readparam(bInt)/10); \">"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_5966_script_untranslated",
+      "unit": "E3-unknown-bonus-bmatk-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          5966
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 5966 is not summarized: the translator does not interpret the quoted statement (bonus bMatk (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            68299
+          ],
+          "required_source_literals": [
+            "bonus bMatk,2*(readparam(bDex)/10);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_13442_script_untranslated",
+      "unit": "E3-unknown-bonus-bmatk-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          13442
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 13442 is not summarized: the translator does not interpret the quoted statement (bonus bMatk (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            106337
+          ],
+          "required_source_literals": [
+            "bonus bMatk,getrefine();"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_18760_script_untranslated",
+      "unit": "E3-unknown-bonus-bmatk-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          18760
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 18760 is not summarized: the translator does not interpret the quoted statement (bonus bMatk (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            136722
+          ],
+          "required_source_literals": [
+            "bonus bMatk,getrefine();"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_18848_script_untranslated",
+      "unit": "E3-unknown-bonus-bmatk-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          18848
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 18848 is not summarized: the translator does not interpret the quoted statement (bonus bMatk (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            138328
+          ],
+          "required_source_literals": [
+            "Script: <\" bonus bMatk,20+getrefine(); \">"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_18849_script_untranslated",
+      "unit": "E3-unknown-bonus-bmatk-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          18849
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 18849 is not summarized: the translator does not interpret the quoted statement (bonus bMatk (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            138341
+          ],
+          "required_source_literals": [
+            "bonus bMatk,40+getrefine();"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_24042_script_untranslated",
+      "unit": "E3-unknown-bonus-bmatk-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          24042
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 24042 is not summarized: the translator does not interpret the quoted statement (bonus bMatk (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            151133
+          ],
+          "required_source_literals": [
+            "bonus bMatk,getrefine();"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_24088_script_untranslated",
+      "unit": "E3-unknown-bonus-bmatk-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          24088
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 24088 is not summarized: the translator does not interpret the quoted statement (bonus bMatk (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            151750
+          ],
+          "required_source_literals": [
+            "Script: <\" bonus bMatk,5+(getrefine()/2); \">"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_24184_script_untranslated",
+      "unit": "E3-unknown-bonus-bmatk-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          24184
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 24184 is not summarized: the translator does not interpret the quoted statement (bonus bMatk (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            152810
+          ],
+          "required_source_literals": [
+            "Script: <\" bonus bMatk,5+(getrefine()/2); \">"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_24229_script_untranslated",
+      "unit": "E3-unknown-bonus-bmatk-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          24229
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 24229 is not summarized: the translator does not interpret the quoted statement (bonus bMatk (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            153360
+          ],
+          "required_source_literals": [
+            "bonus bMatk,(5+getrefine());"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_24230_script_untranslated",
+      "unit": "E3-unknown-bonus-bmatk-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          24230
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 24230 is not summarized: the translator does not interpret the quoted statement (bonus bMatk (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            153374
+          ],
+          "required_source_literals": [
+            "bonus bMatk,(5+getrefine());"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
