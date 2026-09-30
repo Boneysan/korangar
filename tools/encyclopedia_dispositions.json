@@ -76651,6 +76651,31 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_dew_in01_sage_kasyapa_dew_branch_for_107_207",
+      "unit": "E1-dew_in01_sage_kasyapa_dew_branch_for_107",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Sage Kasyapa#dew"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Cendrawasih_SF,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_dewata.txt",
+          "lines": [
+            207
+          ],
+          "required_source_literals": [
+            "getitem Cendrawasih_SF,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
