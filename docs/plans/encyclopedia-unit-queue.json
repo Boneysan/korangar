@@ -36066,7 +36066,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Dry Machine#mal",
@@ -36085,7 +36085,25 @@
       ],
       "size_lines": 28,
       "reason": "refused by the braced one-item prover: switch",
-      "history": []
+      "history": [
+        "2026-09-30T19:28:28Z activated",
+        "2026-09-30T19:28:28Z validated",
+        "2026-09-30T19:28:28Z verified: 1 claims supported",
+        "2026-09-30T19:28:52Z accepted",
+        "2026-09-30T19:28:52Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "b1e4ca2f0a09e9109e2719e6deb4985beb2439f769ab4ec383f5a2f0e660ee31",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-mal_dun01_biscuit_mal_branch_for_2010",

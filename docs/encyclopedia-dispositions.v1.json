@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 3256,
+    "E1_unknown": 3257,
     "E1_verified": 1
   },
   "entries": [
@@ -33454,6 +33454,31 @@
           ],
           "required_source_literals": [
             "getitem Ancient_Grudge,7;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mal_in01_dry_machine_mal_branch_for_1884_1899",
+      "unit": "E1-mal_in01_dry_machine_mal_branch_for_1884",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Dry Machine#mal"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Fresh_Fruit,30; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malangdo.txt",
+          "lines": [
+            1899
+          ],
+          "required_source_literals": [
+            "delitem Fresh_Fruit,30;"
           ]
         }
       ],
