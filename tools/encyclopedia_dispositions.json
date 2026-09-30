@@ -132789,6 +132789,33 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2025_npc_jobs_2_2_rogue_txt_1279",
+      "unit": "E5-chain-2025",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2025
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 2025; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/rogue.txt",
+          "lines": [
+            1279
+          ],
+          "required_source_literals": [
+            "changequest 2025,2026;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
