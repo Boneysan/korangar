@@ -11,7 +11,7 @@
     "E2_conditional": 1,
     "E2_verified": 236,
     "E3_unknown": 973,
-    "E4_unknown": 39
+    "E4_unknown": 40
   },
   "entries": [
     {
@@ -98095,6 +98095,33 @@
           ],
           "required_source_literals": [
             "case NPC_RANDOMATTACK:"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e4_npc_vampire_gift_formula",
+      "unit": "E4-npc-vampire-gift",
+      "package": "E4",
+      "subject": {
+        "kind": "skill",
+        "ids": [
+          679
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted case is the ratio site for these skills; this record does not reduce it to a worked example.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "src/map/battle.c",
+          "lines": [
+            2541
+          ],
+          "required_source_literals": [
+            "case NPC_VAMPIRE_GIFT:"
           ]
         }
       ],
