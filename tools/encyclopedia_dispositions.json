@@ -51701,6 +51701,31 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_morocc_prison_ward_sch_branch_for_993_1040",
+      "unit": "E1-morocc_prison_ward_sch_branch_for_993",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Prison Ward#sch"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Luk_Dish01,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_veins.txt",
+          "lines": [
+            1040
+          ],
+          "required_source_literals": [
+            "delitem Luk_Dish01,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
