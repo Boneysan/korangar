@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 1102,
+    "E1_unknown": 1103,
     "E1_verified": 1
   },
   "entries": [
@@ -24279,6 +24279,31 @@
           ],
           "required_source_literals": [
             "delitem Glitering_PaperB,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_spl_fild02_tree_ep13bs1_ep13tree_branch_for_3462_3480",
+      "unit": "E1-spl_fild02_tree_ep13bs1_ep13tree_branch_for_3462",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Tree#ep13bs1::ep13tree"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Ordinary_Branch,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_1.txt",
+          "lines": [
+            3480
+          ],
+          "required_source_literals": [
+            "getitem Ordinary_Branch,1;"
           ]
         }
       ],

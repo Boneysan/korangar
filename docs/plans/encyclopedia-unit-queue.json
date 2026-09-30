@@ -10396,7 +10396,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Tree#ep13bs1::ep13tree",
@@ -10415,7 +10415,25 @@
       ],
       "size_lines": 45,
       "reason": "refused by the braced one-item prover: loop-or-random",
-      "history": []
+      "history": [
+        "2026-09-30T15:31:56Z activated",
+        "2026-09-30T15:31:56Z validated",
+        "2026-09-30T15:31:56Z verified: 1 claims supported",
+        "2026-09-30T15:32:20Z accepted",
+        "2026-09-30T15:32:20Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "766229f8fa4b4cab07eda45045e24d502921dc15a50f72b622aa82faad8cec78",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-mid_camp_monster_scholar_ep13_branch_for_3670",

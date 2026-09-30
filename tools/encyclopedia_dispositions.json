@@ -27676,6 +27676,31 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_spl_fild02_tree_ep13bs1_ep13tree_branch_for_3462_3480",
+      "unit": "E1-spl_fild02_tree_ep13bs1_ep13tree_branch_for_3462",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Tree#ep13bs1::ep13tree"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Ordinary_Branch,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_1.txt",
+          "lines": [
+            3480
+          ],
+          "required_source_literals": [
+            "getitem Ordinary_Branch,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
