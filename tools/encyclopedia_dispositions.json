@@ -14676,6 +14676,106 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_kh_school_elly_branch_for_1387_1451",
+      "unit": "E1-kh_school_elly_branch_for_1387",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Elly"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Golden_Key,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/kiel_hyre_quest.txt",
+          "lines": [
+            1451
+          ],
+          "required_source_literals": [
+            "getitem Golden_Key,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_kh_school_elly_branch_for_1387_1452",
+      "unit": "E1-kh_school_elly_branch_for_1387",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Elly"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Kiel_Button,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/kiel_hyre_quest.txt",
+          "lines": [
+            1452
+          ],
+          "required_source_literals": [
+            "getitem Kiel_Button,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_kh_school_elly_branch_for_1387_1518",
+      "unit": "E1-kh_school_elly_branch_for_1387",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Elly"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Blue_Key_Card,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/kiel_hyre_quest.txt",
+          "lines": [
+            1518
+          ],
+          "required_source_literals": [
+            "getitem Blue_Key_Card,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_kh_school_elly_branch_for_1387_1519",
+      "unit": "E1-kh_school_elly_branch_for_1387",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Elly"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Iron_Box,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/kiel_hyre_quest.txt",
+          "lines": [
+            1519
+          ],
+          "required_source_literals": [
+            "delitem Iron_Box,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
