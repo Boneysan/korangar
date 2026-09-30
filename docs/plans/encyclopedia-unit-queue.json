@@ -21896,7 +21896,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Blazing Fire#ice3",
@@ -21915,7 +21915,26 @@
       ],
       "size_lines": 35,
       "reason": "refused by the braced one-item prover: braceless",
-      "history": []
+      "history": [
+        "2026-09-30T17:17:50Z activated",
+        "2026-09-30T17:17:50Z validated",
+        "2026-09-30T17:17:51Z verified: 2 claims supported",
+        "2026-09-30T17:18:14Z accepted",
+        "2026-09-30T17:18:14Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "fb82139bc354b99c02297dfb62d37a2bc04c6c81a586563f68945a72f42682f9",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "audit": "due",
+      "commit": "committed"
     },
     {
       "id": "E1-ice_dun03_blazing_fire_ice4_branch_for_3613",
