@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 1109,
+    "E1_unknown": 1110,
     "E1_verified": 1
   },
   "entries": [
@@ -10029,6 +10029,31 @@
           ],
           "required_source_literals": [
             "getitem Delivery_Box,1; //Delivery_Package"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_man_fild01_frozen_tree_evt_lumis_branch_for_4769_4853",
+      "unit": "E1-man_fild01_frozen_tree_evt_lumis_branch_for_4769",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Frozen Tree#evt_lumis"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Horn_Of_Hilsrion,5; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_1.txt",
+          "lines": [
+            4853
+          ],
+          "required_source_literals": [
+            "delitem Horn_Of_Hilsrion,5;"
           ]
         }
       ],
