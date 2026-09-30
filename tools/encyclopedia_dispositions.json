@@ -67051,6 +67051,31 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_job_gun_ivan_sidorenko_2_branch_for_902_946",
+      "unit": "E1-job_gun_ivan_sidorenko_2_branch_for_902",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Ivan Sidorenko#2"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Freedom_Flame,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/2e/rebellion.txt",
+          "lines": [
+            946
+          ],
+          "required_source_literals": [
+            "getitem(Freedom_Flame, 1);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
