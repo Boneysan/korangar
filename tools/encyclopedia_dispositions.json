@@ -65476,6 +65476,81 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_sign01_serin_witch_branch_for_8735_8953",
+      "unit": "E1-que_sign01_serin_witch_branch_for_8735",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Serin#witch"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Witchs_Potion,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/the_sign_quest.txt",
+          "lines": [
+            8953
+          ],
+          "required_source_literals": [
+            "delitem Witchs_Potion,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_sign01_serin_witch_branch_for_8735_8975",
+      "unit": "E1-que_sign01_serin_witch_branch_for_8735",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Serin#witch"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Witchs_Potion,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/the_sign_quest.txt",
+          "lines": [
+            8975
+          ],
+          "required_source_literals": [
+            "delitem Witchs_Potion,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_sign01_serin_witch_branch_for_8735_9022",
+      "unit": "E1-que_sign01_serin_witch_branch_for_8735",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Serin#witch"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Witchs_Potion,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/the_sign_quest.txt",
+          "lines": [
+            9022
+          ],
+          "required_source_literals": [
+            "delitem Witchs_Potion,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
