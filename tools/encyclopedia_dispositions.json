@@ -27576,6 +27576,31 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mid_campin_receptionist_brink_ep13b_branch_for_2846_2916",
+      "unit": "E1-mid_campin_receptionist_brink_ep13b_branch_for_2846",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Receptionist Brink#ep13b"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Chocolate_Pie,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_1.txt",
+          "lines": [
+            2916
+          ],
+          "required_source_literals": [
+            "getitem Chocolate_Pie,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
