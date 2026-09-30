@@ -21194,7 +21194,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Teacher",
@@ -21213,7 +21213,22 @@
       ],
       "size_lines": 81,
       "reason": "refused by the braced one-item prover: switch",
-      "history": []
+      "history": [
+        "2026-09-30T17:11:26Z activated",
+        "2026-09-30T17:11:26Z validated",
+        "2026-09-30T17:11:26Z verified: 0 claims supported",
+        "2026-09-30T17:11:49Z accepted",
+        "2026-09-30T17:11:49Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "5c010fe70f6ca4e2ef480ddb1e01b985917d9e59a395f27489bb401355f6f9fa",
+      "accepted_files": [
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-prontera_busy_boy_prt_branch_for_250",
