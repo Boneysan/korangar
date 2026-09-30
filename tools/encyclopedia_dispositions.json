@@ -124432,6 +124432,33 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e4_tk_counter_formula",
+      "unit": "E4-tk-counter",
+      "package": "E4",
+      "subject": {
+        "kind": "skill",
+        "ids": [
+          419
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted case is the ratio site for these skills; this record does not reduce it to a worked example.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "src/map/battle.c",
+          "lines": [
+            2459
+          ],
+          "required_source_literals": [
+            "case TK_COUNTER:"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
