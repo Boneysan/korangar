@@ -73351,6 +73351,106 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_moc_para01_mingmin_1_branch_for_42_568",
+      "unit": "E1-moc_para01_mingmin_1_branch_for_42",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Mingmin#1"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Bloody_Page,20; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/111-120.txt",
+          "lines": [
+            568
+          ],
+          "required_source_literals": [
+            "delitem Bloody_Page,20;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_moc_para01_mingmin_1_branch_for_42_778",
+      "unit": "E1-moc_para01_mingmin_1_branch_for_42",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Mingmin#1"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Mystic_Horn,20; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/111-120.txt",
+          "lines": [
+            778
+          ],
+          "required_source_literals": [
+            "delitem Mystic_Horn,20;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_moc_para01_mingmin_1_branch_for_42_923",
+      "unit": "E1-moc_para01_mingmin_1_branch_for_42",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Mingmin#1"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Mystery_Piece,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/111-120.txt",
+          "lines": [
+            923
+          ],
+          "required_source_literals": [
+            "delitem Mystery_Piece,10;// Mystery_Piece"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_moc_para01_mingmin_1_branch_for_42_924",
+      "unit": "E1-moc_para01_mingmin_1_branch_for_42",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Mingmin#1"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Screw,20; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/111-120.txt",
+          "lines": [
+            924
+          ],
+          "required_source_literals": [
+            "delitem Screw,20;// Screw"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
