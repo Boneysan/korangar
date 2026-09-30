@@ -11,7 +11,7 @@
     "E2_conditional": 1,
     "E2_verified": 236,
     "E3_unknown": 973,
-    "E4_unknown": 98
+    "E4_unknown": 99
   },
   "entries": [
     {
@@ -100061,6 +100061,36 @@
           ],
           "required_source_literals": [
             "case WL_SOULEXPANSION: // MATK [{( Skill Level + 4 ) x 100 ) + ( Caster's INT )} x ( Caster's Base Level / 100 )] %"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e4_wl_summon_atk_fire_formula",
+      "unit": "E4-wl-summon-atk-fire",
+      "package": "E4",
+      "subject": {
+        "kind": "skill",
+        "ids": [
+          2225,
+          2227,
+          2226,
+          2228
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted case is the ratio site for these skills; this record does not reduce it to a worked example.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "src/map/battle.c",
+          "lines": [
+            1934
+          ],
+          "required_source_literals": [
+            "case WL_SUMMON_ATK_FIRE:"
           ]
         }
       ],
