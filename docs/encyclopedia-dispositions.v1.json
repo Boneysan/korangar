@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 2129,
+    "E1_unknown": 2166,
     "E1_verified": 1
   },
   "entries": [
@@ -42729,6 +42729,931 @@
           ],
           "required_source_literals": [
             "getitem Seal_Scroll,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_grunburti_god_branch_for_398_502",
+      "unit": "E1-que_god01_grunburti_god_branch_for_398",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Grunburti#god"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Jewel_Of_Prayer,4; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/god_weapon_creation.txt",
+          "lines": [
+            502
+          ],
+          "required_source_literals": [
+            "delitem Jewel_Of_Prayer,4;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_grunburti_god_branch_for_398_503",
+      "unit": "E1-que_god01_grunburti_god_branch_for_398",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Grunburti#god"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Silver_Fancy,4; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/god_weapon_creation.txt",
+          "lines": [
+            503
+          ],
+          "required_source_literals": [
+            "delitem Silver_Fancy,4;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_grunburti_god_branch_for_398_504",
+      "unit": "E1-que_god01_grunburti_god_branch_for_398",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Grunburti#god"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Crystal_Of_Snow,3; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/god_weapon_creation.txt",
+          "lines": [
+            504
+          ],
+          "required_source_literals": [
+            "delitem Crystal_Of_Snow,3;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_grunburti_god_branch_for_398_505",
+      "unit": "E1-que_god01_grunburti_god_branch_for_398",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Grunburti#god"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Slilince_Wave,3; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/god_weapon_creation.txt",
+          "lines": [
+            505
+          ],
+          "required_source_literals": [
+            "delitem Slilince_Wave,3;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_grunburti_god_branch_for_398_506",
+      "unit": "E1-que_god01_grunburti_god_branch_for_398",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Grunburti#god"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Air_Stream,3; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/god_weapon_creation.txt",
+          "lines": [
+            506
+          ],
+          "required_source_literals": [
+            "delitem Air_Stream,3;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_grunburti_god_branch_for_398_507",
+      "unit": "E1-que_god01_grunburti_god_branch_for_398",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Grunburti#god"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Blue_Jewel,2; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/god_weapon_creation.txt",
+          "lines": [
+            507
+          ],
+          "required_source_literals": [
+            "delitem Blue_Jewel,2;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_grunburti_god_branch_for_398_508",
+      "unit": "E1-que_god01_grunburti_god_branch_for_398",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Grunburti#god"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Scarlet_Jewel,3; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/god_weapon_creation.txt",
+          "lines": [
+            508
+          ],
+          "required_source_literals": [
+            "delitem Scarlet_Jewel,3;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_grunburti_god_branch_for_398_509",
+      "unit": "E1-que_god01_grunburti_god_branch_for_398",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Grunburti#god"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem White_Jewel,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/god_weapon_creation.txt",
+          "lines": [
+            509
+          ],
+          "required_source_literals": [
+            "delitem White_Jewel,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_grunburti_god_branch_for_398_510",
+      "unit": "E1-que_god01_grunburti_god_branch_for_398",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Grunburti#god"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Cardinal_Jewel_,5; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/god_weapon_creation.txt",
+          "lines": [
+            510
+          ],
+          "required_source_literals": [
+            "delitem Cardinal_Jewel_,5;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_grunburti_god_branch_for_398_511",
+      "unit": "E1-que_god01_grunburti_god_branch_for_398",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Grunburti#god"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Gold,20; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/god_weapon_creation.txt",
+          "lines": [
+            511
+          ],
+          "required_source_literals": [
+            "delitem Gold,20;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_grunburti_god_branch_for_398_512",
+      "unit": "E1-que_god01_grunburti_god_branch_for_398",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Grunburti#god"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Necklace,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/god_weapon_creation.txt",
+          "lines": [
+            512
+          ],
+          "required_source_literals": [
+            "delitem Necklace,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_grunburti_god_branch_for_398_513",
+      "unit": "E1-que_god01_grunburti_god_branch_for_398",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Grunburti#god"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Brysinggamen,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/god_weapon_creation.txt",
+          "lines": [
+            513
+          ],
+          "required_source_literals": [
+            "getitem Brysinggamen,1; // Brysinggamen"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_grunburti_god_branch_for_398_582",
+      "unit": "E1-que_god01_grunburti_god_branch_for_398",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Grunburti#god"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Gullraifnir,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/god_weapon_creation.txt",
+          "lines": [
+            582
+          ],
+          "required_source_literals": [
+            "delitem Gullraifnir,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_grunburti_god_branch_for_398_583",
+      "unit": "E1-que_god01_grunburti_god_branch_for_398",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Grunburti#god"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Gold,20; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/god_weapon_creation.txt",
+          "lines": [
+            583
+          ],
+          "required_source_literals": [
+            "delitem Gold,20;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_grunburti_god_branch_for_398_584",
+      "unit": "E1-que_god01_grunburti_god_branch_for_398",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Grunburti#god"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Blue_Jewel,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/god_weapon_creation.txt",
+          "lines": [
+            584
+          ],
+          "required_source_literals": [
+            "delitem Blue_Jewel,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_grunburti_god_branch_for_398_585",
+      "unit": "E1-que_god01_grunburti_god_branch_for_398",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Grunburti#god"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Oridecon,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/god_weapon_creation.txt",
+          "lines": [
+            585
+          ],
+          "required_source_literals": [
+            "delitem Oridecon,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_grunburti_god_branch_for_398_586",
+      "unit": "E1-que_god01_grunburti_god_branch_for_398",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Grunburti#god"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Belt,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/god_weapon_creation.txt",
+          "lines": [
+            586
+          ],
+          "required_source_literals": [
+            "delitem Belt,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_grunburti_god_branch_for_398_587",
+      "unit": "E1-que_god01_grunburti_god_branch_for_398",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Grunburti#god"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Magingiorde,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/god_weapon_creation.txt",
+          "lines": [
+            587
+          ],
+          "required_source_literals": [
+            "getitem Magingiorde,1; // Magingiorde"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_grunburti_god_branch_for_398_669",
+      "unit": "E1-que_god01_grunburti_god_branch_for_398",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Grunburti#god"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Mystery_Wheel,3; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/god_weapon_creation.txt",
+          "lines": [
+            669
+          ],
+          "required_source_literals": [
+            "delitem Mystery_Wheel,3;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_grunburti_god_branch_for_398_670",
+      "unit": "E1-que_god01_grunburti_god_branch_for_398",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Grunburti#god"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Feather_Of_Angel,5; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/god_weapon_creation.txt",
+          "lines": [
+            670
+          ],
+          "required_source_literals": [
+            "delitem Feather_Of_Angel,5;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_grunburti_god_branch_for_398_671",
+      "unit": "E1-que_god01_grunburti_god_branch_for_398",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Grunburti#god"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Soul_Of_Fish,3; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/god_weapon_creation.txt",
+          "lines": [
+            671
+          ],
+          "required_source_literals": [
+            "delitem Soul_Of_Fish,3;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_grunburti_god_branch_for_398_672",
+      "unit": "E1-que_god01_grunburti_god_branch_for_398",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Grunburti#god"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Symbol_Of_Sun,4; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/god_weapon_creation.txt",
+          "lines": [
+            672
+          ],
+          "required_source_literals": [
+            "delitem Symbol_Of_Sun,4;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_grunburti_god_branch_for_398_673",
+      "unit": "E1-que_god01_grunburti_god_branch_for_398",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Grunburti#god"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Breath_Of_Soul,3; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/god_weapon_creation.txt",
+          "lines": [
+            673
+          ],
+          "required_source_literals": [
+            "delitem Breath_Of_Soul,3;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_grunburti_god_branch_for_398_674",
+      "unit": "E1-que_god01_grunburti_god_branch_for_398",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Grunburti#god"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Gold,20; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/god_weapon_creation.txt",
+          "lines": [
+            674
+          ],
+          "required_source_literals": [
+            "delitem Gold,20;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_grunburti_god_branch_for_398_675",
+      "unit": "E1-que_god01_grunburti_god_branch_for_398",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Grunburti#god"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Elunium,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/god_weapon_creation.txt",
+          "lines": [
+            675
+          ],
+          "required_source_literals": [
+            "delitem Elunium,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_grunburti_god_branch_for_398_676",
+      "unit": "E1-que_god01_grunburti_god_branch_for_398",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Grunburti#god"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Boots_,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/god_weapon_creation.txt",
+          "lines": [
+            676
+          ],
+          "required_source_literals": [
+            "delitem Boots_,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_grunburti_god_branch_for_398_677",
+      "unit": "E1-que_god01_grunburti_god_branch_for_398",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Grunburti#god"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Sleipnir,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/god_weapon_creation.txt",
+          "lines": [
+            677
+          ],
+          "required_source_literals": [
+            "getitem Sleipnir,1; // Sleipnir"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_grunburti_god_branch_for_398_757",
+      "unit": "E1-que_god01_grunburti_god_branch_for_398",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Grunburti#god"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Iron_Glove,2; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/god_weapon_creation.txt",
+          "lines": [
+            757
+          ],
+          "required_source_literals": [
+            "delitem Iron_Glove,2;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_grunburti_god_branch_for_398_758",
+      "unit": "E1-que_god01_grunburti_god_branch_for_398",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Grunburti#god"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Iron_Maiden,4; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/god_weapon_creation.txt",
+          "lines": [
+            758
+          ],
+          "required_source_literals": [
+            "delitem Iron_Maiden,4;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_grunburti_god_branch_for_398_759",
+      "unit": "E1-que_god01_grunburti_god_branch_for_398",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Grunburti#god"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Anger_Of_Valkurye,5; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/god_weapon_creation.txt",
+          "lines": [
+            759
+          ],
+          "required_source_literals": [
+            "delitem Anger_Of_Valkurye,5;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_grunburti_god_branch_for_398_760",
+      "unit": "E1-que_god01_grunburti_god_branch_for_398",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Grunburti#god"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Indication_Of_Tempest,5; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/god_weapon_creation.txt",
+          "lines": [
+            760
+          ],
+          "required_source_literals": [
+            "delitem Indication_Of_Tempest,5;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_grunburti_god_branch_for_398_761",
+      "unit": "E1-que_god01_grunburti_god_branch_for_398",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Grunburti#god"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Rough_Billows,5; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/god_weapon_creation.txt",
+          "lines": [
+            761
+          ],
+          "required_source_literals": [
+            "delitem Rough_Billows,5;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_grunburti_god_branch_for_398_762",
+      "unit": "E1-que_god01_grunburti_god_branch_for_398",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Grunburti#god"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Oridecon,20; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/god_weapon_creation.txt",
+          "lines": [
+            762
+          ],
+          "required_source_literals": [
+            "delitem Oridecon,20;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_grunburti_god_branch_for_398_763",
+      "unit": "E1-que_god01_grunburti_god_branch_for_398",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Grunburti#god"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Elunium,5; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/god_weapon_creation.txt",
+          "lines": [
+            763
+          ],
+          "required_source_literals": [
+            "delitem Elunium,5;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_grunburti_god_branch_for_398_764",
+      "unit": "E1-que_god01_grunburti_god_branch_for_398",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Grunburti#god"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Gold,40; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/god_weapon_creation.txt",
+          "lines": [
+            764
+          ],
+          "required_source_literals": [
+            "delitem Gold,40;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_grunburti_god_branch_for_398_765",
+      "unit": "E1-que_god01_grunburti_god_branch_for_398",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Grunburti#god"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Stunner,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/god_weapon_creation.txt",
+          "lines": [
+            765
+          ],
+          "required_source_literals": [
+            "delitem Stunner,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_god01_grunburti_god_branch_for_398_766",
+      "unit": "E1-que_god01_grunburti_god_branch_for_398",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Grunburti#god"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Mjolnir,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/god_weapon_creation.txt",
+          "lines": [
+            766
+          ],
+          "required_source_literals": [
+            "getitem Mjolnir,1; // Mjolnir"
           ]
         }
       ],
