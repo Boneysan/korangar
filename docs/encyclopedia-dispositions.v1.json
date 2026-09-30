@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 643,
+    "E1_unknown": 649,
     "E1_verified": 1
   },
   "entries": [
@@ -14429,6 +14429,156 @@
           ],
           "required_source_literals": [
             "getitem(Splendide_Coin, 10);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_um_in_tabezthan_lv4_branch_for_940_1046",
+      "unit": "E1-um_in_tabezthan_lv4_branch_for_940",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Tabezthan#lv4"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Scissores_Sword,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/lvl4_weapon_quest.txt",
+          "lines": [
+            1046
+          ],
+          "required_source_literals": [
+            "getitem Scissores_Sword,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_um_in_tabezthan_lv4_branch_for_940_1052",
+      "unit": "E1-um_in_tabezthan_lv4_branch_for_940",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Tabezthan#lv4"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Tale_Fing_,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/lvl4_weapon_quest.txt",
+          "lines": [
+            1052
+          ],
+          "required_source_literals": [
+            "getitem Tale_Fing_,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_um_in_tabezthan_lv4_branch_for_940_1058",
+      "unit": "E1-um_in_tabezthan_lv4_branch_for_940",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Tabezthan#lv4"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Sabbath,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/lvl4_weapon_quest.txt",
+          "lines": [
+            1058
+          ],
+          "required_source_literals": [
+            "getitem Sabbath,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_um_in_tabezthan_lv4_branch_for_940_1271",
+      "unit": "E1-um_in_tabezthan_lv4_branch_for_940",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Tabezthan#lv4"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Steel,50; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/lvl4_weapon_quest.txt",
+          "lines": [
+            1271
+          ],
+          "required_source_literals": [
+            "delitem Steel,50;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_um_in_tabezthan_lv4_branch_for_940_1272",
+      "unit": "E1-um_in_tabezthan_lv4_branch_for_940",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Tabezthan#lv4"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Gold,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/lvl4_weapon_quest.txt",
+          "lines": [
+            1272
+          ],
+          "required_source_literals": [
+            "delitem Gold,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_um_in_tabezthan_lv4_branch_for_940_1273",
+      "unit": "E1-um_in_tabezthan_lv4_branch_for_940",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Tabezthan#lv4"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Emperium,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/lvl4_weapon_quest.txt",
+          "lines": [
+            1273
+          ],
+          "required_source_literals": [
+            "delitem Emperium,10;"
           ]
         }
       ],

@@ -182,15 +182,15 @@
   ],
   "last_coverage_delta": null,
   "next_action": "Run: python3 tools/encyclopedia_unit.py next",
-  "last_checkpoint_utc": "2026-09-30T15:10:35Z",
+  "last_checkpoint_utc": "2026-09-30T15:10:59Z",
   "unit_queue": "docs/plans/encyclopedia-unit-queue.json",
   "queue_summary": {
     "E0": {
       "done": 1
     },
     "E1": {
-      "done": 184,
-      "todo": 722
+      "done": 185,
+      "todo": 721
     },
     "E3": {
       "todo": 191
