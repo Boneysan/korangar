@@ -120467,6 +120467,372 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_re_merchants_shops_txt_147_147",
+      "unit": "E2-npc-re-merchants-shops-txt-147",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Points Merchant#dic"
+      },
+      "result": "verified",
+      "statement": "Points Merchant#dic is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/merchants/shops.txt",
+          "lines": [
+            147,
+            148,
+            149,
+            150,
+            151,
+            152,
+            153
+          ],
+          "required_source_literals": [
+            "dicastes01,207,200,6\ttrader\tPoints Merchant#dic\t1_F_01,{",
+            "OnInit:",
+            "sellitem Scarlet_Pts;",
+            "sellitem Indigo_Pts;",
+            "sellitem Yellow_Wish_Pts;",
+            "sellitem Lime_Green_Pts;",
+            "}"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_re_merchants_shops_txt_147_156",
+      "unit": "E2-npc-re-merchants-shops-txt-147",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Fruit Gardener#iz"
+      },
+      "result": "verified",
+      "statement": "Fruit Gardener#iz is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/merchants/shops.txt",
+          "lines": [
+            156,
+            157,
+            158,
+            159,
+            160,
+            161,
+            162,
+            164,
+            165,
+            166,
+            167
+          ],
+          "required_source_literals": [
+            "izlude,124,165,4\ttrader\tFruit Gardener#iz\t1_M_INNKEEPER,{",
+            "OnInit:",
+            "sellitem Apple;",
+            "sellitem Banana;",
+            "sellitem Carrot;",
+            "sellitem Sweet_Potato;",
+            "}",
+            "izlude_a,124,165,4\tduplicate(Fruit Gardener#iz)\tFruit Gardener#iz_a\t1_M_INNKEEPER",
+            "izlude_b,124,165,4\tduplicate(Fruit Gardener#iz)\tFruit Gardener#iz_b\t1_M_INNKEEPER",
+            "izlude_c,124,165,4\tduplicate(Fruit Gardener#iz)\tFruit Gardener#iz_c\t1_M_INNKEEPER",
+            "izlude_d,124,165,4\tduplicate(Fruit Gardener#iz)\tFruit Gardener#iz_d\t1_M_INNKEEPER"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_re_merchants_shops_txt_147_169",
+      "unit": "E2-npc-re-merchants-shops-txt-147",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Butcher#iz"
+      },
+      "result": "verified",
+      "statement": "Butcher#iz is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/merchants/shops.txt",
+          "lines": [
+            169,
+            170,
+            171,
+            172,
+            174,
+            175,
+            176,
+            177
+          ],
+          "required_source_literals": [
+            "izlude,160,186,0\ttrader\tButcher#iz\t1_M_JOBGUIDER,{",
+            "OnInit:",
+            "sellitem Meat;",
+            "}",
+            "izlude_a,160,186,0\tduplicate(Butcher#iz)\tButcher#iz_a\t1_M_JOBGUIDER",
+            "izlude_b,160,186,0\tduplicate(Butcher#iz)\tButcher#iz_b\t1_M_JOBGUIDER",
+            "izlude_c,160,186,0\tduplicate(Butcher#iz)\tButcher#iz_c\t1_M_JOBGUIDER",
+            "izlude_d,160,186,0\tduplicate(Butcher#iz)\tButcher#iz_d\t1_M_JOBGUIDER"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_re_merchants_shops_txt_147_179",
+      "unit": "E2-npc-re-merchants-shops-txt-147",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Vendor from Milk Ranch#i"
+      },
+      "result": "verified",
+      "statement": "Vendor from Milk Ranch#i is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/merchants/shops.txt",
+          "lines": [
+            179,
+            180,
+            181,
+            182,
+            184,
+            185,
+            186,
+            187
+          ],
+          "required_source_literals": [
+            "izlude,128,158,7\ttrader\tVendor from Milk Ranch#i\t4_F_01,{",
+            "OnInit:",
+            "sellitem Milk;",
+            "}",
+            "izlude_a,128,158,7\tduplicate(Vendor from Milk Ranch#i)\tVendor from Milk Ranch#a\t4_F_01",
+            "izlude_b,128,158,7\tduplicate(Vendor from Milk Ranch#i)\tVendor from Milk Ranch#b\t4_F_01",
+            "izlude_c,128,158,7\tduplicate(Vendor from Milk Ranch#i)\tVendor from Milk Ranch#c\t4_F_01",
+            "izlude_d,128,158,7\tduplicate(Vendor from Milk Ranch#i)\tVendor from Milk Ranch#d\t4_F_01"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_re_merchants_shops_txt_147_189",
+      "unit": "E2-npc-re-merchants-shops-txt-147",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Pet Groomer#iz"
+      },
+      "result": "verified",
+      "statement": "Pet Groomer#iz is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/merchants/shops.txt",
+          "lines": [
+            189,
+            190,
+            191,
+            192,
+            193,
+            194,
+            195,
+            196,
+            197,
+            198,
+            199,
+            200,
+            201,
+            202,
+            203,
+            204,
+            205,
+            206,
+            207,
+            208,
+            209,
+            210,
+            211
+          ],
+          "required_source_literals": [
+            "izlude_in,72,98,3\ttrader\tPet Groomer#iz\t4_F_TELEPORTER,{",
+            "OnInit:",
+            "sellitem Pet_Food;",
+            "sellitem Pet_Incubator;",
+            "sellitem Backpack;",
+            "sellitem Rocker_Glasses;",
+            "sellitem Vital_Flower_;",
+            "sellitem Flame_Gemstone;",
+            "sellitem Bun_;",
+            "sellitem Vital_Flower;",
+            "sellitem Damp_Darkness;",
+            "sellitem Small_Snow_Flower;",
+            "sellitem Fresh_Plant;",
+            "sellitem Big_Cell;",
+            "sellitem Apple_Pudding;",
+            "sellitem Mystic_Stone;",
+            "sellitem Flavored_Alcohol;",
+            "sellitem Spirit_Liquor;",
+            "sellitem Pumpkin_Pie_;",
+            "sellitem Sunset_On_The_Rock;",
+            "sellitem Morning_Dew;",
+            "sellitem Grilled_Rice_Cake;",
+            "}"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_re_merchants_shops_txt_147_213",
+      "unit": "E2-npc-re-merchants-shops-txt-147",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Tool Dealer#iz"
+      },
+      "result": "verified",
+      "statement": "Tool Dealer#iz is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/merchants/shops.txt",
+          "lines": [
+            213,
+            214,
+            215,
+            216,
+            217,
+            218,
+            219,
+            220,
+            221,
+            222,
+            223,
+            224,
+            225,
+            226,
+            227
+          ],
+          "required_source_literals": [
+            "izlude_in,57,110,0\ttrader\tTool Dealer#iz\t1_M_01,{",
+            "OnInit:",
+            "sellitem Spectacles;",
+            "sellitem Red_Potion;",
+            "sellitem Orange_Potion;",
+            "sellitem Yellow_Potion;",
+            "sellitem White_Potion;",
+            "sellitem Center_Potion;",
+            "sellitem Awakening_Potion;",
+            "sellitem Empty_Bottle;",
+            "sellitem Wing_Of_Fly;",
+            "sellitem Wing_Of_Butterfly;",
+            "sellitem Booby_Trap;",
+            "sellitem Arrow;",
+            "}"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_re_merchants_shops_txt_147_229",
+      "unit": "E2-npc-re-merchants-shops-txt-147",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Trading Merchant#iz"
+      },
+      "result": "verified",
+      "statement": "Trading Merchant#iz is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/merchants/shops.txt",
+          "lines": [
+            229,
+            230,
+            231,
+            232,
+            233,
+            234,
+            235,
+            236,
+            237,
+            238,
+            239,
+            240,
+            241,
+            242
+          ],
+          "required_source_literals": [
+            "izlude_in,72,110,3\ttrader\tTrading Merchant#iz\t4_M_HUMERCHANT,{",
+            "OnInit:",
+            "sellitem Bullet;",
+            "sellitem Silver_Bullet;",
+            "sellitem Shell_Of_Blood;",
+            "sellitem Branch;",
+            "sellitem Crimson_Bolt;",
+            "sellitem The_Cyclone;",
+            "sellitem Rolling_Stone;",
+            "sellitem Black_Rose;",
+            "sellitem Long_Barrel;",
+            "sellitem Jungle_Carbine;",
+            "sellitem Thunder_P;",
+            "}"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_re_merchants_shops_txt_147_245",
+      "unit": "E2-npc-re-merchants-shops-txt-147",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Part-Timer#sc_yuno"
+      },
+      "result": "verified",
+      "statement": "Part-Timer#sc_yuno is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/merchants/shops.txt",
+          "lines": [
+            245,
+            246,
+            247,
+            248,
+            249
+          ],
+          "required_source_literals": [
+            "s_atelier,114,117,1\ttrader\tPart-Timer#sc_yuno\t4_F_03,{",
+            "OnInit:",
+            "sellitem Surface_Paint;",
+            "sellitem Face_Paint;",
+            "}"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
