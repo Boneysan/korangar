@@ -109865,6 +109865,141 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_4951_script_untranslated",
+      "unit": "E3-unknown-bonus3-baddele-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          4951
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 4951 is not summarized: the translator does not interpret the quoted statement (bonus3 bAddEle (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            52473
+          ],
+          "required_source_literals": [
+            "bonus3 bAddEle, Ele_Dark, 2, BF_WEAPON | BF_MAGIC;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_4952_script_untranslated",
+      "unit": "E3-unknown-bonus3-baddele-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          4952
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 4952 is not summarized: the translator does not interpret the quoted statement (bonus3 bAddEle (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            52484
+          ],
+          "required_source_literals": [
+            "bonus3 bAddEle, Ele_Fire, 2, BF_WEAPON | BF_MAGIC;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_4953_script_untranslated",
+      "unit": "E3-unknown-bonus3-baddele-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          4953
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 4953 is not summarized: the translator does not interpret the quoted statement (bonus3 bAddEle (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            52495
+          ],
+          "required_source_literals": [
+            "bonus3 bAddEle, Ele_Water, 2, BF_WEAPON | BF_MAGIC;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_4954_script_untranslated",
+      "unit": "E3-unknown-bonus3-baddele-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          4954
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 4954 is not summarized: the translator does not interpret the quoted statement (bonus3 bAddEle (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            52506
+          ],
+          "required_source_literals": [
+            "bonus3 bAddEle, Ele_Earth, 2, BF_WEAPON | BF_MAGIC;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_4955_script_untranslated",
+      "unit": "E3-unknown-bonus3-baddele-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          4955
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 4955 is not summarized: the translator does not interpret the quoted statement (bonus3 bAddEle (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            52517
+          ],
+          "required_source_literals": [
+            "bonus3 bAddEle, Ele_Holy, 2, BF_WEAPON | BF_MAGIC;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }

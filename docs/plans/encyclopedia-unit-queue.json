@@ -53539,7 +53539,7 @@
       "package": "E3",
       "kind": "e3_dispose",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "key": "bonus3 bAddEle (expression)",
@@ -53617,7 +53617,25 @@
       ],
       "size_lines": 5,
       "reason": "5 item script(s) first stop at `bonus3 bAddEle (expression)`, which is control flow or undocumented",
-      "history": []
+      "history": [
+        "2026-09-30T20:21:09Z activated",
+        "2026-09-30T20:21:09Z validated",
+        "2026-09-30T20:21:09Z verification not required: tool-drafted, no behavior claim",
+        "2026-09-30T20:21:32Z accepted",
+        "2026-09-30T20:21:32Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "55ad0b6df5978b488c163b41fb5018e0cabf924f7dcb2836baefd35ab5a9baea",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E3-unknown-bonus5-bautospellwhenhit-expression",
