@@ -23478,7 +23478,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "strong",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Dwarf Blacksmith#north",
@@ -23497,7 +23497,25 @@
       ],
       "size_lines": 433,
       "reason": "refused by the braced one-item prover: switch",
-      "history": []
+      "history": [
+        "2026-09-30T17:32:22Z activated",
+        "2026-09-30T17:32:22Z validated",
+        "2026-09-30T17:32:22Z verified: 2 claims supported",
+        "2026-09-30T17:32:46Z accepted",
+        "2026-09-30T17:32:46Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "9add8a483bfcb0d562dba524fd46722a60ccfd1dcb08277b7ebc71fc1fe42f8e",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-que_god01_manager_g_branch_for_82",
