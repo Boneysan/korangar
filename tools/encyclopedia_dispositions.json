@@ -75151,6 +75151,181 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_geffen_in_lea_branch_for_291_358",
+      "unit": "E1-geffen_in_lea_branch_for_291",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Lea"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Old_Magic_Book,2; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/magic_books.txt",
+          "lines": [
+            358
+          ],
+          "required_source_literals": [
+            "else if (.@Payment == 2) delitem Old_Magic_Book,2;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_geffen_in_lea_branch_for_291_359",
+      "unit": "E1-geffen_in_lea_branch_for_291",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Lea"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Worn_Out_Page,50; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/magic_books.txt",
+          "lines": [
+            359
+          ],
+          "required_source_literals": [
+            "else delitem Worn_Out_Page,50;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_geffen_in_lea_branch_for_291_403",
+      "unit": "E1-geffen_in_lea_branch_for_291",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Lea"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Old_Blue_Box,2; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/magic_books.txt",
+          "lines": [
+            403
+          ],
+          "required_source_literals": [
+            "else if (.@Payment == 2) delitem Old_Blue_Box,2;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_geffen_in_lea_branch_for_291_404",
+      "unit": "E1-geffen_in_lea_branch_for_291",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Lea"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Elunium,9; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/magic_books.txt",
+          "lines": [
+            404
+          ],
+          "required_source_literals": [
+            "else delitem Elunium,9;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_geffen_in_lea_branch_for_291_475",
+      "unit": "E1-geffen_in_lea_branch_for_291",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Lea"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Mystery_Piece,12; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/magic_books.txt",
+          "lines": [
+            475
+          ],
+          "required_source_literals": [
+            "else if (.@Payment == 2) delitem Mystery_Piece,12;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_geffen_in_lea_branch_for_291_476",
+      "unit": "E1-geffen_in_lea_branch_for_291",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Lea"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Oridecon,7; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/magic_books.txt",
+          "lines": [
+            476
+          ],
+          "required_source_literals": [
+            "else if (.@Payment == 3) delitem Oridecon,7;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_geffen_in_lea_branch_for_291_477",
+      "unit": "E1-geffen_in_lea_branch_for_291",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Lea"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Old_Violet_Box,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/magic_books.txt",
+          "lines": [
+            477
+          ],
+          "required_source_literals": [
+            "else delitem Old_Violet_Box,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }

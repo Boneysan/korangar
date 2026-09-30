@@ -32408,7 +32408,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Lea",
@@ -32427,7 +32427,26 @@
       ],
       "size_lines": 235,
       "reason": "refused by the braced one-item prover: braceless",
-      "history": []
+      "history": [
+        "2026-09-30T18:54:50Z activated",
+        "2026-09-30T18:54:50Z validated",
+        "2026-09-30T18:54:50Z verified: 7 claims supported",
+        "2026-09-30T18:55:13Z accepted",
+        "2026-09-30T18:55:14Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "d2dd19af3a044a655558fb6298f0a13076d6b95070637d546255c8a808c43fd8",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "audit": "due",
+      "commit": "committed"
     },
     {
       "id": "E1-moc_para01_reno_2012hat_branch_for_37",
