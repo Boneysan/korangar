@@ -48401,6 +48401,31 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_cmd_in02_small_safe_branch_for_6270_6299",
+      "unit": "E1-cmd_in02_small_safe_branch_for_6270",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Small Safe"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Diamond_Of_Ruin,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_nameless.txt",
+          "lines": [
+            6299
+          ],
+          "required_source_literals": [
+            "getitem Diamond_Of_Ruin,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
