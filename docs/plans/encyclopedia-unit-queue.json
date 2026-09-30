@@ -15135,7 +15135,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Eric",
@@ -15154,7 +15154,22 @@
       ],
       "size_lines": 78,
       "reason": "refused by the braced one-item prover: switch",
-      "history": []
+      "history": [
+        "2026-09-30T16:15:47Z activated",
+        "2026-09-30T16:15:48Z validated",
+        "2026-09-30T16:15:48Z verified: 0 claims supported",
+        "2026-09-30T16:16:11Z accepted",
+        "2026-09-30T16:16:11Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "1c6072665a865e2701afde0b2dd897951afef3f34ae823587c0b2929b007ef04",
+      "accepted_files": [
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-gon_in_chief_gon_branch_for_39",
