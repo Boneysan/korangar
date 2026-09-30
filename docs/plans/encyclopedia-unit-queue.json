@@ -33287,7 +33287,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Lero#dew_drink",
@@ -33306,7 +33306,26 @@
       ],
       "size_lines": 259,
       "reason": "refused by the braced one-item prover: braceless",
-      "history": []
+      "history": [
+        "2026-09-30T19:02:59Z activated",
+        "2026-09-30T19:02:59Z validated",
+        "2026-09-30T19:03:00Z verified: 5 claims supported",
+        "2026-09-30T19:03:23Z accepted",
+        "2026-09-30T19:03:23Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "8d262579dcd3bb6c43298c0e8314fdc8ec8ad45a1af6a2d5bb638c48726cbb25",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "audit": "due",
+      "commit": "committed"
     },
     {
       "id": "E1-dew_fild01_poby_dew_drink_branch_for_1351",

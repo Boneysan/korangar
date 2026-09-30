@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 3077,
+    "E1_unknown": 3082,
     "E1_verified": 1
   },
   "entries": [
@@ -11804,6 +11804,131 @@
           ],
           "required_source_literals": [
             "delitem Satay,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_dew_fild01_lero_dew_drink_branch_for_1091_1220",
+      "unit": "E1-dew_fild01_lero_dew_drink_branch_for_1091",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Lero#dew_drink"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Oil_Palm_F,60; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_dewata.txt",
+          "lines": [
+            1220
+          ],
+          "required_source_literals": [
+            "delitem Oil_Palm_F,60;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_dew_fild01_lero_dew_drink_branch_for_1091_1246",
+      "unit": "E1-dew_fild01_lero_dew_drink_branch_for_1091",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Lero#dew_drink"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Palm_O,30; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_dewata.txt",
+          "lines": [
+            1246
+          ],
+          "required_source_literals": [
+            "getitem Palm_O,30;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_dew_fild01_lero_dew_drink_branch_for_1091_1271",
+      "unit": "E1-dew_fild01_lero_dew_drink_branch_for_1091",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Lero#dew_drink"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Palm_O,.@num; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_dewata.txt",
+          "lines": [
+            1271
+          ],
+          "required_source_literals": [
+            "getitem Palm_O,.@num;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_dew_fild01_lero_dew_drink_branch_for_1091_1332",
+      "unit": "E1-dew_fild01_lero_dew_drink_branch_for_1091",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Lero#dew_drink"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Oil_Palm_F,.@i[0]; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_dewata.txt",
+          "lines": [
+            1332
+          ],
+          "required_source_literals": [
+            "delitem Oil_Palm_F,.@i[0];"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_dew_fild01_lero_dew_drink_branch_for_1091_1333",
+      "unit": "E1-dew_fild01_lero_dew_drink_branch_for_1091",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Lero#dew_drink"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Palm_O,.@i[2]; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_dewata.txt",
+          "lines": [
+            1333
+          ],
+          "required_source_literals": [
+            "getitem Palm_O,.@i[2];"
           ]
         }
       ],
