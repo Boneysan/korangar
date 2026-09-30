@@ -111917,6 +111917,60 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_1649_script_untranslated",
+      "unit": "E3-unknown-bonus-bfixedcastrate-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          1649
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 1649 is not summarized: the translator does not interpret the quoted statement (bonus bFixedCastrate (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            17799
+          ],
+          "required_source_literals": [
+            "Script: <\" bonus bFixedCastrate,-getrefine(); \">"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_18795_script_untranslated",
+      "unit": "E3-unknown-bonus-bfixedcastrate-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          18795
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 18795 is not summarized: the translator does not interpret the quoted statement (bonus bFixedCastrate (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            137441
+          ],
+          "required_source_literals": [
+            "bonus bFixedCastrate,-(getskilllv(BA_MUSICALLESSON)*5);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }

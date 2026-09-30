@@ -55363,7 +55363,7 @@
       "package": "E3",
       "kind": "e3_dispose",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "key": "bonus bFixedCastrate (expression)",
@@ -55402,7 +55402,25 @@
       ],
       "size_lines": 2,
       "reason": "2 item script(s) first stop at `bonus bFixedCastrate (expression)`, which is control flow or undocumented",
-      "history": []
+      "history": [
+        "2026-09-30T20:31:12Z activated",
+        "2026-09-30T20:31:12Z validated",
+        "2026-09-30T20:31:12Z verification not required: tool-drafted, no behavior claim",
+        "2026-09-30T20:31:35Z accepted",
+        "2026-09-30T20:31:35Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "77bf4513f3c729660ffb843c372f93dbce43bdc8e67b17b93c26f5be37213c7a",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E3-unknown-bonus-bhealpower2-expression",
