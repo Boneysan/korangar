@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 2075,
+    "E1_unknown": 2087,
     "E1_verified": 1
   },
   "entries": [
@@ -47529,6 +47529,306 @@
           ],
           "required_source_literals": [
             "getitem Cotton_Shirt_,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ve_fild07_silk_sand_camel_branch_for_4782_4837",
+      "unit": "E1-ve_fild07_silk_sand_camel_branch_for_4782",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Silk Sand Camel"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Sweet_Potato,2; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_veins.txt",
+          "lines": [
+            4837
+          ],
+          "required_source_literals": [
+            "getitem Sweet_Potato,2;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ve_fild07_silk_sand_camel_branch_for_4782_4839",
+      "unit": "E1-ve_fild07_silk_sand_camel_branch_for_4782",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Silk Sand Camel"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Milk,2; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_veins.txt",
+          "lines": [
+            4839
+          ],
+          "required_source_literals": [
+            "delitem Milk,2;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ve_fild07_silk_sand_camel_branch_for_4782_4840",
+      "unit": "E1-ve_fild07_silk_sand_camel_branch_for_4782",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Silk Sand Camel"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Green_Herb,20; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_veins.txt",
+          "lines": [
+            4840
+          ],
+          "required_source_literals": [
+            "delitem Green_Herb,20;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ve_fild07_silk_sand_camel_branch_for_4782_4841",
+      "unit": "E1-ve_fild07_silk_sand_camel_branch_for_4782",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Silk Sand Camel"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Jellopy,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_veins.txt",
+          "lines": [
+            4841
+          ],
+          "required_source_literals": [
+            "delitem Jellopy,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ve_fild07_silk_sand_camel_branch_for_4782_4913",
+      "unit": "E1-ve_fild07_silk_sand_camel_branch_for_4782",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Silk Sand Camel"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Milk,2; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_veins.txt",
+          "lines": [
+            4913
+          ],
+          "required_source_literals": [
+            "delitem Milk,2;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ve_fild07_silk_sand_camel_branch_for_4782_4914",
+      "unit": "E1-ve_fild07_silk_sand_camel_branch_for_4782",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Silk Sand Camel"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Green_Herb,20; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_veins.txt",
+          "lines": [
+            4914
+          ],
+          "required_source_literals": [
+            "delitem Green_Herb,20;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ve_fild07_silk_sand_camel_branch_for_4782_4915",
+      "unit": "E1-ve_fild07_silk_sand_camel_branch_for_4782",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Silk Sand Camel"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Jellopy,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_veins.txt",
+          "lines": [
+            4915
+          ],
+          "required_source_literals": [
+            "delitem Jellopy,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ve_fild07_silk_sand_camel_branch_for_4782_4916",
+      "unit": "E1-ve_fild07_silk_sand_camel_branch_for_4782",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Silk Sand Camel"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Empty_Bottle,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_veins.txt",
+          "lines": [
+            4916
+          ],
+          "required_source_literals": [
+            "delitem Empty_Bottle,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ve_fild07_silk_sand_camel_branch_for_4782_4929",
+      "unit": "E1-ve_fild07_silk_sand_camel_branch_for_4782",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Silk Sand Camel"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Milk,2; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_veins.txt",
+          "lines": [
+            4929
+          ],
+          "required_source_literals": [
+            "delitem Milk,2;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ve_fild07_silk_sand_camel_branch_for_4782_4930",
+      "unit": "E1-ve_fild07_silk_sand_camel_branch_for_4782",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Silk Sand Camel"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Green_Herb,20; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_veins.txt",
+          "lines": [
+            4930
+          ],
+          "required_source_literals": [
+            "delitem Green_Herb,20;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ve_fild07_silk_sand_camel_branch_for_4782_4931",
+      "unit": "E1-ve_fild07_silk_sand_camel_branch_for_4782",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Silk Sand Camel"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Jellopy,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_veins.txt",
+          "lines": [
+            4931
+          ],
+          "required_source_literals": [
+            "delitem Jellopy,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ve_fild07_silk_sand_camel_branch_for_4782_4932",
+      "unit": "E1-ve_fild07_silk_sand_camel_branch_for_4782",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Silk Sand Camel"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Sweet_Potato,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_veins.txt",
+          "lines": [
+            4932
+          ],
+          "required_source_literals": [
+            "getitem Sweet_Potato,1;"
           ]
         }
       ],
