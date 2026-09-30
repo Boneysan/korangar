@@ -23919,7 +23919,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Young Man#bard_q1",
@@ -23938,7 +23938,25 @@
       ],
       "size_lines": 351,
       "reason": "refused by the braced one-item prover: braceless",
-      "history": []
+      "history": [
+        "2026-09-30T17:36:21Z activated",
+        "2026-09-30T17:36:21Z validated",
+        "2026-09-30T17:36:22Z verified: 4 claims supported",
+        "2026-09-30T17:36:45Z accepted",
+        "2026-09-30T17:36:45Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "792f51cad5acdb32ecb27f5e8484501fc9eb151968e72537dd2149bc1bfe1b95",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-morocc_in_spiteful_looking_bard_bs_branch_for_391",
