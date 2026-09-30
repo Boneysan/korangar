@@ -2855,3 +2855,11 @@ Read the [loop plan](encyclopedia-local-model-plan.md) and [resume ledger](encyc
 - Checks: validate; verifier: all claims supported; export_supported_data.py: passed; export_supported_data.py --check: passed.
 - Files: docs/encyclopedia-coverage.v1.json, docs/encyclopedia-dispositions.v1.json, docs/plans/encyclopedia-qwen3-journal.md, docs/plans/encyclopedia-qwen3-progress.json, docs/plans/encyclopedia-unit-queue.json, tools/encyclopedia_dispositions.json.
 - Not verified: the Guide screen for these records (E7 live pass).
+
+## 2026-09-30 E1-hu_in01_herico_branch_for_2140 — accepted
+
+- Kind e1_exchange, package E1, model grok-4.7, attempts 0.
+- Reviews: none. Dispositions: 9 (e1_hu_in01_herico_branch_for_2140_2729, e1_hu_in01_herico_branch_for_2140_2813, e1_hu_in01_herico_branch_for_2140_2852, e1_hu_in01_herico_branch_for_2140_2855, e1_hu_in01_herico_branch_for_2140_2858 ...).
+- Checks: validate; verifier: all claims supported; export_supported_data.py: passed; export_supported_data.py --check: passed.
+- Files: docs/encyclopedia-coverage.v1.json, docs/encyclopedia-dispositions.v1.json, docs/plans/encyclopedia-qwen3-journal.md, docs/plans/encyclopedia-qwen3-progress.json, docs/plans/encyclopedia-unit-queue.json, tools/encyclopedia_dispositions.json.
+- Not verified: the Guide screen for these records (E7 live pass).

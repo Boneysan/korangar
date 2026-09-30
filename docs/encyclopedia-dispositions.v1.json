@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 1623,
+    "E1_unknown": 1632,
     "E1_verified": 1
   },
   "entries": [
@@ -12579,6 +12579,231 @@
           ],
           "required_source_literals": [
             "delitem White_Potion,1; //White potion"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_hu_in01_herico_branch_for_2140_2729",
+      "unit": "E1-hu_in01_herico_branch_for_2140",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Herico"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem File01,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_hugel.txt",
+          "lines": [
+            2729
+          ],
+          "required_source_literals": [
+            "delitem File01,1; //File Folder"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_hu_in01_herico_branch_for_2140_2813",
+      "unit": "E1-hu_in01_herico_branch_for_2140",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Herico"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem 7342,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_hugel.txt",
+          "lines": [
+            2813
+          ],
+          "required_source_literals": [
+            "getitem 7342,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_hu_in01_herico_branch_for_2140_2852",
+      "unit": "E1-hu_in01_herico_branch_for_2140",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Herico"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Armlet_Of_Prisoner,100; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_hugel.txt",
+          "lines": [
+            2852
+          ],
+          "required_source_literals": [
+            "delitem Armlet_Of_Prisoner,100; //Handcuffs"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_hu_in01_herico_branch_for_2140_2855",
+      "unit": "E1-hu_in01_herico_branch_for_2140",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Herico"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Str_Dish04,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_hugel.txt",
+          "lines": [
+            2855
+          ],
+          "required_source_literals": [
+            "getitem Str_Dish04,1; //Herb Marinade Beef"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_hu_in01_herico_branch_for_2140_2858",
+      "unit": "E1-hu_in01_herico_branch_for_2140",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Herico"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Int_Dish04,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_hugel.txt",
+          "lines": [
+            2858
+          ],
+          "required_source_literals": [
+            "getitem Int_Dish04,1; //Morroc Fruit Wine"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_hu_in01_herico_branch_for_2140_2861",
+      "unit": "E1-hu_in01_herico_branch_for_2140",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Herico"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Agi_Dish04,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_hugel.txt",
+          "lines": [
+            2861
+          ],
+          "required_source_literals": [
+            "getitem Agi_Dish04,1; //Lutie Cold Noodle"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_hu_in01_herico_branch_for_2140_2864",
+      "unit": "E1-hu_in01_herico_branch_for_2140",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Herico"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Dex_Dish04,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_hugel.txt",
+          "lines": [
+            2864
+          ],
+          "required_source_literals": [
+            "getitem Dex_Dish04,1; //Cream Sandwich"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_hu_in01_herico_branch_for_2140_2867",
+      "unit": "E1-hu_in01_herico_branch_for_2140",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Herico"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Luk_Dish04,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_hugel.txt",
+          "lines": [
+            2867
+          ],
+          "required_source_literals": [
+            "getitem Luk_Dish04,1; //Steamed Ancient Lips"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_hu_in01_herico_branch_for_2140_2870",
+      "unit": "E1-hu_in01_herico_branch_for_2140",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Herico"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Vit_Dish04,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_hugel.txt",
+          "lines": [
+            2870
+          ],
+          "required_source_literals": [
+            "getitem Vit_Dish04,1; //Seasoned Jellyfish"
           ]
         }
       ],
