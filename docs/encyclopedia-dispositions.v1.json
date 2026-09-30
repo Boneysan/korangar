@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 1462,
+    "E1_unknown": 1477,
     "E1_verified": 1
   },
   "entries": [
@@ -4954,6 +4954,381 @@
           ],
           "required_source_literals": [
             "delitem White_Potion,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ayo_in01_shaman_thai_branch_for_1338_1505",
+      "unit": "E1-ayo_in01_shaman_thai_branch_for_1338",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Shaman#thai"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Solid_Peeling,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_ayothaya.txt",
+          "lines": [
+            1505
+          ],
+          "required_source_literals": [
+            "delitem Solid_Peeling,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ayo_in01_shaman_thai_branch_for_1338_1506",
+      "unit": "E1-ayo_in01_shaman_thai_branch_for_1338",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Shaman#thai"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Holy_Water,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_ayothaya.txt",
+          "lines": [
+            1506
+          ],
+          "required_source_literals": [
+            "delitem Holy_Water,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ayo_in01_shaman_thai_branch_for_1338_1509",
+      "unit": "E1-ayo_in01_shaman_thai_branch_for_1338",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Shaman#thai"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Thread_Skein,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_ayothaya.txt",
+          "lines": [
+            1509
+          ],
+          "required_source_literals": [
+            "getitem Thread_Skein,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ayo_in01_shaman_thai_branch_for_1338_1555",
+      "unit": "E1-ayo_in01_shaman_thai_branch_for_1338",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Shaman#thai"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Solid_Peeling,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_ayothaya.txt",
+          "lines": [
+            1555
+          ],
+          "required_source_literals": [
+            "delitem Solid_Peeling,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ayo_in01_shaman_thai_branch_for_1338_1556",
+      "unit": "E1-ayo_in01_shaman_thai_branch_for_1338",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Shaman#thai"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Holy_Water,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_ayothaya.txt",
+          "lines": [
+            1556
+          ],
+          "required_source_literals": [
+            "delitem Holy_Water,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ayo_in01_shaman_thai_branch_for_1338_1557",
+      "unit": "E1-ayo_in01_shaman_thai_branch_for_1338",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Shaman#thai"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Thread_Skein,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_ayothaya.txt",
+          "lines": [
+            1557
+          ],
+          "required_source_literals": [
+            "getitem Thread_Skein,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ayo_in01_shaman_thai_branch_for_1338_1652",
+      "unit": "E1-ayo_in01_shaman_thai_branch_for_1338",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Shaman#thai"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Leaf_Of_Yggdrasil,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_ayothaya.txt",
+          "lines": [
+            1652
+          ],
+          "required_source_literals": [
+            "delitem Leaf_Of_Yggdrasil,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ayo_in01_shaman_thai_branch_for_1338_1653",
+      "unit": "E1-ayo_in01_shaman_thai_branch_for_1338",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Shaman#thai"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Holy_Water,2; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_ayothaya.txt",
+          "lines": [
+            1653
+          ],
+          "required_source_literals": [
+            "delitem Holy_Water,2;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ayo_in01_shaman_thai_branch_for_1338_1655",
+      "unit": "E1-ayo_in01_shaman_thai_branch_for_1338",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Shaman#thai"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Thread_Skein_,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_ayothaya.txt",
+          "lines": [
+            1655
+          ],
+          "required_source_literals": [
+            "getitem Thread_Skein_,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ayo_in01_shaman_thai_branch_for_1338_1710",
+      "unit": "E1-ayo_in01_shaman_thai_branch_for_1338",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Shaman#thai"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Leaf_Of_Yggdrasil,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_ayothaya.txt",
+          "lines": [
+            1710
+          ],
+          "required_source_literals": [
+            "delitem Leaf_Of_Yggdrasil,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ayo_in01_shaman_thai_branch_for_1338_1711",
+      "unit": "E1-ayo_in01_shaman_thai_branch_for_1338",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Shaman#thai"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Holy_Water,2; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_ayothaya.txt",
+          "lines": [
+            1711
+          ],
+          "required_source_literals": [
+            "delitem Holy_Water,2;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ayo_in01_shaman_thai_branch_for_1338_1712",
+      "unit": "E1-ayo_in01_shaman_thai_branch_for_1338",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Shaman#thai"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Thread_Skein_,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_ayothaya.txt",
+          "lines": [
+            1712
+          ],
+          "required_source_literals": [
+            "getitem Thread_Skein_,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ayo_in01_shaman_thai_branch_for_1338_1789",
+      "unit": "E1-ayo_in01_shaman_thai_branch_for_1338",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Shaman#thai"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Leaf_Of_Yggdrasil,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_ayothaya.txt",
+          "lines": [
+            1789
+          ],
+          "required_source_literals": [
+            "delitem Leaf_Of_Yggdrasil,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ayo_in01_shaman_thai_branch_for_1338_1790",
+      "unit": "E1-ayo_in01_shaman_thai_branch_for_1338",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Shaman#thai"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Holy_Water,2; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_ayothaya.txt",
+          "lines": [
+            1790
+          ],
+          "required_source_literals": [
+            "delitem Holy_Water,2;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ayo_in01_shaman_thai_branch_for_1338_1791",
+      "unit": "E1-ayo_in01_shaman_thai_branch_for_1338",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Shaman#thai"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Thread_Skein_,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_ayothaya.txt",
+          "lines": [
+            1791
+          ],
+          "required_source_literals": [
+            "getitem Thread_Skein_,1;"
           ]
         }
       ],
