@@ -34214,7 +34214,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Alp Ocart#ep14_2in2",
@@ -34233,7 +34233,25 @@
       ],
       "size_lines": 135,
       "reason": "refused by the braced one-item prover: multi-item",
-      "history": []
+      "history": [
+        "2026-09-30T19:11:24Z activated",
+        "2026-09-30T19:11:25Z validated",
+        "2026-09-30T19:11:25Z verified: 1 claims supported",
+        "2026-09-30T19:11:48Z accepted",
+        "2026-09-30T19:11:49Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "745644cfeeb9352b4e39b78ccd72562b250e8559ccc6f781b507f2d7590d18da",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-eclage_wuhari_eclbig_branch_for_3258",
