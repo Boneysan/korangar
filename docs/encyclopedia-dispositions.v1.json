@@ -5,10 +5,58 @@
   "mode": "renewal",
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
-    "E1_unknown": 1,
+    "E1_unknown": 2,
     "E1_verified": 1
   },
   "entries": [
+    {
+      "id": "airplane_01_apple_merchant_variable_apple_sale",
+      "unit": "E1-airplane_01_apple_merchant_air01_branch_for_833",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Apple Merchant#air01"
+      },
+      "result": "unknown",
+      "statement": "Case 1 grants Apple with getitem Apple,.@input after Zeny -= .@pay, and .@input is the player's typed count rather than a fixed amount.",
+      "conditions": [
+        "The shop closes immediately when checkweight(Knife,1) is 0, before the menu.",
+        "input(.@input) below 1 closes with no grant, and a value above 500 repeats the input loop.",
+        "After a count from 1 through 500, .@pay is .@input * 15, and answering No to the confirm menu closes with no grant.",
+        "The grant is refused when Zeny is below .@pay or checkweight(Apple,.@input) is 0."
+      ],
+      "sources": [
+        {
+          "path": "npc/airports/airships.txt",
+          "lines": [
+            834,
+            859,
+            860,
+            869,
+            879,
+            886,
+            897,
+            905,
+            915,
+            916
+          ],
+          "required_source_literals": [
+            "if (checkweight(Knife,1) == 0) {",
+            "input(.@input);",
+            "if (.@input <= 0) {",
+            "if (.@input > 500) {",
+            ".@pay = .@input * 15;",
+            "if (select(\"Yes\", \"No\") == 2) {",
+            "if (Zeny < .@pay) {",
+            "else if (checkweight(Apple,.@input) == 0) {",
+            "Zeny -= .@pay;",
+            "getitem Apple,.@input;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
     {
       "id": "airplane_apple_merchant_juice_branch",
       "unit": "E1-airplane_apple_merchant_airplane_branch_for_478",
