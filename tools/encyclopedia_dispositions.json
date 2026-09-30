@@ -71726,6 +71726,31 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_iz_ac02_salim_hamid_ac_branch_for_9668_9845",
+      "unit": "E1-iz_ac02_salim_hamid_ac_branch_for_9668",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Salim Hamid#ac"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Merchant_Manual,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            9845
+          ],
+          "required_source_literals": [
+            "getitem(Merchant_Manual, 1); // Merchant_Manual"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
