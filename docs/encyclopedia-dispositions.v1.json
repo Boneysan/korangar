@@ -12,7 +12,7 @@
     "E2_verified": 236,
     "E3_unknown": 973,
     "E4_unknown": 213,
-    "E5_unknown": 137
+    "E5_unknown": 139
   },
   "entries": [
     {
@@ -105932,6 +105932,60 @@
           ],
           "required_source_literals": [
             "changequest 6007,6008;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_6010_npc_jobs_novice_supernovice_txt_234",
+      "unit": "E5-chain-6010",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          6010
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 6010; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/novice/supernovice.txt",
+          "lines": [
+            234
+          ],
+          "required_source_literals": [
+            "setquest 6010;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_6010_npc_jobs_novice_supernovice_txt_78",
+      "unit": "E5-chain-6010",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          6010
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 6010; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/novice/supernovice.txt",
+          "lines": [
+            78
+          ],
+          "required_source_literals": [
+            "completequest 6010;"
           ]
         }
       ],
