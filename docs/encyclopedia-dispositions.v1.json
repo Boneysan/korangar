@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 764,
+    "E1_unknown": 769,
     "E1_verified": 1
   },
   "entries": [
@@ -19229,6 +19229,131 @@
           ],
           "required_source_literals": [
             "delitem Valkyrie_Gift,1; //Valkyrie's_Gift"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_yuno_zhenbolt_1_branch_for_312_339",
+      "unit": "E1-yuno_zhenbolt_1_branch_for_312",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Zhenbolt#1"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Red_Scarf,300; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2004_headgears.txt",
+          "lines": [
+            339
+          ],
+          "required_source_literals": [
+            "delitem Red_Scarf,300;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_yuno_zhenbolt_1_branch_for_312_340",
+      "unit": "E1-yuno_zhenbolt_1_branch_for_312",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Zhenbolt#1"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Burning_Heart,300; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2004_headgears.txt",
+          "lines": [
+            340
+          ],
+          "required_source_literals": [
+            "delitem Burning_Heart,300;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_yuno_zhenbolt_1_branch_for_312_341",
+      "unit": "E1-yuno_zhenbolt_1_branch_for_312",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Zhenbolt#1"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Bandana,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2004_headgears.txt",
+          "lines": [
+            341
+          ],
+          "required_source_literals": [
+            "delitem Bandana,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_yuno_zhenbolt_1_branch_for_312_342",
+      "unit": "E1-yuno_zhenbolt_1_branch_for_312",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Zhenbolt#1"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem White_Dyestuffs,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2004_headgears.txt",
+          "lines": [
+            342
+          ],
+          "required_source_literals": [
+            "delitem White_Dyestuffs,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_yuno_zhenbolt_1_branch_for_312_343",
+      "unit": "E1-yuno_zhenbolt_1_branch_for_312",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Zhenbolt#1"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Headband_Of_Power,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2004_headgears.txt",
+          "lines": [
+            343
+          ],
+          "required_source_literals": [
+            "getitem Headband_Of_Power,1;"
           ]
         }
       ],
