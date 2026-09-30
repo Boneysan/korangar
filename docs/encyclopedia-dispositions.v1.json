@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 1566,
+    "E1_unknown": 1575,
     "E1_verified": 1
   },
   "entries": [
@@ -9579,6 +9579,231 @@
           ],
           "required_source_literals": [
             "getitem Steel,5;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ein_in01_klitzer_ein_branch_for_4643_4691",
+      "unit": "E1-ein_in01_klitzer_ein_branch_for_4643",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Klitzer#ein"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Tuxedo,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_ein.txt",
+          "lines": [
+            4691
+          ],
+          "required_source_literals": [
+            "delitem Tuxedo,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ein_in01_klitzer_ein_branch_for_4643_4696",
+      "unit": "E1-ein_in01_klitzer_ein_branch_for_4643",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Klitzer#ein"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Olivine,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_ein.txt",
+          "lines": [
+            4696
+          ],
+          "required_source_literals": [
+            "getitem Olivine,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ein_in01_klitzer_ein_branch_for_4643_4699",
+      "unit": "E1-ein_in01_klitzer_ein_branch_for_4643",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Klitzer#ein"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Phlogopite,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_ein.txt",
+          "lines": [
+            4699
+          ],
+          "required_source_literals": [
+            "getitem Phlogopite,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ein_in01_klitzer_ein_branch_for_4643_4702",
+      "unit": "E1-ein_in01_klitzer_ein_branch_for_4643",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Klitzer#ein"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Agate,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_ein.txt",
+          "lines": [
+            4702
+          ],
+          "required_source_literals": [
+            "getitem Agate,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ein_in01_klitzer_ein_branch_for_4643_4705",
+      "unit": "E1-ein_in01_klitzer_ein_branch_for_4643",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Klitzer#ein"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Rose_Quartz,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_ein.txt",
+          "lines": [
+            4705
+          ],
+          "required_source_literals": [
+            "getitem Rose_Quartz,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ein_in01_klitzer_ein_branch_for_4643_4708",
+      "unit": "E1-ein_in01_klitzer_ein_branch_for_4643",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Klitzer#ein"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Turquoise,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_ein.txt",
+          "lines": [
+            4708
+          ],
+          "required_source_literals": [
+            "getitem Turquoise,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ein_in01_klitzer_ein_branch_for_4643_4711",
+      "unit": "E1-ein_in01_klitzer_ein_branch_for_4643",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Klitzer#ein"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Citrine,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_ein.txt",
+          "lines": [
+            4711
+          ],
+          "required_source_literals": [
+            "getitem Citrine,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ein_in01_klitzer_ein_branch_for_4643_4714",
+      "unit": "E1-ein_in01_klitzer_ein_branch_for_4643",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Klitzer#ein"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Pyroxene,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_ein.txt",
+          "lines": [
+            4714
+          ],
+          "required_source_literals": [
+            "getitem Pyroxene,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ein_in01_klitzer_ein_branch_for_4643_4929",
+      "unit": "E1-ein_in01_klitzer_ein_branch_for_4643",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Klitzer#ein"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Violin,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_ein.txt",
+          "lines": [
+            4929
+          ],
+          "required_source_literals": [
+            "delitem Violin,1;"
           ]
         }
       ],
