@@ -39485,7 +39485,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "strong",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Black Shadow#ep14_muk",
@@ -39504,7 +39504,25 @@
       ],
       "size_lines": 628,
       "reason": "refused by the braced one-item prover: braceless",
-      "history": []
+      "history": [
+        "2026-09-30T20:00:07Z activated",
+        "2026-09-30T20:00:07Z validated",
+        "2026-09-30T20:00:07Z verified: 3 claims supported",
+        "2026-09-30T20:00:30Z accepted",
+        "2026-09-30T20:00:31Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "4f9813e8f54a63974b4f61228d044c1a06b5c9a8500ba30863ed96a6f9d3551e",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-mora_hotcha_pa0829_branch_for_4497",
