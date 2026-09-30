@@ -77626,7 +77626,7 @@
       "package": "E5",
       "kind": "e5_quest",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "quest_ids": [
@@ -77647,7 +77647,25 @@
       ],
       "size_lines": 268,
       "reason": "1 quest ID(s) set or checked by 1 NPC block(s)",
-      "history": []
+      "history": [
+        "2026-09-30T23:08:39Z activated",
+        "2026-09-30T23:08:39Z validated",
+        "2026-09-30T23:08:39Z verified: 4 claims supported",
+        "2026-09-30T23:09:03Z accepted",
+        "2026-09-30T23:09:03Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "6df633b8815c986c7efedeaedde0732b8c517db41c66147890289c368a1ebb8c",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E5-chain-2082",
