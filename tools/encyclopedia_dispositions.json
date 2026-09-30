@@ -79926,6 +79926,31 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mid_camp_shelby_pa0829_branch_for_10733_10839",
+      "unit": "E1-mid_camp_shelby_pa0829_branch_for_10733",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Shelby#pa0829"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Malang_Sp_Can,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "lines": [
+            10839
+          ],
+          "required_source_literals": [
+            "delitem Malang_Sp_Can,10; //Malang_Sp_Can"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
