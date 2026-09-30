@@ -12,7 +12,7 @@
     "E2_verified": 236,
     "E3_unknown": 973,
     "E4_unknown": 213,
-    "E5_unknown": 377
+    "E5_unknown": 378
   },
   "entries": [
     {
@@ -105095,6 +105095,33 @@
           ],
           "required_source_literals": [
             "changequest 11079,11080;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_11081_npc_quests_quests_louyang_txt_4471",
+      "unit": "E5-chain-11081",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          11081
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 11081; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_louyang.txt",
+          "lines": [
+            4471
+          ],
+          "required_source_literals": [
+            "changequest 11081,11802;"
           ]
         }
       ],
