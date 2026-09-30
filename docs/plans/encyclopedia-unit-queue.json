@@ -8354,7 +8354,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Ponka-Hontas",
@@ -8373,7 +8373,22 @@
       ],
       "size_lines": 20,
       "reason": "refused by the braced one-item prover: menu",
-      "history": []
+      "history": [
+        "2026-09-30T15:12:59Z activated",
+        "2026-09-30T15:12:59Z validated",
+        "2026-09-30T15:12:59Z verified: 0 claims supported",
+        "2026-09-30T15:13:22Z accepted",
+        "2026-09-30T15:13:22Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "87f633deb3c6dd81ddc56135612fb42b3c066917e7bce520d09f1adc0b6b651f",
+      "accepted_files": [
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-alberta_in_monster_tamer_alb_branch_for_41",
