@@ -66992,7 +66992,7 @@
       "package": "E4",
       "kind": "e4_formula",
       "tier": "strong",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "skill_names": [
@@ -67011,7 +67011,25 @@
       ],
       "size_lines": 6,
       "reason": "skillratio case with branches or preprocessor blocks",
-      "history": []
+      "history": [
+        "2026-09-30T21:43:39Z activated",
+        "2026-09-30T21:43:39Z validated",
+        "2026-09-30T21:43:39Z verified: 1 claims supported",
+        "2026-09-30T21:44:03Z accepted",
+        "2026-09-30T21:44:03Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "c76353ced7401c978b9f8a1be6eba54bfe1cdb0281bd3df040d10d078deb22e2",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E4-sp-spa",
