@@ -31885,7 +31885,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Entomologist",
@@ -31904,7 +31904,22 @@
       ],
       "size_lines": 64,
       "reason": "refused by the braced one-item prover: menu",
-      "history": []
+      "history": [
+        "2026-09-30T18:50:01Z activated",
+        "2026-09-30T18:50:02Z validated",
+        "2026-09-30T18:50:02Z verified: 0 claims supported",
+        "2026-09-30T18:50:25Z accepted",
+        "2026-09-30T18:50:25Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "666d2008a6758dd02126647784e06be663d3a9cd0557a303c27213e4f08954f7",
+      "accepted_files": [
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-xmas_fild01_biologist_branch_for_414",
