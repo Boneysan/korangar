@@ -126763,6 +126763,33 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e4_ko_kaihou_formula",
+      "unit": "E4-ko-kaihou",
+      "package": "E4",
+      "subject": {
+        "kind": "skill",
+        "ids": [
+          3019
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted case is the ratio site for these skills; this record does not reduce it to a worked example.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "src/map/battle.c",
+          "lines": [
+            2053
+          ],
+          "required_source_literals": [
+            "case KO_KAIHOU:"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
