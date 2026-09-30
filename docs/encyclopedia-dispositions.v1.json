@@ -8,7 +8,7 @@
     "E1_not_applicable": 1,
     "E1_unknown": 3464,
     "E1_verified": 1,
-    "E3_unknown": 941
+    "E3_unknown": 943
   },
   "entries": [
     {
@@ -105205,6 +105205,33 @@
       "reviewed_on": "2026-09-30"
     },
     {
+      "id": "item_4338_script_untranslated",
+      "unit": "E3-unknown-bonus-bvit-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          4338
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 4338 is not summarized: the translator does not interpret the quoted statement (bonus bVit (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            45449
+          ],
+          "required_source_literals": [
+            "Script: <\" bonus bVit,readparam(bDex)/18; \">"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
       "id": "item_4346_script_untranslated",
       "unit": "E3-unknown-bonus-bstr-expression",
       "package": "E3",
@@ -105414,6 +105441,33 @@
           ],
           "required_source_literals": [
             "Script: <\" bonus bLuk,readparam(bAgi)/18; \">"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_4370_script_untranslated",
+      "unit": "E3-unknown-bonus-bvit-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          4370
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 4370 is not summarized: the translator does not interpret the quoted statement (bonus bVit (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            45839
+          ],
+          "required_source_literals": [
+            "Script: <\" bonus bVit,getrefine()-5; \">"
           ]
         }
       ],
