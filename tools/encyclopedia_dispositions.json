@@ -5451,6 +5451,206 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_comodo_wandering_bard_branch_for_41_276",
+      "unit": "E1-comodo_wandering_bard_branch_for_41",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Wandering Bard"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Singing_Flower,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/bard.txt",
+          "lines": [
+            276
+          ],
+          "required_source_literals": [
+            "delitem Singing_Flower,1; //Singing Flower"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_comodo_wandering_bard_branch_for_41_285",
+      "unit": "E1-comodo_wandering_bard_branch_for_41",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Wandering Bard"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Hinalle,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/bard.txt",
+          "lines": [
+            285
+          ],
+          "required_source_literals": [
+            "delitem Hinalle,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_comodo_wandering_bard_branch_for_41_294",
+      "unit": "E1-comodo_wandering_bard_branch_for_41",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Wandering Bard"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Aloe,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/bard.txt",
+          "lines": [
+            294
+          ],
+          "required_source_literals": [
+            "delitem Aloe,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_comodo_wandering_bard_branch_for_41_303",
+      "unit": "E1-comodo_wandering_bard_branch_for_41",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Wandering Bard"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Ment,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/bard.txt",
+          "lines": [
+            303
+          ],
+          "required_source_literals": [
+            "delitem Ment,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_comodo_wandering_bard_branch_for_41_312",
+      "unit": "E1-comodo_wandering_bard_branch_for_41",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Wandering Bard"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Izidor,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/bard.txt",
+          "lines": [
+            312
+          ],
+          "required_source_literals": [
+            "delitem Izidor,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_comodo_wandering_bard_branch_for_41_321",
+      "unit": "E1-comodo_wandering_bard_branch_for_41",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Wandering Bard"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Witherless_Rose,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/bard.txt",
+          "lines": [
+            321
+          ],
+          "required_source_literals": [
+            "delitem Witherless_Rose,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_comodo_wandering_bard_branch_for_41_330",
+      "unit": "E1-comodo_wandering_bard_branch_for_41",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Wandering Bard"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Frozen_Rose,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/bard.txt",
+          "lines": [
+            330
+          ],
+          "required_source_literals": [
+            "delitem Frozen_Rose,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_comodo_wandering_bard_branch_for_41_339",
+      "unit": "E1-comodo_wandering_bard_branch_for_41",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Wandering Bard"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Illusion_Flower,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/bard.txt",
+          "lines": [
+            339
+          ],
+          "required_source_literals": [
+            "delitem Illusion_Flower,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }

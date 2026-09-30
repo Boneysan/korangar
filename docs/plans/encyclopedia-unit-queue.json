@@ -3262,7 +3262,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "strong",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Wandering Bard",
@@ -3281,7 +3281,25 @@
       ],
       "size_lines": 911,
       "reason": "refused by the braced one-item prover: braceless",
-      "history": []
+      "history": [
+        "2026-09-30T14:26:37Z activated",
+        "2026-09-30T14:26:38Z validated",
+        "2026-09-30T14:26:38Z verified: 8 claims supported",
+        "2026-09-30T14:27:01Z accepted",
+        "2026-09-30T14:27:01Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "0f6691a54b3460f5842dba499f8976b07f5aea81b4653618ee3b0f67073a7d25",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-prt_castle_senior_crusader_branch_for_46",
