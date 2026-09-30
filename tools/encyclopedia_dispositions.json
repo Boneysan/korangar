@@ -139323,6 +139323,33 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_12012_npc_quests_quests_lighthalzen_txt_11828",
+      "unit": "E5-chain-12012",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          12012
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 12012; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_lighthalzen.txt",
+          "lines": [
+            11828
+          ],
+          "required_source_literals": [
+            "changequest 12012,12013;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
