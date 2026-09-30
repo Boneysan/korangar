@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 2053,
+    "E1_unknown": 2058,
     "E1_verified": 1
   },
   "entries": [
@@ -46804,6 +46804,131 @@
           ],
           "required_source_literals": [
             "delitem Mr_Smile,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_um_in_utan_shaman_branch_for_377_601",
+      "unit": "E1-um_in_utan_shaman_branch_for_377",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Utan Shaman"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Garlet,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_umbala.txt",
+          "lines": [
+            601
+          ],
+          "required_source_literals": [
+            "getitem Garlet,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_um_in_utan_shaman_branch_for_377_782",
+      "unit": "E1-um_in_utan_shaman_branch_for_377",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Utan Shaman"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Boody_Red,.@shaman_max; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_umbala.txt",
+          "lines": [
+            782
+          ],
+          "required_source_literals": [
+            "getitem Boody_Red,.@shaman_max;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_um_in_utan_shaman_branch_for_377_785",
+      "unit": "E1-um_in_utan_shaman_branch_for_377",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Utan Shaman"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Crystal_Blue,.@shaman_max; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_umbala.txt",
+          "lines": [
+            785
+          ],
+          "required_source_literals": [
+            "getitem Crystal_Blue,.@shaman_max;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_um_in_utan_shaman_branch_for_377_788",
+      "unit": "E1-um_in_utan_shaman_branch_for_377",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Utan Shaman"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Wind_Of_Verdure,.@shaman_max; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_umbala.txt",
+          "lines": [
+            788
+          ],
+          "required_source_literals": [
+            "getitem Wind_Of_Verdure,.@shaman_max;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_um_in_utan_shaman_branch_for_377_791",
+      "unit": "E1-um_in_utan_shaman_branch_for_377",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Utan Shaman"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Yellow_Live,.@shaman_max; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_umbala.txt",
+          "lines": [
+            791
+          ],
+          "required_source_literals": [
+            "getitem Yellow_Live,.@shaman_max;"
           ]
         }
       ],
