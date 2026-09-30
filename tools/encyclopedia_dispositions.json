@@ -69626,6 +69626,56 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_gl_church_delicate_trace_01_branch_for_457_462",
+      "unit": "E1-gl_church_delicate_trace_01_branch_for_457",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Delicate trace#01"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Saint_Cloth_Piece,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-2/royal_guard.txt",
+          "lines": [
+            462
+          ],
+          "required_source_literals": [
+            "getitem Saint_Cloth_Piece,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_gl_church_delicate_trace_01_branch_for_457_464",
+      "unit": "E1-gl_church_delicate_trace_01_branch_for_457",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Delicate trace#01"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Stone,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-2/royal_guard.txt",
+          "lines": [
+            464
+          ],
+          "required_source_literals": [
+            "getitem Stone,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }

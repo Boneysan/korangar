@@ -29181,7 +29181,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Delicate trace#01",
@@ -29200,7 +29200,25 @@
       ],
       "size_lines": 40,
       "reason": "refused by the braced one-item prover: braceless",
-      "history": []
+      "history": [
+        "2026-09-30T18:24:53Z activated",
+        "2026-09-30T18:24:53Z validated",
+        "2026-09-30T18:24:53Z verified: 2 claims supported",
+        "2026-09-30T18:25:17Z accepted",
+        "2026-09-30T18:25:17Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "c48987410549476977114efc68ec289ea804c71011a7d766ce4ce1b2ea1b8e99",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-s_atelier_dumk_sc13_lgh_branch_for_1363",
