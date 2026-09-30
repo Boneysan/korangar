@@ -8,7 +8,7 @@
     "E1_not_applicable": 1,
     "E1_unknown": 3464,
     "E1_verified": 1,
-    "E2_verified": 234,
+    "E2_verified": 235,
     "E3_unknown": 973
   },
   "entries": [
@@ -93830,6 +93830,65 @@
             "sellitem(END_OF_HORIZON);",
             "sellitem(Southern_Cross_R);",
             "end;",
+            "}"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_re_merchants_shops_txt_1040_1040",
+      "unit": "E2-npc-re-merchants-shops-txt-1040",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Chef Assistant#pay"
+      },
+      "result": "verified",
+      "statement": "Chef Assistant#pay is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/merchants/shops.txt",
+          "lines": [
+            1040,
+            1041,
+            1042,
+            1043,
+            1044,
+            1045,
+            1046,
+            1047,
+            1048,
+            1049,
+            1050,
+            1051,
+            1052,
+            1053,
+            1054,
+            1055,
+            1056,
+            1057
+          ],
+          "required_source_literals": [
+            "payon,206,119,5\ttrader\tChef Assistant#pay\t4_M_ORIENT02,{",
+            "OnInit:",
+            "sellitem Combination_Kit;",
+            "sellitem Mushroom;",
+            "sellitem Pot;",
+            "sellitem Bread;",
+            "sellitem Grain;",
+            "sellitem Cooking_Oil;",
+            "sellitem Plain_Sauce;",
+            "sellitem Hot_Sauce;",
+            "sellitem Sweet_Sauce;",
+            "sellitem Red_Spice;",
+            "sellitem Yellow_Spice;",
+            "sellitem Delicious_Fish;",
+            "sellitem Outdoor_Cooking_Kits;",
+            "sellitem Indoor_Cooking_Kits;",
+            "sellitem High_end_Cooking_Kits;",
             "}"
           ]
         }
