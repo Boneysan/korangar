@@ -126493,6 +126493,33 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e4_wm_reverberation_magic_formula",
+      "unit": "E4-wm-reverberation-magic",
+      "package": "E4",
+      "subject": {
+        "kind": "skill",
+        "ids": [
+          2416
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted case is the ratio site for these skills; this record does not reduce it to a worked example.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "src/map/battle.c",
+          "lines": [
+            1960
+          ],
+          "required_source_literals": [
+            "case WM_REVERBERATION_MAGIC:"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
