@@ -8,7 +8,7 @@
     "E1_not_applicable": 1,
     "E1_unknown": 3464,
     "E1_verified": 1,
-    "E3_unknown": 962
+    "E3_unknown": 963
   },
   "entries": [
     {
@@ -107196,6 +107196,33 @@
           ],
           "required_source_literals": [
             "if (getrefine()>14) bonus2 bHPLossRate,777,8000;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_4500_script_untranslated",
+      "unit": "E3-unknown-bonus-bshortweapondamagereturn-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          4500
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 4500 is not summarized: the translator does not interpret the quoted statement (bonus bShortWeaponDamageReturn (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            47534
+          ],
+          "required_source_literals": [
+            "Script: <\" bonus bShortWeaponDamageReturn,((getrefine()>14)?25:15); \">"
           ]
         }
       ],
