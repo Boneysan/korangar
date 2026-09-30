@@ -7226,6 +7226,156 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_yuno_in03_biology_professor_sa_branch_for_1710_2047",
+      "unit": "E1-yuno_in03_biology_professor_sa_branch_for_1710",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Biology Professor#sa"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Feather_Of_Birds,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/sage.txt",
+          "lines": [
+            2047
+          ],
+          "required_source_literals": [
+            "delitem Feather_Of_Birds,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_yuno_in03_biology_professor_sa_branch_for_1710_2048",
+      "unit": "E1-yuno_in03_biology_professor_sa_branch_for_1710",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Biology Professor#sa"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Animals_Skin,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/sage.txt",
+          "lines": [
+            2048
+          ],
+          "required_source_literals": [
+            "delitem Animals_Skin,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_yuno_in03_biology_professor_sa_branch_for_1710_2049",
+      "unit": "E1-yuno_in03_biology_professor_sa_branch_for_1710",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Biology Professor#sa"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Wooden_Block,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/sage.txt",
+          "lines": [
+            2049
+          ],
+          "required_source_literals": [
+            "delitem Wooden_Block,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_yuno_in03_biology_professor_sa_branch_for_1710_2050",
+      "unit": "E1-yuno_in03_biology_professor_sa_branch_for_1710",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Biology Professor#sa"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Chinese_Ink,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/sage.txt",
+          "lines": [
+            2050
+          ],
+          "required_source_literals": [
+            "delitem Chinese_Ink,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_yuno_in03_biology_professor_sa_branch_for_1710_2051",
+      "unit": "E1-yuno_in03_biology_professor_sa_branch_for_1710",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Biology Professor#sa"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Empty_Bottle,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/sage.txt",
+          "lines": [
+            2051
+          ],
+          "required_source_literals": [
+            "delitem Empty_Bottle,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_yuno_in03_biology_professor_sa_branch_for_1710_2093",
+      "unit": "E1-yuno_in03_biology_professor_sa_branch_for_1710",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Biology Professor#sa"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Book,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/sage.txt",
+          "lines": [
+            2093
+          ],
+          "required_source_literals": [
+            "getitem Book,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
