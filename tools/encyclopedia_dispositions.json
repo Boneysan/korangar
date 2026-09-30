@@ -130629,6 +130629,60 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_8003_npc_jobs_2_1_assassin_txt_1191",
+      "unit": "E5-chain-8003",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8003
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 8003; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-1/assassin.txt",
+          "lines": [
+            1191
+          ],
+          "required_source_literals": [
+            "changequest 8003,8000;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_8003_npc_jobs_2_1_assassin_txt_1265",
+      "unit": "E5-chain-8003",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8003
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 8003; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-1/assassin.txt",
+          "lines": [
+            1265
+          ],
+          "required_source_literals": [
+            "changequest 8003,8004;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
