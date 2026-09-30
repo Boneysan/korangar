@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 2407,
+    "E1_unknown": 2412,
     "E1_verified": 1
   },
   "entries": [
@@ -25854,6 +25854,131 @@
           ],
           "required_source_literals": [
             "delitem No_Recipient,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_moc_ruins_roberto_branch_for_43_74",
+      "unit": "E1-moc_ruins_roberto_branch_for_43",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Roberto"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Resin,20; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/skills/archer_skills.txt",
+          "lines": [
+            74
+          ],
+          "required_source_literals": [
+            "delitem Resin,20;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_moc_ruins_roberto_branch_for_43_75",
+      "unit": "E1-moc_ruins_roberto_branch_for_43",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Roberto"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Mushroom_Spore,7; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/skills/archer_skills.txt",
+          "lines": [
+            75
+          ],
+          "required_source_literals": [
+            "delitem Mushroom_Spore,7;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_moc_ruins_roberto_branch_for_43_76",
+      "unit": "E1-moc_ruins_roberto_branch_for_43",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Roberto"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Pointed_Scale,41; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/skills/archer_skills.txt",
+          "lines": [
+            76
+          ],
+          "required_source_literals": [
+            "delitem Pointed_Scale,41; //Tough_Scalelike_Stem"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_moc_ruins_roberto_branch_for_43_77",
+      "unit": "E1-moc_ruins_roberto_branch_for_43",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Roberto"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Wooden_Block,13; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/skills/archer_skills.txt",
+          "lines": [
+            77
+          ],
+          "required_source_literals": [
+            "delitem Wooden_Block,13;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_moc_ruins_roberto_branch_for_43_78",
+      "unit": "E1-moc_ruins_roberto_branch_for_43",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Roberto"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Red_Potion,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/skills/archer_skills.txt",
+          "lines": [
+            78
+          ],
+          "required_source_literals": [
+            "delitem Red_Potion,1;"
           ]
         }
       ],
