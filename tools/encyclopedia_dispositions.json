@@ -64401,6 +64401,56 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prt_castle_soldier_s11_branch_for_6014_6096",
+      "unit": "E1-prt_castle_soldier_s11_branch_for_6014",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Soldier#s11"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Vigorgra,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/the_sign_quest.txt",
+          "lines": [
+            6096
+          ],
+          "required_source_literals": [
+            "delitem Vigorgra,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prt_castle_soldier_s11_branch_for_6014_6097",
+      "unit": "E1-prt_castle_soldier_s11_branch_for_6014",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Soldier#s11"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Sister_Letter,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/the_sign_quest.txt",
+          "lines": [
+            6097
+          ],
+          "required_source_literals": [
+            "delitem Sister_Letter,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
