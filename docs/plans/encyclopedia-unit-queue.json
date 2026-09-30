@@ -38653,7 +38653,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Missing Person's Son",
@@ -38672,7 +38672,25 @@
       ],
       "size_lines": 45,
       "reason": "refused by the braced one-item prover: braceless",
-      "history": []
+      "history": [
+        "2026-09-30T19:52:29Z activated",
+        "2026-09-30T19:52:29Z validated",
+        "2026-09-30T19:52:29Z verified: 1 claims supported",
+        "2026-09-30T19:52:52Z accepted",
+        "2026-09-30T19:52:52Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "f35c2211eb4673818170a98382387f35d9bc7e795e37bd145674c4c4f120a3dd",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-malaya_missing_person_s_mother_branch_for_6069",
