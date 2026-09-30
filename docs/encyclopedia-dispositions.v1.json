@@ -8,7 +8,7 @@
     "E1_not_applicable": 1,
     "E1_unknown": 3464,
     "E1_verified": 1,
-    "E3_unknown": 769
+    "E3_unknown": 778
   },
   "entries": [
     {
@@ -87925,6 +87925,33 @@
       "reviewed_on": "2026-09-30"
     },
     {
+      "id": "item_1293_script_untranslated",
+      "unit": "E3-unknown-bonus-baspdrate-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          1293
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 1293 is not summarized: the translator does not interpret the quoted statement (bonus bAspdRate (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            9453
+          ],
+          "required_source_literals": [
+            "bonus bAspdRate,getrefine();"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
       "id": "item_1295_script_untranslated",
       "unit": "E3-unknown-control-if",
       "package": "E3",
@@ -88323,6 +88350,33 @@
           ],
           "required_source_literals": [
             "bonus bBaseAtk,(getrefine()*10);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_13072_script_untranslated",
+      "unit": "E3-unknown-bonus-baspdrate-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          13072
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 13072 is not summarized: the translator does not interpret the quoted statement (bonus bAspdRate (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            100913
+          ],
+          "required_source_literals": [
+            "bonus bAspdRate,getrefine();"
           ]
         }
       ],
@@ -89950,6 +90004,33 @@
       "reviewed_on": "2026-09-30"
     },
     {
+      "id": "item_15089_script_untranslated",
+      "unit": "E3-unknown-bonus-baspdrate-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          15089
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 15089 is not summarized: the translator does not interpret the quoted statement (bonus bAspdRate (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            125711
+          ],
+          "required_source_literals": [
+            "bonus bAspdRate,3+((getrefine()>=7)?2:0);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
       "id": "item_15090_script_untranslated",
       "unit": "E3-unknown-bonus2-bsubele-expression",
       "package": "E3",
@@ -90537,6 +90618,33 @@
           ],
           "required_source_literals": [
             "bonus bBaseAtk,(getrefine()*5);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_16030_script_untranslated",
+      "unit": "E3-unknown-bonus-baspdrate-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          16030
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 16030 is not summarized: the translator does not interpret the quoted statement (bonus bAspdRate (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            126992
+          ],
+          "required_source_literals": [
+            "Script: <\" bonus bAspdRate, (getrefine() / 2); \">"
           ]
         }
       ],
@@ -92184,6 +92292,33 @@
           ],
           "required_source_literals": [
             "bonus bMaxHP,100+(getrefine()*100);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_18841_script_untranslated",
+      "unit": "E3-unknown-bonus-baspdrate-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          18841
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 18841 is not summarized: the translator does not interpret the quoted statement (bonus bAspdRate (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            138217
+          ],
+          "required_source_literals": [
+            "bonus bAspdRate,(getrefine()/3)*2;"
           ]
         }
       ],
@@ -94702,6 +94837,33 @@
       "reviewed_on": "2026-09-30"
     },
     {
+      "id": "item_22043_script_untranslated",
+      "unit": "E3-unknown-bonus-baspdrate-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          22043
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 22043 is not summarized: the translator does not interpret the quoted statement (bonus bAspdRate (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            148802
+          ],
+          "required_source_literals": [
+            "Script: <\" bonus bAspdRate,5+(getrefine()/4); \">"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
       "id": "item_22047_script_untranslated",
       "unit": "E3-unknown-control-if",
       "package": "E3",
@@ -95512,6 +95674,33 @@
       "reviewed_on": "2026-09-30"
     },
     {
+      "id": "item_24018_script_untranslated",
+      "unit": "E3-unknown-bonus-baspdrate-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          24018
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 24018 is not summarized: the translator does not interpret the quoted statement (bonus bAspdRate (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            150856
+          ],
+          "required_source_literals": [
+            "Script: <\" bonus bAspdRate,(getrefine()>=7)?2:1; \">"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
       "id": "item_24024_script_untranslated",
       "unit": "E3-unknown-bonus-bflee-expression",
       "package": "E3",
@@ -95802,6 +95991,33 @@
           ],
           "required_source_literals": [
             "bonus bFlee,getrefine();"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_24047_script_untranslated",
+      "unit": "E3-unknown-bonus-baspdrate-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          24047
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 24047 is not summarized: the translator does not interpret the quoted statement (bonus bAspdRate (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            151189
+          ],
+          "required_source_literals": [
+            "bonus bAspdRate,1+((getrefine()>=9)?2:(getrefine()>=7)?1:0);"
           ]
         }
       ],
@@ -103983,6 +104199,33 @@
           ],
           "required_source_literals": [
             "Script: <\" bonus bMaxHP,200*(readparam(bVit)/10); \">"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_4595_script_untranslated",
+      "unit": "E3-unknown-bonus-baspdrate-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          4595
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 4595 is not summarized: the translator does not interpret the quoted statement (bonus bAspdRate (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            48821
+          ],
+          "required_source_literals": [
+            "bonus bAspdRate,2*(readparam(bAgi)/10);"
           ]
         }
       ],
