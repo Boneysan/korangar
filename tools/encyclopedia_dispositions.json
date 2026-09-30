@@ -53051,6 +53051,81 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_yuno_sage_yklah_juno_branch_for_735_812",
+      "unit": "E1-yuno_sage_yklah_juno_branch_for_735",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Sage Yklah#juno"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Claw_Of_Desert_Wolf,3; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_yuno.txt",
+          "lines": [
+            812
+          ],
+          "required_source_literals": [
+            "delitem Claw_Of_Desert_Wolf,3;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_yuno_sage_yklah_juno_branch_for_735_813",
+      "unit": "E1-yuno_sage_yklah_juno_branch_for_735",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Sage Yklah#juno"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Tooth_Of_Bat,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_yuno.txt",
+          "lines": [
+            813
+          ],
+          "required_source_literals": [
+            "delitem Tooth_Of_Bat,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_yuno_sage_yklah_juno_branch_for_735_814",
+      "unit": "E1-yuno_sage_yklah_juno_branch_for_735",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Sage Yklah#juno"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Piece_Of_Egg_Shell,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_yuno.txt",
+          "lines": [
+            814
+          ],
+          "required_source_literals": [
+            "delitem Piece_Of_Egg_Shell,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
