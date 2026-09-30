@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 1460,
+    "E1_unknown": 1462,
     "E1_verified": 1
   },
   "entries": [
@@ -4879,6 +4879,56 @@
           ],
           "required_source_literals": [
             "delitem Glitering_PaperB,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ayo_dun02_ayofootprint6_branch_for_1049_1081",
+      "unit": "E1-ayo_dun02_ayofootprint6_branch_for_1049",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "AyoFootprint6"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem White_Potion,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_ayothaya.txt",
+          "lines": [
+            1081
+          ],
+          "required_source_literals": [
+            "getitem White_Potion,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ayo_dun02_ayofootprint6_branch_for_1049_1095",
+      "unit": "E1-ayo_dun02_ayofootprint6_branch_for_1049",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "AyoFootprint6"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Yellow_Potion,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_ayothaya.txt",
+          "lines": [
+            1095
+          ],
+          "required_source_literals": [
+            "getitem Yellow_Potion,10; //Yellow potion"
           ]
         }
       ],
