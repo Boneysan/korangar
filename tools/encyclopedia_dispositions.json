@@ -97472,6 +97472,951 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_2158_script_untranslated",
+      "unit": "E3-unknown-bonus3-bsubdefele-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          2158
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 2158 is not summarized: the translator does not interpret the quoted statement (bonus3 bSubDefEle (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            25656
+          ],
+          "required_source_literals": [
+            "bonus3(bSubDefEle, Ele_Undead, 5, 3);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_2159_script_untranslated",
+      "unit": "E3-unknown-bonus3-bsubdefele-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          2159
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 2159 is not summarized: the translator does not interpret the quoted statement (bonus3 bSubDefEle (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            25674
+          ],
+          "required_source_literals": [
+            "bonus3(bSubDefEle, Ele_Fire, 5, 3);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_2163_script_untranslated",
+      "unit": "E3-unknown-bonus3-bsubdefele-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          2163
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 2163 is not summarized: the translator does not interpret the quoted statement (bonus3 bSubDefEle (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            25763
+          ],
+          "required_source_literals": [
+            "bonus3(bSubDefEle, Ele_Water, 5, 3);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_2164_script_untranslated",
+      "unit": "E3-unknown-bonus3-bsubdefele-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          2164
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 2164 is not summarized: the translator does not interpret the quoted statement (bonus3 bSubDefEle (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            25781
+          ],
+          "required_source_literals": [
+            "bonus3(bSubDefEle, Ele_Dark, 5, 3);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_2165_script_untranslated",
+      "unit": "E3-unknown-bonus3-bsubdefele-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          2165
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 2165 is not summarized: the translator does not interpret the quoted statement (bonus3 bSubDefEle (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            25799
+          ],
+          "required_source_literals": [
+            "bonus3(bSubDefEle, Ele_Earth, 5, 3);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_2167_script_untranslated",
+      "unit": "E3-unknown-bonus3-bsubdefele-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          2167
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 2167 is not summarized: the translator does not interpret the quoted statement (bonus3 bSubDefEle (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            25835
+          ],
+          "required_source_literals": [
+            "bonus3(bSubDefEle, Ele_Poison, 5, 3);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_2174_script_untranslated",
+      "unit": "E3-unknown-bonus3-bsubdefele-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          2174
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 2174 is not summarized: the translator does not interpret the quoted statement (bonus3 bSubDefEle (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            25948
+          ],
+          "required_source_literals": [
+            "bonus3(bSubDefEle, Ele_Holy, 5, 3);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_2175_script_untranslated",
+      "unit": "E3-unknown-bonus3-bsubdefele-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          2175
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 2175 is not summarized: the translator does not interpret the quoted statement (bonus3 bSubDefEle (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            25966
+          ],
+          "required_source_literals": [
+            "bonus3(bSubDefEle, Ele_Ghost, 5, 3);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_2194_script_untranslated",
+      "unit": "E3-unknown-bonus3-bsubdefele-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          2194
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 2194 is not summarized: the translator does not interpret the quoted statement (bonus3 bSubDefEle (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            26332
+          ],
+          "required_source_literals": [
+            "bonus3(bSubDefEle, Ele_Wind, 5, 3);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_2195_script_untranslated",
+      "unit": "E3-unknown-bonus3-bsubdefele-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          2195
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 2195 is not summarized: the translator does not interpret the quoted statement (bonus3 bSubDefEle (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            26349
+          ],
+          "required_source_literals": [
+            "bonus3(bSubDefEle, Ele_Neutral, 5, 3);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_2593_script_untranslated",
+      "unit": "E3-unknown-bonus3-bsubdefele-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          2593
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 2593 is not summarized: the translator does not interpret the quoted statement (bonus3 bSubDefEle (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            34294
+          ],
+          "required_source_literals": [
+            "bonus3(bSubDefEle, Ele_Water, 5, 3);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_2595_script_untranslated",
+      "unit": "E3-unknown-bonus3-bsubdefele-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          2595
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 2595 is not summarized: the translator does not interpret the quoted statement (bonus3 bSubDefEle (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            34321
+          ],
+          "required_source_literals": [
+            "bonus3(bSubDefEle, Ele_Dark, 5, 3);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_2596_script_untranslated",
+      "unit": "E3-unknown-bonus3-bsubdefele-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          2596
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 2596 is not summarized: the translator does not interpret the quoted statement (bonus3 bSubDefEle (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            34337
+          ],
+          "required_source_literals": [
+            "bonus3(bSubDefEle, Ele_Fire, 5, 3);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_2598_script_untranslated",
+      "unit": "E3-unknown-bonus3-bsubdefele-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          2598
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 2598 is not summarized: the translator does not interpret the quoted statement (bonus3 bSubDefEle (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            34366
+          ],
+          "required_source_literals": [
+            "bonus3(bSubDefEle, Ele_Undead, 5, 3);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_2682_script_untranslated",
+      "unit": "E3-unknown-bonus3-bsubdefele-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          2682
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 2682 is not summarized: the translator does not interpret the quoted statement (bonus3 bSubDefEle (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            35850
+          ],
+          "required_source_literals": [
+            "Script: <\" bonus3(bSubDefEle, Ele_Water, 5, 3); \">"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_2683_script_untranslated",
+      "unit": "E3-unknown-bonus3-bsubdefele-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          2683
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 2683 is not summarized: the translator does not interpret the quoted statement (bonus3 bSubDefEle (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            35867
+          ],
+          "required_source_literals": [
+            "Script: <\" bonus3(bSubDefEle, Ele_Fire, 5, 3); \">"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_2684_script_untranslated",
+      "unit": "E3-unknown-bonus3-bsubdefele-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          2684
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 2684 is not summarized: the translator does not interpret the quoted statement (bonus3 bSubDefEle (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            35884
+          ],
+          "required_source_literals": [
+            "Script: <\" bonus3(bSubDefEle, Ele_Wind, 5, 3); \">"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_2685_script_untranslated",
+      "unit": "E3-unknown-bonus3-bsubdefele-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          2685
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 2685 is not summarized: the translator does not interpret the quoted statement (bonus3 bSubDefEle (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            35901
+          ],
+          "required_source_literals": [
+            "Script: <\" bonus3(bSubDefEle, Ele_Earth, 5, 3); \">"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_4442_script_untranslated",
+      "unit": "E3-unknown-bonus3-bsubdefele-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          4442
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 4442 is not summarized: the translator does not interpret the quoted statement (bonus3 bSubDefEle (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            46795
+          ],
+          "required_source_literals": [
+            "bonus3(bSubDefEle, Ele_Neutral, 20, 3);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_4443_script_untranslated",
+      "unit": "E3-unknown-bonus3-bsubdefele-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          4443
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 4443 is not summarized: the translator does not interpret the quoted statement (bonus3 bSubDefEle (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            46808
+          ],
+          "required_source_literals": [
+            "bonus3(bSubDefEle, Ele_Water, 20, 3);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_4444_script_untranslated",
+      "unit": "E3-unknown-bonus3-bsubdefele-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          4444
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 4444 is not summarized: the translator does not interpret the quoted statement (bonus3 bSubDefEle (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            46821
+          ],
+          "required_source_literals": [
+            "bonus3(bSubDefEle, Ele_Earth, 20, 3);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_4445_script_untranslated",
+      "unit": "E3-unknown-bonus3-bsubdefele-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          4445
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 4445 is not summarized: the translator does not interpret the quoted statement (bonus3 bSubDefEle (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            46834
+          ],
+          "required_source_literals": [
+            "bonus3(bSubDefEle, Ele_Wind, 20, 3);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_4447_script_untranslated",
+      "unit": "E3-unknown-bonus3-bsubdefele-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          4447
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 4447 is not summarized: the translator does not interpret the quoted statement (bonus3 bSubDefEle (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            46863
+          ],
+          "required_source_literals": [
+            "bonus3(bSubDefEle, Ele_Poison, 20, 3);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_4448_script_untranslated",
+      "unit": "E3-unknown-bonus3-bsubdefele-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          4448
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 4448 is not summarized: the translator does not interpret the quoted statement (bonus3 bSubDefEle (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            46876
+          ],
+          "required_source_literals": [
+            "bonus3(bSubDefEle, Ele_Holy, 20, 3);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_4449_script_untranslated",
+      "unit": "E3-unknown-bonus3-bsubdefele-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          4449
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 4449 is not summarized: the translator does not interpret the quoted statement (bonus3 bSubDefEle (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            46889
+          ],
+          "required_source_literals": [
+            "bonus3(bSubDefEle, Ele_Dark, 20, 3);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_5502_script_untranslated",
+      "unit": "E3-unknown-bonus3-bsubdefele-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          5502
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 5502 is not summarized: the translator does not interpret the quoted statement (bonus3 bSubDefEle (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            61661
+          ],
+          "required_source_literals": [
+            "bonus3(bSubDefEle, Ele_Holy, -20, 3);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_18699_script_untranslated",
+      "unit": "E3-unknown-bonus3-bsubdefele-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          18699
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 18699 is not summarized: the translator does not interpret the quoted statement (bonus3 bSubDefEle (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            135828
+          ],
+          "required_source_literals": [
+            "bonus3(bSubDefEle, Ele_Water, 15, 3);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_18714_script_untranslated",
+      "unit": "E3-unknown-bonus3-bsubdefele-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          18714
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 18714 is not summarized: the translator does not interpret the quoted statement (bonus3 bSubDefEle (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            136075
+          ],
+          "required_source_literals": [
+            "bonus3(bSubDefEle, Ele_Water, 10, 3);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_18908_script_untranslated",
+      "unit": "E3-unknown-bonus3-bsubdefele-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          18908
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 18908 is not summarized: the translator does not interpret the quoted statement (bonus3 bSubDefEle (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            138841
+          ],
+          "required_source_literals": [
+            "bonus3(bSubDefEle, Ele_Fire, 10, 3);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_18911_script_untranslated",
+      "unit": "E3-unknown-bonus3-bsubdefele-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          18911
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 18911 is not summarized: the translator does not interpret the quoted statement (bonus3 bSubDefEle (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            138891
+          ],
+          "required_source_literals": [
+            "bonus3(bSubDefEle, Ele_Earth, 3, 3);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_20701_script_untranslated",
+      "unit": "E3-unknown-bonus3-bsubdefele-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          20701
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 20701 is not summarized: the translator does not interpret the quoted statement (bonus3 bSubDefEle (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            146887
+          ],
+          "required_source_literals": [
+            "bonus3(bSubDefEle, Ele_Earth, 5, 3);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_20705_script_untranslated",
+      "unit": "E3-unknown-bonus3-bsubdefele-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          20705
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 20705 is not summarized: the translator does not interpret the quoted statement (bonus3 bSubDefEle (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            146997
+          ],
+          "required_source_literals": [
+            "bonus3(bSubDefEle, Ele_Holy, 5, 3);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_20708_script_untranslated",
+      "unit": "E3-unknown-bonus3-bsubdefele-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          20708
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 20708 is not summarized: the translator does not interpret the quoted statement (bonus3 bSubDefEle (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            147055
+          ],
+          "required_source_literals": [
+            "bonus3(bSubDefEle, Ele_Poison, 5, 3);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_20750_script_untranslated",
+      "unit": "E3-unknown-bonus3-bsubdefele-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          20750
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 20750 is not summarized: the translator does not interpret the quoted statement (bonus3 bSubDefEle (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            147404
+          ],
+          "required_source_literals": [
+            "bonus3(bSubDefEle, Ele_Wind, 5, 3);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_20753_script_untranslated",
+      "unit": "E3-unknown-bonus3-bsubdefele-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          20753
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 20753 is not summarized: the translator does not interpret the quoted statement (bonus3 bSubDefEle (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            147420
+          ],
+          "required_source_literals": [
+            "bonus3(bSubDefEle, Ele_Neutral, 5, 3);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
