@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 2429,
+    "E1_unknown": 2436,
     "E1_verified": 1
   },
   "entries": [
@@ -11904,6 +11904,181 @@
           ],
           "required_source_literals": [
             "getitem Blue_Potion,6;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_geffen_akkie_qsk_bs_branch_for_39_208",
+      "unit": "E1-geffen_akkie_qsk_bs_branch_for_39",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Akkie#qsk_bs"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Coal,5; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/skills/blacksmith_skills.txt",
+          "lines": [
+            208
+          ],
+          "required_source_literals": [
+            "delitem Coal,5;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_geffen_akkie_qsk_bs_branch_for_39_209",
+      "unit": "E1-geffen_akkie_qsk_bs_branch_for_39",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Akkie#qsk_bs"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Steel,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/skills/blacksmith_skills.txt",
+          "lines": [
+            209
+          ],
+          "required_source_literals": [
+            "delitem Steel,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_geffen_akkie_qsk_bs_branch_for_39_210",
+      "unit": "E1-geffen_akkie_qsk_bs_branch_for_39",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Akkie#qsk_bs"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Detrimindexta,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/skills/blacksmith_skills.txt",
+          "lines": [
+            210
+          ],
+          "required_source_literals": [
+            "delitem Detrimindexta,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_geffen_akkie_qsk_bs_branch_for_39_211",
+      "unit": "E1-geffen_akkie_qsk_bs_branch_for_39",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Akkie#qsk_bs"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Iron_Hammer,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/skills/blacksmith_skills.txt",
+          "lines": [
+            211
+          ],
+          "required_source_literals": [
+            "delitem Iron_Hammer,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_geffen_akkie_qsk_bs_branch_for_39_304",
+      "unit": "E1-geffen_akkie_qsk_bs_branch_for_39",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Akkie#qsk_bs"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Steel,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/skills/blacksmith_skills.txt",
+          "lines": [
+            304
+          ],
+          "required_source_literals": [
+            "delitem Steel,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_geffen_akkie_qsk_bs_branch_for_39_305",
+      "unit": "E1-geffen_akkie_qsk_bs_branch_for_39",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Akkie#qsk_bs"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Coal,3; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/skills/blacksmith_skills.txt",
+          "lines": [
+            305
+          ],
+          "required_source_literals": [
+            "delitem Coal,3;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_geffen_akkie_qsk_bs_branch_for_39_361",
+      "unit": "E1-geffen_akkie_qsk_bs_branch_for_39",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Akkie#qsk_bs"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Iron_Hammer,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/skills/blacksmith_skills.txt",
+          "lines": [
+            361
+          ],
+          "required_source_literals": [
+            "delitem Iron_Hammer,1;"
           ]
         }
       ],
