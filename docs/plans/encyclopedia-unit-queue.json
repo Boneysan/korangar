@@ -9567,7 +9567,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Bebete#Baby_Angel_Status",
@@ -9586,7 +9586,22 @@
       ],
       "size_lines": 146,
       "reason": "refused by the braced one-item prover: menu",
-      "history": []
+      "history": [
+        "2026-09-30T15:24:14Z activated",
+        "2026-09-30T15:24:14Z validated",
+        "2026-09-30T15:24:14Z verified: 0 claims supported",
+        "2026-09-30T15:24:37Z accepted",
+        "2026-09-30T15:24:37Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "aabf51486b00ca616a398b55d40ade97d2dae2d3ebcdf4cf9e553bc3e183f6c0",
+      "accepted_files": [
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-gef_fild07_roda_frog_frog_cap_branch_for_519",
