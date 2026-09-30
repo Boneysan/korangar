@@ -9526,6 +9526,106 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_poring_w02_deviruchi_wop_endmaster_branch_for_1230_1252",
+      "unit": "E1-poring_w02_deviruchi_wop_endmaster_branch_for_1230",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Deviruchi#wop_endmaster"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Poring_Coin,3; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/other/poring_war.txt",
+          "lines": [
+            1252
+          ],
+          "required_source_literals": [
+            "getitem Poring_Coin,3; // Poring_Coin"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_poring_w02_deviruchi_wop_endmaster_branch_for_1230_1278",
+      "unit": "E1-poring_w02_deviruchi_wop_endmaster_branch_for_1230",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Deviruchi#wop_endmaster"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Poring_Coin,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/other/poring_war.txt",
+          "lines": [
+            1278
+          ],
+          "required_source_literals": [
+            "getitem Poring_Coin,1; // Poring_Coin"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_poring_w02_deviruchi_wop_endmaster_branch_for_1230_1333",
+      "unit": "E1-poring_w02_deviruchi_wop_endmaster_branch_for_1230",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Deviruchi#wop_endmaster"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Poring_Coin,3; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/other/poring_war.txt",
+          "lines": [
+            1333
+          ],
+          "required_source_literals": [
+            "getitem Poring_Coin,3; // Poring_Coin"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_poring_w02_deviruchi_wop_endmaster_branch_for_1230_1359",
+      "unit": "E1-poring_w02_deviruchi_wop_endmaster_branch_for_1230",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Deviruchi#wop_endmaster"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Poring_Coin,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/other/poring_war.txt",
+          "lines": [
+            1359
+          ],
+          "required_source_literals": [
+            "getitem Poring_Coin,1; // Poring_Coin"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }

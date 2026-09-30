@@ -4926,7 +4926,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Deviruchi#wop_endmaster",
@@ -4945,7 +4945,25 @@
       ],
       "size_lines": 232,
       "reason": "refused by the braced one-item prover: multi-item",
-      "history": []
+      "history": [
+        "2026-09-30T14:41:44Z activated",
+        "2026-09-30T14:41:44Z validated",
+        "2026-09-30T14:41:44Z verified: 4 claims supported",
+        "2026-09-30T14:42:08Z accepted",
+        "2026-09-30T14:42:08Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "a0f922926fb7ffd84ae04b7f1be79923b486b520b070c0700fdc918a9545318d",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-poring_w02_angeling_guardian_wop_da_branch_for_1464",
