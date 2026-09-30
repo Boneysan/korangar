@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 2450,
+    "E1_unknown": 2453,
     "E1_verified": 1
   },
   "entries": [
@@ -33854,6 +33854,81 @@
           ],
           "required_source_literals": [
             "getitem Monster_Ticket,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_pay_arche_arpesto_branch_for_39_224",
+      "unit": "E1-pay_arche_arpesto_branch_for_39",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Arpesto"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Cardinal_Jewel_,5; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/skills/hunter_skills.txt",
+          "lines": [
+            224
+          ],
+          "required_source_literals": [
+            "delitem Cardinal_Jewel_,5;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_pay_arche_arpesto_branch_for_39_225",
+      "unit": "E1-pay_arche_arpesto_branch_for_39",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Arpesto"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Harpys_Feather,5; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/skills/hunter_skills.txt",
+          "lines": [
+            225
+          ],
+          "required_source_literals": [
+            "delitem Harpys_Feather,5;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_pay_arche_arpesto_branch_for_39_226",
+      "unit": "E1-pay_arche_arpesto_branch_for_39",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Arpesto"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Pet_Food,30; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/skills/hunter_skills.txt",
+          "lines": [
+            226
+          ],
+          "required_source_literals": [
+            "delitem Pet_Food,30;"
           ]
         }
       ],
