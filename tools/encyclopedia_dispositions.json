@@ -122703,6 +122703,424 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_re_merchants_shops_txt_775_775",
+      "unit": "E2-npc-re-merchants-shops-txt-775",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Pet Groomer#gef"
+      },
+      "result": "verified",
+      "statement": "Pet Groomer#gef is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/merchants/shops.txt",
+          "lines": [
+            775,
+            776,
+            777,
+            778,
+            779,
+            780,
+            781,
+            782,
+            783,
+            784,
+            785,
+            786,
+            787,
+            788,
+            789,
+            790,
+            791,
+            792,
+            793,
+            794,
+            795,
+            796,
+            797
+          ],
+          "required_source_literals": [
+            "geffen,193,152,4\ttrader\tPet Groomer#gef\t4_F_TELEPORTER,{",
+            "OnInit:",
+            "sellitem Pet_Food;",
+            "sellitem Pet_Incubator;",
+            "sellitem Backpack;",
+            "sellitem Rocker_Glasses;",
+            "sellitem Vital_Flower_;",
+            "sellitem Flame_Gemstone;",
+            "sellitem Bun_;",
+            "sellitem Vital_Flower;",
+            "sellitem Damp_Darkness;",
+            "sellitem Small_Snow_Flower;",
+            "sellitem Fresh_Plant;",
+            "sellitem Big_Cell;",
+            "sellitem Apple_Pudding;",
+            "sellitem Mystic_Stone;",
+            "sellitem Flavored_Alcohol;",
+            "sellitem Spirit_Liquor;",
+            "sellitem Pumpkin_Pie_;",
+            "sellitem Sunset_On_The_Rock;",
+            "sellitem Morning_Dew;",
+            "sellitem Grilled_Rice_Cake;",
+            "}"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_re_merchants_shops_txt_775_799",
+      "unit": "E2-npc-re-merchants-shops-txt-775",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Tool Dealer#gef2"
+      },
+      "result": "verified",
+      "statement": "Tool Dealer#gef2 is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/merchants/shops.txt",
+          "lines": [
+            799,
+            800,
+            801,
+            802,
+            803,
+            804
+          ],
+          "required_source_literals": [
+            "geffen_in,171,123,4\ttrader\tTool Dealer#gef2\t1_M_WIZARD,{",
+            "OnInit:",
+            "sellitem Empty_Cylinder;",
+            "sellitem Empty_Potion;",
+            "sellitem Empty_Bottle;",
+            "}"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_re_merchants_shops_txt_775_807",
+      "unit": "E2-npc-re-merchants-shops-txt-775",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Tool Dealer#alb"
+      },
+      "result": "verified",
+      "statement": "Tool Dealer#alb is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/merchants/shops.txt",
+          "lines": [
+            807,
+            808,
+            809,
+            810,
+            811,
+            812,
+            813,
+            814,
+            815,
+            816,
+            817,
+            818,
+            819
+          ],
+          "required_source_literals": [
+            "alb2trea,87,65,5\ttrader\tTool Dealer#alb\t4_M_01,{",
+            "OnInit:",
+            "sellitem Arrow;",
+            "sellitem Silver_Arrow;",
+            "sellitem Fire_Arrow;",
+            "sellitem Red_Potion;",
+            "sellitem Orange_Potion;",
+            "sellitem Yellow_Potion;",
+            "sellitem White_Potion;",
+            "sellitem Center_Potion;",
+            "sellitem Awakening_Potion;",
+            "sellitem Empty_Bottle;",
+            "}"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_re_merchants_shops_txt_775_821",
+      "unit": "E2-npc-re-merchants-shops-txt-775",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Tool Dealer#alb2"
+      },
+      "result": "verified",
+      "statement": "Tool Dealer#alb2 is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/merchants/shops.txt",
+          "lines": [
+            821,
+            822,
+            823,
+            824,
+            825,
+            826,
+            827,
+            828,
+            829,
+            830,
+            831,
+            832,
+            833,
+            834
+          ],
+          "required_source_literals": [
+            "alberta_in,182,97,0\ttrader\tTool Dealer#alb2\t1_F_MERCHANT_01,{",
+            "OnInit:",
+            "sellitem Arrow;",
+            "sellitem Spectacles;",
+            "sellitem Red_Potion;",
+            "sellitem Orange_Potion;",
+            "sellitem Yellow_Potion;",
+            "sellitem White_Potion;",
+            "sellitem Center_Potion;",
+            "sellitem Awakening_Potion;",
+            "sellitem Empty_Bottle;",
+            "sellitem Wing_Of_Fly;",
+            "sellitem Wing_Of_Butterfly;",
+            "}"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_re_merchants_shops_txt_775_836",
+      "unit": "E2-npc-re-merchants-shops-txt-775",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Trading Merchant#alb"
+      },
+      "result": "verified",
+      "statement": "Trading Merchant#alb is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/merchants/shops.txt",
+          "lines": [
+            836,
+            837,
+            838,
+            839,
+            840,
+            841,
+            842,
+            843,
+            844,
+            845,
+            846,
+            847,
+            848,
+            849
+          ],
+          "required_source_literals": [
+            "alberta_in,176,81,3\ttrader\tTrading Merchant#alb\t4_M_HUMERCHANT,{",
+            "OnInit:",
+            "sellitem Bullet;",
+            "sellitem Silver_Bullet_;",
+            "sellitem Shell_Of_Blood_;",
+            "sellitem Branch;",
+            "sellitem Crimson_Bolt;",
+            "sellitem The_Cyclone;",
+            "sellitem Rolling_Stone;",
+            "sellitem Black_Rose;",
+            "sellitem Long_Barrel;",
+            "sellitem Jungle_Carbine;",
+            "sellitem Thunder_P;",
+            "}"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_re_merchants_shops_txt_775_852",
+      "unit": "E2-npc-re-merchants-shops-txt-775",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Tool Dealer#pay3"
+      },
+      "result": "verified",
+      "statement": "Tool Dealer#pay3 is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/merchants/shops.txt",
+          "lines": [
+            852,
+            853,
+            854,
+            855,
+            856,
+            857,
+            858,
+            859,
+            860
+          ],
+          "required_source_literals": [
+            "payon,159,96,4\ttrader\tTool Dealer#pay3\t4_M_ORIENT01,{",
+            "OnInit:",
+            "sellitem Arrow;",
+            "sellitem Red_Potion;",
+            "sellitem Center_Potion;",
+            "sellitem Empty_Bottle;",
+            "sellitem Wing_Of_Fly;",
+            "sellitem Wing_Of_Butterfly;",
+            "}"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_re_merchants_shops_txt_775_862",
+      "unit": "E2-npc-re-merchants-shops-txt-775",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Tool Dealer#pay"
+      },
+      "result": "verified",
+      "statement": "Tool Dealer#pay is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/merchants/shops.txt",
+          "lines": [
+            862,
+            863,
+            864,
+            865,
+            866,
+            867,
+            868,
+            869,
+            870,
+            871,
+            872,
+            873,
+            874,
+            875,
+            876
+          ],
+          "required_source_literals": [
+            "payon_in01,5,49,7\ttrader\tTool Dealer#pay\t4_M_ORIENT01,{",
+            "OnInit:",
+            "sellitem Arrow;",
+            "sellitem Spectacles;",
+            "sellitem Red_Potion;",
+            "sellitem Orange_Potion;",
+            "sellitem Yellow_Potion;",
+            "sellitem White_Potion;",
+            "sellitem Center_Potion;",
+            "sellitem Awakening_Potion;",
+            "sellitem Empty_Bottle;",
+            "sellitem Wing_Of_Fly;",
+            "sellitem Wing_Of_Butterfly;",
+            "sellitem Booby_Trap;",
+            "}"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_re_merchants_shops_txt_775_878",
+      "unit": "E2-npc-re-merchants-shops-txt-775",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Pet Groomer#pay"
+      },
+      "result": "verified",
+      "statement": "Pet Groomer#pay is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/merchants/shops.txt",
+          "lines": [
+            878,
+            879,
+            880,
+            881,
+            882,
+            883,
+            884,
+            885,
+            886,
+            887,
+            888,
+            889,
+            890,
+            891,
+            892,
+            893,
+            894,
+            895,
+            896,
+            897,
+            898,
+            899,
+            900
+          ],
+          "required_source_literals": [
+            "payon,177,131,4\ttrader\tPet Groomer#pay\t4_F_TELEPORTER,{",
+            "OnInit:",
+            "sellitem Pet_Food;",
+            "sellitem Pet_Incubator;",
+            "sellitem Backpack;",
+            "sellitem Rocker_Glasses;",
+            "sellitem Vital_Flower_;",
+            "sellitem Flame_Gemstone;",
+            "sellitem Bun_;",
+            "sellitem Vital_Flower;",
+            "sellitem Damp_Darkness;",
+            "sellitem Small_Snow_Flower;",
+            "sellitem Fresh_Plant;",
+            "sellitem Big_Cell;",
+            "sellitem Apple_Pudding;",
+            "sellitem Mystic_Stone;",
+            "sellitem Flavored_Alcohol;",
+            "sellitem Spirit_Liquor;",
+            "sellitem Pumpkin_Pie_;",
+            "sellitem Sunset_On_The_Rock;",
+            "sellitem Morning_Dew;",
+            "sellitem Grilled_Rice_Cake;",
+            "}"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
