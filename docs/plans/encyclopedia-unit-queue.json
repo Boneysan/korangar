@@ -17599,7 +17599,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "strong",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Employee#poison",
@@ -17618,7 +17618,25 @@
       ],
       "size_lines": 689,
       "reason": "refused by the braced one-item prover: braceless",
-      "history": []
+      "history": [
+        "2026-09-30T16:38:26Z activated",
+        "2026-09-30T16:38:26Z validated",
+        "2026-09-30T16:38:27Z verified: 13 claims supported",
+        "2026-09-30T16:38:50Z accepted",
+        "2026-09-30T16:38:50Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "c69e19aad78a358433a5de54194d25dc9010d33b33c2db3d71b7d8448321928b",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-lou_fild01_lady_delivery_branch_for_4103",

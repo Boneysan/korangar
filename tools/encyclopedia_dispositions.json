@@ -43376,6 +43376,331 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_lou_in02_employee_poison_branch_for_3413_3671",
+      "unit": "E1-lou_in02_employee_poison_branch_for_3413",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Employee#poison"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Bee_Sting,4; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_louyang.txt",
+          "lines": [
+            3671
+          ],
+          "required_source_literals": [
+            "delitem Bee_Sting,4;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_lou_in02_employee_poison_branch_for_3413_3672",
+      "unit": "E1-lou_in02_employee_poison_branch_for_3413",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Employee#poison"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Posionous_Canine,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_louyang.txt",
+          "lines": [
+            3672
+          ],
+          "required_source_literals": [
+            "delitem Posionous_Canine,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_lou_in02_employee_poison_branch_for_3413_3673",
+      "unit": "E1-lou_in02_employee_poison_branch_for_3413",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Employee#poison"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Empty_Potion,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_louyang.txt",
+          "lines": [
+            3673
+          ],
+          "required_source_literals": [
+            "delitem Empty_Potion,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_lou_in02_employee_poison_branch_for_3413_3674",
+      "unit": "E1-lou_in02_employee_poison_branch_for_3413",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Employee#poison"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Green_Potion,30; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_louyang.txt",
+          "lines": [
+            3674
+          ],
+          "required_source_literals": [
+            "delitem Green_Potion,30;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_lou_in02_employee_poison_branch_for_3413_3736",
+      "unit": "E1-lou_in02_employee_poison_branch_for_3413",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Employee#poison"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Large_Jellopy,countitem(Large_Jellopy; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_louyang.txt",
+          "lines": [
+            3736
+          ],
+          "required_source_literals": [
+            "delitem Large_Jellopy,countitem(Large_Jellopy);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_lou_in02_employee_poison_branch_for_3413_3798",
+      "unit": "E1-lou_in02_employee_poison_branch_for_3413",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Employee#poison"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Bee_Sting,countitem(Bee_Sting; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_louyang.txt",
+          "lines": [
+            3798
+          ],
+          "required_source_literals": [
+            "delitem Bee_Sting,countitem(Bee_Sting);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_lou_in02_employee_poison_branch_for_3413_3799",
+      "unit": "E1-lou_in02_employee_poison_branch_for_3413",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Employee#poison"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Posionous_Canine,countitem(Posionous_Canine; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_louyang.txt",
+          "lines": [
+            3799
+          ],
+          "required_source_literals": [
+            "delitem Posionous_Canine,countitem(Posionous_Canine);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_lou_in02_employee_poison_branch_for_3413_3800",
+      "unit": "E1-lou_in02_employee_poison_branch_for_3413",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Employee#poison"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Empty_Potion,countitem(Empty_Potion; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_louyang.txt",
+          "lines": [
+            3800
+          ],
+          "required_source_literals": [
+            "delitem Empty_Potion,countitem(Empty_Potion);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_lou_in02_employee_poison_branch_for_3413_3801",
+      "unit": "E1-lou_in02_employee_poison_branch_for_3413",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Employee#poison"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Green_Potion,countitem(Green_Potion; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_louyang.txt",
+          "lines": [
+            3801
+          ],
+          "required_source_literals": [
+            "delitem Green_Potion,countitem(Green_Potion);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_lou_in02_employee_poison_branch_for_3413_3802",
+      "unit": "E1-lou_in02_employee_poison_branch_for_3413",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Employee#poison"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Large_Jellopy,countitem(Large_Jellopy; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_louyang.txt",
+          "lines": [
+            3802
+          ],
+          "required_source_literals": [
+            "delitem Large_Jellopy,countitem(Large_Jellopy);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_lou_in02_employee_poison_branch_for_3413_3853",
+      "unit": "E1-lou_in02_employee_poison_branch_for_3413",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Employee#poison"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Poison_Bottle,2; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_louyang.txt",
+          "lines": [
+            3853
+          ],
+          "required_source_literals": [
+            "getitem Poison_Bottle,2;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_lou_in02_employee_poison_branch_for_3413_4005",
+      "unit": "E1-lou_in02_employee_poison_branch_for_3413",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Employee#poison"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Poison_Bottle,3; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_louyang.txt",
+          "lines": [
+            4005
+          ],
+          "required_source_literals": [
+            "getitem Poison_Bottle,3;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_lou_in02_employee_poison_branch_for_3413_4083",
+      "unit": "E1-lou_in02_employee_poison_branch_for_3413",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Employee#poison"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Poison_Bottle,5; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_louyang.txt",
+          "lines": [
+            4083
+          ],
+          "required_source_literals": [
+            "getitem Poison_Bottle,5;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
