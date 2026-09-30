@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 169,
+    "E1_unknown": 171,
     "E1_verified": 1
   },
   "entries": [
@@ -3154,6 +3154,56 @@
           ],
           "required_source_literals": [
             "getitem(Manuk_Coin, 10);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_in02_hunter_htngm2_branch_for_755_805",
+      "unit": "E1-payon_in02_hunter_htngm2_branch_for_755",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Hunter#htnGM2"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Silver_Arrow,200; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-1/hunter.txt",
+          "lines": [
+            805
+          ],
+          "required_source_literals": [
+            "getitem Silver_Arrow,200;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_in02_hunter_htngm2_branch_for_755_924",
+      "unit": "E1-payon_in02_hunter_htngm2_branch_for_755",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Hunter#htnGM2"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Penetration,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-1/hunter.txt",
+          "lines": [
+            924
+          ],
+          "required_source_literals": [
+            "getitem Penetration,1;"
           ]
         }
       ],
