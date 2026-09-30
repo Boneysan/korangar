@@ -40376,6 +40376,31 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_hu_in01_allen_schuwell_branch_for_40_157",
+      "unit": "E1-hu_in01_allen_schuwell_branch_for_40",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Allen Schuwell"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem White_Potion,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_hugel.txt",
+          "lines": [
+            157
+          ],
+          "required_source_literals": [
+            "delitem White_Potion,1; //White potion"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
