@@ -50326,6 +50326,81 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prt_in_recruiter_branch_for_53_138",
+      "unit": "E1-prt_in_recruiter_branch_for_53",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Recruiter"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Red_Potion,3; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_prontera.txt",
+          "lines": [
+            138
+          ],
+          "required_source_literals": [
+            "getitem Red_Potion,3;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prt_in_recruiter_branch_for_53_139",
+      "unit": "E1-prt_in_recruiter_branch_for_53",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Recruiter"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Milk,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_prontera.txt",
+          "lines": [
+            139
+          ],
+          "required_source_literals": [
+            "getitem Milk,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prt_in_recruiter_branch_for_53_140",
+      "unit": "E1-prt_in_recruiter_branch_for_53",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Recruiter"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Orange_Potion,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_prontera.txt",
+          "lines": [
+            140
+          ],
+          "required_source_literals": [
+            "getitem Orange_Potion,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
