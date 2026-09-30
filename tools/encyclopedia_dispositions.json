@@ -108974,6 +108974,195 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_1433_script_untranslated",
+      "unit": "E3-unknown-bonus2-bskillatk-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          1433
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 1433 is not summarized: the translator does not interpret the quoted statement (bonus2 bSkillAtk (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            12410
+          ],
+          "required_source_literals": [
+            "bonus2 bSkillAtk,LG_CANNONSPEAR,20+getrefine()/2;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_5547_script_untranslated",
+      "unit": "E3-unknown-bonus2-bskillatk-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          5547
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 5547 is not summarized: the translator does not interpret the quoted statement (bonus2 bSkillAtk (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            62450
+          ],
+          "required_source_literals": [
+            "bonus2 bSkillAtk,WZ_HEAVENDRIVE,15+getequiprefinerycnt(EQI_HAND_R);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_5906_script_untranslated",
+      "unit": "E3-unknown-bonus2-bskillatk-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          5906
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 5906 is not summarized: the translator does not interpret the quoted statement (bonus2 bSkillAtk (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            68135
+          ],
+          "required_source_literals": [
+            "bonus2 bSkillAtk,GC_COUNTERSLASH,getskilllv(GC_WEAPONBLOCKING)*10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_18109_script_untranslated",
+      "unit": "E3-unknown-bonus2-bskillatk-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          18109
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 18109 is not summarized: the translator does not interpret the quoted statement (bonus2 bSkillAtk (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            132011
+          ],
+          "required_source_literals": [
+            "bonus2 bSkillAtk,SC_TRIANGLESHOT,(getrefine()*2);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_18110_script_untranslated",
+      "unit": "E3-unknown-bonus2-bskillatk-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          18110
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 18110 is not summarized: the translator does not interpret the quoted statement (bonus2 bSkillAtk (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            132034
+          ],
+          "required_source_literals": [
+            "bonus2 bSkillAtk,RA_ARROWSTORM,(getrefine()*5);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_18791_script_untranslated",
+      "unit": "E3-unknown-bonus2-bskillatk-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          18791
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 18791 is not summarized: the translator does not interpret the quoted statement (bonus2 bSkillAtk (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            137343
+          ],
+          "required_source_literals": [
+            "bonus2 bSkillAtk,PR_MAGNUS,(getrefine()/2)*5;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_27182_script_untranslated",
+      "unit": "E3-unknown-bonus2-bskillatk-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          27182
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 27182 is not summarized: the translator does not interpret the quoted statement (bonus2 bSkillAtk (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            155624
+          ],
+          "required_source_literals": [
+            "bonus2(bSkillAtk, RL_AM_BLAST, getrefine() >= 10 ? 60 : 30);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
