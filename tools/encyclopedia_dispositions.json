@@ -2201,6 +2201,31 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_jawaii_honeymoon_helper_jawaii_branch_for_391_419",
+      "unit": "E1-jawaii_honeymoon_helper_jawaii_branch_for_391",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Honeymoon Helper#Jawaii"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Memory_Of_Wedding,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/cities/jawaii.txt",
+          "lines": [
+            419
+          ],
+          "required_source_literals": [
+            "getitem Memory_Of_Wedding,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
