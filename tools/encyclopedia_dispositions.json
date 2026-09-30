@@ -62676,6 +62676,31 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_tha_t03_rune_device_tt1_branch_for_933_990",
+      "unit": "E1-tha_t03_rune_device_tt1_branch_for_933",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Rune Device#tt1"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Key_Red,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/thana_quest.txt",
+          "lines": [
+            990
+          ],
+          "required_source_literals": [
+            "getitem Key_Red,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
