@@ -4876,6 +4876,56 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_alde_alche_alchemist_guildsman_am_branch_for_41_271",
+      "unit": "E1-alde_alche_alchemist_guildsman_am_branch_for_41",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Alchemist Guildsman#am"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Old_Magic_Book,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/alchemist.txt",
+          "lines": [
+            271
+          ],
+          "required_source_literals": [
+            "delitem Old_Magic_Book,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_alde_alche_alchemist_guildsman_am_branch_for_41_272",
+      "unit": "E1-alde_alche_alchemist_guildsman_am_branch_for_41",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Alchemist Guildsman#am"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Hammer_Of_Blacksmith,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/alchemist.txt",
+          "lines": [
+            272
+          ],
+          "required_source_literals": [
+            "delitem Hammer_Of_Blacksmith,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
