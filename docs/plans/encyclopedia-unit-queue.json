@@ -4838,7 +4838,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "strong",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Ei'felle#repay01",
@@ -4857,7 +4857,25 @@
       ],
       "size_lines": 693,
       "reason": "refused by the braced one-item prover: braceless",
-      "history": []
+      "history": [
+        "2026-09-30T14:40:57Z activated",
+        "2026-09-30T14:40:57Z validated",
+        "2026-09-30T14:40:57Z verified: 4 claims supported",
+        "2026-09-30T14:41:20Z accepted",
+        "2026-09-30T14:41:20Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "0435c3fbc37fd3acc7c051e3ade0705d0f2c00b7667d4a2bf01be6f18e1fa5ef",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-poring_w01_poring_vending_machine_w_branch_for_89",

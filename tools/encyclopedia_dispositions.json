@@ -9376,6 +9376,106 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ein_in01_ei_felle_repay01_branch_for_1987_2334",
+      "unit": "E1-ein_in01_ei_felle_repay01_branch_for_1987",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Ei'felle#repay01"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Marvelous_Medal,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/other/monster_race.txt",
+          "lines": [
+            2334
+          ],
+          "required_source_literals": [
+            "delitem Marvelous_Medal,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ein_in01_ei_felle_repay01_branch_for_1987_2396",
+      "unit": "E1-ein_in01_ei_felle_repay01_branch_for_1987",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Ei'felle#repay01"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Marvelous_Medal,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/other/monster_race.txt",
+          "lines": [
+            2396
+          ],
+          "required_source_literals": [
+            "delitem Marvelous_Medal,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ein_in01_ei_felle_repay01_branch_for_1987_2521",
+      "unit": "E1-ein_in01_ei_felle_repay01_branch_for_1987",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Ei'felle#repay01"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Marvelous_Medal,.@medals; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/other/monster_race.txt",
+          "lines": [
+            2521
+          ],
+          "required_source_literals": [
+            "delitem Marvelous_Medal,.@medals;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ein_in01_ei_felle_repay01_branch_for_1987_2572",
+      "unit": "E1-ein_in01_ei_felle_repay01_branch_for_1987",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Ei'felle#repay01"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Marvelous_Medal,.@input; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/other/monster_race.txt",
+          "lines": [
+            2572
+          ],
+          "required_source_literals": [
+            "delitem Marvelous_Medal,.@input;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
