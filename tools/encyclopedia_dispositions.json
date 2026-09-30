@@ -27701,6 +27701,131 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mid_camp_monster_scholar_ep13_branch_for_3670_3960",
+      "unit": "E1-mid_camp_monster_scholar_ep13_branch_for_3670",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Monster Scholar#ep13"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Strong_Bine,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_1.txt",
+          "lines": [
+            3960
+          ],
+          "required_source_literals": [
+            "delitem Strong_Bine,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mid_camp_monster_scholar_ep13_branch_for_3670_4062",
+      "unit": "E1-mid_camp_monster_scholar_ep13_branch_for_3670",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Monster Scholar#ep13"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Empty_Bottle,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_1.txt",
+          "lines": [
+            4062
+          ],
+          "required_source_literals": [
+            "delitem Empty_Bottle,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mid_camp_monster_scholar_ep13_branch_for_3670_4063",
+      "unit": "E1-mid_camp_monster_scholar_ep13_branch_for_3670",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Monster Scholar#ep13"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Holy_Water,5; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_1.txt",
+          "lines": [
+            4063
+          ],
+          "required_source_literals": [
+            "delitem Holy_Water,5;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mid_camp_monster_scholar_ep13_branch_for_3670_4064",
+      "unit": "E1-mid_camp_monster_scholar_ep13_branch_for_3670",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Monster Scholar#ep13"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Sticky_Mucus,30; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_1.txt",
+          "lines": [
+            4064
+          ],
+          "required_source_literals": [
+            "delitem Sticky_Mucus,30;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mid_camp_monster_scholar_ep13_branch_for_3670_4326",
+      "unit": "E1-mid_camp_monster_scholar_ep13_branch_for_3670",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Monster Scholar#ep13"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Horn_Of_Tendrilion,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_1.txt",
+          "lines": [
+            4326
+          ],
+          "required_source_literals": [
+            "delitem Horn_Of_Tendrilion,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
