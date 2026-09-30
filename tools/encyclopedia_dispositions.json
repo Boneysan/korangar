@@ -1526,6 +1526,206 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_bat_a01_croix_vintenar_a01_b_branch_for_795_806",
+      "unit": "E1-bat_a01_croix_vintenar_a01_b_branch_for_795",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Croix Vintenar#a01_b"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem BF_Badge1,3; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/battleground/tierra/tierra01.txt",
+          "lines": [
+            806
+          ],
+          "required_source_literals": [
+            "getitem BF_Badge1,3;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_bat_a01_croix_vintenar_a01_b_branch_for_795_814",
+      "unit": "E1-bat_a01_croix_vintenar_a01_b_branch_for_795",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Croix Vintenar#a01_b"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem BF_Badge1,.@medal_gap; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/battleground/tierra/tierra01.txt",
+          "lines": [
+            814
+          ],
+          "required_source_literals": [
+            "getitem BF_Badge1,.@medal_gap;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_bat_a01_croix_vintenar_a01_b_branch_for_795_826",
+      "unit": "E1-bat_a01_croix_vintenar_a01_b_branch_for_795",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Croix Vintenar#a01_b"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem BF_Badge1,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/battleground/tierra/tierra01.txt",
+          "lines": [
+            826
+          ],
+          "required_source_literals": [
+            "getitem BF_Badge1,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_bat_a01_croix_vintenar_a01_b_branch_for_795_834",
+      "unit": "E1-bat_a01_croix_vintenar_a01_b_branch_for_795",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Croix Vintenar#a01_b"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem BF_Badge1,.@medal_gap; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/battleground/tierra/tierra01.txt",
+          "lines": [
+            834
+          ],
+          "required_source_literals": [
+            "getitem BF_Badge1,.@medal_gap;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_bat_a01_croix_vintenar_a01_b_branch_for_795_848",
+      "unit": "E1-bat_a01_croix_vintenar_a01_b_branch_for_795",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Croix Vintenar#a01_b"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem BF_Badge1,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/battleground/tierra/tierra01.txt",
+          "lines": [
+            848
+          ],
+          "required_source_literals": [
+            "getitem BF_Badge1,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_bat_a01_croix_vintenar_a01_b_branch_for_795_856",
+      "unit": "E1-bat_a01_croix_vintenar_a01_b_branch_for_795",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Croix Vintenar#a01_b"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem BF_Badge1,.@medal_gap; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/battleground/tierra/tierra01.txt",
+          "lines": [
+            856
+          ],
+          "required_source_literals": [
+            "getitem BF_Badge1,.@medal_gap;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_bat_a01_croix_vintenar_a01_b_branch_for_795_868",
+      "unit": "E1-bat_a01_croix_vintenar_a01_b_branch_for_795",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Croix Vintenar#a01_b"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem BF_Badge1,3; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/battleground/tierra/tierra01.txt",
+          "lines": [
+            868
+          ],
+          "required_source_literals": [
+            "getitem BF_Badge1,3;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_bat_a01_croix_vintenar_a01_b_branch_for_795_876",
+      "unit": "E1-bat_a01_croix_vintenar_a01_b_branch_for_795",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Croix Vintenar#a01_b"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem BF_Badge1,.@medal_gap; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/battleground/tierra/tierra01.txt",
+          "lines": [
+            876
+          ],
+          "required_source_literals": [
+            "getitem BF_Badge1,.@medal_gap;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
