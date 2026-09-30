@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 1860,
+    "E1_unknown": 1863,
     "E1_verified": 1
   },
   "entries": [
@@ -26729,6 +26729,81 @@
           ],
           "required_source_literals": [
             "delitem Yaga_Secret_Medicine,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_moscovia_the_blacksmith_rus06_branch_for_7469_7598",
+      "unit": "E1-moscovia_the_blacksmith_rus06_branch_for_7469",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "The Blacksmith#rus06"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Steel,25; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_moscovia.txt",
+          "lines": [
+            7598
+          ],
+          "required_source_literals": [
+            "delitem Steel,25;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_moscovia_the_blacksmith_rus06_branch_for_7469_7602",
+      "unit": "E1-moscovia_the_blacksmith_rus06_branch_for_7469",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "The Blacksmith#rus06"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Iron_Boots01,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_moscovia.txt",
+          "lines": [
+            7602
+          ],
+          "required_source_literals": [
+            "if (BaseClass == Job_Merchant || BaseClass == Job_Swordman || BaseClass == Job_Thief || BaseClass == Job_Archer) getitem Iron_Boots01,1; else getitem Iron_Boots02,1; close;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_moscovia_the_blacksmith_rus06_branch_for_7469_7661",
+      "unit": "E1-moscovia_the_blacksmith_rus06_branch_for_7469",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "The Blacksmith#rus06"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Iron_Boots01,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_moscovia.txt",
+          "lines": [
+            7661
+          ],
+          "required_source_literals": [
+            "if (countitem(Iron_Boots01)) delitem Iron_Boots01,1; else delitem Iron_Boots02,1;"
           ]
         }
       ],
