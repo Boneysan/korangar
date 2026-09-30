@@ -12,7 +12,7 @@
     "E2_verified": 236,
     "E3_unknown": 973,
     "E4_unknown": 213,
-    "E5_unknown": 117
+    "E5_unknown": 120
   },
   "entries": [
     {
@@ -104528,6 +104528,87 @@
           ],
           "required_source_literals": [
             "changequest 3026,3028;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_3027_npc_jobs_2_2_monk_txt_2071",
+      "unit": "E5-chain-3027",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          3027
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 3027; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/monk.txt",
+          "lines": [
+            2071
+          ],
+          "required_source_literals": [
+            "changequest 3027,3028;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_3027_npc_jobs_2_2_monk_txt_2118",
+      "unit": "E5-chain-3027",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          3027
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 3027; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/monk.txt",
+          "lines": [
+            2118
+          ],
+          "required_source_literals": [
+            "changequest 3027,3028;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_3027_npc_jobs_2_2_monk_txt_2130",
+      "unit": "E5-chain-3027",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          3027
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 3027; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/monk.txt",
+          "lines": [
+            2130
+          ],
+          "required_source_literals": [
+            "changequest 3027,3029;"
           ]
         }
       ],
