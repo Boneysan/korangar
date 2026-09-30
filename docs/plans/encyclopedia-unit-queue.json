@@ -30542,7 +30542,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "strong",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Guest Lecturer Mayssel#0",
@@ -30561,7 +30561,25 @@
       ],
       "size_lines": 658,
       "reason": "refused by the braced one-item prover: braceless",
-      "history": []
+      "history": [
+        "2026-09-30T18:37:26Z activated",
+        "2026-09-30T18:37:27Z validated",
+        "2026-09-30T18:37:27Z verified: 9 claims supported",
+        "2026-09-30T18:37:50Z accepted",
+        "2026-09-30T18:37:50Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "11d06100d09bed638e6ddb9ebc3274cd7a803a564da04d13e8c84ac09999b445",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-iz_ac02_vicente_ac_branch_for_10865",

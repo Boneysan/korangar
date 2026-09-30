@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 2866,
+    "E1_unknown": 2875,
     "E1_verified": 1
   },
   "entries": [
@@ -19979,6 +19979,231 @@
           ],
           "required_source_literals": [
             "getitem(Archer_Manual, 1); // Archer_Manual"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_iz_ac02_guest_lecturer_mayssel_0_branch_for_10204_10335",
+      "unit": "E1-iz_ac02_guest_lecturer_mayssel_0_branch_for_10204",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Guest Lecturer Mayssel#0"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Novice_Potion,30; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            10335
+          ],
+          "required_source_literals": [
+            "getitem(Novice_Potion, 30); // Novice_Potion"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_iz_ac02_guest_lecturer_mayssel_0_branch_for_10204_10336",
+      "unit": "E1-iz_ac02_guest_lecturer_mayssel_0_branch_for_10204",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Guest Lecturer Mayssel#0"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem N_Magnifier,20; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            10336
+          ],
+          "required_source_literals": [
+            "getitem(N_Magnifier, 20); // N_Magnifier"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_iz_ac02_guest_lecturer_mayssel_0_branch_for_10204_10352",
+      "unit": "E1-iz_ac02_guest_lecturer_mayssel_0_branch_for_10204",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Guest Lecturer Mayssel#0"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Thief_Manual,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            10352
+          ],
+          "required_source_literals": [
+            "getitem(Thief_Manual, 1); // Thief_Manual"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_iz_ac02_guest_lecturer_mayssel_0_branch_for_10204_10409",
+      "unit": "E1-iz_ac02_guest_lecturer_mayssel_0_branch_for_10204",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Guest Lecturer Mayssel#0"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Novice_Potion,30; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            10409
+          ],
+          "required_source_literals": [
+            "getitem(Novice_Potion, 30); // Novice_Potion"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_iz_ac02_guest_lecturer_mayssel_0_branch_for_10204_10410",
+      "unit": "E1-iz_ac02_guest_lecturer_mayssel_0_branch_for_10204",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Guest Lecturer Mayssel#0"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem N_Magnifier,20; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            10410
+          ],
+          "required_source_literals": [
+            "getitem(N_Magnifier, 20); // N_Magnifier"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_iz_ac02_guest_lecturer_mayssel_0_branch_for_10204_10426",
+      "unit": "E1-iz_ac02_guest_lecturer_mayssel_0_branch_for_10204",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Guest Lecturer Mayssel#0"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Thief_Manual,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            10426
+          ],
+          "required_source_literals": [
+            "getitem(Thief_Manual, 1); // Thief_Manual"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_iz_ac02_guest_lecturer_mayssel_0_branch_for_10204_10457",
+      "unit": "E1-iz_ac02_guest_lecturer_mayssel_0_branch_for_10204",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Guest Lecturer Mayssel#0"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Novice_Potion,30; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            10457
+          ],
+          "required_source_literals": [
+            "getitem(Novice_Potion, 30); // Novice_Potion"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_iz_ac02_guest_lecturer_mayssel_0_branch_for_10204_10458",
+      "unit": "E1-iz_ac02_guest_lecturer_mayssel_0_branch_for_10204",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Guest Lecturer Mayssel#0"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem N_Magnifier,20; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            10458
+          ],
+          "required_source_literals": [
+            "getitem(N_Magnifier, 20); // N_Magnifier"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_iz_ac02_guest_lecturer_mayssel_0_branch_for_10204_10497",
+      "unit": "E1-iz_ac02_guest_lecturer_mayssel_0_branch_for_10204",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Guest Lecturer Mayssel#0"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Thief_Manual,countitem(Thief_Manual; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            10497
+          ],
+          "required_source_literals": [
+            "delitem(Thief_Manual, countitem(Thief_Manual)); // Thief_Manual"
           ]
         }
       ],
