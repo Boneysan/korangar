@@ -36351,6 +36351,31 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ama_in01_grandma_ama2_branch_for_1916_1956",
+      "unit": "E1-ama_in01_grandma_ama2_branch_for_1916",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Grandma#ama2"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Fox_Tail,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_amatsu.txt",
+          "lines": [
+            1956
+          ],
+          "required_source_literals": [
+            "getitem Fox_Tail,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
