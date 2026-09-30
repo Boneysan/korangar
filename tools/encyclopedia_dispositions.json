@@ -60601,6 +60601,31 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_moc_pryd04_glimmer_crypt_branch_for_976_1004",
+      "unit": "E1-moc_pryd04_glimmer_crypt_branch_for_976",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Glimmer#crypt"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Skyblue_Jewel,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/skills/assassin_skills.txt",
+          "lines": [
+            1004
+          ],
+          "required_source_literals": [
+            "getitem Skyblue_Jewel,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
