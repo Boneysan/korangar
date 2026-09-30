@@ -14951,6 +14951,81 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_kh_vila_bookshelf_khp1_branch_for_2512_2582",
+      "unit": "E1-kh_vila_bookshelf_khp1_branch_for_2512",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Bookshelf#khp1"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Villa_Spare_Key,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/kiel_hyre_quest.txt",
+          "lines": [
+            2582
+          ],
+          "required_source_literals": [
+            "delitem Villa_Spare_Key,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_kh_vila_bookshelf_khp1_branch_for_2512_2583",
+      "unit": "E1-kh_vila_bookshelf_khp1_branch_for_2512",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Bookshelf#khp1"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Green_Key_Card,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/kiel_hyre_quest.txt",
+          "lines": [
+            2583
+          ],
+          "required_source_literals": [
+            "delitem Green_Key_Card,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_kh_vila_bookshelf_khp1_branch_for_2512_2584",
+      "unit": "E1-kh_vila_bookshelf_khp1_branch_for_2512",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Bookshelf#khp1"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Iron_Box,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/kiel_hyre_quest.txt",
+          "lines": [
+            2584
+          ],
+          "required_source_literals": [
+            "getitem Iron_Box,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
