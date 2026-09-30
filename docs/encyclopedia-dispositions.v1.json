@@ -8,7 +8,7 @@
     "E1_not_applicable": 1,
     "E1_unknown": 3464,
     "E1_verified": 1,
-    "E3_unknown": 963
+    "E3_unknown": 964
   },
   "entries": [
     {
@@ -104712,6 +104712,33 @@
           ],
           "required_source_literals": [
             "bonus bCritical,(readparam(bLuk)/10);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_31022_script_untranslated",
+      "unit": "E3-unknown-bonus2-baddeff2-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          31022
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 31022 is not summarized: the translator does not interpret the quoted statement (bonus2 bAddEff2 (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            158189
+          ],
+          "required_source_literals": [
+            "bonus2(bAddEff2, Eff_Curse, 20);"
           ]
         }
       ],
