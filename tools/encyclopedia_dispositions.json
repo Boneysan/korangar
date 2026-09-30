@@ -79226,6 +79226,31 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ecl_fild01_balumin_eclage_branch_for_6310_6420",
+      "unit": "E1-ecl_fild01_balumin_eclage_branch_for_6310",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Balumin#eclage"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Pile_Of_Acorn,20; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "lines": [
+            6420
+          ],
+          "required_source_literals": [
+            "getitem Pile_Of_Acorn,20; //Pile_Of_Acorn"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }

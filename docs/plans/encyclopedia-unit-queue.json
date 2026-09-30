@@ -34655,7 +34655,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Balumin#eclage",
@@ -34674,7 +34674,25 @@
       ],
       "size_lines": 121,
       "reason": "refused by the braced one-item prover: menu",
-      "history": []
+      "history": [
+        "2026-09-30T19:15:26Z activated",
+        "2026-09-30T19:15:27Z validated",
+        "2026-09-30T19:15:27Z verified: 1 claims supported",
+        "2026-09-30T19:15:50Z accepted",
+        "2026-09-30T19:15:50Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "c20e41242dbf5f6373384338b83d9d728077766d9b99c5135d1e2f8a9e7ad4d3",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-eclage_wandering_merchant_ecl_branch_for_6432",
