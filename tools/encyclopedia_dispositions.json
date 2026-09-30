@@ -3726,6 +3726,256 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_in_moc_16_guildmaster_asn2_branch_for_1636_2070",
+      "unit": "E1-in_moc_16_guildmaster_asn2_branch_for_1636",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Guildmaster#ASN2"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Jur_,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-1/assassin.txt",
+          "lines": [
+            2070
+          ],
+          "required_source_literals": [
+            "getitem Jur_,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_in_moc_16_guildmaster_asn2_branch_for_1636_2079",
+      "unit": "E1-in_moc_16_guildmaster_asn2_branch_for_1636",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Guildmaster#ASN2"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Katar_,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-1/assassin.txt",
+          "lines": [
+            2079
+          ],
+          "required_source_literals": [
+            "getitem Katar_,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_in_moc_16_guildmaster_asn2_branch_for_1636_2084",
+      "unit": "E1-in_moc_16_guildmaster_asn2_branch_for_1636",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Guildmaster#ASN2"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Main_Gauche_,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-1/assassin.txt",
+          "lines": [
+            2084
+          ],
+          "required_source_literals": [
+            "getitem Main_Gauche_,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_in_moc_16_guildmaster_asn2_branch_for_1636_2090",
+      "unit": "E1-in_moc_16_guildmaster_asn2_branch_for_1636",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Guildmaster#ASN2"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Gladius_,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-1/assassin.txt",
+          "lines": [
+            2090
+          ],
+          "required_source_literals": [
+            "getitem Gladius_,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_in_moc_16_guildmaster_asn2_branch_for_1636_2102",
+      "unit": "E1-in_moc_16_guildmaster_asn2_branch_for_1636",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Guildmaster#ASN2"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Main_Gauche,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-1/assassin.txt",
+          "lines": [
+            2102
+          ],
+          "required_source_literals": [
+            "getitem Main_Gauche,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_in_moc_16_guildmaster_asn2_branch_for_1636_2105",
+      "unit": "E1-in_moc_16_guildmaster_asn2_branch_for_1636",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Guildmaster#ASN2"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Jur,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-1/assassin.txt",
+          "lines": [
+            2105
+          ],
+          "required_source_literals": [
+            "getitem Jur,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_in_moc_16_guildmaster_asn2_branch_for_1636_2108",
+      "unit": "E1-in_moc_16_guildmaster_asn2_branch_for_1636",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Guildmaster#ASN2"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Stiletto,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-1/assassin.txt",
+          "lines": [
+            2108
+          ],
+          "required_source_literals": [
+            "getitem Stiletto,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_in_moc_16_guildmaster_asn2_branch_for_1636_2111",
+      "unit": "E1-in_moc_16_guildmaster_asn2_branch_for_1636",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Guildmaster#ASN2"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Knife,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-1/assassin.txt",
+          "lines": [
+            2111
+          ],
+          "required_source_literals": [
+            "getitem Knife,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_in_moc_16_guildmaster_asn2_branch_for_1636_2114",
+      "unit": "E1-in_moc_16_guildmaster_asn2_branch_for_1636",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Guildmaster#ASN2"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Katar,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-1/assassin.txt",
+          "lines": [
+            2114
+          ],
+          "required_source_literals": [
+            "getitem Katar,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_in_moc_16_guildmaster_asn2_branch_for_1636_2126",
+      "unit": "E1-in_moc_16_guildmaster_asn2_branch_for_1636",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Guildmaster#ASN2"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Frozen_Heart,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-1/assassin.txt",
+          "lines": [
+            2126
+          ],
+          "required_source_literals": [
+            "getitem Frozen_Heart,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
