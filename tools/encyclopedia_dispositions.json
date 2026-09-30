@@ -68676,6 +68676,406 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_spl_in02_assistant_warlock2_branch_for_469_500",
+      "unit": "E1-spl_in02_assistant_warlock2_branch_for_469",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Assistant#Warlock2"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Rainbow_Ruby_Water,5; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-1/warlock.txt",
+          "lines": [
+            500
+          ],
+          "required_source_literals": [
+            "getitem Rainbow_Ruby_Water,5;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_spl_in02_assistant_warlock2_branch_for_469_501",
+      "unit": "E1-spl_in02_assistant_warlock2_branch_for_469",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Assistant#Warlock2"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Rainbow_Ruby_Wind,5; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-1/warlock.txt",
+          "lines": [
+            501
+          ],
+          "required_source_literals": [
+            "getitem Rainbow_Ruby_Wind,5;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_spl_in02_assistant_warlock2_branch_for_469_502",
+      "unit": "E1-spl_in02_assistant_warlock2_branch_for_469",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Assistant#Warlock2"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Rainbow_Ruby_Earth,5; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-1/warlock.txt",
+          "lines": [
+            502
+          ],
+          "required_source_literals": [
+            "getitem Rainbow_Ruby_Earth,5;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_spl_in02_assistant_warlock2_branch_for_469_503",
+      "unit": "E1-spl_in02_assistant_warlock2_branch_for_469",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Assistant#Warlock2"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Rainbow_Ruby_Fire,5; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-1/warlock.txt",
+          "lines": [
+            503
+          ],
+          "required_source_literals": [
+            "getitem Rainbow_Ruby_Fire,5;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_spl_in02_assistant_warlock2_branch_for_469_517",
+      "unit": "E1-spl_in02_assistant_warlock2_branch_for_469",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Assistant#Warlock2"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Rainbow_Ruby_Water,countitem(Rainbow_Ruby_Water; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-1/warlock.txt",
+          "lines": [
+            517
+          ],
+          "required_source_literals": [
+            "if (countitem(Rainbow_Ruby_Water)) delitem Rainbow_Ruby_Water,countitem(Rainbow_Ruby_Water);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_spl_in02_assistant_warlock2_branch_for_469_518",
+      "unit": "E1-spl_in02_assistant_warlock2_branch_for_469",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Assistant#Warlock2"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Rainbow_Ruby_Wind,countitem(Rainbow_Ruby_Wind; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-1/warlock.txt",
+          "lines": [
+            518
+          ],
+          "required_source_literals": [
+            "if (countitem(Rainbow_Ruby_Wind)) delitem Rainbow_Ruby_Wind,countitem(Rainbow_Ruby_Wind);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_spl_in02_assistant_warlock2_branch_for_469_519",
+      "unit": "E1-spl_in02_assistant_warlock2_branch_for_469",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Assistant#Warlock2"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Rainbow_Ruby_Earth,countitem(Rainbow_Ruby_Earth; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-1/warlock.txt",
+          "lines": [
+            519
+          ],
+          "required_source_literals": [
+            "if (countitem(Rainbow_Ruby_Earth)) delitem Rainbow_Ruby_Earth,countitem(Rainbow_Ruby_Earth);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_spl_in02_assistant_warlock2_branch_for_469_520",
+      "unit": "E1-spl_in02_assistant_warlock2_branch_for_469",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Assistant#Warlock2"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Rainbow_Ruby_Fire,countitem(Rainbow_Ruby_Fire; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-1/warlock.txt",
+          "lines": [
+            520
+          ],
+          "required_source_literals": [
+            "if (countitem(Rainbow_Ruby_Fire)) delitem Rainbow_Ruby_Fire,countitem(Rainbow_Ruby_Fire);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_spl_in02_assistant_warlock2_branch_for_469_521",
+      "unit": "E1-spl_in02_assistant_warlock2_branch_for_469",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Assistant#Warlock2"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Rainbow_Ruby_Water,5; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-1/warlock.txt",
+          "lines": [
+            521
+          ],
+          "required_source_literals": [
+            "getitem Rainbow_Ruby_Water,5;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_spl_in02_assistant_warlock2_branch_for_469_522",
+      "unit": "E1-spl_in02_assistant_warlock2_branch_for_469",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Assistant#Warlock2"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Rainbow_Ruby_Wind,5; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-1/warlock.txt",
+          "lines": [
+            522
+          ],
+          "required_source_literals": [
+            "getitem Rainbow_Ruby_Wind,5;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_spl_in02_assistant_warlock2_branch_for_469_523",
+      "unit": "E1-spl_in02_assistant_warlock2_branch_for_469",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Assistant#Warlock2"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Rainbow_Ruby_Earth,5; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-1/warlock.txt",
+          "lines": [
+            523
+          ],
+          "required_source_literals": [
+            "getitem Rainbow_Ruby_Earth,5;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_spl_in02_assistant_warlock2_branch_for_469_524",
+      "unit": "E1-spl_in02_assistant_warlock2_branch_for_469",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Assistant#Warlock2"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Rainbow_Ruby_Fire,5; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-1/warlock.txt",
+          "lines": [
+            524
+          ],
+          "required_source_literals": [
+            "getitem Rainbow_Ruby_Fire,5;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_spl_in02_assistant_warlock2_branch_for_469_532",
+      "unit": "E1-spl_in02_assistant_warlock2_branch_for_469",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Assistant#Warlock2"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Rainbow_Ruby_Water,countitem(Rainbow_Ruby_Water; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-1/warlock.txt",
+          "lines": [
+            532
+          ],
+          "required_source_literals": [
+            "if (countitem(Rainbow_Ruby_Water)) delitem Rainbow_Ruby_Water,countitem(Rainbow_Ruby_Water);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_spl_in02_assistant_warlock2_branch_for_469_533",
+      "unit": "E1-spl_in02_assistant_warlock2_branch_for_469",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Assistant#Warlock2"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Rainbow_Ruby_Wind,countitem(Rainbow_Ruby_Wind; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-1/warlock.txt",
+          "lines": [
+            533
+          ],
+          "required_source_literals": [
+            "if (countitem(Rainbow_Ruby_Wind)) delitem Rainbow_Ruby_Wind,countitem(Rainbow_Ruby_Wind);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_spl_in02_assistant_warlock2_branch_for_469_534",
+      "unit": "E1-spl_in02_assistant_warlock2_branch_for_469",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Assistant#Warlock2"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Rainbow_Ruby_Earth,countitem(Rainbow_Ruby_Earth; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-1/warlock.txt",
+          "lines": [
+            534
+          ],
+          "required_source_literals": [
+            "if (countitem(Rainbow_Ruby_Earth)) delitem Rainbow_Ruby_Earth,countitem(Rainbow_Ruby_Earth);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_spl_in02_assistant_warlock2_branch_for_469_535",
+      "unit": "E1-spl_in02_assistant_warlock2_branch_for_469",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Assistant#Warlock2"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Rainbow_Ruby_Fire,countitem(Rainbow_Ruby_Fire; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-1/warlock.txt",
+          "lines": [
+            535
+          ],
+          "required_source_literals": [
+            "if (countitem(Rainbow_Ruby_Fire)) delitem Rainbow_Ruby_Fire,countitem(Rainbow_Ruby_Fire);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }

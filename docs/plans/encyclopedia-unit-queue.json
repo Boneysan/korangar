@@ -28784,7 +28784,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Assistant#Warlock2",
@@ -28803,7 +28803,25 @@
       ],
       "size_lines": 90,
       "reason": "refused by the braced one-item prover: braceless",
-      "history": []
+      "history": [
+        "2026-09-30T18:21:17Z activated",
+        "2026-09-30T18:21:17Z validated",
+        "2026-09-30T18:21:18Z verified: 16 claims supported",
+        "2026-09-30T18:21:41Z accepted",
+        "2026-09-30T18:21:41Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "2ede017165f73c9ff1144eab34e63fa90ebd34e8eaa2474f1b9e46641aea8687",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-spl_in02_guild_master_warlock_branch_for_587",
