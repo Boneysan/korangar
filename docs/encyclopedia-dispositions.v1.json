@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 3056,
+    "E1_unknown": 3060,
     "E1_verified": 1
   },
   "entries": [
@@ -9629,6 +9629,106 @@
           ],
           "required_source_literals": [
             "getitem Leaf_Cat_Ball,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_brasilis_shaman_nk_branch_for_2814_2849",
+      "unit": "E1-brasilis_shaman_nk_branch_for_2814",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Shaman#nk"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Heart_Of_Mermaid,20; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_brasilis.txt",
+          "lines": [
+            2849
+          ],
+          "required_source_literals": [
+            "delitem Heart_Of_Mermaid,20;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_brasilis_shaman_nk_branch_for_2814_2850",
+      "unit": "E1-brasilis_shaman_nk_branch_for_2814",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Shaman#nk"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Leopard_Talon,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_brasilis.txt",
+          "lines": [
+            2850
+          ],
+          "required_source_literals": [
+            "delitem Leopard_Talon,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_brasilis_shaman_nk_branch_for_2814_2851",
+      "unit": "E1-brasilis_shaman_nk_branch_for_2814",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Shaman#nk"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Lip_Of_Ancient_Fish,3; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_brasilis.txt",
+          "lines": [
+            2851
+          ],
+          "required_source_literals": [
+            "delitem Lip_Of_Ancient_Fish,3;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_brasilis_shaman_nk_branch_for_2814_2852",
+      "unit": "E1-brasilis_shaman_nk_branch_for_2814",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Shaman#nk"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Puri_Potion,2; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_brasilis.txt",
+          "lines": [
+            2852
+          ],
+          "required_source_literals": [
+            "getitem Puri_Potion,2;"
           ]
         }
       ],
