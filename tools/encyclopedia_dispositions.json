@@ -112970,6 +112970,33 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_1647_script_untranslated",
+      "unit": "E3-unknown-bonus4-bautospellonskill-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          1647
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 1647 is not summarized: the translator does not interpret the quoted statement (bonus4 bAutoSpellOnSkill (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            17746
+          ],
+          "required_source_literals": [
+            "bonus4 bAutoSpellOnSkill,AL_HEAL,AL_BLESSING,max(getskilllv(AL_BLESSING),1),20;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }

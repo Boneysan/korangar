@@ -57010,7 +57010,7 @@
       "package": "E3",
       "kind": "e3_dispose",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "key": "bonus4 bAutoSpellOnSkill (expression)",
@@ -57036,7 +57036,25 @@
       ],
       "size_lines": 1,
       "reason": "1 item script(s) first stop at `bonus4 bAutoSpellOnSkill (expression)`, which is control flow or undocumented",
-      "history": []
+      "history": [
+        "2026-09-30T20:43:10Z activated",
+        "2026-09-30T20:43:10Z validated",
+        "2026-09-30T20:43:10Z verification not required: tool-drafted, no behavior claim",
+        "2026-09-30T20:43:34Z accepted",
+        "2026-09-30T20:43:34Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "151f892ff239382a18cebbf2d9284337dbb324ead938c51d8cc7a23a4b97fa7c",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E2-npc-merchants-shops-txt-53",
