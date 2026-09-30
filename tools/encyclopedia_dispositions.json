@@ -112025,6 +112025,60 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_4369_script_untranslated",
+      "unit": "E3-unknown-bonus-bluk-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          4369
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 4369 is not summarized: the translator does not interpret the quoted statement (bonus bLuk (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            45829
+          ],
+          "required_source_literals": [
+            "Script: <\" bonus bLuk,readparam(bAgi)/18; \">"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_4373_script_untranslated",
+      "unit": "E3-unknown-bonus-bluk-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          4373
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 4373 is not summarized: the translator does not interpret the quoted statement (bonus bLuk (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            45876
+          ],
+          "required_source_literals": [
+            "bonus bLuk,getrefine()-5;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
