@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 384,
+    "E1_unknown": 399,
     "E1_verified": 1
   },
   "entries": [
@@ -7329,6 +7329,381 @@
           ],
           "required_source_literals": [
             "getitem Hood,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prt_castle_charles_orleans_cook_branch_for_40_1409",
+      "unit": "E1-prt_castle_charles_orleans_cook_branch_for_40",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Charles Orleans#cook"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Cookbook01,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/cooking_quest.txt",
+          "lines": [
+            1409
+          ],
+          "required_source_literals": [
+            "if (.@old_book == 1) delitem Cookbook01,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prt_castle_charles_orleans_cook_branch_for_40_1410",
+      "unit": "E1-prt_castle_charles_orleans_cook_branch_for_40",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Charles Orleans#cook"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Cookbook02,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/cooking_quest.txt",
+          "lines": [
+            1410
+          ],
+          "required_source_literals": [
+            "else if (.@old_book == 2) delitem Cookbook02,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prt_castle_charles_orleans_cook_branch_for_40_1411",
+      "unit": "E1-prt_castle_charles_orleans_cook_branch_for_40",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Charles Orleans#cook"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Cookbook03,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/cooking_quest.txt",
+          "lines": [
+            1411
+          ],
+          "required_source_literals": [
+            "else if (.@old_book == 3) delitem Cookbook03,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prt_castle_charles_orleans_cook_branch_for_40_1412",
+      "unit": "E1-prt_castle_charles_orleans_cook_branch_for_40",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Charles Orleans#cook"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Cookbook04,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/cooking_quest.txt",
+          "lines": [
+            1412
+          ],
+          "required_source_literals": [
+            "else if (.@old_book == 4) delitem Cookbook04,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prt_castle_charles_orleans_cook_branch_for_40_1413",
+      "unit": "E1-prt_castle_charles_orleans_cook_branch_for_40",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Charles Orleans#cook"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Cookbook05,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/cooking_quest.txt",
+          "lines": [
+            1413
+          ],
+          "required_source_literals": [
+            "else if (.@old_book == 5) delitem Cookbook05,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prt_castle_charles_orleans_cook_branch_for_40_1415",
+      "unit": "E1-prt_castle_charles_orleans_cook_branch_for_40",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Charles Orleans#cook"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Pumpkin,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/cooking_quest.txt",
+          "lines": [
+            1415
+          ],
+          "required_source_literals": [
+            "delitem Pumpkin,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prt_castle_charles_orleans_cook_branch_for_40_1416",
+      "unit": "E1-prt_castle_charles_orleans_cook_branch_for_40",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Charles Orleans#cook"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Cookbook01,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/cooking_quest.txt",
+          "lines": [
+            1416
+          ],
+          "required_source_literals": [
+            "getitem Cookbook01,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prt_castle_charles_orleans_cook_branch_for_40_1419",
+      "unit": "E1-prt_castle_charles_orleans_cook_branch_for_40",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Charles Orleans#cook"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Well_Baked_Cookie,5; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/cooking_quest.txt",
+          "lines": [
+            1419
+          ],
+          "required_source_literals": [
+            "delitem Well_Baked_Cookie,5;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prt_castle_charles_orleans_cook_branch_for_40_1420",
+      "unit": "E1-prt_castle_charles_orleans_cook_branch_for_40",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Charles Orleans#cook"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Cookbook02,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/cooking_quest.txt",
+          "lines": [
+            1420
+          ],
+          "required_source_literals": [
+            "getitem Cookbook02,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prt_castle_charles_orleans_cook_branch_for_40_1423",
+      "unit": "E1-prt_castle_charles_orleans_cook_branch_for_40",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Charles Orleans#cook"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Shusi,5; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/cooking_quest.txt",
+          "lines": [
+            1423
+          ],
+          "required_source_literals": [
+            "delitem Shusi,5;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prt_castle_charles_orleans_cook_branch_for_40_1424",
+      "unit": "E1-prt_castle_charles_orleans_cook_branch_for_40",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Charles Orleans#cook"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Cookbook03,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/cooking_quest.txt",
+          "lines": [
+            1424
+          ],
+          "required_source_literals": [
+            "getitem Cookbook03,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prt_castle_charles_orleans_cook_branch_for_40_1427",
+      "unit": "E1-prt_castle_charles_orleans_cook_branch_for_40",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Charles Orleans#cook"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Bun,5; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/cooking_quest.txt",
+          "lines": [
+            1427
+          ],
+          "required_source_literals": [
+            "delitem Bun,5;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prt_castle_charles_orleans_cook_branch_for_40_1428",
+      "unit": "E1-prt_castle_charles_orleans_cook_branch_for_40",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Charles Orleans#cook"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Cookbook04,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/cooking_quest.txt",
+          "lines": [
+            1428
+          ],
+          "required_source_literals": [
+            "getitem Cookbook04,1; //Cookbook05"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prt_castle_charles_orleans_cook_branch_for_40_1431",
+      "unit": "E1-prt_castle_charles_orleans_cook_branch_for_40",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Charles Orleans#cook"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Shoot,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/cooking_quest.txt",
+          "lines": [
+            1431
+          ],
+          "required_source_literals": [
+            "delitem Shoot,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prt_castle_charles_orleans_cook_branch_for_40_1432",
+      "unit": "E1-prt_castle_charles_orleans_cook_branch_for_40",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Charles Orleans#cook"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Cookbook05,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/cooking_quest.txt",
+          "lines": [
+            1432
+          ],
+          "required_source_literals": [
+            "getitem Cookbook05,1;"
           ]
         }
       ],

@@ -5228,7 +5228,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "strong",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Charles Orleans#cook",
@@ -5247,7 +5247,26 @@
       ],
       "size_lines": 1454,
       "reason": "refused by the braced one-item prover: braceless",
-      "history": []
+      "history": [
+        "2026-09-30T14:44:39Z activated",
+        "2026-09-30T14:44:39Z validated",
+        "2026-09-30T14:44:39Z verified: 15 claims supported",
+        "2026-09-30T14:45:03Z accepted",
+        "2026-09-30T14:45:03Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "97d0b4a7ae64c3e43171119844f614b4d8ac47a2195d45d713257ed5f87c9b97",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "audit": "due",
+      "commit": "committed"
     },
     {
       "id": "E1-prt_castle_madeleine_chu_cook_branch_for_1495",
