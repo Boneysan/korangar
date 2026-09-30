@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 2042,
+    "E1_unknown": 2044,
     "E1_verified": 1
   },
   "entries": [
@@ -15376,6 +15376,56 @@
           "path": "npc/quests/quests_rachel.txt",
           "lines": [
             3602
+          ],
+          "required_source_literals": [
+            "delitem Ice_Scale,1; //Ice Scale"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ice_dun03_blazing_fire_ice4_branch_for_3613_3627",
+      "unit": "E1-ice_dun03_blazing_fire_ice4_branch_for_3613",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Blazing Fire#ice4"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Ice_Particle,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_rachel.txt",
+          "lines": [
+            3627
+          ],
+          "required_source_literals": [
+            "delitem Ice_Particle,1; //Freezing Snow Powder"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ice_dun03_blazing_fire_ice4_branch_for_3613_3638",
+      "unit": "E1-ice_dun03_blazing_fire_ice4_branch_for_3613",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Blazing Fire#ice4"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Ice_Scale,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_rachel.txt",
+          "lines": [
+            3638
           ],
           "required_source_literals": [
             "delitem Ice_Scale,1; //Ice Scale"
