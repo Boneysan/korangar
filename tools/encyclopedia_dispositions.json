@@ -62551,6 +62551,106 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_gef_tower_meow_q_wiz_branch_for_39_315",
+      "unit": "E1-gef_tower_meow_q_wiz_branch_for_39",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Meow#q_wiz"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Crystal_Blue,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/skills/wizard_skills.txt",
+          "lines": [
+            315
+          ],
+          "required_source_literals": [
+            "delitem Crystal_Blue,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_gef_tower_meow_q_wiz_branch_for_39_316",
+      "unit": "E1-gef_tower_meow_q_wiz_branch_for_39",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Meow#q_wiz"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Yellow_Live,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/skills/wizard_skills.txt",
+          "lines": [
+            316
+          ],
+          "required_source_literals": [
+            "delitem Yellow_Live,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_gef_tower_meow_q_wiz_branch_for_39_317",
+      "unit": "E1-gef_tower_meow_q_wiz_branch_for_39",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Meow#q_wiz"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Boody_Red,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/skills/wizard_skills.txt",
+          "lines": [
+            317
+          ],
+          "required_source_literals": [
+            "delitem Boody_Red,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_gef_tower_meow_q_wiz_branch_for_39_318",
+      "unit": "E1-gef_tower_meow_q_wiz_branch_for_39",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Meow#q_wiz"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Wind_Of_Verdure,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/skills/wizard_skills.txt",
+          "lines": [
+            318
+          ],
+          "required_source_literals": [
+            "delitem Wind_Of_Verdure,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
