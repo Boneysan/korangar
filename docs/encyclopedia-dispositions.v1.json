@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 2801,
+    "E1_unknown": 2803,
     "E1_verified": 1
   },
   "entries": [
@@ -19004,6 +19004,56 @@
           ],
           "required_source_literals": [
             "getitem Cardinal_Jewel,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_int_land_sailor_int_land_branch_for_120_128",
+      "unit": "E1-int_land_sailor_int_land_branch_for_120",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Sailor#int_land"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Wood,countitem(Wood; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            128
+          ],
+          "required_source_literals": [
+            "delitem(Wood, countitem(Wood));"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_int_land_sailor_int_land_branch_for_120_149",
+      "unit": "E1-int_land_sailor_int_land_branch_for_120",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Sailor#int_land"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Spectacles,5; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            149
+          ],
+          "required_source_literals": [
+            "getitem(Spectacles, 5);"
           ]
         }
       ],
