@@ -85576,6 +85576,31 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_splendide_theodore_ep14_1_bs_branch_for_844_881",
+      "unit": "E1-splendide_theodore_ep14_1_bs_branch_for_844",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Theodore#ep14_1_bs"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Small_Pocket,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_mora.txt",
+          "lines": [
+            881
+          ],
+          "required_source_literals": [
+            "delitem Small_Pocket,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
