@@ -2226,6 +2226,56 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_jawaii_in_waitress_jawaii_branch_for_719_742",
+      "unit": "E1-jawaii_in_waitress_jawaii_branch_for_719",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Waitress#jawaii"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Meat,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/cities/jawaii.txt",
+          "lines": [
+            742
+          ],
+          "required_source_literals": [
+            "getitem Meat,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_jawaii_in_waitress_jawaii_branch_for_719_768",
+      "unit": "E1-jawaii_in_waitress_jawaii_branch_for_719",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Waitress#jawaii"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Yellow_Potion,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/cities/jawaii.txt",
+          "lines": [
+            768
+          ],
+          "required_source_literals": [
+            "getitem Yellow_Potion,1; //Yelow_Potion"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
