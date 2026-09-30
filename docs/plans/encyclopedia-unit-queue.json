@@ -2045,7 +2045,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Master Miller",
@@ -2064,7 +2064,25 @@
       ],
       "size_lines": 181,
       "reason": "refused by the braced one-item prover: menu",
-      "history": []
+      "history": [
+        "2026-09-30T14:15:21Z activated",
+        "2026-09-30T14:15:21Z validated",
+        "2026-09-30T14:15:21Z verified: 2 claims supported",
+        "2026-09-30T14:15:44Z accepted",
+        "2026-09-30T14:15:44Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "e3a84af33b54caa0bd3860e17daf0d236e3936ab801f0f31384d4992e9d13284",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-payon_wise_bull_horn_branch_for_227",

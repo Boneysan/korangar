@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 129,
+    "E1_unknown": 131,
     "E1_verified": 1
   },
   "entries": [
@@ -2654,6 +2654,56 @@
           ],
           "required_source_literals": [
             "getitem(L_Magestic_Goat, 1);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_ng_master_miller_branch_for_45_201",
+      "unit": "E1-que_ng_master_miller_branch_for_45",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Master Miller"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Six_Shooter,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/1-1e/gunslinger.txt",
+          "lines": [
+            201
+          ],
+          "required_source_literals": [
+            "getitem Six_Shooter,1; // Six_Shooter"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_ng_master_miller_branch_for_45_203",
+      "unit": "E1-que_ng_master_miller_branch_for_45",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Master Miller"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Branch,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/1-1e/gunslinger.txt",
+          "lines": [
+            203
+          ],
+          "required_source_literals": [
+            "getitem Branch,1; // Branch"
           ]
         }
       ],
