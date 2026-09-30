@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 1485,
+    "E1_unknown": 1487,
     "E1_verified": 1
   },
   "entries": [
@@ -5654,6 +5654,56 @@
           ],
           "required_source_literals": [
             "getitem Thai_Ring,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ayothaya_merchant_ayo_branch_for_2938_2960",
+      "unit": "E1-ayothaya_merchant_ayo_branch_for_2938",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Merchant#ayo"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Chilli,30; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_ayothaya.txt",
+          "lines": [
+            2960
+          ],
+          "required_source_literals": [
+            "getitem Chilli,30;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ayothaya_merchant_ayo_branch_for_2938_3015",
+      "unit": "E1-ayothaya_merchant_ayo_branch_for_2938",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Merchant#ayo"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Chilli,30; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_ayothaya.txt",
+          "lines": [
+            3015
+          ],
+          "required_source_literals": [
+            "getitem Chilli,30;"
           ]
         }
       ],

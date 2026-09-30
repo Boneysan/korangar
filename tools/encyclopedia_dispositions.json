@@ -37251,6 +37251,56 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ayothaya_merchant_ayo_branch_for_2938_2960",
+      "unit": "E1-ayothaya_merchant_ayo_branch_for_2938",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Merchant#ayo"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Chilli,30; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_ayothaya.txt",
+          "lines": [
+            2960
+          ],
+          "required_source_literals": [
+            "getitem Chilli,30;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ayothaya_merchant_ayo_branch_for_2938_3015",
+      "unit": "E1-ayothaya_merchant_ayo_branch_for_2938",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Merchant#ayo"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Chilli,30; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_ayothaya.txt",
+          "lines": [
+            3015
+          ],
+          "required_source_literals": [
+            "getitem Chilli,30;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
