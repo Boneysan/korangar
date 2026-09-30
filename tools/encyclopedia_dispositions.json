@@ -79526,6 +79526,106 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ecl_in03_bourbon_nk_branch_for_8219_8295",
+      "unit": "E1-ecl_in03_bourbon_nk_branch_for_8219",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Bourbon#nk"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Splendide_Coin,2; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "lines": [
+            8295
+          ],
+          "required_source_literals": [
+            "getitem Splendide_Coin,2; //Splendide_Coin"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ecl_in03_bourbon_nk_branch_for_8219_8410",
+      "unit": "E1-ecl_in03_bourbon_nk_branch_for_8219",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Bourbon#nk"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Rat_Tail,2; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "lines": [
+            8410
+          ],
+          "required_source_literals": [
+            "delitem Rat_Tail,2; //Rat_Tail"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ecl_in03_bourbon_nk_branch_for_8219_8413",
+      "unit": "E1-ecl_in03_bourbon_nk_branch_for_8219",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Bourbon#nk"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Tiny_Mouse_Tail,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "lines": [
+            8413
+          ],
+          "required_source_literals": [
+            "getitem Tiny_Mouse_Tail,1; //Tiny_Mouse_Tail"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ecl_in03_bourbon_nk_branch_for_8219_8441",
+      "unit": "E1-ecl_in03_bourbon_nk_branch_for_8219",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Bourbon#nk"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Tiny_Mouse_Tail,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "lines": [
+            8441
+          ],
+          "required_source_literals": [
+            "getitem Tiny_Mouse_Tail,1; //Tiny_Mouse_Tail"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
