@@ -15397,7 +15397,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Han Ran Jiao#gon",
@@ -15416,7 +15416,22 @@
       ],
       "size_lines": 94,
       "reason": "refused by the braced one-item prover: menu",
-      "history": []
+      "history": [
+        "2026-09-30T16:18:12Z activated",
+        "2026-09-30T16:18:12Z validated",
+        "2026-09-30T16:18:12Z verified: 0 claims supported",
+        "2026-09-30T16:18:36Z accepted",
+        "2026-09-30T16:18:36Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "43ed3f4bfcefe81ff94451c75bbca5ed042dd2c128376520730bb9612cd649eb",
+      "accepted_files": [
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-gon_fild01_gonknife_branch_for_3815",
