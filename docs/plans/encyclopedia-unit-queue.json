@@ -9135,7 +9135,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "strong",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Orc Warrior#1",
@@ -9154,7 +9154,25 @@
       ],
       "size_lines": 870,
       "reason": "refused by the braced one-item prover: braceless",
-      "history": []
+      "history": [
+        "2026-09-30T15:20:16Z activated",
+        "2026-09-30T15:20:16Z validated",
+        "2026-09-30T15:20:16Z verified: 19 claims supported",
+        "2026-09-30T15:20:40Z accepted",
+        "2026-09-30T15:20:40Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "7f7f88df2e8417dd637b121e3ffbac049782ee95d6621cad323202cf0e0b84b0",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-in_orcs01_orc_hero_1_branch_for_3505",
