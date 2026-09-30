@@ -8,7 +8,7 @@
     "E1_not_applicable": 1,
     "E1_unknown": 3464,
     "E1_verified": 1,
-    "E3_unknown": 939
+    "E3_unknown": 941
   },
   "entries": [
     {
@@ -95890,6 +95890,33 @@
       "reviewed_on": "2026-09-30"
     },
     {
+      "id": "item_2185_script_untranslated",
+      "unit": "E3-unknown-bonus-bmagicdamagereturn-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          2185
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 2185 is not summarized: the translator does not interpret the quoted statement (bonus bMagicDamageReturn (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            26175
+          ],
+          "required_source_literals": [
+            "bonus bMagicDamageReturn,3+((getrefine()>=9)?3:0);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
       "id": "item_2187_script_untranslated",
       "unit": "E3-unknown-bonus-bmdef-expression",
       "package": "E3",
@@ -105738,6 +105765,33 @@
           ],
           "required_source_literals": [
             "Script: <\" bonus3 bAddEffWhenHit,Eff_Bleeding,3000,ATF_TARGET|ATF_SELF; \">"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_4405_script_untranslated",
+      "unit": "E3-unknown-bonus-bmagicdamagereturn-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          4405
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 4405 is not summarized: the translator does not interpret the quoted statement (bonus bMagicDamageReturn (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            46282
+          ],
+          "required_source_literals": [
+            "bonus bMagicDamageReturn,min(getrefine(),10)*2;"
           ]
         }
       ],
