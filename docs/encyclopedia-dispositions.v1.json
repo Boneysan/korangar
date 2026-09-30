@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 1523,
+    "E1_unknown": 1527,
     "E1_verified": 1
   },
   "entries": [
@@ -20829,6 +20829,106 @@
           ],
           "required_source_literals": [
             "delitem Lokis_Whispers,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_morocc_zaka_cmd_branch_for_2180_2224",
+      "unit": "E1-morocc_zaka_cmd_branch_for_2180",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Zaka#cmd"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Scale_Of_Snakes,2; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_comodo.txt",
+          "lines": [
+            2224
+          ],
+          "required_source_literals": [
+            "delitem Scale_Of_Snakes,2;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_morocc_zaka_cmd_branch_for_2180_2267",
+      "unit": "E1-morocc_zaka_cmd_branch_for_2180",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Zaka#cmd"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Scales_Shell,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_comodo.txt",
+          "lines": [
+            2267
+          ],
+          "required_source_literals": [
+            "delitem Scales_Shell,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_morocc_zaka_cmd_branch_for_2180_2288",
+      "unit": "E1-morocc_zaka_cmd_branch_for_2180",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Zaka#cmd"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Shining_Scales,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_comodo.txt",
+          "lines": [
+            2288
+          ],
+          "required_source_literals": [
+            "delitem Shining_Scales,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_morocc_zaka_cmd_branch_for_2180_2321",
+      "unit": "E1-morocc_zaka_cmd_branch_for_2180",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Zaka#cmd"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Rotten_Scale,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_comodo.txt",
+          "lines": [
+            2321
+          ],
+          "required_source_literals": [
+            "delitem Rotten_Scale,1;"
           ]
         }
       ],
