@@ -37176,6 +37176,56 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ayothaya_thongpool_ayo_branch_for_2523_2565",
+      "unit": "E1-ayothaya_thongpool_ayo_branch_for_2523",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Thongpool#ayo"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Prawn,20; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_ayothaya.txt",
+          "lines": [
+            2565
+          ],
+          "required_source_literals": [
+            "getitem Prawn,20;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ayothaya_thongpool_ayo_branch_for_2523_2608",
+      "unit": "E1-ayothaya_thongpool_ayo_branch_for_2523",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Thongpool#ayo"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Prawn,20; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_ayothaya.txt",
+          "lines": [
+            2608
+          ],
+          "required_source_literals": [
+            "getitem Prawn,20;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
