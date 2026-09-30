@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 183,
+    "E1_unknown": 184,
     "E1_verified": 1
   },
   "entries": [
@@ -2579,6 +2579,31 @@
           ],
           "required_source_literals": [
             "delitem Cyfar,5;\t// Cyfar"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_gef_tower_gloomy_wizard_branch_for_465_937",
+      "unit": "E1-gef_tower_gloomy_wizard_branch_for_465",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Gloomy Wizard"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Worn_Out_Scroll,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-1/wizard.txt",
+          "lines": [
+            937
+          ],
+          "required_source_literals": [
+            "delitem Worn_Out_Scroll,1;"
           ]
         }
       ],

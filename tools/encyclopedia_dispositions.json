@@ -4701,6 +4701,31 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_gef_tower_gloomy_wizard_branch_for_465_937",
+      "unit": "E1-gef_tower_gloomy_wizard_branch_for_465",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Gloomy Wizard"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Worn_Out_Scroll,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-1/wizard.txt",
+          "lines": [
+            937
+          ],
+          "required_source_literals": [
+            "delitem Worn_Out_Scroll,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }

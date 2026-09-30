@@ -2953,7 +2953,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "strong",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Gloomy Wizard",
@@ -2972,7 +2972,25 @@
       ],
       "size_lines": 606,
       "reason": "refused by the braced one-item prover: braceless",
-      "history": []
+      "history": [
+        "2026-09-30T14:23:42Z activated",
+        "2026-09-30T14:23:42Z validated",
+        "2026-09-30T14:23:42Z verified: 1 claims supported",
+        "2026-09-30T14:24:05Z accepted",
+        "2026-09-30T14:24:05Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "6b3f87aafcacd79746c8fede421cc86e18443aa75f89bf063fc6b29a30b62fa9",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-comodo_wandering_master_job_sta_branch_for_375",
