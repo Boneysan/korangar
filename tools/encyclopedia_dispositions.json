@@ -39201,6 +39201,81 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ein_in01_calla_ein_branch_for_4350_4525",
+      "unit": "E1-ein_in01_calla_ein_branch_for_4350",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Calla#ein"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Flower,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_ein.txt",
+          "lines": [
+            4525
+          ],
+          "required_source_literals": [
+            "delitem Flower,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ein_in01_calla_ein_branch_for_4350_4560",
+      "unit": "E1-ein_in01_calla_ein_branch_for_4350",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Calla#ein"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Violin,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_ein.txt",
+          "lines": [
+            4560
+          ],
+          "required_source_literals": [
+            "getitem Violin,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ein_in01_calla_ein_branch_for_4350_4603",
+      "unit": "E1-ein_in01_calla_ein_branch_for_4350",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Calla#ein"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Violin,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_ein.txt",
+          "lines": [
+            4603
+          ],
+          "required_source_literals": [
+            "getitem Violin,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }

@@ -14918,7 +14918,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Calla#ein",
@@ -14937,7 +14937,25 @@
       ],
       "size_lines": 292,
       "reason": "refused by the braced one-item prover: braceless",
-      "history": []
+      "history": [
+        "2026-09-30T16:13:48Z activated",
+        "2026-09-30T16:13:48Z validated",
+        "2026-09-30T16:13:48Z verified: 3 claims supported",
+        "2026-09-30T16:14:11Z accepted",
+        "2026-09-30T16:14:11Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "77fb80f1d88f91ed406684cdf4b147cb2553ff12c765b6bfd9526bb5d087dfbe",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-ein_in01_klitzer_ein_branch_for_4643",
