@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 3421,
+    "E1_unknown": 3425,
     "E1_verified": 1
   },
   "entries": [
@@ -77004,6 +77004,106 @@
           ],
           "required_source_literals": [
             "getitem Mail_Package,1; //Mail_Package"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_splendide_daphrer_ep14_1_bs_branch_for_1427_1443",
+      "unit": "E1-splendide_daphrer_ep14_1_bs_branch_for_1427",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Daphrer#ep14_1_bs"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Splendid_Supply_Kit,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_mora.txt",
+          "lines": [
+            1443
+          ],
+          "required_source_literals": [
+            "delitem Splendid_Supply_Kit,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_splendide_daphrer_ep14_1_bs_branch_for_1427_1448",
+      "unit": "E1-splendide_daphrer_ep14_1_bs_branch_for_1427",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Daphrer#ep14_1_bs"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Mora_Coin,5; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_mora.txt",
+          "lines": [
+            1448
+          ],
+          "required_source_literals": [
+            "getitem Mora_Coin,5;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_splendide_daphrer_ep14_1_bs_branch_for_1427_1450",
+      "unit": "E1-splendide_daphrer_ep14_1_bs_branch_for_1427",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Daphrer#ep14_1_bs"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Mora_Coin,2; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_mora.txt",
+          "lines": [
+            1450
+          ],
+          "required_source_literals": [
+            "getitem Mora_Coin,2;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_splendide_daphrer_ep14_1_bs_branch_for_1427_1465",
+      "unit": "E1-splendide_daphrer_ep14_1_bs_branch_for_1427",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Daphrer#ep14_1_bs"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Mora_Coin,2; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_mora.txt",
+          "lines": [
+            1465
+          ],
+          "required_source_literals": [
+            "getitem Mora_Coin,2;"
           ]
         }
       ],
