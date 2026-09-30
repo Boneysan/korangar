@@ -113,27 +113,85 @@ def _parse_refine_scaled_value(expr: str) -> tuple[int, int, str] | None:
     coefficients) returns None so the caller leaves the script untranslated.
     """
     compact = expr.strip()
+
+    # Handle patterns like: 20+getrefine()/2, getrefine()*2, 3*getrefine(), (getrefine()-5)
+    # Note: getrefine() is shorthand for getequiprefinerycnt(EQI_HAND_R) in many contexts
+
+    # Pattern: base + refine_expression (e.g., "20+getrefine()/2")
     match = re.fullmatch(
-        r"(-?\d+)\s*\+\s*\(\s*getequiprefinerycnt\(\s*(EQI_[A-Za-z0-9_]+)\s*\)\s*\*\s*(-?\d+)\s*\)",
-        compact, re.I,
+        r"(-?\d+)\s*\+\s*(.+)", compact, re.I
     )
     if match:
-        base, slot, coef = match.groups()
-        slot_key = slot.upper()
-        return (int(base), int(coef), slot_key) if slot_key in _REFINE_SLOT_LABELS else None
+        base = int(match.group(1))
+        refine_expr = match.group(2).strip()
+        parsed = _parse_refine_expression(refine_expr)
+        if parsed:
+            return (base, parsed[0], parsed[1])
+        return None
+
+    # Direct refine expression without base
+    parsed = _parse_refine_expression(compact)
+    if parsed:
+        return (0, parsed[0], parsed[1])
+
+    return None
+
+
+def _parse_refine_expression(expr: str) -> tuple[int, str] | None:
+    """Parse a refine-scaled expression like getrefine()*2 or (getrefine()-5)*2."""
+    compact = expr.strip()
+
+    # Pattern with parentheses: (getrefine()-5)*2 or ((getrefine()-5)*2)
     match = re.fullmatch(
-        r"\(?\s*getequiprefinerycnt\(\s*(EQI_[A-Za-z0-9_]+)\s*\)\s*\*\s*(-?\d+)\s*\)?",
-        compact, re.I,
+        r"\(\s*getrefine\(\)\s*([+-])\s*(-?\d+)\s*\)\s*\*\s*(-?\d+)",
+        compact, re.I
     )
     if match:
-        slot, coef = match.groups()
-        slot_key = slot.upper()
-        return (0, int(coef), slot_key) if slot_key in _REFINE_SLOT_LABELS else None
-    match = re.fullmatch(r"(-)?\s*getequiprefinerycnt\(\s*(EQI_[A-Za-z0-9_]+)\s*\)", compact, re.I)
+        op, subtracted, coef = match.groups()
+        # (getrefine() - 5) * 2 becomes base_offset = -10, coef = 2
+        subtracted_val = int(subtracted)
+        coef_val = int(coef)
+        base_offset = -subtracted_val * coef_val if op == "-" else subtracted_val * coef_val
+        return (coef_val, "EQI_HAND_R")  # getrefine() defaults to weapon slot
+
+    # Pattern: getrefine() * coef or getrefine()*coef
+    match = re.fullmatch(
+        r"getrefine\(\)\s*\*\s*(-?\d+)",
+        compact, re.I
+    )
     if match:
-        neg, slot = match.groups()
-        slot_key = slot.upper()
-        return (0, -1 if neg else 1, slot_key) if slot_key in _REFINE_SLOT_LABELS else None
+        coef = int(match.group(1))
+        return (coef, "EQI_HAND_R")
+
+    # Pattern: coef * getrefine()
+    match = re.fullmatch(
+        r"(-?\d+)\s*\*\s*getrefine\(\)",
+        compact, re.I
+    )
+    if match:
+        coef = int(match.group(1))
+        return (coef, "EQI_HAND_R")
+
+    # Pattern: getrefine() with optional division: getrefine()/2 or getrefine() / 2
+    match = re.fullmatch(
+        r"getrefine\(\)\s*/\s*(-?\d+)",
+        compact, re.I
+    )
+    if match:
+        divisor = int(match.group(1))
+        # Division makes it non-integer for many refine levels; skip for safety
+        return None
+
+    # Pattern: (getrefine()-5) without multiplier - returns getrefine()-5 which can be negative
+    match = re.fullmatch(
+        r"\(\s*getrefine\(\)\s*([+-])\s*(-?\d+)\s*\)",
+        compact, re.I
+    )
+    if match:
+        op, subtracted = match.groups()
+        # This form is ambiguous for direction (can flip sign across refine range)
+        return None
+
     return None
 
 
@@ -143,12 +201,18 @@ def _refine_scaled_phrase(base: int, coef: int, slot_key: str) -> str | None:
     single unambiguous claim."""
     if coef == 0:
         return None
+    # getrefine() defaults to EQI_HAND_R (weapon) - use that slot label
+    slot_label = _REFINE_SLOT_LABELS.get(slot_key, f"refined equipment ({slot_key})")
+
+    # If base is non-zero and has opposite sign to coef, the effect direction could flip
+    # depending on refine level. This is too ambiguous for a single claim.
     if base != 0 and ((base > 0) != (coef > 0)):
         return None
-    slot_label = _REFINE_SLOT_LABELS[slot_key]
+
     if base == 0:
         direction = "increases" if coef >= 0 else "reduces"
         return f"{direction} by {abs(coef)}% per refine level of {slot_label}"
+
     direction = "increases" if base >= 0 else "reduces"
     return f"{direction} by {abs(base)}%, plus {abs(coef)}% per refine level of {slot_label}"
 
@@ -217,8 +281,13 @@ def translate_simple_effect(script: str) -> str | None:
         "SC_ASPDPOTION3": "Speed Potion", "SC_STRFOOD": "STR Food", "SC_AGIFOOD": "AGI Food",
         "SC_VITFOOD": "VIT Food", "SC_INTFOOD": "INT Food", "SC_DEXFOOD": "DEX Food",
         "SC_LUKFOOD": "LUK Food", "SC_ATKPOTION": "ATK Potion", "SC_MATKPOTION": "MATK Potion",
+        "SC_FOOD_STR": "STR food", "SC_FOOD_AGI": "AGI food", "SC_FOOD_VIT": "VIT food",
+        "SC_FOOD_INT": "INT food", "SC_FOOD_DEX": "DEX food", "SC_FOOD_LUK": "LUK food",
     }
     for statement in statements:
+        parenthesized = re.fullmatch(r"bonus\((b[A-Za-z0-9_]+)\s*,\s*(-?\d+)\)", statement, re.I)
+        if parenthesized:
+            statement = f"bonus {parenthesized.group(1)},{parenthesized.group(2)}"
         if statement in conditional_effects:
             condition, nested_effect = conditional_effects[statement]
             condition_label = describe_item_condition(condition)
@@ -255,6 +324,49 @@ def translate_simple_effect(script: str) -> str | None:
             } else ""
             direction = "increases" if value >= 0 else "reduces"
             effects.append(f"{direction} {labels[key]} by {abs(value)}{unit}")
+            continue
+        match = re.fullmatch(
+            r"bonus\s+(bBaseAtk|bAspd|bSpeedRate|bSpeedAddRate|bVariableCastrate)\s*,\s*(-?\d+)",
+            statement,
+            re.I,
+        )
+        if match:
+            key, value = match.group(1).lower(), int(match.group(2))
+            labels = {
+                "bbaseatk": ("basic attack power", ""),
+                "baspd": ("attack speed", ""),
+                "bspeedrate": ("movement speed", "%"),
+                "bspeedaddrate": ("movement speed", "%"),
+                "bvariablecastrate": ("variable cast time of all skills", "%"),
+            }
+            label, unit = labels[key]
+            direction = "increases" if value >= 0 else "reduces"
+            note = ""
+            if key == "bspeedrate":
+                note = " (only the highest bonus applies)"
+            effects.append(f"{direction} {label} by {abs(value)}{unit}{note}")
+            continue
+        match = re.fullmatch(
+            r"bonus\s+(bUnbreakableWeapon|bUnbreakableArmor|bUnbreakableHelm|bUnbreakableShield|bUnbreakableGarment|bUnbreakableShoes)\s*,\s*-?\d+",
+            statement,
+            re.I,
+        )
+        if match:
+            slot = {
+                "bunbreakableweapon": "weapon",
+                "bunbreakablearmor": "armor",
+                "bunbreakablehelm": "helm",
+                "bunbreakableshield": "shield",
+                "bunbreakablegarment": "garment",
+                "bunbreakableshoes": "shoes",
+            }[match.group(1).lower()]
+            effects.append(f"the equipped {slot} cannot be broken")
+            continue
+        match = re.fullmatch(r"bonus\s+bUnbreakable\s*,\s*(-?\d+)", statement, re.I)
+        if match:
+            value = int(match.group(1))
+            direction = "reduces" if value >= 0 else "increases"
+            effects.append(f"{direction} the chance equipped items break by {abs(value)}%")
             continue
         match = re.fullmatch(r"bonus\s+(bBreakWeaponRate|bBreakArmorRate)\s*,\s*(-?\d+)", statement, re.I)
         if match:
@@ -293,6 +405,28 @@ def translate_simple_effect(script: str) -> str | None:
             value = int(raw_value)
             direction = "reduces" if value >= 0 else "increases"
             effects.append(f"{direction} the SP cost of {_skill_display_name(skill)} by {abs(value)}")
+            continue
+        match = re.fullmatch(r"bonus2\s+bSkillCooldown\s*,\s*([A-Za-z0-9_]+)\s*,\s*(-?\d+)", statement, re.I)
+        if match:
+            skill, raw_value = match.groups()
+            value = int(raw_value)
+            # Negative cooldown values mean "increases duration" in seconds
+            direction = "increases" if value >= 0 else "reduces"
+            effects.append(f"{direction} the cooldown of {_skill_display_name(skill)} by {abs(value)} ms")
+            continue
+        bare_itemskill = re.fullmatch(r"itemskill\s+([A-Za-z0-9_]+)\s*,\s*(\d+)", statement, re.I)
+        called_itemskill = re.fullmatch(
+            r"itemskill\(\s*([A-Za-z0-9_]+)\s*,\s*(\d+)(?:\s*,\s*([A-Za-z0-9_]+(?:\s*\|\s*[A-Za-z0-9_]+)*))?\s*\)",
+            statement,
+            re.I,
+        )
+        match = bare_itemskill or called_itemskill
+        if match:
+            skill, level, *flags = match.groups()
+            phrase = _itemskill_phrase(skill, level, flags[0] if flags else None)
+            if phrase is None:
+                return None
+            effects.append(phrase)
             continue
         match = re.fullmatch(r"bonus2\s+bSkillAtk\s*,\s*([A-Za-z0-9_]+)\s*,\s*(.+)", statement, re.I)
         if match:
@@ -472,7 +606,9 @@ def translate_simple_effect(script: str) -> str | None:
             if sp != "0":
                 effects.append(f"restores {sp} SP")
             continue
-        match = re.fullmatch(r"percentheal\s+(-?\d+)\s*,\s*(-?\d+)", statement, re.I)
+        match = re.fullmatch(r"percentheal\s+(-?\d+)\s*,\s*(-?\d+)", statement, re.I) or re.fullmatch(
+            r"percentheal\(\s*(-?\d+)\s*,\s*(-?\d+)\s*\)", statement, re.I
+        )
         if match:
             hp, sp = map(int, match.groups())
             if hp: effects.append(f"restores {hp}% HP" if hp > 0 else f"reduces HP by {abs(hp)}%")
@@ -482,7 +618,11 @@ def translate_simple_effect(script: str) -> str | None:
         if match and match.group(1).upper() in cures:
             effects.append(f"Cures {cures[match.group(1).upper()]}")
             continue
-        match = re.fullmatch(r"sc_start\s+(SC_[A-Z0-9_]+)\s*,\s*(\d+)\s*,\s*(-?\d+)(?:\s*,\s*(\d+))?", statement, re.I)
+        match = re.fullmatch(
+            r"sc_start\s+(SC_[A-Z0-9_]+)\s*,\s*(\d+)\s*,\s*(-?\d+)(?:\s*,\s*(\d+))?", statement, re.I
+        ) or re.fullmatch(
+            r"sc_start\(\s*(SC_[A-Z0-9_]+)\s*,\s*(\d+)\s*,\s*(-?\d+)(?:\s*,\s*(\d+))?\s*\)", statement, re.I
+        )
         if match:
             status, duration_ms, value1, raw_rate = match.groups()
             status = status.upper()
@@ -494,6 +634,30 @@ def translate_simple_effect(script: str) -> str | None:
             rate_note = f" at {int(raw_rate) / 100:g}% chance" if raw_rate is not None else " (no explicit chance limit)"
             value_note = f", value {value1}" if int(value1) != 0 else ""
             effects.append(f"Applies {label} for {duration}{value_note}{rate_note}")
+            continue
+        match = re.fullmatch(r"getitem\s+(-?\d+)\s*,\s*(\d+)", statement, re.I)
+        if match:
+            item_id, amount = int(match.group(1)), int(match.group(2))
+            effects.append(f"grants {amount} {_item_display_name(item_id)}")
+            continue
+        match = re.fullmatch(r"rentitem\s+(-?\d+)\s*,\s*(\d+)", statement, re.I)
+        if match:
+            item_id, seconds = int(match.group(1)), int(match.group(2))
+            effects.append(f"rents {_item_display_name(item_id)} for {seconds} seconds")
+            continue
+        match = re.fullmatch(r"getrandgroupitem\s+(-?\d+)\s*,\s*(\d+)", statement, re.I)
+        if match:
+            group_id, amount = int(match.group(1)), int(match.group(2))
+            effects.append(f"grants {amount} random item from {_item_display_name(group_id)}")
+            continue
+        match = re.fullmatch(r"packageitem(?:\(\s*\))?", statement, re.I)
+        if match:
+            effects.append("grants this item's package contents")
+            continue
+        match = re.fullmatch(r"skill\s+([A-Za-z0-9_]+)\s*,\s*(\d+)", statement, re.I)
+        if match:
+            skill, level = match.groups()
+            effects.append(f"grants {_skill_display_name(skill)} at level {level}")
             continue
         return None
     return "; ".join(effects) if effects else None
@@ -509,8 +673,44 @@ def _skill_display_names() -> dict[str, str]:
     }
 
 
+@lru_cache(maxsize=1)
+def _item_names_by_id() -> dict[int, str]:
+    names: dict[int, str] = {}
+    pattern = re.compile(r"Id:\s*(\d+)(?:(?!\n\s*Id:)[\s\S]){0,800}?\n\s*Name:\s*\"([^\"]*)\"")
+    for path in ITEM_SOURCES:
+        if not path.is_file():
+            continue
+        for match in pattern.finditer(path.read_text(encoding="utf-8", errors="replace")):
+            names[int(match.group(1))] = match.group(2)
+    return names
+
+
+def _item_display_name(item_id: int) -> str:
+    return _item_names_by_id().get(item_id, f"item {item_id}")
+
+
 def _skill_display_name(constant: str) -> str:
     return _skill_display_names().get(constant, constant.replace("_", " ").title())
+
+
+# itemskill() flag bits from Hercules enum itemskill_flag (src/map/script.h).
+_ITEMSKILL_FLAG_NOTES = (
+    ("ISF_CHECKCONDITIONS", "after checking the skill's conditions and paying its costs"),
+    ("ISF_INSTANTCAST", "instantly"),
+    ("ISF_CASTONSELF", "on yourself, without a target cursor"),
+)
+
+
+def _itemskill_phrase(skill: str, level: str, flags: str | None) -> str | None:
+    phrase = f"grants access to {_skill_display_name(skill)} at level {level}"
+    if not flags:
+        return phrase
+    present = {part.strip().upper() for part in flags.split("|") if part.strip()}
+    known = {name for name, _note in _ITEMSKILL_FLAG_NOTES}
+    if not present or not present <= known:
+        return None
+    notes = [note for name, note in _ITEMSKILL_FLAG_NOTES if name in present]
+    return f"{phrase}, {', '.join(notes)}"
 
 
 def _effect_display_name(constant: str) -> str:

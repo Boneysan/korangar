@@ -618,7 +618,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases STR by 1; increases basic attack power by 10",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -1289,7 +1290,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases STR by 1; increases basic attack power by 3",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -1349,7 +1351,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "on attack, has a 5% chance to inflict Blindness; increases basic attack power by 5",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -1434,7 +1437,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases DEX by 1; increases basic attack power by 5",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -1616,7 +1620,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "on attack, has a 5% chance to inflict Sleep; increases basic attack power by 5",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -1694,7 +1699,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases basic attack power by 10; on attack, has a 2% chance to inflict Stun",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -1973,7 +1979,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases basic attack power by 15; increases critical chance by 1%",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -2262,7 +2269,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "grants Detoxify at level 1",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -2553,7 +2561,8 @@
               "name": "Sidewinder Card"
             }
           ],
-          "effect_status": "scripted_not_translated",
+          "effect_status": "translated",
+          "effect_summary": "increases attack speed by 1",
           "source": {
             "path": "db/re/item_combo_db.conf",
             "record": "combo_db[37]"
@@ -2597,7 +2606,8 @@
               "name": "Sidewinder Card"
             }
           ],
-          "effect_status": "scripted_not_translated",
+          "effect_status": "translated",
+          "effect_summary": "increases attack speed by 1",
           "source": {
             "path": "db/re/item_combo_db.conf",
             "record": "combo_db[40]"
@@ -2640,7 +2650,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "on attack, has a 5% chance to inflict Poison; increases basic attack power by 5",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -2858,7 +2869,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "grants Teleport at level 1",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -3079,7 +3091,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases basic attack power by 20",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -3378,7 +3391,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "grants Envenom at level 3",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -3700,7 +3714,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "grants Heal at level 1; increases the SP cost of skills by 25%",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -3800,7 +3815,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "on attack, has a 5% chance to inflict Freeze; increases basic attack power by 5",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -3921,7 +3937,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "on attack, has a 5% chance to inflict Silence; increases basic attack power by 5",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -4161,7 +4178,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "the equipped armor cannot be broken; increases equipment DEF by 1",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -4835,7 +4853,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "the equipped weapon cannot be broken; increases basic attack power by 5",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -4888,7 +4907,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "grants Discount at level 5",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -5109,7 +5129,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "on attack, has a 5% chance to inflict Curse; increases basic attack power by 5",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -5466,7 +5487,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases physical damage against small targets by 15%; increases basic attack power by 5",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -5580,7 +5602,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "grants Magnum Break at level 3",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -6107,7 +6130,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases physical damage against medium targets by 15%; increases basic attack power by 5",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -6167,7 +6191,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "grants Cure at level 1",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -6328,7 +6353,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "on attack, has a 4% chance to inflict Poison; increases basic attack power by 10",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -7668,7 +7694,8 @@
               "name": "Sidewinder Card"
             }
           ],
-          "effect_status": "scripted_not_translated",
+          "effect_status": "translated",
+          "effect_summary": "increases attack speed by 1",
           "source": {
             "path": "db/re/item_combo_db.conf",
             "record": "combo_db[37]"
@@ -7712,7 +7739,8 @@
               "name": "Sidewinder Card"
             }
           ],
-          "effect_status": "scripted_not_translated",
+          "effect_status": "translated",
+          "effect_summary": "increases attack speed by 1",
           "source": {
             "path": "db/re/item_combo_db.conf",
             "record": "combo_db[40]"
@@ -8218,7 +8246,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases physical damage against large targets by 15%; increases basic attack power by 5",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -8282,7 +8311,8 @@
               "name": "Nightmare Card"
             }
           ],
-          "effect_status": "scripted_not_translated",
+          "effect_status": "translated",
+          "effect_summary": "increases maximum SP by 10%",
           "source": {
             "path": "db/re/item_combo_db.conf",
             "record": "combo_db[418]"
@@ -8468,7 +8498,8 @@
           "source_record": "db/re/mob_db.conf:Id=1150"
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases movement speed by 25% (only the highest bonus applies)",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -8779,7 +8810,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "grants Steal at level 1",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -9016,7 +9048,8 @@
           "source_record": "db/re/mob_db.conf:Id=1874"
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "reduces variable cast time of all skills by 30%",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -10262,7 +10295,8 @@
               "name": "Nightmare Terror Card"
             }
           ],
-          "effect_status": "scripted_not_translated",
+          "effect_status": "translated",
+          "effect_summary": "increases physical damage by 10%",
           "source": {
             "path": "db/re/item_combo_db.conf",
             "record": "combo_db[417]"
@@ -10394,7 +10428,8 @@
               "name": "Dark Illusion Card"
             }
           ],
-          "effect_status": "scripted_not_translated",
+          "effect_status": "translated",
+          "effect_summary": "increases maximum HP by 20%; increases maximum SP by 20%; reduces variable cast time of all skills by 10%",
           "source": {
             "path": "db/re/item_combo_db.conf",
             "record": "combo_db[229]"
@@ -10449,7 +10484,8 @@
               "name": "Dark Illusion Card"
             }
           ],
-          "effect_status": "scripted_not_translated",
+          "effect_status": "translated",
+          "effect_summary": "increases maximum HP by 20%; increases maximum SP by 20%; reduces variable cast time of all skills by 10%",
           "source": {
             "path": "db/re/item_combo_db.conf",
             "record": "combo_db[229]"
@@ -10489,7 +10525,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "reduces maximum HP by 10%; reduces maximum SP by 10%; reduces variable cast time of all skills by 10%",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -14531,7 +14568,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases basic attack power by 10; increases HIT by 10",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -14800,7 +14838,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases INT by 1; reduces variable cast time of all skills by 5%",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -15179,7 +15218,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases LUK by 3; For the Merchant class: the equipped armor cannot be broken",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -17657,7 +17697,8 @@
               "name": "Zealotus Card"
             }
           ],
-          "effect_status": "scripted_not_translated",
+          "effect_status": "translated",
+          "effect_summary": "increases basic attack power by 20; increases LUK by 3",
           "source": {
             "path": "db/re/item_combo_db.conf",
             "record": "combo_db[243]"
@@ -18269,7 +18310,8 @@
               "name": "Zealotus Card"
             }
           ],
-          "effect_status": "scripted_not_translated",
+          "effect_status": "translated",
+          "effect_summary": "increases basic attack power by 20; increases LUK by 3",
           "source": {
             "path": "db/re/item_combo_db.conf",
             "record": "combo_db[243]"
@@ -20136,7 +20178,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases FLEE by 10; With STR at least 80: increases basic attack power by 20; With VIT at least 80: increases maximum HP by 3%; With LUK at least 80: increases critical chance by 3%",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -20652,7 +20695,8 @@
               "name": "Archdam Card"
             }
           ],
-          "effect_status": "scripted_not_translated",
+          "effect_status": "translated",
+          "effect_summary": "increases INT by 1; increases STR by 1; increases equipment DEF by 2; increases SP regeneration rate by 10%; increases Shield Chain damage by 10%; increases Martyr's Reckoning damage by 10%; reduces variable cast time of all skills by 10%; For the Crusader job: gives the player's defense the Holy element",
           "source": {
             "path": "db/re/item_combo_db.conf",
             "record": "combo_db[244]"
@@ -21280,7 +21324,8 @@
               "name": "Archdam Card"
             }
           ],
-          "effect_status": "scripted_not_translated",
+          "effect_status": "translated",
+          "effect_summary": "increases INT by 1; increases STR by 1; increases equipment DEF by 2; increases SP regeneration rate by 10%; increases Shield Chain damage by 10%; increases Martyr's Reckoning damage by 10%; reduces variable cast time of all skills by 10%; For the Crusader job: gives the player's defense the Holy element",
           "source": {
             "path": "db/re/item_combo_db.conf",
             "record": "combo_db[244]"
@@ -22262,7 +22307,8 @@
               "name": "Archdam Card"
             }
           ],
-          "effect_status": "scripted_not_translated",
+          "effect_status": "translated",
+          "effect_summary": "increases INT by 1; increases STR by 1; increases equipment DEF by 2; increases SP regeneration rate by 10%; increases Shield Chain damage by 10%; increases Martyr's Reckoning damage by 10%; reduces variable cast time of all skills by 10%; For the Crusader job: gives the player's defense the Holy element",
           "source": {
             "path": "db/re/item_combo_db.conf",
             "record": "combo_db[244]"
@@ -22377,7 +22423,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases basic attack power by 5; increases INT by 1",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -22650,7 +22697,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases basic attack power by 25; reduces equipment DEF by 5",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -22735,7 +22783,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "reduces basic attack power by 25; increases equipment DEF by 3",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -23596,7 +23645,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "grants Cast Cancel at level 1",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -23619,7 +23669,8 @@
           "source_record": "db/re/mob_db.conf:Id=1646"
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "grants Frenzy at level 1; reduces maximum HP by 50%",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -24239,7 +24290,8 @@
               "name": "Archdam Card"
             }
           ],
-          "effect_status": "scripted_not_translated",
+          "effect_status": "translated",
+          "effect_summary": "increases INT by 1; increases STR by 1; increases equipment DEF by 2; increases SP regeneration rate by 10%; increases Shield Chain damage by 10%; increases Martyr's Reckoning damage by 10%; reduces variable cast time of all skills by 10%; For the Crusader job: gives the player's defense the Holy element",
           "source": {
             "path": "db/re/item_combo_db.conf",
             "record": "combo_db[244]"
@@ -24265,7 +24317,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases basic attack power by 10; increases variable cast time of all skills by 20%",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -25238,7 +25291,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases basic attack power by 5; on attack, has a 5% chance to inflict Bleeding",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -25490,7 +25544,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases basic attack power by 5; on a normal attack, has a 5% chance to cast Decrease AGI Lv 3",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -25981,7 +26036,8 @@
           "source_record": "db/re/mob_db.conf:Id=2109"
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "the equipped weapon cannot be broken; increases damage against all targets by 10%; on a normal attack, has a 5% chance to cast Dispell Lv 1",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -26133,7 +26189,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases basic attack power by 15; For the Swordman class: increases maximum HP by 500",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -26374,7 +26431,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "grants Stone Curse at level 1; increases tolerance to Stone Curse by 30%; increases equipment MDEF by 10",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -26940,7 +26998,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "grants Find Stone at level 1; grants Stone Fling at level 1",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -28341,7 +28400,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases basic attack power by 25",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -28693,7 +28753,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases critical chance by 5%; At refine level at least +12: increases basic attack power by 35; At refine level at least +14: increases critical chance by 10%",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -29432,7 +29493,8 @@
         "record": "Id=4486"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "reduces variable cast time of all skills by 15%",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -29955,7 +30017,8 @@
       "belongs_to_combos": [
         "Gold_Scaraba_Card_Scaraba_Card"
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases basic attack power by 20; reduces maximum HP by 1%",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -30728,7 +30791,8 @@
           "source_record": "db/re/mob_db.conf:Id=2194"
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases maximum HP by 12%; grants Water Ball at level 5",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -31166,7 +31230,8 @@
         "record": "Id=4559"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases attack speed by 1; reduces maximum SP by 10%",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -31380,7 +31445,8 @@
           "source_record": "db/re/mob_db.conf:Id=2875"
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases FLEE by 10; grants Hocus-pocus at level 1",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -31403,7 +31469,8 @@
           "source_record": "db/re/mob_db.conf:Id=2224"
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases FLEE by 10; grants Summon Spirit Sphere at level 2",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -31449,7 +31516,8 @@
           "source_record": "db/re/mob_db.conf:Id=2225"
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases FLEE by 10; grants Close Confine at level 1",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -31472,7 +31540,8 @@
           "source_record": "db/re/mob_db.conf:Id=2221"
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases FLEE by 10; grants Guard at level 3",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -32409,7 +32478,8 @@
       "belongs_to_combos": [
         "Khali_Knightage_Card_White_Knightage_Card"
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases basic attack power by 15; increases physical damage against medium targets by 20%; increases physical damage against large targets by 20%",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -36304,7 +36374,8 @@
         "record": "Id=4803"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "reduces the cooldown of Highness Heal by 3000 ms",
       "type": "IT_CARD",
       "loc": [
         "EQP_HELM",
@@ -36386,7 +36457,8 @@
         "record": "Id=4807"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases attack speed by 1",
       "type": "IT_CARD",
       "loc": [
         "EQP_HELM",
@@ -36406,7 +36478,8 @@
         "record": "Id=4808"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases basic attack power by 15; increases HIT by 5",
       "type": "IT_CARD",
       "loc": [
         "EQP_HELM",
@@ -36426,7 +36499,8 @@
         "record": "Id=4809"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases basic attack power by 12; increases HIT by 4",
       "type": "IT_CARD",
       "loc": [
         "EQP_HELM",
@@ -36446,7 +36520,8 @@
         "record": "Id=4810"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases basic attack power by 9; increases HIT by 3",
       "type": "IT_CARD",
       "loc": [
         "EQP_HELM",
@@ -36466,7 +36541,8 @@
         "record": "Id=4811"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases basic attack power by 6; increases HIT by 2",
       "type": "IT_CARD",
       "loc": [
         "EQP_HELM",
@@ -36486,7 +36562,8 @@
         "record": "Id=4812"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases MATK by 15; reduces variable cast time of all skills by 10%",
       "type": "IT_CARD",
       "loc": [
         "EQP_HELM",
@@ -36506,7 +36583,8 @@
         "record": "Id=4813"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases MATK by 12; reduces variable cast time of all skills by 8%",
       "type": "IT_CARD",
       "loc": [
         "EQP_HELM",
@@ -36526,7 +36604,8 @@
         "record": "Id=4814"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases MATK by 9; reduces variable cast time of all skills by 6%",
       "type": "IT_CARD",
       "loc": [
         "EQP_HELM",
@@ -36546,7 +36625,8 @@
         "record": "Id=4815"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases MATK by 6; reduces variable cast time of all skills by 4%",
       "type": "IT_CARD",
       "loc": [
         "EQP_HELM",
@@ -36650,7 +36730,8 @@
         "record": "Id=4820"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases basic attack power by 18; increases HIT by 5",
       "type": "IT_CARD",
       "loc": [
         "EQP_HELM",
@@ -36670,7 +36751,8 @@
         "record": "Id=4821"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases basic attack power by 21; increases HIT by 5",
       "type": "IT_CARD",
       "loc": [
         "EQP_HELM",
@@ -36690,7 +36772,8 @@
         "record": "Id=4822"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases basic attack power by 24; increases HIT by 5",
       "type": "IT_CARD",
       "loc": [
         "EQP_HELM",
@@ -36710,7 +36793,8 @@
         "record": "Id=4823"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases basic attack power by 27; increases HIT by 5",
       "type": "IT_CARD",
       "loc": [
         "EQP_HELM",
@@ -36730,7 +36814,8 @@
         "record": "Id=4824"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases basic attack power by 30; increases HIT by 5",
       "type": "IT_CARD",
       "loc": [
         "EQP_HELM",
@@ -36750,7 +36835,8 @@
         "record": "Id=4825"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases basic attack power by 50; increases HIT by 15",
       "type": "IT_CARD",
       "loc": [
         "EQP_HELM",
@@ -36770,7 +36856,8 @@
         "record": "Id=4826"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases MATK by 18; reduces variable cast time of all skills by 10%",
       "type": "IT_CARD",
       "loc": [
         "EQP_HELM",
@@ -36790,7 +36877,8 @@
         "record": "Id=4827"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases MATK by 21; reduces variable cast time of all skills by 10%",
       "type": "IT_CARD",
       "loc": [
         "EQP_HELM",
@@ -36810,7 +36898,8 @@
         "record": "Id=4828"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases MATK by 24; reduces variable cast time of all skills by 10%",
       "type": "IT_CARD",
       "loc": [
         "EQP_HELM",
@@ -36830,7 +36919,8 @@
         "record": "Id=4829"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases MATK by 27; reduces variable cast time of all skills by 10%",
       "type": "IT_CARD",
       "loc": [
         "EQP_HELM",
@@ -36850,7 +36940,8 @@
         "record": "Id=4830"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases MATK by 30; reduces variable cast time of all skills by 10%",
       "type": "IT_CARD",
       "loc": [
         "EQP_HELM",
@@ -36870,7 +36961,8 @@
         "record": "Id=4831"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases MATK by 50; reduces variable cast time of all skills by 20%",
       "type": "IT_CARD",
       "loc": [
         "EQP_HELM",
@@ -37079,7 +37171,8 @@
         "record": "Id=4841"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases ranged (long-range) physical damage by 20%; increases attack speed by 1",
       "type": "IT_CARD",
       "loc": [
         "EQP_HELM",
@@ -37099,7 +37192,8 @@
         "record": "Id=4842"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases attack speed by 2",
       "type": "IT_CARD",
       "loc": [
         "EQP_HELM",
@@ -37181,7 +37275,8 @@
         "record": "Id=4846"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases basic attack power by 10; increases MATK by 10",
       "type": "IT_CARD",
       "loc": [
         "EQP_HELM",
@@ -37201,7 +37296,8 @@
         "record": "Id=4847"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases basic attack power by 10; increases MATK by 10",
       "type": "IT_CARD",
       "loc": [
         "EQP_HELM",
@@ -37965,7 +38061,8 @@
         "record": "Id=4885"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases MATK by 5; reduces variable cast time of all skills by 3%",
       "type": "IT_CARD",
       "loc": [
         "EQP_HELM",
@@ -37985,7 +38082,8 @@
         "record": "Id=4886"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases MATK by 10; reduces variable cast time of all skills by 3%",
       "type": "IT_CARD",
       "loc": [
         "EQP_HELM",
@@ -38005,7 +38103,8 @@
         "record": "Id=4887"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases MATK by 15; reduces variable cast time of all skills by 3%",
       "type": "IT_CARD",
       "loc": [
         "EQP_HELM",
@@ -38025,7 +38124,8 @@
         "record": "Id=4888"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases MATK by 20; reduces variable cast time of all skills by 3%",
       "type": "IT_CARD",
       "loc": [
         "EQP_HELM",
@@ -38045,7 +38145,8 @@
         "record": "Id=4889"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases MATK by 30; reduces variable cast time of all skills by 5%",
       "type": "IT_CARD",
       "loc": [
         "EQP_HELM",
@@ -38422,7 +38523,8 @@
         "record": "Id=4908"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases STR by 1; increases basic attack power by 3; reduces INT by 1",
       "type": "IT_CARD",
       "weight": 10,
       "loc": [
@@ -38443,7 +38545,8 @@
         "record": "Id=4909"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases STR by 2; increases basic attack power by 6; reduces INT by 2",
       "type": "IT_CARD",
       "weight": 10,
       "loc": [
@@ -38464,7 +38567,8 @@
         "record": "Id=4910"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases STR by 4; increases basic attack power by 12; reduces INT by 4",
       "type": "IT_CARD",
       "weight": 10,
       "loc": [
@@ -39563,7 +39667,8 @@
         "record": "Id=4962"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases basic attack power by 3",
       "type": "IT_CARD",
       "loc": [
         "EQP_HELM",
@@ -39583,7 +39688,8 @@
         "record": "Id=4963"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases basic attack power by 3; increases HIT by 1",
       "type": "IT_CARD",
       "loc": [
         "EQP_HELM",
@@ -39624,7 +39730,8 @@
         "record": "Id=4965"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "reduces variable cast time of all skills by 2%",
       "type": "IT_CARD",
       "loc": [
         "EQP_HELM",
@@ -39973,7 +40080,8 @@
         "record": "Id=4982"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "With STR at least 10: increases basic attack power by 5; At refine level at least +7: increases basic attack power by 10",
       "type": "IT_CARD",
       "loc": [
         "EQP_HELM",
@@ -40056,7 +40164,8 @@
         "record": "Id=4986"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases basic attack power by 20",
       "type": "IT_CARD",
       "loc": [
         "EQP_HELM",
@@ -40160,7 +40269,8 @@
         "record": "Id=4991"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases attack speed by 1",
       "type": "IT_CARD",
       "loc": [
         "EQP_HELM",
@@ -40410,7 +40520,8 @@
               "name": "Nightmare Terror Card"
             }
           ],
-          "effect_status": "scripted_not_translated",
+          "effect_status": "translated",
+          "effect_summary": "increases physical damage by 10%",
           "source": {
             "path": "db/re/item_combo_db.conf",
             "record": "combo_db[417]"
@@ -40429,7 +40540,8 @@
               "name": "Nightmare Card"
             }
           ],
-          "effect_status": "scripted_not_translated",
+          "effect_status": "translated",
+          "effect_summary": "increases maximum SP by 10%",
           "source": {
             "path": "db/re/item_combo_db.conf",
             "record": "combo_db[418]"
@@ -40440,7 +40552,8 @@
         "Nightmare_Card_Rigid_Nightmare_Terror_Card",
         "Nightmare_Terror_Card_Rigid_Nightmare_Terror_Card"
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases maximum SP by 5%",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,

@@ -13,7 +13,8 @@ use korangar_interface::window::{CustomWindow, Window};
 use rust_state::{ManuallyAssertExt, Path, RustState, State, VecIndexExt};
 
 use crate::dm::reference_data::{
-    ReferenceItem, ReferenceJobBonuses, ReferenceMonster, ReferenceNpc, ReferenceRefinement, ReferenceSkill, reference_data,
+    ReferenceCraftingEntry, ReferenceItem, ReferenceJobBonuses, ReferenceMonster, ReferenceNpc, ReferenceRefinement, ReferenceSkill,
+    reference_data,
 };
 use crate::input::InputEvent;
 use crate::interface::windows::WindowClass;
@@ -252,8 +253,12 @@ fn item_details(item: &ReferenceItem, card: bool) -> Vec<String> {
         format!("Type: {kind}   Weight: {}", item.weight),
     ];
     let relevant = reference_data()
-        .crafting_recipes
+        .crafting_entries
         .iter()
+        .filter_map(|entry| match entry {
+            ReferenceCraftingEntry::Production(recipe) | ReferenceCraftingEntry::ArrowConversion(recipe) => Some(recipe),
+            ReferenceCraftingEntry::Combo(_) => None,
+        })
         .filter(|recipe| recipe.output_id == item.id || recipe.materials.iter().any(|material| material.item_id == item.id))
         .collect::<Vec<_>>();
     if !relevant.is_empty() {

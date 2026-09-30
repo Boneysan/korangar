@@ -269,9 +269,12 @@ pub struct ReferenceItem {
     pub drops_from: Vec<ReferenceItemDrop>,
 }
 
+/// A production recipe (produce_db.txt) or arrow conversion
+/// (create_arrow_db.txt)
 #[derive(Debug, Deserialize)]
 pub struct ReferenceCraftingRecipe {
-    pub kind: String,
+    #[serde(skip_deserializing)]
+    pub entry_kind: String,
     pub output_id: u32,
     pub output_name: String,
     pub output_amount: u32,
@@ -284,7 +287,33 @@ pub struct ReferenceCraftingRecipe {
     #[serde(default)]
     pub skill_level: Option<u8>,
     pub materials: Vec<ReferenceCraftingMaterial>,
+    #[serde(default)]
+    pub combos: Vec<String>,
     pub source: ReferenceSource,
+}
+
+/// An item combo entry from item_combo_db.conf
+#[derive(Debug, Deserialize)]
+pub struct ReferenceItemComboRecipe {
+    #[serde(skip_deserializing)]
+    pub entry_kind: String,
+    pub name: String,
+    pub members: Vec<String>,
+    pub script: String,
+    #[serde(default)]
+    pub source: ReferenceSource,
+}
+
+/// All crafting entry types
+#[derive(Debug, Deserialize)]
+#[serde(tag = "kind")]
+pub enum ReferenceCraftingEntry {
+    #[serde(rename = "production")]
+    Production(ReferenceCraftingRecipe),
+    #[serde(rename = "arrow_conversion")]
+    ArrowConversion(ReferenceCraftingRecipe),
+    #[serde(rename = "combo")]
+    Combo(ReferenceItemComboRecipe),
 }
 
 #[derive(Debug, Deserialize)]
@@ -598,7 +627,7 @@ impl ReferenceItem {
     }
 }
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Default, Deserialize)]
 pub struct ReferenceSource {
     pub path: String,
     pub record: String,
@@ -804,7 +833,7 @@ pub struct ReferenceData {
     pub statuses: Vec<ReferenceStatus>,
     pub quests: Vec<ReferenceQuest>,
     pub npcs: Vec<ReferenceNpc>,
-    pub crafting_recipes: Vec<ReferenceCraftingRecipe>,
+    pub crafting_entries: Vec<ReferenceCraftingEntry>,
     pub item_grants: Vec<ReferenceItemGrant>,
     pub item_consumptions: Vec<ReferenceItemConsumption>,
     pub item_exchanges: Vec<ReferenceItemExchange>,
@@ -844,7 +873,7 @@ impl ReferenceData {
             serde_json::from_str(SERVER_RULES_JSON).map_err(|error| format!("embedded server-rules.v1.json is invalid: {error}"))?;
         let npcs: VersionedFile<ReferenceNpc> =
             serde_json::from_str(NPCS_JSON).map_err(|error| format!("embedded npcs.v1.json is invalid: {error}"))?;
-        let crafting: VersionedFile<ReferenceCraftingRecipe> =
+        let crafting: VersionedFile<ReferenceCraftingEntry> =
             serde_json::from_str(CRAFTING_JSON).map_err(|error| format!("embedded crafting.v1.json is invalid: {error}"))?;
         let item_grants: VersionedItemGrantFile =
             serde_json::from_str(ITEM_GRANTS_JSON).map_err(|error| format!("embedded item-script-grants.v1.json is invalid: {error}"))?;
@@ -1152,7 +1181,7 @@ impl ReferenceData {
             statuses,
             quests: quests.entries,
             npcs: npcs.entries,
-            crafting_recipes: crafting.entries,
+            crafting_entries: crafting.entries,
             item_grants: item_grants.entries,
             item_consumptions: item_grants.consumptions,
             item_exchanges: item_exchanges.entries,

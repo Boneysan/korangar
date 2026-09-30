@@ -24,6 +24,12 @@ ROOT = Path(__file__).resolve().parent.parent
 HERCULES = ROOT.parent / "Hercules"
 MANIFEST = HERCULES / "npc/re/scripts_main.conf"
 OUTPUT = ROOT / "docs/npc-service-clues.v1.json"
+REVIEWS = ROOT / "docs/npc-service-reviews.v1.json"
+# Shared-function reviews that explicitly cover every indexed call of that kind.
+SHARED_REVIEW_BY_KIND = {
+    "kafra_menu": "kafra_employee_core_services",
+    "repair_shared_function": "repairmain_shared_function",
+}
 
 NPC_DECL = re.compile(r"^([A-Za-z0-9_]+),(-?\d+),(-?\d+),(-?\d+)\t(script|shop|cashshop|trader)\t(.+)")
 
@@ -53,7 +59,10 @@ SERVICE_PATTERNS: dict[str, re.Pattern[str]] = {
 def source_revision() -> tuple[str, bool]:
     try:
         revision = subprocess.check_output(["git", "-C", str(HERCULES), "rev-parse", "HEAD"], text=True, stderr=subprocess.DEVNULL).strip()
-        dirty = bool(subprocess.check_output(["git", "-C", str(HERCULES), "status", "--porcelain"], text=True).strip())
+        dirty = subprocess.run(
+            ["git", "-C", str(HERCULES), "diff-index", "--quiet", "HEAD"],
+            capture_output=True,
+        ).returncode != 0
         return revision, dirty
     except (OSError, subprocess.CalledProcessError):
         return "unknown", False
@@ -80,6 +89,33 @@ def nearest_npc_declaration(lines: list[str], line_index: int) -> dict[str, Any]
     return None
 
 
+def _attach_reviews(entries: list[dict[str, Any]]) -> None:
+    """Point a clue at a review when that review cites its line or its shared function."""
+    if not REVIEWS.is_file():
+        return
+    reviews = json.loads(REVIEWS.read_text(encoding="utf-8")).get("entries", [])
+    by_id = {review["id"]: review for review in reviews if review.get("id")}
+    by_line: dict[tuple[str, int], str] = {}
+    for review in reviews:
+        for source in review.get("sources") or []:
+            path = source.get("path")
+            for line in source.get("lines") or []:
+                if isinstance(path, str) and isinstance(line, int):
+                    by_line.setdefault((path, line), review["id"])
+    for entry in entries:
+        review_id = by_line.get((entry["source"]["path"], entry["source"]["line"]))
+        if review_id is None:
+            shared = SHARED_REVIEW_BY_KIND.get(entry["service_kind"])
+            if shared in by_id:
+                review_id = shared
+        review = by_id.get(review_id or "")
+        if review is None:
+            continue
+        entry["status"] = "reviewed_service_call"
+        entry["review_id"] = review["id"]
+        entry["evidence_state"] = review.get("evidence_state", "conditional")
+
+
 def build() -> dict[str, Any]:
     files = loaded_script_files(HERCULES, MANIFEST)
     entries: list[dict[str, Any]] = []
@@ -100,6 +136,7 @@ def build() -> dict[str, Any]:
                     "status": "unreviewed_service_call_clue",
                 })
     entries.sort(key=lambda row: (row["service_kind"], row["source"]["path"], row["source"]["line"]))
+    _attach_reviews(entries)
     revision, dirty = source_revision()
     by_kind: dict[str, int] = {}
     for entry in entries:

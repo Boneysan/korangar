@@ -1,10 +1,10 @@
 {
   "schema_version": 1,
   "source_revision": {
-    "korangar": "4636b2c11072960d88f9773a4d03472d0c5c949b",
+    "korangar": "3c5a0f651a1383d6451299d379c9232601276dca",
     "hercules": "cc83ca152ff09132a047acad028a9e978bd90b89"
   },
-  "source_worktree_dirty": false,
+  "source_worktree_dirty": true,
   "mode": "renewal",
   "loaded_scripts": [
     {
@@ -2620,5 +2620,231 @@
       "sha256": "84b380a60bf58e93d6ef9aba77a23f7d46a6dd390a541d84d024bc976947e397"
     }
   ],
-  "dirty_files": []
+  "dirty_files": [
+    {
+      "repo": "korangar",
+      "path": "docs/boss-behavior.v1.json",
+      "sha256": "c769d5302cb2cb9569fb21a5f44072f52e00998989fe6ee2441a905db5bb09b0"
+    },
+    {
+      "repo": "korangar",
+      "path": "docs/cards.v1.json",
+      "sha256": "9102fe7d7d110a3bd3f18392e2f4674b6c45189cf7bcfe26a33ed89fec15d2ab"
+    },
+    {
+      "repo": "korangar",
+      "path": "docs/encyclopedia-coverage.v1.json",
+      "sha256": "12262ca624900d826015543007c588985b634a2f29cb21132116819ff202fa4f"
+    },
+    {
+      "repo": "korangar",
+      "path": "docs/item-exchanges.v1.json",
+      "sha256": "89bfe3b95f343984c5aa784aded107b1cb606f6b956f8cbc49071646f9e7946e"
+    },
+    {
+      "repo": "korangar",
+      "path": "docs/items.v1.json",
+      "sha256": "9426578ad24adedb1820fb7d9797fa1a05bbb3bf72390a86e8ff7257dd6a878d"
+    },
+    {
+      "repo": "korangar",
+      "path": "docs/npc-service-clues.v1.json",
+      "sha256": "c8965ca9b51a8b54cfa7031729bc1c5106668f5a3d9043ef1cda28239ffcddbd"
+    },
+    {
+      "repo": "korangar",
+      "path": "docs/npc-service-reviews.v1.json",
+      "sha256": "891c97ba74adc00f8c72afd094c235da6ba209cf749bd61645fe78ce56a1e935"
+    },
+    {
+      "repo": "korangar",
+      "path": "docs/plans/encyclopedia-coverage.md",
+      "sha256": "0cb5736265e738243ec77fd6617de41bc948f095e8aa926c6228fa4312cda313"
+    },
+    {
+      "repo": "korangar",
+      "path": "docs/plans/encyclopedia-local-model-plan.md",
+      "sha256": "4a19382c13162894f19e638793ac58c2c60796679ac2f7c2123b4b834020a043"
+    },
+    {
+      "repo": "korangar",
+      "path": "docs/plans/encyclopedia-qwen3-progress.json",
+      "sha256": "165b3d5c1f9f1503571e3a545b0b178ca707817277ab115e2b25bdac49be15dc"
+    },
+    {
+      "repo": "korangar",
+      "path": "docs/plans/encyclopedia-roadmap.md",
+      "sha256": "9cef8011206f7ca9b5c902ce6aa22681717a7b8cb0847ad8712aad83a3abe610"
+    },
+    {
+      "repo": "korangar",
+      "path": "docs/scripted-spawn-reviews.v1.json",
+      "sha256": "7efbcdccdf461d712fc43218c3f426cac2ed357b587f8c8b25a649949143d954"
+    },
+    {
+      "repo": "korangar",
+      "path": "docs/skill-formula-reviews.v1.json",
+      "sha256": "08089b25b40fda4c4a4b85d01f0da5177e4754cf33fc868d91745600076c1e7a"
+    },
+    {
+      "repo": "korangar",
+      "path": "korangar/data/navigation_graph.json",
+      "sha256": "7e27f202f5a6a5db718d6ada63d808e0ce8eff662c1983543dc76661a1af3867"
+    },
+    {
+      "repo": "korangar",
+      "path": "korangar/src/dm/reference_data.rs",
+      "sha256": "36b8999aeb24a02b77d4a109b7812bd014d62a2748c1869a6431197408699520"
+    },
+    {
+      "repo": "korangar",
+      "path": "korangar/src/interface/windows/adventure_guide.rs",
+      "sha256": "35bef037277a7310eec70b6e77f5b4fc8393fd17a669e183eed9e725f4095d46"
+    },
+    {
+      "repo": "korangar",
+      "path": "tools/export_bestiary_reference.py",
+      "sha256": "139dc0a3deb942d798904abea263355dd20ce5235600a757263da4de1c939e78"
+    },
+    {
+      "repo": "korangar",
+      "path": "tools/export_boss_behavior_reviews.py",
+      "sha256": "b2a46fe65090acecb1a90ddd87e53213c272a1d78cd716d106aba13917c67d66"
+    },
+    {
+      "repo": "korangar",
+      "path": "tools/export_encyclopedia_coverage.py",
+      "sha256": "70193af681f7d1aeb8b57f053b05225ee7666e2f75c2bb8369f22e79057a3f66"
+    },
+    {
+      "repo": "korangar",
+      "path": "tools/export_item_grant_reference.py",
+      "sha256": "c0846a14d6230a5c98ce9e144b0ee4de620c4461d9a9fed893e762c54176ce14"
+    },
+    {
+      "repo": "korangar",
+      "path": "tools/export_item_reference.py",
+      "sha256": "70470f8a57c606670096f3e2b37363d5d646deb7180b675c1d65da53932c04c8"
+    },
+    {
+      "repo": "korangar",
+      "path": "tools/export_job_skills.py",
+      "sha256": "56904d71b00ae4042e540e1e4725af6c5f43ce0d52ec8e9eb2451eab684ce7d0"
+    },
+    {
+      "repo": "korangar",
+      "path": "tools/export_map_flags.py",
+      "sha256": "86402698b036a9057ca88878ec2531ac86d90305a49446595fbadae95da66e0c"
+    },
+    {
+      "repo": "korangar",
+      "path": "tools/export_npc_reference.py",
+      "sha256": "e1fb47be7e73fc48b56c6a298ec551a595023974feac1174aac7e39b8b313676"
+    },
+    {
+      "repo": "korangar",
+      "path": "tools/export_npc_service_clues.py",
+      "sha256": "5a324d45de96be456ca14512521f4ca3c384927332168aff2ad25ee15ef3d5cf"
+    },
+    {
+      "repo": "korangar",
+      "path": "tools/export_scripted_spawn_reviews.py",
+      "sha256": "f521543be63bcfc175343cf5599425c780f3c8bc3097b0dd69b9c4c662879c39"
+    },
+    {
+      "repo": "korangar",
+      "path": "tools/item_exchange_reviews.json",
+      "sha256": "aadfd2a9c66df97ef194c0203398f26a5bad7f77dec40348b5c77477faec1258"
+    },
+    {
+      "repo": "korangar",
+      "path": "docs/eden_quests_extraction.json",
+      "sha256": "541bb884b3d8d9d8cb8b92d8b102457c45f558ce89bbfda2ca832a91ad669cab"
+    },
+    {
+      "repo": "korangar",
+      "path": "docs/plans/encyclopedia-completion-plan.md",
+      "sha256": "f71f030d0c9bf9aa4cf6b4afedcd0ccdd5b1232555228817da89bfac24bbed4f"
+    },
+    {
+      "repo": "korangar",
+      "path": "docs/plans/encyclopedia-loop-report.json",
+      "sha256": "8ddb7ed374bfdadf87eb973a907a2868bb4a40c3d50f79661e7c772e827fd2cc"
+    },
+    {
+      "repo": "korangar",
+      "path": "docs/plans/encyclopedia-procedures.md",
+      "sha256": "1a909c5acc6308a7dee6070dc531ebc00aacdb4ddc7e2c1dee0b65846294398e"
+    },
+    {
+      "repo": "korangar",
+      "path": "docs/plans/encyclopedia-quest-families.json",
+      "sha256": "8d5a37a04da5aa7b3da916ba640c0456b8266bc240355472305a8a13acbe662b"
+    },
+    {
+      "repo": "korangar",
+      "path": "docs/plans/encyclopedia-qwen3-quest-inventory.json",
+      "sha256": "044ec3d664015703688e16e27457137961da570a49f946d065a3e17d6623731c"
+    },
+    {
+      "repo": "korangar",
+      "path": "docs/status_inventory.v1.json",
+      "sha256": "fe1622aba8ec08ce8de4b5bc9fd1cd64c8d696e6dd34f33f6150469578626f12"
+    },
+    {
+      "repo": "korangar",
+      "path": "tools/encyclopedia_loop.py",
+      "sha256": "aa9a13aec6309c9d6ef562b6439b059d8721e1584adc9443e8ee35b4c28a3b4c"
+    },
+    {
+      "repo": "korangar",
+      "path": "tools/encyclopedia_unit.py",
+      "sha256": "a16bcecb4ccc4231ece4cf0adb0cc1c1022c3ea641975e165c62e4d5b0401bc4"
+    },
+    {
+      "repo": "korangar",
+      "path": "tools/review_simple_exchanges.py",
+      "sha256": "7007d38c152a2065068d4818d412ea47f616f245a347c8219b13a658111b67c5"
+    },
+    {
+      "repo": "korangar",
+      "path": "tools/tests/test_encyclopedia_unit.py",
+      "sha256": "f1352b953ecf861823454be71ece30130148c3226179b919c4838bc26fd8564c"
+    },
+    {
+      "repo": "korangar",
+      "path": "tools/tests/test_export_item_effect_phrases.py",
+      "sha256": "e3fac51fa29853cd6cef0074c4920ceb1ffda67e6eb099947798cb451dff001f"
+    },
+    {
+      "repo": "korangar",
+      "path": "tools/tests/test_review_simple_exchanges.py",
+      "sha256": "59e46056861e8b05ee0351156fc3810a2181337588621b8d989946a2e8abbc67"
+    },
+    {
+      "repo": "hercules",
+      "path": "db/re/generate_status_inventory.py",
+      "sha256": "5e313e14c2436fbf02196f18f2a0f684971ef2f94ecae940de37218969629a35"
+    },
+    {
+      "repo": "hercules",
+      "path": "db/re/sc_config_parser.py",
+      "sha256": "33e2cb65b1c04ab16ae39cd912d62a40c08a680902f3b06a83934872e80faa39"
+    },
+    {
+      "repo": "hercules",
+      "path": "db/re/status_inventory_summary.md",
+      "sha256": "c374c5ebb2b0ef7e06a7f674886f854f9010849d626ee39ad3dd907360f89522"
+    },
+    {
+      "repo": "hercules",
+      "path": "tools/classify_unmapped_skills.py",
+      "sha256": "6e7ed91bc68bd8cd6ebab063e0ed6b53bb6f7da36b2a04d85dfecb0a0b3c5e00"
+    },
+    {
+      "repo": "hercules",
+      "path": "tools/extract_bf_weapon.py",
+      "sha256": "00fe350639b7bbf98f94eacb1c77e1d1e84f1720f04c4300ecfb1103e92f4a3a"
+    }
+  ]
 }

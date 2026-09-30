@@ -1,0 +1,17 @@
+{
+  "loop": "encyclopedia_loop.py",
+  "automatic_phase": "single-branch delitem plus getitem with braced conditions and no skip between the calls",
+  "reviewed_exchanges": 87,
+  "quests_with_reviewed_flow": {
+    "observed": 124,
+    "total": 3172,
+    "basis": "quest records with source-anchored reviewed flow notes"
+  },
+  "live_client_pass": "deferred until the source reviews that this loop cannot prove are done",
+  "not_completed_by_this_loop": [
+    "NPC branches with menus, switches, braceless if/else, calls, or more than one item on either side",
+    "Quest flows that are not already in tools/quest_flow_reviews.json",
+    "Skill formulas beyond tools/skill_formula_reviews.json",
+    "Fresh-account Adventure Guide journeys"
+  ]
+}

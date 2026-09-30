@@ -1,0 +1,2064 @@
+{
+  "total_statuses": 694,
+  "with_skill_mapping": 77,
+  "without_skill_mapping": 617,
+  "by_attack_type": {
+    "Unknown": {
+      "statuses_count": 28,
+      "status_entries": [
+        {
+          "name": "SC_NJ_UTSUSEMI",
+          "flags": {
+            "NoSave": true,
+            "Buff": true
+          },
+          "calcflags": [],
+          "icon": null,
+          "skill": null,
+          "mapped_skill_ids": [
+            531
+          ],
+          "attack_type": "Unknown",
+          "reviewed": false
+        },
+        {
+          "name": "SC_OFFERTORIUM",
+          "flags": {},
+          "calcflags": [],
+          "icon": "SI_OFFERTORIUM",
+          "skill": "AB_OFFERTORIUM",
+          "mapped_skill_ids": [
+            5011
+          ],
+          "attack_type": "Unknown",
+          "reviewed": false
+        },
+        {
+          "name": "SC_STEALTHFIELD",
+          "flags": {},
+          "calcflags": [],
+          "icon": "SI_STEALTHFIELD",
+          "skill": "NC_STEALTHFIELD",
+          "mapped_skill_ids": [
+            2274
+          ],
+          "attack_type": "Unknown",
+          "reviewed": false
+        },
+        {
+          "name": "SC_GRANITIC_ARMOR",
+          "flags": {},
+          "calcflags": [],
+          "icon": "SI_GRANITIC_ARMOR",
+          "skill": "MH_GRANITIC_ARMOR",
+          "mapped_skill_ids": [
+            8040
+          ],
+          "attack_type": "Unknown",
+          "reviewed": false
+        },
+        {
+          "name": "SC_GENSOU",
+          "flags": {},
+          "calcflags": [],
+          "icon": "SI_GENSOU",
+          "skill": "OB_OBOROGENSOU",
+          "mapped_skill_ids": [
+            3027
+          ],
+          "attack_type": "Unknown",
+          "reviewed": false
+        },
+        {
+          "name": "SC_KAGEMUSYA",
+          "flags": {},
+          "calcflags": [],
+          "icon": "SI_KAGEMUSYA",
+          "skill": "KG_KAGEMUSYA",
+          "mapped_skill_ids": [
+            3025
+          ],
+          "attack_type": "Unknown",
+          "reviewed": false
+        },
+        {
+          "name": "SC_LG_REFLECTDAMAGE",
+          "flags": {},
+          "calcflags": [],
+          "icon": "SI_LG_REFLECTDAMAGE",
+          "skill": "LG_REFLECTDAMAGE",
+          "mapped_skill_ids": [
+            2311
+          ],
+          "attack_type": "Unknown",
+          "reviewed": false
+        },
+        {
+          "name": "SC_WATER_SCREEN_OPTION",
+          "flags": {},
+          "calcflags": [],
+          "icon": "SI_WATER_SCREEN_OPTION",
+          "skill": "EL_WATER_SCREEN",
+          "mapped_skill_ids": [
+            8404
+          ],
+          "attack_type": "Unknown",
+          "reviewed": false
+        },
+        {
+          "name": "SC_GENTLETOUCH_ENERGYGAIN",
+          "flags": {},
+          "calcflags": [],
+          "icon": "SI_GENTLETOUCH_ENERGYGAIN",
+          "skill": "SR_GENTLETOUCH_ENERGYGAIN",
+          "mapped_skill_ids": [
+            2346
+          ],
+          "attack_type": "Unknown",
+          "reviewed": false
+        },
+        {
+          "name": "SC_NJ_NEN",
+          "flags": {},
+          "calcflags": [
+            "Str",
+            "Int"
+          ],
+          "icon": null,
+          "skill": null,
+          "mapped_skill_ids": [
+            543
+          ],
+          "attack_type": "Unknown",
+          "reviewed": false
+        },
+        {
+          "name": "SC_KYOMU",
+          "flags": {},
+          "calcflags": [],
+          "icon": "SI_KYOMU",
+          "skill": "KG_KYOMU",
+          "mapped_skill_ids": [
+            3024
+          ],
+          "attack_type": "Unknown",
+          "reviewed": false
+        },
+        {
+          "name": "SC_KINGS_GRACE",
+          "flags": {},
+          "calcflags": [],
+          "icon": "SI_KINGS_GRACE",
+          "skill": "LG_KINGS_GRACE",
+          "mapped_skill_ids": [
+            5013
+          ],
+          "attack_type": "Unknown",
+          "reviewed": false
+        },
+        {
+          "name": "SC_AKAITSUKI",
+          "flags": {},
+          "calcflags": [],
+          "icon": "SI_AKAITSUKI",
+          "skill": "OB_AKAITSUKI",
+          "mapped_skill_ids": [
+            3029
+          ],
+          "attack_type": "Unknown",
+          "reviewed": false
+        },
+        {
+          "name": "SC_SU_STOOP",
+          "flags": {},
+          "calcflags": [],
+          "icon": "SI_SU_STOOP",
+          "skill": "SU_STOOP",
+          "mapped_skill_ids": [
+            5022
+          ],
+          "attack_type": "Unknown",
+          "reviewed": false
+        },
+        {
+          "name": "SC_TUNAPARTY",
+          "flags": {},
+          "calcflags": [],
+          "icon": "SI_TUNAPARTY",
+          "skill": "SU_TUNAPARTY",
+          "mapped_skill_ids": [
+            5039
+          ],
+          "attack_type": "Unknown",
+          "reviewed": false
+        },
+        {
+          "name": "SC_KG_KAGEHUMI",
+          "flags": {},
+          "calcflags": [],
+          "icon": "SI_KG_KAGEHUMI",
+          "skill": "KG_KAGEHUMI",
+          "mapped_skill_ids": [
+            3023
+          ],
+          "attack_type": "Unknown",
+          "reviewed": false
+        },
+        {
+          "name": "SC_MEIKYOUSISUI",
+          "flags": {},
+          "calcflags": [],
+          "icon": "SI_MEIKYOUSISUI",
+          "skill": "KO_MEIKYOUSISUI",
+          "mapped_skill_ids": [
+            3011
+          ],
+          "attack_type": "Unknown",
+          "reviewed": false
+        },
+        {
+          "name": "SC_BABY",
+          "flags": {},
+          "calcflags": [],
+          "icon": "SI_PROTECTEXP",
+          "skill": "WE_BABY",
+          "mapped_skill_ids": [
+            408
+          ],
+          "attack_type": "Unknown",
+          "reviewed": false
+        },
+        {
+          "name": "SC_GN_CARTBOOST",
+          "flags": {},
+          "calcflags": [
+            "Speed"
+          ],
+          "icon": null,
+          "skill": null,
+          "mapped_skill_ids": [
+            2478
+          ],
+          "attack_type": "Unknown",
+          "reviewed": false
+        },
+        {
+          "name": "SC_CONFUSION",
+          "flags": {},
+          "calcflags": [],
+          "icon": null,
+          "skill": "NPC_WIDECONFUSE",
+          "mapped_skill_ids": [
+            667
+          ],
+          "attack_type": "Unknown",
+          "reviewed": false
+        },
+        {
+          "name": "SC_SKILLRATE_UP",
+          "flags": {},
+          "calcflags": [],
+          "icon": null,
+          "skill": "SG_FRIEND",
+          "mapped_skill_ids": [
+            442
+          ],
+          "attack_type": "Unknown",
+          "reviewed": false
+        },
+        {
+          "name": "SC_HLIF_AVOID",
+          "flags": {},
+          "calcflags": [
+            "Speed"
+          ],
+          "icon": null,
+          "skill": null,
+          "mapped_skill_ids": [
+            8002
+          ],
+          "attack_type": "Unknown",
+          "reviewed": false
+        },
+        {
+          "name": "SC_HLIF_CHANGE",
+          "flags": {},
+          "calcflags": [
+            "Vit",
+            "Int"
+          ],
+          "icon": null,
+          "skill": null,
+          "mapped_skill_ids": [
+            8004
+          ],
+          "attack_type": "Unknown",
+          "reviewed": false
+        },
+        {
+          "name": "SC_HAMI_BLOODLUST",
+          "flags": {},
+          "calcflags": [
+            "AtkPerc"
+          ],
+          "icon": null,
+          "skill": null,
+          "mapped_skill_ids": [
+            8008
+          ],
+          "attack_type": "Unknown",
+          "reviewed": false
+        },
+        {
+          "name": "SC_HAMI_DEFENCE",
+          "flags": {},
+          "calcflags": [
+            "Def"
+          ],
+          "icon": null,
+          "skill": null,
+          "mapped_skill_ids": [
+            8006
+          ],
+          "attack_type": "Unknown",
+          "reviewed": false
+        },
+        {
+          "name": "SC_MILLENNIUMSHIELD",
+          "flags": {},
+          "calcflags": [],
+          "icon": null,
+          "skill": "RK_MILLENNIUMSHIELD",
+          "mapped_skill_ids": [
+            2011
+          ],
+          "attack_type": "Unknown",
+          "reviewed": false
+        },
+        {
+          "name": "SC_STYLE_CHANGE",
+          "flags": {},
+          "calcflags": [],
+          "icon": null,
+          "skill": "MH_STYLE_CHANGE",
+          "mapped_skill_ids": [
+            8027
+          ],
+          "attack_type": "Unknown",
+          "reviewed": false
+        },
+        {
+          "name": "SC_NO_SWITCH_EQUIP",
+          "flags": {},
+          "calcflags": [],
+          "icon": null,
+          "skill": "WM_SEVERE_RAINSTORM",
+          "mapped_skill_ids": [
+            2418
+          ],
+          "attack_type": "Unknown",
+          "reviewed": false
+        }
+      ]
+    },
+    "Weapon": {
+      "statuses_count": 27,
+      "status_entries": [
+        {
+          "name": "SC_CR_SHRINK",
+          "flags": {
+            "NoDeathReset": true,
+            "NoSave": true,
+            "NoDispelReset": true,
+            "Buff": true
+          },
+          "calcflags": [],
+          "icon": null,
+          "skill": null,
+          "mapped_skill_ids": [
+            1002
+          ],
+          "attack_type": "Weapon",
+          "reviewed": false
+        },
+        {
+          "name": "SC_MAGMA_FLOW",
+          "flags": {},
+          "calcflags": [],
+          "icon": "SI_MAGMA_FLOW",
+          "skill": "MH_MAGMA_FLOW",
+          "mapped_skill_ids": [
+            8039
+          ],
+          "attack_type": "Weapon",
+          "reviewed": false
+        },
+        {
+          "name": "SC_GS_GATLINGFEVER",
+          "flags": {},
+          "calcflags": [
+            "Flee",
+            "Speed",
+            "Aspd"
+          ],
+          "icon": null,
+          "skill": null,
+          "mapped_skill_ids": [
+            517
+          ],
+          "attack_type": "Weapon",
+          "reviewed": false
+        },
+        {
+          "name": "SC_FALLENEMPIRE",
+          "flags": {},
+          "calcflags": [],
+          "icon": "SI_FALLENEMPIRE",
+          "skill": "SR_FALLENEMPIRE",
+          "mapped_skill_ids": [
+            2329
+          ],
+          "attack_type": "Weapon",
+          "reviewed": false
+        },
+        {
+          "name": "SC_AUTOBERSERK",
+          "flags": {},
+          "calcflags": [],
+          "icon": "SI_AUTOBERSERK",
+          "skill": "SM_AUTOBERSERK",
+          "mapped_skill_ids": [
+            146
+          ],
+          "attack_type": "Weapon",
+          "reviewed": false
+        },
+        {
+          "name": "SC_CRUSHSTRIKE",
+          "flags": {},
+          "calcflags": [],
+          "icon": "SI_CRUSHSTRIKE",
+          "skill": "RK_CRUSHSTRIKE",
+          "mapped_skill_ids": [
+            2012
+          ],
+          "attack_type": "Weapon",
+          "reviewed": false
+        },
+        {
+          "name": "SC_GS_MADNESSCANCEL",
+          "flags": {},
+          "calcflags": [
+            "Aspd"
+          ],
+          "icon": null,
+          "skill": null,
+          "mapped_skill_ids": [
+            504
+          ],
+          "attack_type": "Weapon",
+          "reviewed": false
+        },
+        {
+          "name": "SC_KO_JYUMONJIKIRI",
+          "flags": {},
+          "calcflags": [],
+          "icon": "SI_KO_JYUMONJIKIRI",
+          "skill": "KO_JYUMONJIKIRI",
+          "mapped_skill_ids": [
+            3004
+          ],
+          "attack_type": "Weapon",
+          "reviewed": false
+        },
+        {
+          "name": "SC_DARKCROW",
+          "flags": {},
+          "calcflags": [],
+          "icon": "SI_DARKCROW",
+          "skill": "GC_DARKCROW",
+          "mapped_skill_ids": [
+            5001
+          ],
+          "attack_type": "Weapon",
+          "reviewed": false
+        },
+        {
+          "name": "SC_CIRCLE_OF_FIRE_OPTION",
+          "flags": {},
+          "calcflags": [],
+          "icon": "SI_CIRCLE_OF_FIRE_OPTION",
+          "skill": "EL_CIRCLE_OF_FIRE",
+          "mapped_skill_ids": [
+            8401
+          ],
+          "attack_type": "Weapon",
+          "reviewed": false
+        },
+        {
+          "name": "SC_BROKENWEAPON",
+          "flags": {},
+          "calcflags": [],
+          "icon": "SI_BROKENWEAPON",
+          "skill": "NPC_WEAPONBRAKER",
+          "mapped_skill_ids": [
+            343
+          ],
+          "attack_type": "Weapon",
+          "reviewed": false
+        },
+        {
+          "name": "SC_BROKENARMOR",
+          "flags": {},
+          "calcflags": [],
+          "icon": "SI_BROKENARMOR",
+          "skill": "NPC_ARMORBRAKE",
+          "mapped_skill_ids": [
+            344
+          ],
+          "attack_type": "Weapon",
+          "reviewed": false
+        },
+        {
+          "name": "SC_GS_ADJUSTMENT",
+          "flags": {},
+          "calcflags": [
+            "Hit",
+            "Flee"
+          ],
+          "icon": null,
+          "skill": null,
+          "mapped_skill_ids": [
+            505
+          ],
+          "attack_type": "Weapon",
+          "reviewed": false
+        },
+        {
+          "name": "SC_SWORDREJECT",
+          "flags": {},
+          "calcflags": [],
+          "icon": "SI_SWORDREJECT",
+          "skill": "ST_REJECTSWORD",
+          "mapped_skill_ids": [
+            390
+          ],
+          "attack_type": "Weapon",
+          "reviewed": false
+        },
+        {
+          "name": "SC_EXTREMITYFIST2",
+          "flags": {},
+          "calcflags": [],
+          "icon": "SI_EXTREMITYFIST",
+          "skill": "MO_EXTREMITYFIST",
+          "mapped_skill_ids": [
+            271
+          ],
+          "attack_type": "Weapon",
+          "reviewed": false
+        },
+        {
+          "name": "SC_WARM",
+          "flags": {},
+          "calcflags": [],
+          "icon": "SI_SG_SUN_WARM",
+          "skill": "SG_SUN_WARM",
+          "mapped_skill_ids": [
+            428
+          ],
+          "attack_type": "Weapon",
+          "reviewed": false
+        },
+        {
+          "name": "SC_STUN",
+          "flags": {},
+          "calcflags": [],
+          "icon": null,
+          "skill": "NPC_STUNATTACK",
+          "mapped_skill_ids": [
+            179
+          ],
+          "attack_type": "Weapon",
+          "reviewed": false
+        },
+        {
+          "name": "SC_SLEEP",
+          "flags": {},
+          "calcflags": [],
+          "icon": null,
+          "skill": "NPC_SLEEPATTACK",
+          "mapped_skill_ids": [
+            182
+          ],
+          "attack_type": "Weapon",
+          "reviewed": false
+        },
+        {
+          "name": "SC_SPLASHER",
+          "flags": {},
+          "calcflags": [],
+          "icon": null,
+          "skill": "AS_SPLASHER",
+          "mapped_skill_ids": [
+            141
+          ],
+          "attack_type": "Weapon",
+          "reviewed": true
+        },
+        {
+          "name": "SC_AUTOCOUNTER",
+          "flags": {},
+          "calcflags": [],
+          "icon": null,
+          "skill": "KN_AUTOCOUNTER",
+          "mapped_skill_ids": [
+            61
+          ],
+          "attack_type": "Weapon",
+          "reviewed": false
+        },
+        {
+          "name": "SC_BLADESTOP_WAIT",
+          "flags": {},
+          "calcflags": [],
+          "icon": null,
+          "skill": "MO_BLADESTOP",
+          "mapped_skill_ids": [
+            269
+          ],
+          "attack_type": "Weapon",
+          "reviewed": false
+        },
+        {
+          "name": "SC_ARMOR",
+          "flags": {},
+          "calcflags": [],
+          "icon": null,
+          "skill": "NPC_DEFENDER",
+          "mapped_skill_ids": [
+            205
+          ],
+          "attack_type": "Weapon",
+          "reviewed": false
+        },
+        {
+          "name": "SC_NJ_TATAMIGAESHI",
+          "flags": {},
+          "calcflags": [],
+          "icon": null,
+          "skill": "NJ_TATAMIGAESHI",
+          "mapped_skill_ids": [
+            527
+          ],
+          "attack_type": "Weapon",
+          "reviewed": false
+        },
+        {
+          "name": "SC_MAGICALATTACK",
+          "flags": {},
+          "calcflags": [],
+          "icon": null,
+          "skill": "NPC_MAGICALATTACK",
+          "mapped_skill_ids": [
+            192
+          ],
+          "attack_type": "Weapon",
+          "reviewed": false
+        },
+        {
+          "name": "SC_TK_SEVENWIND",
+          "flags": {},
+          "calcflags": [],
+          "icon": null,
+          "skill": "TK_SEVENWIND",
+          "mapped_skill_ids": [
+            425
+          ],
+          "attack_type": "Weapon",
+          "reviewed": false
+        },
+        {
+          "name": "SC_MER_QUICKEN",
+          "flags": {},
+          "calcflags": [
+            "Aspd"
+          ],
+          "icon": null,
+          "skill": null,
+          "mapped_skill_ids": [
+            8223
+          ],
+          "attack_type": "Weapon",
+          "reviewed": false
+        },
+        {
+          "name": "SC__FEINTBOMB_MASTER",
+          "flags": {},
+          "calcflags": [],
+          "icon": null,
+          "skill": "SC_FEINTBOMB",
+          "mapped_skill_ids": [
+            2304
+          ],
+          "attack_type": "Weapon",
+          "reviewed": false
+        }
+      ]
+    },
+    "Magic": {
+      "statuses_count": 17,
+      "status_entries": [
+        {
+          "name": "SC_WZ_SIGHTBLASTER",
+          "flags": {
+            "NoDeathReset": true,
+            "NoSave": true,
+            "NoDispelReset": true,
+            "Buff": true
+          },
+          "calcflags": [],
+          "icon": null,
+          "skill": null,
+          "mapped_skill_ids": [
+            1006
+          ],
+          "attack_type": "Magic",
+          "reviewed": false
+        },
+        {
+          "name": "SC_NJ_BUNSINJYUTSU",
+          "flags": {
+            "NoSave": true,
+            "Buff": true
+          },
+          "calcflags": [],
+          "icon": null,
+          "skill": null,
+          "mapped_skill_ids": [
+            532
+          ],
+          "attack_type": "Magic",
+          "reviewed": false
+        },
+        {
+          "name": "SC_NJ_SUITON",
+          "flags": {
+            "NoDeathReset": true,
+            "NoSave": true,
+            "NoDispelReset": true,
+            "Debuff": true
+          },
+          "calcflags": [
+            "Agi",
+            "Speed"
+          ],
+          "icon": null,
+          "skill": null,
+          "mapped_skill_ids": [
+            538
+          ],
+          "attack_type": "Magic",
+          "reviewed": false
+        },
+        {
+          "name": "SC_KAIZEL",
+          "flags": {},
+          "calcflags": [],
+          "icon": "SI_KAIZEL",
+          "skill": "SL_KAIZEL",
+          "mapped_skill_ids": [
+            462
+          ],
+          "attack_type": "Magic",
+          "reviewed": false
+        },
+        {
+          "name": "SC_SECRAMENT",
+          "flags": {},
+          "calcflags": [],
+          "icon": "SI_SECRAMENT",
+          "skill": "AB_SECRAMENT",
+          "mapped_skill_ids": [
+            2515
+          ],
+          "attack_type": "Magic",
+          "reviewed": false
+        },
+        {
+          "name": "SC_ZENKAI",
+          "flags": {},
+          "calcflags": [],
+          "icon": "SI_ZENKAI",
+          "skill": "KO_ZENKAI",
+          "mapped_skill_ids": [
+            3020
+          ],
+          "attack_type": "Magic",
+          "reviewed": false
+        },
+        {
+          "name": "SC_STASIS",
+          "flags": {},
+          "calcflags": [],
+          "icon": "SI_STASIS",
+          "skill": "WL_STASIS",
+          "mapped_skill_ids": [
+            2209
+          ],
+          "attack_type": "Magic",
+          "reviewed": false
+        },
+        {
+          "name": "SC_SMA_READY",
+          "flags": {},
+          "calcflags": [],
+          "icon": "SI_SMA_READY",
+          "skill": "SL_SMA",
+          "mapped_skill_ids": [
+            469
+          ],
+          "attack_type": "Magic",
+          "reviewed": false
+        },
+        {
+          "name": "SC_SIGHT",
+          "flags": {},
+          "calcflags": [],
+          "icon": null,
+          "skill": "MG_SIGHT",
+          "mapped_skill_ids": [
+            10
+          ],
+          "attack_type": "Magic",
+          "reviewed": false
+        },
+        {
+          "name": "SC_RUWACH",
+          "flags": {},
+          "calcflags": [],
+          "icon": null,
+          "skill": "AL_RUWACH",
+          "mapped_skill_ids": [
+            24
+          ],
+          "attack_type": "Magic",
+          "reviewed": true
+        },
+        {
+          "name": "SC_MAGICMIRROR",
+          "flags": {},
+          "calcflags": [],
+          "icon": null,
+          "skill": "NPC_MAGICMIRROR",
+          "mapped_skill_ids": [
+            671
+          ],
+          "attack_type": "Magic",
+          "reviewed": false
+        },
+        {
+          "name": "SC_REBIRTH",
+          "flags": {},
+          "calcflags": [],
+          "icon": null,
+          "skill": "NPC_REBIRTH",
+          "mapped_skill_ids": [
+            208
+          ],
+          "attack_type": "Magic",
+          "reviewed": false
+        },
+        {
+          "name": "SC_WHITEIMPRISON",
+          "flags": {},
+          "calcflags": [],
+          "icon": null,
+          "skill": "WL_WHITEIMPRISON",
+          "mapped_skill_ids": [
+            2201
+          ],
+          "attack_type": "Magic",
+          "reviewed": false
+        },
+        {
+          "name": "SC__MAELSTROM",
+          "flags": {},
+          "calcflags": [],
+          "icon": null,
+          "skill": "SC_MAELSTROM",
+          "mapped_skill_ids": [
+            2302
+          ],
+          "attack_type": "Magic",
+          "reviewed": false
+        },
+        {
+          "name": "SC__CHAOS",
+          "flags": {},
+          "calcflags": [],
+          "icon": null,
+          "skill": "SC_CHAOSPANIC",
+          "mapped_skill_ids": [
+            2301
+          ],
+          "attack_type": "Magic",
+          "reviewed": false
+        },
+        {
+          "name": "SC_SP_SHA",
+          "flags": {
+            "Buff": true,
+            "NoDispelReset": true
+          },
+          "calcflags": [
+            "Speed"
+          ],
+          "icon": null,
+          "skill": null,
+          "mapped_skill_ids": [
+            2603
+          ],
+          "attack_type": "Magic",
+          "reviewed": false
+        },
+        {
+          "name": "SC_SP_SPA",
+          "flags": {
+            "Buff": true,
+            "NoDispelReset": true
+          },
+          "calcflags": [],
+          "icon": null,
+          "skill": null,
+          "mapped_skill_ids": [
+            2602
+          ],
+          "attack_type": "Magic",
+          "reviewed": false
+        }
+      ]
+    },
+    "Misc": {
+      "statuses_count": 5,
+      "status_entries": [
+        {
+          "name": "SC_ANKLESNARE",
+          "flags": {},
+          "calcflags": [],
+          "icon": "SI_ANKLESNARE",
+          "skill": "HT_ANKLESNARE",
+          "mapped_skill_ids": [
+            117
+          ],
+          "attack_type": "Misc",
+          "reviewed": false
+        },
+        {
+          "name": "SC_DC_WINKCHARM",
+          "flags": {},
+          "calcflags": [],
+          "icon": "SI_DC_WINKCHARM",
+          "skill": "DC_WINKCHARM",
+          "mapped_skill_ids": [
+            1011
+          ],
+          "attack_type": "Misc",
+          "reviewed": false
+        },
+        {
+          "name": "SC_THORNS_TRAP",
+          "flags": {},
+          "calcflags": [],
+          "icon": "SI_THORNTRAP",
+          "skill": "GN_THORNS_TRAP",
+          "mapped_skill_ids": [
+            2479
+          ],
+          "attack_type": "Misc",
+          "reviewed": false
+        },
+        {
+          "name": "SC_HERMODE",
+          "flags": {},
+          "calcflags": [],
+          "icon": null,
+          "skill": "CG_HERMODE",
+          "mapped_skill_ids": [
+            488
+          ],
+          "attack_type": "Misc",
+          "reviewed": false
+        },
+        {
+          "name": "SC_SCRESIST",
+          "flags": {},
+          "calcflags": [],
+          "icon": null,
+          "skill": "PA_GOSPEL",
+          "mapped_skill_ids": [
+            369
+          ],
+          "attack_type": "Misc",
+          "reviewed": false
+        }
+      ]
+    }
+  },
+  "by_calcflags_pattern": {
+    "()": 388,
+    "('Speed',)": 32,
+    "('Aspd',)": 24,
+    "('Maxhp',)": 20,
+    "('Flee',)": 16,
+    "('Matk',)": 15,
+    "('Watk',)": 12,
+    "('Batk', 'Matk')": 9,
+    "('Def',)": 9,
+    "('Def', 'Mdef')": 8,
+    "('Int',)": 8,
+    "('Str',)": 8,
+    "('Vit',)": 7,
+    "('Hit',)": 7,
+    "('Maxsp',)": 7,
+    "('Luk',)": 6,
+    "('Aspd', 'Speed')": 6,
+    "('Batk',)": 6,
+    "('Flee', 'Hit')": 6,
+    "('Agi', 'Dex', 'Int', 'Luk', 'Str', 'Vit')": 6,
+    "('Aspd', 'Hit')": 5,
+    "('AtkPerc',)": 5,
+    "('DefPerc',)": 5,
+    "('Agi',)": 5,
+    "('Dex',)": 5,
+    "('Mdef',)": 4,
+    "('Agi', 'Speed')": 4,
+    "('AtkPerc', 'DefPerc')": 2,
+    "('Aspd', 'Flee')": 2,
+    "('Flee', 'Speed')": 2,
+    "('Aspd', 'Flee', 'Speed')": 2,
+    "('Maxhp', 'Maxsp')": 2,
+    "('Agi', 'Dex', 'Int', 'Luk', 'Speed', 'Str', 'Vit')": 2,
+    "('Batk', 'Matk', 'Maxhp', 'Maxsp')": 2,
+    "('Agi', 'Dex')": 1,
+    "('Agi', 'Aspd', 'Dex', 'Speed')": 1,
+    "('Dex', 'Hit', 'Int', 'Str')": 1,
+    "('Agi', 'Aspd', 'Speed')": 1,
+    "('Batk', 'Str')": 1,
+    "('Aspd', 'Def', 'Mdef', 'Speed')": 1,
+    "('DefPerc', 'Hit', 'Watk')": 1,
+    "('Aspd', 'Def', 'Flee', 'Maxhp', 'Mdef', 'Speed')": 1,
+    "('Matk', 'Watk')": 1,
+    "('Agi', 'Dex', 'Hit', 'Int', 'Luk', 'Str', 'Vit')": 1,
+    "('Aspd', 'AtkPerc', 'DefPerc', 'Speed')": 1,
+    "('Aspd', 'Watk')": 1,
+    "('Agi', 'Dex', 'Flee', 'Speed')": 1,
+    "('Def', 'Maxhp', 'Mdef')": 1,
+    "('Aspd', 'Def')": 1,
+    "('Agi', 'Dex', 'Hit', 'Int', 'Luk', 'Maxhp', 'Str', 'Vit', 'Watk')": 1,
+    "('Aspd', 'Hit', 'Speed')": 1,
+    "('Dex', 'Int', 'Luk')": 1,
+    "('Batk', 'Def', 'Flee')": 1,
+    "('Maxhp', 'Str')": 1,
+    "('Aspd', 'Def', 'Speed')": 1,
+    "('Flee', 'Watk')": 1,
+    "('Def', 'Maxhp', 'Speed')": 1,
+    "('Batk', 'Matk', 'Watk')": 1,
+    "('Def', 'Maxhp', 'Maxsp', 'Mdef', 'Watk')": 1,
+    "('Aspd', 'Batk')": 1,
+    "('Def', 'Flee')": 1,
+    "('Aspd', 'Maxhp')": 1,
+    "('Agi', 'Dex', 'Hit')": 1,
+    "('Speed', 'Watk')": 1,
+    "('Batk', 'Def', 'Flee', 'Maxhp')": 1,
+    "('Def', 'Matk', 'Mdef', 'Watk')": 1,
+    "('Agi', 'Batk', 'Dex', 'Int', 'Luk', 'Matk', 'Str', 'Vit')": 1,
+    "('Int', 'Str')": 1,
+    "('Batk', 'Def', 'Flee', 'Hit')": 1,
+    "('Flee', 'Luk')": 1,
+    "('Aspd', 'Maxhp', 'Mdef', 'Watk')": 1,
+    "('Aspd', 'Def', 'Flee')": 1,
+    "('Def', 'Maxhp')": 1,
+    "('AtkPerc', 'Luk', 'Speed')": 1,
+    "('Dex', 'Int', 'Str')": 1,
+    "('Batk', 'Def')": 1,
+    "('Aspd', 'Def', 'Mdef')": 1,
+    "('Int', 'Vit')": 1,
+    "('Aspd', 'AtkPerc')": 1,
+    "('Batk', 'Watk')": 1,
+    "('Hit', 'Watk')": 1
+  },
+  "reviewed_formula_status": [
+    {
+      "status": "SC_SPLASHER",
+      "skill_id": 141,
+      "attack_type": "Weapon",
+      "calcflags": []
+    },
+    {
+      "status": "SC_RUWACH",
+      "skill_id": 24,
+      "attack_type": "Magic",
+      "calcflags": []
+    }
+  ],
+  "unreviewed_status_by_priority": [
+    {
+      "name": "SC_ARMOR",
+      "flags": {},
+      "calcflags": [],
+      "icon": null,
+      "skill": "NPC_DEFENDER",
+      "mapped_skill_ids": [
+        205
+      ],
+      "attack_type": "Weapon",
+      "reviewed": false
+    },
+    {
+      "name": "SC_AUTOBERSERK",
+      "flags": {},
+      "calcflags": [],
+      "icon": "SI_AUTOBERSERK",
+      "skill": "SM_AUTOBERSERK",
+      "mapped_skill_ids": [
+        146
+      ],
+      "attack_type": "Weapon",
+      "reviewed": false
+    },
+    {
+      "name": "SC_AUTOCOUNTER",
+      "flags": {},
+      "calcflags": [],
+      "icon": null,
+      "skill": "KN_AUTOCOUNTER",
+      "mapped_skill_ids": [
+        61
+      ],
+      "attack_type": "Weapon",
+      "reviewed": false
+    },
+    {
+      "name": "SC_BLADESTOP_WAIT",
+      "flags": {},
+      "calcflags": [],
+      "icon": null,
+      "skill": "MO_BLADESTOP",
+      "mapped_skill_ids": [
+        269
+      ],
+      "attack_type": "Weapon",
+      "reviewed": false
+    },
+    {
+      "name": "SC_BROKENARMOR",
+      "flags": {},
+      "calcflags": [],
+      "icon": "SI_BROKENARMOR",
+      "skill": "NPC_ARMORBRAKE",
+      "mapped_skill_ids": [
+        344
+      ],
+      "attack_type": "Weapon",
+      "reviewed": false
+    },
+    {
+      "name": "SC_BROKENWEAPON",
+      "flags": {},
+      "calcflags": [],
+      "icon": "SI_BROKENWEAPON",
+      "skill": "NPC_WEAPONBRAKER",
+      "mapped_skill_ids": [
+        343
+      ],
+      "attack_type": "Weapon",
+      "reviewed": false
+    },
+    {
+      "name": "SC_CIRCLE_OF_FIRE_OPTION",
+      "flags": {},
+      "calcflags": [],
+      "icon": "SI_CIRCLE_OF_FIRE_OPTION",
+      "skill": "EL_CIRCLE_OF_FIRE",
+      "mapped_skill_ids": [
+        8401
+      ],
+      "attack_type": "Weapon",
+      "reviewed": false
+    },
+    {
+      "name": "SC_CRUSHSTRIKE",
+      "flags": {},
+      "calcflags": [],
+      "icon": "SI_CRUSHSTRIKE",
+      "skill": "RK_CRUSHSTRIKE",
+      "mapped_skill_ids": [
+        2012
+      ],
+      "attack_type": "Weapon",
+      "reviewed": false
+    },
+    {
+      "name": "SC_CR_SHRINK",
+      "flags": {
+        "NoDeathReset": true,
+        "NoSave": true,
+        "NoDispelReset": true,
+        "Buff": true
+      },
+      "calcflags": [],
+      "icon": null,
+      "skill": null,
+      "mapped_skill_ids": [
+        1002
+      ],
+      "attack_type": "Weapon",
+      "reviewed": false
+    },
+    {
+      "name": "SC_DARKCROW",
+      "flags": {},
+      "calcflags": [],
+      "icon": "SI_DARKCROW",
+      "skill": "GC_DARKCROW",
+      "mapped_skill_ids": [
+        5001
+      ],
+      "attack_type": "Weapon",
+      "reviewed": false
+    },
+    {
+      "name": "SC_EXTREMITYFIST2",
+      "flags": {},
+      "calcflags": [],
+      "icon": "SI_EXTREMITYFIST",
+      "skill": "MO_EXTREMITYFIST",
+      "mapped_skill_ids": [
+        271
+      ],
+      "attack_type": "Weapon",
+      "reviewed": false
+    },
+    {
+      "name": "SC_FALLENEMPIRE",
+      "flags": {},
+      "calcflags": [],
+      "icon": "SI_FALLENEMPIRE",
+      "skill": "SR_FALLENEMPIRE",
+      "mapped_skill_ids": [
+        2329
+      ],
+      "attack_type": "Weapon",
+      "reviewed": false
+    },
+    {
+      "name": "SC_GS_ADJUSTMENT",
+      "flags": {},
+      "calcflags": [
+        "Hit",
+        "Flee"
+      ],
+      "icon": null,
+      "skill": null,
+      "mapped_skill_ids": [
+        505
+      ],
+      "attack_type": "Weapon",
+      "reviewed": false
+    },
+    {
+      "name": "SC_GS_GATLINGFEVER",
+      "flags": {},
+      "calcflags": [
+        "Flee",
+        "Speed",
+        "Aspd"
+      ],
+      "icon": null,
+      "skill": null,
+      "mapped_skill_ids": [
+        517
+      ],
+      "attack_type": "Weapon",
+      "reviewed": false
+    },
+    {
+      "name": "SC_GS_MADNESSCANCEL",
+      "flags": {},
+      "calcflags": [
+        "Aspd"
+      ],
+      "icon": null,
+      "skill": null,
+      "mapped_skill_ids": [
+        504
+      ],
+      "attack_type": "Weapon",
+      "reviewed": false
+    },
+    {
+      "name": "SC_KO_JYUMONJIKIRI",
+      "flags": {},
+      "calcflags": [],
+      "icon": "SI_KO_JYUMONJIKIRI",
+      "skill": "KO_JYUMONJIKIRI",
+      "mapped_skill_ids": [
+        3004
+      ],
+      "attack_type": "Weapon",
+      "reviewed": false
+    },
+    {
+      "name": "SC_MAGICALATTACK",
+      "flags": {},
+      "calcflags": [],
+      "icon": null,
+      "skill": "NPC_MAGICALATTACK",
+      "mapped_skill_ids": [
+        192
+      ],
+      "attack_type": "Weapon",
+      "reviewed": false
+    },
+    {
+      "name": "SC_MAGMA_FLOW",
+      "flags": {},
+      "calcflags": [],
+      "icon": "SI_MAGMA_FLOW",
+      "skill": "MH_MAGMA_FLOW",
+      "mapped_skill_ids": [
+        8039
+      ],
+      "attack_type": "Weapon",
+      "reviewed": false
+    },
+    {
+      "name": "SC_MER_QUICKEN",
+      "flags": {},
+      "calcflags": [
+        "Aspd"
+      ],
+      "icon": null,
+      "skill": null,
+      "mapped_skill_ids": [
+        8223
+      ],
+      "attack_type": "Weapon",
+      "reviewed": false
+    },
+    {
+      "name": "SC_NJ_TATAMIGAESHI",
+      "flags": {},
+      "calcflags": [],
+      "icon": null,
+      "skill": "NJ_TATAMIGAESHI",
+      "mapped_skill_ids": [
+        527
+      ],
+      "attack_type": "Weapon",
+      "reviewed": false
+    },
+    {
+      "name": "SC_SLEEP",
+      "flags": {},
+      "calcflags": [],
+      "icon": null,
+      "skill": "NPC_SLEEPATTACK",
+      "mapped_skill_ids": [
+        182
+      ],
+      "attack_type": "Weapon",
+      "reviewed": false
+    },
+    {
+      "name": "SC_STUN",
+      "flags": {},
+      "calcflags": [],
+      "icon": null,
+      "skill": "NPC_STUNATTACK",
+      "mapped_skill_ids": [
+        179
+      ],
+      "attack_type": "Weapon",
+      "reviewed": false
+    },
+    {
+      "name": "SC_SWORDREJECT",
+      "flags": {},
+      "calcflags": [],
+      "icon": "SI_SWORDREJECT",
+      "skill": "ST_REJECTSWORD",
+      "mapped_skill_ids": [
+        390
+      ],
+      "attack_type": "Weapon",
+      "reviewed": false
+    },
+    {
+      "name": "SC_TK_SEVENWIND",
+      "flags": {},
+      "calcflags": [],
+      "icon": null,
+      "skill": "TK_SEVENWIND",
+      "mapped_skill_ids": [
+        425
+      ],
+      "attack_type": "Weapon",
+      "reviewed": false
+    },
+    {
+      "name": "SC_WARM",
+      "flags": {},
+      "calcflags": [],
+      "icon": "SI_SG_SUN_WARM",
+      "skill": "SG_SUN_WARM",
+      "mapped_skill_ids": [
+        428
+      ],
+      "attack_type": "Weapon",
+      "reviewed": false
+    },
+    {
+      "name": "SC__FEINTBOMB_MASTER",
+      "flags": {},
+      "calcflags": [],
+      "icon": null,
+      "skill": "SC_FEINTBOMB",
+      "mapped_skill_ids": [
+        2304
+      ],
+      "attack_type": "Weapon",
+      "reviewed": false
+    },
+    {
+      "name": "SC_KAIZEL",
+      "flags": {},
+      "calcflags": [],
+      "icon": "SI_KAIZEL",
+      "skill": "SL_KAIZEL",
+      "mapped_skill_ids": [
+        462
+      ],
+      "attack_type": "Magic",
+      "reviewed": false
+    },
+    {
+      "name": "SC_MAGICMIRROR",
+      "flags": {},
+      "calcflags": [],
+      "icon": null,
+      "skill": "NPC_MAGICMIRROR",
+      "mapped_skill_ids": [
+        671
+      ],
+      "attack_type": "Magic",
+      "reviewed": false
+    },
+    {
+      "name": "SC_NJ_BUNSINJYUTSU",
+      "flags": {
+        "NoSave": true,
+        "Buff": true
+      },
+      "calcflags": [],
+      "icon": null,
+      "skill": null,
+      "mapped_skill_ids": [
+        532
+      ],
+      "attack_type": "Magic",
+      "reviewed": false
+    },
+    {
+      "name": "SC_NJ_SUITON",
+      "flags": {
+        "NoDeathReset": true,
+        "NoSave": true,
+        "NoDispelReset": true,
+        "Debuff": true
+      },
+      "calcflags": [
+        "Agi",
+        "Speed"
+      ],
+      "icon": null,
+      "skill": null,
+      "mapped_skill_ids": [
+        538
+      ],
+      "attack_type": "Magic",
+      "reviewed": false
+    },
+    {
+      "name": "SC_REBIRTH",
+      "flags": {},
+      "calcflags": [],
+      "icon": null,
+      "skill": "NPC_REBIRTH",
+      "mapped_skill_ids": [
+        208
+      ],
+      "attack_type": "Magic",
+      "reviewed": false
+    },
+    {
+      "name": "SC_SECRAMENT",
+      "flags": {},
+      "calcflags": [],
+      "icon": "SI_SECRAMENT",
+      "skill": "AB_SECRAMENT",
+      "mapped_skill_ids": [
+        2515
+      ],
+      "attack_type": "Magic",
+      "reviewed": false
+    },
+    {
+      "name": "SC_SIGHT",
+      "flags": {},
+      "calcflags": [],
+      "icon": null,
+      "skill": "MG_SIGHT",
+      "mapped_skill_ids": [
+        10
+      ],
+      "attack_type": "Magic",
+      "reviewed": false
+    },
+    {
+      "name": "SC_SMA_READY",
+      "flags": {},
+      "calcflags": [],
+      "icon": "SI_SMA_READY",
+      "skill": "SL_SMA",
+      "mapped_skill_ids": [
+        469
+      ],
+      "attack_type": "Magic",
+      "reviewed": false
+    },
+    {
+      "name": "SC_SP_SHA",
+      "flags": {
+        "Buff": true,
+        "NoDispelReset": true
+      },
+      "calcflags": [
+        "Speed"
+      ],
+      "icon": null,
+      "skill": null,
+      "mapped_skill_ids": [
+        2603
+      ],
+      "attack_type": "Magic",
+      "reviewed": false
+    },
+    {
+      "name": "SC_SP_SPA",
+      "flags": {
+        "Buff": true,
+        "NoDispelReset": true
+      },
+      "calcflags": [],
+      "icon": null,
+      "skill": null,
+      "mapped_skill_ids": [
+        2602
+      ],
+      "attack_type": "Magic",
+      "reviewed": false
+    },
+    {
+      "name": "SC_STASIS",
+      "flags": {},
+      "calcflags": [],
+      "icon": "SI_STASIS",
+      "skill": "WL_STASIS",
+      "mapped_skill_ids": [
+        2209
+      ],
+      "attack_type": "Magic",
+      "reviewed": false
+    },
+    {
+      "name": "SC_WHITEIMPRISON",
+      "flags": {},
+      "calcflags": [],
+      "icon": null,
+      "skill": "WL_WHITEIMPRISON",
+      "mapped_skill_ids": [
+        2201
+      ],
+      "attack_type": "Magic",
+      "reviewed": false
+    },
+    {
+      "name": "SC_WZ_SIGHTBLASTER",
+      "flags": {
+        "NoDeathReset": true,
+        "NoSave": true,
+        "NoDispelReset": true,
+        "Buff": true
+      },
+      "calcflags": [],
+      "icon": null,
+      "skill": null,
+      "mapped_skill_ids": [
+        1006
+      ],
+      "attack_type": "Magic",
+      "reviewed": false
+    },
+    {
+      "name": "SC_ZENKAI",
+      "flags": {},
+      "calcflags": [],
+      "icon": "SI_ZENKAI",
+      "skill": "KO_ZENKAI",
+      "mapped_skill_ids": [
+        3020
+      ],
+      "attack_type": "Magic",
+      "reviewed": false
+    },
+    {
+      "name": "SC__CHAOS",
+      "flags": {},
+      "calcflags": [],
+      "icon": null,
+      "skill": "SC_CHAOSPANIC",
+      "mapped_skill_ids": [
+        2301
+      ],
+      "attack_type": "Magic",
+      "reviewed": false
+    },
+    {
+      "name": "SC__MAELSTROM",
+      "flags": {},
+      "calcflags": [],
+      "icon": null,
+      "skill": "SC_MAELSTROM",
+      "mapped_skill_ids": [
+        2302
+      ],
+      "attack_type": "Magic",
+      "reviewed": false
+    },
+    {
+      "name": "SC_ANKLESNARE",
+      "flags": {},
+      "calcflags": [],
+      "icon": "SI_ANKLESNARE",
+      "skill": "HT_ANKLESNARE",
+      "mapped_skill_ids": [
+        117
+      ],
+      "attack_type": "Misc",
+      "reviewed": false
+    },
+    {
+      "name": "SC_DC_WINKCHARM",
+      "flags": {},
+      "calcflags": [],
+      "icon": "SI_DC_WINKCHARM",
+      "skill": "DC_WINKCHARM",
+      "mapped_skill_ids": [
+        1011
+      ],
+      "attack_type": "Misc",
+      "reviewed": false
+    },
+    {
+      "name": "SC_HERMODE",
+      "flags": {},
+      "calcflags": [],
+      "icon": null,
+      "skill": "CG_HERMODE",
+      "mapped_skill_ids": [
+        488
+      ],
+      "attack_type": "Misc",
+      "reviewed": false
+    },
+    {
+      "name": "SC_SCRESIST",
+      "flags": {},
+      "calcflags": [],
+      "icon": null,
+      "skill": "PA_GOSPEL",
+      "mapped_skill_ids": [
+        369
+      ],
+      "attack_type": "Misc",
+      "reviewed": false
+    },
+    {
+      "name": "SC_THORNS_TRAP",
+      "flags": {},
+      "calcflags": [],
+      "icon": "SI_THORNTRAP",
+      "skill": "GN_THORNS_TRAP",
+      "mapped_skill_ids": [
+        2479
+      ],
+      "attack_type": "Misc",
+      "reviewed": false
+    },
+    {
+      "name": "SC_AKAITSUKI",
+      "flags": {},
+      "calcflags": [],
+      "icon": "SI_AKAITSUKI",
+      "skill": "OB_AKAITSUKI",
+      "mapped_skill_ids": [
+        3029
+      ],
+      "attack_type": "Unknown",
+      "reviewed": false
+    },
+    {
+      "name": "SC_BABY",
+      "flags": {},
+      "calcflags": [],
+      "icon": "SI_PROTECTEXP",
+      "skill": "WE_BABY",
+      "mapped_skill_ids": [
+        408
+      ],
+      "attack_type": "Unknown",
+      "reviewed": false
+    },
+    {
+      "name": "SC_CONFUSION",
+      "flags": {},
+      "calcflags": [],
+      "icon": null,
+      "skill": "NPC_WIDECONFUSE",
+      "mapped_skill_ids": [
+        667
+      ],
+      "attack_type": "Unknown",
+      "reviewed": false
+    },
+    {
+      "name": "SC_GENSOU",
+      "flags": {},
+      "calcflags": [],
+      "icon": "SI_GENSOU",
+      "skill": "OB_OBOROGENSOU",
+      "mapped_skill_ids": [
+        3027
+      ],
+      "attack_type": "Unknown",
+      "reviewed": false
+    },
+    {
+      "name": "SC_GENTLETOUCH_ENERGYGAIN",
+      "flags": {},
+      "calcflags": [],
+      "icon": "SI_GENTLETOUCH_ENERGYGAIN",
+      "skill": "SR_GENTLETOUCH_ENERGYGAIN",
+      "mapped_skill_ids": [
+        2346
+      ],
+      "attack_type": "Unknown",
+      "reviewed": false
+    },
+    {
+      "name": "SC_GN_CARTBOOST",
+      "flags": {},
+      "calcflags": [
+        "Speed"
+      ],
+      "icon": null,
+      "skill": null,
+      "mapped_skill_ids": [
+        2478
+      ],
+      "attack_type": "Unknown",
+      "reviewed": false
+    },
+    {
+      "name": "SC_GRANITIC_ARMOR",
+      "flags": {},
+      "calcflags": [],
+      "icon": "SI_GRANITIC_ARMOR",
+      "skill": "MH_GRANITIC_ARMOR",
+      "mapped_skill_ids": [
+        8040
+      ],
+      "attack_type": "Unknown",
+      "reviewed": false
+    },
+    {
+      "name": "SC_HAMI_BLOODLUST",
+      "flags": {},
+      "calcflags": [
+        "AtkPerc"
+      ],
+      "icon": null,
+      "skill": null,
+      "mapped_skill_ids": [
+        8008
+      ],
+      "attack_type": "Unknown",
+      "reviewed": false
+    },
+    {
+      "name": "SC_HAMI_DEFENCE",
+      "flags": {},
+      "calcflags": [
+        "Def"
+      ],
+      "icon": null,
+      "skill": null,
+      "mapped_skill_ids": [
+        8006
+      ],
+      "attack_type": "Unknown",
+      "reviewed": false
+    },
+    {
+      "name": "SC_HLIF_AVOID",
+      "flags": {},
+      "calcflags": [
+        "Speed"
+      ],
+      "icon": null,
+      "skill": null,
+      "mapped_skill_ids": [
+        8002
+      ],
+      "attack_type": "Unknown",
+      "reviewed": false
+    },
+    {
+      "name": "SC_HLIF_CHANGE",
+      "flags": {},
+      "calcflags": [
+        "Vit",
+        "Int"
+      ],
+      "icon": null,
+      "skill": null,
+      "mapped_skill_ids": [
+        8004
+      ],
+      "attack_type": "Unknown",
+      "reviewed": false
+    },
+    {
+      "name": "SC_KAGEMUSYA",
+      "flags": {},
+      "calcflags": [],
+      "icon": "SI_KAGEMUSYA",
+      "skill": "KG_KAGEMUSYA",
+      "mapped_skill_ids": [
+        3025
+      ],
+      "attack_type": "Unknown",
+      "reviewed": false
+    },
+    {
+      "name": "SC_KG_KAGEHUMI",
+      "flags": {},
+      "calcflags": [],
+      "icon": "SI_KG_KAGEHUMI",
+      "skill": "KG_KAGEHUMI",
+      "mapped_skill_ids": [
+        3023
+      ],
+      "attack_type": "Unknown",
+      "reviewed": false
+    },
+    {
+      "name": "SC_KINGS_GRACE",
+      "flags": {},
+      "calcflags": [],
+      "icon": "SI_KINGS_GRACE",
+      "skill": "LG_KINGS_GRACE",
+      "mapped_skill_ids": [
+        5013
+      ],
+      "attack_type": "Unknown",
+      "reviewed": false
+    },
+    {
+      "name": "SC_KYOMU",
+      "flags": {},
+      "calcflags": [],
+      "icon": "SI_KYOMU",
+      "skill": "KG_KYOMU",
+      "mapped_skill_ids": [
+        3024
+      ],
+      "attack_type": "Unknown",
+      "reviewed": false
+    },
+    {
+      "name": "SC_LG_REFLECTDAMAGE",
+      "flags": {},
+      "calcflags": [],
+      "icon": "SI_LG_REFLECTDAMAGE",
+      "skill": "LG_REFLECTDAMAGE",
+      "mapped_skill_ids": [
+        2311
+      ],
+      "attack_type": "Unknown",
+      "reviewed": false
+    },
+    {
+      "name": "SC_MEIKYOUSISUI",
+      "flags": {},
+      "calcflags": [],
+      "icon": "SI_MEIKYOUSISUI",
+      "skill": "KO_MEIKYOUSISUI",
+      "mapped_skill_ids": [
+        3011
+      ],
+      "attack_type": "Unknown",
+      "reviewed": false
+    },
+    {
+      "name": "SC_MILLENNIUMSHIELD",
+      "flags": {},
+      "calcflags": [],
+      "icon": null,
+      "skill": "RK_MILLENNIUMSHIELD",
+      "mapped_skill_ids": [
+        2011
+      ],
+      "attack_type": "Unknown",
+      "reviewed": false
+    },
+    {
+      "name": "SC_NJ_NEN",
+      "flags": {},
+      "calcflags": [
+        "Str",
+        "Int"
+      ],
+      "icon": null,
+      "skill": null,
+      "mapped_skill_ids": [
+        543
+      ],
+      "attack_type": "Unknown",
+      "reviewed": false
+    },
+    {
+      "name": "SC_NJ_UTSUSEMI",
+      "flags": {
+        "NoSave": true,
+        "Buff": true
+      },
+      "calcflags": [],
+      "icon": null,
+      "skill": null,
+      "mapped_skill_ids": [
+        531
+      ],
+      "attack_type": "Unknown",
+      "reviewed": false
+    },
+    {
+      "name": "SC_NO_SWITCH_EQUIP",
+      "flags": {},
+      "calcflags": [],
+      "icon": null,
+      "skill": "WM_SEVERE_RAINSTORM",
+      "mapped_skill_ids": [
+        2418
+      ],
+      "attack_type": "Unknown",
+      "reviewed": false
+    },
+    {
+      "name": "SC_OFFERTORIUM",
+      "flags": {},
+      "calcflags": [],
+      "icon": "SI_OFFERTORIUM",
+      "skill": "AB_OFFERTORIUM",
+      "mapped_skill_ids": [
+        5011
+      ],
+      "attack_type": "Unknown",
+      "reviewed": false
+    },
+    {
+      "name": "SC_SKILLRATE_UP",
+      "flags": {},
+      "calcflags": [],
+      "icon": null,
+      "skill": "SG_FRIEND",
+      "mapped_skill_ids": [
+        442
+      ],
+      "attack_type": "Unknown",
+      "reviewed": false
+    },
+    {
+      "name": "SC_STEALTHFIELD",
+      "flags": {},
+      "calcflags": [],
+      "icon": "SI_STEALTHFIELD",
+      "skill": "NC_STEALTHFIELD",
+      "mapped_skill_ids": [
+        2274
+      ],
+      "attack_type": "Unknown",
+      "reviewed": false
+    },
+    {
+      "name": "SC_STYLE_CHANGE",
+      "flags": {},
+      "calcflags": [],
+      "icon": null,
+      "skill": "MH_STYLE_CHANGE",
+      "mapped_skill_ids": [
+        8027
+      ],
+      "attack_type": "Unknown",
+      "reviewed": false
+    },
+    {
+      "name": "SC_SU_STOOP",
+      "flags": {},
+      "calcflags": [],
+      "icon": "SI_SU_STOOP",
+      "skill": "SU_STOOP",
+      "mapped_skill_ids": [
+        5022
+      ],
+      "attack_type": "Unknown",
+      "reviewed": false
+    },
+    {
+      "name": "SC_TUNAPARTY",
+      "flags": {},
+      "calcflags": [],
+      "icon": "SI_TUNAPARTY",
+      "skill": "SU_TUNAPARTY",
+      "mapped_skill_ids": [
+        5039
+      ],
+      "attack_type": "Unknown",
+      "reviewed": false
+    },
+    {
+      "name": "SC_WATER_SCREEN_OPTION",
+      "flags": {},
+      "calcflags": [],
+      "icon": "SI_WATER_SCREEN_OPTION",
+      "skill": "EL_WATER_SCREEN",
+      "mapped_skill_ids": [
+        8404
+      ],
+      "attack_type": "Unknown",
+      "reviewed": false
+    }
+  ]
+}

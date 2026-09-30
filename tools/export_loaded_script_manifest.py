@@ -101,23 +101,25 @@ def ordered_script_files(root: Path, entry: Path) -> list[Path]:
     return sorted(scripts)
 
 
+def porcelain_lines(root: Path) -> list[str]:
+    """Working-tree status lines. Empty when git cannot be queried."""
+    try:
+        output = subprocess.check_output(
+            ["git", "-C", str(root), "status", "--porcelain"],
+            text=True,
+        )
+    except (OSError, subprocess.CalledProcessError):
+        return []
+    return [line for line in output.splitlines() if line.strip()]
+
+
 def has_uncommitted_changes(root: Path, exclude_paths: list[str] | None = None) -> bool:
     """Check if repository has uncommitted changes, optionally excluding paths."""
-    try:
-        status_cmd = ["git", "-C", str(root), "status", "--porcelain"]
-        output = subprocess.check_output(status_cmd, text=True).strip()
-        if not output:
-            return False
-        # Filter out excluded paths (e.g., this script and its output manifest)
-        for line in output.splitlines():
-            parts = line.split(maxsplit=1)
-            if len(parts) == 2:
-                path = parts[1]
-                if exclude_paths and path not in exclude_paths:
-                    return True
-        return False
-    except (OSError, subprocess.CalledProcessError):
-        return False
+    for line in porcelain_lines(root):
+        parts = line.split(maxsplit=1)
+        if len(parts) == 2 and (not exclude_paths or parts[1] not in exclude_paths):
+            return True
+    return False
 
 
 def build_manifest(korangar: Path, hercules: Path) -> dict:
@@ -155,7 +157,7 @@ def build_manifest(korangar: Path, hercules: Path) -> dict:
     dirty_files = []
 
     if korangar_dirty:
-        for line in korangar_status.splitlines():
+        for line in porcelain_lines(korangar):
             # Format: "XY path" where X=Y status chars (M=modified, A=added, D=deleted, etc.)
             # First char is index status, second is working tree status
             parts = line.split(maxsplit=1)
@@ -173,11 +175,7 @@ def build_manifest(korangar: Path, hercules: Path) -> dict:
                 })
 
     if hercules_dirty:
-        hercules_status = subprocess.check_output(
-            ["git", "-C", str(hercules), "status", "--porcelain"],
-            text=True
-        ).strip()
-        for line in hercules_status.splitlines():
+        for line in porcelain_lines(hercules):
             parts = line.split(maxsplit=1)
             if len(parts) == 2:
                 status_code = parts[0]

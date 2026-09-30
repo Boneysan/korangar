@@ -4,7 +4,7 @@
   "source_worktree_dirty": false,
   "mode": "renewal",
   "reviewed_by": "Repository source review",
-  "reviewed_on": "2026-09-28",
+  "reviewed_on": "2026-09-30",
   "review_method": "Traced each exchange branch through the loaded NPC script and checked input removal, output grant, NPC declaration, and stated conditions.",
   "entries": [
     {
@@ -65,7 +65,7 @@
         ]
       },
       "reviewed_by": "Repository source review",
-      "reviewed_on": "2026-09-28",
+      "reviewed_on": "2026-09-30",
       "evidence_state": "conditional"
     },
     {
@@ -128,7 +128,7 @@
         ]
       },
       "reviewed_by": "Repository source review",
-      "reviewed_on": "2026-09-28",
+      "reviewed_on": "2026-09-30",
       "evidence_state": "conditional"
     },
     {
@@ -212,7 +212,7 @@
         ]
       },
       "reviewed_by": "Repository source review",
-      "reviewed_on": "2026-09-28",
+      "reviewed_on": "2026-09-30",
       "evidence_state": "conditional"
     },
     {
@@ -269,7 +269,7 @@
         ]
       },
       "reviewed_by": "Repository source review",
-      "reviewed_on": "2026-09-28",
+      "reviewed_on": "2026-09-30",
       "evidence_state": "conditional"
     },
     {
@@ -326,7 +326,7 @@
         ]
       },
       "reviewed_by": "Repository source review",
-      "reviewed_on": "2026-09-28",
+      "reviewed_on": "2026-09-30",
       "evidence_state": "conditional"
     },
     {
@@ -401,7 +401,7 @@
         ]
       },
       "reviewed_by": "Repository source review",
-      "reviewed_on": "2026-09-28",
+      "reviewed_on": "2026-09-30",
       "evidence_state": "conditional"
     },
     {
@@ -609,7 +609,7 @@
         ]
       },
       "reviewed_by": "Repository source review",
-      "reviewed_on": "2026-09-28",
+      "reviewed_on": "2026-09-30",
       "evidence_state": "conditional"
     },
     {
@@ -673,7 +673,7 @@
         ]
       },
       "reviewed_by": "Repository source review",
-      "reviewed_on": "2026-09-28",
+      "reviewed_on": "2026-09-30",
       "evidence_state": "conditional"
     },
     {
@@ -805,7 +805,7 @@
         ]
       },
       "reviewed_by": "Repository source review",
-      "reviewed_on": "2026-09-28",
+      "reviewed_on": "2026-09-30",
       "evidence_state": "conditional"
     },
     {
@@ -913,7 +913,7 @@
         ]
       },
       "reviewed_by": "Repository source review",
-      "reviewed_on": "2026-09-28",
+      "reviewed_on": "2026-09-30",
       "evidence_state": "conditional"
     },
     {
@@ -1021,7 +1021,7 @@
         ]
       },
       "reviewed_by": "Repository source review",
-      "reviewed_on": "2026-09-28",
+      "reviewed_on": "2026-09-30",
       "evidence_state": "conditional"
     },
     {
@@ -1129,7 +1129,7 @@
         ]
       },
       "reviewed_by": "Repository source review",
-      "reviewed_on": "2026-09-28",
+      "reviewed_on": "2026-09-30",
       "evidence_state": "conditional"
     },
     {
@@ -1230,7 +1230,7 @@
         ]
       },
       "reviewed_by": "Repository source review",
-      "reviewed_on": "2026-09-28",
+      "reviewed_on": "2026-09-30",
       "evidence_state": "conditional"
     },
     {
@@ -1338,7 +1338,7 @@
         ]
       },
       "reviewed_by": "Repository source review",
-      "reviewed_on": "2026-09-28",
+      "reviewed_on": "2026-09-30",
       "evidence_state": "conditional"
     },
     {
@@ -1446,7 +1446,7 @@
         ]
       },
       "reviewed_by": "Repository source review",
-      "reviewed_on": "2026-09-28",
+      "reviewed_on": "2026-09-30",
       "evidence_state": "conditional"
     },
     {
@@ -1530,7 +1530,7 @@
         ]
       },
       "reviewed_by": "Repository source review",
-      "reviewed_on": "2026-09-28",
+      "reviewed_on": "2026-09-30",
       "evidence_state": "conditional"
     },
     {
@@ -1586,7 +1586,208 @@
         ]
       },
       "reviewed_by": "Repository source review",
-      "reviewed_on": "2026-09-28",
+      "reviewed_on": "2026-09-30",
+      "evidence_state": "conditional"
+    },
+    {
+      "id": "eden_26_40_biologist_blankets",
+      "title": "Biologist accepts Dieshin's blanket delivery",
+      "npc": {
+        "name": "Biologist",
+        "internal_name": "Biologist",
+        "map": "xmas_fild01",
+        "x": 92,
+        "y": 57,
+        "service_role": "Eden 26-40 delivery turn-in",
+        "npc_id": 7963
+      },
+      "inputs": [
+        {
+          "item_id": 6218,
+          "amount": 1,
+          "item_name": "Dieshin's Delivery Box"
+        }
+      ],
+      "outcomes": [
+        {
+          "label": "Novice Potion",
+          "item_ids": [
+            569
+          ],
+          "amount": 100,
+          "selection": "single_option",
+          "items": [
+            {
+              "item_id": 569,
+              "item_name": "Novice Potion"
+            }
+          ]
+        }
+      ],
+      "conditions": [
+        "Same weight gate as the other two researchers. The Knife is not taken.",
+        "The player must choose \"Here are the blankets.\"",
+        "Quest 8273 must be active and the player must hold a Dieshin's Delivery Box. The box is removed, quest 8273 is erased, 100 Novice Potions and 1000 base EXP (0 job EXP) are granted."
+      ],
+      "source": {
+        "path": "npc/re/quests/eden/26-40.txt",
+        "lines": [
+          414,
+          431,
+          436,
+          445,
+          461,
+          462,
+          463,
+          464
+        ],
+        "reviewed_lines": [
+          414,
+          431,
+          436,
+          445,
+          461,
+          462,
+          463,
+          464
+        ]
+      },
+      "reviewed_by": "Repository source review",
+      "reviewed_on": "2026-09-30",
+      "evidence_state": "conditional"
+    },
+    {
+      "id": "eden_26_40_entomologist_honey",
+      "title": "Entomologist accepts Dieshin's honey delivery",
+      "npc": {
+        "name": "Entomologist",
+        "internal_name": "Entomologist",
+        "map": "prt_fild03",
+        "x": 30,
+        "y": 254,
+        "service_role": "Eden 26-40 delivery turn-in",
+        "npc_id": 6336
+      },
+      "inputs": [
+        {
+          "item_id": 6218,
+          "amount": 1,
+          "item_name": "Dieshin's Delivery Box"
+        }
+      ],
+      "outcomes": [
+        {
+          "label": "Novice Potion",
+          "item_ids": [
+            569
+          ],
+          "amount": 100,
+          "selection": "single_option",
+          "items": [
+            {
+              "item_id": 569,
+              "item_name": "Novice Potion"
+            }
+          ]
+        }
+      ],
+      "conditions": [
+        "Same weight gate as the Zoologist: one Knife of weight space and 3500 weight free. The Knife is not taken.",
+        "The player must choose \"Here is the Honey.\"",
+        "Quest 8272 must be active and the player must hold a Dieshin's Delivery Box. The box is removed, quest 8272 is erased, 100 Novice Potions and 1000 base EXP (0 job EXP) are granted."
+      ],
+      "source": {
+        "path": "npc/re/quests/eden/26-40.txt",
+        "lines": [
+          349,
+          366,
+          371,
+          380,
+          396,
+          397,
+          398,
+          399
+        ],
+        "reviewed_lines": [
+          349,
+          366,
+          371,
+          380,
+          396,
+          397,
+          398,
+          399
+        ]
+      },
+      "reviewed_by": "Repository source review",
+      "reviewed_on": "2026-09-30",
+      "evidence_state": "conditional"
+    },
+    {
+      "id": "eden_26_40_zoologist_insecticide",
+      "title": "Zoologist accepts Dieshin's insecticide delivery",
+      "npc": {
+        "name": "Zoologist",
+        "internal_name": "Zoologist",
+        "map": "pay_fild07",
+        "x": 83,
+        "y": 89,
+        "service_role": "Eden 26-40 delivery turn-in",
+        "npc_id": 5749
+      },
+      "inputs": [
+        {
+          "item_id": 6218,
+          "amount": 1,
+          "item_name": "Dieshin's Delivery Box"
+        }
+      ],
+      "outcomes": [
+        {
+          "label": "Novice Potion",
+          "item_ids": [
+            569
+          ],
+          "amount": 100,
+          "selection": "single_option",
+          "items": [
+            {
+              "item_id": 569,
+              "item_name": "Novice Potion"
+            }
+          ]
+        }
+      ],
+      "conditions": [
+        "Refuses while the inventory cannot hold one Knife's worth of weight or has under 3500 weight free. The Knife is only the weight probe; it is not taken.",
+        "The player must choose \"Here is the Insecticide.\" The other menu choice ends the talk with no exchange.",
+        "Quest 8271 must be active (questprogress == 1) and the player must hold a Dieshin's Delivery Box. The box is removed, quest 8271 is erased, 100 Novice Potions are granted, and 1000 base EXP is granted with 0 job EXP."
+      ],
+      "source": {
+        "path": "npc/re/quests/eden/26-40.txt",
+        "lines": [
+          284,
+          301,
+          306,
+          315,
+          331,
+          332,
+          333,
+          334
+        ],
+        "reviewed_lines": [
+          284,
+          301,
+          306,
+          315,
+          331,
+          332,
+          333,
+          334
+        ]
+      },
+      "reviewed_by": "Repository source review",
+      "reviewed_on": "2026-09-30",
       "evidence_state": "conditional"
     },
     {
@@ -1643,7 +1844,7 @@
         ]
       },
       "reviewed_by": "Repository source review",
-      "reviewed_on": "2026-09-28",
+      "reviewed_on": "2026-09-30",
       "evidence_state": "conditional"
     },
     {
@@ -1737,7 +1938,7 @@
         ]
       },
       "reviewed_by": "Repository source review",
-      "reviewed_on": "2026-09-28",
+      "reviewed_on": "2026-09-30",
       "evidence_state": "conditional"
     },
     {
@@ -1794,7 +1995,7 @@
         ]
       },
       "reviewed_by": "Repository source review",
-      "reviewed_on": "2026-09-28",
+      "reviewed_on": "2026-09-30",
       "evidence_state": "conditional"
     },
     {
@@ -1854,7 +2055,7 @@
         ]
       },
       "reviewed_by": "Repository source review",
-      "reviewed_on": "2026-09-28",
+      "reviewed_on": "2026-09-30",
       "evidence_state": "conditional"
     },
     {
@@ -1945,7 +2146,7 @@
         ]
       },
       "reviewed_by": "Repository source review",
-      "reviewed_on": "2026-09-28",
+      "reviewed_on": "2026-09-30",
       "evidence_state": "conditional"
     },
     {
@@ -2019,7 +2220,7 @@
         ]
       },
       "reviewed_by": "Repository source review",
-      "reviewed_on": "2026-09-28",
+      "reviewed_on": "2026-09-30",
       "evidence_state": "conditional"
     },
     {
@@ -2119,7 +2320,7 @@
         ]
       },
       "reviewed_by": "Repository source review",
-      "reviewed_on": "2026-09-28",
+      "reviewed_on": "2026-09-30",
       "evidence_state": "conditional"
     },
     {
@@ -2174,7 +2375,7 @@
         ]
       },
       "reviewed_by": "Repository source review",
-      "reviewed_on": "2026-09-28",
+      "reviewed_on": "2026-09-30",
       "evidence_state": "conditional"
     },
     {
@@ -2255,7 +2456,7 @@
         ]
       },
       "reviewed_by": "Repository source review",
-      "reviewed_on": "2026-09-28",
+      "reviewed_on": "2026-09-30",
       "evidence_state": "conditional"
     },
     {
@@ -2313,7 +2514,7 @@
         ]
       },
       "reviewed_by": "Repository source review",
-      "reviewed_on": "2026-09-28",
+      "reviewed_on": "2026-09-30",
       "evidence_state": "conditional"
     },
     {
@@ -2405,7 +2606,7 @@
         ]
       },
       "reviewed_by": "Repository source review",
-      "reviewed_on": "2026-09-28",
+      "reviewed_on": "2026-09-30",
       "evidence_state": "conditional"
     },
     {
@@ -2464,7 +2665,7 @@
         ]
       },
       "reviewed_by": "Repository source review",
-      "reviewed_on": "2026-09-28",
+      "reviewed_on": "2026-09-30",
       "evidence_state": "conditional"
     },
     {
@@ -2548,7 +2749,7 @@
         ]
       },
       "reviewed_by": "Repository source review",
-      "reviewed_on": "2026-09-28",
+      "reviewed_on": "2026-09-30",
       "evidence_state": "conditional"
     },
     {
@@ -2604,7 +2805,7 @@
         ]
       },
       "reviewed_by": "Repository source review",
-      "reviewed_on": "2026-09-28",
+      "reviewed_on": "2026-09-30",
       "evidence_state": "conditional"
     },
     {
@@ -2683,7 +2884,7 @@
         ]
       },
       "reviewed_by": "Repository source review",
-      "reviewed_on": "2026-09-28",
+      "reviewed_on": "2026-09-30",
       "evidence_state": "conditional"
     },
     {
@@ -2750,7 +2951,7 @@
         ]
       },
       "reviewed_by": "Repository source review",
-      "reviewed_on": "2026-09-28",
+      "reviewed_on": "2026-09-30",
       "evidence_state": "conditional"
     },
     {
@@ -2827,7 +3028,7 @@
         ]
       },
       "reviewed_by": "Repository source review",
-      "reviewed_on": "2026-09-28",
+      "reviewed_on": "2026-09-30",
       "evidence_state": "conditional"
     },
     {
@@ -2923,7 +3124,7 @@
         ]
       },
       "reviewed_by": "Repository source review",
-      "reviewed_on": "2026-09-28",
+      "reviewed_on": "2026-09-30",
       "evidence_state": "conditional"
     },
     {
@@ -2979,7 +3180,7 @@
         ]
       },
       "reviewed_by": "Repository source review",
-      "reviewed_on": "2026-09-28",
+      "reviewed_on": "2026-09-30",
       "evidence_state": "conditional"
     },
     {
@@ -3049,7 +3250,7 @@
         ]
       },
       "reviewed_by": "Repository source review",
-      "reviewed_on": "2026-09-28",
+      "reviewed_on": "2026-09-30",
       "evidence_state": "conditional"
     },
     {
@@ -3106,7 +3307,7 @@
         ]
       },
       "reviewed_by": "Repository source review",
-      "reviewed_on": "2026-09-28",
+      "reviewed_on": "2026-09-30",
       "evidence_state": "conditional"
     },
     {
@@ -3164,7 +3365,7 @@
         ]
       },
       "reviewed_by": "Repository source review",
-      "reviewed_on": "2026-09-28",
+      "reviewed_on": "2026-09-30",
       "evidence_state": "conditional"
     },
     {
@@ -3221,7 +3422,7 @@
         ]
       },
       "reviewed_by": "Repository source review",
-      "reviewed_on": "2026-09-28",
+      "reviewed_on": "2026-09-30",
       "evidence_state": "conditional"
     },
     {
@@ -3278,7 +3479,234 @@
         ]
       },
       "reviewed_by": "Repository source review",
-      "reviewed_on": "2026-09-28",
+      "reviewed_on": "2026-09-30",
+      "evidence_state": "conditional"
+    },
+    {
+      "id": "man_fild01_alberto_ep13bs_supply_box_for_chocolate_pie",
+      "title": "Alberto#ep13bs exchanges Supply Box for Chocolate Pie",
+      "npc": {
+        "name": "Alberto",
+        "internal_name": "Alberto#ep13bs",
+        "map": "man_fild01",
+        "x": 80,
+        "y": 248,
+        "service_role": "Source-proven single-branch item exchange",
+        "npc_id": 4516
+      },
+      "inputs": [
+        {
+          "item_id": 6045,
+          "amount": 1,
+          "item_name": "Supply Box"
+        }
+      ],
+      "outcomes": [
+        {
+          "label": "Chocolate Pie",
+          "item_ids": [
+            12322
+          ],
+          "amount": 1,
+          "selection": "single_option",
+          "items": [
+            {
+              "item_id": 12322,
+              "item_name": "Chocolate Pie"
+            }
+          ]
+        }
+      ],
+      "conditions": [
+        "ep13_newbs == 19",
+        "countitem(Supply_Box) > 0",
+        "The removal and the grant are the only item calls in this brace branch, and no close, end, menu, loop, or call sits between them."
+      ],
+      "source": {
+        "path": "npc/quests/quests_13_1.txt",
+        "lines": [
+          3355,
+          3400,
+          3402
+        ],
+        "reviewed_lines": [
+          3355,
+          3400,
+          3402
+        ]
+      },
+      "reviewed_by": "Repository source review",
+      "reviewed_on": "2026-09-30",
+      "evidence_state": "conditional"
+    },
+    {
+      "id": "mid_camp_dirt_ep13_decaying_stem_for_germinating_sprout",
+      "title": "Dirt#ep13 exchanges Decaying Stem for Sprout",
+      "npc": {
+        "name": "Dirt",
+        "internal_name": "Dirt#ep13",
+        "map": "mid_camp",
+        "x": 52,
+        "y": 148,
+        "service_role": "Source-proven single-branch item exchange",
+        "npc_id": 4640
+      },
+      "inputs": [
+        {
+          "item_id": 6035,
+          "amount": 1,
+          "item_name": "Decaying Stem"
+        }
+      ],
+      "outcomes": [
+        {
+          "label": "Sprout",
+          "item_ids": [
+            7193
+          ],
+          "amount": 1,
+          "selection": "single_option",
+          "items": [
+            {
+              "item_id": 7193,
+              "item_name": "Sprout"
+            }
+          ]
+        }
+      ],
+      "conditions": [
+        "ep13_animal == 8",
+        "The removal and the grant are the only item calls in this brace branch, and no close, end, menu, loop, or call sits between them."
+      ],
+      "source": {
+        "path": "npc/quests/quests_13_1.txt",
+        "lines": [
+          4735,
+          4752,
+          4753
+        ],
+        "reviewed_lines": [
+          4735,
+          4752,
+          4753
+        ]
+      },
+      "reviewed_by": "Repository source review",
+      "reviewed_on": "2026-09-30",
+      "evidence_state": "conditional"
+    },
+    {
+      "id": "mid_camp_gerard_ep13bs_supply_box_for_chocolate_pie",
+      "title": "Gerard#ep13bs exchanges Supply Box for Chocolate Pie",
+      "npc": {
+        "name": "Gerard",
+        "internal_name": "Gerard#ep13bs",
+        "map": "mid_camp",
+        "x": 30,
+        "y": 168,
+        "service_role": "Source-proven single-branch item exchange",
+        "npc_id": 4653
+      },
+      "inputs": [
+        {
+          "item_id": 6045,
+          "amount": 1,
+          "item_name": "Supply Box"
+        }
+      ],
+      "outcomes": [
+        {
+          "label": "Chocolate Pie",
+          "item_ids": [
+            12322
+          ],
+          "amount": 1,
+          "selection": "single_option",
+          "items": [
+            {
+              "item_id": 12322,
+              "item_name": "Chocolate Pie"
+            }
+          ]
+        }
+      ],
+      "conditions": [
+        "ep13_newbs == 17",
+        "countitem(Supply_Box) > 0",
+        "The removal and the grant are the only item calls in this brace branch, and no close, end, menu, loop, or call sits between them."
+      ],
+      "source": {
+        "path": "npc/quests/quests_13_1.txt",
+        "lines": [
+          3279,
+          3318,
+          3320
+        ],
+        "reviewed_lines": [
+          3279,
+          3318,
+          3320
+        ]
+      },
+      "reviewed_by": "Repository source review",
+      "reviewed_on": "2026-09-30",
+      "evidence_state": "conditional"
+    },
+    {
+      "id": "mid_camp_jan_ep13bs_supply_box_for_chocolate_pie",
+      "title": "Jan#ep13bs exchanges Supply Box for Chocolate Pie",
+      "npc": {
+        "name": "Jan",
+        "internal_name": "Jan#ep13bs",
+        "map": "mid_camp",
+        "x": 160,
+        "y": 298,
+        "service_role": "Source-proven single-branch item exchange",
+        "npc_id": 4660
+      },
+      "inputs": [
+        {
+          "item_id": 6045,
+          "amount": 1,
+          "item_name": "Supply Box"
+        }
+      ],
+      "outcomes": [
+        {
+          "label": "Chocolate Pie",
+          "item_ids": [
+            12322
+          ],
+          "amount": 1,
+          "selection": "single_option",
+          "items": [
+            {
+              "item_id": 12322,
+              "item_name": "Chocolate Pie"
+            }
+          ]
+        }
+      ],
+      "conditions": [
+        "ep13_newbs == 15",
+        "countitem(Supply_Box) > 0",
+        "The removal and the grant are the only item calls in this brace branch, and no close, end, menu, loop, or call sits between them."
+      ],
+      "source": {
+        "path": "npc/quests/quests_13_1.txt",
+        "lines": [
+          3214,
+          3235,
+          3237
+        ],
+        "reviewed_lines": [
+          3214,
+          3235,
+          3237
+        ]
+      },
+      "reviewed_by": "Repository source review",
+      "reviewed_on": "2026-09-30",
       "evidence_state": "conditional"
     },
     {
@@ -3457,7 +3885,7 @@
         ]
       },
       "reviewed_by": "Repository source review",
-      "reviewed_on": "2026-09-28",
+      "reviewed_on": "2026-09-30",
       "evidence_state": "conditional"
     },
     {
@@ -3524,7 +3952,7 @@
         ]
       },
       "reviewed_by": "Repository source review",
-      "reviewed_on": "2026-09-28",
+      "reviewed_on": "2026-09-30",
       "evidence_state": "conditional"
     },
     {
@@ -3586,7 +4014,7 @@
         ]
       },
       "reviewed_by": "Repository source review",
-      "reviewed_on": "2026-09-28",
+      "reviewed_on": "2026-09-30",
       "evidence_state": "conditional"
     },
     {
@@ -3653,7 +4081,7 @@
         ]
       },
       "reviewed_by": "Repository source review",
-      "reviewed_on": "2026-09-28",
+      "reviewed_on": "2026-09-30",
       "evidence_state": "conditional"
     },
     {
@@ -3840,7 +4268,7 @@
         ]
       },
       "reviewed_by": "Repository source review",
-      "reviewed_on": "2026-09-28",
+      "reviewed_on": "2026-09-30",
       "evidence_state": "conditional"
     },
     {
@@ -3907,7 +4335,7 @@
         ]
       },
       "reviewed_by": "Repository source review",
-      "reviewed_on": "2026-09-28",
+      "reviewed_on": "2026-09-30",
       "evidence_state": "conditional"
     },
     {
@@ -3996,7 +4424,7 @@
         ]
       },
       "reviewed_by": "Repository source review",
-      "reviewed_on": "2026-09-28",
+      "reviewed_on": "2026-09-30",
       "evidence_state": "conditional"
     },
     {
@@ -4053,7 +4481,7 @@
         ]
       },
       "reviewed_by": "Repository source review",
-      "reviewed_on": "2026-09-28",
+      "reviewed_on": "2026-09-30",
       "evidence_state": "conditional"
     },
     {
@@ -4109,7 +4537,7 @@
         ]
       },
       "reviewed_by": "Repository source review",
-      "reviewed_on": "2026-09-28",
+      "reviewed_on": "2026-09-30",
       "evidence_state": "conditional"
     },
     {
@@ -4384,7 +4812,7 @@
         ]
       },
       "reviewed_by": "Repository source review",
-      "reviewed_on": "2026-09-28",
+      "reviewed_on": "2026-09-30",
       "evidence_state": "conditional"
     },
     {
@@ -4440,7 +4868,7 @@
         ]
       },
       "reviewed_by": "Repository source review",
-      "reviewed_on": "2026-09-28",
+      "reviewed_on": "2026-09-30",
       "evidence_state": "conditional"
     },
     {
@@ -4498,7 +4926,7 @@
         ]
       },
       "reviewed_by": "Repository source review",
-      "reviewed_on": "2026-09-28",
+      "reviewed_on": "2026-09-30",
       "evidence_state": "conditional"
     },
     {
@@ -4560,7 +4988,7 @@
         ]
       },
       "reviewed_by": "Repository source review",
-      "reviewed_on": "2026-09-28",
+      "reviewed_on": "2026-09-30",
       "evidence_state": "conditional"
     },
     {
@@ -4619,7 +5047,7 @@
         ]
       },
       "reviewed_by": "Repository source review",
-      "reviewed_on": "2026-09-28",
+      "reviewed_on": "2026-09-30",
       "evidence_state": "conditional"
     },
     {
@@ -4676,7 +5104,7 @@
         ]
       },
       "reviewed_by": "Repository source review",
-      "reviewed_on": "2026-09-28",
+      "reviewed_on": "2026-09-30",
       "evidence_state": "conditional"
     },
     {
@@ -4970,7 +5398,7 @@
         ]
       },
       "reviewed_by": "Repository source review",
-      "reviewed_on": "2026-09-28",
+      "reviewed_on": "2026-09-30",
       "evidence_state": "conditional"
     },
     {
@@ -5043,7 +5471,7 @@
         ]
       },
       "reviewed_by": "Repository source review",
-      "reviewed_on": "2026-09-28",
+      "reviewed_on": "2026-09-30",
       "evidence_state": "conditional"
     },
     {
@@ -5101,7 +5529,7 @@
         ]
       },
       "reviewed_by": "Repository source review",
-      "reviewed_on": "2026-09-28",
+      "reviewed_on": "2026-09-30",
       "evidence_state": "conditional"
     },
     {
@@ -5238,7 +5666,7 @@
         ]
       },
       "reviewed_by": "Repository source review",
-      "reviewed_on": "2026-09-28",
+      "reviewed_on": "2026-09-30",
       "evidence_state": "conditional"
     },
     {
@@ -5308,7 +5736,7 @@
         ]
       },
       "reviewed_by": "Repository source review",
-      "reviewed_on": "2026-09-28",
+      "reviewed_on": "2026-09-30",
       "evidence_state": "conditional"
     },
     {
@@ -5364,7 +5792,7 @@
         ]
       },
       "reviewed_by": "Repository source review",
-      "reviewed_on": "2026-09-28",
+      "reviewed_on": "2026-09-30",
       "evidence_state": "conditional"
     },
     {
@@ -5428,7 +5856,7 @@
         ]
       },
       "reviewed_by": "Repository source review",
-      "reviewed_on": "2026-09-28",
+      "reviewed_on": "2026-09-30",
       "evidence_state": "conditional"
     },
     {
@@ -5509,7 +5937,7 @@
         ]
       },
       "reviewed_by": "Repository source review",
-      "reviewed_on": "2026-09-28",
+      "reviewed_on": "2026-09-30",
       "evidence_state": "conditional"
     },
     {
@@ -5564,7 +5992,7 @@
         ]
       },
       "reviewed_by": "Repository source review",
-      "reviewed_on": "2026-09-28",
+      "reviewed_on": "2026-09-30",
       "evidence_state": "conditional"
     },
     {
@@ -5640,7 +6068,67 @@
         ]
       },
       "reviewed_by": "Repository source review",
-      "reviewed_on": "2026-09-28",
+      "reviewed_on": "2026-09-30",
+      "evidence_state": "conditional"
+    },
+    {
+      "id": "prt_monk_hedrick_mothers_letter",
+      "title": "Hedrick trades his mother's letter for one cookie",
+      "npc": {
+        "name": "Hedrick",
+        "internal_name": "Hedrick",
+        "map": "prt_monk",
+        "x": 28,
+        "y": 260,
+        "service_role": "Acolyte job-quest letter delivery",
+        "npc_id": 6688
+      },
+      "inputs": [
+        {
+          "item_id": 7148,
+          "amount": 1,
+          "item_name": "Mother's Letter"
+        }
+      ],
+      "outcomes": [
+        {
+          "label": "Well-baked Cookie",
+          "item_ids": [
+            538
+          ],
+          "amount": 1,
+          "selection": "single_option",
+          "items": [
+            {
+              "item_id": 538,
+              "item_name": "Well-baked Cookie"
+            }
+          ]
+        }
+      ],
+      "conditions": [
+        "The branch runs only when tu_acolyte01 is exactly 19 and the player holds at least one Mother's Letter. Otherwise the NPC closes after the opening lines and nothing is exchanged.",
+        "On that branch one Mother's Letter is removed, tu_acolyte01 becomes 20, and one Well-baked Cookie is granted. No Zeny or experience is moved."
+      ],
+      "source": {
+        "path": "npc/quests/first_class/tu_acolyte.txt",
+        "lines": [
+          1268,
+          1275,
+          1296,
+          1297,
+          1298
+        ],
+        "reviewed_lines": [
+          1268,
+          1275,
+          1296,
+          1297,
+          1298
+        ]
+      },
+      "reviewed_by": "Repository source review",
+      "reviewed_on": "2026-09-30",
       "evidence_state": "conditional"
     },
     {
@@ -5768,7 +6256,7 @@
         ]
       },
       "reviewed_by": "Repository source review",
-      "reviewed_on": "2026-09-28",
+      "reviewed_on": "2026-09-30",
       "evidence_state": "conditional"
     },
     {
@@ -5873,7 +6361,7 @@
         ]
       },
       "reviewed_by": "Repository source review",
-      "reviewed_on": "2026-09-28",
+      "reviewed_on": "2026-09-30",
       "evidence_state": "conditional"
     },
     {
@@ -6106,7 +6594,64 @@
         ]
       },
       "reviewed_by": "Repository source review",
-      "reviewed_on": "2026-09-28",
+      "reviewed_on": "2026-09-30",
+      "evidence_state": "conditional"
+    },
+    {
+      "id": "spl_in02_middle_ranked_laphine_la_germinating_sprout_for_flower_of_alfheim",
+      "title": "Middle-Ranked Laphine#la exchanges Sprout for Flower Of Alfheim",
+      "npc": {
+        "name": "Middle-Ranked Laphine",
+        "internal_name": "Middle-Ranked Laphine#la",
+        "map": "spl_in02",
+        "x": 139,
+        "y": 65,
+        "service_role": "Source-proven single-branch item exchange",
+        "npc_id": 7409
+      },
+      "inputs": [
+        {
+          "item_id": 7193,
+          "amount": 1,
+          "item_name": "Sprout"
+        }
+      ],
+      "outcomes": [
+        {
+          "label": "Flower Of Alfheim",
+          "item_ids": [
+            6079
+          ],
+          "amount": 1,
+          "selection": "single_option",
+          "items": [
+            {
+              "item_id": 6079,
+              "item_name": "Flower Of Alfheim"
+            }
+          ]
+        }
+      ],
+      "conditions": [
+        "ep13_2_tre1 == 2",
+        "countitem(Germinating_Sprout) > 0",
+        "The removal and the grant are the only item calls in this brace branch, and no close, end, menu, loop, or call sits between them."
+      ],
+      "source": {
+        "path": "npc/quests/quests_13_2.txt",
+        "lines": [
+          5684,
+          5774,
+          5776
+        ],
+        "reviewed_lines": [
+          5684,
+          5774,
+          5776
+        ]
+      },
+      "reviewed_by": "Repository source review",
+      "reviewed_on": "2026-09-30",
       "evidence_state": "conditional"
     },
     {
@@ -6182,7 +6727,231 @@
         ]
       },
       "reviewed_by": "Repository source review",
-      "reviewed_on": "2026-09-28",
+      "reviewed_on": "2026-09-30",
+      "evidence_state": "conditional"
+    },
+    {
+      "id": "tha_t08_shining_crystal_tt_b1_key_blue_for_magic_gem_blue",
+      "title": "Shining Crystal#tt_b1 exchanges Blue Key for Blue Charm Stone",
+      "npc": {
+        "name": "Shining Crystal",
+        "internal_name": "Shining Crystal#tt_b1",
+        "map": "tha_t08",
+        "x": 49,
+        "y": 65,
+        "service_role": "Source-proven single-branch item exchange",
+        "npc_id": 7516
+      },
+      "inputs": [
+        {
+          "item_id": 7423,
+          "amount": 1,
+          "item_name": "Blue Key"
+        }
+      ],
+      "outcomes": [
+        {
+          "label": "Blue Charm Stone",
+          "item_ids": [
+            7428
+          ],
+          "amount": 1,
+          "selection": "single_option",
+          "items": [
+            {
+              "item_id": 7428,
+              "item_name": "Blue Charm Stone"
+            }
+          ]
+        }
+      ],
+      "conditions": [
+        "countitem(Key_Blue) > 0",
+        "The removal and the grant are the only item calls in this brace branch, and no close, end, menu, loop, or call sits between them."
+      ],
+      "source": {
+        "path": "npc/quests/thana_quest.txt",
+        "lines": [
+          1772,
+          1786,
+          1787
+        ],
+        "reviewed_lines": [
+          1772,
+          1786,
+          1787
+        ]
+      },
+      "reviewed_by": "Repository source review",
+      "reviewed_on": "2026-09-30",
+      "evidence_state": "conditional"
+    },
+    {
+      "id": "tha_t08_shining_crystal_tt_g1_key_green_for_magic_gem_green",
+      "title": "Shining Crystal#tt_g1 exchanges Green Key for Green Charm Stone",
+      "npc": {
+        "name": "Shining Crystal",
+        "internal_name": "Shining Crystal#tt_g1",
+        "map": "tha_t08",
+        "x": 90,
+        "y": 65,
+        "service_role": "Source-proven single-branch item exchange",
+        "npc_id": 7517
+      },
+      "inputs": [
+        {
+          "item_id": 7424,
+          "amount": 1,
+          "item_name": "Green Key"
+        }
+      ],
+      "outcomes": [
+        {
+          "label": "Green Charm Stone",
+          "item_ids": [
+            7429
+          ],
+          "amount": 1,
+          "selection": "single_option",
+          "items": [
+            {
+              "item_id": 7429,
+              "item_name": "Green Charm Stone"
+            }
+          ]
+        }
+      ],
+      "conditions": [
+        "countitem(Key_Green) > 0",
+        "The removal and the grant are the only item calls in this brace branch, and no close, end, menu, loop, or call sits between them."
+      ],
+      "source": {
+        "path": "npc/quests/thana_quest.txt",
+        "lines": [
+          1806,
+          1820,
+          1821
+        ],
+        "reviewed_lines": [
+          1806,
+          1820,
+          1821
+        ]
+      },
+      "reviewed_by": "Repository source review",
+      "reviewed_on": "2026-09-30",
+      "evidence_state": "conditional"
+    },
+    {
+      "id": "tha_t08_shining_crystal_tt_r1_key_red_for_magic_gem_red",
+      "title": "Shining Crystal#tt_r1 exchanges Red Key for Red Charm Stone",
+      "npc": {
+        "name": "Shining Crystal",
+        "internal_name": "Shining Crystal#tt_r1",
+        "map": "tha_t08",
+        "x": 90,
+        "y": 153,
+        "service_role": "Source-proven single-branch item exchange",
+        "npc_id": 7514
+      },
+      "inputs": [
+        {
+          "item_id": 7421,
+          "amount": 1,
+          "item_name": "Red Key"
+        }
+      ],
+      "outcomes": [
+        {
+          "label": "Red Charm Stone",
+          "item_ids": [
+            7426
+          ],
+          "amount": 1,
+          "selection": "single_option",
+          "items": [
+            {
+              "item_id": 7426,
+              "item_name": "Red Charm Stone"
+            }
+          ]
+        }
+      ],
+      "conditions": [
+        "countitem(Key_Red) > 0",
+        "The removal and the grant are the only item calls in this brace branch, and no close, end, menu, loop, or call sits between them."
+      ],
+      "source": {
+        "path": "npc/quests/thana_quest.txt",
+        "lines": [
+          1704,
+          1718,
+          1719
+        ],
+        "reviewed_lines": [
+          1704,
+          1718,
+          1719
+        ]
+      },
+      "reviewed_by": "Repository source review",
+      "reviewed_on": "2026-09-30",
+      "evidence_state": "conditional"
+    },
+    {
+      "id": "tha_t08_shining_crystal_tt_y1_key_yellow_for_magic_gem_yellow",
+      "title": "Shining Crystal#tt_y1 exchanges Yellow Key for Yellow Charm Stone",
+      "npc": {
+        "name": "Shining Crystal",
+        "internal_name": "Shining Crystal#tt_y1",
+        "map": "tha_t08",
+        "x": 49,
+        "y": 153,
+        "service_role": "Source-proven single-branch item exchange",
+        "npc_id": 7515
+      },
+      "inputs": [
+        {
+          "item_id": 7422,
+          "amount": 1,
+          "item_name": "Yellow Key"
+        }
+      ],
+      "outcomes": [
+        {
+          "label": "Yellow Charm Stone",
+          "item_ids": [
+            7427
+          ],
+          "amount": 1,
+          "selection": "single_option",
+          "items": [
+            {
+              "item_id": 7427,
+              "item_name": "Yellow Charm Stone"
+            }
+          ]
+        }
+      ],
+      "conditions": [
+        "countitem(Key_Yellow) > 0",
+        "The removal and the grant are the only item calls in this brace branch, and no close, end, menu, loop, or call sits between them."
+      ],
+      "source": {
+        "path": "npc/quests/thana_quest.txt",
+        "lines": [
+          1738,
+          1752,
+          1753
+        ],
+        "reviewed_lines": [
+          1738,
+          1752,
+          1753
+        ]
+      },
+      "reviewed_by": "Repository source review",
+      "reviewed_on": "2026-09-30",
       "evidence_state": "conditional"
     },
     {
@@ -6237,7 +7006,7 @@
         ]
       },
       "reviewed_by": "Repository source review",
-      "reviewed_on": "2026-09-28",
+      "reviewed_on": "2026-09-30",
       "evidence_state": "conditional"
     },
     {
@@ -6317,7 +7086,7 @@
         ]
       },
       "reviewed_by": "Repository source review",
-      "reviewed_on": "2026-09-28",
+      "reviewed_on": "2026-09-30",
       "evidence_state": "conditional"
     },
     {
@@ -6495,7 +7264,7 @@
         ]
       },
       "reviewed_by": "Repository source review",
-      "reviewed_on": "2026-09-28",
+      "reviewed_on": "2026-09-30",
       "evidence_state": "conditional"
     },
     {
@@ -6569,7 +7338,7 @@
         ]
       },
       "reviewed_by": "Repository source review",
-      "reviewed_on": "2026-09-28",
+      "reviewed_on": "2026-09-30",
       "evidence_state": "conditional"
     }
   ]
