@@ -29884,7 +29884,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Shop Helper#iz",
@@ -29903,7 +29903,25 @@
       ],
       "size_lines": 213,
       "reason": "refused by the braced one-item prover: braceless",
-      "history": []
+      "history": [
+        "2026-09-30T18:31:25Z activated",
+        "2026-09-30T18:31:25Z validated",
+        "2026-09-30T18:31:25Z verified: 3 claims supported",
+        "2026-09-30T18:31:49Z accepted",
+        "2026-09-30T18:31:49Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "f551306d832e988b68226eb383108fb7bf030f89d53432dcbf736fa164789044",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-iz_ac01_dacquoise_ac_branch_for_3910",
