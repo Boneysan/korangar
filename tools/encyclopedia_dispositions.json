@@ -52701,6 +52701,181 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_yuno_in01_bain_juno_branch_for_439_539",
+      "unit": "E1-yuno_in01_bain_juno_branch_for_439",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Bain#juno"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Mixture,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_yuno.txt",
+          "lines": [
+            539
+          ],
+          "required_source_literals": [
+            "delitem Mixture,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_yuno_in01_bain_juno_branch_for_439_540",
+      "unit": "E1-yuno_in01_bain_juno_branch_for_439",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Bain#juno"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Portable_Furnace,5; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_yuno.txt",
+          "lines": [
+            540
+          ],
+          "required_source_literals": [
+            "delitem Portable_Furnace,5;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_yuno_in01_bain_juno_branch_for_439_541",
+      "unit": "E1-yuno_in01_bain_juno_branch_for_439",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Bain#juno"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Coal,5; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_yuno.txt",
+          "lines": [
+            541
+          ],
+          "required_source_literals": [
+            "delitem Coal,5;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_yuno_in01_bain_juno_branch_for_439_542",
+      "unit": "E1-yuno_in01_bain_juno_branch_for_439",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Bain#juno"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Burn_Tree,5; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_yuno.txt",
+          "lines": [
+            542
+          ],
+          "required_source_literals": [
+            "delitem Burn_Tree,5;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_yuno_in01_bain_juno_branch_for_439_543",
+      "unit": "E1-yuno_in01_bain_juno_branch_for_439",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Bain#juno"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Fine_Sand,5; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_yuno.txt",
+          "lines": [
+            543
+          ],
+          "required_source_literals": [
+            "delitem Fine_Sand,5;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_yuno_in01_bain_juno_branch_for_439_544",
+      "unit": "E1-yuno_in01_bain_juno_branch_for_439",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Bain#juno"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Elunium_Stone,3; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_yuno.txt",
+          "lines": [
+            544
+          ],
+          "required_source_literals": [
+            "delitem Elunium_Stone,3;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_yuno_in01_bain_juno_branch_for_439_545",
+      "unit": "E1-yuno_in01_bain_juno_branch_for_439",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Bain#juno"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Oridecon_Stone,3; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_yuno.txt",
+          "lines": [
+            545
+          ],
+          "required_source_literals": [
+            "delitem Oridecon_Stone,3;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }

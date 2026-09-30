@@ -22952,7 +22952,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Bain#juno",
@@ -22971,7 +22971,25 @@
       ],
       "size_lines": 131,
       "reason": "refused by the braced one-item prover: braceless",
-      "history": []
+      "history": [
+        "2026-09-30T17:27:35Z activated",
+        "2026-09-30T17:27:35Z validated",
+        "2026-09-30T17:27:35Z verified: 7 claims supported",
+        "2026-09-30T17:27:58Z accepted",
+        "2026-09-30T17:27:58Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "fe0fc7d63f3d24ab9d5ba2f129ad97f5271809cf0dd12906a82e484580223272",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-yuno_in01_bajin_branch_for_571",
