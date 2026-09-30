@@ -137487,6 +137487,87 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_8131_npc_quests_quests_amatsu_txt_1372",
+      "unit": "E5-chain-8131",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8131
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 8131; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_amatsu.txt",
+          "lines": [
+            1372
+          ],
+          "required_source_literals": [
+            "setquest 8131;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_8131_npc_quests_quests_amatsu_txt_1805",
+      "unit": "E5-chain-8131",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8131
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 8131; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_amatsu.txt",
+          "lines": [
+            1805
+          ],
+          "required_source_literals": [
+            "changequest 8131,8132;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_8131_npc_quests_quests_amatsu_txt_1865",
+      "unit": "E5-chain-8131",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8135
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 8135; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_amatsu.txt",
+          "lines": [
+            1865
+          ],
+          "required_source_literals": [
+            "completequest 8135;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
