@@ -69226,6 +69226,131 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_job3_gen01_testing_table_gen_branch_for_716_754",
+      "unit": "E1-job3_gen01_testing_table_gen_branch_for_716",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Testing Table#gen"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Experiment_Seed,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-2/genetic.txt",
+          "lines": [
+            754
+          ],
+          "required_source_literals": [
+            "getitem Experiment_Seed,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_job3_gen01_testing_table_gen_branch_for_716_763",
+      "unit": "E1-job3_gen01_testing_table_gen_branch_for_716",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Testing Table#gen"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Altered_Seed,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-2/genetic.txt",
+          "lines": [
+            763
+          ],
+          "required_source_literals": [
+            "getitem Altered_Seed,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_job3_gen01_testing_table_gen_branch_for_716_767",
+      "unit": "E1-job3_gen01_testing_table_gen_branch_for_716",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Testing Table#gen"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Experiment_Seed,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-2/genetic.txt",
+          "lines": [
+            767
+          ],
+          "required_source_literals": [
+            "getitem Experiment_Seed,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_job3_gen01_testing_table_gen_branch_for_716_773",
+      "unit": "E1-job3_gen01_testing_table_gen_branch_for_716",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Testing Table#gen"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Altered_Seed,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-2/genetic.txt",
+          "lines": [
+            773
+          ],
+          "required_source_literals": [
+            "if (countitem(Altered_Seed)) delitem Altered_Seed,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_job3_gen01_testing_table_gen_branch_for_716_774",
+      "unit": "E1-job3_gen01_testing_table_gen_branch_for_716",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Testing Table#gen"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Experiment_Seed,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-2/genetic.txt",
+          "lines": [
+            774
+          ],
+          "required_source_literals": [
+            "if (countitem(Experiment_Seed)) delitem Experiment_Seed,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
