@@ -110783,6 +110783,114 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_1477_script_untranslated",
+      "unit": "E3-unknown-bonus3-baddeff-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          1477
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 1477 is not summarized: the translator does not interpret the quoted statement (bonus3 bAddEff (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            13211
+          ],
+          "required_source_literals": [
+            "bonus3 bAddEff,Eff_Confusion,10000,ATF_SELF|ATF_SHORT;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_1479_script_untranslated",
+      "unit": "E3-unknown-bonus3-baddeff-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          1479
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 1479 is not summarized: the translator does not interpret the quoted statement (bonus3 bAddEff (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            13264
+          ],
+          "required_source_literals": [
+            "bonus3 bAddEff,Eff_Confusion,10000,ATF_SELF|ATF_SHORT;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_13062_script_untranslated",
+      "unit": "E3-unknown-bonus3-baddeff-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          13062
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 13062 is not summarized: the translator does not interpret the quoted statement (bonus3 bAddEff (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            100579
+          ],
+          "required_source_literals": [
+            "bonus3 bAddEff,Eff_Curse,20,ATF_SELF|ATF_SKILL;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_19053_script_untranslated",
+      "unit": "E3-unknown-bonus3-baddeff-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          19053
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 19053 is not summarized: the translator does not interpret the quoted statement (bonus3 bAddEff (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            139588
+          ],
+          "required_source_literals": [
+            "bonus3 bAddEff,Eff_Stun,500+(getrefine()*100),ATF_SHORT|ATF_LONG;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
