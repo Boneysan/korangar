@@ -61051,6 +61051,181 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prt_church_pastor_1011_branch_for_603_706",
+      "unit": "E1-prt_church_pastor_1011_branch_for_603",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Pastor#1011"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Sticky_Mucus,20; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/skills/crusader_skills.txt",
+          "lines": [
+            706
+          ],
+          "required_source_literals": [
+            "delitem Sticky_Mucus,20;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prt_church_pastor_1011_branch_for_603_707",
+      "unit": "E1-prt_church_pastor_1011_branch_for_603",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Pastor#1011"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Unripe_Apple,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/skills/crusader_skills.txt",
+          "lines": [
+            707
+          ],
+          "required_source_literals": [
+            "delitem Unripe_Apple,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prt_church_pastor_1011_branch_for_603_708",
+      "unit": "E1-prt_church_pastor_1011_branch_for_603",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Pastor#1011"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Jellopy,5; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/skills/crusader_skills.txt",
+          "lines": [
+            708
+          ],
+          "required_source_literals": [
+            "delitem Jellopy,5;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prt_church_pastor_1011_branch_for_603_709",
+      "unit": "E1-prt_church_pastor_1011_branch_for_603",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Pastor#1011"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Grape,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/skills/crusader_skills.txt",
+          "lines": [
+            709
+          ],
+          "required_source_literals": [
+            "delitem Grape,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prt_church_pastor_1011_branch_for_603_710",
+      "unit": "E1-prt_church_pastor_1011_branch_for_603",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Pastor#1011"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Coal,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/skills/crusader_skills.txt",
+          "lines": [
+            710
+          ],
+          "required_source_literals": [
+            "delitem Coal,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prt_church_pastor_1011_branch_for_603_711",
+      "unit": "E1-prt_church_pastor_1011_branch_for_603",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Pastor#1011"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Cyfar,3; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/skills/crusader_skills.txt",
+          "lines": [
+            711
+          ],
+          "required_source_literals": [
+            "delitem Cyfar,3;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prt_church_pastor_1011_branch_for_603_712",
+      "unit": "E1-prt_church_pastor_1011_branch_for_603",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Pastor#1011"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Empty_Bottle,3; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/skills/crusader_skills.txt",
+          "lines": [
+            712
+          ],
+          "required_source_literals": [
+            "delitem Empty_Bottle,3;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
