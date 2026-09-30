@@ -125001,6 +125001,33 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e4_el_fire_wave_atk_formula",
+      "unit": "E4-el-fire-wave-atk",
+      "package": "E4",
+      "subject": {
+        "kind": "skill",
+        "ids": [
+          8429
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted case is the ratio site for these skills; this record does not reduce it to a worked example.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "src/map/battle.c",
+          "lines": [
+            2936
+          ],
+          "required_source_literals": [
+            "case EL_FIRE_WAVE_ATK:"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
