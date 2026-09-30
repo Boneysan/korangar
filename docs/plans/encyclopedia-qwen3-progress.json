@@ -178,11 +178,12 @@
   ],
   "last_checks": [
     "export_supported_data.py: passed",
-    "export_supported_data.py --check: passed"
+    "export_supported_data.py --check: passed",
+    "cargo test versioned_reference_data_loads_and_reconciles_all_links: passed"
   ],
   "last_coverage_delta": null,
   "next_action": "Run: python3 tools/encyclopedia_unit.py next",
-  "last_checkpoint_utc": "2026-09-30T22:57:54Z",
+  "last_checkpoint_utc": "2026-09-30T22:58:26Z",
   "unit_queue": "docs/plans/encyclopedia-unit-queue.json",
   "queue_summary": {
     "E0": {
@@ -202,8 +203,8 @@
       "done": 213
     },
     "E5": {
-      "done": 80,
-      "todo": 816
+      "done": 81,
+      "todo": 815
     },
     "E6": {
       "todo": 98
