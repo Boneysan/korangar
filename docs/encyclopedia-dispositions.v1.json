@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 1788,
+    "E1_unknown": 1791,
     "E1_verified": 1
   },
   "entries": [
@@ -24179,6 +24179,81 @@
           ],
           "required_source_literals": [
             "getitem Morroc_Skin,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_moc_ruins_book_touching_man_garas_branch_for_2096_2331",
+      "unit": "E1-moc_ruins_book_touching_man_garas_branch_for_2096",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Book-Touching Man#garas"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Mami_Photo_Album,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_morocc.txt",
+          "lines": [
+            2331
+          ],
+          "required_source_literals": [
+            "getitem Mami_Photo_Album,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_moc_ruins_book_touching_man_garas_branch_for_2096_2386",
+      "unit": "E1-moc_ruins_book_touching_man_garas_branch_for_2096",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Book-Touching Man#garas"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Author_Memo,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_morocc.txt",
+          "lines": [
+            2386
+          ],
+          "required_source_literals": [
+            "delitem Author_Memo,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_moc_ruins_book_touching_man_garas_branch_for_2096_2387",
+      "unit": "E1-moc_ruins_book_touching_man_garas_branch_for_2096",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Book-Touching Man#garas"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Author_Autograph,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_morocc.txt",
+          "lines": [
+            2387
+          ],
+          "required_source_literals": [
+            "delitem Author_Autograph,1;"
           ]
         }
       ],

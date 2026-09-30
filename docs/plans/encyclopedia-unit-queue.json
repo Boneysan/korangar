@@ -18075,7 +18075,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Book-Touching Man#garas",
@@ -18094,7 +18094,25 @@
       ],
       "size_lines": 321,
       "reason": "refused by the braced one-item prover: braceless",
-      "history": []
+      "history": [
+        "2026-09-30T16:42:50Z activated",
+        "2026-09-30T16:42:50Z validated",
+        "2026-09-30T16:42:50Z verified: 3 claims supported",
+        "2026-09-30T16:43:13Z accepted",
+        "2026-09-30T16:43:14Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "02dd52e9339cc24793bf62bc56a56e21d0104c7298a6dd686273d6dc3121c4a5",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-yuno_in04_suspicious_man_oliver_h_branch_for_3111",
