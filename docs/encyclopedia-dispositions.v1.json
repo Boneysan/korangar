@@ -12,7 +12,7 @@
     "E2_verified": 236,
     "E3_unknown": 973,
     "E4_unknown": 213,
-    "E5_unknown": 313
+    "E5_unknown": 314
   },
   "entries": [
     {
@@ -106418,6 +106418,33 @@
           ],
           "required_source_literals": [
             "erasequest 2070;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2076_npc_quests_quests_ein_txt_4094",
+      "unit": "E5-chain-2076",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2076
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 2076; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_ein.txt",
+          "lines": [
+            4094
+          ],
+          "required_source_literals": [
+            "changequest 2076,2077;"
           ]
         }
       ],
