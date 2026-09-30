@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 2881,
+    "E1_unknown": 2882,
     "E1_verified": 1
   },
   "entries": [
@@ -19929,6 +19929,31 @@
           ],
           "required_source_literals": [
             "getitem(Apple, 10); // Apple"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_iz_ac02_a_nun_2_branch_for_12288_12332",
+      "unit": "E1-iz_ac02_a_nun_2_branch_for_12288",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "A Nun#2"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Acolyte_Manual,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            12332
+          ],
+          "required_source_literals": [
+            "getitem(Acolyte_Manual, 1); // Acolyte_Manual"
           ]
         }
       ],

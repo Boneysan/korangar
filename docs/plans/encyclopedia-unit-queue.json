@@ -30674,7 +30674,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "A Nun#2",
@@ -30693,7 +30693,26 @@
       ],
       "size_lines": 55,
       "reason": "refused by the braced one-item prover: menu",
-      "history": []
+      "history": [
+        "2026-09-30T18:38:39Z activated",
+        "2026-09-30T18:38:39Z validated",
+        "2026-09-30T18:38:39Z verified: 1 claims supported",
+        "2026-09-30T18:39:02Z accepted",
+        "2026-09-30T18:39:02Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "96963981a59c5f856910bfbe79c9bc203cf559a502989b08f86aff50a1021af0",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "audit": "due",
+      "commit": "committed"
     },
     {
       "id": "E1-iz_ac02_ninja_guide_ac_branch_for_12348",
