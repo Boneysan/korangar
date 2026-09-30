@@ -12898,7 +12898,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Exhausted Soldier#2",
@@ -12917,7 +12917,25 @@
       ],
       "size_lines": 45,
       "reason": "refused by the braced one-item prover: switch",
-      "history": []
+      "history": [
+        "2026-09-30T15:55:17Z activated",
+        "2026-09-30T15:55:17Z validated",
+        "2026-09-30T15:55:18Z verified: 1 claims supported",
+        "2026-09-30T15:55:41Z accepted",
+        "2026-09-30T15:55:41Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "1dd7828cff7998ca7c6489d4e625d5885e67183f24c11970ffcfd035faf8da84",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-splendide_exhausted_soldier_3_branch_for_5912",

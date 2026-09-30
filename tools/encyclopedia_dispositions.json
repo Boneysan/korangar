@@ -32701,6 +32701,31 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_splendide_exhausted_soldier_2_branch_for_5855_5872",
+      "unit": "E1-splendide_exhausted_soldier_2_branch_for_5855",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Exhausted Soldier#2"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Spirit_Of_Alfheim,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_2.txt",
+          "lines": [
+            5872
+          ],
+          "required_source_literals": [
+            "delitem Spirit_Of_Alfheim,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
