@@ -66701,6 +66701,31 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_moc_prydb1_thief_guildsman_thief_branch_for_181_193",
+      "unit": "E1-moc_prydb1_thief_guildsman_thief_branch_for_181",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Thief Guildsman#thief"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem N_Main_Gauche,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/1-1/thief.txt",
+          "lines": [
+            193
+          ],
+          "required_source_literals": [
+            "getitem N_Main_Gauche,1; // N_Main_Gauche"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
