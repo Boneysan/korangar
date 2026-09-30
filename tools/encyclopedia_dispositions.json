@@ -46976,6 +46976,56 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mosk_fild02_shepherdess_rus10_branch_for_8406_8504",
+      "unit": "E1-mosk_fild02_shepherdess_rus10_branch_for_8406",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Shepherdess#rus10"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Pointed_Branch,25; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_moscovia.txt",
+          "lines": [
+            8504
+          ],
+          "required_source_literals": [
+            "delitem Pointed_Branch,25;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mosk_fild02_shepherdess_rus10_branch_for_8406_8507",
+      "unit": "E1-mosk_fild02_shepherdess_rus10_branch_for_8406",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Shepherdess#rus10"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Pointed_Wooden_Flute,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_moscovia.txt",
+          "lines": [
+            8507
+          ],
+          "required_source_literals": [
+            "getitem Pointed_Wooden_Flute,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
