@@ -28255,7 +28255,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Bercasell#3rdgc16",
@@ -28274,7 +28274,25 @@
       ],
       "size_lines": 212,
       "reason": "refused by the braced one-item prover: switch",
-      "history": []
+      "history": [
+        "2026-09-30T18:16:29Z activated",
+        "2026-09-30T18:16:30Z validated",
+        "2026-09-30T18:16:30Z verified: 2 claims supported",
+        "2026-09-30T18:16:53Z accepted",
+        "2026-09-30T18:16:53Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "2defe810d86a0521c608c71e40a662390dae9739e385d4281e2cefe9b8904cfe",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-yuno_chainheart_branch_for_38",

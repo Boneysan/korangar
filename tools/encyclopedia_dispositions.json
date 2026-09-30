@@ -67651,6 +67651,56 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_job3_guil01_bercasell_3rdgc16_branch_for_3621_3728",
+      "unit": "E1-job3_guil01_bercasell_3rdgc16_branch_for_3621",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Bercasell#3rdgc16"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Green_Apple_Ring,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-1/guillotine_cross.txt",
+          "lines": [
+            3728
+          ],
+          "required_source_literals": [
+            "getitem Green_Apple_Ring,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_job3_guil01_bercasell_3rdgc16_branch_for_3621_3729",
+      "unit": "E1-job3_guil01_bercasell_3rdgc16_branch_for_3621",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Bercasell#3rdgc16"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Silent_Executer,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-1/guillotine_cross.txt",
+          "lines": [
+            3729
+          ],
+          "required_source_literals": [
+            "getitem Silent_Executer,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }

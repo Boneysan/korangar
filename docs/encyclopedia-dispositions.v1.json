@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 2701,
+    "E1_unknown": 2703,
     "E1_verified": 1
   },
   "entries": [
@@ -19379,6 +19379,56 @@
           ],
           "required_source_literals": [
             "getitem Will_Of_Exhausted_Angel,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_job3_guil01_bercasell_3rdgc16_branch_for_3621_3728",
+      "unit": "E1-job3_guil01_bercasell_3rdgc16_branch_for_3621",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Bercasell#3rdgc16"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Green_Apple_Ring,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-1/guillotine_cross.txt",
+          "lines": [
+            3728
+          ],
+          "required_source_literals": [
+            "getitem Green_Apple_Ring,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_job3_guil01_bercasell_3rdgc16_branch_for_3621_3729",
+      "unit": "E1-job3_guil01_bercasell_3rdgc16_branch_for_3621",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Bercasell#3rdgc16"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Silent_Executer,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-1/guillotine_cross.txt",
+          "lines": [
+            3729
+          ],
+          "required_source_literals": [
+            "getitem Silent_Executer,1;"
           ]
         }
       ],
