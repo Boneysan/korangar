@@ -66351,6 +66351,56 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mora_sharp_eyed_man_branch_for_870_974",
+      "unit": "E1-mora_sharp_eyed_man_branch_for_870",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Sharp Eyed Man"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Muffler_Of_Roki,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/instances/HazyForest.txt",
+          "lines": [
+            974
+          ],
+          "required_source_literals": [
+            "getitem(Muffler_Of_Roki, 1);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mora_sharp_eyed_man_branch_for_870_975",
+      "unit": "E1-mora_sharp_eyed_man_branch_for_870",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Sharp Eyed Man"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Pendant_Of_Guardian,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/instances/HazyForest.txt",
+          "lines": [
+            975
+          ],
+          "required_source_literals": [
+            "getitem(Pendant_Of_Guardian, 1);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
