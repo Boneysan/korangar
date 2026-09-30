@@ -42901,6 +42901,31 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_airplane_01_man_lyozien_branch_for_11219_11295",
+      "unit": "E1-airplane_01_man_lyozien_branch_for_11219",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Man#Lyozien"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem White_Potion,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_lighthalzen.txt",
+          "lines": [
+            11295
+          ],
+          "required_source_literals": [
+            "getitem White_Potion,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
