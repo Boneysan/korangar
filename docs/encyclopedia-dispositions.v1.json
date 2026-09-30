@@ -12,7 +12,7 @@
     "E2_verified": 236,
     "E3_unknown": 973,
     "E4_unknown": 213,
-    "E5_unknown": 338
+    "E5_unknown": 341
   },
   "entries": [
     {
@@ -111521,6 +111521,87 @@
           ],
           "required_source_literals": [
             "changequest 8047,8048;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_8048_npc_quests_quests_hugel_txt_6650",
+      "unit": "E5-chain-8048",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8048
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 8048; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_hugel.txt",
+          "lines": [
+            6650
+          ],
+          "required_source_literals": [
+            "changequest 8048,8049;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_8048_npc_quests_quests_hugel_txt_6779",
+      "unit": "E5-chain-8048",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8050
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 8050; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_hugel.txt",
+          "lines": [
+            6779
+          ],
+          "required_source_literals": [
+            "changequest 8050,8051;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_8048_npc_quests_quests_hugel_txt_6832",
+      "unit": "E5-chain-8048",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8051
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 8051; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_hugel.txt",
+          "lines": [
+            6832
+          ],
+          "required_source_literals": [
+            "changequest 8051,8052;"
           ]
         }
       ],
