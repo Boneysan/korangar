@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 1256,
+    "E1_unknown": 1257,
     "E1_verified": 1
   },
   "entries": [
@@ -28154,6 +28154,31 @@
           ],
           "required_source_literals": [
             "getitem(Splendide_Coin, 10);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_spl_in01_splendide_guard_ep13md01_branch_for_531_842",
+      "unit": "E1-spl_in01_splendide_guard_ep13md01_branch_for_531",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Splendide Guard#ep13md01"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Yggdrasilberry,3; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_2.txt",
+          "lines": [
+            842
+          ],
+          "required_source_literals": [
+            "getitem Yggdrasilberry,3;"
           ]
         }
       ],
