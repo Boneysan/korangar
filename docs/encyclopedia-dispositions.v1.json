@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 792,
+    "E1_unknown": 797,
     "E1_verified": 1
   },
   "entries": [
@@ -18054,6 +18054,131 @@
           ],
           "required_source_literals": [
             "getitem Cotton_Shirt_,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_xmas_fuzzy_fuzz_1_branch_for_1087_1120",
+      "unit": "E1-xmas_fuzzy_fuzz_1_branch_for_1087",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Fuzzy Fuzz#1"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Panda_Cap,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2004_headgears.txt",
+          "lines": [
+            1120
+          ],
+          "required_source_literals": [
+            "delitem Panda_Cap,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_xmas_fuzzy_fuzz_1_branch_for_1087_1121",
+      "unit": "E1-xmas_fuzzy_fuzz_1_branch_for_1087",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Fuzzy Fuzz#1"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Needle_Pouch,100; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2004_headgears.txt",
+          "lines": [
+            1121
+          ],
+          "required_source_literals": [
+            "delitem Needle_Pouch,100;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_xmas_fuzzy_fuzz_1_branch_for_1087_1122",
+      "unit": "E1-xmas_fuzzy_fuzz_1_branch_for_1087",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Fuzzy Fuzz#1"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Spool,100; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2004_headgears.txt",
+          "lines": [
+            1122
+          ],
+          "required_source_literals": [
+            "delitem Spool,100;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_xmas_fuzzy_fuzz_1_branch_for_1087_1123",
+      "unit": "E1-xmas_fuzzy_fuzz_1_branch_for_1087",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Fuzzy Fuzz#1"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Black_Bears_Skin,300; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2004_headgears.txt",
+          "lines": [
+            1123
+          ],
+          "required_source_literals": [
+            "delitem Black_Bears_Skin,300;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_xmas_fuzzy_fuzz_1_branch_for_1087_1124",
+      "unit": "E1-xmas_fuzzy_fuzz_1_branch_for_1087",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Fuzzy Fuzz#1"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Brown_Bear_Cap,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2004_headgears.txt",
+          "lines": [
+            1124
+          ],
+          "required_source_literals": [
+            "getitem Brown_Bear_Cap,1;"
           ]
         }
       ],

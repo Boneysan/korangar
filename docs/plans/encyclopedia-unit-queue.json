@@ -8792,7 +8792,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Fuzzy Fuzz#1",
@@ -8811,7 +8811,25 @@
       ],
       "size_lines": 85,
       "reason": "refused by the braced one-item prover: multi-item",
-      "history": []
+      "history": [
+        "2026-09-30T15:17:05Z activated",
+        "2026-09-30T15:17:05Z validated",
+        "2026-09-30T15:17:05Z verified: 5 claims supported",
+        "2026-09-30T15:17:28Z accepted",
+        "2026-09-30T15:17:28Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "5e871a062332c2cb2db132337cfe93f1c79f1e637f1309c6ac71503ddf6740ce",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-payon_in03_nanhyang_1_branch_for_1174",
