@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 256,
+    "E1_unknown": 274,
     "E1_verified": 1
   },
   "entries": [
@@ -4104,6 +4104,456 @@
           ],
           "required_source_literals": [
             "delitem Frozen_Heart,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_in_rogue_mr_smith_rg_branch_for_509_684",
+      "unit": "E1-in_rogue_mr_smith_rg_branch_for_509",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Mr. Smith#rg"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Chrysalis,5; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/rogue.txt",
+          "lines": [
+            684
+          ],
+          "required_source_literals": [
+            "delitem Chrysalis,5;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_in_rogue_mr_smith_rg_branch_for_509_685",
+      "unit": "E1-in_rogue_mr_smith_rg_branch_for_509",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Mr. Smith#rg"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Empty_Bottle,5; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/rogue.txt",
+          "lines": [
+            685
+          ],
+          "required_source_literals": [
+            "delitem Empty_Bottle,5;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_in_rogue_mr_smith_rg_branch_for_509_686",
+      "unit": "E1-in_rogue_mr_smith_rg_branch_for_509",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Mr. Smith#rg"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Iron_Ore,5; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/rogue.txt",
+          "lines": [
+            686
+          ],
+          "required_source_literals": [
+            "delitem Iron_Ore,5;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_in_rogue_mr_smith_rg_branch_for_509_687",
+      "unit": "E1-in_rogue_mr_smith_rg_branch_for_509",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Mr. Smith#rg"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Stone_Heart,5; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/rogue.txt",
+          "lines": [
+            687
+          ],
+          "required_source_literals": [
+            "delitem Stone_Heart,5;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_in_rogue_mr_smith_rg_branch_for_509_688",
+      "unit": "E1-in_rogue_mr_smith_rg_branch_for_509",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Mr. Smith#rg"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Red_Herb,5; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/rogue.txt",
+          "lines": [
+            688
+          ],
+          "required_source_literals": [
+            "delitem Red_Herb,5;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_in_rogue_mr_smith_rg_branch_for_509_689",
+      "unit": "E1-in_rogue_mr_smith_rg_branch_for_509",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Mr. Smith#rg"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Animals_Skin,5; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/rogue.txt",
+          "lines": [
+            689
+          ],
+          "required_source_literals": [
+            "delitem Animals_Skin,5;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_in_rogue_mr_smith_rg_branch_for_509_690",
+      "unit": "E1-in_rogue_mr_smith_rg_branch_for_509",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Mr. Smith#rg"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Yellow_Gemstone,5; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/rogue.txt",
+          "lines": [
+            690
+          ],
+          "required_source_literals": [
+            "delitem Yellow_Gemstone,5;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_in_rogue_mr_smith_rg_branch_for_509_691",
+      "unit": "E1-in_rogue_mr_smith_rg_branch_for_509",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Mr. Smith#rg"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Tooth_Of_Bat,5; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/rogue.txt",
+          "lines": [
+            691
+          ],
+          "required_source_literals": [
+            "delitem Tooth_Of_Bat,5;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_in_rogue_mr_smith_rg_branch_for_509_692",
+      "unit": "E1-in_rogue_mr_smith_rg_branch_for_509",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Mr. Smith#rg"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Scorpions_Tail,5; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/rogue.txt",
+          "lines": [
+            692
+          ],
+          "required_source_literals": [
+            "delitem Scorpions_Tail,5;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_in_rogue_mr_smith_rg_branch_for_509_693",
+      "unit": "E1-in_rogue_mr_smith_rg_branch_for_509",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Mr. Smith#rg"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Yoyo_Tail,5; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/rogue.txt",
+          "lines": [
+            693
+          ],
+          "required_source_literals": [
+            "delitem Yoyo_Tail,5;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_in_rogue_mr_smith_rg_branch_for_509_694",
+      "unit": "E1-in_rogue_mr_smith_rg_branch_for_509",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Mr. Smith#rg"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Monsters_Feed,5; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/rogue.txt",
+          "lines": [
+            694
+          ],
+          "required_source_literals": [
+            "delitem Monsters_Feed,5;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_in_rogue_mr_smith_rg_branch_for_509_695",
+      "unit": "E1-in_rogue_mr_smith_rg_branch_for_509",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Mr. Smith#rg"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Fluff,5; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/rogue.txt",
+          "lines": [
+            695
+          ],
+          "required_source_literals": [
+            "delitem Fluff,5;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_in_rogue_mr_smith_rg_branch_for_509_696",
+      "unit": "E1-in_rogue_mr_smith_rg_branch_for_509",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Mr. Smith#rg"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Clover,5; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/rogue.txt",
+          "lines": [
+            696
+          ],
+          "required_source_literals": [
+            "delitem Clover,5;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_in_rogue_mr_smith_rg_branch_for_509_697",
+      "unit": "E1-in_rogue_mr_smith_rg_branch_for_509",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Mr. Smith#rg"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Feather_Of_Birds,5; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/rogue.txt",
+          "lines": [
+            697
+          ],
+          "required_source_literals": [
+            "delitem Feather_Of_Birds,5;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_in_rogue_mr_smith_rg_branch_for_509_698",
+      "unit": "E1-in_rogue_mr_smith_rg_branch_for_509",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Mr. Smith#rg"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Talon,5; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/rogue.txt",
+          "lines": [
+            698
+          ],
+          "required_source_literals": [
+            "delitem Talon,5;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_in_rogue_mr_smith_rg_branch_for_509_699",
+      "unit": "E1-in_rogue_mr_smith_rg_branch_for_509",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Mr. Smith#rg"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Spawn,5; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/rogue.txt",
+          "lines": [
+            699
+          ],
+          "required_source_literals": [
+            "delitem Spawn,5;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_in_rogue_mr_smith_rg_branch_for_509_700",
+      "unit": "E1-in_rogue_mr_smith_rg_branch_for_509",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Mr. Smith#rg"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Raccoon_Leaf,5; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/rogue.txt",
+          "lines": [
+            700
+          ],
+          "required_source_literals": [
+            "delitem Raccoon_Leaf,5;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_in_rogue_mr_smith_rg_branch_for_509_716",
+      "unit": "E1-in_rogue_mr_smith_rg_branch_for_509",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Mr. Smith#rg"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Worn_Out_Page,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/rogue.txt",
+          "lines": [
+            716
+          ],
+          "required_source_literals": [
+            "getitem Worn_Out_Page,1;"
           ]
         }
       ],
