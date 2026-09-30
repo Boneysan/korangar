@@ -15751,6 +15751,31 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_kh_kiehl01_big_door_bigdoorkhq3_branch_for_5850_5863",
+      "unit": "E1-kh_kiehl01_big_door_bigdoorkhq3_branch_for_5850",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Big Door#BigDoorKHQ3"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Black_Key_Card,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/kiel_hyre_quest.txt",
+          "lines": [
+            5863
+          ],
+          "required_source_literals": [
+            "delitem Black_Key_Card,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
