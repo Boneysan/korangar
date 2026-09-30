@@ -31126,6 +31126,31 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_dan01_corpse_moc2_dead01_branch_for_13624_13652",
+      "unit": "E1-que_dan01_corpse_moc2_dead01_branch_for_13624",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Corpse#moc2_dead01"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Seal_Scroll,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_1.txt",
+          "lines": [
+            13652
+          ],
+          "required_source_literals": [
+            "getitem Seal_Scroll,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }

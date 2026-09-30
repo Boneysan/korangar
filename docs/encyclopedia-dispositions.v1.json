@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 1240,
+    "E1_unknown": 1241,
     "E1_verified": 1
   },
   "entries": [
@@ -25854,6 +25854,31 @@
           ],
           "required_source_literals": [
             "delitem Invite_For_Duel,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_dan01_corpse_moc2_dead01_branch_for_13624_13652",
+      "unit": "E1-que_dan01_corpse_moc2_dead01_branch_for_13624",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Corpse#moc2_dead01"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Seal_Scroll,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_1.txt",
+          "lines": [
+            13652
+          ],
+          "required_source_literals": [
+            "getitem Seal_Scroll,1;"
           ]
         }
       ],
