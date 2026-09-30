@@ -72376,6 +72376,81 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_izlude_enchanter_mounds_iz_branch_for_13637_13813",
+      "unit": "E1-izlude_enchanter_mounds_iz_branch_for_13637",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Enchanter Mounds#iz"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Cotton_Shirt,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            13813
+          ],
+          "required_source_literals": [
+            "delitem(Cotton_Shirt, 1); // Cotton_Shirt"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_izlude_enchanter_mounds_iz_branch_for_13637_13814",
+      "unit": "E1-izlude_enchanter_mounds_iz_branch_for_13637",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Enchanter Mounds#iz"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Cotton_Shirt_,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            13814
+          ],
+          "required_source_literals": [
+            "getitem(Cotton_Shirt_, 1); // Cotton_Shirt_"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_izlude_enchanter_mounds_iz_branch_for_13637_13916",
+      "unit": "E1-izlude_enchanter_mounds_iz_branch_for_13637",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Enchanter Mounds#iz"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Cargo_Free_Ticket,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            13916
+          ],
+          "required_source_literals": [
+            "getitem(Cargo_Free_Ticket, 1); // Cargo_Free_Ticket"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
