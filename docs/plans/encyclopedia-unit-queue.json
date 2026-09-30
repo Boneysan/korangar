@@ -33464,7 +33464,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Papyrus#0001",
@@ -33483,7 +33483,25 @@
       ],
       "size_lines": 107,
       "reason": "refused by the braced one-item prover: braceless",
-      "history": []
+      "history": [
+        "2026-09-30T19:04:36Z activated",
+        "2026-09-30T19:04:36Z validated",
+        "2026-09-30T19:04:36Z verified: 4 claims supported",
+        "2026-09-30T19:04:59Z accepted",
+        "2026-09-30T19:04:59Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "2b23872ab7270f870304355bf2843865f3d1c802523e8a621e0afdc113fb0791",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-dic_in01_diel_guard_ep133_20_branch_for_1275",

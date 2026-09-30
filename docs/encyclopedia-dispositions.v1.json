@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 3100,
+    "E1_unknown": 3104,
     "E1_verified": 1
   },
   "entries": [
@@ -12779,6 +12779,106 @@
           ],
           "required_source_literals": [
             "delitem Scaraba_Perfume,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_dic_in01_papyrus_0001_branch_for_922_967",
+      "unit": "E1-dic_in01_papyrus_0001_branch_for_922",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Papyrus#0001"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Unidentified_Relic,30; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_dicastes.txt",
+          "lines": [
+            967
+          ],
+          "required_source_literals": [
+            "delitem Unidentified_Relic,30;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_dic_in01_papyrus_0001_branch_for_922_968",
+      "unit": "E1-dic_in01_papyrus_0001_branch_for_922",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Papyrus#0001"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Sapa_Feat_Cert,11; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_dicastes.txt",
+          "lines": [
+            968
+          ],
+          "required_source_literals": [
+            "getitem Sapa_Feat_Cert,11;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_dic_in01_papyrus_0001_branch_for_922_984",
+      "unit": "E1-dic_in01_papyrus_0001_branch_for_922",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Papyrus#0001"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Unidentified_Relic,3; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_dicastes.txt",
+          "lines": [
+            984
+          ],
+          "required_source_literals": [
+            "delitem Unidentified_Relic,3;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_dic_in01_papyrus_0001_branch_for_922_985",
+      "unit": "E1-dic_in01_papyrus_0001_branch_for_922",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Papyrus#0001"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Sapa_Feat_Cert,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_dicastes.txt",
+          "lines": [
+            985
+          ],
+          "required_source_literals": [
+            "getitem Sapa_Feat_Cert,1;"
           ]
         }
       ],
