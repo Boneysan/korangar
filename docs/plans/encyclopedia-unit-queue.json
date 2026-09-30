@@ -30366,7 +30366,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Swordman Trainer#ac",
@@ -30385,7 +30385,25 @@
       ],
       "size_lines": 279,
       "reason": "refused by the braced one-item prover: braceless",
-      "history": []
+      "history": [
+        "2026-09-30T18:35:50Z activated",
+        "2026-09-30T18:35:50Z validated",
+        "2026-09-30T18:35:51Z verified: 1 claims supported",
+        "2026-09-30T18:36:14Z accepted",
+        "2026-09-30T18:36:14Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "634cae037ccf88b86f37d52bd9239f061619c43b4aa94cfbbd16584ccdf1fe89",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-iz_ac02_mage_chuck_ac_branch_for_9299",

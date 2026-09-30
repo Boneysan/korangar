@@ -71676,6 +71676,31 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_iz_ac02_swordman_trainer_ac_branch_for_8907_8953",
+      "unit": "E1-iz_ac02_swordman_trainer_ac_branch_for_8907",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Swordman Trainer#ac"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Swordman_Manual,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            8953
+          ],
+          "required_source_literals": [
+            "getitem(Swordman_Manual, 1); // Swordman_Manual"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
