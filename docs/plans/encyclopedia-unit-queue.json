@@ -24974,7 +24974,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Rune Device#tt2",
@@ -24993,7 +24993,26 @@
       ],
       "size_lines": 156,
       "reason": "refused by the braced one-item prover: braceless",
-      "history": []
+      "history": [
+        "2026-09-30T17:46:06Z activated",
+        "2026-09-30T17:46:06Z validated",
+        "2026-09-30T17:46:07Z verified: 1 claims supported",
+        "2026-09-30T17:46:30Z accepted",
+        "2026-09-30T17:46:30Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "71320faf7072b9ed0387a7e1f805d78f11e61478c3465e1a503c243367ccf4d2",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "audit": "due",
+      "commit": "committed"
     },
     {
       "id": "E1-tha_t05_brilliant_statue_tt3_branch_for_1206",

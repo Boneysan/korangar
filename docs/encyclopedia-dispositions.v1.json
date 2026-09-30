@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 2503,
+    "E1_unknown": 2504,
     "E1_verified": 1
   },
   "entries": [
@@ -55204,6 +55204,31 @@
           ],
           "required_source_literals": [
             "getitem Key_Red,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_tha_t04_rune_device_tt2_branch_for_1049_1131",
+      "unit": "E1-tha_t04_rune_device_tt2_branch_for_1049",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Rune Device#tt2"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Key_Yellow,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/thana_quest.txt",
+          "lines": [
+            1131
+          ],
+          "required_source_literals": [
+            "getitem Key_Yellow,1;"
           ]
         }
       ],
