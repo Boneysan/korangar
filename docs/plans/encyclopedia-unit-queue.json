@@ -292,7 +292,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Airport Staff#y_air1a::y_airport1",
@@ -311,7 +311,25 @@
       ],
       "size_lines": 39,
       "reason": "refused by the braced one-item prover: menu",
-      "history": []
+      "history": [
+        "2026-09-30T13:58:31Z activated",
+        "2026-09-30T13:58:31Z validated",
+        "2026-09-30T13:58:31Z verified: 1 claims supported",
+        "2026-09-30T13:58:55Z accepted",
+        "2026-09-30T13:58:55Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "b31b89bd9a300cdadeb4a61d219924d23f335a2592717c085bb6ca262ebc3bef",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-bat_b01_guillaume_vintenar_b01_a_branch_for_411",
