@@ -71251,6 +71251,56 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_iz_ac01_battle_instructor_08_branch_for_4551_4582",
+      "unit": "E1-iz_ac01_battle_instructor_08_branch_for_4551",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Battle Instructor#08"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Cargo_Free_Ticket,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            4582
+          ],
+          "required_source_literals": [
+            "getitem(Cargo_Free_Ticket, 1); // Cargo_Free_Ticket"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_iz_ac01_battle_instructor_08_branch_for_4551_4771",
+      "unit": "E1-iz_ac01_battle_instructor_08_branch_for_4551",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Battle Instructor#08"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Cargo_Free_Ticket,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            4771
+          ],
+          "required_source_literals": [
+            "getitem(Cargo_Free_Ticket, 1); // Cargo_Free_Ticket"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
