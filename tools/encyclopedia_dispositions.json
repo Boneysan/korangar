@@ -4426,6 +4426,56 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prt_church_high_bishop_prst_branch_for_48_534",
+      "unit": "E1-prt_church_high_bishop_prst_branch_for_48",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "High Bishop#prst"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Book,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-1/priest.txt",
+          "lines": [
+            534
+          ],
+          "required_source_literals": [
+            "getitem Book,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prt_church_high_bishop_prst_branch_for_48_538",
+      "unit": "E1-prt_church_high_bishop_prst_branch_for_48",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "High Bishop#prst"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Bible,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-1/priest.txt",
+          "lines": [
+            538
+          ],
+          "required_source_literals": [
+            "getitem Bible,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
