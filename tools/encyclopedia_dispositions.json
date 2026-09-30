@@ -27826,6 +27826,31 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mid_camp_botanist_ep13_branch_for_4349_4605",
+      "unit": "E1-mid_camp_botanist_ep13_branch_for_4349",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Botanist#ep13"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Decaying_Stem,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_1.txt",
+          "lines": [
+            4605
+          ],
+          "required_source_literals": [
+            "getitem Decaying_Stem,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
