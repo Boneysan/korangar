@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 2586,
+    "E1_unknown": 2587,
     "E1_verified": 1
   },
   "entries": [
@@ -2079,6 +2079,31 @@
           ],
           "required_source_literals": [
             "getitem Buy_Market_Permit,5; //Buy_Stall_Permit"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_alberta_in_refined_steward_branch_for_6455_6517",
+      "unit": "E1-alberta_in_refined_steward_branch_for_6455",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Refined Steward"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Receipt_01,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/the_sign_quest.txt",
+          "lines": [
+            6517
+          ],
+          "required_source_literals": [
+            "delitem Receipt_01,1;"
           ]
         }
       ],

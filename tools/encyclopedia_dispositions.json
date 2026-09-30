@@ -64776,6 +64776,31 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_alberta_in_refined_steward_branch_for_6455_6517",
+      "unit": "E1-alberta_in_refined_steward_branch_for_6455",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Refined Steward"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Receipt_01,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/the_sign_quest.txt",
+          "lines": [
+            6517
+          ],
+          "required_source_literals": [
+            "delitem Receipt_01,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
