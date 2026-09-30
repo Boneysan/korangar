@@ -45801,6 +45801,81 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mosk_dun03_bubbling_swamp_mos1_branch_for_3763_3793",
+      "unit": "E1-mosk_dun03_bubbling_swamp_mos1_branch_for_3763",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Bubbling Swamp#mos1"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Sticky_Herb,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_moscovia.txt",
+          "lines": [
+            3793
+          ],
+          "required_source_literals": [
+            "getitem Sticky_Herb,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mosk_dun03_bubbling_swamp_mos1_branch_for_3763_3798",
+      "unit": "E1-mosk_dun03_bubbling_swamp_mos1_branch_for_3763",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Bubbling Swamp#mos1"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Sticky_Herb,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_moscovia.txt",
+          "lines": [
+            3798
+          ],
+          "required_source_literals": [
+            "getitem Sticky_Herb,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mosk_dun03_bubbling_swamp_mos1_branch_for_3763_3803",
+      "unit": "E1-mosk_dun03_bubbling_swamp_mos1_branch_for_3763",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Bubbling Swamp#mos1"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Green_Herb,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_moscovia.txt",
+          "lines": [
+            3803
+          ],
+          "required_source_literals": [
+            "getitem Green_Herb,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }

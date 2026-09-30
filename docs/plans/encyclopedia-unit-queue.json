@@ -18604,7 +18604,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Bubbling Swamp#mos1",
@@ -18623,7 +18623,25 @@
       ],
       "size_lines": 48,
       "reason": "refused by the braced one-item prover: loop-or-random",
-      "history": []
+      "history": [
+        "2026-09-30T16:47:38Z activated",
+        "2026-09-30T16:47:38Z validated",
+        "2026-09-30T16:47:38Z verified: 3 claims supported",
+        "2026-09-30T16:48:01Z accepted",
+        "2026-09-30T16:48:02Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "575bc6ee49214b8c627f41a8b5c10c253a914d3f1ca12972100a8f6702ebf514",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-mosk_in_larissa_mos_01_branch_for_3813",
