@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 324,
+    "E1_unknown": 332,
     "E1_verified": 1
   },
   "entries": [
@@ -4929,6 +4929,206 @@
           ],
           "required_source_literals": [
             "delitem Free_Flying_Ship_Ticket,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_lhz_in02_hair_dyer_lich_branch_for_177_382",
+      "unit": "E1-lhz_in02_hair_dyer_lich_branch_for_177",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Hair Dyer#lich"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Scarlet_Dyestuffs,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/merchants/hair_dyer.txt",
+          "lines": [
+            382
+          ],
+          "required_source_literals": [
+            "if (.@headpalette == 8) delitem Scarlet_Dyestuffs,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_lhz_in02_hair_dyer_lich_branch_for_177_383",
+      "unit": "E1-lhz_in02_hair_dyer_lich_branch_for_177",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Hair Dyer#lich"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Lemon_Dyestuffs,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/merchants/hair_dyer.txt",
+          "lines": [
+            383
+          ],
+          "required_source_literals": [
+            "else if (.@headpalette == 1) delitem Lemon_Dyestuffs,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_lhz_in02_hair_dyer_lich_branch_for_177_384",
+      "unit": "E1-lhz_in02_hair_dyer_lich_branch_for_177",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Hair Dyer#lich"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Violet_Dyestuffs,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/merchants/hair_dyer.txt",
+          "lines": [
+            384
+          ],
+          "required_source_literals": [
+            "else if (.@headpalette == 2) delitem Violet_Dyestuffs,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_lhz_in02_hair_dyer_lich_branch_for_177_385",
+      "unit": "E1-lhz_in02_hair_dyer_lich_branch_for_177",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Hair Dyer#lich"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Orange_Dyestuffs,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/merchants/hair_dyer.txt",
+          "lines": [
+            385
+          ],
+          "required_source_literals": [
+            "else if (.@headpalette == 3) delitem Orange_Dyestuffs,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_lhz_in02_hair_dyer_lich_branch_for_177_386",
+      "unit": "E1-lhz_in02_hair_dyer_lich_branch_for_177",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Hair Dyer#lich"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Darkgreen_Dyestuffs,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/merchants/hair_dyer.txt",
+          "lines": [
+            386
+          ],
+          "required_source_literals": [
+            "else if (.@headpalette == 4) delitem Darkgreen_Dyestuffs,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_lhz_in02_hair_dyer_lich_branch_for_177_387",
+      "unit": "E1-lhz_in02_hair_dyer_lich_branch_for_177",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Hair Dyer#lich"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Cobaltblue_Dyestuffs,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/merchants/hair_dyer.txt",
+          "lines": [
+            387
+          ],
+          "required_source_literals": [
+            "else if (.@headpalette == 5) delitem Cobaltblue_Dyestuffs,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_lhz_in02_hair_dyer_lich_branch_for_177_388",
+      "unit": "E1-lhz_in02_hair_dyer_lich_branch_for_177",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Hair Dyer#lich"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem White_Dyestuffs,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/merchants/hair_dyer.txt",
+          "lines": [
+            388
+          ],
+          "required_source_literals": [
+            "else if (.@headpalette == 6) delitem White_Dyestuffs,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_lhz_in02_hair_dyer_lich_branch_for_177_389",
+      "unit": "E1-lhz_in02_hair_dyer_lich_branch_for_177",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Hair Dyer#lich"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Black_Dyestuffs,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/merchants/hair_dyer.txt",
+          "lines": [
+            389
+          ],
+          "required_source_literals": [
+            "else if (.@headpalette == 7) delitem Black_Dyestuffs,1;"
           ]
         }
       ],
