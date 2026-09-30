@@ -37336,7 +37336,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Leader#gamer",
@@ -37355,7 +37355,25 @@
       ],
       "size_lines": 372,
       "reason": "refused by the braced one-item prover: braceless",
-      "history": []
+      "history": [
+        "2026-09-30T19:40:15Z activated",
+        "2026-09-30T19:40:16Z validated",
+        "2026-09-30T19:40:16Z verified: 2 claims supported",
+        "2026-09-30T19:40:39Z accepted",
+        "2026-09-30T19:40:39Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "9de479363f06d71f2aef73b2052268dd3d1e90a7a864cc264d46057c73c16902",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-mal_in01_fallen_angel_mal_branch_for_10532",

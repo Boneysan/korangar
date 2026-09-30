@@ -83351,6 +83351,56 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mal_in01_leader_gamer_branch_for_9925_10251",
+      "unit": "E1-mal_in01_leader_gamer_branch_for_9925",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Leader#gamer"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Malang_Sp_Can,3; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malangdo.txt",
+          "lines": [
+            10251
+          ],
+          "required_source_literals": [
+            "getitem Malang_Sp_Can,3;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mal_in01_leader_gamer_branch_for_9925_10265",
+      "unit": "E1-mal_in01_leader_gamer_branch_for_9925",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Leader#gamer"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Malang_Sp_Can,.@cans; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malangdo.txt",
+          "lines": [
+            10265
+          ],
+          "required_source_literals": [
+            "getitem Malang_Sp_Can, .@cans;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
