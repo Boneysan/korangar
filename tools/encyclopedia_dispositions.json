@@ -81451,6 +81451,81 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mal_in01_rican_mal_branch_for_1585_1817",
+      "unit": "E1-mal_in01_rican_mal_branch_for_1585",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Rican#mal"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Egrade_Coin,20; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malangdo.txt",
+          "lines": [
+            1817
+          ],
+          "required_source_literals": [
+            "getitem Egrade_Coin,20;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mal_in01_rican_mal_branch_for_1585_1837",
+      "unit": "E1-mal_in01_rican_mal_branch_for_1585",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Rican#mal"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Fresh_Fruit,30; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malangdo.txt",
+          "lines": [
+            1837
+          ],
+          "required_source_literals": [
+            "delitem Fresh_Fruit,30;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mal_in01_rican_mal_branch_for_1585_1840",
+      "unit": "E1-mal_in01_rican_mal_branch_for_1585",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Rican#mal"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Egrade_Coin,5; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malangdo.txt",
+          "lines": [
+            1840
+          ],
+          "required_source_literals": [
+            "getitem Egrade_Coin,5;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
