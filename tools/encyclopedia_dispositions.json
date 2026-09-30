@@ -70201,6 +70201,106 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_izlude_criatura_academy_staff_0_branch_for_814_833",
+      "unit": "E1-izlude_criatura_academy_staff_0_branch_for_814",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Criatura Academy Staff#0"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Apple_Juice,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            833
+          ],
+          "required_source_literals": [
+            "getitem(Apple_Juice, 1); // Apple_Juice"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_izlude_criatura_academy_staff_0_branch_for_814_881",
+      "unit": "E1-izlude_criatura_academy_staff_0_branch_for_814",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Criatura Academy Staff#0"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Apple_Juice,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            881
+          ],
+          "required_source_literals": [
+            "getitem(Apple_Juice, 1); // Apple_Juice"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_izlude_criatura_academy_staff_0_branch_for_814_925",
+      "unit": "E1-izlude_criatura_academy_staff_0_branch_for_814",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Criatura Academy Staff#0"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Novice_Potion,30; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            925
+          ],
+          "required_source_literals": [
+            "getitem(Novice_Potion, 30); // Novice_Potion"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_izlude_criatura_academy_staff_0_branch_for_814_944",
+      "unit": "E1-izlude_criatura_academy_staff_0_branch_for_814",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Criatura Academy Staff#0"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Novice_Potion,30; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            944
+          ],
+          "required_source_literals": [
+            "getitem(Novice_Potion, 30); // Novice_Potion"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
