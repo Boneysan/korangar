@@ -50676,6 +50676,31 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ra_in01_vincent_ra_in01_branch_for_54_424",
+      "unit": "E1-ra_in01_vincent_ra_in01_branch_for_54",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Vincent#ra_in01"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Old_Violet_Box,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_rachel.txt",
+          "lines": [
+            424
+          ],
+          "required_source_literals": [
+            "getitem Old_Violet_Box,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
