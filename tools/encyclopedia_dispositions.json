@@ -108380,6 +108380,222 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_22016_script_untranslated",
+      "unit": "E3-unknown-bonus2-bexpaddrace-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          22016
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 22016 is not summarized: the translator does not interpret the quoted statement (bonus2 bExpAddRace (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            148570
+          ],
+          "required_source_literals": [
+            "bonus2 bExpAddRace,RC_DemiPlayer,5+getrefine();"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_24209_script_untranslated",
+      "unit": "E3-unknown-bonus2-bexpaddrace-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          24209
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 24209 is not summarized: the translator does not interpret the quoted statement (bonus2 bExpAddRace (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            153118
+          ],
+          "required_source_literals": [
+            "Script: <\" bonus2 bExpAddRace, RC_All, (getrefine()/4); \">"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_24210_script_untranslated",
+      "unit": "E3-unknown-bonus2-bexpaddrace-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          24210
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 24210 is not summarized: the translator does not interpret the quoted statement (bonus2 bExpAddRace (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            153128
+          ],
+          "required_source_literals": [
+            "Script: <\" bonus2 bExpAddRace, RC_All, getrefine(); \">"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_24211_script_untranslated",
+      "unit": "E3-unknown-bonus2-bexpaddrace-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          24211
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 24211 is not summarized: the translator does not interpret the quoted statement (bonus2 bExpAddRace (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            153138
+          ],
+          "required_source_literals": [
+            "Script: <\" bonus2 bExpAddRace, RC_All, getrefine(); \">"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_24212_script_untranslated",
+      "unit": "E3-unknown-bonus2-bexpaddrace-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          24212
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 24212 is not summarized: the translator does not interpret the quoted statement (bonus2 bExpAddRace (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            153148
+          ],
+          "required_source_literals": [
+            "Script: <\" bonus2 bExpAddRace, RC_All, (getrefine()/2); \">"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_24213_script_untranslated",
+      "unit": "E3-unknown-bonus2-bexpaddrace-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          24213
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 24213 is not summarized: the translator does not interpret the quoted statement (bonus2 bExpAddRace (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            153158
+          ],
+          "required_source_literals": [
+            "Script: <\" bonus2 bExpAddRace, RC_All, (getrefine()/2); \">"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_24214_script_untranslated",
+      "unit": "E3-unknown-bonus2-bexpaddrace-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          24214
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 24214 is not summarized: the translator does not interpret the quoted statement (bonus2 bExpAddRace (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            153168
+          ],
+          "required_source_literals": [
+            "Script: <\" bonus2 bExpAddRace, RC_All, (getrefine()/3); \">"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_24215_script_untranslated",
+      "unit": "E3-unknown-bonus2-bexpaddrace-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          24215
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 24215 is not summarized: the translator does not interpret the quoted statement (bonus2 bExpAddRace (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            153178
+          ],
+          "required_source_literals": [
+            "Script: <\" bonus2 bExpAddRace, RC_All, (getrefine()/3); \">"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
