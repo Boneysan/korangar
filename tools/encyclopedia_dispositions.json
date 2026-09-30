@@ -138135,6 +138135,33 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_11012_npc_quests_quests_hugel_txt_1823",
+      "unit": "E5-chain-11012",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          11012
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 11012; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_hugel.txt",
+          "lines": [
+            1823
+          ],
+          "required_source_literals": [
+            "changequest 11012,11013;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
