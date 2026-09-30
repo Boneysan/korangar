@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 2782,
+    "E1_unknown": 2787,
     "E1_verified": 1
   },
   "entries": [
@@ -59104,6 +59104,131 @@
           ],
           "required_source_literals": [
             "delitem Magic_Necklace_,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_s_atelier_dumk_sc13_lgh_branch_for_1363_1521",
+      "unit": "E1-s_atelier_dumk_sc13_lgh_branch_for_1363",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Dumk#sc13_lgh"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Master_Brush,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-2/shadow_chaser.txt",
+          "lines": [
+            1521
+          ],
+          "required_source_literals": [
+            "delitem Master_Brush,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_s_atelier_dumk_sc13_lgh_branch_for_1363_1617",
+      "unit": "E1-s_atelier_dumk_sc13_lgh_branch_for_1363",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Dumk#sc13_lgh"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Makeover_Brush,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-2/shadow_chaser.txt",
+          "lines": [
+            1617
+          ],
+          "required_source_literals": [
+            "getitem Makeover_Brush,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_s_atelier_dumk_sc13_lgh_branch_for_1363_1618",
+      "unit": "E1-s_atelier_dumk_sc13_lgh_branch_for_1363",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Dumk#sc13_lgh"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Paint_Brush,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-2/shadow_chaser.txt",
+          "lines": [
+            1618
+          ],
+          "required_source_literals": [
+            "getitem Paint_Brush,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_s_atelier_dumk_sc13_lgh_branch_for_1363_1620",
+      "unit": "E1-s_atelier_dumk_sc13_lgh_branch_for_1363",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Dumk#sc13_lgh"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Green_Apple_Ring,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-2/shadow_chaser.txt",
+          "lines": [
+            1620
+          ],
+          "required_source_literals": [
+            "getitem Green_Apple_Ring,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_s_atelier_dumk_sc13_lgh_branch_for_1363_1621",
+      "unit": "E1-s_atelier_dumk_sc13_lgh_branch_for_1363",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Dumk#sc13_lgh"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Shadow_Handicraft,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-2/shadow_chaser.txt",
+          "lines": [
+            1621
+          ],
+          "required_source_literals": [
+            "getitem Shadow_Handicraft,1;"
           ]
         }
       ],
