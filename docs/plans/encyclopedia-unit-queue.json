@@ -22073,7 +22073,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "strong",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Panno#rachel",
@@ -22092,7 +22092,22 @@
       ],
       "size_lines": 436,
       "reason": "refused by the braced one-item prover: braceless",
-      "history": []
+      "history": [
+        "2026-09-30T17:19:26Z activated",
+        "2026-09-30T17:19:26Z validated",
+        "2026-09-30T17:19:27Z verified: 0 claims supported",
+        "2026-09-30T17:19:50Z accepted",
+        "2026-09-30T17:19:50Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "c599e829b12820016fdcb3bb210c24b0932a15bff223ba1b201b863a20a2bea6",
+      "accepted_files": [
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-ra_temin_pope_s_office_guard_rac_raofficeguard_branch_for_6761",
