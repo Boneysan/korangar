@@ -27601,6 +27601,81 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mid_camp_diego_ep13bs_branch_for_2942_3036",
+      "unit": "E1-mid_camp_diego_ep13bs_branch_for_2942",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Diego#ep13bs"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Strong_Bine,20; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_1.txt",
+          "lines": [
+            3036
+          ],
+          "required_source_literals": [
+            "delitem Strong_Bine,20;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mid_camp_diego_ep13bs_branch_for_2942_3037",
+      "unit": "E1-mid_camp_diego_ep13bs_branch_for_2942",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Diego#ep13bs"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Ordinary_Branch,20; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_1.txt",
+          "lines": [
+            3037
+          ],
+          "required_source_literals": [
+            "delitem Ordinary_Branch,20;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mid_camp_diego_ep13bs_branch_for_2942_3098",
+      "unit": "E1-mid_camp_diego_ep13bs_branch_for_2942",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Diego#ep13bs"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Chocolate_Pie,5; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_1.txt",
+          "lines": [
+            3098
+          ],
+          "required_source_literals": [
+            "getitem Chocolate_Pie,5;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
