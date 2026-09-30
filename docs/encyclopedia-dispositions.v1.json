@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 382,
+    "E1_unknown": 383,
     "E1_verified": 1
   },
   "entries": [
@@ -8004,6 +8004,31 @@
           ],
           "required_source_literals": [
             "getitem(L_Magestic_Goat, 1);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_pvp_room_registration_staff_1_branch_for_335_358",
+      "unit": "E1-pvp_room_registration_staff_1_branch_for_335",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Registration Staff#1"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Invite_For_Duel,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/other/pvp.txt",
+          "lines": [
+            358
+          ],
+          "required_source_literals": [
+            "delitem Invite_For_Duel,1;"
           ]
         }
       ],
