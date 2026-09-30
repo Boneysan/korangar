@@ -76951,6 +76951,106 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_dewata_memo_dew_drink_branch_for_765_931",
+      "unit": "E1-dewata_memo_dew_drink_branch_for_765",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Memo#dew_drink"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Palm_O,30; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_dewata.txt",
+          "lines": [
+            931
+          ],
+          "required_source_literals": [
+            "delitem Palm_O,30;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_dewata_memo_dew_drink_branch_for_765_983",
+      "unit": "E1-dewata_memo_dew_drink_branch_for_765",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Memo#dew_drink"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Old_Violet_Box,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_dewata.txt",
+          "lines": [
+            983
+          ],
+          "required_source_literals": [
+            "getitem Old_Violet_Box,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_dewata_memo_dew_drink_branch_for_765_1041",
+      "unit": "E1-dewata_memo_dew_drink_branch_for_765",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Memo#dew_drink"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Palm_O,.@i[0]; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_dewata.txt",
+          "lines": [
+            1041
+          ],
+          "required_source_literals": [
+            "delitem Palm_O,.@i[0];"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_dewata_memo_dew_drink_branch_for_765_1044",
+      "unit": "E1-dewata_memo_dew_drink_branch_for_765",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Memo#dew_drink"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Coco_Juice,.@i[2]; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_dewata.txt",
+          "lines": [
+            1044
+          ],
+          "required_source_literals": [
+            "getitem Coco_Juice,.@i[2];"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
