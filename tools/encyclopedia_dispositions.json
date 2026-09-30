@@ -9301,6 +9301,31 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_hugel_eckar_erenes_double_branch_for_1135_1228",
+      "unit": "E1-hugel_eckar_erenes_double_branch_for_1135",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Eckar Erenes#double"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Monster_Ticket,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/other/monster_race.txt",
+          "lines": [
+            1228
+          ],
+          "required_source_literals": [
+            "delitem Monster_Ticket,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
