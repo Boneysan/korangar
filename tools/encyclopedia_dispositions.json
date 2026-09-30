@@ -5876,6 +5876,581 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_monk_in_sensei_moohae_mk_branch_for_349_448",
+      "unit": "E1-monk_in_sensei_moohae_mk_branch_for_349",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Sensei Moohae#mk"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Sticky_Mucus,5; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/monk.txt",
+          "lines": [
+            448
+          ],
+          "required_source_literals": [
+            "delitem Sticky_Mucus,5;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_monk_in_sensei_moohae_mk_branch_for_349_449",
+      "unit": "E1-monk_in_sensei_moohae_mk_branch_for_349",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Sensei Moohae#mk"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Earthworm_Peeling,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/monk.txt",
+          "lines": [
+            449
+          ],
+          "required_source_literals": [
+            "delitem Earthworm_Peeling,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_monk_in_sensei_moohae_mk_branch_for_349_450",
+      "unit": "E1-monk_in_sensei_moohae_mk_branch_for_349",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Sensei Moohae#mk"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Green_Herb,20; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/monk.txt",
+          "lines": [
+            450
+          ],
+          "required_source_literals": [
+            "delitem Green_Herb,20;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_monk_in_sensei_moohae_mk_branch_for_349_479",
+      "unit": "E1-monk_in_sensei_moohae_mk_branch_for_349",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Sensei Moohae#mk"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Yoyo_Tail,20; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/monk.txt",
+          "lines": [
+            479
+          ],
+          "required_source_literals": [
+            "delitem Yoyo_Tail,20;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_monk_in_sensei_moohae_mk_branch_for_349_480",
+      "unit": "E1-monk_in_sensei_moohae_mk_branch_for_349",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Sensei Moohae#mk"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Iron_Ore,5; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/monk.txt",
+          "lines": [
+            480
+          ],
+          "required_source_literals": [
+            "delitem Iron_Ore,5;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_monk_in_sensei_moohae_mk_branch_for_349_481",
+      "unit": "E1-monk_in_sensei_moohae_mk_branch_for_349",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Sensei Moohae#mk"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Blue_Herb,3; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/monk.txt",
+          "lines": [
+            481
+          ],
+          "required_source_literals": [
+            "delitem Blue_Herb,3;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_monk_in_sensei_moohae_mk_branch_for_349_510",
+      "unit": "E1-monk_in_sensei_moohae_mk_branch_for_349",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Sensei Moohae#mk"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Stem,30; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/monk.txt",
+          "lines": [
+            510
+          ],
+          "required_source_literals": [
+            "delitem Stem,30;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_monk_in_sensei_moohae_mk_branch_for_349_511",
+      "unit": "E1-monk_in_sensei_moohae_mk_branch_for_349",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Sensei Moohae#mk"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Jellopy,5; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/monk.txt",
+          "lines": [
+            511
+          ],
+          "required_source_literals": [
+            "delitem Jellopy,5;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_monk_in_sensei_moohae_mk_branch_for_349_512",
+      "unit": "E1-monk_in_sensei_moohae_mk_branch_for_349",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Sensei Moohae#mk"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Worm_Peelings,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/monk.txt",
+          "lines": [
+            512
+          ],
+          "required_source_literals": [
+            "delitem Worm_Peelings,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_monk_in_sensei_moohae_mk_branch_for_349_541",
+      "unit": "E1-monk_in_sensei_moohae_mk_branch_for_349",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Sensei Moohae#mk"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Solid_Shell,5; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/monk.txt",
+          "lines": [
+            541
+          ],
+          "required_source_literals": [
+            "delitem Solid_Shell,5;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_monk_in_sensei_moohae_mk_branch_for_349_542",
+      "unit": "E1-monk_in_sensei_moohae_mk_branch_for_349",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Sensei Moohae#mk"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Shell,20; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/monk.txt",
+          "lines": [
+            542
+          ],
+          "required_source_literals": [
+            "delitem Shell,20;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_monk_in_sensei_moohae_mk_branch_for_349_543",
+      "unit": "E1-monk_in_sensei_moohae_mk_branch_for_349",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Sensei Moohae#mk"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Zargon,5; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/monk.txt",
+          "lines": [
+            543
+          ],
+          "required_source_literals": [
+            "delitem Zargon,5;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_monk_in_sensei_moohae_mk_branch_for_349_572",
+      "unit": "E1-monk_in_sensei_moohae_mk_branch_for_349",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Sensei Moohae#mk"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Cyfar,5; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/monk.txt",
+          "lines": [
+            572
+          ],
+          "required_source_literals": [
+            "delitem Cyfar,5;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_monk_in_sensei_moohae_mk_branch_for_349_573",
+      "unit": "E1-monk_in_sensei_moohae_mk_branch_for_349",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Sensei Moohae#mk"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem White_Herb,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/monk.txt",
+          "lines": [
+            573
+          ],
+          "required_source_literals": [
+            "delitem White_Herb,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_monk_in_sensei_moohae_mk_branch_for_349_574",
+      "unit": "E1-monk_in_sensei_moohae_mk_branch_for_349",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Sensei Moohae#mk"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Yellow_Herb,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/monk.txt",
+          "lines": [
+            574
+          ],
+          "required_source_literals": [
+            "delitem Yellow_Herb,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_monk_in_sensei_moohae_mk_branch_for_349_603",
+      "unit": "E1-monk_in_sensei_moohae_mk_branch_for_349",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Sensei Moohae#mk"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Tooth_Of_Bat,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/monk.txt",
+          "lines": [
+            603
+          ],
+          "required_source_literals": [
+            "delitem Tooth_Of_Bat,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_monk_in_sensei_moohae_mk_branch_for_349_604",
+      "unit": "E1-monk_in_sensei_moohae_mk_branch_for_349",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Sensei Moohae#mk"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Bears_Foot,5; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/monk.txt",
+          "lines": [
+            604
+          ],
+          "required_source_literals": [
+            "delitem Bears_Foot,5;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_monk_in_sensei_moohae_mk_branch_for_349_605",
+      "unit": "E1-monk_in_sensei_moohae_mk_branch_for_349",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Sensei Moohae#mk"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Poison_Spore,20; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/monk.txt",
+          "lines": [
+            605
+          ],
+          "required_source_literals": [
+            "delitem Poison_Spore,20;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_monk_in_sensei_moohae_mk_branch_for_349_634",
+      "unit": "E1-monk_in_sensei_moohae_mk_branch_for_349",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Sensei Moohae#mk"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Porcupine_Spike,5; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/monk.txt",
+          "lines": [
+            634
+          ],
+          "required_source_literals": [
+            "delitem Porcupine_Spike,5;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_monk_in_sensei_moohae_mk_branch_for_349_635",
+      "unit": "E1-monk_in_sensei_moohae_mk_branch_for_349",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Sensei Moohae#mk"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Spiderweb,20; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/monk.txt",
+          "lines": [
+            635
+          ],
+          "required_source_literals": [
+            "delitem Spiderweb,20;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_monk_in_sensei_moohae_mk_branch_for_349_636",
+      "unit": "E1-monk_in_sensei_moohae_mk_branch_for_349",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Sensei Moohae#mk"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Short_Leg,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/monk.txt",
+          "lines": [
+            636
+          ],
+          "required_source_literals": [
+            "delitem Short_Leg,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_monk_in_sensei_moohae_mk_branch_for_349_894",
+      "unit": "E1-monk_in_sensei_moohae_mk_branch_for_349",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Sensei Moohae#mk"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Knuckle_Duster_,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/monk.txt",
+          "lines": [
+            894
+          ],
+          "required_source_literals": [
+            "getitem Knuckle_Duster_,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_monk_in_sensei_moohae_mk_branch_for_349_896",
+      "unit": "E1-monk_in_sensei_moohae_mk_branch_for_349",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Sensei Moohae#mk"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Waghnakh,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/monk.txt",
+          "lines": [
+            896
+          ],
+          "required_source_literals": [
+            "getitem Waghnakh,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
