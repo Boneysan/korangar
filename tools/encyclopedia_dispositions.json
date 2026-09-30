@@ -60076,6 +60076,231 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_yuno_in04_pisruik_qsk_al_branch_for_41_216",
+      "unit": "E1-yuno_in04_pisruik_qsk_al_branch_for_41",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Pisruik#qsk_al"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Yellow_Gemstone,5; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/skills/alchemist_skills.txt",
+          "lines": [
+            216
+          ],
+          "required_source_literals": [
+            "delitem Yellow_Gemstone,5;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_yuno_in04_pisruik_qsk_al_branch_for_41_217",
+      "unit": "E1-yuno_in04_pisruik_qsk_al_branch_for_41",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Pisruik#qsk_al"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Empty_Potion,4; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/skills/alchemist_skills.txt",
+          "lines": [
+            217
+          ],
+          "required_source_literals": [
+            "delitem Empty_Potion,4;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_yuno_in04_pisruik_qsk_al_branch_for_41_218",
+      "unit": "E1-yuno_in04_pisruik_qsk_al_branch_for_41",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Pisruik#qsk_al"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Heart_Of_Mermaid,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/skills/alchemist_skills.txt",
+          "lines": [
+            218
+          ],
+          "required_source_literals": [
+            "delitem Heart_Of_Mermaid,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_yuno_in04_pisruik_qsk_al_branch_for_41_219",
+      "unit": "E1-yuno_in04_pisruik_qsk_al_branch_for_41",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Pisruik#qsk_al"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Moth_Dust,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/skills/alchemist_skills.txt",
+          "lines": [
+            219
+          ],
+          "required_source_literals": [
+            "delitem Moth_Dust,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_yuno_in04_pisruik_qsk_al_branch_for_41_685",
+      "unit": "E1-yuno_in04_pisruik_qsk_al_branch_for_41",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Pisruik#qsk_al"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Blossom_Of_Maneater,20; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/skills/alchemist_skills.txt",
+          "lines": [
+            685
+          ],
+          "required_source_literals": [
+            "delitem Blossom_Of_Maneater,20;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_yuno_in04_pisruik_qsk_al_branch_for_41_789",
+      "unit": "E1-yuno_in04_pisruik_qsk_al_branch_for_41",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Pisruik#qsk_al"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Blossom_Of_Maneater,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/skills/alchemist_skills.txt",
+          "lines": [
+            789
+          ],
+          "required_source_literals": [
+            "delitem Blossom_Of_Maneater,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_yuno_in04_pisruik_qsk_al_branch_for_41_890",
+      "unit": "E1-yuno_in04_pisruik_qsk_al_branch_for_41",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Pisruik#qsk_al"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Spinning_Eyes,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/skills/alchemist_skills.txt",
+          "lines": [
+            890
+          ],
+          "required_source_literals": [
+            "delitem Spinning_Eyes,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_yuno_in04_pisruik_qsk_al_branch_for_41_948",
+      "unit": "E1-yuno_in04_pisruik_qsk_al_branch_for_41",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Pisruik#qsk_al"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Elemental_Potion_Book,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/skills/alchemist_skills.txt",
+          "lines": [
+            948
+          ],
+          "required_source_literals": [
+            "getitem Elemental_Potion_Book,1; //Elemental_Create_Book"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_yuno_in04_pisruik_qsk_al_branch_for_41_1035",
+      "unit": "E1-yuno_in04_pisruik_qsk_al_branch_for_41",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Pisruik#qsk_al"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Elemental_Potion_Book,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/skills/alchemist_skills.txt",
+          "lines": [
+            1035
+          ],
+          "required_source_literals": [
+            "getitem Elemental_Potion_Book,1; //Elemental_Create_Book"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
