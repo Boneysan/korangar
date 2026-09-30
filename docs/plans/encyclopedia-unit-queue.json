@@ -17378,7 +17378,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Supply Stack#5lou",
@@ -17397,7 +17397,25 @@
       ],
       "size_lines": 51,
       "reason": "refused by the braced one-item prover: loop-or-random",
-      "history": []
+      "history": [
+        "2026-09-30T16:36:27Z activated",
+        "2026-09-30T16:36:27Z validated",
+        "2026-09-30T16:36:27Z verified: 1 claims supported",
+        "2026-09-30T16:36:50Z accepted",
+        "2026-09-30T16:36:50Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "8a09c65e66da3eb5d5251c63e1ab2c34aae113462a1cdc20eb39cf394abdff46",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-lou_in02_supply_stack_4lou_branch_for_2263",
