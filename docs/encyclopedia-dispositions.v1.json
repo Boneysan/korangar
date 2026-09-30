@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 1672,
+    "E1_unknown": 1680,
     "E1_verified": 1
   },
   "entries": [
@@ -15804,6 +15804,206 @@
           ],
           "required_source_literals": [
             "delitem Sparkling_Dust,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_jupe_ele_r_switch_ufe_branch_for_4230_4266",
+      "unit": "E1-jupe_ele_r_switch_ufe_branch_for_4230",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Switch#ufe"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Piece_Of_Crest1,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_juperos.txt",
+          "lines": [
+            4266
+          ],
+          "required_source_literals": [
+            "delitem Piece_Of_Crest1,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_jupe_ele_r_switch_ufe_branch_for_4230_4267",
+      "unit": "E1-jupe_ele_r_switch_ufe_branch_for_4230",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Switch#ufe"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Piece_Of_Crest4,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_juperos.txt",
+          "lines": [
+            4267
+          ],
+          "required_source_literals": [
+            "delitem Piece_Of_Crest4,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_jupe_ele_r_switch_ufe_branch_for_4230_4268",
+      "unit": "E1-jupe_ele_r_switch_ufe_branch_for_4230",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Switch#ufe"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Piece_Of_Crest2,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_juperos.txt",
+          "lines": [
+            4268
+          ],
+          "required_source_literals": [
+            "delitem Piece_Of_Crest2,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_jupe_ele_r_switch_ufe_branch_for_4230_4269",
+      "unit": "E1-jupe_ele_r_switch_ufe_branch_for_4230",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Switch#ufe"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Piece_Of_Crest3,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_juperos.txt",
+          "lines": [
+            4269
+          ],
+          "required_source_literals": [
+            "delitem Piece_Of_Crest3,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_jupe_ele_r_switch_ufe_branch_for_4230_4278",
+      "unit": "E1-jupe_ele_r_switch_ufe_branch_for_4230",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Switch#ufe"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Piece_Of_Crest1,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_juperos.txt",
+          "lines": [
+            4278
+          ],
+          "required_source_literals": [
+            "getitem Piece_Of_Crest1,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_jupe_ele_r_switch_ufe_branch_for_4230_4279",
+      "unit": "E1-jupe_ele_r_switch_ufe_branch_for_4230",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Switch#ufe"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Piece_Of_Crest4,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_juperos.txt",
+          "lines": [
+            4279
+          ],
+          "required_source_literals": [
+            "getitem Piece_Of_Crest4,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_jupe_ele_r_switch_ufe_branch_for_4230_4280",
+      "unit": "E1-jupe_ele_r_switch_ufe_branch_for_4230",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Switch#ufe"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Piece_Of_Crest2,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_juperos.txt",
+          "lines": [
+            4280
+          ],
+          "required_source_literals": [
+            "getitem Piece_Of_Crest2,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_jupe_ele_r_switch_ufe_branch_for_4230_4281",
+      "unit": "E1-jupe_ele_r_switch_ufe_branch_for_4230",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Switch#ufe"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Piece_Of_Crest3,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_juperos.txt",
+          "lines": [
+            4281
+          ],
+          "required_source_literals": [
+            "getitem Piece_Of_Crest3,1;"
           ]
         }
       ],
