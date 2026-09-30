@@ -10837,7 +10837,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "School of Fish#1::Fishinghole",
@@ -10856,7 +10856,25 @@
       ],
       "size_lines": 65,
       "reason": "refused by the braced one-item prover: braceless",
-      "history": []
+      "history": [
+        "2026-09-30T15:35:54Z activated",
+        "2026-09-30T15:35:55Z validated",
+        "2026-09-30T15:35:55Z verified: 15 claims supported",
+        "2026-09-30T15:36:18Z accepted",
+        "2026-09-30T15:36:18Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "a77eaeb09e8b2a8e5bb97610b600204e14fef4011a7e09e5b3d1e2f7da0de3f5",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-mid_camp_henry_clifford_branch_for_8339",
