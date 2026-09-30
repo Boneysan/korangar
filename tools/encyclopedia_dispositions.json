@@ -78876,6 +78876,56 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_eclage_svery_eclbig_branch_for_4305_4371",
+      "unit": "E1-eclage_svery_eclbig_branch_for_4305",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Svery#eclbig"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Stained_Research_Book,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "lines": [
+            4371
+          ],
+          "required_source_literals": [
+            "getitem Stained_Research_Book,1; //Stained_Research_Book"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_eclage_svery_eclbig_branch_for_4305_4398",
+      "unit": "E1-eclage_svery_eclbig_branch_for_4305",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Svery#eclbig"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Stained_Research_Book,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "lines": [
+            4398
+          ],
+          "required_source_literals": [
+            "getitem Stained_Research_Book,1; //Stained_Research_Book"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }

@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 3150,
+    "E1_unknown": 3152,
     "E1_verified": 1
   },
   "entries": [
@@ -13829,6 +13829,56 @@
           ],
           "required_source_literals": [
             "delitem Birthday_Candle,128; //Birthday_Candle"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_eclage_svery_eclbig_branch_for_4305_4371",
+      "unit": "E1-eclage_svery_eclbig_branch_for_4305",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Svery#eclbig"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Stained_Research_Book,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "lines": [
+            4371
+          ],
+          "required_source_literals": [
+            "getitem Stained_Research_Book,1; //Stained_Research_Book"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_eclage_svery_eclbig_branch_for_4305_4398",
+      "unit": "E1-eclage_svery_eclbig_branch_for_4305",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Svery#eclbig"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Stained_Research_Book,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "lines": [
+            4398
+          ],
+          "required_source_literals": [
+            "getitem Stained_Research_Book,1; //Stained_Research_Book"
           ]
         }
       ],
