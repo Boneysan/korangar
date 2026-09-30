@@ -69451,6 +69451,106 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prt_castle_middle_aged_gentleman_rg_branch_for_37_223",
+      "unit": "E1-prt_castle_middle_aged_gentleman_rg_branch_for_37",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Middle-aged Gentleman#rg"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Burning_Heart,100; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-2/royal_guard.txt",
+          "lines": [
+            223
+          ],
+          "required_source_literals": [
+            "delitem Burning_Heart,100;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prt_castle_middle_aged_gentleman_rg_branch_for_37_340",
+      "unit": "E1-prt_castle_middle_aged_gentleman_rg_branch_for_37",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Middle-aged Gentleman#rg"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Saint_Cloth_Piece,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-2/royal_guard.txt",
+          "lines": [
+            340
+          ],
+          "required_source_literals": [
+            "delitem Saint_Cloth_Piece,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prt_castle_middle_aged_gentleman_rg_branch_for_37_341",
+      "unit": "E1-prt_castle_middle_aged_gentleman_rg_branch_for_37",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Middle-aged Gentleman#rg"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem King_Shield,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-2/royal_guard.txt",
+          "lines": [
+            341
+          ],
+          "required_source_literals": [
+            "getitem King_Shield,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prt_castle_middle_aged_gentleman_rg_branch_for_37_348",
+      "unit": "E1-prt_castle_middle_aged_gentleman_rg_branch_for_37",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Middle-aged Gentleman#rg"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem King_Shield,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-2/royal_guard.txt",
+          "lines": [
+            348
+          ],
+          "required_source_literals": [
+            "getitem King_Shield,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
