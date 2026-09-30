@@ -62851,6 +62851,31 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_tha_t12_green_wiseman_statue_tt_branch_for_1870_1883",
+      "unit": "E1-tha_t12_green_wiseman_statue_tt_branch_for_1870",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Green Wiseman Statue#tt"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Magic_Gem_Green,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/thana_quest.txt",
+          "lines": [
+            1883
+          ],
+          "required_source_literals": [
+            "delitem Magic_Gem_Green,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
