@@ -85626,6 +85626,31 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mora_jones_ep14_1_bs_branch_for_1360_1404",
+      "unit": "E1-mora_jones_ep14_1_bs_branch_for_1360",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Jones#ep14_1_bs"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Splendid_Supply_Kit,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_mora.txt",
+          "lines": [
+            1404
+          ],
+          "required_source_literals": [
+            "getitem Splendid_Supply_Kit,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
