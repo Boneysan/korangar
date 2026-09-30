@@ -81151,6 +81151,131 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mal_in02_investment_cat_helper_branch_for_46_92",
+      "unit": "E1-mal_in02_investment_cat_helper_branch_for_46",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Investment Cat Helper"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Malang_Sp_Can,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malangdo.txt",
+          "lines": [
+            92
+          ],
+          "required_source_literals": [
+            "delitem Malang_Sp_Can,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mal_in02_investment_cat_helper_branch_for_46_219",
+      "unit": "E1-mal_in02_investment_cat_helper_branch_for_46",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Investment Cat Helper"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Malang_Sp_Can,.@required; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malangdo.txt",
+          "lines": [
+            219
+          ],
+          "required_source_literals": [
+            "delitem Malang_Sp_Can,.@required;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mal_in02_investment_cat_helper_branch_for_46_233",
+      "unit": "E1-mal_in02_investment_cat_helper_branch_for_46",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Investment Cat Helper"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Malang_Sp_Can,.@required; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malangdo.txt",
+          "lines": [
+            233
+          ],
+          "required_source_literals": [
+            "delitem Malang_Sp_Can,.@required;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mal_in02_investment_cat_helper_branch_for_46_247",
+      "unit": "E1-mal_in02_investment_cat_helper_branch_for_46",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Investment Cat Helper"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Malang_Sp_Can,.@required; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malangdo.txt",
+          "lines": [
+            247
+          ],
+          "required_source_literals": [
+            "delitem Malang_Sp_Can,.@required;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mal_in02_investment_cat_helper_branch_for_46_314",
+      "unit": "E1-mal_in02_investment_cat_helper_branch_for_46",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Investment Cat Helper"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Malang_Sp_Can,.@input; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malangdo.txt",
+          "lines": [
+            314
+          ],
+          "required_source_literals": [
+            "delitem Malang_Sp_Can,.@input;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
