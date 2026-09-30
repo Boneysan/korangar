@@ -43726,6 +43726,81 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_lou_in01_lou_drink1_branch_for_4348_4353",
+      "unit": "E1-lou_in01_lou_drink1_branch_for_4348",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "#lou_drink1"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Poison_Bottle,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_louyang.txt",
+          "lines": [
+            4353
+          ],
+          "required_source_literals": [
+            "delitem Poison_Bottle,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_lou_in01_lou_drink1_branch_for_4348_4365",
+      "unit": "E1-lou_in01_lou_drink1_branch_for_4348",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "#lou_drink1"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Sticky_Mucus,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_louyang.txt",
+          "lines": [
+            4365
+          ],
+          "required_source_literals": [
+            "delitem Sticky_Mucus,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_lou_in01_lou_drink1_branch_for_4348_4366",
+      "unit": "E1-lou_in01_lou_drink1_branch_for_4348",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "#lou_drink1"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Empty_Bottle,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_louyang.txt",
+          "lines": [
+            4366
+          ],
+          "required_source_literals": [
+            "delitem Empty_Bottle,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
