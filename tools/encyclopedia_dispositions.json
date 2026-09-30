@@ -80601,6 +80601,181 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ecl_in01_eclage_guard_tl02_branch_for_15309_15519",
+      "unit": "E1-ecl_in01_eclage_guard_tl02_branch_for_15309",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Eclage Guard#tl02"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Horn_Of_Hilsrion,5; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "lines": [
+            15519
+          ],
+          "required_source_literals": [
+            "delitem Horn_Of_Hilsrion,5; //Horn_Of_Hilsrion"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ecl_in01_eclage_guard_tl02_branch_for_15309_15520",
+      "unit": "E1-ecl_in01_eclage_guard_tl02_branch_for_15309",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Eclage Guard#tl02"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Mystic_Horn,5; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "lines": [
+            15520
+          ],
+          "required_source_literals": [
+            "delitem Mystic_Horn,5; //Mystic_Horn"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ecl_in01_eclage_guard_tl02_branch_for_15309_15521",
+      "unit": "E1-ecl_in01_eclage_guard_tl02_branch_for_15309",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Eclage Guard#tl02"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Horseshoe,5; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "lines": [
+            15521
+          ],
+          "required_source_literals": [
+            "delitem Horseshoe,5; //Horseshoe"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ecl_in01_eclage_guard_tl02_branch_for_15309_15665",
+      "unit": "E1-ecl_in01_eclage_guard_tl02_branch_for_15309",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Eclage Guard#tl02"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Horn_Of_Hilsrion,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "lines": [
+            15665
+          ],
+          "required_source_literals": [
+            "delitem Horn_Of_Hilsrion,10; //Horn_Of_Hilsrion"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ecl_in01_eclage_guard_tl02_branch_for_15309_15666",
+      "unit": "E1-ecl_in01_eclage_guard_tl02_branch_for_15309",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Eclage Guard#tl02"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Mystic_Horn,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "lines": [
+            15666
+          ],
+          "required_source_literals": [
+            "delitem Mystic_Horn,10; //Mystic_Horn"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ecl_in01_eclage_guard_tl02_branch_for_15309_15667",
+      "unit": "E1-ecl_in01_eclage_guard_tl02_branch_for_15309",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Eclage Guard#tl02"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Horseshoe,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "lines": [
+            15667
+          ],
+          "required_source_literals": [
+            "delitem Horseshoe,10; //Horseshoe"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ecl_in01_eclage_guard_tl02_branch_for_15309_15670",
+      "unit": "E1-ecl_in01_eclage_guard_tl02_branch_for_15309",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Eclage Guard#tl02"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Splendide_Coin,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "lines": [
+            15670
+          ],
+          "required_source_literals": [
+            "getitem Splendide_Coin,1; //Splendide_Coin"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
