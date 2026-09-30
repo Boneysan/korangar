@@ -133275,6 +133275,222 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_7054_npc_quests_newgears_2008_headgears_txt_121",
+      "unit": "E5-chain-7054",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7054
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 7054; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2008_headgears.txt",
+          "lines": [
+            121
+          ],
+          "required_source_literals": [
+            "setquest 7054;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_7054_npc_quests_newgears_2008_headgears_txt_122",
+      "unit": "E5-chain-7054",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7055
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 7055; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2008_headgears.txt",
+          "lines": [
+            122
+          ],
+          "required_source_literals": [
+            "setquest 7055;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_7054_npc_quests_newgears_2008_headgears_txt_141",
+      "unit": "E5-chain-7054",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7054
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 7054; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2008_headgears.txt",
+          "lines": [
+            141
+          ],
+          "required_source_literals": [
+            "erasequest 7054;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_7054_npc_quests_newgears_2008_headgears_txt_142",
+      "unit": "E5-chain-7054",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7055
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 7055; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2008_headgears.txt",
+          "lines": [
+            142
+          ],
+          "required_source_literals": [
+            "erasequest 7055;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_7054_npc_quests_newgears_2008_headgears_txt_162",
+      "unit": "E5-chain-7054",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7054
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 7054; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2008_headgears.txt",
+          "lines": [
+            162
+          ],
+          "required_source_literals": [
+            "erasequest 7054;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_7054_npc_quests_newgears_2008_headgears_txt_163",
+      "unit": "E5-chain-7054",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7055
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 7055; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2008_headgears.txt",
+          "lines": [
+            163
+          ],
+          "required_source_literals": [
+            "erasequest 7055;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_7054_npc_quests_newgears_2008_headgears_txt_210",
+      "unit": "E5-chain-7054",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7054
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 7054; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2008_headgears.txt",
+          "lines": [
+            210
+          ],
+          "required_source_literals": [
+            "setquest 7054;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_7054_npc_quests_newgears_2008_headgears_txt_211",
+      "unit": "E5-chain-7054",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7055
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 7055; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2008_headgears.txt",
+          "lines": [
+            211
+          ],
+          "required_source_literals": [
+            "setquest 7055;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
