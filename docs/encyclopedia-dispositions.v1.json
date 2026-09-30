@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 1660,
+    "E1_unknown": 1666,
     "E1_verified": 1
   },
   "entries": [
@@ -13679,6 +13679,156 @@
           ],
           "required_source_literals": [
             "delitem Bloody_Rune,1000;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_hugel_kurupe_branch_for_6889_6987",
+      "unit": "E1-hugel_kurupe_branch_for_6889",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Kurupe"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem 12063,3; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_hugel.txt",
+          "lines": [
+            6987
+          ],
+          "required_source_literals": [
+            "getitem 12063,3;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_hugel_kurupe_branch_for_6889_7091",
+      "unit": "E1-hugel_kurupe_branch_for_6889",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Kurupe"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Milk,5; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_hugel.txt",
+          "lines": [
+            7091
+          ],
+          "required_source_literals": [
+            "getitem Milk,5;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_hugel_kurupe_branch_for_6889_7112",
+      "unit": "E1-hugel_kurupe_branch_for_6889",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Kurupe"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Orange_Potion,5; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_hugel.txt",
+          "lines": [
+            7112
+          ],
+          "required_source_literals": [
+            "getitem Orange_Potion,5;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_hugel_kurupe_branch_for_6889_7134",
+      "unit": "E1-hugel_kurupe_branch_for_6889",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Kurupe"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Yellow_Potion,5; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_hugel.txt",
+          "lines": [
+            7134
+          ],
+          "required_source_literals": [
+            "getitem Yellow_Potion,5;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_hugel_kurupe_branch_for_6889_7158",
+      "unit": "E1-hugel_kurupe_branch_for_6889",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Kurupe"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Honey,3; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_hugel.txt",
+          "lines": [
+            7158
+          ],
+          "required_source_literals": [
+            "getitem Honey,3;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_hugel_kurupe_branch_for_6889_7180",
+      "unit": "E1-hugel_kurupe_branch_for_6889",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Kurupe"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Food_Package,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_hugel.txt",
+          "lines": [
+            7180
+          ],
+          "required_source_literals": [
+            "getitem Food_Package,1;"
           ]
         }
       ],
