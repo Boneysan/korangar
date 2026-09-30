@@ -29251,6 +29251,31 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mid_camp_henry_clifford_branch_for_8339_8352",
+      "unit": "E1-mid_camp_henry_clifford_branch_for_8339",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Henry Clifford"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Marlin,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_1.txt",
+          "lines": [
+            8352
+          ],
+          "required_source_literals": [
+            "delitem Marlin,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
