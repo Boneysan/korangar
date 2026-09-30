@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 1058,
+    "E1_unknown": 1078,
     "E1_verified": 1
   },
   "entries": [
@@ -18679,6 +18679,506 @@
           ],
           "required_source_literals": [
             "getitem Old_Violet_Box,3;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_lospii_payon_relaylospii_branch_for_2469_2518",
+      "unit": "E1-payon_lospii_payon_relaylospii_branch_for_2469",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Lospii#payon::RelayLospii"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Mission_Certificate12,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/partyrelay.txt",
+          "lines": [
+            2518
+          ],
+          "required_source_literals": [
+            "getitem Mission_Certificate12,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_lospii_payon_relaylospii_branch_for_2469_2519",
+      "unit": "E1-payon_lospii_payon_relaylospii_branch_for_2469",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Lospii#payon::RelayLospii"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Leaf_Of_Yggdrasil,2; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/partyrelay.txt",
+          "lines": [
+            2519
+          ],
+          "required_source_literals": [
+            "getitem Leaf_Of_Yggdrasil,2;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_lospii_payon_relaylospii_branch_for_2469_2520",
+      "unit": "E1-payon_lospii_payon_relaylospii_branch_for_2469",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Lospii#payon::RelayLospii"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Yggdrasilberry,2; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/partyrelay.txt",
+          "lines": [
+            2520
+          ],
+          "required_source_literals": [
+            "getitem Yggdrasilberry,2;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_lospii_payon_relaylospii_branch_for_2469_2555",
+      "unit": "E1-payon_lospii_payon_relaylospii_branch_for_2469",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Lospii#payon::RelayLospii"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Mission_Certificate12,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/partyrelay.txt",
+          "lines": [
+            2555
+          ],
+          "required_source_literals": [
+            "getitem Mission_Certificate12,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_lospii_payon_relaylospii_branch_for_2469_2556",
+      "unit": "E1-payon_lospii_payon_relaylospii_branch_for_2469",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Lospii#payon::RelayLospii"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Leaf_Of_Yggdrasil,2; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/partyrelay.txt",
+          "lines": [
+            2556
+          ],
+          "required_source_literals": [
+            "getitem Leaf_Of_Yggdrasil,2;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_lospii_payon_relaylospii_branch_for_2469_2557",
+      "unit": "E1-payon_lospii_payon_relaylospii_branch_for_2469",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Lospii#payon::RelayLospii"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Yggdrasilberry,2; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/partyrelay.txt",
+          "lines": [
+            2557
+          ],
+          "required_source_literals": [
+            "getitem Yggdrasilberry,2;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_lospii_payon_relaylospii_branch_for_2469_2617",
+      "unit": "E1-payon_lospii_payon_relaylospii_branch_for_2469",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Lospii#payon::RelayLospii"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Mission_Certificate11,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/partyrelay.txt",
+          "lines": [
+            2617
+          ],
+          "required_source_literals": [
+            "delitem Mission_Certificate11,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_lospii_payon_relaylospii_branch_for_2469_2658",
+      "unit": "E1-payon_lospii_payon_relaylospii_branch_for_2469",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Lospii#payon::RelayLospii"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Mission_Certificate11,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/partyrelay.txt",
+          "lines": [
+            2658
+          ],
+          "required_source_literals": [
+            "delitem Mission_Certificate11,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_lospii_payon_relaylospii_branch_for_2469_2717",
+      "unit": "E1-payon_lospii_payon_relaylospii_branch_for_2469",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Lospii#payon::RelayLospii"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Mission_Certificate8,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/partyrelay.txt",
+          "lines": [
+            2717
+          ],
+          "required_source_literals": [
+            "getitem Mission_Certificate8,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_lospii_payon_relaylospii_branch_for_2469_2718",
+      "unit": "E1-payon_lospii_payon_relaylospii_branch_for_2469",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Lospii#payon::RelayLospii"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Leaf_Of_Yggdrasil,2; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/partyrelay.txt",
+          "lines": [
+            2718
+          ],
+          "required_source_literals": [
+            "getitem Leaf_Of_Yggdrasil,2;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_lospii_payon_relaylospii_branch_for_2469_2753",
+      "unit": "E1-payon_lospii_payon_relaylospii_branch_for_2469",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Lospii#payon::RelayLospii"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Mission_Certificate8,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/partyrelay.txt",
+          "lines": [
+            2753
+          ],
+          "required_source_literals": [
+            "getitem Mission_Certificate8,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_lospii_payon_relaylospii_branch_for_2469_2754",
+      "unit": "E1-payon_lospii_payon_relaylospii_branch_for_2469",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Lospii#payon::RelayLospii"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Leaf_Of_Yggdrasil,2; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/partyrelay.txt",
+          "lines": [
+            2754
+          ],
+          "required_source_literals": [
+            "getitem Leaf_Of_Yggdrasil,2;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_lospii_payon_relaylospii_branch_for_2469_2814",
+      "unit": "E1-payon_lospii_payon_relaylospii_branch_for_2469",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Lospii#payon::RelayLospii"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Mission_Certificate7,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/partyrelay.txt",
+          "lines": [
+            2814
+          ],
+          "required_source_literals": [
+            "delitem Mission_Certificate7,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_lospii_payon_relaylospii_branch_for_2469_2855",
+      "unit": "E1-payon_lospii_payon_relaylospii_branch_for_2469",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Lospii#payon::RelayLospii"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Mission_Certificate7,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/partyrelay.txt",
+          "lines": [
+            2855
+          ],
+          "required_source_literals": [
+            "delitem Mission_Certificate7,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_lospii_payon_relaylospii_branch_for_2469_2914",
+      "unit": "E1-payon_lospii_payon_relaylospii_branch_for_2469",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Lospii#payon::RelayLospii"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Mission_Certificate4,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/partyrelay.txt",
+          "lines": [
+            2914
+          ],
+          "required_source_literals": [
+            "getitem Mission_Certificate4,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_lospii_payon_relaylospii_branch_for_2469_2915",
+      "unit": "E1-payon_lospii_payon_relaylospii_branch_for_2469",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Lospii#payon::RelayLospii"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Yggdrasilberry,2; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/partyrelay.txt",
+          "lines": [
+            2915
+          ],
+          "required_source_literals": [
+            "getitem Yggdrasilberry,2;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_lospii_payon_relaylospii_branch_for_2469_2950",
+      "unit": "E1-payon_lospii_payon_relaylospii_branch_for_2469",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Lospii#payon::RelayLospii"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Mission_Certificate4,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/partyrelay.txt",
+          "lines": [
+            2950
+          ],
+          "required_source_literals": [
+            "getitem Mission_Certificate4,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_lospii_payon_relaylospii_branch_for_2469_2951",
+      "unit": "E1-payon_lospii_payon_relaylospii_branch_for_2469",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Lospii#payon::RelayLospii"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Yggdrasilberry,2; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/partyrelay.txt",
+          "lines": [
+            2951
+          ],
+          "required_source_literals": [
+            "getitem Yggdrasilberry,2;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_lospii_payon_relaylospii_branch_for_2469_3011",
+      "unit": "E1-payon_lospii_payon_relaylospii_branch_for_2469",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Lospii#payon::RelayLospii"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Mission_Certificate3,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/partyrelay.txt",
+          "lines": [
+            3011
+          ],
+          "required_source_literals": [
+            "delitem Mission_Certificate3,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_lospii_payon_relaylospii_branch_for_2469_3052",
+      "unit": "E1-payon_lospii_payon_relaylospii_branch_for_2469",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Lospii#payon::RelayLospii"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Mission_Certificate3,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/partyrelay.txt",
+          "lines": [
+            3052
+          ],
+          "required_source_literals": [
+            "delitem Mission_Certificate3,1;"
           ]
         }
       ],

@@ -10002,7 +10002,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "strong",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Lospii#payon::RelayLospii",
@@ -10021,7 +10021,25 @@
       ],
       "size_lines": 624,
       "reason": "refused by the braced one-item prover: braceless",
-      "history": []
+      "history": [
+        "2026-09-30T15:28:13Z activated",
+        "2026-09-30T15:28:13Z validated",
+        "2026-09-30T15:28:13Z verified: 20 claims supported",
+        "2026-09-30T15:28:36Z accepted",
+        "2026-09-30T15:28:36Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "afbee06869a51e62843d5d8e8e126e64bae0e7764c4680ccb1c2654fad857e10",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-aldebaran_promotional_staff_alde_branch_for_373",
