@@ -48276,6 +48276,31 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_kimeunbang_branch_for_5345_5385",
+      "unit": "E1-payon_kimeunbang_branch_for_5345",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Kimeunbang"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Scarlet_Jewel,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_nameless.txt",
+          "lines": [
+            5385
+          ],
+          "required_source_literals": [
+            "getitem Scarlet_Jewel,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
