@@ -31071,7 +31071,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "strong",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Mayomayo#mal",
@@ -31090,7 +31090,25 @@
       ],
       "size_lines": 632,
       "reason": "refused by the braced one-item prover: braceless",
-      "history": []
+      "history": [
+        "2026-09-30T18:42:15Z activated",
+        "2026-09-30T18:42:15Z validated",
+        "2026-09-30T18:42:16Z verified: 1 claims supported",
+        "2026-09-30T18:42:39Z accepted",
+        "2026-09-30T18:42:39Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "de09de328fb4f1246d294da78c9a1f3233bfe28bd9e305428ad65639dda79d39",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-mora_keeper_of_secrets_pa082_branch_for_38",

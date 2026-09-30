@@ -72901,6 +72901,31 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_malangdo_mayomayo_mal_branch_for_37_656",
+      "unit": "E1-malangdo_mayomayo_mal_branch_for_37",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Mayomayo#mal"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Silvervine,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/merchants/enchan_mal.txt",
+          "lines": [
+            656
+          ],
+          "required_source_literals": [
+            "delitem Silvervine,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
