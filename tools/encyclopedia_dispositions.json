@@ -2676,6 +2676,56 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_yuno_juno_sage_juno_branch_for_166_185",
+      "unit": "E1-yuno_juno_sage_juno_branch_for_166",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Juno Sage#juno"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Red_Herb,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/cities/yuno.txt",
+          "lines": [
+            185
+          ],
+          "required_source_literals": [
+            "getitem Red_Herb,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_yuno_juno_sage_juno_branch_for_166_193",
+      "unit": "E1-yuno_juno_sage_juno_branch_for_166",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Juno Sage#juno"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Blue_Herb,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/cities/yuno.txt",
+          "lines": [
+            193
+          ],
+          "required_source_literals": [
+            "getitem Blue_Herb,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
