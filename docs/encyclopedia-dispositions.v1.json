@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 1499,
+    "E1_unknown": 1517,
     "E1_verified": 1
   },
   "entries": [
@@ -8229,6 +8229,456 @@
           ],
           "required_source_literals": [
             "getitem Old_Blue_Box,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_comodo_traveler_head_branch_for_248_279",
+      "unit": "E1-comodo_traveler_head_branch_for_248",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Traveler#head"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Safety_Helmet,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_comodo.txt",
+          "lines": [
+            279
+          ],
+          "required_source_literals": [
+            "delitem Safety_Helmet,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_comodo_traveler_head_branch_for_248_280",
+      "unit": "E1-comodo_traveler_head_branch_for_248",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Traveler#head"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Candle,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_comodo.txt",
+          "lines": [
+            280
+          ],
+          "required_source_literals": [
+            "delitem Candle,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_comodo_traveler_head_branch_for_248_281",
+      "unit": "E1-comodo_traveler_head_branch_for_248",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Traveler#head"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Crystal_Mirror,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_comodo.txt",
+          "lines": [
+            281
+          ],
+          "required_source_literals": [
+            "delitem Crystal_Mirror,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_comodo_traveler_head_branch_for_248_282",
+      "unit": "E1-comodo_traveler_head_branch_for_248",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Traveler#head"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Steel,25; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_comodo.txt",
+          "lines": [
+            282
+          ],
+          "required_source_literals": [
+            "delitem Steel,25;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_comodo_traveler_head_branch_for_248_285",
+      "unit": "E1-comodo_traveler_head_branch_for_248",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Traveler#head"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Mine_Helm,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_comodo.txt",
+          "lines": [
+            285
+          ],
+          "required_source_literals": [
+            "getitem Mine_Helm,1; // Mine_Helm"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_comodo_traveler_head_branch_for_248_334",
+      "unit": "E1-comodo_traveler_head_branch_for_248",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Traveler#head"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Transparent_Cloth,150; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_comodo.txt",
+          "lines": [
+            334
+          ],
+          "required_source_literals": [
+            "delitem Transparent_Cloth,150;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_comodo_traveler_head_branch_for_248_335",
+      "unit": "E1-comodo_traveler_head_branch_for_248",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Traveler#head"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Resin,100; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_comodo.txt",
+          "lines": [
+            335
+          ],
+          "required_source_literals": [
+            "delitem Resin,100;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_comodo_traveler_head_branch_for_248_336",
+      "unit": "E1-comodo_traveler_head_branch_for_248",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Traveler#head"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Cobaltblue_Dyestuffs,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_comodo.txt",
+          "lines": [
+            336
+          ],
+          "required_source_literals": [
+            "delitem Cobaltblue_Dyestuffs,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_comodo_traveler_head_branch_for_248_340",
+      "unit": "E1-comodo_traveler_head_branch_for_248",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Traveler#head"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Hat_Of_Bundle,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_comodo.txt",
+          "lines": [
+            340
+          ],
+          "required_source_literals": [
+            "getitem Hat_Of_Bundle,1; // Hat_Of_Bundle"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_comodo_traveler_head_branch_for_248_389",
+      "unit": "E1-comodo_traveler_head_branch_for_248",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Traveler#head"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Circlet_,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_comodo.txt",
+          "lines": [
+            389
+          ],
+          "required_source_literals": [
+            "delitem Circlet_,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_comodo_traveler_head_branch_for_248_390",
+      "unit": "E1-comodo_traveler_head_branch_for_248",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Traveler#head"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Gold,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_comodo.txt",
+          "lines": [
+            390
+          ],
+          "required_source_literals": [
+            "delitem Gold,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_comodo_traveler_head_branch_for_248_391",
+      "unit": "E1-comodo_traveler_head_branch_for_248",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Traveler#head"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Feather,80; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_comodo.txt",
+          "lines": [
+            391
+          ],
+          "required_source_literals": [
+            "delitem Feather,80;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_comodo_traveler_head_branch_for_248_392",
+      "unit": "E1-comodo_traveler_head_branch_for_248",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Traveler#head"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Steel,20; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_comodo.txt",
+          "lines": [
+            392
+          ],
+          "required_source_literals": [
+            "delitem Steel,20;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_comodo_traveler_head_branch_for_248_393",
+      "unit": "E1-comodo_traveler_head_branch_for_248",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Traveler#head"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Sticky_Mucus,800; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_comodo.txt",
+          "lines": [
+            393
+          ],
+          "required_source_literals": [
+            "delitem Sticky_Mucus,800;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_comodo_traveler_head_branch_for_248_396",
+      "unit": "E1-comodo_traveler_head_branch_for_248",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Traveler#head"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Bankruptcy_Of_Heart,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_comodo.txt",
+          "lines": [
+            396
+          ],
+          "required_source_literals": [
+            "getitem Bankruptcy_Of_Heart,1; // Bankruptcy_Of_Heart"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_comodo_traveler_head_branch_for_248_450",
+      "unit": "E1-comodo_traveler_head_branch_for_248",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Traveler#head"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Phantom_Of_Opera,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_comodo.txt",
+          "lines": [
+            450
+          ],
+          "required_source_literals": [
+            "delitem Phantom_Of_Opera,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_comodo_traveler_head_branch_for_248_451",
+      "unit": "E1-comodo_traveler_head_branch_for_248",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Traveler#head"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Slender_Snake,50; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_comodo.txt",
+          "lines": [
+            451
+          ],
+          "required_source_literals": [
+            "delitem Slender_Snake,50;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_comodo_traveler_head_branch_for_248_455",
+      "unit": "E1-comodo_traveler_head_branch_for_248",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Traveler#head"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Opera_Ghost_Mask,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_comodo.txt",
+          "lines": [
+            455
+          ],
+          "required_source_literals": [
+            "getitem Opera_Ghost_Mask,1; // Opera_Ghost_Mask"
           ]
         }
       ],
