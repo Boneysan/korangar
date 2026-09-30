@@ -67845,7 +67845,7 @@
       "package": "E4",
       "kind": "e4_formula",
       "tier": "strong",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "skill_names": [
@@ -67876,7 +67876,25 @@
       ],
       "size_lines": 62,
       "reason": "skillratio case with branches or preprocessor blocks",
-      "history": []
+      "history": [
+        "2026-09-30T21:50:33Z activated",
+        "2026-09-30T21:50:33Z validated",
+        "2026-09-30T21:50:33Z verified: 1 claims supported",
+        "2026-09-30T21:50:57Z accepted",
+        "2026-09-30T21:50:57Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "13f97af541dc4efe91984768bbb36b48e41518374917ac7e446e9014623792ec",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E4-cg-arrowvulcan",
