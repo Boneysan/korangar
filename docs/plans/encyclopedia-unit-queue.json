@@ -11937,7 +11937,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Snorren#ep13_13",
@@ -11956,7 +11956,25 @@
       ],
       "size_lines": 311,
       "reason": "refused by the braced one-item prover: switch",
-      "history": []
+      "history": [
+        "2026-09-30T15:46:07Z activated",
+        "2026-09-30T15:46:07Z validated",
+        "2026-09-30T15:46:07Z verified: 2 claims supported",
+        "2026-09-30T15:46:34Z accepted",
+        "2026-09-30T15:46:34Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "4d69ad90dbf59043014254072ea16d4eefb72a32a829c5aaff60417125eb7b5f",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-man_in01_snorren_ep13md_15_branch_for_2058",

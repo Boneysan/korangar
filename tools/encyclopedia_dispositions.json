@@ -31651,6 +31651,56 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_man_in01_snorren_ep13_13_branch_for_1549_1759",
+      "unit": "E1-man_in01_snorren_ep13_13_branch_for_1549",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Snorren#ep13_13"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Yggdrasilberry,.@temp_ig; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_2.txt",
+          "lines": [
+            1759
+          ],
+          "required_source_literals": [
+            "delitem Yggdrasilberry,.@temp_ig;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_man_in01_snorren_ep13_13_branch_for_1549_1834",
+      "unit": "E1-man_in01_snorren_ep13_13_branch_for_1549",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Snorren#ep13_13"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Manuk_Coin,15; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_2.txt",
+          "lines": [
+            1834
+          ],
+          "required_source_literals": [
+            "getitem Manuk_Coin,15;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
