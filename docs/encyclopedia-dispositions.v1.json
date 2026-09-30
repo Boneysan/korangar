@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 1166,
+    "E1_unknown": 1167,
     "E1_verified": 1
   },
   "entries": [
@@ -10304,6 +10304,31 @@
           ],
           "required_source_literals": [
             "delitem Fur,30;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mid_camp_cat_hand_mining_agent_branch_for_8389_8396",
+      "unit": "E1-mid_camp_cat_hand_mining_agent_branch_for_8389",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Cat Hand Mining Agent"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Unidentified_Mineral,3; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_1.txt",
+          "lines": [
+            8396
+          ],
+          "required_source_literals": [
+            "delitem Unidentified_Mineral,3;"
           ]
         }
       ],
