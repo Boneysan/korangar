@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 3458,
+    "E1_unknown": 3459,
     "E1_verified": 1
   },
   "entries": [
@@ -46704,6 +46704,31 @@
           ],
           "required_source_literals": [
             "getitem Mora_Coin,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mora_general_good_dealer_pa0_branch_for_4680_4762",
+      "unit": "E1-mora_general_good_dealer_pa0_branch_for_4680",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "General Good Dealer#pa0"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Mora_Coin,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_mora.txt",
+          "lines": [
+            4762
+          ],
+          "required_source_literals": [
+            "getitem Mora_Coin,1;"
           ]
         }
       ],

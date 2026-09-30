@@ -39573,7 +39573,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "General Good Dealer#pa0",
@@ -39592,7 +39592,25 @@
       ],
       "size_lines": 87,
       "reason": "refused by the braced one-item prover: braceless",
-      "history": []
+      "history": [
+        "2026-09-30T20:00:55Z activated",
+        "2026-09-30T20:00:55Z validated",
+        "2026-09-30T20:00:55Z verified: 1 claims supported",
+        "2026-09-30T20:01:19Z accepted",
+        "2026-09-30T20:01:19Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "83838317712e2d5418fa5fad8e2b92c5d5a337f94941cde04a46c1210542ad30",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-mora_commodities_dealer_pa08_branch_for_4876",
