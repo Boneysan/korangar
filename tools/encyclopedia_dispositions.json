@@ -67851,6 +67851,156 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_tur_dun01_test_instructor_jr02_branch_for_321_416",
+      "unit": "E1-tur_dun01_test_instructor_jr02_branch_for_321",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Test Instructor#jr02"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Dragon_Fly_Wing,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-1/ranger.txt",
+          "lines": [
+            416
+          ],
+          "required_source_literals": [
+            "delitem Dragon_Fly_Wing,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_tur_dun01_test_instructor_jr02_branch_for_321_565",
+      "unit": "E1-tur_dun01_test_instructor_jr02_branch_for_321",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Test Instructor#jr02"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Bow__,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-1/ranger.txt",
+          "lines": [
+            565
+          ],
+          "required_source_literals": [
+            "delitem Bow__,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_tur_dun01_test_instructor_jr02_branch_for_321_632",
+      "unit": "E1-tur_dun01_test_instructor_jr02_branch_for_321",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Test Instructor#jr02"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Desert_Wolf_Babe_Scroll,countitem(Desert_Wolf_Babe_Scroll; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-1/ranger.txt",
+          "lines": [
+            632
+          ],
+          "required_source_literals": [
+            "delitem Desert_Wolf_Babe_Scroll,countitem(Desert_Wolf_Babe_Scroll);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_tur_dun01_test_instructor_jr02_branch_for_321_639",
+      "unit": "E1-tur_dun01_test_instructor_jr02_branch_for_321",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Test Instructor#jr02"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Bombring_Box,countitem(Bombring_Box; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-1/ranger.txt",
+          "lines": [
+            639
+          ],
+          "required_source_literals": [
+            "delitem Bombring_Box,countitem(Bombring_Box);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_tur_dun01_test_instructor_jr02_branch_for_321_649",
+      "unit": "E1-tur_dun01_test_instructor_jr02_branch_for_321",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Test Instructor#jr02"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Approval_Report,countitem(Approval_Report; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-1/ranger.txt",
+          "lines": [
+            649
+          ],
+          "required_source_literals": [
+            "delitem Approval_Report,countitem(Approval_Report);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_tur_dun01_test_instructor_jr02_branch_for_321_684",
+      "unit": "E1-tur_dun01_test_instructor_jr02_branch_for_321",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Test Instructor#jr02"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Arrow,100; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-1/ranger.txt",
+          "lines": [
+            684
+          ],
+          "required_source_literals": [
+            "if (.@arrow) getitem Arrow,100;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
