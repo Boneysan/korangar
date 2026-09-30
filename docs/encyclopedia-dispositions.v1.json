@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 2046,
+    "E1_unknown": 2047,
     "E1_verified": 1
   },
   "entries": [
@@ -43704,6 +43704,31 @@
           ],
           "required_source_literals": [
             "getitem Old_Violet_Box,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ra_temin_high_priest_zhed_rachel_branch_for_4767_5770",
+      "unit": "E1-ra_temin_high_priest_zhed_rachel_branch_for_4767",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "High Priest Zhed#rachel"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem File01,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_rachel.txt",
+          "lines": [
+            5770
+          ],
+          "required_source_literals": [
+            "delitem File01,1;"
           ]
         }
       ],
