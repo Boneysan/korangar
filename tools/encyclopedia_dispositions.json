@@ -41051,6 +41051,31 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_hugel_el_schatt_branch_for_4640_4865",
+      "unit": "E1-hugel_el_schatt_branch_for_4640",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "El Schatt"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Old_Blue_Box,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_hugel.txt",
+          "lines": [
+            4865
+          ],
+          "required_source_literals": [
+            "getitem Old_Blue_Box,1; //Old Blue Box"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
