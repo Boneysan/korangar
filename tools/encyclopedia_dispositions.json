@@ -2926,6 +2926,81 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_schg_dun01_dwarf_sch_gd_branch_for_81_175",
+      "unit": "E1-schg_dun01_dwarf_sch_gd_branch_for_81",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Dwarf#sch_gd"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Pickaxe,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/events/gdevent_sch.txt",
+          "lines": [
+            175
+          ],
+          "required_source_literals": [
+            "delitem Pickaxe,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_schg_dun01_dwarf_sch_gd_branch_for_81_307",
+      "unit": "E1-schg_dun01_dwarf_sch_gd_branch_for_81",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Dwarf#sch_gd"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Pickaxe,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/events/gdevent_sch.txt",
+          "lines": [
+            307
+          ],
+          "required_source_literals": [
+            "delitem Pickaxe,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_schg_dun01_dwarf_sch_gd_branch_for_81_449",
+      "unit": "E1-schg_dun01_dwarf_sch_gd_branch_for_81",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Dwarf#sch_gd"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Pickaxe,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/events/gdevent_sch.txt",
+          "lines": [
+            449
+          ],
+          "required_source_literals": [
+            "delitem Pickaxe,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
