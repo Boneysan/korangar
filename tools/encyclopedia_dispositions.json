@@ -62751,6 +62751,31 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_tha_t06_brilliant_statue_tt4_branch_for_1291_1490",
+      "unit": "E1-tha_t06_brilliant_statue_tt4_branch_for_1291",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Brilliant Statue#tt4"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Key_Green,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/thana_quest.txt",
+          "lines": [
+            1490
+          ],
+          "required_source_literals": [
+            "getitem Key_Green,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
