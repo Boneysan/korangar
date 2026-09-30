@@ -119897,6 +119897,31 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_quests_quests_morocc_txt_4280_4280",
+      "unit": "E2-npc-quests-quests-morocc-txt-4280",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Cave Girl#f_cave5"
+      },
+      "result": "verified",
+      "statement": "Cave Girl#f_cave5 is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_morocc.txt",
+          "lines": [
+            4280
+          ],
+          "required_source_literals": [
+            "cave,76,39,5\tshop\tCave Girl#f_cave5\t1_M_SIZ,712:-1"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }

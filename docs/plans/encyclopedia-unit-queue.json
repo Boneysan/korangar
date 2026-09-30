@@ -60010,7 +60010,7 @@
       "package": "E2",
       "kind": "e2_stock",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "declarations": [
@@ -60034,7 +60034,25 @@
       ],
       "size_lines": 1,
       "reason": "1 stock declaration(s) not covered by the 107 literal service calls",
-      "history": []
+      "history": [
+        "2026-09-30T20:52:12Z activated",
+        "2026-09-30T20:52:12Z validated",
+        "2026-09-30T20:52:13Z verified: 1 claims supported",
+        "2026-09-30T20:52:36Z accepted",
+        "2026-09-30T20:52:36Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "a539da16effde59e800d3dd381d3c7fcbc2ddbb4e7026145a3e4a31340c81121",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E2-npc-re-jobs-2e-rebellion-txt-967",

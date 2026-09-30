@@ -8,7 +8,7 @@
     "E1_not_applicable": 1,
     "E1_unknown": 3464,
     "E1_verified": 1,
-    "E2_verified": 158,
+    "E2_verified": 159,
     "E3_unknown": 973
   },
   "entries": [
@@ -93631,6 +93631,31 @@
           ],
           "required_source_literals": [
             "turbo_room,124,86,0\tshop\tTurbo Track Merchant\t4_F_01,501:-1,502:-1,503:-1,504:-1,645:-1,656:-1,1065:-1,1750:-1"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_quests_quests_morocc_txt_4280_4280",
+      "unit": "E2-npc-quests-quests-morocc-txt-4280",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Cave Girl#f_cave5"
+      },
+      "result": "verified",
+      "statement": "Cave Girl#f_cave5 is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_morocc.txt",
+          "lines": [
+            4280
+          ],
+          "required_source_literals": [
+            "cave,76,39,5\tshop\tCave Girl#f_cave5\t1_M_SIZ,712:-1"
           ]
         }
       ],
