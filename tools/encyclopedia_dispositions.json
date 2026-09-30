@@ -86676,6 +86676,56 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mora_knights_head_mo_branch_for_5250_5347",
+      "unit": "E1-mora_knights_head_mo_branch_for_5250",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Knights Head#mo"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Clue_Of_Lope,30; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_mora.txt",
+          "lines": [
+            5347
+          ],
+          "required_source_literals": [
+            "delitem Clue_Of_Lope,30;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mora_knights_head_mo_branch_for_5250_5349",
+      "unit": "E1-mora_knights_head_mo_branch_for_5250",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Knights Head#mo"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Mora_Coin,2; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_mora.txt",
+          "lines": [
+            5349
+          ],
+          "required_source_literals": [
+            "getitem Mora_Coin,2;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
