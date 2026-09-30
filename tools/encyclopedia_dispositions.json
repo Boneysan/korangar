@@ -38051,6 +38051,156 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_aldebaran_meteurengut_cmd_branch_for_1958_2040",
+      "unit": "E1-aldebaran_meteurengut_cmd_branch_for_1958",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Meteurengut#cmd"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Blue_Gemstone,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_comodo.txt",
+          "lines": [
+            2040
+          ],
+          "required_source_literals": [
+            "delitem Blue_Gemstone,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_aldebaran_meteurengut_cmd_branch_for_1958_2041",
+      "unit": "E1-aldebaran_meteurengut_cmd_branch_for_1958",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Meteurengut#cmd"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Blue_Jewel,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_comodo.txt",
+          "lines": [
+            2041
+          ],
+          "required_source_literals": [
+            "delitem Blue_Jewel,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_aldebaran_meteurengut_cmd_branch_for_1958_2042",
+      "unit": "E1-aldebaran_meteurengut_cmd_branch_for_1958",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Meteurengut#cmd"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Azure_Jewel,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_comodo.txt",
+          "lines": [
+            2042
+          ],
+          "required_source_literals": [
+            "delitem Azure_Jewel,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_aldebaran_meteurengut_cmd_branch_for_1958_2043",
+      "unit": "E1-aldebaran_meteurengut_cmd_branch_for_1958",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Meteurengut#cmd"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Shining_Stone,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_comodo.txt",
+          "lines": [
+            2043
+          ],
+          "required_source_literals": [
+            "delitem Shining_Stone,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_aldebaran_meteurengut_cmd_branch_for_1958_2044",
+      "unit": "E1-aldebaran_meteurengut_cmd_branch_for_1958",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Meteurengut#cmd"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Elunium_Stone,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_comodo.txt",
+          "lines": [
+            2044
+          ],
+          "required_source_literals": [
+            "delitem Elunium_Stone,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_aldebaran_meteurengut_cmd_branch_for_1958_2088",
+      "unit": "E1-aldebaran_meteurengut_cmd_branch_for_1958",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Meteurengut#cmd"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Spiderweb,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_comodo.txt",
+          "lines": [
+            2088
+          ],
+          "required_source_literals": [
+            "delitem Spiderweb,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
