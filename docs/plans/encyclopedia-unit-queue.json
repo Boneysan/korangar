@@ -24581,7 +24581,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "strong",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Mischna",
@@ -24600,7 +24600,25 @@
       ],
       "size_lines": 467,
       "reason": "refused by the braced one-item prover: braceless",
-      "history": []
+      "history": [
+        "2026-09-30T17:42:29Z activated",
+        "2026-09-30T17:42:30Z validated",
+        "2026-09-30T17:42:30Z verified: 7 claims supported",
+        "2026-09-30T17:42:53Z accepted",
+        "2026-09-30T17:42:53Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "9aa1161a0a229c495f8bd7fa7085608c73f57a7fbac5ad1ddd34838192ee1ba9",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-izlude_in_knight_de_thomas_branch_for_43",

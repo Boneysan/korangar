@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 2471,
+    "E1_unknown": 2478,
     "E1_verified": 1
   },
   "entries": [
@@ -59529,6 +59529,181 @@
           ],
           "required_source_literals": [
             "getitem Book,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_yuno_in03_mischna_branch_for_40_336",
+      "unit": "E1-yuno_in03_mischna_branch_for_40",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Mischna"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Scorpions_Tail,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/skills/sage_skills.txt",
+          "lines": [
+            336
+          ],
+          "required_source_literals": [
+            "delitem Scorpions_Tail,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_yuno_in03_mischna_branch_for_40_337",
+      "unit": "E1-yuno_in03_mischna_branch_for_40",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Mischna"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Horn,7; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/skills/sage_skills.txt",
+          "lines": [
+            337
+          ],
+          "required_source_literals": [
+            "delitem Horn,7; // Horn"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_yuno_in03_mischna_branch_for_40_338",
+      "unit": "E1-yuno_in03_mischna_branch_for_40",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Mischna"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Colorful_Shell,12; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/skills/sage_skills.txt",
+          "lines": [
+            338
+          ],
+          "required_source_literals": [
+            "delitem Colorful_Shell,12; // Rainbow_Shell"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_yuno_in03_mischna_branch_for_40_339",
+      "unit": "E1-yuno_in03_mischna_branch_for_40",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Mischna"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Snails_Shell,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/skills/sage_skills.txt",
+          "lines": [
+            339
+          ],
+          "required_source_literals": [
+            "delitem Snails_Shell,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_yuno_in03_mischna_branch_for_40_340",
+      "unit": "E1-yuno_in03_mischna_branch_for_40",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Mischna"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Scroll,4; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/skills/sage_skills.txt",
+          "lines": [
+            340
+          ],
+          "required_source_literals": [
+            "delitem Scroll,4; // Blank_Scroll"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_yuno_in03_mischna_branch_for_40_475",
+      "unit": "E1-yuno_in03_mischna_branch_for_40",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Mischna"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Payon_Potion,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/skills/sage_skills.txt",
+          "lines": [
+            475
+          ],
+          "required_source_literals": [
+            "delitem Payon_Potion,1; // Payon Potion"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_yuno_in03_mischna_branch_for_40_476",
+      "unit": "E1-yuno_in03_mischna_branch_for_40",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Mischna"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Morocc_Potion,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/skills/sage_skills.txt",
+          "lines": [
+            476
+          ],
+          "required_source_literals": [
+            "delitem Morocc_Potion,1; // Morocc Potion"
           ]
         }
       ],
