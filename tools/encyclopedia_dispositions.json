@@ -135543,6 +135543,33 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_7035_npc_quests_quests_13_1_txt_10870",
+      "unit": "E5-chain-7035",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7035
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 7035; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_1.txt",
+          "lines": [
+            10870
+          ],
+          "required_source_literals": [
+            "changequest 7035,7036;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
