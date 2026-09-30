@@ -112781,6 +112781,33 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_5593_script_untranslated",
+      "unit": "E3-unknown-bonus2-baddracetolerance-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          5593
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 5593 is not summarized: the translator does not interpret the quoted statement (bonus2 bAddRaceTolerance (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            63271
+          ],
+          "required_source_literals": [
+            "bonus2(bAddRaceTolerance, RC_DemiPlayer, 3);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
