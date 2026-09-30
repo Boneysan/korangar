@@ -37468,7 +37468,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Leader Phong in Mumbaki",
@@ -37487,7 +37487,25 @@
       ],
       "size_lines": 336,
       "reason": "refused by the braced one-item prover: braceless",
-      "history": []
+      "history": [
+        "2026-09-30T19:41:27Z activated",
+        "2026-09-30T19:41:27Z validated",
+        "2026-09-30T19:41:28Z verified: 8 claims supported",
+        "2026-09-30T19:41:51Z accepted",
+        "2026-09-30T19:41:51Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "a5409a2a02032089f6812daa74e4011d9be517be1609c41ed94c668df8a88646",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-malaya_imelda_malaya_branch_for_537",

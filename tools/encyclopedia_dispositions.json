@@ -83451,6 +83451,206 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_malaya_leader_phong_in_mumbaki_branch_for_200_476",
+      "unit": "E1-malaya_leader_phong_in_mumbaki_branch_for_200",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Leader Phong in Mumbaki"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Mysterious_Flower,3; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malaya.txt",
+          "lines": [
+            476
+          ],
+          "required_source_literals": [
+            "delitem Mysterious_Flower, 3; // Mysterious_Flower"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_malaya_leader_phong_in_mumbaki_branch_for_200_477",
+      "unit": "E1-malaya_leader_phong_in_mumbaki_branch_for_200",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Leader Phong in Mumbaki"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Elegant_Flower,3; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malaya.txt",
+          "lines": [
+            477
+          ],
+          "required_source_literals": [
+            "delitem Elegant_Flower, 3; // Elegant_Flower"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_malaya_leader_phong_in_mumbaki_branch_for_200_478",
+      "unit": "E1-malaya_leader_phong_in_mumbaki_branch_for_200",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Leader Phong in Mumbaki"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Beautiful_Flower,3; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malaya.txt",
+          "lines": [
+            478
+          ],
+          "required_source_literals": [
+            "delitem Beautiful_Flower, 3; // Beautiful_Flower"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_malaya_leader_phong_in_mumbaki_branch_for_200_479",
+      "unit": "E1-malaya_leader_phong_in_mumbaki_branch_for_200",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Leader Phong in Mumbaki"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Offering_Bouquet,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malaya.txt",
+          "lines": [
+            479
+          ],
+          "required_source_literals": [
+            "getitem Offering_Bouquet, 1; // Memorial_Bouquet"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_malaya_leader_phong_in_mumbaki_branch_for_200_528",
+      "unit": "E1-malaya_leader_phong_in_mumbaki_branch_for_200",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Leader Phong in Mumbaki"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Mysterious_Flower,3; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malaya.txt",
+          "lines": [
+            528
+          ],
+          "required_source_literals": [
+            "delitem Mysterious_Flower, 3; // Mysterious_Flower"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_malaya_leader_phong_in_mumbaki_branch_for_200_529",
+      "unit": "E1-malaya_leader_phong_in_mumbaki_branch_for_200",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Leader Phong in Mumbaki"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Elegant_Flower,3; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malaya.txt",
+          "lines": [
+            529
+          ],
+          "required_source_literals": [
+            "delitem Elegant_Flower, 3; // Elegant_Flower"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_malaya_leader_phong_in_mumbaki_branch_for_200_530",
+      "unit": "E1-malaya_leader_phong_in_mumbaki_branch_for_200",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Leader Phong in Mumbaki"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Beautiful_Flower,3; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malaya.txt",
+          "lines": [
+            530
+          ],
+          "required_source_literals": [
+            "delitem Beautiful_Flower, 3; // Beautiful_Flower"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_malaya_leader_phong_in_mumbaki_branch_for_200_531",
+      "unit": "E1-malaya_leader_phong_in_mumbaki_branch_for_200",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Leader Phong in Mumbaki"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Offering_Bouquet,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malaya.txt",
+          "lines": [
+            531
+          ],
+          "required_source_literals": [
+            "getitem Offering_Bouquet, 1; // Memorial_Bouquet"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
