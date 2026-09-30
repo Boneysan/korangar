@@ -52476,6 +52476,131 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ve_in_bookshelf_vol_branch_for_6045_6061",
+      "unit": "E1-ve_in_bookshelf_vol_branch_for_6045",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Bookshelf#vol"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem File01,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_veins.txt",
+          "lines": [
+            6061
+          ],
+          "required_source_literals": [
+            "getitem File01,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ve_in_bookshelf_vol_branch_for_6045_6094",
+      "unit": "E1-ve_in_bookshelf_vol_branch_for_6045",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Bookshelf#vol"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Random_Quiver,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_veins.txt",
+          "lines": [
+            6094
+          ],
+          "required_source_literals": [
+            "getitem Random_Quiver,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ve_in_bookshelf_vol_branch_for_6045_6097",
+      "unit": "E1-ve_in_bookshelf_vol_branch_for_6045",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Bookshelf#vol"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Sway_Apron,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_veins.txt",
+          "lines": [
+            6097
+          ],
+          "required_source_literals": [
+            "getitem Sway_Apron,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ve_in_bookshelf_vol_branch_for_6045_6100",
+      "unit": "E1-ve_in_bookshelf_vol_branch_for_6045",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Bookshelf#vol"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Giggling_Box,5; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_veins.txt",
+          "lines": [
+            6100
+          ],
+          "required_source_literals": [
+            "getitem Giggling_Box,5;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ve_in_bookshelf_vol_branch_for_6045_6103",
+      "unit": "E1-ve_in_bookshelf_vol_branch_for_6045",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Bookshelf#vol"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Bloody_Dead_Branch,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_veins.txt",
+          "lines": [
+            6103
+          ],
+          "required_source_literals": [
+            "getitem Bloody_Dead_Branch,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
