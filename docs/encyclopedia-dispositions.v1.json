@@ -12,7 +12,7 @@
     "E2_verified": 236,
     "E3_unknown": 973,
     "E4_unknown": 213,
-    "E5_unknown": 102
+    "E5_unknown": 103
   },
   "entries": [
     {
@@ -104393,6 +104393,33 @@
           ],
           "required_source_literals": [
             "changequest 3011,3012;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_3013_npc_jobs_2_2_crusader_txt_890",
+      "unit": "E5-chain-3013",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          3013
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 3013; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/crusader.txt",
+          "lines": [
+            890
+          ],
+          "required_source_literals": [
+            "changequest 3013,3014;"
           ]
         }
       ],
