@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 3120,
+    "E1_unknown": 3122,
     "E1_verified": 1
   },
   "entries": [
@@ -12879,6 +12879,56 @@
           ],
           "required_source_literals": [
             "delitem Sapa_Feat_Cert,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_dic_in01_frede_13_3_in_branch_for_5068_5100",
+      "unit": "E1-dic_in01_frede_13_3_in_branch_for_5068",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Frede#13_3_in"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Banana,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_dicastes.txt",
+          "lines": [
+            5100
+          ],
+          "required_source_literals": [
+            "getitem Banana,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_dic_in01_frede_13_3_in_branch_for_5068_5347",
+      "unit": "E1-dic_in01_frede_13_3_in_branch_for_5068",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Frede#13_3_in"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Bradium_Earing,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_dicastes.txt",
+          "lines": [
+            5347
+          ],
+          "required_source_literals": [
+            "getitem Bradium_Earing,1;"
           ]
         }
       ],

@@ -78126,6 +78126,56 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_dic_in01_frede_13_3_in_branch_for_5068_5100",
+      "unit": "E1-dic_in01_frede_13_3_in_branch_for_5068",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Frede#13_3_in"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Banana,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_dicastes.txt",
+          "lines": [
+            5100
+          ],
+          "required_source_literals": [
+            "getitem Banana,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_dic_in01_frede_13_3_in_branch_for_5068_5347",
+      "unit": "E1-dic_in01_frede_13_3_in_branch_for_5068",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Frede#13_3_in"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Bradium_Earing,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_dicastes.txt",
+          "lines": [
+            5347
+          ],
+          "required_source_literals": [
+            "getitem Bradium_Earing,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
