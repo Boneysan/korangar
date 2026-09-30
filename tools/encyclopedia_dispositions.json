@@ -110891,6 +110891,114 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_4333_script_untranslated",
+      "unit": "E3-unknown-bonus3-baddeffwhenhit-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          4333
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 4333 is not summarized: the translator does not interpret the quoted statement (bonus3 bAddEffWhenHit (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            45386
+          ],
+          "required_source_literals": [
+            "Script: <\" bonus3 bAddEffWhenHit,Eff_Poison,3000,ATF_TARGET|ATF_SELF; \">"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_4383_script_untranslated",
+      "unit": "E3-unknown-bonus3-baddeffwhenhit-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          4383
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 4383 is not summarized: the translator does not interpret the quoted statement (bonus3 bAddEffWhenHit (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            46024
+          ],
+          "required_source_literals": [
+            "Script: <\" bonus3 bAddEffWhenHit,Eff_Confusion,3000,ATF_TARGET|ATF_SELF; \">"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_4404_script_untranslated",
+      "unit": "E3-unknown-bonus3-baddeffwhenhit-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          4404
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 4404 is not summarized: the translator does not interpret the quoted statement (bonus3 bAddEffWhenHit (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            46271
+          ],
+          "required_source_literals": [
+            "Script: <\" bonus3 bAddEffWhenHit,Eff_Bleeding,3000,ATF_TARGET|ATF_SELF; \">"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_5812_script_untranslated",
+      "unit": "E3-unknown-bonus3-baddeffwhenhit-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          5812
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 5812 is not summarized: the translator does not interpret the quoted statement (bonus3 bAddEffWhenHit (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            67085
+          ],
+          "required_source_literals": [
+            "bonus3 bAddEffWhenHit,Eff_Bleeding,500,ATF_TARGET|ATF_SELF;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
