@@ -15901,6 +15901,156 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_umbala_bazo_lv4_branch_for_41_155",
+      "unit": "E1-umbala_bazo_lv4_branch_for_41",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Bazo#lv4"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Immaterial_Sword,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/lvl4_weapon_quest.txt",
+          "lines": [
+            155
+          ],
+          "required_source_literals": [
+            "getitem Immaterial_Sword,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_umbala_bazo_lv4_branch_for_41_162",
+      "unit": "E1-umbala_bazo_lv4_branch_for_41",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Bazo#lv4"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Slash,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/lvl4_weapon_quest.txt",
+          "lines": [
+            162
+          ],
+          "required_source_literals": [
+            "getitem Slash,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_umbala_bazo_lv4_branch_for_41_169",
+      "unit": "E1-umbala_bazo_lv4_branch_for_41",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Bazo#lv4"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Quadrille,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/lvl4_weapon_quest.txt",
+          "lines": [
+            169
+          ],
+          "required_source_literals": [
+            "getitem Quadrille,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_umbala_bazo_lv4_branch_for_41_377",
+      "unit": "E1-umbala_bazo_lv4_branch_for_41",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Bazo#lv4"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Gold,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/lvl4_weapon_quest.txt",
+          "lines": [
+            377
+          ],
+          "required_source_literals": [
+            "delitem Gold,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_umbala_bazo_lv4_branch_for_41_378",
+      "unit": "E1-umbala_bazo_lv4_branch_for_41",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Bazo#lv4"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Steel,50; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/lvl4_weapon_quest.txt",
+          "lines": [
+            378
+          ],
+          "required_source_literals": [
+            "delitem Steel,50;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_umbala_bazo_lv4_branch_for_41_379",
+      "unit": "E1-umbala_bazo_lv4_branch_for_41",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Bazo#lv4"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Emperium,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/lvl4_weapon_quest.txt",
+          "lines": [
+            379
+          ],
+          "required_source_literals": [
+            "delitem Emperium,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
