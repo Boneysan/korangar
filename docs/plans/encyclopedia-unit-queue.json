@@ -21764,7 +21764,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Hamion#aru",
@@ -21783,7 +21783,25 @@
       ],
       "size_lines": 152,
       "reason": "refused by the braced one-item prover: menu",
-      "history": []
+      "history": [
+        "2026-09-30T17:16:38Z activated",
+        "2026-09-30T17:16:38Z validated",
+        "2026-09-30T17:16:38Z verified: 4 claims supported",
+        "2026-09-30T17:17:02Z accepted",
+        "2026-09-30T17:17:02Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "793e4526ba776c2ea2007872de5a22b3e73c30665a2323e1f9da213454c1201b",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-ice_dun03_blazing_fire_ice1_branch_for_3504",

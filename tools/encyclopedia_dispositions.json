@@ -50926,6 +50926,106 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_rachel_hamion_aru_branch_for_3240_3373",
+      "unit": "E1-rachel_hamion_aru_branch_for_3240",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Hamion#aru"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Hammer,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_rachel.txt",
+          "lines": [
+            3373
+          ],
+          "required_source_literals": [
+            "delitem Hammer,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_rachel_hamion_aru_branch_for_3240_3374",
+      "unit": "E1-rachel_hamion_aru_branch_for_3240",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Hamion#aru"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Rough_Wind,5; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_rachel.txt",
+          "lines": [
+            3374
+          ],
+          "required_source_literals": [
+            "delitem Rough_Wind,5;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_rachel_hamion_aru_branch_for_3240_3375",
+      "unit": "E1-rachel_hamion_aru_branch_for_3240",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Hamion#aru"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Scroll,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_rachel.txt",
+          "lines": [
+            3375
+          ],
+          "required_source_literals": [
+            "delitem Scroll,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_rachel_hamion_aru_branch_for_3240_3378",
+      "unit": "E1-rachel_hamion_aru_branch_for_3240",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Hamion#aru"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Hammer_Of_Wind,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_rachel.txt",
+          "lines": [
+            3378
+          ],
+          "required_source_literals": [
+            "getitem Hammer_Of_Wind,1; //Hammer_of_Wind"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
