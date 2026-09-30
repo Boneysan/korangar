@@ -73026,6 +73026,56 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mora_artifact_researcher_new_branch_for_612_1118",
+      "unit": "E1-mora_artifact_researcher_new_branch_for_612",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Artifact Researcher#new"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Mora_Coin,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/merchants/enchan_mora.txt",
+          "lines": [
+            1118
+          ],
+          "required_source_literals": [
+            "delitem Mora_Coin,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mora_artifact_researcher_new_branch_for_612_1153",
+      "unit": "E1-mora_artifact_researcher_new_branch_for_612",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Artifact Researcher#new"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Mora_Coin,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/merchants/enchan_mora.txt",
+          "lines": [
+            1153
+          ],
+          "required_source_literals": [
+            "delitem Mora_Coin,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
