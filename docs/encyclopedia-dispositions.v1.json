@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 383,
+    "E1_unknown": 384,
     "E1_verified": 1
   },
   "entries": [
@@ -979,6 +979,31 @@
           ],
           "required_source_literals": [
             "getitem White_Potion,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_alde_gld_en_turbo_branch_for_4625_4663",
+      "unit": "E1-alde_gld_en_turbo_branch_for_4625",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "en_turbo"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Free_Peco_Ticket,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/other/turbo_track.txt",
+          "lines": [
+            4663
+          ],
+          "required_source_literals": [
+            "getitem Free_Peco_Ticket, 1;"
           ]
         }
       ],
