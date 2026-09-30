@@ -8776,6 +8776,231 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_geffen_in_christopher_1_branch_for_57_74",
+      "unit": "E1-geffen_in_christopher_1_branch_for_57",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Christopher#1"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Anvil,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/merchants/refine.txt",
+          "lines": [
+            74
+          ],
+          "required_source_literals": [
+            "getitem Anvil,1; // Anvil"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_geffen_in_christopher_1_branch_for_57_85",
+      "unit": "E1-geffen_in_christopher_1_branch_for_57",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Christopher#1"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Oridecon_Anvil,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/merchants/refine.txt",
+          "lines": [
+            85
+          ],
+          "required_source_literals": [
+            "getitem Oridecon_Anvil,1; // Oridecon_Anvil"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_geffen_in_christopher_1_branch_for_57_96",
+      "unit": "E1-geffen_in_christopher_1_branch_for_57",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Christopher#1"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Golden_Anvil,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/merchants/refine.txt",
+          "lines": [
+            96
+          ],
+          "required_source_literals": [
+            "getitem Golden_Anvil,1; // Golden_Anvil"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_geffen_in_christopher_1_branch_for_57_148",
+      "unit": "E1-geffen_in_christopher_1_branch_for_57",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Christopher#1"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Portable_Furnace,.@input; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/merchants/refine.txt",
+          "lines": [
+            148
+          ],
+          "required_source_literals": [
+            "getitem Portable_Furnace,.@input; // Portable_Furnace"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_geffen_in_christopher_1_branch_for_57_159",
+      "unit": "E1-geffen_in_christopher_1_branch_for_57",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Christopher#1"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Iron_Hammer,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/merchants/refine.txt",
+          "lines": [
+            159
+          ],
+          "required_source_literals": [
+            "getitem Iron_Hammer,1; // Iron_Hammer"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_geffen_in_christopher_1_branch_for_57_170",
+      "unit": "E1-geffen_in_christopher_1_branch_for_57",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Christopher#1"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Golden_Hammer,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/merchants/refine.txt",
+          "lines": [
+            170
+          ],
+          "required_source_literals": [
+            "getitem Golden_Hammer,1; // Golden_Hammer"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_geffen_in_christopher_1_branch_for_57_181",
+      "unit": "E1-geffen_in_christopher_1_branch_for_57",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Christopher#1"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Oridecon_Hammer,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/merchants/refine.txt",
+          "lines": [
+            181
+          ],
+          "required_source_literals": [
+            "getitem Oridecon_Hammer,1; // Oridecon_Hammer"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_geffen_in_christopher_1_branch_for_57_228",
+      "unit": "E1-geffen_in_christopher_1_branch_for_57",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Christopher#1"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Phracon,.@input; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/merchants/refine.txt",
+          "lines": [
+            228
+          ],
+          "required_source_literals": [
+            "getitem Phracon,.@input; // Phracon"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_geffen_in_christopher_1_branch_for_57_265",
+      "unit": "E1-geffen_in_christopher_1_branch_for_57",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Christopher#1"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Emveretarcon,.@input; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/merchants/refine.txt",
+          "lines": [
+            265
+          ],
+          "required_source_literals": [
+            "getitem Emveretarcon,.@input; // Emveretarcon"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
