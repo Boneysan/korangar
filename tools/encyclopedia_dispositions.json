@@ -70101,6 +70101,56 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_xmas_dancer_kim_xmas_branch_for_908_1006",
+      "unit": "E1-xmas_dancer_kim_xmas_branch_for_908",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Dancer Kim#xmas"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Green_Apple_Ring,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-2/wanderer.txt",
+          "lines": [
+            1006
+          ],
+          "required_source_literals": [
+            "getitem Green_Apple_Ring,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_xmas_dancer_kim_xmas_branch_for_908_1007",
+      "unit": "E1-xmas_dancer_kim_xmas_branch_for_908",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Dancer Kim#xmas"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Dying_Swan,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-2/wanderer.txt",
+          "lines": [
+            1007
+          ],
+          "required_source_literals": [
+            "getitem Dying_Swan,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
