@@ -133059,6 +133059,141 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_6006_npc_jobs_2_2e_soullinker_txt_382",
+      "unit": "E5-chain-6006",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          6006
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 6006; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2e/SoulLinker.txt",
+          "lines": [
+            382
+          ],
+          "required_source_literals": [
+            "changequest 6006,6007;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_6006_npc_jobs_2_2e_soullinker_txt_463",
+      "unit": "E5-chain-6006",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          6008
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 6008; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2e/SoulLinker.txt",
+          "lines": [
+            463
+          ],
+          "required_source_literals": [
+            "completequest 6008;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_6006_npc_jobs_2_2e_soullinker_txt_542",
+      "unit": "E5-chain-6006",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          6007
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 6007; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2e/SoulLinker.txt",
+          "lines": [
+            542
+          ],
+          "required_source_literals": [
+            "changequest 6007,6008;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_6006_npc_jobs_2_2e_soullinker_txt_591",
+      "unit": "E5-chain-6006",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          6007
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 6007; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2e/SoulLinker.txt",
+          "lines": [
+            591
+          ],
+          "required_source_literals": [
+            "changequest 6007,6008;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_6006_npc_jobs_2_2e_soullinker_txt_635",
+      "unit": "E5-chain-6006",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          6007
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 6007; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2e/SoulLinker.txt",
+          "lines": [
+            635
+          ],
+          "required_source_literals": [
+            "changequest 6007,6008;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
