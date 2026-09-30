@@ -46176,6 +46176,56 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mosk_dun03_magic_bottle_branch_for_6370_6396",
+      "unit": "E1-mosk_dun03_magic_bottle_branch_for_6370",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "#Magic_Bottle"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Magic_Gourd_Bottle,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_moscovia.txt",
+          "lines": [
+            6396
+          ],
+          "required_source_literals": [
+            "getitem Magic_Gourd_Bottle,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mosk_dun03_magic_bottle_branch_for_6370_6405",
+      "unit": "E1-mosk_dun03_magic_bottle_branch_for_6370",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "#Magic_Bottle"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Magic_Gourd_Bottle,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_moscovia.txt",
+          "lines": [
+            6405
+          ],
+          "required_source_literals": [
+            "getitem Magic_Gourd_Bottle,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
