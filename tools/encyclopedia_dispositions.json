@@ -86601,6 +86601,31 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mora_commodities_dealer_pa08_branch_for_4876_4958",
+      "unit": "E1-mora_commodities_dealer_pa08_branch_for_4876",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Commodities Dealer#pa08"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Mora_Coin,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_mora.txt",
+          "lines": [
+            4958
+          ],
+          "required_source_literals": [
+            "getitem Mora_Coin,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }

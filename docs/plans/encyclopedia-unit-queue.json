@@ -39617,7 +39617,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Commodities Dealer#pa08",
@@ -39636,7 +39636,25 @@
       ],
       "size_lines": 87,
       "reason": "refused by the braced one-item prover: braceless",
-      "history": []
+      "history": [
+        "2026-09-30T20:01:20Z activated",
+        "2026-09-30T20:01:20Z validated",
+        "2026-09-30T20:01:20Z verified: 1 claims supported",
+        "2026-09-30T20:01:43Z accepted",
+        "2026-09-30T20:01:43Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "34029611a846a0a500d55f3d2cbf654194cf7696038e6be884f19c208136c6ad",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-mora_knights_boss_mo_branch_for_5188",
