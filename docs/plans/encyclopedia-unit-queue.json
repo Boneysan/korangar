@@ -10223,7 +10223,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Otto#ep13bs",
@@ -10242,7 +10242,25 @@
       ],
       "size_lines": 111,
       "reason": "refused by the braced one-item prover: multi-item",
-      "history": []
+      "history": [
+        "2026-09-30T15:30:12Z activated",
+        "2026-09-30T15:30:12Z validated",
+        "2026-09-30T15:30:12Z verified: 4 claims supported",
+        "2026-09-30T15:30:44Z accepted",
+        "2026-09-30T15:30:44Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "fafe12de03033c1874d2a2e22345638c610a05ec3a6a9b3ff6d3f12bb677293b",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-mid_campin_receptionist_brink_ep13b_branch_for_2846",

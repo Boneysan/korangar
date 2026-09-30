@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 1094,
+    "E1_unknown": 1098,
     "E1_verified": 1
   },
   "entries": [
@@ -10379,6 +10379,106 @@
           ],
           "required_source_literals": [
             "getitem Supply_Box,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mid_camp_otto_ep13bs_branch_for_2734_2792",
+      "unit": "E1-mid_camp_otto_ep13bs_branch_for_2734",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Otto#ep13bs"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Letter_From_Lugen,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_1.txt",
+          "lines": [
+            2792
+          ],
+          "required_source_literals": [
+            "delitem Letter_From_Lugen,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mid_camp_otto_ep13bs_branch_for_2734_2794",
+      "unit": "E1-mid_camp_otto_ep13bs_branch_for_2734",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Otto#ep13bs"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Letter_From_Otto,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_1.txt",
+          "lines": [
+            2794
+          ],
+          "required_source_literals": [
+            "getitem Letter_From_Otto,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mid_camp_otto_ep13bs_branch_for_2734_2795",
+      "unit": "E1-mid_camp_otto_ep13bs_branch_for_2734",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Otto#ep13bs"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Chocolate_Pie,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_1.txt",
+          "lines": [
+            2795
+          ],
+          "required_source_literals": [
+            "getitem Chocolate_Pie,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mid_camp_otto_ep13bs_branch_for_2734_2805",
+      "unit": "E1-mid_camp_otto_ep13bs_branch_for_2734",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Otto#ep13bs"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Letter_From_Otto,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_1.txt",
+          "lines": [
+            2805
+          ],
+          "required_source_literals": [
+            "getitem Letter_From_Otto,1;"
           ]
         }
       ],
