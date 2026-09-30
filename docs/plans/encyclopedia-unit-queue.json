@@ -38218,7 +38218,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Tikbalang Expert#malaya",
@@ -38237,7 +38237,22 @@
       ],
       "size_lines": 184,
       "reason": "refused by the braced one-item prover: switch",
-      "history": []
+      "history": [
+        "2026-09-30T19:48:18Z activated",
+        "2026-09-30T19:48:18Z validated",
+        "2026-09-30T19:48:18Z verified: 0 claims supported",
+        "2026-09-30T19:48:41Z accepted",
+        "2026-09-30T19:48:41Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "3c8c1bba5feb7ce9ee94d200b360e3ca635eb2ded2f1b9685d86b7a1a73a0b44",
+      "accepted_files": [
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-ma_fild01_tribe_blacksmith_malaya_branch_for_3615",
