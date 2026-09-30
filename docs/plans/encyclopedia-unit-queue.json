@@ -3923,7 +3923,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Metheus Sylphe#Library",
@@ -3942,7 +3942,26 @@
       ],
       "size_lines": 208,
       "reason": "refused by the braced one-item prover: braceless",
-      "history": []
+      "history": [
+        "2026-09-30T14:32:36Z activated",
+        "2026-09-30T14:32:36Z validated",
+        "2026-09-30T14:32:36Z verified: 2 claims supported",
+        "2026-09-30T14:32:59Z accepted",
+        "2026-09-30T14:32:59Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "55fd031b43abef55ec199b8f608d0ec7384358f278d96c51d6f0a5c40e88e47f",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "audit": "due",
+      "commit": "committed"
     },
     {
       "id": "E1-alberta_in_purchasing_team_buying_branch_for_121",
