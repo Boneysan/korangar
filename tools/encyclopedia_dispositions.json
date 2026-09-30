@@ -81301,6 +81301,31 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mal_in02_linguist_devore_mal_branch_for_792_950",
+      "unit": "E1-mal_in02_linguist_devore_mal_branch_for_792",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Linguist Devore#mal"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Egrade_Coin,30; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malangdo.txt",
+          "lines": [
+            950
+          ],
+          "required_source_literals": [
+            "getitem Egrade_Coin,30;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
