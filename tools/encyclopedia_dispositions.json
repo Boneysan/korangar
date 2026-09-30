@@ -66026,6 +66026,106 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_sign01_queen_of_the_dead_branch_for_10758_10812",
+      "unit": "E1-que_sign01_queen_of_the_dead_branch_for_10758",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Queen of the Dead"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Whisper_Of_Soul,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/the_sign_quest.txt",
+          "lines": [
+            10812
+          ],
+          "required_source_literals": [
+            "delitem Whisper_Of_Soul,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_sign01_queen_of_the_dead_branch_for_10758_10814",
+      "unit": "E1-que_sign01_queen_of_the_dead_branch_for_10758",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Queen of the Dead"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Authority_Of_Nine_World,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/the_sign_quest.txt",
+          "lines": [
+            10814
+          ],
+          "required_source_literals": [
+            "getitem Authority_Of_Nine_World,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_sign01_queen_of_the_dead_branch_for_10758_10870",
+      "unit": "E1-que_sign01_queen_of_the_dead_branch_for_10758",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Queen of the Dead"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Stars_Sob,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/the_sign_quest.txt",
+          "lines": [
+            10870
+          ],
+          "required_source_literals": [
+            "delitem Stars_Sob,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_sign01_queen_of_the_dead_branch_for_10758_10918",
+      "unit": "E1-que_sign01_queen_of_the_dead_branch_for_10758",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Queen of the Dead"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Lucifers_Lament,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/the_sign_quest.txt",
+          "lines": [
+            10918
+          ],
+          "required_source_literals": [
+            "getitem Lucifers_Lament,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
