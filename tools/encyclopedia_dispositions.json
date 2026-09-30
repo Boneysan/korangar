@@ -37226,6 +37226,31 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ayothaya_mr_jun_ayo_branch_for_2636_2893",
+      "unit": "E1-ayothaya_mr_jun_ayo_branch_for_2636",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Mr. Jun#ayo"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Lemon,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_ayothaya.txt",
+          "lines": [
+            2893
+          ],
+          "required_source_literals": [
+            "getitem Lemon,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
