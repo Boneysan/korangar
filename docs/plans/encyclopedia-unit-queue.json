@@ -1389,7 +1389,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Strife#pront",
@@ -1408,7 +1408,25 @@
       ],
       "size_lines": 96,
       "reason": "refused by the braced one-item prover: menu",
-      "history": []
+      "history": [
+        "2026-09-30T14:08:24Z activated",
+        "2026-09-30T14:08:24Z validated",
+        "2026-09-30T14:08:24Z verified: 1 claims supported",
+        "2026-09-30T14:08:47Z accepted",
+        "2026-09-30T14:08:47Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "11a59093b61560bce76b1d602462603e1abf55d74f7a0c620c2b427414b0b413",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-umbala_utan_kid_um_branch_for_258",

@@ -2576,6 +2576,31 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prontera_strife_pront_branch_for_131_191",
+      "unit": "E1-prontera_strife_pront_branch_for_131",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Strife#pront"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Hood,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/cities/prontera.txt",
+          "lines": [
+            191
+          ],
+          "required_source_literals": [
+            "getitem Hood,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
