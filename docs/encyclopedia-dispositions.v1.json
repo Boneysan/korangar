@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 2794,
+    "E1_unknown": 2799,
     "E1_verified": 1
   },
   "entries": [
@@ -13054,6 +13054,131 @@
           ],
           "required_source_literals": [
             "delitem Worn_Out_Scroll,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_gef_tower_karacas_branch_for_149_342",
+      "unit": "E1-gef_tower_karacas_branch_for_149",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Karacas"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Clear_Reagent,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-2/sorcerer.txt",
+          "lines": [
+            342
+          ],
+          "required_source_literals": [
+            "delitem Clear_Reagent,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_gef_tower_karacas_branch_for_149_343",
+      "unit": "E1-gef_tower_karacas_branch_for_149",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Karacas"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Black_Reagent,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-2/sorcerer.txt",
+          "lines": [
+            343
+          ],
+          "required_source_literals": [
+            "delitem Black_Reagent,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_gef_tower_karacas_branch_for_149_344",
+      "unit": "E1-gef_tower_karacas_branch_for_149",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Karacas"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Red_Reagent,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-2/sorcerer.txt",
+          "lines": [
+            344
+          ],
+          "required_source_literals": [
+            "delitem Red_Reagent,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_gef_tower_karacas_branch_for_149_385",
+      "unit": "E1-gef_tower_karacas_branch_for_149",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Karacas"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Wind_Whisper,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-2/sorcerer.txt",
+          "lines": [
+            385
+          ],
+          "required_source_literals": [
+            "getitem Wind_Whisper,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_gef_tower_karacas_branch_for_149_386",
+      "unit": "E1-gef_tower_karacas_branch_for_149",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Karacas"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Green_Apple_Ring,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-2/sorcerer.txt",
+          "lines": [
+            386
+          ],
+          "required_source_literals": [
+            "getitem Green_Apple_Ring,1;"
           ]
         }
       ],
