@@ -50001,6 +50001,31 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_niflheim_graveyard1_branch_for_188_203",
+      "unit": "E1-niflheim_graveyard1_branch_for_188",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "#Graveyard1"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Piano_Keyboard,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_niflheim.txt",
+          "lines": [
+            203
+          ],
+          "required_source_literals": [
+            "getitem Piano_Keyboard,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
