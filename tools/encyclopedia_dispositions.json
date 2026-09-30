@@ -103898,6 +103898,384 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_2188_script_untranslated",
+      "unit": "E3-unknown-bonus2-bsubele-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          2188
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 2188 is not summarized: the translator does not interpret the quoted statement (bonus2 bSubEle (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            26236
+          ],
+          "required_source_literals": [
+            "bonus2 bSubEle,Ele_Water,10+(getrefine()/3);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_15090_script_untranslated",
+      "unit": "E3-unknown-bonus2-bsubele-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          15090
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 15090 is not summarized: the translator does not interpret the quoted statement (bonus2 bSubEle (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            125741
+          ],
+          "required_source_literals": [
+            "bonus2 bSubEle,Ele_Holy,10+(getrefine()/2);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_15091_script_untranslated",
+      "unit": "E3-unknown-bonus2-bsubele-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          15091
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 15091 is not summarized: the translator does not interpret the quoted statement (bonus2 bSubEle (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            125763
+          ],
+          "required_source_literals": [
+            "Script: <\" bonus2 bSubEle,Ele_Holy,10+(getrefine()/2); \">"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_18820_script_untranslated",
+      "unit": "E3-unknown-bonus2-bsubele-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          18820
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 18820 is not summarized: the translator does not interpret the quoted statement (bonus2 bSubEle (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            137871
+          ],
+          "required_source_literals": [
+            "Script: <\" bonus2 bSubEle,Ele_Holy,3+(getrefine()/2); \">"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_20721_script_untranslated",
+      "unit": "E3-unknown-bonus2-bsubele-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          20721
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 20721 is not summarized: the translator does not interpret the quoted statement (bonus2 bSubEle (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            147148
+          ],
+          "required_source_literals": [
+            "Script: <\" bonus2 bSubEle,Ele_Holy,3+(getrefine()/2); \">"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_22033_script_untranslated",
+      "unit": "E3-unknown-bonus2-bsubele-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          22033
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 22033 is not summarized: the translator does not interpret the quoted statement (bonus2 bSubEle (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            148626
+          ],
+          "required_source_literals": [
+            "Script: <\" bonus2 bSubEle,Ele_Holy,1+getrefine()/3; \">"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_22048_script_untranslated",
+      "unit": "E3-unknown-bonus2-bsubele-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          22048
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 22048 is not summarized: the translator does not interpret the quoted statement (bonus2 bSubEle (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            148897
+          ],
+          "required_source_literals": [
+            "bonus2(bSubEle, Ele_Dark, 5);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_22049_script_untranslated",
+      "unit": "E3-unknown-bonus2-bsubele-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          22049
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 22049 is not summarized: the translator does not interpret the quoted statement (bonus2 bSubEle (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            148914
+          ],
+          "required_source_literals": [
+            "bonus2(bSubEle, Ele_Earth, 5);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_22055_script_untranslated",
+      "unit": "E3-unknown-bonus2-bsubele-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          22055
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 22055 is not summarized: the translator does not interpret the quoted statement (bonus2 bSubEle (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            148931
+          ],
+          "required_source_literals": [
+            "bonus2(bSubEle, Ele_Fire, 5);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_22057_script_untranslated",
+      "unit": "E3-unknown-bonus2-bsubele-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          22057
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 22057 is not summarized: the translator does not interpret the quoted statement (bonus2 bSubEle (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            148948
+          ],
+          "required_source_literals": [
+            "bonus2(bSubEle, Ele_Water, 5);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_22061_script_untranslated",
+      "unit": "E3-unknown-bonus2-bsubele-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          22061
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 22061 is not summarized: the translator does not interpret the quoted statement (bonus2 bSubEle (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            148982
+          ],
+          "required_source_literals": [
+            "bonus2(bSubEle, Ele_Holy, 5);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_22063_script_untranslated",
+      "unit": "E3-unknown-bonus2-bsubele-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          22063
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 22063 is not summarized: the translator does not interpret the quoted statement (bonus2 bSubEle (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            148999
+          ],
+          "required_source_literals": [
+            "bonus2(bSubEle, Ele_Wind, 5);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_22065_script_untranslated",
+      "unit": "E3-unknown-bonus2-bsubele-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          22065
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 22065 is not summarized: the translator does not interpret the quoted statement (bonus2 bSubEle (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            149016
+          ],
+          "required_source_literals": [
+            "bonus2(bSubEle, Ele_Poison, 5);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_22069_script_untranslated",
+      "unit": "E3-unknown-bonus2-bsubele-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          22069
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 22069 is not summarized: the translator does not interpret the quoted statement (bonus2 bSubEle (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            149052
+          ],
+          "required_source_literals": [
+            "bonus2(bSubEle, Ele_Neutral, 5);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
