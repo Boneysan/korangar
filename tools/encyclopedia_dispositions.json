@@ -79176,6 +79176,56 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_eclage_cruyan_eclage_branch_for_6173_6251",
+      "unit": "E1-eclage_cruyan_eclage_branch_for_6173",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Cruyan#eclage"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Center_Potion,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "lines": [
+            6251
+          ],
+          "required_source_literals": [
+            "getitem Center_Potion,1; //Center_Potion"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_eclage_cruyan_eclage_branch_for_6173_6299",
+      "unit": "E1-eclage_cruyan_eclage_branch_for_6173",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Cruyan#eclage"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Seed_Of_Yggdrasil,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "lines": [
+            6299
+          ],
+          "required_source_literals": [
+            "getitem Seed_Of_Yggdrasil,1; //Seed_Of_Yggdrasil"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }

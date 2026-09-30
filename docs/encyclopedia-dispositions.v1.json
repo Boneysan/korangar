@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 3162,
+    "E1_unknown": 3164,
     "E1_verified": 1
   },
   "entries": [
@@ -14029,6 +14029,56 @@
           ],
           "required_source_literals": [
             "delitem Pile_Of_Acorn,1; //Pile_Of_Acorn"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_eclage_cruyan_eclage_branch_for_6173_6251",
+      "unit": "E1-eclage_cruyan_eclage_branch_for_6173",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Cruyan#eclage"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Center_Potion,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "lines": [
+            6251
+          ],
+          "required_source_literals": [
+            "getitem Center_Potion,1; //Center_Potion"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_eclage_cruyan_eclage_branch_for_6173_6299",
+      "unit": "E1-eclage_cruyan_eclage_branch_for_6173",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Cruyan#eclage"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Seed_Of_Yggdrasil,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "lines": [
+            6299
+          ],
+          "required_source_literals": [
+            "getitem Seed_Of_Yggdrasil,1; //Seed_Of_Yggdrasil"
           ]
         }
       ],
