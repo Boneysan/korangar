@@ -33949,7 +33949,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "strong",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Glaces#ep14_2",
@@ -33968,7 +33968,25 @@
       ],
       "size_lines": 459,
       "reason": "refused by the braced one-item prover: menu",
-      "history": []
+      "history": [
+        "2026-09-30T19:09:00Z activated",
+        "2026-09-30T19:09:00Z validated",
+        "2026-09-30T19:09:00Z verified: 1 claims supported",
+        "2026-09-30T19:09:24Z accepted",
+        "2026-09-30T19:09:24Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "1f2a8cd8debde39b5718dd67e103d734845a5a1ec4a65cb0aa27b37a2e6588b7",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-eclage_yube_ep14_2_branch_for_1369",
