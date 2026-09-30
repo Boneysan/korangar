@@ -36426,6 +36426,206 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ayothaya_fisherman_branch_for_845_874",
+      "unit": "E1-ayothaya_fisherman_branch_for_845",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Fisherman"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Monsters_Feed,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_ayothaya.txt",
+          "lines": [
+            874
+          ],
+          "required_source_literals": [
+            "delitem Monsters_Feed,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ayothaya_fisherman_branch_for_845_881",
+      "unit": "E1-ayothaya_fisherman_branch_for_845",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Fisherman"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Stone,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_ayothaya.txt",
+          "lines": [
+            881
+          ],
+          "required_source_literals": [
+            "getitem Stone,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ayothaya_fisherman_branch_for_845_887",
+      "unit": "E1-ayothaya_fisherman_branch_for_845",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Fisherman"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Red_Potion,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_ayothaya.txt",
+          "lines": [
+            887
+          ],
+          "required_source_literals": [
+            "getitem Red_Potion,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ayothaya_fisherman_branch_for_845_893",
+      "unit": "E1-ayothaya_fisherman_branch_for_845",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Fisherman"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Yellow_Potion,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_ayothaya.txt",
+          "lines": [
+            893
+          ],
+          "required_source_literals": [
+            "getitem Yellow_Potion,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ayothaya_fisherman_branch_for_845_899",
+      "unit": "E1-ayothaya_fisherman_branch_for_845",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Fisherman"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Shusi,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_ayothaya.txt",
+          "lines": [
+            899
+          ],
+          "required_source_literals": [
+            "getitem Shusi,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ayothaya_fisherman_branch_for_845_906",
+      "unit": "E1-ayothaya_fisherman_branch_for_845",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Fisherman"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Flower_Ring,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_ayothaya.txt",
+          "lines": [
+            906
+          ],
+          "required_source_literals": [
+            "getitem Flower_Ring,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ayothaya_fisherman_branch_for_845_913",
+      "unit": "E1-ayothaya_fisherman_branch_for_845",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Fisherman"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Diamond_Ring,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_ayothaya.txt",
+          "lines": [
+            913
+          ],
+          "required_source_literals": [
+            "getitem Diamond_Ring,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ayothaya_fisherman_branch_for_845_925",
+      "unit": "E1-ayothaya_fisherman_branch_for_845",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Fisherman"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Thai_Ring,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_ayothaya.txt",
+          "lines": [
+            925
+          ],
+          "required_source_literals": [
+            "getitem Thai_Ring,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
