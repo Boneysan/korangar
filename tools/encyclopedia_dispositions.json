@@ -61226,6 +61226,31 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_comodo_canell_qsk_dan01_branch_for_39_174",
+      "unit": "E1-comodo_canell_qsk_dan01_branch_for_39",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Canell#qsk_dan01"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Crystal_Mirror,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/skills/dancer_skills.txt",
+          "lines": [
+            174
+          ],
+          "required_source_literals": [
+            "delitem Crystal_Mirror,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
