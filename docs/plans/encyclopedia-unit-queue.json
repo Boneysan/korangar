@@ -31377,7 +31377,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Artifact Collector#blan",
@@ -31396,7 +31396,22 @@
       ],
       "size_lines": 318,
       "reason": "refused by the braced one-item prover: braceless",
-      "history": []
+      "history": [
+        "2026-09-30T18:45:13Z activated",
+        "2026-09-30T18:45:13Z validated",
+        "2026-09-30T18:45:13Z verified: 0 claims supported",
+        "2026-09-30T18:45:36Z accepted",
+        "2026-09-30T18:45:36Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "cab8361d4f8a38ad68425e73b107a3d1d97d1ef6e545449c5fc181684ba00485",
+      "accepted_files": [
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-mora_master_tailor_pa0829_branch_for_1521",
