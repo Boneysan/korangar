@@ -76051,6 +76051,231 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_brasilis_lucia_brasilis_branch_for_166_169",
+      "unit": "E1-brasilis_lucia_brasilis_branch_for_166",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Lucia#brasilis"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Leaf_Cat_Ball,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_brasilis.txt",
+          "lines": [
+            169
+          ],
+          "required_source_literals": [
+            "delitem Leaf_Cat_Ball,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_brasilis_lucia_brasilis_branch_for_166_170",
+      "unit": "E1-brasilis_lucia_brasilis_branch_for_166",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Lucia#brasilis"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Leaf_Cat_Ball,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_brasilis.txt",
+          "lines": [
+            170
+          ],
+          "required_source_literals": [
+            "getitem Leaf_Cat_Ball,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_brasilis_lucia_brasilis_branch_for_166_173",
+      "unit": "E1-brasilis_lucia_brasilis_branch_for_166",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Lucia#brasilis"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Mystic_Leaf_Cat_Ball,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_brasilis.txt",
+          "lines": [
+            173
+          ],
+          "required_source_literals": [
+            "delitem Mystic_Leaf_Cat_Ball,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_brasilis_lucia_brasilis_branch_for_166_174",
+      "unit": "E1-brasilis_lucia_brasilis_branch_for_166",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Lucia#brasilis"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Mystic_Leaf_Cat_Ball,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_brasilis.txt",
+          "lines": [
+            174
+          ],
+          "required_source_literals": [
+            "getitem Mystic_Leaf_Cat_Ball,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_brasilis_lucia_brasilis_branch_for_166_197",
+      "unit": "E1-brasilis_lucia_brasilis_branch_for_166",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Lucia#brasilis"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Leaf_Cat_Ball,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_brasilis.txt",
+          "lines": [
+            197
+          ],
+          "required_source_literals": [
+            "getitem Leaf_Cat_Ball,1; //Hydra_Ball"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_brasilis_lucia_brasilis_branch_for_166_242",
+      "unit": "E1-brasilis_lucia_brasilis_branch_for_166",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Lucia#brasilis"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Mystic_Leaf_Cat_Ball,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_brasilis.txt",
+          "lines": [
+            242
+          ],
+          "required_source_literals": [
+            "delitem Mystic_Leaf_Cat_Ball,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_brasilis_lucia_brasilis_branch_for_166_251",
+      "unit": "E1-brasilis_lucia_brasilis_branch_for_166",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Lucia#brasilis"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Light_Blue_Pot,3; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_brasilis.txt",
+          "lines": [
+            251
+          ],
+          "required_source_literals": [
+            "getitem Light_Blue_Pot,3;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_brasilis_lucia_brasilis_branch_for_166_267",
+      "unit": "E1-brasilis_lucia_brasilis_branch_for_166",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Lucia#brasilis"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Leaf_Cat_Ball,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_brasilis.txt",
+          "lines": [
+            267
+          ],
+          "required_source_literals": [
+            "getitem Leaf_Cat_Ball,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_brasilis_lucia_brasilis_branch_for_166_323",
+      "unit": "E1-brasilis_lucia_brasilis_branch_for_166",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Lucia#brasilis"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Leaf_Cat_Ball,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_brasilis.txt",
+          "lines": [
+            323
+          ],
+          "required_source_literals": [
+            "getitem Leaf_Cat_Ball,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
