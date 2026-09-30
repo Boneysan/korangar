@@ -13163,7 +13163,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Bazett Teablack#ep13bs",
@@ -13182,7 +13182,25 @@
       ],
       "size_lines": 398,
       "reason": "refused by the braced one-item prover: braceless",
-      "history": []
+      "history": [
+        "2026-09-30T15:57:41Z activated",
+        "2026-09-30T15:57:41Z validated",
+        "2026-09-30T15:57:42Z verified: 7 claims supported",
+        "2026-09-30T15:58:05Z accepted",
+        "2026-09-30T15:58:05Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "6a1fb56fe803bcf8a591ad1a6265b7e7a5fe009bb3e02b895316b7fcbaa3ee2a",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-manuk_worker_ep13bs_branch_for_6612",

@@ -32851,6 +32851,181 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mid_camp_bazett_teablack_ep13bs_branch_for_6213_6512",
+      "unit": "E1-mid_camp_bazett_teablack_ep13bs_branch_for_6213",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Bazett Teablack#ep13bs"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Bazetts_Order,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_2.txt",
+          "lines": [
+            6512
+          ],
+          "required_source_literals": [
+            "getitem Bazetts_Order,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mid_camp_bazett_teablack_ep13bs_branch_for_6213_6529",
+      "unit": "E1-mid_camp_bazett_teablack_ep13bs_branch_for_6213",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Bazett Teablack#ep13bs"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Bazetts_Order,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_2.txt",
+          "lines": [
+            6529
+          ],
+          "required_source_literals": [
+            "getitem Bazetts_Order,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mid_camp_bazett_teablack_ep13bs_branch_for_6213_6587",
+      "unit": "E1-mid_camp_bazett_teablack_ep13bs_branch_for_6213",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Bazett Teablack#ep13bs"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Bazetts_Order,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_2.txt",
+          "lines": [
+            6587
+          ],
+          "required_source_literals": [
+            "delitem Bazetts_Order,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mid_camp_bazett_teablack_ep13bs_branch_for_6213_6589",
+      "unit": "E1-mid_camp_bazett_teablack_ep13bs_branch_for_6213",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Bazett Teablack#ep13bs"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Manuk_Coin,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_2.txt",
+          "lines": [
+            6589
+          ],
+          "required_source_literals": [
+            "if (ep13_2_bs1 == 3) getitem Manuk_Coin,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mid_camp_bazett_teablack_ep13bs_branch_for_6213_6590",
+      "unit": "E1-mid_camp_bazett_teablack_ep13bs_branch_for_6213",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Bazett Teablack#ep13bs"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Manuk_Coin,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_2.txt",
+          "lines": [
+            6590
+          ],
+          "required_source_literals": [
+            "if (ep13_2_bs2 == 3) getitem Manuk_Coin,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mid_camp_bazett_teablack_ep13bs_branch_for_6213_6591",
+      "unit": "E1-mid_camp_bazett_teablack_ep13bs_branch_for_6213",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Bazett Teablack#ep13bs"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Manuk_Coin,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_2.txt",
+          "lines": [
+            6591
+          ],
+          "required_source_literals": [
+            "if (ep13_2_bs3 == 3) getitem Manuk_Coin,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mid_camp_bazett_teablack_ep13bs_branch_for_6213_6592",
+      "unit": "E1-mid_camp_bazett_teablack_ep13bs_branch_for_6213",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Bazett Teablack#ep13bs"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Manuk_Coin,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_2.txt",
+          "lines": [
+            6592
+          ],
+          "required_source_literals": [
+            "if (ep13_2_bs4 == 3) getitem Manuk_Coin,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
