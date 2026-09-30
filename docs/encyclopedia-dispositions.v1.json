@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 1271,
+    "E1_unknown": 1274,
     "E1_verified": 1
   },
   "entries": [
@@ -27626,6 +27626,81 @@
           "path": "npc/quests/quests_13_2.txt",
           "lines": [
             2582
+          ],
+          "required_source_literals": [
+            "getitem Apple,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_spl_fild01_ep13mdf02_branch_for_2601_2615",
+      "unit": "E1-spl_fild01_ep13mdf02_branch_for_2601",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "???#ep13mdf02"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Yggdrasilberry,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_2.txt",
+          "lines": [
+            2615
+          ],
+          "required_source_literals": [
+            "getitem Yggdrasilberry,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_spl_fild01_ep13mdf02_branch_for_2601_2616",
+      "unit": "E1-spl_fild01_ep13mdf02_branch_for_2601",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "???#ep13mdf02"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Fruit_Of_Mastela,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_2.txt",
+          "lines": [
+            2616
+          ],
+          "required_source_literals": [
+            "getitem Fruit_Of_Mastela,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_spl_fild01_ep13mdf02_branch_for_2601_2631",
+      "unit": "E1-spl_fild01_ep13mdf02_branch_for_2601",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "???#ep13mdf02"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Apple,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_2.txt",
+          "lines": [
+            2631
           ],
           "required_source_literals": [
             "getitem Apple,1;"

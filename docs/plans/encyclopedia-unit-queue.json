@@ -12157,7 +12157,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "???#ep13mdf02",
@@ -12176,7 +12176,25 @@
       ],
       "size_lines": 48,
       "reason": "refused by the braced one-item prover: loop-or-random",
-      "history": []
+      "history": [
+        "2026-09-30T15:48:27Z activated",
+        "2026-09-30T15:48:27Z validated",
+        "2026-09-30T15:48:27Z verified: 3 claims supported",
+        "2026-09-30T15:48:51Z accepted",
+        "2026-09-30T15:48:51Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "afd3f3c4bdb1d2005a919f1332c52d2bb4556f608a4aaf92a52d8ad962eaead2",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-spl_fild01_ep13mdf03_branch_for_2650",
