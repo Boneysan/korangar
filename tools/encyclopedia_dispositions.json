@@ -45476,6 +45476,156 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mosk_in_csar_alexsay_iii_npc_branch_for_1841_1897",
+      "unit": "E1-mosk_in_csar_alexsay_iii_npc_branch_for_1841",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Csar Alexsay III#npc"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Yaga_Pestle,40; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_moscovia.txt",
+          "lines": [
+            1897
+          ],
+          "required_source_literals": [
+            "delitem Yaga_Pestle,40;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mosk_in_csar_alexsay_iii_npc_branch_for_1841_1936",
+      "unit": "E1-mosk_in_csar_alexsay_iii_npc_branch_for_1841",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Csar Alexsay III#npc"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Yaga_Pestle,40; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_moscovia.txt",
+          "lines": [
+            1936
+          ],
+          "required_source_literals": [
+            "delitem Yaga_Pestle,40;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mosk_in_csar_alexsay_iii_npc_branch_for_1841_2035",
+      "unit": "E1-mosk_in_csar_alexsay_iii_npc_branch_for_1841",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Csar Alexsay III#npc"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Old_Blue_Box,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_moscovia.txt",
+          "lines": [
+            2035
+          ],
+          "required_source_literals": [
+            "getitem Old_Blue_Box,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mosk_in_csar_alexsay_iii_npc_branch_for_1841_2226",
+      "unit": "E1-mosk_in_csar_alexsay_iii_npc_branch_for_1841",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Csar Alexsay III#npc"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Old_Bleu_Box,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_moscovia.txt",
+          "lines": [
+            2226
+          ],
+          "required_source_literals": [
+            "getitem Old_Bleu_Box,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mosk_in_csar_alexsay_iii_npc_branch_for_1841_2254",
+      "unit": "E1-mosk_in_csar_alexsay_iii_npc_branch_for_1841",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Csar Alexsay III#npc"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Old_Bleu_Box,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_moscovia.txt",
+          "lines": [
+            2254
+          ],
+          "required_source_literals": [
+            "getitem Old_Bleu_Box,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mosk_in_csar_alexsay_iii_npc_branch_for_1841_2336",
+      "unit": "E1-mosk_in_csar_alexsay_iii_npc_branch_for_1841",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Csar Alexsay III#npc"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Old_Violet_Box,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_moscovia.txt",
+          "lines": [
+            2336
+          ],
+          "required_source_literals": [
+            "getitem Old_Violet_Box,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }

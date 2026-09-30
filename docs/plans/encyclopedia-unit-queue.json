@@ -18428,7 +18428,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "strong",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Csar Alexsay III#npc",
@@ -18447,7 +18447,25 @@
       ],
       "size_lines": 536,
       "reason": "refused by the braced one-item prover: menu",
-      "history": []
+      "history": [
+        "2026-09-30T16:46:02Z activated",
+        "2026-09-30T16:46:02Z validated",
+        "2026-09-30T16:46:02Z verified: 6 claims supported",
+        "2026-09-30T16:46:26Z accepted",
+        "2026-09-30T16:46:26Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "48a14adf00ac63385c5d2abe1e23652a02e226f6893fd1c8cbca4782e2e6bc36",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-mosk_in_fire_pot_mos_branch_for_3004",
