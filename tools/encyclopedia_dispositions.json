@@ -68576,6 +68576,106 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_spl_in02_yoop_warlock_branch_for_340_388",
+      "unit": "E1-spl_in02_yoop_warlock_branch_for_340",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Yoop#Warlock"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Magical_Stone,countitem(Magical_Stone; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-1/warlock.txt",
+          "lines": [
+            388
+          ],
+          "required_source_literals": [
+            "delitem Magical_Stone,countitem(Magical_Stone);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_spl_in02_yoop_warlock_branch_for_340_389",
+      "unit": "E1-spl_in02_yoop_warlock_branch_for_340",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Yoop#Warlock"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Magical_Stone_,countitem(Magical_Stone_; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-1/warlock.txt",
+          "lines": [
+            389
+          ],
+          "required_source_literals": [
+            "delitem Magical_Stone_,countitem(Magical_Stone_);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_spl_in02_yoop_warlock_branch_for_340_390",
+      "unit": "E1-spl_in02_yoop_warlock_branch_for_340",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Yoop#Warlock"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Glittering_Crystal,countitem(Glittering_Crystal; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-1/warlock.txt",
+          "lines": [
+            390
+          ],
+          "required_source_literals": [
+            "delitem Glittering_Crystal,countitem(Glittering_Crystal);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_spl_in02_yoop_warlock_branch_for_340_391",
+      "unit": "E1-spl_in02_yoop_warlock_branch_for_340",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Yoop#Warlock"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Peice_Of_Great_Bradium,countitem(Peice_Of_Great_Bradium; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-1/warlock.txt",
+          "lines": [
+            391
+          ],
+          "required_source_literals": [
+            "delitem Peice_Of_Great_Bradium,countitem(Peice_Of_Great_Bradium);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
