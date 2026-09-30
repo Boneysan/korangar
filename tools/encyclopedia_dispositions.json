@@ -74501,6 +74501,56 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_um_fild01_instructor_romeo_2nd02_branch_for_2965_3022",
+      "unit": "E1-um_fild01_instructor_romeo_2nd02_branch_for_2965",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Instructor Romeo#2nd02"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Shoulder_Protection,5; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/eden_quests.txt",
+          "lines": [
+            3022
+          ],
+          "required_source_literals": [
+            "delitem Shoulder_Protection,5;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_um_fild01_instructor_romeo_2nd02_branch_for_2965_3023",
+      "unit": "E1-um_fild01_instructor_romeo_2nd02_branch_for_2965",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Instructor Romeo#2nd02"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Sharp_Leaf,7; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/eden_quests.txt",
+          "lines": [
+            3023
+          ],
+          "required_source_literals": [
+            "delitem Sharp_Leaf,7;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
