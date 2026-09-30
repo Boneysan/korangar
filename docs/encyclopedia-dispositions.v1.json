@@ -11,7 +11,7 @@
     "E2_conditional": 1,
     "E2_verified": 236,
     "E3_unknown": 973,
-    "E4_unknown": 15
+    "E4_unknown": 16
   },
   "entries": [
     {
@@ -97852,6 +97852,33 @@
           ],
           "required_source_literals": [
             "case SU_SCRATCH:"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e4_su_sv_stemspear_formula",
+      "unit": "E4-su-sv-stemspear",
+      "package": "E4",
+      "subject": {
+        "kind": "skill",
+        "ids": [
+          5026
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted case is the ratio site for these skills; this record does not reduce it to a worked example.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "src/map/battle.c",
+          "lines": [
+            2060
+          ],
+          "required_source_literals": [
+            "case SU_SV_STEMSPEAR:"
           ]
         }
       ],
