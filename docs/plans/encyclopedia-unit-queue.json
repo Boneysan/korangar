@@ -9179,7 +9179,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Orc Hero#1",
@@ -9198,7 +9198,26 @@
       ],
       "size_lines": 129,
       "reason": "refused by the braced one-item prover: menu",
-      "history": []
+      "history": [
+        "2026-09-30T15:20:40Z activated",
+        "2026-09-30T15:20:40Z validated",
+        "2026-09-30T15:20:40Z verified: 1 claims supported",
+        "2026-09-30T15:21:03Z accepted",
+        "2026-09-30T15:21:03Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "1088c94e9e42e39e5a83e757884071ac88e9173fada31f5ed6321d3faba79cdd",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "audit": "due",
+      "commit": "committed"
     },
     {
       "id": "E1-rachel_branch_for_40",

@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 877,
+    "E1_unknown": 878,
     "E1_verified": 1
   },
   "entries": [
@@ -6054,6 +6054,31 @@
           ],
           "required_source_literals": [
             "delitem Frozen_Heart,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_in_orcs01_orc_hero_1_branch_for_3505_3580",
+      "unit": "E1-in_orcs01_orc_hero_1_branch_for_3505",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Orc Hero#1"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Viking_Helm,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2004_headgears.txt",
+          "lines": [
+            3580
+          ],
+          "required_source_literals": [
+            "delitem Viking_Helm,1;"
           ]
         }
       ],
