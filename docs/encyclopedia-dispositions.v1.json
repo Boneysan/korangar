@@ -12,7 +12,7 @@
     "E2_verified": 236,
     "E3_unknown": 973,
     "E4_unknown": 213,
-    "E5_unknown": 405
+    "E5_unknown": 407
   },
   "entries": [
     {
@@ -106688,6 +106688,60 @@
           ],
           "required_source_literals": [
             "completequest(18069);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_18073_npc_quests_quests_moscovia_txt_6395",
+      "unit": "E5-chain-18073",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          18073
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 18073; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_moscovia.txt",
+          "lines": [
+            6395
+          ],
+          "required_source_literals": [
+            "changequest(18073, 18074);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_18073_npc_quests_quests_moscovia_txt_6404",
+      "unit": "E5-chain-18073",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          18073
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 18073; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_moscovia.txt",
+          "lines": [
+            6404
+          ],
+          "required_source_literals": [
+            "changequest(18073, 18074);"
           ]
         }
       ],
