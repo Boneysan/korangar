@@ -14451,6 +14451,31 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_kh_school_lady_kh_branch_for_699_752",
+      "unit": "E1-kh_school_lady_kh_branch_for_699",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Lady#kh"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Tavern_Wine,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/kiel_hyre_quest.txt",
+          "lines": [
+            752
+          ],
+          "required_source_literals": [
+            "delitem Tavern_Wine,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
