@@ -20233,7 +20233,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Martha",
@@ -20252,7 +20252,25 @@
       ],
       "size_lines": 123,
       "reason": "refused by the braced one-item prover: multi-item",
-      "history": []
+      "history": [
+        "2026-09-30T17:02:31Z activated",
+        "2026-09-30T17:02:32Z validated",
+        "2026-09-30T17:02:32Z verified: 1 claims supported",
+        "2026-09-30T17:02:55Z accepted",
+        "2026-09-30T17:02:55Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "3d003fb94edb547afd409a765fd0d1f121cfc500ad97b52e5f92917bc4d1bb9d",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-z_agit_catfoii_branch_for_9169",
