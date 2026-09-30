@@ -6769,7 +6769,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Windmill Owner#kh",
@@ -6788,7 +6788,25 @@
       ],
       "size_lines": 71,
       "reason": "refused by the braced one-item prover: switch",
-      "history": []
+      "history": [
+        "2026-09-30T14:58:41Z activated",
+        "2026-09-30T14:58:41Z validated",
+        "2026-09-30T14:58:41Z verified: 1 claims supported",
+        "2026-09-30T14:59:05Z accepted",
+        "2026-09-30T14:59:05Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "78584f2560214035fd6d481b26e298f6d29179b6fb3eb3984f9d2458d176455d",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-kh_school_lady_kh_branch_for_699",

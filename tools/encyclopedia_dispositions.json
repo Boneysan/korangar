@@ -14426,6 +14426,31 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_lighthalzen_windmill_owner_kh_branch_for_407_453",
+      "unit": "E1-lighthalzen_windmill_owner_kh_branch_for_407",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Windmill Owner#kh"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Delivery_Box,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/kiel_hyre_quest.txt",
+          "lines": [
+            453
+          ],
+          "required_source_literals": [
+            "getitem Delivery_Box,1; //Delivery_Package"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
