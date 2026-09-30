@@ -62776,6 +62776,56 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_tha_t06_splendid_sword_tt5_branch_for_1563_1612",
+      "unit": "E1-tha_t06_splendid_sword_tt5_branch_for_1563",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Splendid Sword#tt5"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Key_Black,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/thana_quest.txt",
+          "lines": [
+            1612
+          ],
+          "required_source_literals": [
+            "getitem Key_Black,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_tha_t06_splendid_sword_tt5_branch_for_1563_1625",
+      "unit": "E1-tha_t06_splendid_sword_tt5_branch_for_1563",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Splendid Sword#tt5"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Barmund_Note,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/thana_quest.txt",
+          "lines": [
+            1625
+          ],
+          "required_source_literals": [
+            "getitem Barmund_Note,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }

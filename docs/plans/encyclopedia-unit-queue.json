@@ -25107,7 +25107,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Splendid Sword#tt5",
@@ -25126,7 +25126,25 @@
       ],
       "size_lines": 89,
       "reason": "refused by the braced one-item prover: braceless",
-      "history": []
+      "history": [
+        "2026-09-30T17:47:19Z activated",
+        "2026-09-30T17:47:19Z validated",
+        "2026-09-30T17:47:19Z verified: 2 claims supported",
+        "2026-09-30T17:47:43Z accepted",
+        "2026-09-30T17:47:43Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "efeb1bc88b92cb24a91a13609b7d130a0fe0834463d4abf4bde2682b2a56aaa5",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-tha_t12_gold_religious_statue_tt_branch_for_1840",
