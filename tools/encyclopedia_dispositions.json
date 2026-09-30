@@ -42851,6 +42851,56 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_lhz_in01_researcher_2_branch_for_9482_9525",
+      "unit": "E1-lhz_in01_researcher_2_branch_for_9482",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Researcher#2"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Indication_Of_Member02,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_lighthalzen.txt",
+          "lines": [
+            9525
+          ],
+          "required_source_literals": [
+            "getitem Indication_Of_Member02,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_lhz_in01_researcher_2_branch_for_9482_9617",
+      "unit": "E1-lhz_in01_researcher_2_branch_for_9482",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Researcher#2"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Indication_Of_Member02,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_lighthalzen.txt",
+          "lines": [
+            9617
+          ],
+          "required_source_literals": [
+            "delitem Indication_Of_Member02,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }

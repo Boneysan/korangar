@@ -17158,7 +17158,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Researcher#2",
@@ -17177,7 +17177,25 @@
       ],
       "size_lines": 152,
       "reason": "refused by the braced one-item prover: braceless",
-      "history": []
+      "history": [
+        "2026-09-30T16:34:18Z activated",
+        "2026-09-30T16:34:19Z validated",
+        "2026-09-30T16:34:19Z verified: 2 claims supported",
+        "2026-09-30T16:34:42Z accepted",
+        "2026-09-30T16:34:42Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "147343705bd19807530803639dc2172327e2d8dfd3a3b488154646d91c89fa37",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-airplane_01_man_lyozien_branch_for_11219",
