@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 3183,
+    "E1_unknown": 3184,
     "E1_verified": 1
   },
   "entries": [
@@ -13629,6 +13629,31 @@
           ],
           "required_source_literals": [
             "delitem Mould_Powder,10; //Mould_Powder"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ecl_in01_dominic_nk_branch_for_8770_8826",
+      "unit": "E1-ecl_in01_dominic_nk_branch_for_8770",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Dominic#nk"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Tiny_Mouse_Tail,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "lines": [
+            8826
+          ],
+          "required_source_literals": [
+            "delitem Tiny_Mouse_Tail,1; //Tiny_Mouse_Tail"
           ]
         }
       ],

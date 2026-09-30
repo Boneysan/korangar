@@ -34875,7 +34875,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Dominic#nk",
@@ -34894,7 +34894,25 @@
       ],
       "size_lines": 71,
       "reason": "refused by the braced one-item prover: menu",
-      "history": []
+      "history": [
+        "2026-09-30T19:17:37Z activated",
+        "2026-09-30T19:17:37Z validated",
+        "2026-09-30T19:17:37Z verified: 1 claims supported",
+        "2026-09-30T19:18:00Z accepted",
+        "2026-09-30T19:18:00Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "4ee413cf6a324ed0bff8886725f9b6e49c4369714a6a596d191dc36d9507ab6d",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-ecl_in01_kusa_branch_for_8842",

@@ -79701,6 +79701,31 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ecl_in01_dominic_nk_branch_for_8770_8826",
+      "unit": "E1-ecl_in01_dominic_nk_branch_for_8770",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Dominic#nk"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Tiny_Mouse_Tail,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "lines": [
+            8826
+          ],
+          "required_source_literals": [
+            "delitem Tiny_Mouse_Tail,1; //Tiny_Mouse_Tail"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
