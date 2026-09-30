@@ -12,7 +12,7 @@
     "E2_verified": 236,
     "E3_unknown": 973,
     "E4_unknown": 213,
-    "E5_unknown": 310
+    "E5_unknown": 311
   },
   "entries": [
     {
@@ -111062,6 +111062,33 @@
           ],
           "required_source_literals": [
             "changequest 8021,8022;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_8023_npc_quests_quests_ein_txt_2642",
+      "unit": "E5-chain-8023",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8023
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 8023; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_ein.txt",
+          "lines": [
+            2642
+          ],
+          "required_source_literals": [
+            "changequest 8023,8024;"
           ]
         }
       ],
