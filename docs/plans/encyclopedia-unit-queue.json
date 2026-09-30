@@ -13642,7 +13642,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Skull Stone#tur",
@@ -13661,7 +13661,25 @@
       ],
       "size_lines": 42,
       "reason": "refused by the braced one-item prover: switch",
-      "history": []
+      "history": [
+        "2026-09-30T16:02:05Z activated",
+        "2026-09-30T16:02:05Z validated",
+        "2026-09-30T16:02:06Z verified: 4 claims supported",
+        "2026-09-30T16:02:29Z accepted",
+        "2026-09-30T16:02:29Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "6eb00027bbda360a5652319480582b740f8417cd29c6987f19797cd25412d9c2",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-tur_dun02_turtle_pillar_tur_branch_for_1688",

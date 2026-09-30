@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 1375,
+    "E1_unknown": 1379,
     "E1_verified": 1
   },
   "entries": [
@@ -31129,6 +31129,106 @@
           ],
           "required_source_literals": [
             "delitem Spirit_Of_Alfheim,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_tur_dun01_skull_stone_tur_branch_for_1530_1549",
+      "unit": "E1-tur_dun01_skull_stone_tur_branch_for_1530",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Skull Stone#tur"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Banana_Juice,5; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_alberta.txt",
+          "lines": [
+            1549
+          ],
+          "required_source_literals": [
+            "getitem Banana_Juice,5;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_tur_dun01_skull_stone_tur_branch_for_1530_1554",
+      "unit": "E1-tur_dun01_skull_stone_tur_branch_for_1530",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Skull Stone#tur"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Banana,5; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_alberta.txt",
+          "lines": [
+            1554
+          ],
+          "required_source_literals": [
+            "getitem Banana,5;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_tur_dun01_skull_stone_tur_branch_for_1530_1559",
+      "unit": "E1-tur_dun01_skull_stone_tur_branch_for_1530",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Skull Stone#tur"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Banana,5; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_alberta.txt",
+          "lines": [
+            1559
+          ],
+          "required_source_literals": [
+            "getitem Banana,5;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_tur_dun01_skull_stone_tur_branch_for_1530_1560",
+      "unit": "E1-tur_dun01_skull_stone_tur_branch_for_1530",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Skull Stone#tur"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Banana_Juice,5; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_alberta.txt",
+          "lines": [
+            1560
+          ],
+          "required_source_literals": [
+            "getitem Banana_Juice,5;"
           ]
         }
       ],
