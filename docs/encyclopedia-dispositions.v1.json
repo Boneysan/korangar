@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 1112,
+    "E1_unknown": 1120,
     "E1_verified": 1
   },
   "entries": [
@@ -10729,6 +10729,206 @@
           ],
           "required_source_literals": [
             "getitem Letter_From_Otto,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mid_camp_ryosen_ep131_rhea01_branch_for_5501_5655",
+      "unit": "E1-mid_camp_ryosen_ep131_rhea01_branch_for_5501",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Ryosen#ep131_rhea01"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Invite_To_Meeting,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_1.txt",
+          "lines": [
+            5655
+          ],
+          "required_source_literals": [
+            "getitem Invite_To_Meeting,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mid_camp_ryosen_ep131_rhea01_branch_for_5501_5687",
+      "unit": "E1-mid_camp_ryosen_ep131_rhea01_branch_for_5501",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Ryosen#ep131_rhea01"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Invite_To_Meeting,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_1.txt",
+          "lines": [
+            5687
+          ],
+          "required_source_literals": [
+            "delitem Invite_To_Meeting,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mid_camp_ryosen_ep131_rhea01_branch_for_5501_5728",
+      "unit": "E1-mid_camp_ryosen_ep131_rhea01_branch_for_5501",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Ryosen#ep131_rhea01"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Invite_To_Meeting,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_1.txt",
+          "lines": [
+            5728
+          ],
+          "required_source_literals": [
+            "getitem Invite_To_Meeting,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mid_camp_ryosen_ep131_rhea01_branch_for_5501_5837",
+      "unit": "E1-mid_camp_ryosen_ep131_rhea01_branch_for_5501",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Ryosen#ep131_rhea01"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Neat_Report,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_1.txt",
+          "lines": [
+            5837
+          ],
+          "required_source_literals": [
+            "delitem Neat_Report,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mid_camp_ryosen_ep131_rhea01_branch_for_5501_5935",
+      "unit": "E1-mid_camp_ryosen_ep131_rhea01_branch_for_5501",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Ryosen#ep131_rhea01"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Neat_Report,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_1.txt",
+          "lines": [
+            5935
+          ],
+          "required_source_literals": [
+            "delitem Neat_Report,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mid_camp_ryosen_ep131_rhea01_branch_for_5501_5937",
+      "unit": "E1-mid_camp_ryosen_ep131_rhea01_branch_for_5501",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Ryosen#ep131_rhea01"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Strawberry_Cake,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_1.txt",
+          "lines": [
+            5937
+          ],
+          "required_source_literals": [
+            "getitem Strawberry_Cake,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mid_camp_ryosen_ep131_rhea01_branch_for_5501_6015",
+      "unit": "E1-mid_camp_ryosen_ep131_rhea01_branch_for_5501",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Ryosen#ep131_rhea01"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Mystic_Horn,5; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_1.txt",
+          "lines": [
+            6015
+          ],
+          "required_source_literals": [
+            "delitem Mystic_Horn,5;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mid_camp_ryosen_ep131_rhea01_branch_for_5501_6016",
+      "unit": "E1-mid_camp_ryosen_ep131_rhea01_branch_for_5501",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Ryosen#ep131_rhea01"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Strawberry_Cake,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_1.txt",
+          "lines": [
+            6016
+          ],
+          "required_source_literals": [
+            "getitem Strawberry_Cake,1;"
           ]
         }
       ],
