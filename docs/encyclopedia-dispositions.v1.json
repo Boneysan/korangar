@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 254,
+    "E1_unknown": 256,
     "E1_verified": 1
   },
   "entries": [
@@ -4104,6 +4104,56 @@
           ],
           "required_source_literals": [
             "delitem Frozen_Heart,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_in_rogue_rogue_guildsman_rg_branch_for_74_205",
+      "unit": "E1-in_rogue_rogue_guildsman_rg_branch_for_74",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Rogue Guildsman#rg"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Gladius_,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/rogue.txt",
+          "lines": [
+            205
+          ],
+          "required_source_literals": [
+            "getitem Gladius_,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_in_rogue_rogue_guildsman_rg_branch_for_74_207",
+      "unit": "E1-in_rogue_rogue_guildsman_rg_branch_for_74",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Rogue Guildsman#rg"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Gladius,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/rogue.txt",
+          "lines": [
+            207
+          ],
+          "required_source_literals": [
+            "getitem Gladius,1;"
           ]
         }
       ],
