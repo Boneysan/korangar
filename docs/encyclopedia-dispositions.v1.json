@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 2455,
+    "E1_unknown": 2459,
     "E1_verified": 1
   },
   "entries": [
@@ -12829,6 +12829,106 @@
           ],
           "required_source_literals": [
             "delitem Aloebera,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_geffen_in_great_wizard_branch_for_41_141",
+      "unit": "E1-geffen_in_great_wizard_branch_for_41",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Great Wizard"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Glass_Bead,3; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/skills/mage_skills.txt",
+          "lines": [
+            141
+          ],
+          "required_source_literals": [
+            "delitem Glass_Bead,3;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_geffen_in_great_wizard_branch_for_41_142",
+      "unit": "E1-geffen_in_great_wizard_branch_for_41",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Great Wizard"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Crystal_Jewel,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/skills/mage_skills.txt",
+          "lines": [
+            142
+          ],
+          "required_source_literals": [
+            "delitem Crystal_Jewel,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_geffen_in_great_wizard_branch_for_41_143",
+      "unit": "E1-geffen_in_great_wizard_branch_for_41",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Great Wizard"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Shell,5; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/skills/mage_skills.txt",
+          "lines": [
+            143
+          ],
+          "required_source_literals": [
+            "delitem Shell,5;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_geffen_in_great_wizard_branch_for_41_144",
+      "unit": "E1-geffen_in_great_wizard_branch_for_41",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Great Wizard"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Solid_Shell,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/skills/mage_skills.txt",
+          "lines": [
+            144
+          ],
+          "required_source_literals": [
+            "delitem Solid_Shell,1;"
           ]
         }
       ],
