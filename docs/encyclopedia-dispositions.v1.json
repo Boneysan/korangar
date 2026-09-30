@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 1851,
+    "E1_unknown": 1860,
     "E1_verified": 1
   },
   "entries": [
@@ -26729,6 +26729,231 @@
           ],
           "required_source_literals": [
             "delitem Yaga_Secret_Medicine,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mosk_dun01_wall_rus04_branch_for_6931_7154",
+      "unit": "E1-mosk_dun01_wall_rus04_branch_for_6931",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Wall#rus04"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Gold_Key,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_moscovia.txt",
+          "lines": [
+            7154
+          ],
+          "required_source_literals": [
+            "delitem Gold_Key,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mosk_dun01_wall_rus04_branch_for_6931_7335",
+      "unit": "E1-mosk_dun01_wall_rus04_branch_for_6931",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Wall#rus04"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Dex_Dish08,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_moscovia.txt",
+          "lines": [
+            7335
+          ],
+          "required_source_literals": [
+            "case 1: getitem Dex_Dish08,1; break;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mosk_dun01_wall_rus04_branch_for_6931_7336",
+      "unit": "E1-mosk_dun01_wall_rus04_branch_for_6931",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Wall#rus04"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Agi_Dish08,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_moscovia.txt",
+          "lines": [
+            7336
+          ],
+          "required_source_literals": [
+            "case 2: getitem Agi_Dish08,1; break;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mosk_dun01_wall_rus04_branch_for_6931_7337",
+      "unit": "E1-mosk_dun01_wall_rus04_branch_for_6931",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Wall#rus04"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Str_Dish08,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_moscovia.txt",
+          "lines": [
+            7337
+          ],
+          "required_source_literals": [
+            "case 3: getitem Str_Dish08,1; break;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mosk_dun01_wall_rus04_branch_for_6931_7338",
+      "unit": "E1-mosk_dun01_wall_rus04_branch_for_6931",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Wall#rus04"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Int_Dish08,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_moscovia.txt",
+          "lines": [
+            7338
+          ],
+          "required_source_literals": [
+            "case 4: getitem Int_Dish08,1; break;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mosk_dun01_wall_rus04_branch_for_6931_7339",
+      "unit": "E1-mosk_dun01_wall_rus04_branch_for_6931",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Wall#rus04"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Vit_Dish08,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_moscovia.txt",
+          "lines": [
+            7339
+          ],
+          "required_source_literals": [
+            "case 5: getitem Vit_Dish08,1; break;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mosk_dun01_wall_rus04_branch_for_6931_7340",
+      "unit": "E1-mosk_dun01_wall_rus04_branch_for_6931",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Wall#rus04"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Luk_Dish08,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_moscovia.txt",
+          "lines": [
+            7340
+          ],
+          "required_source_literals": [
+            "case 6: getitem Luk_Dish08,1; break;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mosk_dun01_wall_rus04_branch_for_6931_7352",
+      "unit": "E1-mosk_dun01_wall_rus04_branch_for_6931",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Wall#rus04"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Old_Violet_Box,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_moscovia.txt",
+          "lines": [
+            7352
+          ],
+          "required_source_literals": [
+            "else getitem Old_Violet_Box,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mosk_dun01_wall_rus04_branch_for_6931_7363",
+      "unit": "E1-mosk_dun01_wall_rus04_branch_for_6931",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Wall#rus04"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Old_Violet_Box,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_moscovia.txt",
+          "lines": [
+            7363
+          ],
+          "required_source_literals": [
+            "else getitem Old_Violet_Box,1;"
           ]
         }
       ],
