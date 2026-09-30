@@ -71351,6 +71351,156 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_iz_ac02_lusa_ac_branch_for_7316_7435",
+      "unit": "E1-iz_ac02_lusa_ac_branch_for_7316",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Lusa#ac"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Gunslinger_Manual,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            7435
+          ],
+          "required_source_literals": [
+            "getitem(Gunslinger_Manual, 1); // Gunslinger_Manual"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_iz_ac02_lusa_ac_branch_for_7316_7704",
+      "unit": "E1-iz_ac02_lusa_ac_branch_for_7316",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Lusa#ac"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Cargo_Free_Ticket,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            7704
+          ],
+          "required_source_literals": [
+            "getitem(Cargo_Free_Ticket, 1); // Cargo_Free_Ticket"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_iz_ac02_lusa_ac_branch_for_7316_7721",
+      "unit": "E1-iz_ac02_lusa_ac_branch_for_7316",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Lusa#ac"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Cargo_Free_Ticket,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            7721
+          ],
+          "required_source_literals": [
+            "getitem(Cargo_Free_Ticket, 1); // Cargo_Free_Ticket"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_iz_ac02_lusa_ac_branch_for_7316_7738",
+      "unit": "E1-iz_ac02_lusa_ac_branch_for_7316",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Lusa#ac"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Cargo_Free_Ticket,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            7738
+          ],
+          "required_source_literals": [
+            "getitem(Cargo_Free_Ticket, 1); // Cargo_Free_Ticket"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_iz_ac02_lusa_ac_branch_for_7316_7755",
+      "unit": "E1-iz_ac02_lusa_ac_branch_for_7316",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Lusa#ac"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Cargo_Free_Ticket,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            7755
+          ],
+          "required_source_literals": [
+            "getitem(Cargo_Free_Ticket, 1); // Cargo_Free_Ticket"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_iz_ac02_lusa_ac_branch_for_7316_7934",
+      "unit": "E1-iz_ac02_lusa_ac_branch_for_7316",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Lusa#ac"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Cargo_Free_Ticket,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            7934
+          ],
+          "required_source_literals": [
+            "getitem(Cargo_Free_Ticket, 1); // Cargo_Free_Ticket"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
