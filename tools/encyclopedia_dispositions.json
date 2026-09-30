@@ -45226,6 +45226,31 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_aldebaran_girl_prince_branch_for_6127_6146",
+      "unit": "E1-aldebaran_girl_prince_branch_for_6127",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Girl#prince"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Bunch_Of_Flowers,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_morocc.txt",
+          "lines": [
+            6146
+          ],
+          "required_source_literals": [
+            "delitem Bunch_Of_Flowers,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }

@@ -18295,7 +18295,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Girl#prince",
@@ -18314,7 +18314,25 @@
       ],
       "size_lines": 35,
       "reason": "refused by the braced one-item prover: multi-item",
-      "history": []
+      "history": [
+        "2026-09-30T16:44:50Z activated",
+        "2026-09-30T16:44:50Z validated",
+        "2026-09-30T16:44:50Z verified: 1 claims supported",
+        "2026-09-30T16:45:14Z accepted",
+        "2026-09-30T16:45:14Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "11e5cafa587fffab818d01e5a0c3da91b7fa79f2be14f80611d037e2349df34f",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-moscovia_mr_ibanoff_npc_branch_for_288",
