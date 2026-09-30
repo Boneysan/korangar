@@ -105005,6 +105005,357 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_1290_script_untranslated",
+      "unit": "E3-unknown-bonus-bhit-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          1290
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 1290 is not summarized: the translator does not interpret the quoted statement (bonus bHit (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            9387
+          ],
+          "required_source_literals": [
+            "Script: <\" bonus bHit,readparam(bLuk)/2; \">"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_2921_script_untranslated",
+      "unit": "E3-unknown-bonus-bhit-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          2921
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 2921 is not summarized: the translator does not interpret the quoted statement (bonus bHit (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            40792
+          ],
+          "required_source_literals": [
+            "bonus bHit,(readparam(bDex)/10);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_2927_script_untranslated",
+      "unit": "E3-unknown-bonus-bhit-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          2927
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 2927 is not summarized: the translator does not interpret the quoted statement (bonus bHit (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            40911
+          ],
+          "required_source_literals": [
+            "bonus bHit,(readparam(bDex)/10);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_4537_script_untranslated",
+      "unit": "E3-unknown-bonus-bhit-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          4537
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 4537 is not summarized: the translator does not interpret the quoted statement (bonus bHit (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            47996
+          ],
+          "required_source_literals": [
+            "Script: <\" bonus bHit,((getrefine()>14)?75:50); \">"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_13107_script_untranslated",
+      "unit": "E3-unknown-bonus-bhit-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          13107
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 13107 is not summarized: the translator does not interpret the quoted statement (bonus bHit (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            101509
+          ],
+          "required_source_literals": [
+            "bonus bHit,readparam(bAgi)/10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_13109_script_untranslated",
+      "unit": "E3-unknown-bonus-bhit-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          13109
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 13109 is not summarized: the translator does not interpret the quoted statement (bonus bHit (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            101574
+          ],
+          "required_source_literals": [
+            "bonus bHit,readparam(bAgi)/10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_13165_script_untranslated",
+      "unit": "E3-unknown-bonus-bhit-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          13165
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 13165 is not summarized: the translator does not interpret the quoted statement (bonus bHit (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            102307
+          ],
+          "required_source_literals": [
+            "bonus bHit,-readparam(bDex)/3;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_13166_script_untranslated",
+      "unit": "E3-unknown-bonus-bhit-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          13166
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 13166 is not summarized: the translator does not interpret the quoted statement (bonus bHit (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            102332
+          ],
+          "required_source_literals": [
+            "bonus bHit,-readparam(bDex)/3;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_24029_script_untranslated",
+      "unit": "E3-unknown-bonus-bhit-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          24029
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 24029 is not summarized: the translator does not interpret the quoted statement (bonus bHit (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            150977
+          ],
+          "required_source_literals": [
+            "Script: <\" bonus bHit,(getrefine()>=7)?20:10; \">"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_24043_script_untranslated",
+      "unit": "E3-unknown-bonus-bhit-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          24043
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 24043 is not summarized: the translator does not interpret the quoted statement (bonus bHit (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            151145
+          ],
+          "required_source_literals": [
+            "bonus bHit,getrefine();"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_24087_script_untranslated",
+      "unit": "E3-unknown-bonus-bhit-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          24087
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 24087 is not summarized: the translator does not interpret the quoted statement (bonus bHit (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            151741
+          ],
+          "required_source_literals": [
+            "Script: <\" bonus bHit,5+(getrefine()/2); \">"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_24153_script_untranslated",
+      "unit": "E3-unknown-bonus-bhit-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          24153
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 24153 is not summarized: the translator does not interpret the quoted statement (bonus bHit (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            152531
+          ],
+          "required_source_literals": [
+            "Script: <\" bonus bHit,5+(getrefine()/2); \">"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_24217_script_untranslated",
+      "unit": "E3-unknown-bonus-bhit-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          24217
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 24217 is not summarized: the translator does not interpret the quoted statement (bonus bHit (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            153199
+          ],
+          "required_source_literals": [
+            "bonus bHit,(getrefine()/2)+5;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
