@@ -112916,6 +112916,33 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_1385_script_untranslated",
+      "unit": "E3-unknown-bonus3-baddeffonskill-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          1385
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 1385 is not summarized: the translator does not interpret the quoted statement (bonus3 bAddEffOnSkill (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            11135
+          ],
+          "required_source_literals": [
+            "Script: <\" bonus3 bAddEffOnSkill,BS_HAMMERFALL,Eff_Stun,500+(200*getrefine()); \">"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
