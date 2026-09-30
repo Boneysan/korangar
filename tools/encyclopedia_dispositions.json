@@ -6976,6 +6976,106 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_yuno_in03_staff_of_the_academy_a_branch_for_209_377",
+      "unit": "E1-yuno_in03_staff_of_the_academy_a_branch_for_209",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Staff of the Academy#a"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Old_Magic_Book,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/sage.txt",
+          "lines": [
+            377
+          ],
+          "required_source_literals": [
+            "delitem Old_Magic_Book,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_yuno_in03_staff_of_the_academy_a_branch_for_209_378",
+      "unit": "E1-yuno_in03_staff_of_the_academy_a_branch_for_209",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Staff of the Academy#a"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Penetration,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/sage.txt",
+          "lines": [
+            378
+          ],
+          "required_source_literals": [
+            "delitem Penetration,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_yuno_in03_staff_of_the_academy_a_branch_for_209_523",
+      "unit": "E1-yuno_in03_staff_of_the_academy_a_branch_for_209",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Staff of the Academy#a"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Old_Magic_Book,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/sage.txt",
+          "lines": [
+            523
+          ],
+          "required_source_literals": [
+            "delitem Old_Magic_Book,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_yuno_in03_staff_of_the_academy_a_branch_for_209_524",
+      "unit": "E1-yuno_in03_staff_of_the_academy_a_branch_for_209",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Staff of the Academy#a"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Penetration,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/sage.txt",
+          "lines": [
+            524
+          ],
+          "required_source_literals": [
+            "delitem Penetration,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
