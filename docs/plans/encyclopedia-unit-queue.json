@@ -11804,7 +11804,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "School of Fish#5::FishingHole_spl3",
@@ -11823,7 +11823,26 @@
       ],
       "size_lines": 73,
       "reason": "refused by the braced one-item prover: braceless",
-      "history": []
+      "history": [
+        "2026-09-30T15:44:46Z activated",
+        "2026-09-30T15:44:46Z validated",
+        "2026-09-30T15:44:47Z verified: 15 claims supported",
+        "2026-09-30T15:45:12Z accepted",
+        "2026-09-30T15:45:13Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "be00de01ed761558d76f36cd7e9dc607d02e0b12f9064d460fded7e0818c570f",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "audit": "due",
+      "commit": "committed"
     },
     {
       "id": "E1-spl_in01_splendide_guard_ep13md01_branch_for_531",

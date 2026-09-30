@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 1241,
+    "E1_unknown": 1256,
     "E1_verified": 1
   },
   "entries": [
@@ -27754,6 +27754,381 @@
           ],
           "required_source_literals": [
             "getitem Some_Of_Report,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_spl_fild03_school_of_fish_5_fishinghole_spl3_branch_for_456_476",
+      "unit": "E1-spl_fild03_school_of_fish_5_fishinghole_spl3_branch_for_456",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "School of Fish#5::FishingHole_spl3"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Rough_File,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_2.txt",
+          "lines": [
+            476
+          ],
+          "required_source_literals": [
+            "getitem Rough_File,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_spl_fild03_school_of_fish_5_fishinghole_spl3_branch_for_456_483",
+      "unit": "E1-spl_fild03_school_of_fish_5_fishinghole_spl3_branch_for_456",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "School of Fish#5::FishingHole_spl3"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Piece_Of_Fish,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_2.txt",
+          "lines": [
+            483
+          ],
+          "required_source_literals": [
+            "if (.@rhea_ran < 20) getitem Piece_Of_Fish,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_spl_fild03_school_of_fish_5_fishinghole_spl3_branch_for_456_484",
+      "unit": "E1-spl_fild03_school_of_fish_5_fishinghole_spl3_branch_for_456",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "School of Fish#5::FishingHole_spl3"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Spawn,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_2.txt",
+          "lines": [
+            484
+          ],
+          "required_source_literals": [
+            "else if (.@rhea_ran == 20) getitem Spawn,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_spl_fild03_school_of_fish_5_fishinghole_spl3_branch_for_456_485",
+      "unit": "E1-spl_fild03_school_of_fish_5_fishinghole_spl3_branch_for_456",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "School of Fish#5::FishingHole_spl3"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Jellopy,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_2.txt",
+          "lines": [
+            485
+          ],
+          "required_source_literals": [
+            "else if (.@rhea_ran == 21) getitem Jellopy,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_spl_fild03_school_of_fish_5_fishinghole_spl3_branch_for_456_486",
+      "unit": "E1-spl_fild03_school_of_fish_5_fishinghole_spl3_branch_for_456",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "School of Fish#5::FishingHole_spl3"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Sharp_Scale,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_2.txt",
+          "lines": [
+            486
+          ],
+          "required_source_literals": [
+            "else if (.@rhea_ran == 22) getitem Sharp_Scale,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_spl_fild03_school_of_fish_5_fishinghole_spl3_branch_for_456_487",
+      "unit": "E1-spl_fild03_school_of_fish_5_fishinghole_spl3_branch_for_456",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "School of Fish#5::FishingHole_spl3"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Gill,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_2.txt",
+          "lines": [
+            487
+          ],
+          "required_source_literals": [
+            "else if (.@rhea_ran == 23) getitem Gill,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_spl_fild03_school_of_fish_5_fishinghole_spl3_branch_for_456_488",
+      "unit": "E1-spl_fild03_school_of_fish_5_fishinghole_spl3_branch_for_456",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "School of Fish#5::FishingHole_spl3"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Marlin,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_2.txt",
+          "lines": [
+            488
+          ],
+          "required_source_literals": [
+            "else if (.@rhea_ran == 24) getitem Marlin,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_spl_fild03_school_of_fish_5_fishinghole_spl3_branch_for_456_489",
+      "unit": "E1-spl_fild03_school_of_fish_5_fishinghole_spl3_branch_for_456",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "School of Fish#5::FishingHole_spl3"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Sticky_Webfoot,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_2.txt",
+          "lines": [
+            489
+          ],
+          "required_source_literals": [
+            "else if (.@rhea_ran == 25) getitem Sticky_Webfoot,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_spl_fild03_school_of_fish_5_fishinghole_spl3_branch_for_456_490",
+      "unit": "E1-spl_fild03_school_of_fish_5_fishinghole_spl3_branch_for_456",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "School of Fish#5::FishingHole_spl3"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Nipper,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_2.txt",
+          "lines": [
+            490
+          ],
+          "required_source_literals": [
+            "else if (.@rhea_ran == 26) getitem Nipper,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_spl_fild03_school_of_fish_5_fishinghole_spl3_branch_for_456_491",
+      "unit": "E1-spl_fild03_school_of_fish_5_fishinghole_spl3_branch_for_456",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "School of Fish#5::FishingHole_spl3"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Garlet,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_2.txt",
+          "lines": [
+            491
+          ],
+          "required_source_literals": [
+            "else if (.@rhea_ran == 27) getitem Garlet,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_spl_fild03_school_of_fish_5_fishinghole_spl3_branch_for_456_492",
+      "unit": "E1-spl_fild03_school_of_fish_5_fishinghole_spl3_branch_for_456",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "School of Fish#5::FishingHole_spl3"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Splendide_Coin,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_2.txt",
+          "lines": [
+            492
+          ],
+          "required_source_literals": [
+            "else if (.@rhea_ran == 28) getitem Splendide_Coin,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_spl_fild03_school_of_fish_5_fishinghole_spl3_branch_for_456_493",
+      "unit": "E1-spl_fild03_school_of_fish_5_fishinghole_spl3_branch_for_456",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "School of Fish#5::FishingHole_spl3"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Stone,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_2.txt",
+          "lines": [
+            493
+          ],
+          "required_source_literals": [
+            "else if ((.@rhea_ran > 28) && (.@rhea_ran < 40)) getitem Stone,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_spl_fild03_school_of_fish_5_fishinghole_spl3_branch_for_456_500",
+      "unit": "E1-spl_fild03_school_of_fish_5_fishinghole_spl3_branch_for_456",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "School of Fish#5::FishingHole_spl3"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Gift_Box,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_2.txt",
+          "lines": [
+            500
+          ],
+          "required_source_literals": [
+            "getitem Gift_Box,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_spl_fild03_school_of_fish_5_fishinghole_spl3_branch_for_456_505",
+      "unit": "E1-spl_fild03_school_of_fish_5_fishinghole_spl3_branch_for_456",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "School of Fish#5::FishingHole_spl3"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Old_Blue_Box,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_2.txt",
+          "lines": [
+            505
+          ],
+          "required_source_literals": [
+            "getitem Old_Blue_Box,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_spl_fild03_school_of_fish_5_fishinghole_spl3_branch_for_456_510",
+      "unit": "E1-spl_fild03_school_of_fish_5_fishinghole_spl3_branch_for_456",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "School of Fish#5::FishingHole_spl3"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Old_Violet_Box,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_2.txt",
+          "lines": [
+            510
+          ],
+          "required_source_literals": [
+            "getitem Old_Violet_Box,1;"
           ]
         }
       ],
