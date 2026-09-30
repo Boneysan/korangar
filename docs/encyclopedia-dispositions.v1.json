@@ -12,7 +12,7 @@
     "E2_verified": 236,
     "E3_unknown": 973,
     "E4_unknown": 213,
-    "E5_unknown": 449
+    "E5_unknown": 451
   },
   "entries": [
     {
@@ -108956,6 +108956,60 @@
           ],
           "required_source_literals": [
             "changequest 2129,2130;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2137_npc_quests_quests_nameless_txt_2751",
+      "unit": "E5-chain-2137",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2137
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 2137; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_nameless.txt",
+          "lines": [
+            2751
+          ],
+          "required_source_literals": [
+            "changequest 2137,2138;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2137_npc_quests_quests_nameless_txt_2839",
+      "unit": "E5-chain-2137",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2138
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 2138; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_nameless.txt",
+          "lines": [
+            2839
+          ],
+          "required_source_literals": [
+            "changequest 2138,2139;"
           ]
         }
       ],
