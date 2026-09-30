@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 1263,
+    "E1_unknown": 1265,
     "E1_verified": 1
   },
   "entries": [
@@ -10229,6 +10229,56 @@
           ],
           "required_source_literals": [
             "getitem Manuk_Coin,15;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_man_in01_snorren_ep13md_15_branch_for_2058_2147",
+      "unit": "E1-man_in01_snorren_ep13md_15_branch_for_2058",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Snorren#ep13md_15"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Shaggy_Muffler,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_2.txt",
+          "lines": [
+            2147
+          ],
+          "required_source_literals": [
+            "delitem Shaggy_Muffler,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_man_in01_snorren_ep13md_15_branch_for_2058_2148",
+      "unit": "E1-man_in01_snorren_ep13md_15_branch_for_2058",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Snorren#ep13md_15"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Bradium_Fragments,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_2.txt",
+          "lines": [
+            2148
+          ],
+          "required_source_literals": [
+            "delitem Bradium_Fragments,1;"
           ]
         }
       ],

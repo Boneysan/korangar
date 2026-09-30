@@ -31701,6 +31701,56 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_man_in01_snorren_ep13md_15_branch_for_2058_2147",
+      "unit": "E1-man_in01_snorren_ep13md_15_branch_for_2058",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Snorren#ep13md_15"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Shaggy_Muffler,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_2.txt",
+          "lines": [
+            2147
+          ],
+          "required_source_literals": [
+            "delitem Shaggy_Muffler,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_man_in01_snorren_ep13md_15_branch_for_2058_2148",
+      "unit": "E1-man_in01_snorren_ep13md_15_branch_for_2058",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Snorren#ep13md_15"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Bradium_Fragments,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_2.txt",
+          "lines": [
+            2148
+          ],
+          "required_source_literals": [
+            "delitem Bradium_Fragments,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }

@@ -11981,7 +11981,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Snorren#ep13md_15",
@@ -12000,7 +12000,25 @@
       ],
       "size_lines": 129,
       "reason": "refused by the braced one-item prover: menu",
-      "history": []
+      "history": [
+        "2026-09-30T15:46:34Z activated",
+        "2026-09-30T15:46:34Z validated",
+        "2026-09-30T15:46:34Z verified: 2 claims supported",
+        "2026-09-30T15:47:14Z accepted",
+        "2026-09-30T15:47:14Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "7294279a54424e57711aaf3d1281b9d23d0113be4d055a8cce024463b35366ef",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-man_in01_luik_ep13md16_branch_for_2188",
