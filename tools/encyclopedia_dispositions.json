@@ -129657,6 +129657,276 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_6025_npc_battleground_kvm_kvm01_txt_112",
+      "unit": "E5-chain-6025",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          6025
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 6025; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/battleground/kvm/kvm01.txt",
+          "lines": [
+            112
+          ],
+          "required_source_literals": [
+            "setquest 6025;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_6025_npc_battleground_kvm_kvm01_txt_133",
+      "unit": "E5-chain-6025",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          6025
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 6025; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/battleground/kvm/kvm01.txt",
+          "lines": [
+            133
+          ],
+          "required_source_literals": [
+            "setquest 6025;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_6025_npc_battleground_kvm_kvm02_txt_113",
+      "unit": "E5-chain-6025",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          6025
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 6025; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/battleground/kvm/kvm02.txt",
+          "lines": [
+            113
+          ],
+          "required_source_literals": [
+            "setquest 6025;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_6025_npc_battleground_kvm_kvm02_txt_134",
+      "unit": "E5-chain-6025",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          6025
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 6025; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/battleground/kvm/kvm02.txt",
+          "lines": [
+            134
+          ],
+          "required_source_literals": [
+            "setquest 6025;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_6025_npc_battleground_kvm_kvm03_txt_113",
+      "unit": "E5-chain-6025",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          6025
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 6025; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/battleground/kvm/kvm03.txt",
+          "lines": [
+            113
+          ],
+          "required_source_literals": [
+            "setquest 6025;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_6025_npc_battleground_kvm_kvm03_txt_134",
+      "unit": "E5-chain-6025",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          6025
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 6025; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/battleground/kvm/kvm03.txt",
+          "lines": [
+            134
+          ],
+          "required_source_literals": [
+            "setquest 6025;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_6025_npc_battleground_kvm_kvm_enter_txt_45",
+      "unit": "E5-chain-6025",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          6026
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 6026; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/battleground/kvm/kvm_enter.txt",
+          "lines": [
+            45
+          ],
+          "required_source_literals": [
+            "else if (.@kvm == 2) erasequest 6026;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_6025_npc_battleground_kvm_kvm_enter_txt_53",
+      "unit": "E5-chain-6025",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          6025
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 6025; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/battleground/kvm/kvm_enter.txt",
+          "lines": [
+            53
+          ],
+          "required_source_literals": [
+            "else if (.@permit == 2) erasequest 6025;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_6025_npc_battleground_kvm_kvm_enter_txt_143",
+      "unit": "E5-chain-6025",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          6025
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 6025; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/battleground/kvm/kvm_enter.txt",
+          "lines": [
+            143
+          ],
+          "required_source_literals": [
+            "else if (.@kvm == 2) erasequest 6025;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_6025_npc_battleground_kvm_kvm_enter_txt_151",
+      "unit": "E5-chain-6025",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          6025
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 6025; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/battleground/kvm/kvm_enter.txt",
+          "lines": [
+            151
+          ],
+          "required_source_literals": [
+            "else if (.@permit == 2) erasequest 6025;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
