@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 2915,
+    "E1_unknown": 2916,
     "E1_verified": 1
   },
   "entries": [
@@ -34476,6 +34476,31 @@
           "path": "npc/re/merchants/enchan_mora.txt",
           "lines": [
             403
+          ],
+          "required_source_literals": [
+            "delitem Mora_Coin,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mora_guardian_of_power_pa082_branch_for_541_605",
+      "unit": "E1-mora_guardian_of_power_pa082_branch_for_541",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Guardian of Power#pa082"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Mora_Coin,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/merchants/enchan_mora.txt",
+          "lines": [
+            605
           ],
           "required_source_literals": [
             "delitem Mora_Coin,10;"
