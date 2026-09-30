@@ -139188,6 +139188,60 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_12019_npc_quests_quests_lighthalzen_txt_8923",
+      "unit": "E5-chain-12019",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          12019
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 12019; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_lighthalzen.txt",
+          "lines": [
+            8923
+          ],
+          "required_source_literals": [
+            "changequest 12019,12020;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_12019_npc_quests_quests_lighthalzen_txt_9012",
+      "unit": "E5-chain-12019",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          12021
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 12021; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_lighthalzen.txt",
+          "lines": [
+            9012
+          ],
+          "required_source_literals": [
+            "changequest 12021,12022;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
