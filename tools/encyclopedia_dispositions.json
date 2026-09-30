@@ -140349,6 +140349,87 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_18075_npc_quests_quests_moscovia_txt_6225",
+      "unit": "E5-chain-18075",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          18075
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 18075; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_moscovia.txt",
+          "lines": [
+            6225
+          ],
+          "required_source_literals": [
+            "changequest(18075, 18076);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_18075_npc_quests_quests_moscovia_txt_6279",
+      "unit": "E5-chain-18075",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          18075
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 18075; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_moscovia.txt",
+          "lines": [
+            6279
+          ],
+          "required_source_literals": [
+            "changequest(18075, 18076);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_18075_npc_quests_quests_moscovia_txt_6332",
+      "unit": "E5-chain-18075",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          18075
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 18075; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_moscovia.txt",
+          "lines": [
+            6332
+          ],
+          "required_source_literals": [
+            "changequest(18075, 18076);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
