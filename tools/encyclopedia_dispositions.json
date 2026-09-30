@@ -47901,6 +47901,31 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_abbey02_books_mona1_branch_for_1323_1346",
+      "unit": "E1-abbey02_books_mona1_branch_for_1323",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Books#Mona1"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Research_Note,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_nameless.txt",
+          "lines": [
+            1346
+          ],
+          "required_source_literals": [
+            "getitem Research_Note,1; // Reasearch_Note"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
