@@ -65276,6 +65276,81 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_alberta_fastidious_old_man_branch_for_8022_8095",
+      "unit": "E1-alberta_fastidious_old_man_branch_for_8022",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Fastidious Old Man"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Glasses,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/the_sign_quest.txt",
+          "lines": [
+            8095
+          ],
+          "required_source_literals": [
+            "delitem Glasses,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_alberta_fastidious_old_man_branch_for_8022_8096",
+      "unit": "E1-alberta_fastidious_old_man_branch_for_8022",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Fastidious Old Man"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Ancient_Document,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/the_sign_quest.txt",
+          "lines": [
+            8096
+          ],
+          "required_source_literals": [
+            "delitem Ancient_Document,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_alberta_fastidious_old_man_branch_for_8022_8129",
+      "unit": "E1-alberta_fastidious_old_man_branch_for_8022",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Fastidious Old Man"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Ancient_Translator,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/the_sign_quest.txt",
+          "lines": [
+            8129
+          ],
+          "required_source_literals": [
+            "getitem Ancient_Translator,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
