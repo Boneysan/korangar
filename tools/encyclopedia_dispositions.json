@@ -128171,6 +128171,33 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e4_nc_armscannon_formula",
+      "unit": "E4-nc-armscannon",
+      "package": "E4",
+      "subject": {
+        "kind": "skill",
+        "ids": [
+          2261
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted case is the ratio site for these skills; this record does not reduce it to a worked example.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "src/map/battle.c",
+          "lines": [
+            2666
+          ],
+          "required_source_literals": [
+            "case NC_ARMSCANNON:"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
