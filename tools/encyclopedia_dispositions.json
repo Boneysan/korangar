@@ -76901,6 +76901,31 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_dewata_gatekeeper_of_krakatau_1_branch_for_630_673",
+      "unit": "E1-dewata_gatekeeper_of_krakatau_1_branch_for_630",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Gatekeeper of Krakatau#1"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Satay,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_dewata.txt",
+          "lines": [
+            673
+          ],
+          "required_source_literals": [
+            "delitem Satay,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
