@@ -8,7 +8,7 @@
     "E1_not_applicable": 1,
     "E1_unknown": 3464,
     "E1_verified": 1,
-    "E3_unknown": 842
+    "E3_unknown": 847
   },
   "entries": [
     {
@@ -90949,6 +90949,33 @@
       "reviewed_on": "2026-09-30"
     },
     {
+      "id": "item_1626_script_untranslated",
+      "unit": "E3-unknown-bonus-bignoremdefrate-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          1626
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 1626 is not summarized: the translator does not interpret the quoted statement (bonus bIgnoreMdefRate (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            17027
+          ],
+          "required_source_literals": [
+            "bonus bIgnoreMdefRate,10+getrefine();"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
       "id": "item_1630_script_untranslated",
       "unit": "E3-unknown-control-autobonus",
       "package": "E3",
@@ -90969,6 +90996,33 @@
           ],
           "required_source_literals": [
             "autobonus \"{ bonus2 bSPRegenRate,100,2000; bonus2 bHPRegenRate,50,2000; }\",10,10000,BF_MAGIC,\"{ specialeffect(EF_HEAL, AREA, playerattached()); }\";"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_1636_script_untranslated",
+      "unit": "E3-unknown-bonus-bignoremdefrate-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          1636
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 1636 is not summarized: the translator does not interpret the quoted statement (bonus bIgnoreMdefRate (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            17363
+          ],
+          "required_source_literals": [
+            "bonus bIgnoreMdefRate,getrefine();"
           ]
         }
       ],
@@ -91104,6 +91158,33 @@
           ],
           "required_source_literals": [
             "if (getrefine()>5) {"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_1644_script_untranslated",
+      "unit": "E3-unknown-bonus-bignoremdefrate-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          1644
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 1644 is not summarized: the translator does not interpret the quoted statement (bonus bIgnoreMdefRate (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            17646
+          ],
+          "required_source_literals": [
+            "bonus bIgnoreMdefRate,10+getrefine();"
           ]
         }
       ],
@@ -91266,6 +91347,60 @@
           ],
           "required_source_literals": [
             "if(getskilllv(SA_DRAGONOLOGY) == 5) {"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_1664_script_untranslated",
+      "unit": "E3-unknown-bonus-bignoremdefrate-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          1664
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 1664 is not summarized: the translator does not interpret the quoted statement (bonus bIgnoreMdefRate (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            18232
+          ],
+          "required_source_literals": [
+            "bonus bIgnoreMdefRate,getrefine();"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_1665_script_untranslated",
+      "unit": "E3-unknown-bonus-bignoremdefrate-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          1665
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 1665 is not summarized: the translator does not interpret the quoted statement (bonus bIgnoreMdefRate (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            18262
+          ],
+          "required_source_literals": [
+            "bonus bIgnoreMdefRate,10+getrefine();"
           ]
         }
       ],
