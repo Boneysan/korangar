@@ -336,7 +336,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Guillaume Vintenar#b01_a",
@@ -355,7 +355,25 @@
       ],
       "size_lines": 51,
       "reason": "refused by the braced one-item prover: multi-item",
-      "history": []
+      "history": [
+        "2026-09-30T13:58:55Z activated",
+        "2026-09-30T13:58:55Z validated",
+        "2026-09-30T13:58:55Z verified: 4 claims supported",
+        "2026-09-30T13:59:19Z accepted",
+        "2026-09-30T13:59:19Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "f4955f56f63a5ea3e6a2dad24600a50f6e07a38e38b3a2c9676a9a0deec6cb5d",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-bat_b01_croix_vintenar_b01_b_branch_for_463",
