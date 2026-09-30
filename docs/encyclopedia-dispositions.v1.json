@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 789,
+    "E1_unknown": 792,
     "E1_verified": 1
   },
   "entries": [
@@ -18054,6 +18054,81 @@
           ],
           "required_source_literals": [
             "getitem Cotton_Shirt_,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_xmas_pretty_lindsay_1_branch_for_973_1011",
+      "unit": "E1-xmas_pretty_lindsay_1_branch_for_973",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Pretty Lindsay#1"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Smokie_Hat,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2004_headgears.txt",
+          "lines": [
+            1011
+          ],
+          "required_source_literals": [
+            "delitem Smokie_Hat,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_xmas_pretty_lindsay_1_branch_for_973_1012",
+      "unit": "E1-xmas_pretty_lindsay_1_branch_for_973",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Pretty Lindsay#1"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Leaf_Headgear,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2004_headgears.txt",
+          "lines": [
+            1012
+          ],
+          "required_source_literals": [
+            "delitem Leaf_Headgear,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_xmas_pretty_lindsay_1_branch_for_973_1013",
+      "unit": "E1-xmas_pretty_lindsay_1_branch_for_973",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Pretty Lindsay#1"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Sea_Otter_Cap,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2004_headgears.txt",
+          "lines": [
+            1013
+          ],
+          "required_source_literals": [
+            "getitem Sea_Otter_Cap,1;"
           ]
         }
       ],
