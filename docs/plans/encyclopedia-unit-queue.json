@@ -21985,7 +21985,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "strong",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Nemma#ra_temple",
@@ -22004,7 +22004,25 @@
       ],
       "size_lines": 447,
       "reason": "refused by the braced one-item prover: braceless",
-      "history": []
+      "history": [
+        "2026-09-30T17:18:38Z activated",
+        "2026-09-30T17:18:38Z validated",
+        "2026-09-30T17:18:39Z verified: 2 claims supported",
+        "2026-09-30T17:19:02Z accepted",
+        "2026-09-30T17:19:02Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "4c8d3ec622488666e2691134d3fe281346524afc42dd3b2c8ac81946ea12fccc",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-ra_temin_high_priest_zhed_rachel_branch_for_4767",

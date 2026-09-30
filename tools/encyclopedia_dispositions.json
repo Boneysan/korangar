@@ -51226,6 +51226,56 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ra_temple_nemma_ra_temple_branch_for_3811_4117",
+      "unit": "E1-ra_temple_nemma_ra_temple_branch_for_3811",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Nemma#ra_temple"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Fire_Cracker,20; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_rachel.txt",
+          "lines": [
+            4117
+          ],
+          "required_source_literals": [
+            "delitem Fire_Cracker,20;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ra_temple_nemma_ra_temple_branch_for_3811_4213",
+      "unit": "E1-ra_temple_nemma_ra_temple_branch_for_3811",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Nemma#ra_temple"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Temple_Lottery_Ticket,getarg(0; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_rachel.txt",
+          "lines": [
+            4213
+          ],
+          "required_source_literals": [
+            "getitem Temple_Lottery_Ticket,getarg(0);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
