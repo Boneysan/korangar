@@ -12,7 +12,7 @@
     "E2_verified": 236,
     "E3_unknown": 973,
     "E4_unknown": 213,
-    "E5_unknown": 325
+    "E5_unknown": 326
   },
   "entries": [
     {
@@ -111440,6 +111440,33 @@
           ],
           "required_source_literals": [
             "changequest 8061,8062;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_8059_npc_quests_quests_hugel_txt_4603",
+      "unit": "E5-chain-8059",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8059
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 8059; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_hugel.txt",
+          "lines": [
+            4603
+          ],
+          "required_source_literals": [
+            "changequest 8059,8060;"
           ]
         }
       ],
