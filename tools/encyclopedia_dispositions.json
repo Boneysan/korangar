@@ -50601,6 +50601,56 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prt_church_prince3_branch_for_3255_3337",
+      "unit": "E1-prt_church_prince3_branch_for_3255",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "#prince3"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Green_Potion,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_prontera.txt",
+          "lines": [
+            3337
+          ],
+          "required_source_literals": [
+            "delitem Green_Potion,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prt_church_prince3_branch_for_3255_3338",
+      "unit": "E1-prt_church_prince3_branch_for_3255",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "#prince3"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Yellow_Gemstone,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_prontera.txt",
+          "lines": [
+            3338
+          ],
+          "required_source_literals": [
+            "delitem Yellow_Gemstone,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }

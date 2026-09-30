@@ -21455,7 +21455,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "#prince3",
@@ -21474,7 +21474,26 @@
       ],
       "size_lines": 114,
       "reason": "refused by the braced one-item prover: braceless",
-      "history": []
+      "history": [
+        "2026-09-30T17:13:49Z activated",
+        "2026-09-30T17:13:50Z validated",
+        "2026-09-30T17:13:50Z verified: 2 claims supported",
+        "2026-09-30T17:14:13Z accepted",
+        "2026-09-30T17:14:13Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "d6dd94f48c3ce31ee37cd03986490fe2880471b7751da090ce53cd44ed95f354",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "audit": "due",
+      "commit": "committed"
     },
     {
       "id": "E1-prt_in_librarian_curse_branch_for_3604",
