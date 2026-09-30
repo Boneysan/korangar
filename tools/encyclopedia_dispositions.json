@@ -115677,6 +115677,384 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_merchants_shops_txt_819_819",
+      "unit": "E2-npc-merchants-shops-txt-819",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Pet Groomer#yuno"
+      },
+      "result": "verified",
+      "statement": "Pet Groomer#yuno is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/merchants/shops.txt",
+          "lines": [
+            819,
+            820,
+            821,
+            822,
+            823,
+            824,
+            825,
+            826,
+            827,
+            828,
+            829,
+            830,
+            831,
+            832,
+            833,
+            834,
+            835,
+            836,
+            837,
+            838,
+            839,
+            840,
+            841
+          ],
+          "required_source_literals": [
+            "yuno,197,114,4\ttrader\tPet Groomer#yuno\t4_F_TELEPORTER,{",
+            "OnInit:",
+            "sellitem Pet_Food;",
+            "sellitem Pet_Incubator;",
+            "sellitem Backpack;",
+            "sellitem Rocker_Glasses;",
+            "sellitem Bun_;",
+            "sellitem Mojji;",
+            "sellitem Flame_Gemstone;",
+            "sellitem Vital_Flower_;",
+            "sellitem Vital_Flower;",
+            "sellitem Bun_;",
+            "sellitem Damp_Darkness;",
+            "sellitem Small_Snow_Flower;",
+            "sellitem Fresh_Plant;",
+            "sellitem Big_Cell;",
+            "sellitem Apple_Pudding;",
+            "sellitem Mystic_Stone;",
+            "sellitem Flavored_Alcohol;",
+            "sellitem Grilled_Rice_Cake;",
+            "sellitem Fish_With_Blue_Back;",
+            "sellitem Pumpkin_Pie_;",
+            "}"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_merchants_shops_txt_819_843",
+      "unit": "E2-npc-merchants-shops-txt-819",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Mr. King's Shop#yuno"
+      },
+      "result": "verified",
+      "statement": "Mr. King's Shop#yuno is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/merchants/shops.txt",
+          "lines": [
+            843,
+            844,
+            845,
+            846,
+            847,
+            848,
+            849,
+            850,
+            851
+          ],
+          "required_source_literals": [
+            "yuno,205,103,4\ttrader\tMr. King's Shop#yuno\t4_M_TELEPORTER,{",
+            "OnInit:",
+            "sellitem Novice_Breast;",
+            "sellitem Full_Plate_Armor;",
+            "sellitem Grave;",
+            "sellitem Turban;",
+            "sellitem Gemmed_Sallet;",
+            "sellitem Repeting_CrossBow;",
+            "}"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_merchants_shops_txt_819_853",
+      "unit": "E2-npc-merchants-shops-txt-819",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Magical Item Seller#yuno"
+      },
+      "result": "verified",
+      "statement": "Magical Item Seller#yuno is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/merchants/shops.txt",
+          "lines": [
+            853,
+            854,
+            855,
+            856,
+            857,
+            858,
+            859,
+            860,
+            861,
+            862,
+            863
+          ],
+          "required_source_literals": [
+            "yuno,163,187,5\ttrader\tMagical Item Seller#yuno\t4_F_01,{",
+            "OnInit:",
+            "sellitem Blue_Gemstone;",
+            "sellitem Rod;",
+            "sellitem Wand;",
+            "sellitem Staff;",
+            "sellitem Arc_Wand;",
+            "sellitem Circlet;",
+            "sellitem Silk_Robe;",
+            "sellitem Silver_Robe;",
+            "}"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_merchants_shops_txt_819_865",
+      "unit": "E2-npc-merchants-shops-txt-819",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Tool Dealer#yuno2"
+      },
+      "result": "verified",
+      "statement": "Tool Dealer#yuno2 is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/merchants/shops.txt",
+          "lines": [
+            865,
+            866,
+            867,
+            868,
+            869,
+            870,
+            871,
+            872,
+            873,
+            874,
+            875,
+            876,
+            877,
+            878
+          ],
+          "required_source_literals": [
+            "yuno_in01,25,34,5\ttrader\tTool Dealer#yuno2\t4_M_01,{",
+            "OnInit:",
+            "sellitem Arrow;",
+            "sellitem Spectacles;",
+            "sellitem Red_Potion;",
+            "sellitem Orange_Potion;",
+            "sellitem Yellow_Potion;",
+            "sellitem White_Potion;",
+            "sellitem Green_Potion;",
+            "sellitem Center_Potion;",
+            "sellitem Awakening_Potion;",
+            "sellitem Wing_Of_Fly;",
+            "sellitem Wing_Of_Butterfly;",
+            "}"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_merchants_shops_txt_819_880",
+      "unit": "E2-npc-merchants-shops-txt-819",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Weapon Dealer#yuno"
+      },
+      "result": "verified",
+      "statement": "Weapon Dealer#yuno is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/merchants/shops.txt",
+          "lines": [
+            880,
+            881,
+            882,
+            883,
+            884,
+            885,
+            886,
+            887,
+            888,
+            889,
+            890,
+            891,
+            892,
+            893,
+            894,
+            895,
+            896
+          ],
+          "required_source_literals": [
+            "yuno_in01,103,35,2\ttrader\tWeapon Dealer#yuno\t1_M_03,{",
+            "OnInit:",
+            "sellitem Arrow;",
+            "sellitem Silver_Arrow;",
+            "sellitem Sword;",
+            "sellitem Bow;",
+            "sellitem Knife;",
+            "sellitem Cutter;",
+            "sellitem Main_Gauche;",
+            "sellitem Dirk;",
+            "sellitem Dagger;",
+            "sellitem Stiletto;",
+            "sellitem Rod;",
+            "sellitem Wand;",
+            "sellitem Staff;",
+            "sellitem Arc_Wand;",
+            "}"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_merchants_shops_txt_819_898",
+      "unit": "E2-npc-merchants-shops-txt-819",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Armor Dealer#yuno"
+      },
+      "result": "verified",
+      "statement": "Armor Dealer#yuno is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/merchants/shops.txt",
+          "lines": [
+            898,
+            899,
+            900,
+            901,
+            902,
+            903,
+            904,
+            905,
+            906,
+            907,
+            908,
+            909,
+            910,
+            911
+          ],
+          "required_source_literals": [
+            "yuno_in01,112,26,4\ttrader\tArmor Dealer#yuno\t4W_F_01,{",
+            "OnInit:",
+            "sellitem Novice_Armlet;",
+            "sellitem Guard;",
+            "sellitem Mirror_Shield;",
+            "sellitem Sandals;",
+            "sellitem Hood;",
+            "sellitem Gemmed_Sallet;",
+            "sellitem Cotton_Shirt;",
+            "sellitem Leather_Jacket;",
+            "sellitem Adventure_Suit;",
+            "sellitem Silk_Robe;",
+            "sellitem Silver_Robe;",
+            "}"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_merchants_shops_txt_819_913",
+      "unit": "E2-npc-merchants-shops-txt-819",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Scroll Merchant#yuno03"
+      },
+      "result": "verified",
+      "statement": "Scroll Merchant#yuno03 is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/merchants/shops.txt",
+          "lines": [
+            913,
+            914,
+            915,
+            916
+          ],
+          "required_source_literals": [
+            "yuno_in03,176,22,3\ttrader\tScroll Merchant#yuno03\t4_M_ORIENT02,{",
+            "OnInit:",
+            "sellitem Scroll; //Temp shop in Yuno that sells Blank Scrolls",
+            "}"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_merchants_shops_txt_819_919",
+      "unit": "E2-npc-merchants-shops-txt-819",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Fruit Gardener#lhz"
+      },
+      "result": "verified",
+      "statement": "Fruit Gardener#lhz is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/merchants/shops.txt",
+          "lines": [
+            919,
+            920,
+            921,
+            922,
+            923
+          ],
+          "required_source_literals": [
+            "lighthalzen,69,75,5\ttrader\tFruit Gardener#lhz\t8_F,{",
+            "OnInit:",
+            "sellitem Apple;",
+            "sellitem Banana;",
+            "}"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
