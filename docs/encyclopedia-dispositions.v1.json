@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 2658,
+    "E1_unknown": 2662,
     "E1_verified": 1
   },
   "entries": [
@@ -40779,6 +40779,106 @@
           ],
           "required_source_literals": [
             "getitem Skirt_Of_Virgin,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_in02_archer_guildsman_archer_branch_for_37_119",
+      "unit": "E1-payon_in02_archer_guildsman_archer_branch_for_37",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Archer Guildsman#archer"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem N_Composite_Bow,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/1-1/archer.txt",
+          "lines": [
+            119
+          ],
+          "required_source_literals": [
+            "getitem N_Composite_Bow,1;\t// N_Composite_Bow"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_in02_archer_guildsman_archer_branch_for_37_120",
+      "unit": "E1-payon_in02_archer_guildsman_archer_branch_for_37",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Archer Guildsman#archer"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Arrow_Container,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/1-1/archer.txt",
+          "lines": [
+            120
+          ],
+          "required_source_literals": [
+            "getitem Arrow_Container,1;\t// Arrow_Container"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_in02_archer_guildsman_archer_branch_for_37_121",
+      "unit": "E1-payon_in02_archer_guildsman_archer_branch_for_37",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Archer Guildsman#archer"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Silver_Arrow_Container,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/1-1/archer.txt",
+          "lines": [
+            121
+          ],
+          "required_source_literals": [
+            "getitem Silver_Arrow_Container,1;\t// Silver_Arrow_Container"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_in02_archer_guildsman_archer_branch_for_37_122",
+      "unit": "E1-payon_in02_archer_guildsman_archer_branch_for_37",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Archer Guildsman#archer"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Fire_Arrow_Container,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/1-1/archer.txt",
+          "lines": [
+            122
+          ],
+          "required_source_literals": [
+            "getitem Fire_Arrow_Container,1;\t// Fire_Arrow_Container"
           ]
         }
       ],
