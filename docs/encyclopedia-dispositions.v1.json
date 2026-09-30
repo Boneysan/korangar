@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 1354,
+    "E1_unknown": 1375,
     "E1_verified": 1
   },
   "entries": [
@@ -829,6 +829,531 @@
           ],
           "required_source_literals": [
             "delitem Poring_Doll,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_alberta_hat_store_girl_new30_branch_for_652_669",
+      "unit": "E1-alberta_hat_store_girl_new30_branch_for_652",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Hat store girl#new30"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Yellow_Potion,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_alberta.txt",
+          "lines": [
+            669
+          ],
+          "required_source_literals": [
+            "delitem Yellow_Potion,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_alberta_hat_store_girl_new30_branch_for_652_722",
+      "unit": "E1-alberta_hat_store_girl_new30_branch_for_652",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Hat store girl#new30"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Transparent_Cloth,250; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_alberta.txt",
+          "lines": [
+            722
+          ],
+          "required_source_literals": [
+            "delitem Transparent_Cloth,250;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_alberta_hat_store_girl_new30_branch_for_652_723",
+      "unit": "E1-alberta_hat_store_girl_new30_branch_for_652",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Hat store girl#new30"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Hat_,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_alberta.txt",
+          "lines": [
+            723
+          ],
+          "required_source_literals": [
+            "delitem Hat_,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_alberta_hat_store_girl_new30_branch_for_652_724",
+      "unit": "E1-alberta_hat_store_girl_new30_branch_for_652",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Hat store girl#new30"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Cap_,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_alberta.txt",
+          "lines": [
+            724
+          ],
+          "required_source_literals": [
+            "delitem Cap_,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_alberta_hat_store_girl_new30_branch_for_652_725",
+      "unit": "E1-alberta_hat_store_girl_new30_branch_for_652",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Hat store girl#new30"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Soft_Feather,600; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_alberta.txt",
+          "lines": [
+            725
+          ],
+          "required_source_literals": [
+            "delitem Soft_Feather,600;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_alberta_hat_store_girl_new30_branch_for_652_729",
+      "unit": "E1-alberta_hat_store_girl_new30_branch_for_652",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Hat store girl#new30"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Picnic_Hat,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_alberta.txt",
+          "lines": [
+            729
+          ],
+          "required_source_literals": [
+            "getitem Picnic_Hat,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_alberta_hat_store_girl_new30_branch_for_652_786",
+      "unit": "E1-alberta_hat_store_girl_new30_branch_for_652",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Hat store girl#new30"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Star_Sparkling,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_alberta.txt",
+          "lines": [
+            786
+          ],
+          "required_source_literals": [
+            "delitem Star_Sparkling,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_alberta_hat_store_girl_new30_branch_for_652_787",
+      "unit": "E1-alberta_hat_store_girl_new30_branch_for_652",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Hat store girl#new30"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Dragon_Scale,400; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_alberta.txt",
+          "lines": [
+            787
+          ],
+          "required_source_literals": [
+            "delitem Dragon_Scale,400;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_alberta_hat_store_girl_new30_branch_for_652_788",
+      "unit": "E1-alberta_hat_store_girl_new30_branch_for_652",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Hat store girl#new30"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Elder_Wilow_Card,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_alberta.txt",
+          "lines": [
+            788
+          ],
+          "required_source_literals": [
+            "delitem Elder_Wilow_Card,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_alberta_hat_store_girl_new30_branch_for_652_789",
+      "unit": "E1-alberta_hat_store_girl_new30_branch_for_652",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Hat store girl#new30"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Mould_Powder,50; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_alberta.txt",
+          "lines": [
+            789
+          ],
+          "required_source_literals": [
+            "delitem Mould_Powder,50;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_alberta_hat_store_girl_new30_branch_for_652_794",
+      "unit": "E1-alberta_hat_store_girl_new30_branch_for_652",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Hat store girl#new30"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Wizardry_Hat,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_alberta.txt",
+          "lines": [
+            794
+          ],
+          "required_source_literals": [
+            "getitem Wizardry_Hat,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_alberta_hat_store_girl_new30_branch_for_652_851",
+      "unit": "E1-alberta_hat_store_girl_new30_branch_for_652",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Hat store girl#new30"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Star_Sparkling,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_alberta.txt",
+          "lines": [
+            851
+          ],
+          "required_source_literals": [
+            "delitem Star_Sparkling,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_alberta_hat_store_girl_new30_branch_for_652_852",
+      "unit": "E1-alberta_hat_store_girl_new30_branch_for_652",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Hat store girl#new30"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Lip_Of_Ancient_Fish,450; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_alberta.txt",
+          "lines": [
+            852
+          ],
+          "required_source_literals": [
+            "delitem Lip_Of_Ancient_Fish,450;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_alberta_hat_store_girl_new30_branch_for_652_853",
+      "unit": "E1-alberta_hat_store_girl_new30_branch_for_652",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Hat store girl#new30"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Solid_Shell,1200; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_alberta.txt",
+          "lines": [
+            853
+          ],
+          "required_source_literals": [
+            "delitem Solid_Shell,1200;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_alberta_hat_store_girl_new30_branch_for_652_858",
+      "unit": "E1-alberta_hat_store_girl_new30_branch_for_652",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Hat store girl#new30"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Magician_Hat,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_alberta.txt",
+          "lines": [
+            858
+          ],
+          "required_source_literals": [
+            "getitem Magician_Hat,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_alberta_hat_store_girl_new30_branch_for_652_904",
+      "unit": "E1-alberta_hat_store_girl_new30_branch_for_652",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Hat store girl#new30"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Symbol_Of_Sun,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_alberta.txt",
+          "lines": [
+            904
+          ],
+          "required_source_literals": [
+            "delitem Symbol_Of_Sun,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_alberta_hat_store_girl_new30_branch_for_652_905",
+      "unit": "E1-alberta_hat_store_girl_new30_branch_for_652",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Hat store girl#new30"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Gold,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_alberta.txt",
+          "lines": [
+            905
+          ],
+          "required_source_literals": [
+            "delitem Gold,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_alberta_hat_store_girl_new30_branch_for_652_906",
+      "unit": "E1-alberta_hat_store_girl_new30_branch_for_652",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Hat store girl#new30"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Steel,40; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_alberta.txt",
+          "lines": [
+            906
+          ],
+          "required_source_literals": [
+            "delitem Steel,40;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_alberta_hat_store_girl_new30_branch_for_652_907",
+      "unit": "E1-alberta_hat_store_girl_new30_branch_for_652",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Hat store girl#new30"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Coal,50; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_alberta.txt",
+          "lines": [
+            907
+          ],
+          "required_source_literals": [
+            "delitem Coal,50;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_alberta_hat_store_girl_new30_branch_for_652_908",
+      "unit": "E1-alberta_hat_store_girl_new30_branch_for_652",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Hat store girl#new30"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Oridecon,2; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_alberta.txt",
+          "lines": [
+            908
+          ],
+          "required_source_literals": [
+            "delitem Oridecon,2;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_alberta_hat_store_girl_new30_branch_for_652_915",
+      "unit": "E1-alberta_hat_store_girl_new30_branch_for_652",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Hat store girl#new30"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Helm_Of_Sun,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_alberta.txt",
+          "lines": [
+            915
+          ],
+          "required_source_literals": [
+            "getitem Helm_Of_Sun,1; // Helm_Of_Sun"
           ]
         }
       ],

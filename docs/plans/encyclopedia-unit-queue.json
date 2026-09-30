@@ -13598,7 +13598,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Hat store girl#new30",
@@ -13617,7 +13617,25 @@
       ],
       "size_lines": 298,
       "reason": "refused by the braced one-item prover: switch",
-      "history": []
+      "history": [
+        "2026-09-30T16:01:41Z activated",
+        "2026-09-30T16:01:42Z validated",
+        "2026-09-30T16:01:42Z verified: 21 claims supported",
+        "2026-09-30T16:02:05Z accepted",
+        "2026-09-30T16:02:05Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "524ec0f3508ab1bc99bab67c94e24edfeff5916c54fd2887356785a89fffdc77",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-tur_dun01_skull_stone_tur_branch_for_1530",
