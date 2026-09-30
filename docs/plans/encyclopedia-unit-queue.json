@@ -23172,7 +23172,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "strong",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Studying Scholar#1",
@@ -23191,7 +23191,25 @@
       ],
       "size_lines": 553,
       "reason": "refused by the braced one-item prover: braceless",
-      "history": []
+      "history": [
+        "2026-09-30T17:29:35Z activated",
+        "2026-09-30T17:29:35Z validated",
+        "2026-09-30T17:29:35Z verified: 1 claims supported",
+        "2026-09-30T17:29:58Z accepted",
+        "2026-09-30T17:29:58Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "841d86de8a29cbb54b107896302b3a5c33ce4e5680fd38dbd026d6099efb78e5",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-que_god01_grunburti_god_branch_for_398",
