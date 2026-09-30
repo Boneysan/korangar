@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 2758,
+    "E1_unknown": 2760,
     "E1_verified": 1
   },
   "entries": [
@@ -60529,6 +60529,56 @@
           ],
           "required_source_literals": [
             "if (countitem(Rainbow_Ruby_Fire)) delitem Rainbow_Ruby_Fire,countitem(Rainbow_Ruby_Fire);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_spl_in02_guild_master_warlock_branch_for_587_718",
+      "unit": "E1-spl_in02_guild_master_warlock_branch_for_587",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Guild Master#Warlock"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Magic_Stone_Hat,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-1/warlock.txt",
+          "lines": [
+            718
+          ],
+          "required_source_literals": [
+            "getitem Magic_Stone_Hat,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_spl_in02_guild_master_warlock_branch_for_587_719",
+      "unit": "E1-spl_in02_guild_master_warlock_branch_for_587",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Guild Master#Warlock"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Green_Apple_Ring,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-1/warlock.txt",
+          "lines": [
+            719
+          ],
+          "required_source_literals": [
+            "getitem Green_Apple_Ring,1;"
           ]
         }
       ],

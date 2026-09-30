@@ -28828,7 +28828,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Guild Master#Warlock",
@@ -28847,7 +28847,25 @@
       ],
       "size_lines": 141,
       "reason": "refused by the braced one-item prover: braceless",
-      "history": []
+      "history": [
+        "2026-09-30T18:21:41Z activated",
+        "2026-09-30T18:21:42Z validated",
+        "2026-09-30T18:21:42Z verified: 2 claims supported",
+        "2026-09-30T18:22:05Z accepted",
+        "2026-09-30T18:22:05Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "2906ed177db57c5a86896cd43f267e4ce4254ec7e3c66f8632991c15dfbe5222",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-job3_gen01_devries_gen_branch_for_108",

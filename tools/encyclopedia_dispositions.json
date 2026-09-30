@@ -69076,6 +69076,56 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_spl_in02_guild_master_warlock_branch_for_587_718",
+      "unit": "E1-spl_in02_guild_master_warlock_branch_for_587",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Guild Master#Warlock"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Magic_Stone_Hat,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-1/warlock.txt",
+          "lines": [
+            718
+          ],
+          "required_source_literals": [
+            "getitem Magic_Stone_Hat,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_spl_in02_guild_master_warlock_branch_for_587_719",
+      "unit": "E1-spl_in02_guild_master_warlock_branch_for_587",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Guild Master#Warlock"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Green_Apple_Ring,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-1/warlock.txt",
+          "lines": [
+            719
+          ],
+          "required_source_literals": [
+            "getitem Green_Apple_Ring,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
