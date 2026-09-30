@@ -25176,6 +25176,1406 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_bafhail_payon_relaybafhail_branch_for_1837_1875",
+      "unit": "E1-payon_bafhail_payon_relaybafhail_branch_for_1837",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Bafhail#payon::RelayBafhail"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Lizard_Scruff,20; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/partyrelay.txt",
+          "lines": [
+            1875
+          ],
+          "required_source_literals": [
+            "delitem Lizard_Scruff,20;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_bafhail_payon_relaybafhail_branch_for_1837_1876",
+      "unit": "E1-payon_bafhail_payon_relaybafhail_branch_for_1837",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Bafhail#payon::RelayBafhail"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Slender_Snake,20; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/partyrelay.txt",
+          "lines": [
+            1876
+          ],
+          "required_source_literals": [
+            "delitem Slender_Snake,20;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_bafhail_payon_relaybafhail_branch_for_1837_1877",
+      "unit": "E1-payon_bafhail_payon_relaybafhail_branch_for_1837",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Bafhail#payon::RelayBafhail"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Anolian_Skin,20; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/partyrelay.txt",
+          "lines": [
+            1877
+          ],
+          "required_source_literals": [
+            "delitem Anolian_Skin,20;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_bafhail_payon_relaybafhail_branch_for_1837_1879",
+      "unit": "E1-payon_bafhail_payon_relaybafhail_branch_for_1837",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Bafhail#payon::RelayBafhail"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Mission_Certificate11,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/partyrelay.txt",
+          "lines": [
+            1879
+          ],
+          "required_source_literals": [
+            "getitem Mission_Certificate11,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_bafhail_payon_relaybafhail_branch_for_1837_1880",
+      "unit": "E1-payon_bafhail_payon_relaybafhail_branch_for_1837",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Bafhail#payon::RelayBafhail"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Leaf_Of_Yggdrasil,2; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/partyrelay.txt",
+          "lines": [
+            1880
+          ],
+          "required_source_literals": [
+            "getitem Leaf_Of_Yggdrasil,2;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_bafhail_payon_relaybafhail_branch_for_1837_1881",
+      "unit": "E1-payon_bafhail_payon_relaybafhail_branch_for_1837",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Bafhail#payon::RelayBafhail"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Yggdrasilberry,2; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/partyrelay.txt",
+          "lines": [
+            1881
+          ],
+          "required_source_literals": [
+            "getitem Yggdrasilberry,2;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_bafhail_payon_relaybafhail_branch_for_1837_1900",
+      "unit": "E1-payon_bafhail_payon_relaybafhail_branch_for_1837",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Bafhail#payon::RelayBafhail"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Lizard_Scruff,20; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/partyrelay.txt",
+          "lines": [
+            1900
+          ],
+          "required_source_literals": [
+            "delitem Lizard_Scruff,20;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_bafhail_payon_relaybafhail_branch_for_1837_1901",
+      "unit": "E1-payon_bafhail_payon_relaybafhail_branch_for_1837",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Bafhail#payon::RelayBafhail"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Slender_Snake,20; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/partyrelay.txt",
+          "lines": [
+            1901
+          ],
+          "required_source_literals": [
+            "delitem Slender_Snake,20;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_bafhail_payon_relaybafhail_branch_for_1837_1902",
+      "unit": "E1-payon_bafhail_payon_relaybafhail_branch_for_1837",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Bafhail#payon::RelayBafhail"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Anolian_Skin,20; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/partyrelay.txt",
+          "lines": [
+            1902
+          ],
+          "required_source_literals": [
+            "delitem Anolian_Skin,20;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_bafhail_payon_relaybafhail_branch_for_1837_1904",
+      "unit": "E1-payon_bafhail_payon_relaybafhail_branch_for_1837",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Bafhail#payon::RelayBafhail"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Mission_Certificate11,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/partyrelay.txt",
+          "lines": [
+            1904
+          ],
+          "required_source_literals": [
+            "getitem Mission_Certificate11,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_bafhail_payon_relaybafhail_branch_for_1837_1905",
+      "unit": "E1-payon_bafhail_payon_relaybafhail_branch_for_1837",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Bafhail#payon::RelayBafhail"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Leaf_Of_Yggdrasil,2; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/partyrelay.txt",
+          "lines": [
+            1905
+          ],
+          "required_source_literals": [
+            "getitem Leaf_Of_Yggdrasil,2;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_bafhail_payon_relaybafhail_branch_for_1837_1906",
+      "unit": "E1-payon_bafhail_payon_relaybafhail_branch_for_1837",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Bafhail#payon::RelayBafhail"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Yggdrasilberry,2; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/partyrelay.txt",
+          "lines": [
+            1906
+          ],
+          "required_source_literals": [
+            "getitem Yggdrasilberry,2;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_bafhail_payon_relaybafhail_branch_for_1837_1950",
+      "unit": "E1-payon_bafhail_payon_relaybafhail_branch_for_1837",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Bafhail#payon::RelayBafhail"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Mission_Certificate10,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/partyrelay.txt",
+          "lines": [
+            1950
+          ],
+          "required_source_literals": [
+            "delitem Mission_Certificate10,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_bafhail_payon_relaybafhail_branch_for_1837_1977",
+      "unit": "E1-payon_bafhail_payon_relaybafhail_branch_for_1837",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Bafhail#payon::RelayBafhail"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Mission_Certificate10,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/partyrelay.txt",
+          "lines": [
+            1977
+          ],
+          "required_source_literals": [
+            "delitem Mission_Certificate10,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_bafhail_payon_relaybafhail_branch_for_1837_2023",
+      "unit": "E1-payon_bafhail_payon_relaybafhail_branch_for_1837",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Bafhail#payon::RelayBafhail"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Thin_N_Long_Tongue,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/partyrelay.txt",
+          "lines": [
+            2023
+          ],
+          "required_source_literals": [
+            "delitem Thin_N_Long_Tongue,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_bafhail_payon_relaybafhail_branch_for_1837_2024",
+      "unit": "E1-payon_bafhail_payon_relaybafhail_branch_for_1837",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Bafhail#payon::RelayBafhail"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Leopard_Talon,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/partyrelay.txt",
+          "lines": [
+            2024
+          ],
+          "required_source_literals": [
+            "delitem Leopard_Talon,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_bafhail_payon_relaybafhail_branch_for_1837_2025",
+      "unit": "E1-payon_bafhail_payon_relaybafhail_branch_for_1837",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Bafhail#payon::RelayBafhail"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Poison_Toads_Skin,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/partyrelay.txt",
+          "lines": [
+            2025
+          ],
+          "required_source_literals": [
+            "delitem Poison_Toads_Skin,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_bafhail_payon_relaybafhail_branch_for_1837_2027",
+      "unit": "E1-payon_bafhail_payon_relaybafhail_branch_for_1837",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Bafhail#payon::RelayBafhail"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Mission_Certificate7,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/partyrelay.txt",
+          "lines": [
+            2027
+          ],
+          "required_source_literals": [
+            "getitem Mission_Certificate7,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_bafhail_payon_relaybafhail_branch_for_1837_2028",
+      "unit": "E1-payon_bafhail_payon_relaybafhail_branch_for_1837",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Bafhail#payon::RelayBafhail"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Leaf_Of_Yggdrasil,2; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/partyrelay.txt",
+          "lines": [
+            2028
+          ],
+          "required_source_literals": [
+            "getitem Leaf_Of_Yggdrasil,2;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_bafhail_payon_relaybafhail_branch_for_1837_2047",
+      "unit": "E1-payon_bafhail_payon_relaybafhail_branch_for_1837",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Bafhail#payon::RelayBafhail"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Thin_N_Long_Tongue,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/partyrelay.txt",
+          "lines": [
+            2047
+          ],
+          "required_source_literals": [
+            "delitem Thin_N_Long_Tongue,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_bafhail_payon_relaybafhail_branch_for_1837_2048",
+      "unit": "E1-payon_bafhail_payon_relaybafhail_branch_for_1837",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Bafhail#payon::RelayBafhail"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Leopard_Talon,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/partyrelay.txt",
+          "lines": [
+            2048
+          ],
+          "required_source_literals": [
+            "delitem Leopard_Talon,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_bafhail_payon_relaybafhail_branch_for_1837_2049",
+      "unit": "E1-payon_bafhail_payon_relaybafhail_branch_for_1837",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Bafhail#payon::RelayBafhail"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Poison_Toads_Skin,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/partyrelay.txt",
+          "lines": [
+            2049
+          ],
+          "required_source_literals": [
+            "delitem Poison_Toads_Skin,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_bafhail_payon_relaybafhail_branch_for_1837_2051",
+      "unit": "E1-payon_bafhail_payon_relaybafhail_branch_for_1837",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Bafhail#payon::RelayBafhail"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Mission_Certificate7,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/partyrelay.txt",
+          "lines": [
+            2051
+          ],
+          "required_source_literals": [
+            "getitem Mission_Certificate7,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_bafhail_payon_relaybafhail_branch_for_1837_2052",
+      "unit": "E1-payon_bafhail_payon_relaybafhail_branch_for_1837",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Bafhail#payon::RelayBafhail"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Leaf_Of_Yggdrasil,2; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/partyrelay.txt",
+          "lines": [
+            2052
+          ],
+          "required_source_literals": [
+            "getitem Leaf_Of_Yggdrasil,2;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_bafhail_payon_relaybafhail_branch_for_1837_2089",
+      "unit": "E1-payon_bafhail_payon_relaybafhail_branch_for_1837",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Bafhail#payon::RelayBafhail"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Black_Mask,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/partyrelay.txt",
+          "lines": [
+            2089
+          ],
+          "required_source_literals": [
+            "delitem Black_Mask,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_bafhail_payon_relaybafhail_branch_for_1837_2090",
+      "unit": "E1-payon_bafhail_payon_relaybafhail_branch_for_1837",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Bafhail#payon::RelayBafhail"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Dokkaebi_Horn,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/partyrelay.txt",
+          "lines": [
+            2090
+          ],
+          "required_source_literals": [
+            "delitem Dokkaebi_Horn,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_bafhail_payon_relaybafhail_branch_for_1837_2091",
+      "unit": "E1-payon_bafhail_payon_relaybafhail_branch_for_1837",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Bafhail#payon::RelayBafhail"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Peco_Wing_Feather,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/partyrelay.txt",
+          "lines": [
+            2091
+          ],
+          "required_source_literals": [
+            "delitem Peco_Wing_Feather,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_bafhail_payon_relaybafhail_branch_for_1837_2093",
+      "unit": "E1-payon_bafhail_payon_relaybafhail_branch_for_1837",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Bafhail#payon::RelayBafhail"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Mission_Certificate7,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/partyrelay.txt",
+          "lines": [
+            2093
+          ],
+          "required_source_literals": [
+            "getitem Mission_Certificate7,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_bafhail_payon_relaybafhail_branch_for_1837_2094",
+      "unit": "E1-payon_bafhail_payon_relaybafhail_branch_for_1837",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Bafhail#payon::RelayBafhail"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Leaf_Of_Yggdrasil,2; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/partyrelay.txt",
+          "lines": [
+            2094
+          ],
+          "required_source_literals": [
+            "getitem Leaf_Of_Yggdrasil,2;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_bafhail_payon_relaybafhail_branch_for_1837_2113",
+      "unit": "E1-payon_bafhail_payon_relaybafhail_branch_for_1837",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Bafhail#payon::RelayBafhail"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Black_Mask,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/partyrelay.txt",
+          "lines": [
+            2113
+          ],
+          "required_source_literals": [
+            "delitem Black_Mask,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_bafhail_payon_relaybafhail_branch_for_1837_2114",
+      "unit": "E1-payon_bafhail_payon_relaybafhail_branch_for_1837",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Bafhail#payon::RelayBafhail"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Dokkaebi_Horn,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/partyrelay.txt",
+          "lines": [
+            2114
+          ],
+          "required_source_literals": [
+            "delitem Dokkaebi_Horn,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_bafhail_payon_relaybafhail_branch_for_1837_2115",
+      "unit": "E1-payon_bafhail_payon_relaybafhail_branch_for_1837",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Bafhail#payon::RelayBafhail"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Peco_Wing_Feather,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/partyrelay.txt",
+          "lines": [
+            2115
+          ],
+          "required_source_literals": [
+            "delitem Peco_Wing_Feather,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_bafhail_payon_relaybafhail_branch_for_1837_2117",
+      "unit": "E1-payon_bafhail_payon_relaybafhail_branch_for_1837",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Bafhail#payon::RelayBafhail"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Mission_Certificate7,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/partyrelay.txt",
+          "lines": [
+            2117
+          ],
+          "required_source_literals": [
+            "getitem Mission_Certificate7,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_bafhail_payon_relaybafhail_branch_for_1837_2118",
+      "unit": "E1-payon_bafhail_payon_relaybafhail_branch_for_1837",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Bafhail#payon::RelayBafhail"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Leaf_Of_Yggdrasil,2; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/partyrelay.txt",
+          "lines": [
+            2118
+          ],
+          "required_source_literals": [
+            "getitem Leaf_Of_Yggdrasil,2;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_bafhail_payon_relaybafhail_branch_for_1837_2175",
+      "unit": "E1-payon_bafhail_payon_relaybafhail_branch_for_1837",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Bafhail#payon::RelayBafhail"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Mission_Certificate6,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/partyrelay.txt",
+          "lines": [
+            2175
+          ],
+          "required_source_literals": [
+            "delitem Mission_Certificate6,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_bafhail_payon_relaybafhail_branch_for_1837_2207",
+      "unit": "E1-payon_bafhail_payon_relaybafhail_branch_for_1837",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Bafhail#payon::RelayBafhail"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Mission_Certificate6,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/partyrelay.txt",
+          "lines": [
+            2207
+          ],
+          "required_source_literals": [
+            "delitem Mission_Certificate6,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_bafhail_payon_relaybafhail_branch_for_1837_2253",
+      "unit": "E1-payon_bafhail_payon_relaybafhail_branch_for_1837",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Bafhail#payon::RelayBafhail"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Shoulder_Protection,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/partyrelay.txt",
+          "lines": [
+            2253
+          ],
+          "required_source_literals": [
+            "delitem Shoulder_Protection,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_bafhail_payon_relaybafhail_branch_for_1837_2254",
+      "unit": "E1-payon_bafhail_payon_relaybafhail_branch_for_1837",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Bafhail#payon::RelayBafhail"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Heart_Of_Tree,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/partyrelay.txt",
+          "lines": [
+            2254
+          ],
+          "required_source_literals": [
+            "delitem Heart_Of_Tree,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_bafhail_payon_relaybafhail_branch_for_1837_2255",
+      "unit": "E1-payon_bafhail_payon_relaybafhail_branch_for_1837",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Bafhail#payon::RelayBafhail"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Claw_Of_Wolves,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/partyrelay.txt",
+          "lines": [
+            2255
+          ],
+          "required_source_literals": [
+            "delitem Claw_Of_Wolves,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_bafhail_payon_relaybafhail_branch_for_1837_2257",
+      "unit": "E1-payon_bafhail_payon_relaybafhail_branch_for_1837",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Bafhail#payon::RelayBafhail"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Mission_Certificate3,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/partyrelay.txt",
+          "lines": [
+            2257
+          ],
+          "required_source_literals": [
+            "getitem Mission_Certificate3,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_bafhail_payon_relaybafhail_branch_for_1837_2258",
+      "unit": "E1-payon_bafhail_payon_relaybafhail_branch_for_1837",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Bafhail#payon::RelayBafhail"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Yggdrasilberry,2; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/partyrelay.txt",
+          "lines": [
+            2258
+          ],
+          "required_source_literals": [
+            "getitem Yggdrasilberry,2;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_bafhail_payon_relaybafhail_branch_for_1837_2276",
+      "unit": "E1-payon_bafhail_payon_relaybafhail_branch_for_1837",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Bafhail#payon::RelayBafhail"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Shoulder_Protection,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/partyrelay.txt",
+          "lines": [
+            2276
+          ],
+          "required_source_literals": [
+            "delitem Shoulder_Protection,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_bafhail_payon_relaybafhail_branch_for_1837_2277",
+      "unit": "E1-payon_bafhail_payon_relaybafhail_branch_for_1837",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Bafhail#payon::RelayBafhail"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Heart_Of_Tree,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/partyrelay.txt",
+          "lines": [
+            2277
+          ],
+          "required_source_literals": [
+            "delitem Heart_Of_Tree,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_bafhail_payon_relaybafhail_branch_for_1837_2278",
+      "unit": "E1-payon_bafhail_payon_relaybafhail_branch_for_1837",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Bafhail#payon::RelayBafhail"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Claw_Of_Wolves,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/partyrelay.txt",
+          "lines": [
+            2278
+          ],
+          "required_source_literals": [
+            "delitem Claw_Of_Wolves,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_bafhail_payon_relaybafhail_branch_for_1837_2280",
+      "unit": "E1-payon_bafhail_payon_relaybafhail_branch_for_1837",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Bafhail#payon::RelayBafhail"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Mission_Certificate3,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/partyrelay.txt",
+          "lines": [
+            2280
+          ],
+          "required_source_literals": [
+            "getitem Mission_Certificate3,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_bafhail_payon_relaybafhail_branch_for_1837_2281",
+      "unit": "E1-payon_bafhail_payon_relaybafhail_branch_for_1837",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Bafhail#payon::RelayBafhail"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Yggdrasilberry,2; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/partyrelay.txt",
+          "lines": [
+            2281
+          ],
+          "required_source_literals": [
+            "getitem Yggdrasilberry,2;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_bafhail_payon_relaybafhail_branch_for_1837_2318",
+      "unit": "E1-payon_bafhail_payon_relaybafhail_branch_for_1837",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Bafhail#payon::RelayBafhail"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Porcupine_Spike,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/partyrelay.txt",
+          "lines": [
+            2318
+          ],
+          "required_source_literals": [
+            "delitem Porcupine_Spike,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_bafhail_payon_relaybafhail_branch_for_1837_2319",
+      "unit": "E1-payon_bafhail_payon_relaybafhail_branch_for_1837",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Bafhail#payon::RelayBafhail"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Elder_Pixies_Beard,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/partyrelay.txt",
+          "lines": [
+            2319
+          ],
+          "required_source_literals": [
+            "delitem Elder_Pixies_Beard,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_bafhail_payon_relaybafhail_branch_for_1837_2320",
+      "unit": "E1-payon_bafhail_payon_relaybafhail_branch_for_1837",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Bafhail#payon::RelayBafhail"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Fish_Tail,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/partyrelay.txt",
+          "lines": [
+            2320
+          ],
+          "required_source_literals": [
+            "delitem Fish_Tail,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_bafhail_payon_relaybafhail_branch_for_1837_2322",
+      "unit": "E1-payon_bafhail_payon_relaybafhail_branch_for_1837",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Bafhail#payon::RelayBafhail"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Mission_Certificate3,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/partyrelay.txt",
+          "lines": [
+            2322
+          ],
+          "required_source_literals": [
+            "getitem Mission_Certificate3,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_bafhail_payon_relaybafhail_branch_for_1837_2340",
+      "unit": "E1-payon_bafhail_payon_relaybafhail_branch_for_1837",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Bafhail#payon::RelayBafhail"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Porcupine_Spike,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/partyrelay.txt",
+          "lines": [
+            2340
+          ],
+          "required_source_literals": [
+            "delitem Porcupine_Spike,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_bafhail_payon_relaybafhail_branch_for_1837_2341",
+      "unit": "E1-payon_bafhail_payon_relaybafhail_branch_for_1837",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Bafhail#payon::RelayBafhail"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Elder_Pixies_Beard,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/partyrelay.txt",
+          "lines": [
+            2341
+          ],
+          "required_source_literals": [
+            "delitem Elder_Pixies_Beard,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_bafhail_payon_relaybafhail_branch_for_1837_2342",
+      "unit": "E1-payon_bafhail_payon_relaybafhail_branch_for_1837",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Bafhail#payon::RelayBafhail"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Fish_Tail,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/partyrelay.txt",
+          "lines": [
+            2342
+          ],
+          "required_source_literals": [
+            "delitem Fish_Tail,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_bafhail_payon_relaybafhail_branch_for_1837_2344",
+      "unit": "E1-payon_bafhail_payon_relaybafhail_branch_for_1837",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Bafhail#payon::RelayBafhail"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Mission_Certificate3,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/partyrelay.txt",
+          "lines": [
+            2344
+          ],
+          "required_source_literals": [
+            "getitem Mission_Certificate3,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_bafhail_payon_relaybafhail_branch_for_1837_2392",
+      "unit": "E1-payon_bafhail_payon_relaybafhail_branch_for_1837",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Bafhail#payon::RelayBafhail"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Mission_Certificate2,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/partyrelay.txt",
+          "lines": [
+            2392
+          ],
+          "required_source_literals": [
+            "delitem Mission_Certificate2,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_bafhail_payon_relaybafhail_branch_for_1837_2424",
+      "unit": "E1-payon_bafhail_payon_relaybafhail_branch_for_1837",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Bafhail#payon::RelayBafhail"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Mission_Certificate2,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/partyrelay.txt",
+          "lines": [
+            2424
+          ],
+          "required_source_literals": [
+            "delitem Mission_Certificate2,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
