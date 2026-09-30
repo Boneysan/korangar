@@ -14080,7 +14080,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Lord of Palace#ama",
@@ -14099,7 +14099,25 @@
       ],
       "size_lines": 160,
       "reason": "refused by the braced one-item prover: braceless",
-      "history": []
+      "history": [
+        "2026-09-30T16:06:13Z activated",
+        "2026-09-30T16:06:13Z validated",
+        "2026-09-30T16:06:13Z verified: 2 claims supported",
+        "2026-09-30T16:06:36Z accepted",
+        "2026-09-30T16:06:36Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "c4c34568bbacc46c6700fd2bd3358e083f06c6bcdc952e210bd73e622ae1fdaa",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-ama_in01_grandma_ama2_branch_for_1916",

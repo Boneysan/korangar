@@ -36301,6 +36301,56 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ama_in02_lord_of_palace_ama_branch_for_1755_1866",
+      "unit": "E1-ama_in02_lord_of_palace_ama_branch_for_1755",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Lord of Palace#ama"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Fox_Tail,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_amatsu.txt",
+          "lines": [
+            1866
+          ],
+          "required_source_literals": [
+            "delitem Fox_Tail,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ama_in02_lord_of_palace_ama_branch_for_1755_1867",
+      "unit": "E1-ama_in02_lord_of_palace_ama_branch_for_1755",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Lord of Palace#ama"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Lords_Passable_Ticket,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_amatsu.txt",
+          "lines": [
+            1867
+          ],
+          "required_source_literals": [
+            "getitem Lords_Passable_Ticket,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
