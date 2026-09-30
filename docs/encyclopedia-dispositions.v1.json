@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 2003,
+    "E1_unknown": 2008,
     "E1_verified": 1
   },
   "entries": [
@@ -30229,6 +30229,131 @@
           ],
           "required_source_literals": [
             "getitem Piano_Keyboard,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_niflheim_feylin_branch_for_584_693",
+      "unit": "E1-niflheim_feylin_branch_for_584",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Feylin"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Witherless_Rose,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_niflheim.txt",
+          "lines": [
+            693
+          ],
+          "required_source_literals": [
+            "delitem Witherless_Rose,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_niflheim_feylin_branch_for_584_694",
+      "unit": "E1-niflheim_feylin_branch_for_584",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Feylin"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Leaf_Of_Yggdrasil,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_niflheim.txt",
+          "lines": [
+            694
+          ],
+          "required_source_literals": [
+            "delitem Leaf_Of_Yggdrasil,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_niflheim_feylin_branch_for_584_707",
+      "unit": "E1-niflheim_feylin_branch_for_584",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Feylin"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Witherless_Rose,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_niflheim.txt",
+          "lines": [
+            707
+          ],
+          "required_source_literals": [
+            "delitem Witherless_Rose,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_niflheim_feylin_branch_for_584_708",
+      "unit": "E1-niflheim_feylin_branch_for_584",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Feylin"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Leaf_Of_Yggdrasil,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_niflheim.txt",
+          "lines": [
+            708
+          ],
+          "required_source_literals": [
+            "delitem Leaf_Of_Yggdrasil,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_niflheim_feylin_branch_for_584_741",
+      "unit": "E1-niflheim_feylin_branch_for_584",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Feylin"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Mementos,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_niflheim.txt",
+          "lines": [
+            741
+          ],
+          "required_source_literals": [
+            "getitem Mementos,1;"
           ]
         }
       ],

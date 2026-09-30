@@ -20982,7 +20982,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Feylin",
@@ -21001,7 +21001,25 @@
       ],
       "size_lines": 224,
       "reason": "refused by the braced one-item prover: menu",
-      "history": []
+      "history": [
+        "2026-09-30T17:09:27Z activated",
+        "2026-09-30T17:09:27Z validated",
+        "2026-09-30T17:09:27Z verified: 5 claims supported",
+        "2026-09-30T17:09:50Z accepted",
+        "2026-09-30T17:09:50Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "3ddb87cadcb477c8d39f7cae530804bb69f2b2e43dd4432644f60c0eecc5dd54",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-payon_in01_granny_branch_for_40",
