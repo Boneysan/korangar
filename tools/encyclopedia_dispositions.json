@@ -48101,6 +48101,81 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_comodo_muff_branch_for_3217_3546",
+      "unit": "E1-comodo_muff_branch_for_3217",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Muff"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Debt_Note,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_nameless.txt",
+          "lines": [
+            3546
+          ],
+          "required_source_literals": [
+            "delitem Debt_Note,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_comodo_muff_branch_for_3217_3556",
+      "unit": "E1-comodo_muff_branch_for_3217",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Muff"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Old_Blue_Box,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_nameless.txt",
+          "lines": [
+            3556
+          ],
+          "required_source_literals": [
+            "getitem Old_Blue_Box,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_comodo_muff_branch_for_3217_3557",
+      "unit": "E1-comodo_muff_branch_for_3217",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Muff"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Seed_Of_Yggdrasil,4; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_nameless.txt",
+          "lines": [
+            3557
+          ],
+          "required_source_literals": [
+            "getitem Seed_Of_Yggdrasil,4;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
