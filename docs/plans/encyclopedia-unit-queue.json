@@ -23434,7 +23434,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "strong",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Dwarf Blacksmith#west",
@@ -23453,7 +23453,25 @@
       ],
       "size_lines": 492,
       "reason": "refused by the braced one-item prover: braceless",
-      "history": []
+      "history": [
+        "2026-09-30T17:31:58Z activated",
+        "2026-09-30T17:31:58Z validated",
+        "2026-09-30T17:31:58Z verified: 2 claims supported",
+        "2026-09-30T17:32:22Z accepted",
+        "2026-09-30T17:32:22Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "6527982ce4939434ce63314d10d2634771f7cb08d4e91acdc0c79772f342f0c4",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-mjolnir_12_dwarf_blacksmith_north_branch_for_2359",
