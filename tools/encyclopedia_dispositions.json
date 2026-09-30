@@ -11026,6 +11026,156 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_old_man_magum1_branch_for_370_455",
+      "unit": "E1-payon_old_man_magum1_branch_for_370",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Old Man#magum1"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Yellow_Potion,20; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/doomed_swords_quest.txt",
+          "lines": [
+            455
+          ],
+          "required_source_literals": [
+            "delitem Yellow_Potion,20;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_old_man_magum1_branch_for_370_577",
+      "unit": "E1-payon_old_man_magum1_branch_for_370",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Old Man#magum1"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Old_Hilt,3; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/doomed_swords_quest.txt",
+          "lines": [
+            577
+          ],
+          "required_source_literals": [
+            "delitem Old_Hilt,3;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_old_man_magum1_branch_for_370_578",
+      "unit": "E1-payon_old_man_magum1_branch_for_370",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Old Man#magum1"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Coal,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/doomed_swords_quest.txt",
+          "lines": [
+            578
+          ],
+          "required_source_literals": [
+            "delitem Coal,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_old_man_magum1_branch_for_370_579",
+      "unit": "E1-payon_old_man_magum1_branch_for_370",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Old Man#magum1"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Wooden_Block,3; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/doomed_swords_quest.txt",
+          "lines": [
+            579
+          ],
+          "required_source_literals": [
+            "delitem Wooden_Block,3;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_old_man_magum1_branch_for_370_580",
+      "unit": "E1-payon_old_man_magum1_branch_for_370",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Old Man#magum1"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Foolishness_Of_Blind,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/doomed_swords_quest.txt",
+          "lines": [
+            580
+          ],
+          "required_source_literals": [
+            "delitem Foolishness_Of_Blind,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_old_man_magum1_branch_for_370_581",
+      "unit": "E1-payon_old_man_magum1_branch_for_370",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Old Man#magum1"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Ogre_Tooth,50; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/doomed_swords_quest.txt",
+          "lines": [
+            581
+          ],
+          "required_source_literals": [
+            "delitem Ogre_Tooth,50;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
