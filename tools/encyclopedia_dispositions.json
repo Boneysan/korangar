@@ -18551,6 +18551,331 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_aldeba_in_monster_tamer_alde_branch_for_209_286",
+      "unit": "E1-aldeba_in_monster_tamer_alde_branch_for_209",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Monster Tamer#alde"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Bone_Helm,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/monstertamers.txt",
+          "lines": [
+            286
+          ],
+          "required_source_literals": [
+            "delitem Bone_Helm,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_aldeba_in_monster_tamer_alde_branch_for_209_287",
+      "unit": "E1-aldeba_in_monster_tamer_alde_branch_for_209",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Monster Tamer#alde"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Skull_Helm,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/monstertamers.txt",
+          "lines": [
+            287
+          ],
+          "required_source_literals": [
+            "getitem Skull_Helm,1; // Skull_Helm"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_aldeba_in_monster_tamer_alde_branch_for_209_321",
+      "unit": "E1-aldeba_in_monster_tamer_alde_branch_for_209",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Monster Tamer#alde"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Oxygen_Mask,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/monstertamers.txt",
+          "lines": [
+            321
+          ],
+          "required_source_literals": [
+            "delitem Oxygen_Mask,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_aldeba_in_monster_tamer_alde_branch_for_209_322",
+      "unit": "E1-aldeba_in_monster_tamer_alde_branch_for_209",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Monster Tamer#alde"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Monster_Oxygen_Mask,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/monstertamers.txt",
+          "lines": [
+            322
+          ],
+          "required_source_literals": [
+            "getitem Monster_Oxygen_Mask,1; // Monster_Oxygen_Mask"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_aldeba_in_monster_tamer_alde_branch_for_209_354",
+      "unit": "E1-aldeba_in_monster_tamer_alde_branch_for_209",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Monster Tamer#alde"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Ribbon,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/monstertamers.txt",
+          "lines": [
+            354
+          ],
+          "required_source_literals": [
+            "delitem Ribbon,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_aldeba_in_monster_tamer_alde_branch_for_209_355",
+      "unit": "E1-aldeba_in_monster_tamer_alde_branch_for_209",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Monster Tamer#alde"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Silk_Ribbon,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/monstertamers.txt",
+          "lines": [
+            355
+          ],
+          "required_source_literals": [
+            "getitem Silk_Ribbon,1; // Silk_Ribbon"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_aldeba_in_monster_tamer_alde_branch_for_209_389",
+      "unit": "E1-aldeba_in_monster_tamer_alde_branch_for_209",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Monster Tamer#alde"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Star_Dust,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/monstertamers.txt",
+          "lines": [
+            389
+          ],
+          "required_source_literals": [
+            "delitem Star_Dust,1;  // Stellar"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_aldeba_in_monster_tamer_alde_branch_for_209_390",
+      "unit": "E1-aldeba_in_monster_tamer_alde_branch_for_209",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Monster Tamer#alde"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Stellar_Hairpin,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/monstertamers.txt",
+          "lines": [
+            390
+          ],
+          "required_source_literals": [
+            "getitem Stellar_Hairpin,1; // Stellar_Hairpin"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_aldeba_in_monster_tamer_alde_branch_for_209_424",
+      "unit": "E1-aldeba_in_monster_tamer_alde_branch_for_209",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Monster Tamer#alde"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Egg_Shell,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/monstertamers.txt",
+          "lines": [
+            424
+          ],
+          "required_source_literals": [
+            "delitem Egg_Shell,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_aldeba_in_monster_tamer_alde_branch_for_209_425",
+      "unit": "E1-aldeba_in_monster_tamer_alde_branch_for_209",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Monster Tamer#alde"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Tiny_Egg_Shell,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/monstertamers.txt",
+          "lines": [
+            425
+          ],
+          "required_source_literals": [
+            "getitem Tiny_Egg_Shell,1; // Tiny_Egg_Shell"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_aldeba_in_monster_tamer_alde_branch_for_209_458",
+      "unit": "E1-aldeba_in_monster_tamer_alde_branch_for_209",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Monster Tamer#alde"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Zargon,2; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/monstertamers.txt",
+          "lines": [
+            458
+          ],
+          "required_source_literals": [
+            "delitem Zargon,2;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_aldeba_in_monster_tamer_alde_branch_for_209_459",
+      "unit": "E1-aldeba_in_monster_tamer_alde_branch_for_209",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Monster Tamer#alde"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Ribbon,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/monstertamers.txt",
+          "lines": [
+            459
+          ],
+          "required_source_literals": [
+            "delitem Ribbon,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_aldeba_in_monster_tamer_alde_branch_for_209_461",
+      "unit": "E1-aldeba_in_monster_tamer_alde_branch_for_209",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Monster Tamer#alde"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Rocker_Glasses,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/monstertamers.txt",
+          "lines": [
+            461
+          ],
+          "required_source_literals": [
+            "getitem Rocker_Glasses,1; // Rocker_Glasses"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
