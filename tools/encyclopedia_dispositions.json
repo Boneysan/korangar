@@ -84951,6 +84951,31 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ma_fild01_maries_malaya_branch_for_2996_3040",
+      "unit": "E1-ma_fild01_maries_malaya_branch_for_2996",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Maries#malaya"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Lesser_Agimat,2; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malaya.txt",
+          "lines": [
+            3040
+          ],
+          "required_source_literals": [
+            "getitem Lesser_Agimat, 2; // Lesser_Agimat"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
