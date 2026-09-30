@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 2977,
+    "E1_unknown": 2980,
     "E1_verified": 1
   },
   "entries": [
@@ -17779,6 +17779,81 @@
           ],
           "required_source_literals": [
             "delitem Free_Flying_Ship_Ticket,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ice_dun01_dispatched_instructor_05_branch_for_3319_3438",
+      "unit": "E1-ice_dun01_dispatched_instructor_05_branch_for_3319",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Dispatched Instructor#05"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Ice_Piece,30; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/eden_quests.txt",
+          "lines": [
+            3438
+          ],
+          "required_source_literals": [
+            "delitem Ice_Piece,30;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ice_dun01_dispatched_instructor_05_branch_for_3319_3439",
+      "unit": "E1-ice_dun01_dispatched_instructor_05_branch_for_3319",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Dispatched Instructor#05"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Sweet_Sauce,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/eden_quests.txt",
+          "lines": [
+            3439
+          ],
+          "required_source_literals": [
+            "delitem Sweet_Sauce,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ice_dun01_dispatched_instructor_05_branch_for_3319_3440",
+      "unit": "E1-ice_dun01_dispatched_instructor_05_branch_for_3319",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Dispatched Instructor#05"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Milk,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/eden_quests.txt",
+          "lines": [
+            3440
+          ],
+          "required_source_literals": [
+            "delitem Milk,1;"
           ]
         }
       ],
