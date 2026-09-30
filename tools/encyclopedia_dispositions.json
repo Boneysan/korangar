@@ -12301,6 +12301,206 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prt_monk_asthe_tu_branch_for_192_349",
+      "unit": "E1-prt_monk_asthe_tu_branch_for_192",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Asthe#tu"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Mace,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/first_class/tu_acolyte.txt",
+          "lines": [
+            349
+          ],
+          "required_source_literals": [
+            "getitem Mace,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prt_monk_asthe_tu_branch_for_192_350",
+      "unit": "E1-prt_monk_asthe_tu_branch_for_192",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Asthe#tu"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Wing_Of_Butterfly,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/first_class/tu_acolyte.txt",
+          "lines": [
+            350
+          ],
+          "required_source_literals": [
+            "getitem Wing_Of_Butterfly,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prt_monk_asthe_tu_branch_for_192_399",
+      "unit": "E1-prt_monk_asthe_tu_branch_for_192",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Asthe#tu"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Mace,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/first_class/tu_acolyte.txt",
+          "lines": [
+            399
+          ],
+          "required_source_literals": [
+            "delitem Mace, 1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prt_monk_asthe_tu_branch_for_192_463",
+      "unit": "E1-prt_monk_asthe_tu_branch_for_192",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Asthe#tu"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Mother_Letter,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/first_class/tu_acolyte.txt",
+          "lines": [
+            463
+          ],
+          "required_source_literals": [
+            "getitem Mother_Letter,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prt_monk_asthe_tu_branch_for_192_710",
+      "unit": "E1-prt_monk_asthe_tu_branch_for_192",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Asthe#tu"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Sister_Letter,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/first_class/tu_acolyte.txt",
+          "lines": [
+            710
+          ],
+          "required_source_literals": [
+            "getitem Sister_Letter,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prt_monk_asthe_tu_branch_for_192_711",
+      "unit": "E1-prt_monk_asthe_tu_branch_for_192",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Asthe#tu"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Receipt_01,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/first_class/tu_acolyte.txt",
+          "lines": [
+            711
+          ],
+          "required_source_literals": [
+            "getitem Receipt_01,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prt_monk_asthe_tu_branch_for_192_712",
+      "unit": "E1-prt_monk_asthe_tu_branch_for_192",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Asthe#tu"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Merchant_Box_1,2; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/first_class/tu_acolyte.txt",
+          "lines": [
+            712
+          ],
+          "required_source_literals": [
+            "getitem Merchant_Box_1,2;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prt_monk_asthe_tu_branch_for_192_713",
+      "unit": "E1-prt_monk_asthe_tu_branch_for_192",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Asthe#tu"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Mother_Letter,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/first_class/tu_acolyte.txt",
+          "lines": [
+            713
+          ],
+          "required_source_literals": [
+            "getitem Mother_Letter,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
