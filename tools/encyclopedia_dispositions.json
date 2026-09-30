@@ -3176,6 +3176,31 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_spl_in01_aide_arioss_edq_branch_for_945_1056",
+      "unit": "E1-spl_in01_aide_arioss_edq_branch_for_945",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Aide Arioss#edq"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Splendide_Coin,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/instances/NydhoggsNest.txt",
+          "lines": [
+            1056
+          ],
+          "required_source_literals": [
+            "getitem(Splendide_Coin, 10);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
