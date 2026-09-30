@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 1832,
+    "E1_unknown": 1833,
     "E1_verified": 1
   },
   "entries": [
@@ -26429,6 +26429,31 @@
           ],
           "required_source_literals": [
             "delitem Rotten_Scale,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_moscovia_acorn_dealer_mos_branch_for_3979_4036",
+      "unit": "E1-moscovia_acorn_dealer_mos_branch_for_3979",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Acorn Dealer#mos"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Acorn,.@input; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_moscovia.txt",
+          "lines": [
+            4036
+          ],
+          "required_source_literals": [
+            "getitem Acorn,.@input;"
           ]
         }
       ],
