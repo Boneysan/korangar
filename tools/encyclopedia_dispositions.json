@@ -84601,6 +84601,131 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_malaya_pedro_the_sailor_branch_for_2132_2223",
+      "unit": "E1-malaya_pedro_the_sailor_branch_for_2132",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Pedro the Sailor"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Blue_Gemstone,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malaya.txt",
+          "lines": [
+            2223
+          ],
+          "required_source_literals": [
+            "delitem Blue_Gemstone, 1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_malaya_pedro_the_sailor_branch_for_2132_2224",
+      "unit": "E1-malaya_pedro_the_sailor_branch_for_2132",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Pedro the Sailor"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Holy_Water,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malaya.txt",
+          "lines": [
+            2224
+          ],
+          "required_source_literals": [
+            "delitem Holy_Water, 1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_malaya_pedro_the_sailor_branch_for_2132_2265",
+      "unit": "E1-malaya_pedro_the_sailor_branch_for_2132",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Pedro the Sailor"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Soul_Protection,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malaya.txt",
+          "lines": [
+            2265
+          ],
+          "required_source_literals": [
+            "delitem Soul_Protection, 1; // Soul_Protection"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_malaya_pedro_the_sailor_branch_for_2132_2393",
+      "unit": "E1-malaya_pedro_the_sailor_branch_for_2132",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Pedro the Sailor"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Lesser_Agimat,2; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malaya.txt",
+          "lines": [
+            2393
+          ],
+          "required_source_literals": [
+            "getitem Lesser_Agimat, 2; // Lesser_Agimat"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_malaya_pedro_the_sailor_branch_for_2132_2454",
+      "unit": "E1-malaya_pedro_the_sailor_branch_for_2132",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Pedro the Sailor"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Lesser_Agimat,2; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malaya.txt",
+          "lines": [
+            2454
+          ],
+          "required_source_literals": [
+            "getitem Lesser_Agimat, 2; // Lesser_Agimat"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
