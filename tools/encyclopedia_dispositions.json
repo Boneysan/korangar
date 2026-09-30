@@ -125191,6 +125191,33 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e4_ko_huumaranka_formula",
+      "unit": "E4-ko-huumaranka",
+      "package": "E4",
+      "subject": {
+        "kind": "skill",
+        "ids": [
+          3009
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted case is the ratio site for these skills; this record does not reduce it to a worked example.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "src/map/battle.c",
+          "lines": [
+            2964
+          ],
+          "required_source_literals": [
+            "case KO_HUUMARANKA:"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
