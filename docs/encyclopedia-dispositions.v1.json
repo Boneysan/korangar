@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 1173,
+    "E1_unknown": 1204,
     "E1_verified": 1
   },
   "entries": [
@@ -11954,6 +11954,781 @@
           ],
           "required_source_literals": [
             "getitem First_Aid_Kit,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mid_campin_staff_officer_abidal_branch_for_9254_9454",
+      "unit": "E1-mid_campin_staff_officer_abidal_branch_for_9254",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Staff Officer Abidal"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Some_Of_Report,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_1.txt",
+          "lines": [
+            9454
+          ],
+          "required_source_literals": [
+            "delitem Some_Of_Report,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mid_campin_staff_officer_abidal_branch_for_9254_9455",
+      "unit": "E1-mid_campin_staff_officer_abidal_branch_for_9254",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Staff Officer Abidal"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Expedition_Report_Vol1,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_1.txt",
+          "lines": [
+            9455
+          ],
+          "required_source_literals": [
+            "getitem Expedition_Report_Vol1,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mid_campin_staff_officer_abidal_branch_for_9254_9469",
+      "unit": "E1-mid_campin_staff_officer_abidal_branch_for_9254",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Staff Officer Abidal"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Some_Of_Report,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_1.txt",
+          "lines": [
+            9469
+          ],
+          "required_source_literals": [
+            "delitem Some_Of_Report,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mid_campin_staff_officer_abidal_branch_for_9254_9476",
+      "unit": "E1-mid_campin_staff_officer_abidal_branch_for_9254",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Staff Officer Abidal"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Some_Of_Report,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_1.txt",
+          "lines": [
+            9476
+          ],
+          "required_source_literals": [
+            "delitem Some_Of_Report,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mid_campin_staff_officer_abidal_branch_for_9254_9477",
+      "unit": "E1-mid_campin_staff_officer_abidal_branch_for_9254",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Staff Officer Abidal"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Expedition_Report_Vol2,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_1.txt",
+          "lines": [
+            9477
+          ],
+          "required_source_literals": [
+            "getitem Expedition_Report_Vol2,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mid_campin_staff_officer_abidal_branch_for_9254_9491",
+      "unit": "E1-mid_campin_staff_officer_abidal_branch_for_9254",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Staff Officer Abidal"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Some_Of_Report,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_1.txt",
+          "lines": [
+            9491
+          ],
+          "required_source_literals": [
+            "delitem Some_Of_Report,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mid_campin_staff_officer_abidal_branch_for_9254_9498",
+      "unit": "E1-mid_campin_staff_officer_abidal_branch_for_9254",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Staff Officer Abidal"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Some_Of_Report,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_1.txt",
+          "lines": [
+            9498
+          ],
+          "required_source_literals": [
+            "delitem Some_Of_Report,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mid_campin_staff_officer_abidal_branch_for_9254_9499",
+      "unit": "E1-mid_campin_staff_officer_abidal_branch_for_9254",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Staff Officer Abidal"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Expedition_Report_Vol3,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_1.txt",
+          "lines": [
+            9499
+          ],
+          "required_source_literals": [
+            "getitem Expedition_Report_Vol3,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mid_campin_staff_officer_abidal_branch_for_9254_9513",
+      "unit": "E1-mid_campin_staff_officer_abidal_branch_for_9254",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Staff Officer Abidal"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Some_Of_Report,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_1.txt",
+          "lines": [
+            9513
+          ],
+          "required_source_literals": [
+            "delitem Some_Of_Report,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mid_campin_staff_officer_abidal_branch_for_9254_9520",
+      "unit": "E1-mid_campin_staff_officer_abidal_branch_for_9254",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Staff Officer Abidal"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Some_Of_Report,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_1.txt",
+          "lines": [
+            9520
+          ],
+          "required_source_literals": [
+            "delitem Some_Of_Report,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mid_campin_staff_officer_abidal_branch_for_9254_9521",
+      "unit": "E1-mid_campin_staff_officer_abidal_branch_for_9254",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Staff Officer Abidal"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Expedition_Report_Vol4,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_1.txt",
+          "lines": [
+            9521
+          ],
+          "required_source_literals": [
+            "getitem Expedition_Report_Vol4,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mid_campin_staff_officer_abidal_branch_for_9254_9530",
+      "unit": "E1-mid_campin_staff_officer_abidal_branch_for_9254",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Staff Officer Abidal"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Some_Of_Report,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_1.txt",
+          "lines": [
+            9530
+          ],
+          "required_source_literals": [
+            "delitem Some_Of_Report,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mid_campin_staff_officer_abidal_branch_for_9254_9540",
+      "unit": "E1-mid_campin_staff_officer_abidal_branch_for_9254",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Staff Officer Abidal"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Some_Of_Report,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_1.txt",
+          "lines": [
+            9540
+          ],
+          "required_source_literals": [
+            "delitem Some_Of_Report,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mid_campin_staff_officer_abidal_branch_for_9254_9557",
+      "unit": "E1-mid_campin_staff_officer_abidal_branch_for_9254",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Staff Officer Abidal"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Some_Of_Report,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_1.txt",
+          "lines": [
+            9557
+          ],
+          "required_source_literals": [
+            "delitem Some_Of_Report,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mid_campin_staff_officer_abidal_branch_for_9254_9558",
+      "unit": "E1-mid_campin_staff_officer_abidal_branch_for_9254",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Staff Officer Abidal"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Expedition_Report_Vol1,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_1.txt",
+          "lines": [
+            9558
+          ],
+          "required_source_literals": [
+            "getitem Expedition_Report_Vol1,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mid_campin_staff_officer_abidal_branch_for_9254_9572",
+      "unit": "E1-mid_campin_staff_officer_abidal_branch_for_9254",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Staff Officer Abidal"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Some_Of_Report,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_1.txt",
+          "lines": [
+            9572
+          ],
+          "required_source_literals": [
+            "delitem Some_Of_Report,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mid_campin_staff_officer_abidal_branch_for_9254_9579",
+      "unit": "E1-mid_campin_staff_officer_abidal_branch_for_9254",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Staff Officer Abidal"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Some_Of_Report,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_1.txt",
+          "lines": [
+            9579
+          ],
+          "required_source_literals": [
+            "delitem Some_Of_Report,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mid_campin_staff_officer_abidal_branch_for_9254_9580",
+      "unit": "E1-mid_campin_staff_officer_abidal_branch_for_9254",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Staff Officer Abidal"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Expedition_Report_Vol2,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_1.txt",
+          "lines": [
+            9580
+          ],
+          "required_source_literals": [
+            "getitem Expedition_Report_Vol2,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mid_campin_staff_officer_abidal_branch_for_9254_9594",
+      "unit": "E1-mid_campin_staff_officer_abidal_branch_for_9254",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Staff Officer Abidal"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Some_Of_Report,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_1.txt",
+          "lines": [
+            9594
+          ],
+          "required_source_literals": [
+            "delitem Some_Of_Report,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mid_campin_staff_officer_abidal_branch_for_9254_9601",
+      "unit": "E1-mid_campin_staff_officer_abidal_branch_for_9254",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Staff Officer Abidal"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Some_Of_Report,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_1.txt",
+          "lines": [
+            9601
+          ],
+          "required_source_literals": [
+            "delitem Some_Of_Report,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mid_campin_staff_officer_abidal_branch_for_9254_9602",
+      "unit": "E1-mid_campin_staff_officer_abidal_branch_for_9254",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Staff Officer Abidal"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Expedition_Report_Vol3,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_1.txt",
+          "lines": [
+            9602
+          ],
+          "required_source_literals": [
+            "getitem Expedition_Report_Vol3,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mid_campin_staff_officer_abidal_branch_for_9254_9616",
+      "unit": "E1-mid_campin_staff_officer_abidal_branch_for_9254",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Staff Officer Abidal"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Some_Of_Report,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_1.txt",
+          "lines": [
+            9616
+          ],
+          "required_source_literals": [
+            "delitem Some_Of_Report,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mid_campin_staff_officer_abidal_branch_for_9254_9623",
+      "unit": "E1-mid_campin_staff_officer_abidal_branch_for_9254",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Staff Officer Abidal"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Some_Of_Report,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_1.txt",
+          "lines": [
+            9623
+          ],
+          "required_source_literals": [
+            "delitem Some_Of_Report,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mid_campin_staff_officer_abidal_branch_for_9254_9624",
+      "unit": "E1-mid_campin_staff_officer_abidal_branch_for_9254",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Staff Officer Abidal"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Expedition_Report_Vol4,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_1.txt",
+          "lines": [
+            9624
+          ],
+          "required_source_literals": [
+            "getitem Expedition_Report_Vol4,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mid_campin_staff_officer_abidal_branch_for_9254_9638",
+      "unit": "E1-mid_campin_staff_officer_abidal_branch_for_9254",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Staff Officer Abidal"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Some_Of_Report,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_1.txt",
+          "lines": [
+            9638
+          ],
+          "required_source_literals": [
+            "delitem Some_Of_Report,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mid_campin_staff_officer_abidal_branch_for_9254_9645",
+      "unit": "E1-mid_campin_staff_officer_abidal_branch_for_9254",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Staff Officer Abidal"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Some_Of_Report,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_1.txt",
+          "lines": [
+            9645
+          ],
+          "required_source_literals": [
+            "delitem Some_Of_Report,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mid_campin_staff_officer_abidal_branch_for_9254_9666",
+      "unit": "E1-mid_campin_staff_officer_abidal_branch_for_9254",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Staff Officer Abidal"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Expedition_Report_Vol1,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_1.txt",
+          "lines": [
+            9666
+          ],
+          "required_source_literals": [
+            "delitem Expedition_Report_Vol1,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mid_campin_staff_officer_abidal_branch_for_9254_9667",
+      "unit": "E1-mid_campin_staff_officer_abidal_branch_for_9254",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Staff Officer Abidal"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Expedition_Report_Vol2,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_1.txt",
+          "lines": [
+            9667
+          ],
+          "required_source_literals": [
+            "delitem Expedition_Report_Vol2,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mid_campin_staff_officer_abidal_branch_for_9254_9668",
+      "unit": "E1-mid_campin_staff_officer_abidal_branch_for_9254",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Staff Officer Abidal"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Expedition_Report_Vol3,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_1.txt",
+          "lines": [
+            9668
+          ],
+          "required_source_literals": [
+            "delitem Expedition_Report_Vol3,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mid_campin_staff_officer_abidal_branch_for_9254_9669",
+      "unit": "E1-mid_campin_staff_officer_abidal_branch_for_9254",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Staff Officer Abidal"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Expedition_Report_Vol4,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_1.txt",
+          "lines": [
+            9669
+          ],
+          "required_source_literals": [
+            "delitem Expedition_Report_Vol4,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mid_campin_staff_officer_abidal_branch_for_9254_9670",
+      "unit": "E1-mid_campin_staff_officer_abidal_branch_for_9254",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Staff Officer Abidal"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Expedition_Report,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_1.txt",
+          "lines": [
+            9670
+          ],
+          "required_source_literals": [
+            "getitem Expedition_Report,1;"
           ]
         }
       ],
