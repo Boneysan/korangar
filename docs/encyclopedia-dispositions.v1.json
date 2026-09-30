@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 919,
+    "E1_unknown": 923,
     "E1_verified": 1
   },
   "entries": [
@@ -4629,6 +4629,106 @@
           ],
           "required_source_literals": [
             "delitem Cyfar,5;\t// Cyfar"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_gef_fild07_roda_frog_frog_cap_branch_for_519_612",
+      "unit": "E1-gef_fild07_roda_frog_frog_cap_branch_for_519",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Roda Frog#Frog_Cap"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Spawn,100; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2010_headgears.txt",
+          "lines": [
+            612
+          ],
+          "required_source_literals": [
+            "delitem Spawn,100; //Spawn"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_gef_fild07_roda_frog_frog_cap_branch_for_519_689",
+      "unit": "E1-gef_fild07_roda_frog_frog_cap_branch_for_519",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Roda Frog#Frog_Cap"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Posionous_Canine,100; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2010_headgears.txt",
+          "lines": [
+            689
+          ],
+          "required_source_literals": [
+            "delitem Posionous_Canine,100; //Posionous_Canine"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_gef_fild07_roda_frog_frog_cap_branch_for_519_727",
+      "unit": "E1-gef_fild07_roda_frog_frog_cap_branch_for_519",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Roda Frog#Frog_Cap"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Scales_Shell,50; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2010_headgears.txt",
+          "lines": [
+            727
+          ],
+          "required_source_literals": [
+            "delitem Scales_Shell,50; //Scales_Shell"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_gef_fild07_roda_frog_frog_cap_branch_for_519_785",
+      "unit": "E1-gef_fild07_roda_frog_frog_cap_branch_for_519",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Roda Frog#Frog_Cap"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Frog_Cap,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2010_headgears.txt",
+          "lines": [
+            785
+          ],
+          "required_source_literals": [
+            "getitem Frog_Cap,1; //Frog_Cap"
           ]
         }
       ],
