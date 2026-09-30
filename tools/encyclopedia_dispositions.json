@@ -141483,6 +141483,33 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_17014_npc_quests_quests_nameless_txt_1345",
+      "unit": "E5-chain-17014",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          17014
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 17014; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_nameless.txt",
+          "lines": [
+            1345
+          ],
+          "required_source_literals": [
+            "changequest 17014,17015;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
