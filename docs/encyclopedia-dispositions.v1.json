@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 2613,
+    "E1_unknown": 2614,
     "E1_verified": 1
   },
   "entries": [
@@ -54854,6 +54854,31 @@
           ],
           "required_source_literals": [
             "getitem Branch,1; // Branch"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_sign01_serin_serin_branch_for_8430_8458",
+      "unit": "E1-que_sign01_serin_serin_branch_for_8430",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Serin#serin"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Authority_Of_Nine_World,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/the_sign_quest.txt",
+          "lines": [
+            8458
+          ],
+          "required_source_literals": [
+            "delitem Authority_Of_Nine_World,1;"
           ]
         }
       ],

@@ -65451,6 +65451,31 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_que_sign01_serin_serin_branch_for_8430_8458",
+      "unit": "E1-que_sign01_serin_serin_branch_for_8430",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Serin#serin"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Authority_Of_Nine_World,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/the_sign_quest.txt",
+          "lines": [
+            8458
+          ],
+          "required_source_literals": [
+            "delitem Authority_Of_Nine_World,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
