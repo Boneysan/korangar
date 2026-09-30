@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 2816,
+    "E1_unknown": 2825,
     "E1_verified": 1
   },
   "entries": [
@@ -19054,6 +19054,231 @@
           ],
           "required_source_literals": [
             "getitem(Spectacles, 5);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_iz_ac01_academy_receptionist_1_branch_for_2608_2656",
+      "unit": "E1-iz_ac01_academy_receptionist_1_branch_for_2608",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Academy Receptionist#1"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Novice_Plate,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            2656
+          ],
+          "required_source_literals": [
+            "getitem(Novice_Plate, 1); // Novice_Plate"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_iz_ac01_academy_receptionist_1_branch_for_2608_2657",
+      "unit": "E1-iz_ac01_academy_receptionist_1_branch_for_2608",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Academy Receptionist#1"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Novice_Hood,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            2657
+          ],
+          "required_source_literals": [
+            "getitem(Novice_Hood, 1); // Novice_Hood"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_iz_ac01_academy_receptionist_1_branch_for_2608_2658",
+      "unit": "E1-iz_ac01_academy_receptionist_1_branch_for_2608",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Academy Receptionist#1"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Novice_Boots,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            2658
+          ],
+          "required_source_literals": [
+            "getitem(Novice_Boots, 1); // Novice_Boots"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_iz_ac01_academy_receptionist_1_branch_for_2608_2659",
+      "unit": "E1-iz_ac01_academy_receptionist_1_branch_for_2608",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Academy Receptionist#1"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Novice_Egg_Cap,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            2659
+          ],
+          "required_source_literals": [
+            "getitem(Novice_Egg_Cap, 1); // Novice_Egg_Cap"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_iz_ac01_academy_receptionist_1_branch_for_2608_2660",
+      "unit": "E1-iz_ac01_academy_receptionist_1_branch_for_2608",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Academy Receptionist#1"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Novice_Knife,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            2660
+          ],
+          "required_source_literals": [
+            "getitem(Novice_Knife, 1); // Novice_Knife"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_iz_ac01_academy_receptionist_1_branch_for_2608_2661",
+      "unit": "E1-iz_ac01_academy_receptionist_1_branch_for_2608",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Academy Receptionist#1"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Novice_Guard,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            2661
+          ],
+          "required_source_literals": [
+            "getitem(Novice_Guard, 1); // Novice_Guard"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_iz_ac01_academy_receptionist_1_branch_for_2608_2662",
+      "unit": "E1-iz_ac01_academy_receptionist_1_branch_for_2608",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Academy Receptionist#1"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Cryptura_Academy_Hat,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            2662
+          ],
+          "required_source_literals": [
+            "getitem(Cryptura_Academy_Hat, 1);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_iz_ac01_academy_receptionist_1_branch_for_2608_2663",
+      "unit": "E1-iz_ac01_academy_receptionist_1_branch_for_2608",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Academy Receptionist#1"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Cryptura_Hair_Coupon,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            2663
+          ],
+          "required_source_literals": [
+            "getitem(Cryptura_Hair_Coupon, 1);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_iz_ac01_academy_receptionist_1_branch_for_2608_2664",
+      "unit": "E1-iz_ac01_academy_receptionist_1_branch_for_2608",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Academy Receptionist#1"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Novice_Potion,300; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            2664
+          ],
+          "required_source_literals": [
+            "getitem(Novice_Potion, 300); // Novice_Potion"
           ]
         }
       ],
