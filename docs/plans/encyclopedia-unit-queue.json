@@ -11102,7 +11102,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Laur",
@@ -11121,7 +11121,25 @@
       ],
       "size_lines": 56,
       "reason": "refused by the braced one-item prover: braceless",
-      "history": []
+      "history": [
+        "2026-09-30T15:38:19Z activated",
+        "2026-09-30T15:38:19Z validated",
+        "2026-09-30T15:38:19Z verified: 1 claims supported",
+        "2026-09-30T15:38:43Z accepted",
+        "2026-09-30T15:38:43Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "66569a96149a95b963a41e98df63c1dc586d60093ee4beedaf1b26dff8ca4242",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-ra_temple_nuria_branch_for_10213",
