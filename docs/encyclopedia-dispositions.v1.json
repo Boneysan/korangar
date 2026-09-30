@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 2703,
+    "E1_unknown": 2706,
     "E1_verified": 1
   },
   "entries": [
@@ -63929,6 +63929,81 @@
           ],
           "required_source_literals": [
             "delitem Free_Flying_Ship_Ticket,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_yuno_chainheart_branch_for_38_101",
+      "unit": "E1-yuno_chainheart_branch_for_38",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Chainheart"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Driver_Band_,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-1/mechanic.txt",
+          "lines": [
+            101
+          ],
+          "required_source_literals": [
+            "getitem Driver_Band_,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_yuno_chainheart_branch_for_38_102",
+      "unit": "E1-yuno_chainheart_branch_for_38",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Chainheart"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Green_Apple_Ring,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-1/mechanic.txt",
+          "lines": [
+            102
+          ],
+          "required_source_literals": [
+            "getitem Green_Apple_Ring,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_yuno_chainheart_branch_for_38_99",
+      "unit": "E1-yuno_chainheart_branch_for_38",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Chainheart"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Driver_Band,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-1/mechanic.txt",
+          "lines": [
+            99
+          ],
+          "required_source_literals": [
+            "getitem Driver_Band,1;"
           ]
         }
       ],
