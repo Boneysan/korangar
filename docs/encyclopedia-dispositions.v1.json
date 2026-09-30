@@ -12,7 +12,7 @@
     "E2_verified": 236,
     "E3_unknown": 973,
     "E4_unknown": 213,
-    "E5_unknown": 349
+    "E5_unknown": 352
   },
   "entries": [
     {
@@ -105122,6 +105122,87 @@
           ],
           "required_source_literals": [
             "completequest 11105;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_12003_npc_quests_quests_lighthalzen_txt_3167",
+      "unit": "E5-chain-12003",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          12006
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 12006; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_lighthalzen.txt",
+          "lines": [
+            3167
+          ],
+          "required_source_literals": [
+            "completequest 12006;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_12003_npc_quests_quests_lighthalzen_txt_3218",
+      "unit": "E5-chain-12003",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          12004
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 12004; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_lighthalzen.txt",
+          "lines": [
+            3218
+          ],
+          "required_source_literals": [
+            "changequest 12004,12005;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_12003_npc_quests_quests_lighthalzen_txt_3268",
+      "unit": "E5-chain-12003",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          12003
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 12003; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_lighthalzen.txt",
+          "lines": [
+            3268
+          ],
+          "required_source_literals": [
+            "changequest 12003,12004;"
           ]
         }
       ],
