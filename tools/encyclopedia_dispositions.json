@@ -52351,6 +52351,106 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ve_in_drunken_man_vol_branch_for_5602_5841",
+      "unit": "E1-ve_in_drunken_man_vol_branch_for_5602",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Drunken Man#vol"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Note_Of_Geologist,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_veins.txt",
+          "lines": [
+            5841
+          ],
+          "required_source_literals": [
+            "getitem Note_Of_Geologist,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ve_in_drunken_man_vol_branch_for_5602_5964",
+      "unit": "E1-ve_in_drunken_man_vol_branch_for_5602",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Drunken Man#vol"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem File01,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_veins.txt",
+          "lines": [
+            5964
+          ],
+          "required_source_literals": [
+            "delitem File01,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ve_in_drunken_man_vol_branch_for_5602_5965",
+      "unit": "E1-ve_in_drunken_man_vol_branch_for_5602",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Drunken Man#vol"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Broken_Thermometer,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_veins.txt",
+          "lines": [
+            5965
+          ],
+          "required_source_literals": [
+            "delitem Broken_Thermometer,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ve_in_drunken_man_vol_branch_for_5602_5966",
+      "unit": "E1-ve_in_drunken_man_vol_branch_for_5602",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Drunken Man#vol"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Note_Of_Geologist,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_veins.txt",
+          "lines": [
+            5966
+          ],
+          "required_source_literals": [
+            "delitem Note_Of_Geologist,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
