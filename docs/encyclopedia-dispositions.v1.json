@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 925,
+    "E1_unknown": 931,
     "E1_verified": 1
   },
   "entries": [
@@ -704,6 +704,156 @@
           ],
           "required_source_literals": [
             "getitem Buy_Market_Permit,5; //Buy_Stall_Permit"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_alberta_tourist_thai_branch_for_44_234",
+      "unit": "E1-alberta_tourist_thai_branch_for_44",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Tourist#thai"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Meat,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/obb_quest.txt",
+          "lines": [
+            234
+          ],
+          "required_source_literals": [
+            "delitem Meat,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_alberta_tourist_thai_branch_for_44_269",
+      "unit": "E1-alberta_tourist_thai_branch_for_44",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Tourist#thai"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Meat,20; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/obb_quest.txt",
+          "lines": [
+            269
+          ],
+          "required_source_literals": [
+            "delitem Meat,20;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_alberta_tourist_thai_branch_for_44_304",
+      "unit": "E1-alberta_tourist_thai_branch_for_44",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Tourist#thai"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Meat,40; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/obb_quest.txt",
+          "lines": [
+            304
+          ],
+          "required_source_literals": [
+            "delitem Meat,40;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_alberta_tourist_thai_branch_for_44_338",
+      "unit": "E1-alberta_tourist_thai_branch_for_44",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Tourist#thai"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Well_Baked_Cookie,countitem(Well_Baked_Cookie; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/obb_quest.txt",
+          "lines": [
+            338
+          ],
+          "required_source_literals": [
+            "delitem Well_Baked_Cookie,countitem(Well_Baked_Cookie);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_alberta_tourist_thai_branch_for_44_394",
+      "unit": "E1-alberta_tourist_thai_branch_for_44",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Tourist#thai"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Well_Baked_Cookie,20; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/obb_quest.txt",
+          "lines": [
+            394
+          ],
+          "required_source_literals": [
+            "delitem Well_Baked_Cookie,20;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_alberta_tourist_thai_branch_for_44_485",
+      "unit": "E1-alberta_tourist_thai_branch_for_44",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Tourist#thai"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Cutter_,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/obb_quest.txt",
+          "lines": [
+            485
+          ],
+          "required_source_literals": [
+            "getitem Cutter_,1;"
           ]
         }
       ],
