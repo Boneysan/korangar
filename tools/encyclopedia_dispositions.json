@@ -142833,6 +142833,33 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_18046_npc_quests_quests_prontera_txt_3342",
+      "unit": "E5-chain-18046",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          18046
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 18046; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_prontera.txt",
+          "lines": [
+            3342
+          ],
+          "required_source_literals": [
+            "changequest 18046,18047;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
