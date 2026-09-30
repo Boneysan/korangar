@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 709,
+    "E1_unknown": 729,
     "E1_verified": 1
   },
   "entries": [
@@ -10901,6 +10901,506 @@
           "path": "npc/quests/lvl4_weapon_quest.txt",
           "lines": [
             2476
+          ],
+          "required_source_literals": [
+            "delitem Gold,20;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_niflheim_waltboughst_lv4_branch_for_3074_3137",
+      "unit": "E1-niflheim_waltboughst_lv4_branch_for_3074",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Waltboughst#lv4"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Byeorrun_Gum,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/lvl4_weapon_quest.txt",
+          "lines": [
+            3137
+          ],
+          "required_source_literals": [
+            "getitem Byeorrun_Gum,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_niflheim_waltboughst_lv4_branch_for_3074_3141",
+      "unit": "E1-niflheim_waltboughst_lv4_branch_for_3074",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Waltboughst#lv4"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Exercise,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/lvl4_weapon_quest.txt",
+          "lines": [
+            3141
+          ],
+          "required_source_literals": [
+            "getitem Exercise,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_niflheim_waltboughst_lv4_branch_for_3074_3167",
+      "unit": "E1-niflheim_waltboughst_lv4_branch_for_3074",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Waltboughst#lv4"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Combat_Knife,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/lvl4_weapon_quest.txt",
+          "lines": [
+            3167
+          ],
+          "required_source_literals": [
+            "getitem Combat_Knife,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_niflheim_waltboughst_lv4_branch_for_3074_3171",
+      "unit": "E1-niflheim_waltboughst_lv4_branch_for_3074",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Waltboughst#lv4"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Grand_Cross,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/lvl4_weapon_quest.txt",
+          "lines": [
+            3171
+          ],
+          "required_source_literals": [
+            "getitem Grand_Cross,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_niflheim_waltboughst_lv4_branch_for_3074_3248",
+      "unit": "E1-niflheim_waltboughst_lv4_branch_for_3074",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Waltboughst#lv4"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Muscovite,30; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/lvl4_weapon_quest.txt",
+          "lines": [
+            3248
+          ],
+          "required_source_literals": [
+            "delitem Muscovite,30;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_niflheim_waltboughst_lv4_branch_for_3074_3249",
+      "unit": "E1-niflheim_waltboughst_lv4_branch_for_3074",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Waltboughst#lv4"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Citrine,30; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/lvl4_weapon_quest.txt",
+          "lines": [
+            3249
+          ],
+          "required_source_literals": [
+            "delitem Citrine,30;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_niflheim_waltboughst_lv4_branch_for_3074_3250",
+      "unit": "E1-niflheim_waltboughst_lv4_branch_for_3074",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Waltboughst#lv4"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Agate,30; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/lvl4_weapon_quest.txt",
+          "lines": [
+            3250
+          ],
+          "required_source_literals": [
+            "delitem Agate,30;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_niflheim_waltboughst_lv4_branch_for_3074_3253",
+      "unit": "E1-niflheim_waltboughst_lv4_branch_for_3074",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Waltboughst#lv4"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Pyroxene,30; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/lvl4_weapon_quest.txt",
+          "lines": [
+            3253
+          ],
+          "required_source_literals": [
+            "delitem Pyroxene,30;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_niflheim_waltboughst_lv4_branch_for_3074_3254",
+      "unit": "E1-niflheim_waltboughst_lv4_branch_for_3074",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Waltboughst#lv4"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Turquoise,30; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/lvl4_weapon_quest.txt",
+          "lines": [
+            3254
+          ],
+          "required_source_literals": [
+            "delitem Turquoise,30;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_niflheim_waltboughst_lv4_branch_for_3074_3255",
+      "unit": "E1-niflheim_waltboughst_lv4_branch_for_3074",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Waltboughst#lv4"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Phlogopite,30; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/lvl4_weapon_quest.txt",
+          "lines": [
+            3255
+          ],
+          "required_source_literals": [
+            "delitem Phlogopite,30;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_niflheim_waltboughst_lv4_branch_for_3074_3262",
+      "unit": "E1-niflheim_waltboughst_lv4_branch_for_3074",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Waltboughst#lv4"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Muscovite,30; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/lvl4_weapon_quest.txt",
+          "lines": [
+            3262
+          ],
+          "required_source_literals": [
+            "delitem Muscovite,30;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_niflheim_waltboughst_lv4_branch_for_3074_3265",
+      "unit": "E1-niflheim_waltboughst_lv4_branch_for_3074",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Waltboughst#lv4"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Pyroxene,30; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/lvl4_weapon_quest.txt",
+          "lines": [
+            3265
+          ],
+          "required_source_literals": [
+            "delitem Pyroxene,30;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_niflheim_waltboughst_lv4_branch_for_3074_3270",
+      "unit": "E1-niflheim_waltboughst_lv4_branch_for_3074",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Waltboughst#lv4"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Citrine,30; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/lvl4_weapon_quest.txt",
+          "lines": [
+            3270
+          ],
+          "required_source_literals": [
+            "delitem Citrine,30;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_niflheim_waltboughst_lv4_branch_for_3074_3273",
+      "unit": "E1-niflheim_waltboughst_lv4_branch_for_3074",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Waltboughst#lv4"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Turquoise,30; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/lvl4_weapon_quest.txt",
+          "lines": [
+            3273
+          ],
+          "required_source_literals": [
+            "delitem Turquoise,30;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_niflheim_waltboughst_lv4_branch_for_3074_3278",
+      "unit": "E1-niflheim_waltboughst_lv4_branch_for_3074",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Waltboughst#lv4"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Agate,30; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/lvl4_weapon_quest.txt",
+          "lines": [
+            3278
+          ],
+          "required_source_literals": [
+            "delitem Agate,30;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_niflheim_waltboughst_lv4_branch_for_3074_3281",
+      "unit": "E1-niflheim_waltboughst_lv4_branch_for_3074",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Waltboughst#lv4"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Phlogopite,30; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/lvl4_weapon_quest.txt",
+          "lines": [
+            3281
+          ],
+          "required_source_literals": [
+            "delitem Phlogopite,30;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_niflheim_waltboughst_lv4_branch_for_3074_3390",
+      "unit": "E1-niflheim_waltboughst_lv4_branch_for_3074",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Waltboughst#lv4"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Hammer_Of_Blacksmith,2; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/lvl4_weapon_quest.txt",
+          "lines": [
+            3390
+          ],
+          "required_source_literals": [
+            "delitem Hammer_Of_Blacksmith,2;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_niflheim_waltboughst_lv4_branch_for_3074_3391",
+      "unit": "E1-niflheim_waltboughst_lv4_branch_for_3074",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Waltboughst#lv4"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Emperium_Anvil,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/lvl4_weapon_quest.txt",
+          "lines": [
+            3391
+          ],
+          "required_source_literals": [
+            "delitem Emperium_Anvil,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_niflheim_waltboughst_lv4_branch_for_3074_3392",
+      "unit": "E1-niflheim_waltboughst_lv4_branch_for_3074",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Waltboughst#lv4"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Illusion_Flower,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/lvl4_weapon_quest.txt",
+          "lines": [
+            3392
+          ],
+          "required_source_literals": [
+            "delitem Illusion_Flower,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_niflheim_waltboughst_lv4_branch_for_3074_3393",
+      "unit": "E1-niflheim_waltboughst_lv4_branch_for_3074",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Waltboughst#lv4"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Gold,20; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/lvl4_weapon_quest.txt",
+          "lines": [
+            3393
           ],
           "required_source_literals": [
             "delitem Gold,20;"
