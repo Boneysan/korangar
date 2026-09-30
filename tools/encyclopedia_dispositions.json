@@ -71626,6 +71626,31 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_iz_ac02_arang_ac_branch_for_8387_8430",
+      "unit": "E1-iz_ac02_arang_ac_branch_for_8387",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Arang#ac"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Taekwon_Manual,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            8430
+          ],
+          "required_source_literals": [
+            "getitem(Taekwon_Manual, 1); // Taekwon_Manual"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
