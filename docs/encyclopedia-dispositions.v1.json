@@ -12,7 +12,7 @@
     "E2_verified": 236,
     "E3_unknown": 973,
     "E4_unknown": 213,
-    "E5_unknown": 93
+    "E5_unknown": 96
   },
   "entries": [
     {
@@ -103610,6 +103610,87 @@
           ],
           "required_source_literals": [
             "changequest 2030,2031;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2034_npc_jobs_2_2_alchemist_txt_1871",
+      "unit": "E5-chain-2034",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2039
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 2039; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/alchemist.txt",
+          "lines": [
+            1871
+          ],
+          "required_source_literals": [
+            "changequest 2039,2040;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2034_npc_jobs_2_2_alchemist_txt_1874",
+      "unit": "E5-chain-2034",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2034
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 2034; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/alchemist.txt",
+          "lines": [
+            1874
+          ],
+          "required_source_literals": [
+            "changequest 2034,2040;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2034_npc_jobs_2_2_alchemist_txt_1882",
+      "unit": "E5-chain-2034",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2040
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 2040; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/alchemist.txt",
+          "lines": [
+            1882
+          ],
+          "required_source_literals": [
+            "completequest 2040;"
           ]
         }
       ],
