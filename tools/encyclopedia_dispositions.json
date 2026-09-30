@@ -20251,6 +20251,531 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_xmas_in_hat_merchant_zero_branch_for_1452_1497",
+      "unit": "E1-xmas_in_hat_merchant_zero_branch_for_1452",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Hat Merchant#zero"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Santas_Hat,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2004_headgears.txt",
+          "lines": [
+            1497
+          ],
+          "required_source_literals": [
+            "delitem Santas_Hat,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_xmas_in_hat_merchant_zero_branch_for_1452_1498",
+      "unit": "E1-xmas_in_hat_merchant_zero_branch_for_1452",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Hat Merchant#zero"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Oil_Paper,100; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2004_headgears.txt",
+          "lines": [
+            1498
+          ],
+          "required_source_literals": [
+            "delitem Oil_Paper,100;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_xmas_in_hat_merchant_zero_branch_for_1452_1499",
+      "unit": "E1-xmas_in_hat_merchant_zero_branch_for_1452",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Hat Merchant#zero"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Smooth_Paper,100; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2004_headgears.txt",
+          "lines": [
+            1499
+          ],
+          "required_source_literals": [
+            "delitem Smooth_Paper,100;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_xmas_in_hat_merchant_zero_branch_for_1452_1502",
+      "unit": "E1-xmas_in_hat_merchant_zero_branch_for_1452",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Hat Merchant#zero"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Party_Hat,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2004_headgears.txt",
+          "lines": [
+            1502
+          ],
+          "required_source_literals": [
+            "getitem Party_Hat,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_xmas_in_hat_merchant_zero_branch_for_1452_1506",
+      "unit": "E1-xmas_in_hat_merchant_zero_branch_for_1452",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Hat Merchant#zero"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Fluff,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2004_headgears.txt",
+          "lines": [
+            1506
+          ],
+          "required_source_literals": [
+            "getitem Fluff,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_xmas_in_hat_merchant_zero_branch_for_1452_1553",
+      "unit": "E1-xmas_in_hat_merchant_zero_branch_for_1452",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Hat Merchant#zero"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Sahkkat,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2004_headgears.txt",
+          "lines": [
+            1553
+          ],
+          "required_source_literals": [
+            "delitem Sahkkat,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_xmas_in_hat_merchant_zero_branch_for_1452_1554",
+      "unit": "E1-xmas_in_hat_merchant_zero_branch_for_1452",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Hat Merchant#zero"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Tough_Vines,300; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2004_headgears.txt",
+          "lines": [
+            1554
+          ],
+          "required_source_literals": [
+            "delitem Tough_Vines,300;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_xmas_in_hat_merchant_zero_branch_for_1452_1555",
+      "unit": "E1-xmas_in_hat_merchant_zero_branch_for_1452",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Hat Merchant#zero"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Bamboo_Cut,300; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2004_headgears.txt",
+          "lines": [
+            1555
+          ],
+          "required_source_literals": [
+            "delitem Bamboo_Cut,300;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_xmas_in_hat_merchant_zero_branch_for_1452_1560",
+      "unit": "E1-xmas_in_hat_merchant_zero_branch_for_1452",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Hat Merchant#zero"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Straw_Hat,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2004_headgears.txt",
+          "lines": [
+            1560
+          ],
+          "required_source_literals": [
+            "getitem Straw_Hat,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_xmas_in_hat_merchant_zero_branch_for_1452_1605",
+      "unit": "E1-xmas_in_hat_merchant_zero_branch_for_1452",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Hat Merchant#zero"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Western_Grace,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2004_headgears.txt",
+          "lines": [
+            1605
+          ],
+          "required_source_literals": [
+            "delitem Western_Grace,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_xmas_in_hat_merchant_zero_branch_for_1452_1606",
+      "unit": "E1-xmas_in_hat_merchant_zero_branch_for_1452",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Hat Merchant#zero"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Claw_Of_Desert_Wolf,108; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2004_headgears.txt",
+          "lines": [
+            1606
+          ],
+          "required_source_literals": [
+            "delitem Claw_Of_Desert_Wolf,108;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_xmas_in_hat_merchant_zero_branch_for_1452_1607",
+      "unit": "E1-xmas_in_hat_merchant_zero_branch_for_1452",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Hat Merchant#zero"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Soft_Leaf,108; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2004_headgears.txt",
+          "lines": [
+            1607
+          ],
+          "required_source_literals": [
+            "delitem Soft_Leaf,108;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_xmas_in_hat_merchant_zero_branch_for_1452_1608",
+      "unit": "E1-xmas_in_hat_merchant_zero_branch_for_1452",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Hat Merchant#zero"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Burning_Horse_Shoe,4; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2004_headgears.txt",
+          "lines": [
+            1608
+          ],
+          "required_source_literals": [
+            "delitem Burning_Horse_Shoe,4;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_xmas_in_hat_merchant_zero_branch_for_1452_1611",
+      "unit": "E1-xmas_in_hat_merchant_zero_branch_for_1452",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Hat Merchant#zero"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Cowboy_Hat,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2004_headgears.txt",
+          "lines": [
+            1611
+          ],
+          "required_source_literals": [
+            "getitem Cowboy_Hat,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_xmas_in_hat_merchant_zero_branch_for_1452_1657",
+      "unit": "E1-xmas_in_hat_merchant_zero_branch_for_1452",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Hat Merchant#zero"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Straw_Hat,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2004_headgears.txt",
+          "lines": [
+            1657
+          ],
+          "required_source_literals": [
+            "delitem Straw_Hat,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_xmas_in_hat_merchant_zero_branch_for_1452_1658",
+      "unit": "E1-xmas_in_hat_merchant_zero_branch_for_1452",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Hat Merchant#zero"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Cactus_Needle,50; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2004_headgears.txt",
+          "lines": [
+            1658
+          ],
+          "required_source_literals": [
+            "delitem Cactus_Needle,50;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_xmas_in_hat_merchant_zero_branch_for_1452_1659",
+      "unit": "E1-xmas_in_hat_merchant_zero_branch_for_1452",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Hat Merchant#zero"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Guitar,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2004_headgears.txt",
+          "lines": [
+            1659
+          ],
+          "required_source_literals": [
+            "delitem Guitar,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_xmas_in_hat_merchant_zero_branch_for_1452_1662",
+      "unit": "E1-xmas_in_hat_merchant_zero_branch_for_1452",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Hat Merchant#zero"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Sombrero,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2004_headgears.txt",
+          "lines": [
+            1662
+          ],
+          "required_source_literals": [
+            "getitem Sombrero,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_xmas_in_hat_merchant_zero_branch_for_1452_1709",
+      "unit": "E1-xmas_in_hat_merchant_zero_branch_for_1452",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Hat Merchant#zero"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Cap,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2004_headgears.txt",
+          "lines": [
+            1709
+          ],
+          "required_source_literals": [
+            "delitem Cap,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_xmas_in_hat_merchant_zero_branch_for_1452_1710",
+      "unit": "E1-xmas_in_hat_merchant_zero_branch_for_1452",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Hat Merchant#zero"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Yarn,500; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2004_headgears.txt",
+          "lines": [
+            1710
+          ],
+          "required_source_literals": [
+            "delitem Yarn,500;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_xmas_in_hat_merchant_zero_branch_for_1452_1717",
+      "unit": "E1-xmas_in_hat_merchant_zero_branch_for_1452",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Hat Merchant#zero"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Fur_Hat,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2004_headgears.txt",
+          "lines": [
+            1717
+          ],
+          "required_source_literals": [
+            "getitem Fur_Hat,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
