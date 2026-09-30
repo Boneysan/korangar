@@ -71282,7 +71282,7 @@
       "package": "E4",
       "kind": "e4_formula",
       "tier": "strong",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "skill_names": [
@@ -71301,7 +71301,25 @@
       ],
       "size_lines": 6,
       "reason": "skillratio case with branches or preprocessor blocks",
-      "history": []
+      "history": [
+        "2026-09-30T22:19:31Z activated",
+        "2026-09-30T22:19:32Z validated",
+        "2026-09-30T22:19:32Z verified: 1 claims supported",
+        "2026-09-30T22:19:55Z accepted",
+        "2026-09-30T22:19:55Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "cf4bb9fe7f33302edca5181a92ca94317b2e0bf46d16d9713a3a794d93ec21e6",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E4-ko-setsudan",
