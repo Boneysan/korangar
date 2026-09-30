@@ -12,7 +12,7 @@
     "E2_verified": 236,
     "E3_unknown": 973,
     "E4_unknown": 213,
-    "E5_unknown": 238
+    "E5_unknown": 242
   },
   "entries": [
     {
@@ -109307,6 +109307,114 @@
           ],
           "required_source_literals": [
             "changequest 7068,7069;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_7060_npc_quests_quests_13_2_txt_1391",
+      "unit": "E5-chain-7060",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7060
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 7060; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_2.txt",
+          "lines": [
+            1391
+          ],
+          "required_source_literals": [
+            "changequest 7060,7061;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_7060_npc_quests_quests_13_2_txt_1418",
+      "unit": "E5-chain-7060",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7060
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 7060; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_2.txt",
+          "lines": [
+            1418
+          ],
+          "required_source_literals": [
+            "changequest 7060,7061;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_7060_npc_quests_quests_13_2_txt_1489",
+      "unit": "E5-chain-7060",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7060
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 7060; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_2.txt",
+          "lines": [
+            1489
+          ],
+          "required_source_literals": [
+            "changequest 7060,7061;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_7060_npc_quests_quests_13_2_txt_1516",
+      "unit": "E5-chain-7060",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7060
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 7060; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_2.txt",
+          "lines": [
+            1516
+          ],
+          "required_source_literals": [
+            "changequest 7060,7061;"
           ]
         }
       ],
