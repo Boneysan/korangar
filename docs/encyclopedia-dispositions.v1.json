@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 2882,
+    "E1_unknown": 2885,
     "E1_verified": 1
   },
   "entries": [
@@ -20654,6 +20654,81 @@
           ],
           "required_source_literals": [
             "getitem(Mage_Manual, 1); // Mage_Manual"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_iz_ac02_ninja_guide_ac_branch_for_12348_12472",
+      "unit": "E1-iz_ac02_ninja_guide_ac_branch_for_12348",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Ninja Guide#ac"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Light_Shuriken,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            12472
+          ],
+          "required_source_literals": [
+            "getitem(Light_Shuriken, 10); // Light_Shuriken"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_iz_ac02_ninja_guide_ac_branch_for_12348_12479",
+      "unit": "E1-iz_ac02_ninja_guide_ac_branch_for_12348",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Ninja Guide#ac"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Ninja_Manual,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            12479
+          ],
+          "required_source_literals": [
+            "getitem(Ninja_Manual, 1); // Ninja_Manual"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_iz_ac02_ninja_guide_ac_branch_for_12348_12480",
+      "unit": "E1-iz_ac02_ninja_guide_ac_branch_for_12348",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Ninja Guide#ac"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Light_Shuriken,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            12480
+          ],
+          "required_source_literals": [
+            "getitem(Light_Shuriken, 10); // Light_Shuriken"
           ]
         }
       ],
