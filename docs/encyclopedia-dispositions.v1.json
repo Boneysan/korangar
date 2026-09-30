@@ -11,7 +11,7 @@
     "E2_conditional": 1,
     "E2_verified": 236,
     "E3_unknown": 973,
-    "E4_unknown": 68
+    "E4_unknown": 69
   },
   "entries": [
     {
@@ -98179,6 +98179,33 @@
           ],
           "required_source_literals": [
             "case MG_SOULSTRIKE:"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e4_mg_thunderstorm_formula",
+      "unit": "E4-mg-thunderstorm",
+      "package": "E4",
+      "subject": {
+        "kind": "skill",
+        "ids": [
+          21
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted case is the ratio site for these skills; this record does not reduce it to a worked example.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "src/map/battle.c",
+          "lines": [
+            1657
+          ],
+          "required_source_literals": [
+            "case MG_THUNDERSTORM:"
           ]
         }
       ],
