@@ -109595,6 +109595,141 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_1940_script_untranslated",
+      "unit": "E3-unknown-bonus-bint-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          1940
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 1940 is not summarized: the translator does not interpret the quoted statement (bonus bInt (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            22507
+          ],
+          "required_source_literals": [
+            "bonus bInt, getrefine();"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_2004_script_untranslated",
+      "unit": "E3-unknown-bonus-bint-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          2004
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 2004 is not summarized: the translator does not interpret the quoted statement (bonus bInt (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            23718
+          ],
+          "required_source_literals": [
+            "bonus bInt,3+(getrefine()/2);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_4393_script_untranslated",
+      "unit": "E3-unknown-bonus-bint-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          4393
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 4393 is not summarized: the translator does not interpret the quoted statement (bonus bInt (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            46141
+          ],
+          "required_source_literals": [
+            "Script: <\" bonus bInt,readparam(bStr)/18; \">"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_4397_script_untranslated",
+      "unit": "E3-unknown-bonus-bint-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          4397
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 4397 is not summarized: the translator does not interpret the quoted statement (bonus bInt (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            46184
+          ],
+          "required_source_literals": [
+            "Script: <\" bonus bInt,getrefine()-6; \">"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_18842_script_untranslated",
+      "unit": "E3-unknown-bonus-bint-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          18842
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 18842 is not summarized: the translator does not interpret the quoted statement (bonus bInt (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            138234
+          ],
+          "required_source_literals": [
+            "bonus bInt,(getrefine()/3)*2;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
