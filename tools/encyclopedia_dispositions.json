@@ -80776,6 +80776,81 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ecl_in03_chief_of_staff_tl01_branch_for_15703_15909",
+      "unit": "E1-ecl_in03_chief_of_staff_tl01_branch_for_15703",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Chief of Staff#tl01"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Fairy_Wing,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "lines": [
+            15909
+          ],
+          "required_source_literals": [
+            "getitem Fairy_Wing,1; //Fairy_Wing"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ecl_in03_chief_of_staff_tl01_branch_for_15703_15981",
+      "unit": "E1-ecl_in03_chief_of_staff_tl01_branch_for_15703",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Chief of Staff#tl01"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Dustball,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "lines": [
+            15981
+          ],
+          "required_source_literals": [
+            "delitem Dustball,10; //Dustball"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ecl_in03_chief_of_staff_tl01_branch_for_15703_15982",
+      "unit": "E1-ecl_in03_chief_of_staff_tl01_branch_for_15703",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Chief of Staff#tl01"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Leaf_Bookmark,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "lines": [
+            15982
+          ],
+          "required_source_literals": [
+            "delitem Leaf_Bookmark,10; //Leaf_Bookmark"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
