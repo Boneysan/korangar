@@ -85026,6 +85026,31 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ma_fild01_old_man_in_dilemma_ga_branch_for_3355_3377",
+      "unit": "E1-ma_fild01_old_man_in_dilemma_ga_branch_for_3355",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Old Man in Dilemma#GA"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Ancient_Spirit_Agimat,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malaya.txt",
+          "lines": [
+            3377
+          ],
+          "required_source_literals": [
+            "getitem Ancient_Spirit_Agimat,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
