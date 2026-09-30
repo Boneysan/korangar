@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 2412,
+    "E1_unknown": 2417,
     "E1_verified": 1
   },
   "entries": [
@@ -37754,6 +37754,131 @@
           ],
           "required_source_literals": [
             "delitem Empty_Bottle,5;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_jason_branch_for_169_247",
+      "unit": "E1-payon_jason_branch_for_169",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Jason"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Azure_Jewel,2; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/skills/archer_skills.txt",
+          "lines": [
+            247
+          ],
+          "required_source_literals": [
+            "delitem Azure_Jewel,2;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_jason_branch_for_169_248",
+      "unit": "E1-payon_jason_branch_for_169",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Jason"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Yoyo_Tail,3; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/skills/archer_skills.txt",
+          "lines": [
+            248
+          ],
+          "required_source_literals": [
+            "delitem Yoyo_Tail,3;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_jason_branch_for_169_249",
+      "unit": "E1-payon_jason_branch_for_169",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Jason"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Tentacle,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/skills/archer_skills.txt",
+          "lines": [
+            249
+          ],
+          "required_source_literals": [
+            "delitem Tentacle,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_jason_branch_for_169_250",
+      "unit": "E1-payon_jason_branch_for_169",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Jason"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Bill_Of_Birds,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/skills/archer_skills.txt",
+          "lines": [
+            250
+          ],
+          "required_source_literals": [
+            "delitem Bill_Of_Birds,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_jason_branch_for_169_251",
+      "unit": "E1-payon_jason_branch_for_169",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Jason"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Banana_Juice,36; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/skills/archer_skills.txt",
+          "lines": [
+            251
+          ],
+          "required_source_literals": [
+            "delitem Banana_Juice,36;"
           ]
         }
       ],
