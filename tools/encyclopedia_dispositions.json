@@ -60576,6 +60576,31 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_in_sphinx2_stone_statue_qsk_as_branch_for_907_936",
+      "unit": "E1-in_sphinx2_stone_statue_qsk_as_branch_for_907",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Stone Statue#qsk_as"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Cardinal_Jewel,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/skills/assassin_skills.txt",
+          "lines": [
+            936
+          ],
+          "required_source_literals": [
+            "getitem Cardinal_Jewel,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
