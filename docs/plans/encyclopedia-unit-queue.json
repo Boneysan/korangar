@@ -71233,7 +71233,7 @@
       "package": "E4",
       "kind": "e4_formula",
       "tier": "strong",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "skill_names": [
@@ -71257,7 +71257,25 @@
       ],
       "size_lines": 32,
       "reason": "skillratio case with branches or preprocessor blocks",
-      "history": []
+      "history": [
+        "2026-09-30T22:19:07Z activated",
+        "2026-09-30T22:19:08Z validated",
+        "2026-09-30T22:19:08Z verified: 1 claims supported",
+        "2026-09-30T22:19:31Z accepted",
+        "2026-09-30T22:19:31Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "5bd1ba405a6012032527c52979fbd9823d0e86eedc895dcc510fd66193d4f27a",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E4-ko-jyumonjikiri",
