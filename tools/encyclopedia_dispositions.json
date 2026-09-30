@@ -130575,6 +130575,60 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_12059_npc_instances_orcsmemory_txt_51",
+      "unit": "E5-chain-12059",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          12059
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 12059; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/instances/OrcsMemory.txt",
+          "lines": [
+            51
+          ],
+          "required_source_literals": [
+            "erasequest(12059);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_12059_npc_instances_orcsmemory_txt_110",
+      "unit": "E5-chain-12059",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          12059
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 12059; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/instances/OrcsMemory.txt",
+          "lines": [
+            110
+          ],
+          "required_source_literals": [
+            "setquest(12059);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
