@@ -138297,6 +138297,87 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_8058_npc_quests_quests_hugel_txt_4673",
+      "unit": "E5-chain-8058",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8058
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 8058; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_hugel.txt",
+          "lines": [
+            4673
+          ],
+          "required_source_literals": [
+            "changequest 8058,8059;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_8058_npc_quests_quests_hugel_txt_4706",
+      "unit": "E5-chain-8058",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8060
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 8060; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_hugel.txt",
+          "lines": [
+            4706
+          ],
+          "required_source_literals": [
+            "changequest 8060,8061;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_8058_npc_quests_quests_hugel_txt_4864",
+      "unit": "E5-chain-8058",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8063
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 8063; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_hugel.txt",
+          "lines": [
+            4864
+          ],
+          "required_source_literals": [
+            "completequest 8063;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
