@@ -121997,6 +121997,420 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_re_merchants_shops_txt_589_589",
+      "unit": "E2-npc-re-merchants-shops-txt-589",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Butcher#moc1"
+      },
+      "result": "verified",
+      "statement": "Butcher#moc1 is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/merchants/shops.txt",
+          "lines": [
+            589,
+            590,
+            591,
+            592
+          ],
+          "required_source_literals": [
+            "morocc,156,76,4\ttrader\tButcher#moc1\t1_M_MERCHANT,{",
+            "OnInit:",
+            "sellitem Meat;",
+            "}"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_re_merchants_shops_txt_589_594",
+      "unit": "E2-npc-re-merchants-shops-txt-589",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Tool Dealer#moc1"
+      },
+      "result": "verified",
+      "statement": "Tool Dealer#moc1 is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/merchants/shops.txt",
+          "lines": [
+            594,
+            595,
+            596,
+            597,
+            598,
+            599,
+            600,
+            601,
+            602,
+            603,
+            604,
+            605,
+            606,
+            607,
+            608
+          ],
+          "required_source_literals": [
+            "moc_ruins,91,128,4\ttrader\tTool Dealer#moc1\t4_F_04,{",
+            "OnInit:",
+            "sellitem Arrow;",
+            "sellitem Spectacles;",
+            "sellitem Red_Potion;",
+            "sellitem Orange_Potion;",
+            "sellitem Yellow_Potion;",
+            "sellitem White_Potion;",
+            "sellitem Center_Potion;",
+            "sellitem Awakening_Potion;",
+            "sellitem Empty_Bottle;",
+            "sellitem Wing_Of_Fly;",
+            "sellitem Wing_Of_Butterfly;",
+            "sellitem Booby_Trap;",
+            "}"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_re_merchants_shops_txt_589_610",
+      "unit": "E2-npc-re-merchants-shops-txt-589",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Tool Dealer#moc2"
+      },
+      "result": "verified",
+      "statement": "Tool Dealer#moc2 is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/merchants/shops.txt",
+          "lines": [
+            610,
+            611,
+            612,
+            613,
+            614,
+            615,
+            616,
+            617,
+            618,
+            619,
+            620,
+            621,
+            622,
+            623,
+            624
+          ],
+          "required_source_literals": [
+            "moc_ruins,114,63,6\ttrader\tTool Dealer#moc2\t4W_M_03,{",
+            "OnInit:",
+            "sellitem Arrow;",
+            "sellitem Spectacles;",
+            "sellitem Red_Potion;",
+            "sellitem Orange_Potion;",
+            "sellitem Yellow_Potion;",
+            "sellitem White_Potion;",
+            "sellitem Center_Potion;",
+            "sellitem Awakening_Potion;",
+            "sellitem Empty_Bottle;",
+            "sellitem Wing_Of_Fly;",
+            "sellitem Wing_Of_Butterfly;",
+            "sellitem Booby_Trap;",
+            "}"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_re_merchants_shops_txt_589_626",
+      "unit": "E2-npc-re-merchants-shops-txt-589",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Tool Dealer#moc3"
+      },
+      "result": "verified",
+      "statement": "Tool Dealer#moc3 is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/merchants/shops.txt",
+          "lines": [
+            626,
+            627,
+            628,
+            629,
+            630,
+            631,
+            632,
+            633,
+            634,
+            635,
+            636,
+            637,
+            638,
+            639,
+            640
+          ],
+          "required_source_literals": [
+            "morocc,147,103,6\ttrader\tTool Dealer#moc3\t4W_M_03,{",
+            "OnInit:",
+            "sellitem Arrow;",
+            "sellitem Spectacles;",
+            "sellitem Red_Potion;",
+            "sellitem Orange_Potion;",
+            "sellitem Yellow_Potion;",
+            "sellitem White_Potion;",
+            "sellitem Center_Potion;",
+            "sellitem Awakening_Potion;",
+            "sellitem Empty_Bottle;",
+            "sellitem Wing_Of_Fly;",
+            "sellitem Wing_Of_Butterfly;",
+            "sellitem Booby_Trap;",
+            "}"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_re_merchants_shops_txt_589_642",
+      "unit": "E2-npc-re-merchants-shops-txt-589",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Tool Dealer#moc4"
+      },
+      "result": "verified",
+      "statement": "Tool Dealer#moc4 is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/merchants/shops.txt",
+          "lines": [
+            642,
+            643,
+            644,
+            645,
+            646,
+            647,
+            648,
+            649,
+            650,
+            651,
+            652,
+            653,
+            654,
+            655,
+            656
+          ],
+          "required_source_literals": [
+            "morocc,151,241,4\ttrader\tTool Dealer#moc4\t4_F_04,{",
+            "OnInit:",
+            "sellitem Arrow;",
+            "sellitem Spectacles;",
+            "sellitem Red_Potion;",
+            "sellitem Orange_Potion;",
+            "sellitem Yellow_Potion;",
+            "sellitem White_Potion;",
+            "sellitem Center_Potion;",
+            "sellitem Awakening_Potion;",
+            "sellitem Empty_Bottle;",
+            "sellitem Wing_Of_Fly;",
+            "sellitem Wing_Of_Butterfly;",
+            "sellitem Booby_Trap;",
+            "}"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_re_merchants_shops_txt_589_658",
+      "unit": "E2-npc-re-merchants-shops-txt-589",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Pet Groomer#moc"
+      },
+      "result": "verified",
+      "statement": "Pet Groomer#moc is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/merchants/shops.txt",
+          "lines": [
+            658,
+            659,
+            660,
+            661,
+            662,
+            663,
+            664,
+            665,
+            666,
+            667,
+            668,
+            669,
+            670,
+            671,
+            672,
+            673,
+            674,
+            675,
+            676,
+            677,
+            678,
+            679,
+            680
+          ],
+          "required_source_literals": [
+            "moc_ruins,118,170,4\ttrader\tPet Groomer#moc\t4_M_TELEPORTER,{",
+            "OnInit:",
+            "sellitem Pet_Food;",
+            "sellitem Pet_Incubator;",
+            "sellitem Backpack;",
+            "sellitem Rocker_Glasses;",
+            "sellitem Vital_Flower_;",
+            "sellitem Flame_Gemstone;",
+            "sellitem Bun_;",
+            "sellitem Vital_Flower;",
+            "sellitem Damp_Darkness;",
+            "sellitem Small_Snow_Flower;",
+            "sellitem Fresh_Plant;",
+            "sellitem Big_Cell;",
+            "sellitem Apple_Pudding;",
+            "sellitem Mystic_Stone;",
+            "sellitem Flavored_Alcohol;",
+            "sellitem Spirit_Liquor;",
+            "sellitem Pumpkin_Pie_;",
+            "sellitem Sunset_On_The_Rock;",
+            "sellitem Morning_Dew;",
+            "sellitem Grilled_Rice_Cake;",
+            "}"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_re_merchants_shops_txt_589_682",
+      "unit": "E2-npc-re-merchants-shops-txt-589",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Pet Groomer#moc1"
+      },
+      "result": "verified",
+      "statement": "Pet Groomer#moc1 is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/merchants/shops.txt",
+          "lines": [
+            682,
+            683,
+            684,
+            685,
+            686,
+            687,
+            688,
+            689,
+            690,
+            691,
+            692,
+            693,
+            694,
+            695,
+            696,
+            697,
+            698,
+            699,
+            700,
+            701,
+            702,
+            703,
+            704
+          ],
+          "required_source_literals": [
+            "morocc,203,87,4\ttrader\tPet Groomer#moc1\t4_M_TELEPORTER,{",
+            "OnInit:",
+            "sellitem Pet_Food;",
+            "sellitem Pet_Incubator;",
+            "sellitem Backpack;",
+            "sellitem Rocker_Glasses;",
+            "sellitem Vital_Flower_;",
+            "sellitem Flame_Gemstone;",
+            "sellitem Bun_;",
+            "sellitem Vital_Flower;",
+            "sellitem Damp_Darkness;",
+            "sellitem Small_Snow_Flower;",
+            "sellitem Fresh_Plant;",
+            "sellitem Big_Cell;",
+            "sellitem Apple_Pudding;",
+            "sellitem Mystic_Stone;",
+            "sellitem Flavored_Alcohol;",
+            "sellitem Spirit_Liquor;",
+            "sellitem Pumpkin_Pie_;",
+            "sellitem Sunset_On_The_Rock;",
+            "sellitem Morning_Dew;",
+            "sellitem Grilled_Rice_Cake;",
+            "}"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_re_merchants_shops_txt_589_706",
+      "unit": "E2-npc-re-merchants-shops-txt-589",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Jeweler#moc3"
+      },
+      "result": "verified",
+      "statement": "Jeweler#moc3 is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/merchants/shops.txt",
+          "lines": [
+            706,
+            707,
+            708,
+            709,
+            710
+          ],
+          "required_source_literals": [
+            "morocc,154,55,6\ttrader\tJeweler#moc3\t4W_M_03,{",
+            "OnInit:",
+            "sellitem Crystal_Jewel;",
+            "sellitem Diamond_Ring;",
+            "}"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
