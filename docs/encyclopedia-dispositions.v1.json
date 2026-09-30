@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 1301,
+    "E1_unknown": 1302,
     "E1_verified": 1
   },
   "entries": [
@@ -29279,6 +29279,31 @@
           ],
           "required_source_literals": [
             "getitem Splendide_Coin,25;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_spl_in02_middle_ranked_laphine_la_branch_for_5684_5737",
+      "unit": "E1-spl_in02_middle_ranked_laphine_la_branch_for_5684",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Middle-Ranked Laphine#la"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Germinating_Sprout,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_2.txt",
+          "lines": [
+            5737
+          ],
+          "required_source_literals": [
+            "getitem Germinating_Sprout,1;"
           ]
         }
       ],

@@ -32651,6 +32651,31 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_spl_in02_middle_ranked_laphine_la_branch_for_5684_5737",
+      "unit": "E1-spl_in02_middle_ranked_laphine_la_branch_for_5684",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Middle-Ranked Laphine#la"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Germinating_Sprout,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_2.txt",
+          "lines": [
+            5737
+          ],
+          "required_source_literals": [
+            "getitem Germinating_Sprout,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
