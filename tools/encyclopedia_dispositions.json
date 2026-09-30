@@ -39776,6 +39776,56 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_gon_in_man_in_hangover_gon_branch_for_533_575",
+      "unit": "E1-gon_in_man_in_hangover_gon_branch_for_533",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Man in hangover#gon"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Green_Potion,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_gonryun.txt",
+          "lines": [
+            575
+          ],
+          "required_source_literals": [
+            "delitem Green_Potion,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_gon_in_man_in_hangover_gon_branch_for_533_619",
+      "unit": "E1-gon_in_man_in_hangover_gon_branch_for_533",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Man in hangover#gon"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Green_Potion,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_gonryun.txt",
+          "lines": [
+            619
+          ],
+          "required_source_literals": [
+            "delitem Green_Potion,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
