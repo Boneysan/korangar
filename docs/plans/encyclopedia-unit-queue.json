@@ -4317,7 +4317,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Pet Enthusiast",
@@ -4336,7 +4336,22 @@
       ],
       "size_lines": 54,
       "reason": "refused by the braced one-item prover: switch",
-      "history": []
+      "history": [
+        "2026-09-30T14:36:10Z activated",
+        "2026-09-30T14:36:10Z validated",
+        "2026-09-30T14:36:11Z verified: 0 claims supported",
+        "2026-09-30T14:36:34Z accepted",
+        "2026-09-30T14:36:34Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "2130681b483be634c6527c89d95deac4abc21beb69e9122e5c0be8bc1ec09175",
+      "accepted_files": [
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-payon_ripped_cabus_gympass_branch_for_38",
