@@ -112241,6 +112241,60 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_4978_script_untranslated",
+      "unit": "E3-unknown-bonus2-bhpregenrate-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          4978
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 4978 is not summarized: the translator does not interpret the quoted statement (bonus2 bHPRegenRate (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            52742
+          ],
+          "required_source_literals": [
+            "Script: <\" bonus2 bHPRegenRate, (getrefine() >= 7) ? 100 : 50, 5000; \">"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_5852_script_untranslated",
+      "unit": "E3-unknown-bonus2-bhpregenrate-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          5852
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 5852 is not summarized: the translator does not interpret the quoted statement (bonus2 bHPRegenRate (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            67658
+          ],
+          "required_source_literals": [
+            "bonus2 bHPRegenRate,(MaxHp/100),10000;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
