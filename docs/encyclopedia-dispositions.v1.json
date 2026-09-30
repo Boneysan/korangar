@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 452,
+    "E1_unknown": 460,
     "E1_verified": 1
   },
   "entries": [
@@ -6829,6 +6829,206 @@
           ],
           "required_source_literals": [
             "delitem Witherless_Rose,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_morocc_in_old_scholar_tyus_hellion_branch_for_44_380",
+      "unit": "E1-morocc_in_old_scholar_tyus_hellion_branch_for_44",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Old Scholar Tyus#hellion"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Piece_Of_Slate_3,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/eye_of_hellion.txt",
+          "lines": [
+            380
+          ],
+          "required_source_literals": [
+            "getitem Piece_Of_Slate_3,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_morocc_in_old_scholar_tyus_hellion_branch_for_44_563",
+      "unit": "E1-morocc_in_old_scholar_tyus_hellion_branch_for_44",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Old Scholar Tyus#hellion"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Slate,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/eye_of_hellion.txt",
+          "lines": [
+            563
+          ],
+          "required_source_literals": [
+            "delitem Slate,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_morocc_in_old_scholar_tyus_hellion_branch_for_44_564",
+      "unit": "E1-morocc_in_old_scholar_tyus_hellion_branch_for_44",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Old Scholar Tyus#hellion"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Eye_Of_Hellion,countitem(Eye_Of_Hellion; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/eye_of_hellion.txt",
+          "lines": [
+            564
+          ],
+          "required_source_literals": [
+            "delitem Eye_Of_Hellion,countitem(Eye_Of_Hellion);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_morocc_in_old_scholar_tyus_hellion_branch_for_44_566",
+      "unit": "E1-morocc_in_old_scholar_tyus_hellion_branch_for_44",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Old Scholar Tyus#hellion"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Nile_Rose_,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/eye_of_hellion.txt",
+          "lines": [
+            566
+          ],
+          "required_source_literals": [
+            "getitem Nile_Rose_,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_morocc_in_old_scholar_tyus_hellion_branch_for_44_567",
+      "unit": "E1-morocc_in_old_scholar_tyus_hellion_branch_for_44",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Old Scholar Tyus#hellion"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Old_Blue_Box,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/eye_of_hellion.txt",
+          "lines": [
+            567
+          ],
+          "required_source_literals": [
+            "getitem Old_Blue_Box,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_morocc_in_old_scholar_tyus_hellion_branch_for_44_632",
+      "unit": "E1-morocc_in_old_scholar_tyus_hellion_branch_for_44",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Old Scholar Tyus#hellion"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Slate,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/eye_of_hellion.txt",
+          "lines": [
+            632
+          ],
+          "required_source_literals": [
+            "delitem Slate,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_morocc_in_old_scholar_tyus_hellion_branch_for_44_634",
+      "unit": "E1-morocc_in_old_scholar_tyus_hellion_branch_for_44",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Old Scholar Tyus#hellion"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Nile_Rose_,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/eye_of_hellion.txt",
+          "lines": [
+            634
+          ],
+          "required_source_literals": [
+            "getitem Nile_Rose_,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_morocc_in_old_scholar_tyus_hellion_branch_for_44_664",
+      "unit": "E1-morocc_in_old_scholar_tyus_hellion_branch_for_44",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Old Scholar Tyus#hellion"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Eye_Of_Hellion,countitem(Eye_Of_Hellion; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/eye_of_hellion.txt",
+          "lines": [
+            664
+          ],
+          "required_source_literals": [
+            "delitem Eye_Of_Hellion,countitem(Eye_Of_Hellion);"
           ]
         }
       ],
