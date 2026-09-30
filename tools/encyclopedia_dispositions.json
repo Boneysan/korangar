@@ -51776,6 +51776,56 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_job_duncer_dance_instructor_sch_branch_for_1445_1586",
+      "unit": "E1-job_duncer_dance_instructor_sch_branch_for_1445",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Dance Instructor#sch"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Megaphone,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_veins.txt",
+          "lines": [
+            1586
+          ],
+          "required_source_literals": [
+            "getitem Megaphone,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_job_duncer_dance_instructor_sch_branch_for_1445_1631",
+      "unit": "E1-job_duncer_dance_instructor_sch_branch_for_1445",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Dance Instructor#sch"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Megaphone,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_veins.txt",
+          "lines": [
+            1631
+          ],
+          "required_source_literals": [
+            "getitem Megaphone,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
