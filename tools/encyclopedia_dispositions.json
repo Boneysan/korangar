@@ -62251,6 +62251,106 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prt_in_juan_branch_for_330_366",
+      "unit": "E1-prt_in_juan_branch_for_330",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Juan"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Powder_Of_Butterfly,35; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/skills/swordman_skills.txt",
+          "lines": [
+            366
+          ],
+          "required_source_literals": [
+            "delitem Powder_Of_Butterfly,35;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prt_in_juan_branch_for_330_367",
+      "unit": "E1-prt_in_juan_branch_for_330",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Juan"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Horrendous_Mouth,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/skills/swordman_skills.txt",
+          "lines": [
+            367
+          ],
+          "required_source_literals": [
+            "delitem Horrendous_Mouth,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prt_in_juan_branch_for_330_368",
+      "unit": "E1-prt_in_juan_branch_for_330",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Juan"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Decayed_Nail,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/skills/swordman_skills.txt",
+          "lines": [
+            368
+          ],
+          "required_source_literals": [
+            "delitem Decayed_Nail,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prt_in_juan_branch_for_330_369",
+      "unit": "E1-prt_in_juan_branch_for_330",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Juan"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Honey,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/skills/swordman_skills.txt",
+          "lines": [
+            369
+          ],
+          "required_source_literals": [
+            "delitem Honey,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }

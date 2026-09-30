@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 2485,
+    "E1_unknown": 2489,
     "E1_verified": 1
   },
   "entries": [
@@ -44129,6 +44129,106 @@
           ],
           "required_source_literals": [
             "case 8: delitem Scarlet_Dyestuffs,1; break;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prt_in_juan_branch_for_330_366",
+      "unit": "E1-prt_in_juan_branch_for_330",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Juan"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Powder_Of_Butterfly,35; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/skills/swordman_skills.txt",
+          "lines": [
+            366
+          ],
+          "required_source_literals": [
+            "delitem Powder_Of_Butterfly,35;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prt_in_juan_branch_for_330_367",
+      "unit": "E1-prt_in_juan_branch_for_330",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Juan"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Horrendous_Mouth,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/skills/swordman_skills.txt",
+          "lines": [
+            367
+          ],
+          "required_source_literals": [
+            "delitem Horrendous_Mouth,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prt_in_juan_branch_for_330_368",
+      "unit": "E1-prt_in_juan_branch_for_330",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Juan"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Decayed_Nail,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/skills/swordman_skills.txt",
+          "lines": [
+            368
+          ],
+          "required_source_literals": [
+            "delitem Decayed_Nail,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prt_in_juan_branch_for_330_369",
+      "unit": "E1-prt_in_juan_branch_for_330",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Juan"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Honey,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/skills/swordman_skills.txt",
+          "lines": [
+            369
+          ],
+          "required_source_literals": [
+            "delitem Honey,10;"
           ]
         }
       ],
