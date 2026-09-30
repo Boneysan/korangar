@@ -43326,6 +43326,31 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_lou_in02_supply_stack_2_branch_for_2367_2385",
+      "unit": "E1-lou_in02_supply_stack_2_branch_for_2367",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Supply Stack#2"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Herb_Medicine,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_louyang.txt",
+          "lines": [
+            2385
+          ],
+          "required_source_literals": [
+            "getitem Herb_Medicine,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
