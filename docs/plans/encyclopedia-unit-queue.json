@@ -51203,7 +51203,7 @@
       "package": "E3",
       "kind": "e3_dispose",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "key": "bonus bMatkRate (expression)",
@@ -51359,7 +51359,25 @@
       ],
       "size_lines": 11,
       "reason": "11 item script(s) first stop at `bonus bMatkRate (expression)`, which is control flow or undocumented",
-      "history": []
+      "history": [
+        "2026-09-30T20:14:22Z activated",
+        "2026-09-30T20:14:23Z validated",
+        "2026-09-30T20:14:23Z verification not required: tool-drafted, no behavior claim",
+        "2026-09-30T20:14:46Z accepted",
+        "2026-09-30T20:14:46Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "ef5067bc75a23d87ccf4338abfa37fa357d3bcfe112b5a83ebccb9ae07760f60",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E3-unknown-bonus3-bautospellwhenhit-expression",
