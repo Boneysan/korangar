@@ -11,7 +11,7 @@
     "E2_conditional": 1,
     "E2_verified": 236,
     "E3_unknown": 973,
-    "E4_unknown": 193
+    "E4_unknown": 194
   },
   "entries": [
     {
@@ -101873,6 +101873,33 @@
           ],
           "required_source_literals": [
             "case SR_RAMPAGEBLASTER:"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e4_sr_rideinlightning_formula",
+      "unit": "E4-sr-rideinlightning",
+      "package": "E4",
+      "subject": {
+        "kind": "skill",
+        "ids": [
+          2518
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted case is the ratio site for these skills; this record does not reduce it to a worked example.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "src/map/battle.c",
+          "lines": [
+            2858
+          ],
+          "required_source_literals": [
+            "case SR_RIDEINLIGHTNING: // ATK [{(Skill Level x 200) + Additional Damage} x Caster Base Level / 100] %"
           ]
         }
       ],
