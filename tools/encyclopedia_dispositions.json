@@ -9476,6 +9476,56 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_poring_w01_poring_vending_machine_w_branch_for_89_160",
+      "unit": "E1-poring_w01_poring_vending_machine_w_branch_for_89",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Poring Vending Machine#w"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Poring_Coin,50; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/other/poring_war.txt",
+          "lines": [
+            160
+          ],
+          "required_source_literals": [
+            "delitem Poring_Coin,50; // Poring_Coin"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_poring_w01_poring_vending_machine_w_branch_for_89_232",
+      "unit": "E1-poring_w01_poring_vending_machine_w_branch_for_89",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Poring Vending Machine#w"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Poring_Coin,getarg(1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/other/poring_war.txt",
+          "lines": [
+            232
+          ],
+          "required_source_literals": [
+            "delitem Poring_Coin,getarg(1); // Poring_Coin"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }

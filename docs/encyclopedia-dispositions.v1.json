@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 374,
+    "E1_unknown": 376,
     "E1_verified": 1
   },
   "entries": [
@@ -7079,6 +7079,56 @@
           ],
           "required_source_literals": [
             "delitem Milk,1; // Milk"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_poring_w01_poring_vending_machine_w_branch_for_89_160",
+      "unit": "E1-poring_w01_poring_vending_machine_w_branch_for_89",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Poring Vending Machine#w"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Poring_Coin,50; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/other/poring_war.txt",
+          "lines": [
+            160
+          ],
+          "required_source_literals": [
+            "delitem Poring_Coin,50; // Poring_Coin"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_poring_w01_poring_vending_machine_w_branch_for_89_232",
+      "unit": "E1-poring_w01_poring_vending_machine_w_branch_for_89",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Poring Vending Machine#w"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Poring_Coin,getarg(1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/other/poring_war.txt",
+          "lines": [
+            232
+          ],
+          "required_source_literals": [
+            "delitem Poring_Coin,getarg(1); // Poring_Coin"
           ]
         }
       ],
