@@ -53642,7 +53642,7 @@
       "package": "E3",
       "kind": "e3_dispose",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "key": "bonus5 bAutoSpellWhenHit (expression)",
@@ -53720,7 +53720,25 @@
       ],
       "size_lines": 5,
       "reason": "5 item script(s) first stop at `bonus5 bAutoSpellWhenHit (expression)`, which is control flow or undocumented",
-      "history": []
+      "history": [
+        "2026-09-30T20:21:32Z activated",
+        "2026-09-30T20:21:33Z validated",
+        "2026-09-30T20:21:33Z verification not required: tool-drafted, no behavior claim",
+        "2026-09-30T20:21:56Z accepted",
+        "2026-09-30T20:21:56Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "6440501e277a8daa496c86005a0bf8d3d5da746ce475a53571c0980e285a4297",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E3-unknown-bonus-bagi-expression",

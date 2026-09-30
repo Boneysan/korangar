@@ -110000,6 +110000,141 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_4363_script_untranslated",
+      "unit": "E3-unknown-bonus5-bautospellwhenhit-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          4363
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 4363 is not summarized: the translator does not interpret the quoted statement (bonus5 bAutoSpellWhenHit (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            45750
+          ],
+          "required_source_literals": [
+            "Script: <\" bonus5 bAutoSpellWhenHit,HP_ASSUMPTIO,1,50,BF_WEAPON|BF_MAGIC,0; \">"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_4419_script_untranslated",
+      "unit": "E3-unknown-bonus5-bautospellwhenhit-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          4419
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 4419 is not summarized: the translator does not interpret the quoted statement (bonus5 bAutoSpellWhenHit (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            46466
+          ],
+          "required_source_literals": [
+            "bonus5 bAutoSpellWhenHit,WZ_FROSTNOVA,10,20,BF_WEAPON|BF_MAGIC,0;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_4501_script_untranslated",
+      "unit": "E3-unknown-bonus5-bautospellwhenhit-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          4501
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 4501 is not summarized: the translator does not interpret the quoted statement (bonus5 bAutoSpellWhenHit (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            47544
+          ],
+          "required_source_literals": [
+            "Script: <\" bonus5 bAutoSpellWhenHit,HP_ASSUMPTIO,1,((getrefine()>14)?35:25),BF_WEAPON|BF_MAGIC,0; \">"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_5353_script_untranslated",
+      "unit": "E3-unknown-bonus5-bautospellwhenhit-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          5353
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 5353 is not summarized: the translator does not interpret the quoted statement (bonus5 bAutoSpellWhenHit (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            59016
+          ],
+          "required_source_literals": [
+            "bonus5 bAutoSpellWhenHit,HP_ASSUMPTIO,1,1,BF_WEAPON|BF_MAGIC,0;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_5509_script_untranslated",
+      "unit": "E3-unknown-bonus5-bautospellwhenhit-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          5509
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 5509 is not summarized: the translator does not interpret the quoted statement (bonus5 bAutoSpellWhenHit (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            61784
+          ],
+          "required_source_literals": [
+            "bonus5(bAutoSpellWhenHit, WZ_EARTHSPIKE, 1, 10, BF_WEAPON, 1);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
