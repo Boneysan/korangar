@@ -37512,7 +37512,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Imelda#malaya",
@@ -37531,7 +37531,25 @@
       ],
       "size_lines": 376,
       "reason": "refused by the braced one-item prover: braceless",
-      "history": []
+      "history": [
+        "2026-09-30T19:41:51Z activated",
+        "2026-09-30T19:41:52Z validated",
+        "2026-09-30T19:41:52Z verified: 12 claims supported",
+        "2026-09-30T19:42:15Z accepted",
+        "2026-09-30T19:42:15Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "f124f303b3d2a2b19b65a7af169c4f76fb4b0fe7af474beca0c6e82b9ec8bb4a",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-malaya_old_man_nardo_malaya_branch_for_914",

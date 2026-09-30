@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 3341,
+    "E1_unknown": 3353,
     "E1_verified": 1
   },
   "entries": [
@@ -35779,6 +35779,306 @@
           ],
           "required_source_literals": [
             "getitem Cat_Hard_Biscuit,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_malaya_imelda_malaya_branch_for_537_649",
+      "unit": "E1-malaya_imelda_malaya_branch_for_537",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Imelda#malaya"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Sharp_Bamboo,6; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malaya.txt",
+          "lines": [
+            649
+          ],
+          "required_source_literals": [
+            "delitem Sharp_Bamboo, 6; // Sharp_Bamboo"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_malaya_imelda_malaya_branch_for_537_650",
+      "unit": "E1-malaya_imelda_malaya_branch_for_537",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Imelda#malaya"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Salt_Bag,6; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malaya.txt",
+          "lines": [
+            650
+          ],
+          "required_source_literals": [
+            "delitem Salt_Bag, 6; // Salt_Bag"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_malaya_imelda_malaya_branch_for_537_651",
+      "unit": "E1-malaya_imelda_malaya_branch_for_537",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Imelda#malaya"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Silver_Cross,6; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malaya.txt",
+          "lines": [
+            651
+          ],
+          "required_source_literals": [
+            "delitem Silver_Cross, 6; // Silver_Cross"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_malaya_imelda_malaya_branch_for_537_675",
+      "unit": "E1-malaya_imelda_malaya_branch_for_537",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Imelda#malaya"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Soul_Protection,6; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malaya.txt",
+          "lines": [
+            675
+          ],
+          "required_source_literals": [
+            "getitem Soul_Protection, 6; // Soul_Protection"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_malaya_imelda_malaya_branch_for_537_718",
+      "unit": "E1-malaya_imelda_malaya_branch_for_537",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Imelda#malaya"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Lesser_Agimat,2; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malaya.txt",
+          "lines": [
+            718
+          ],
+          "required_source_literals": [
+            "getitem Lesser_Agimat, 2; // Lesser_Agimat"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_malaya_imelda_malaya_branch_for_537_750",
+      "unit": "E1-malaya_imelda_malaya_branch_for_537",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Imelda#malaya"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Sharp_Bamboo,6; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malaya.txt",
+          "lines": [
+            750
+          ],
+          "required_source_literals": [
+            "delitem Sharp_Bamboo, 6; // Sharp_Bamboo"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_malaya_imelda_malaya_branch_for_537_751",
+      "unit": "E1-malaya_imelda_malaya_branch_for_537",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Imelda#malaya"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Salt_Bag,6; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malaya.txt",
+          "lines": [
+            751
+          ],
+          "required_source_literals": [
+            "delitem Salt_Bag, 6; // Salt_Bag"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_malaya_imelda_malaya_branch_for_537_752",
+      "unit": "E1-malaya_imelda_malaya_branch_for_537",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Imelda#malaya"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Silver_Cross,6; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malaya.txt",
+          "lines": [
+            752
+          ],
+          "required_source_literals": [
+            "delitem Silver_Cross, 6; // Silver_Cross"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_malaya_imelda_malaya_branch_for_537_756",
+      "unit": "E1-malaya_imelda_malaya_branch_for_537",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Imelda#malaya"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Lesser_Agimat,2; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malaya.txt",
+          "lines": [
+            756
+          ],
+          "required_source_literals": [
+            "getitem Lesser_Agimat, 2; // Lesser_Agimat"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_malaya_imelda_malaya_branch_for_537_824",
+      "unit": "E1-malaya_imelda_malaya_branch_for_537",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Imelda#malaya"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Lesser_Agimat,2; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malaya.txt",
+          "lines": [
+            824
+          ],
+          "required_source_literals": [
+            "getitem Lesser_Agimat, 2; // Lesser_Agimat"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_malaya_imelda_malaya_branch_for_537_862",
+      "unit": "E1-malaya_imelda_malaya_branch_for_537",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Imelda#malaya"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Soul_Protection,6; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malaya.txt",
+          "lines": [
+            862
+          ],
+          "required_source_literals": [
+            "getitem Soul_Protection, 6; // Soul_Protection"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_malaya_imelda_malaya_branch_for_537_897",
+      "unit": "E1-malaya_imelda_malaya_branch_for_537",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Imelda#malaya"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Soul_Protection,6; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malaya.txt",
+          "lines": [
+            897
+          ],
+          "required_source_literals": [
+            "getitem Soul_Protection, 6; // Soul_Protection"
           ]
         }
       ],
