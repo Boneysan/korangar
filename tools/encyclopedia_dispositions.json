@@ -70751,6 +70751,31 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_iz_ac01_trainer_mainz_ac_branch_for_2821_2981",
+      "unit": "E1-iz_ac01_trainer_mainz_ac_branch_for_2821",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Trainer Mainz#ac"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Apple,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            2981
+          ],
+          "required_source_literals": [
+            "getitem(Apple, 10); // Apple"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
