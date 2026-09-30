@@ -70376,6 +70376,131 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_iz_ac01_therapist_ac_branch_for_2089_2231",
+      "unit": "E1-iz_ac01_therapist_ac_branch_for_2089",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Therapist#ac"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Novice_Potion,30; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            2231
+          ],
+          "required_source_literals": [
+            "getitem(Novice_Potion, 30); // Novice_Potion"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_iz_ac01_therapist_ac_branch_for_2089_2232",
+      "unit": "E1-iz_ac01_therapist_ac_branch_for_2089",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Therapist#ac"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Novice_Combi_Book,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            2232
+          ],
+          "required_source_literals": [
+            "getitem(Novice_Combi_Book, 1); // Novice_Combi_Book"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_iz_ac01_therapist_ac_branch_for_2089_2233",
+      "unit": "E1-iz_ac01_therapist_ac_branch_for_2089",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Therapist#ac"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Combination_Kit,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            2233
+          ],
+          "required_source_literals": [
+            "getitem(Combination_Kit, 10); // Combination_Kit"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_iz_ac01_therapist_ac_branch_for_2089_2234",
+      "unit": "E1-iz_ac01_therapist_ac_branch_for_2089",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Therapist#ac"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Red_Herb,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            2234
+          ],
+          "required_source_literals": [
+            "getitem(Red_Herb, 1); // Red_Herb"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_iz_ac01_therapist_ac_branch_for_2089_2235",
+      "unit": "E1-iz_ac01_therapist_ac_branch_for_2089",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Therapist#ac"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Apple,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            2235
+          ],
+          "required_source_literals": [
+            "getitem(Apple, 1); // Apple"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
