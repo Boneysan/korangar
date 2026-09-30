@@ -51384,7 +51384,7 @@
       "package": "E3",
       "kind": "e3_dispose",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "key": "bonus3 bAutoSpellWhenHit (expression)",
@@ -51540,7 +51540,25 @@
       ],
       "size_lines": 11,
       "reason": "11 item script(s) first stop at `bonus3 bAutoSpellWhenHit (expression)`, which is control flow or undocumented",
-      "history": []
+      "history": [
+        "2026-09-30T20:14:46Z activated",
+        "2026-09-30T20:14:46Z validated",
+        "2026-09-30T20:14:46Z verification not required: tool-drafted, no behavior claim",
+        "2026-09-30T20:15:10Z accepted",
+        "2026-09-30T20:15:10Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "3a95e9e22b28310b12f1b2f93ba0d894f1f7252a15a1df744e15657465569b5d",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E3-unknown-bonus-bdef-expression",
