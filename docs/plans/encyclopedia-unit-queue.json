@@ -25371,7 +25371,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "to 7th Floor",
@@ -25390,7 +25390,25 @@
       ],
       "size_lines": 39,
       "reason": "refused by the braced one-item prover: braceless",
-      "history": []
+      "history": [
+        "2026-09-30T17:49:42Z activated",
+        "2026-09-30T17:49:42Z validated",
+        "2026-09-30T17:49:43Z verified: 2 claims supported",
+        "2026-09-30T17:50:06Z accepted",
+        "2026-09-30T17:50:06Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "872de3b22be86d48ed8ae2031320ed6c89a5d1a67e3eac99c531b271b125aa89",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-prt_in_archeologist_sign_branch_for_89",

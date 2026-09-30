@@ -62951,6 +62951,56 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_tha_t06_to_7th_floor_branch_for_2338_2365",
+      "unit": "E1-tha_t06_to_7th_floor_branch_for_2338",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "to 7th Floor"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Key_Black,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/thana_quest.txt",
+          "lines": [
+            2365
+          ],
+          "required_source_literals": [
+            "delitem Key_Black,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_tha_t06_to_7th_floor_branch_for_2338_2366",
+      "unit": "E1-tha_t06_to_7th_floor_branch_for_2338",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "to 7th Floor"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Magic_Gem_Black,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/thana_quest.txt",
+          "lines": [
+            2366
+          ],
+          "required_source_literals": [
+            "getitem Magic_Gem_Black,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
