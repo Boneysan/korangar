@@ -16051,6 +16051,156 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_umbala_hibilaithan_lv4_branch_for_482_597",
+      "unit": "E1-umbala_hibilaithan_lv4_branch_for_482",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Hibilaithan#lv4"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Mail_Breaker,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/lvl4_weapon_quest.txt",
+          "lines": [
+            597
+          ],
+          "required_source_literals": [
+            "getitem Mail_Breaker,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_umbala_hibilaithan_lv4_branch_for_482_602",
+      "unit": "E1-umbala_hibilaithan_lv4_branch_for_482",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Hibilaithan#lv4"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Sword_Breaker,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/lvl4_weapon_quest.txt",
+          "lines": [
+            602
+          ],
+          "required_source_literals": [
+            "getitem Sword_Breaker,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_umbala_hibilaithan_lv4_branch_for_482_607",
+      "unit": "E1-umbala_hibilaithan_lv4_branch_for_482",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Hibilaithan#lv4"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Slaughter,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/lvl4_weapon_quest.txt",
+          "lines": [
+            607
+          ],
+          "required_source_literals": [
+            "getitem Slaughter,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_umbala_hibilaithan_lv4_branch_for_482_825",
+      "unit": "E1-umbala_hibilaithan_lv4_branch_for_482",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Hibilaithan#lv4"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Gold,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/lvl4_weapon_quest.txt",
+          "lines": [
+            825
+          ],
+          "required_source_literals": [
+            "delitem Gold,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_umbala_hibilaithan_lv4_branch_for_482_826",
+      "unit": "E1-umbala_hibilaithan_lv4_branch_for_482",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Hibilaithan#lv4"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Steel,50; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/lvl4_weapon_quest.txt",
+          "lines": [
+            826
+          ],
+          "required_source_literals": [
+            "delitem Steel,50;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_umbala_hibilaithan_lv4_branch_for_482_827",
+      "unit": "E1-umbala_hibilaithan_lv4_branch_for_482",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Hibilaithan#lv4"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Emperium,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/lvl4_weapon_quest.txt",
+          "lines": [
+            827
+          ],
+          "required_source_literals": [
+            "delitem Emperium,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
