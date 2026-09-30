@@ -32051,6 +32051,31 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_manuk_manuk_galtun_ep13_2day_branch_for_2706_2785",
+      "unit": "E1-manuk_manuk_galtun_ep13_2day_branch_for_2706",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manuk Galtun#ep13_2day"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Manuk_Coin,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_2.txt",
+          "lines": [
+            2785
+          ],
+          "required_source_literals": [
+            "getitem Manuk_Coin,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }

@@ -12245,7 +12245,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Manuk Galtun#ep13_2day",
@@ -12264,7 +12264,26 @@
       ],
       "size_lines": 108,
       "reason": "refused by the braced one-item prover: braceless",
-      "history": []
+      "history": [
+        "2026-09-30T15:49:15Z activated",
+        "2026-09-30T15:49:16Z validated",
+        "2026-09-30T15:49:16Z verified: 1 claims supported",
+        "2026-09-30T15:49:39Z accepted",
+        "2026-09-30T15:49:39Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "b2669be6909e2f37b26e9fcdd6428179538bd77cf6902ff7f6da099897b27339",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "audit": "due",
+      "commit": "committed"
     },
     {
       "id": "E1-man_in01_manuk_engineer_ep13_2_branch_for_2819",
