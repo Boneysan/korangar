@@ -75076,6 +75076,81 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_job3_gen01_viorel_job3_gen01_branch_for_38_55",
+      "unit": "E1-job3_gen01_viorel_job3_gen01_branch_for_38",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Viorel#job3_gen01"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Strange_Embryo,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/homun_s.txt",
+          "lines": [
+            55
+          ],
+          "required_source_literals": [
+            "getitem Strange_Embryo,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_job3_gen01_viorel_job3_gen01_branch_for_38_57",
+      "unit": "E1-job3_gen01_viorel_job3_gen01_branch_for_38",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Viorel#job3_gen01"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Strange_Embryo,(countitem(Strange_Embryo; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/homun_s.txt",
+          "lines": [
+            57
+          ],
+          "required_source_literals": [
+            "delitem Strange_Embryo, (countitem(Strange_Embryo) - 1);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_job3_gen01_viorel_job3_gen01_branch_for_38_72",
+      "unit": "E1-job3_gen01_viorel_job3_gen01_branch_for_38",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Viorel#job3_gen01"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Strange_Embryo,countitem(Strange_Embryo; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/homun_s.txt",
+          "lines": [
+            72
+          ],
+          "required_source_literals": [
+            "delitem Strange_Embryo, countitem(Strange_Embryo);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
