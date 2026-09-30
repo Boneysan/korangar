@@ -8,7 +8,7 @@
     "E1_not_applicable": 1,
     "E1_unknown": 3464,
     "E1_verified": 1,
-    "E3_unknown": 923
+    "E3_unknown": 926
   },
   "entries": [
     {
@@ -92893,6 +92893,33 @@
       "reviewed_on": "2026-09-30"
     },
     {
+      "id": "item_18652_script_untranslated",
+      "unit": "E3-unknown-bonus2-bhpdrainrate-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          18652
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 18652 is not summarized: the translator does not interpret the quoted statement (bonus2 bHPDrainRate (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            135040
+          ],
+          "required_source_literals": [
+            "bonus2 bHPDrainRate,10*(5+1*(getrefine()>7)+2*(getrefine()>8)+2*(getrefine()>9)),1+2*(getrefine()>5)+2*(getrefine()>7)+3*(getrefine()>9);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
       "id": "item_18659_script_untranslated",
       "unit": "E3-unknown-control-autobonus",
       "package": "E3",
@@ -93966,6 +93993,33 @@
           ],
           "required_source_literals": [
             "if(readparam(bVit)>=108) {"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_19051_script_untranslated",
+      "unit": "E3-unknown-bonus2-bhpdrainrate-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          19051
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 19051 is not summarized: the translator does not interpret the quoted statement (bonus2 bHPDrainRate (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            139561
+          ],
+          "required_source_literals": [
+            "bonus2 bHPDrainRate,40,10+(getrefine()/3);"
           ]
         }
       ],
@@ -106197,6 +106251,33 @@
           ],
           "required_source_literals": [
             "bonus bBaseAtk,(JobLevel/20);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_4491_script_untranslated",
+      "unit": "E3-unknown-bonus2-bhpdrainrate-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          4491
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 4491 is not summarized: the translator does not interpret the quoted statement (bonus2 bHPDrainRate (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            47410
+          ],
+          "required_source_literals": [
+            "bonus2 bHPDrainRate,5,((getrefine()>14)?15:10);"
           ]
         }
       ],

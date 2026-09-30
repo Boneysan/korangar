@@ -55081,7 +55081,7 @@
       "package": "E3",
       "kind": "e3_dispose",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "key": "bonus2 bHPDrainRate (expression)",
@@ -55133,7 +55133,25 @@
       ],
       "size_lines": 3,
       "reason": "3 item script(s) first stop at `bonus2 bHPDrainRate (expression)`, which is control flow or undocumented",
-      "history": []
+      "history": [
+        "2026-09-30T20:28:30Z activated",
+        "2026-09-30T20:28:31Z validated",
+        "2026-09-30T20:28:31Z verification not required: tool-drafted, no behavior claim",
+        "2026-09-30T20:28:54Z accepted",
+        "2026-09-30T20:28:54Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "02f5ce87c2d25bf0c0fa59a34de95ee26da15b2cc4e10c64e97db3e492c87f5d",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E3-unknown-bonus2-bsubsize-expression",
