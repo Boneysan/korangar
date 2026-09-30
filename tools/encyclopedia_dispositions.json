@@ -36401,6 +36401,31 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ayo_dun02_haggard_man_branch_for_583_606",
+      "unit": "E1-ayo_dun02_haggard_man_branch_for_583",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Haggard Man"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem White_Potion,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_ayothaya.txt",
+          "lines": [
+            606
+          ],
+          "required_source_literals": [
+            "delitem White_Potion,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
