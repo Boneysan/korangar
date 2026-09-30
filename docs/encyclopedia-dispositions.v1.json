@@ -12,7 +12,7 @@
     "E2_verified": 236,
     "E3_unknown": 973,
     "E4_unknown": 213,
-    "E5_unknown": 495
+    "E5_unknown": 496
   },
   "entries": [
     {
@@ -107012,6 +107012,33 @@
           ],
           "required_source_literals": [
             "changequest 18038,18039;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_18040_npc_quests_quests_prontera_txt_3402",
+      "unit": "E5-chain-18040",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          18040
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 18040; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_prontera.txt",
+          "lines": [
+            3402
+          ],
+          "required_source_literals": [
+            "changequest 18040,18041;"
           ]
         }
       ],
