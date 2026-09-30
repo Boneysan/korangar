@@ -142968,6 +142968,60 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_8091_npc_quests_quests_rachel_txt_687",
+      "unit": "E5-chain-8091",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8091
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 8091; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_rachel.txt",
+          "lines": [
+            687
+          ],
+          "required_source_literals": [
+            "changequest 8091,8092;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_8091_npc_quests_quests_rachel_txt_783",
+      "unit": "E5-chain-8091",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8097
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 8097; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_rachel.txt",
+          "lines": [
+            783
+          ],
+          "required_source_literals": [
+            "changequest 8097,8098;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
