@@ -67076,6 +67076,31 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_job3_arch02_arch_1_start_branch_for_995_998",
+      "unit": "E1-job3_arch02_arch_1_start_branch_for_995",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "#arch_1_start"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem ValkyrieA_Scroll,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-1/archbishop.txt",
+          "lines": [
+            998
+          ],
+          "required_source_literals": [
+            "getitem ValkyrieA_Scroll,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
