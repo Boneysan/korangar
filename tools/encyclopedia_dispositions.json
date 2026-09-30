@@ -14801,6 +14801,31 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_kh_vila_box_khp1_branch_for_2010_2042",
+      "unit": "E1-kh_vila_box_khp1_branch_for_2010",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Box#khp1"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Pet_Food,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/kiel_hyre_quest.txt",
+          "lines": [
+            2042
+          ],
+          "required_source_literals": [
+            "getitem Pet_Food,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
