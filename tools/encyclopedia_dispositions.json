@@ -32451,6 +32451,131 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_man_in01_scientist_lifeguard_branch_for_4641_4761",
+      "unit": "E1-man_in01_scientist_lifeguard_branch_for_4641",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Scientist#lifeguard"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Portable_Toolbox,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_2.txt",
+          "lines": [
+            4761
+          ],
+          "required_source_literals": [
+            "getitem Portable_Toolbox,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_man_in01_scientist_lifeguard_branch_for_4641_4782",
+      "unit": "E1-man_in01_scientist_lifeguard_branch_for_4641",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Scientist#lifeguard"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Rough_Mineral,.@stone_chk; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_2.txt",
+          "lines": [
+            4782
+          ],
+          "required_source_literals": [
+            "delitem Rough_Mineral,.@stone_chk;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_man_in01_scientist_lifeguard_branch_for_4641_4783",
+      "unit": "E1-man_in01_scientist_lifeguard_branch_for_4641",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Scientist#lifeguard"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Stone_Fragments,.@stoneelse_chk; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_2.txt",
+          "lines": [
+            4783
+          ],
+          "required_source_literals": [
+            "delitem Stone_Fragments,.@stoneelse_chk;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_man_in01_scientist_lifeguard_branch_for_4641_4784",
+      "unit": "E1-man_in01_scientist_lifeguard_branch_for_4641",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Scientist#lifeguard"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Portable_Toolbox,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_2.txt",
+          "lines": [
+            4784
+          ],
+          "required_source_literals": [
+            "delitem Portable_Toolbox,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_man_in01_scientist_lifeguard_branch_for_4641_4785",
+      "unit": "E1-man_in01_scientist_lifeguard_branch_for_4641",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Scientist#lifeguard"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Manuk_Coin,3; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_2.txt",
+          "lines": [
+            4785
+          ],
+          "required_source_literals": [
+            "getitem Manuk_Coin,3;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
