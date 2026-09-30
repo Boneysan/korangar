@@ -3651,6 +3651,56 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_einbroch_suspicious_man_nq_branch_for_396_547",
+      "unit": "E1-einbroch_suspicious_man_nq_branch_for_396",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Suspicious Man#nq"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Phracon,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/1-1e/ninja.txt",
+          "lines": [
+            547
+          ],
+          "required_source_literals": [
+            "delitem Phracon,1;\t// Phracon"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_einbroch_suspicious_man_nq_branch_for_396_548",
+      "unit": "E1-einbroch_suspicious_man_nq_branch_for_396",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Suspicious Man#nq"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Cyfar,5; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/1-1e/ninja.txt",
+          "lines": [
+            548
+          ],
+          "required_source_literals": [
+            "delitem Cyfar,5;\t// Cyfar"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
