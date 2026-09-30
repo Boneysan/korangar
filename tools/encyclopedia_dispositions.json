@@ -79126,6 +79126,56 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ecl_in04_mother_rosa_eclage_branch_for_5925_6149",
+      "unit": "E1-ecl_in04_mother_rosa_eclage_branch_for_5925",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Mother Rosa#eclage"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Splendide_Coin,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "lines": [
+            6149
+          ],
+          "required_source_literals": [
+            "getitem Splendide_Coin,1; //Splendide_Coin"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ecl_in04_mother_rosa_eclage_branch_for_5925_6150",
+      "unit": "E1-ecl_in04_mother_rosa_eclage_branch_for_5925",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Mother Rosa#eclage"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Yggdrasilberry,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "lines": [
+            6150
+          ],
+          "required_source_literals": [
+            "getitem Yggdrasilberry,1; //Yggdrasilberry"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
