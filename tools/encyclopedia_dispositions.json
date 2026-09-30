@@ -42176,6 +42176,31 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_lhz_in02_digotz_branch_for_2057_2146",
+      "unit": "E1-lhz_in02_digotz_branch_for_2057",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Digotz"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Knife,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_lighthalzen.txt",
+          "lines": [
+            2146
+          ],
+          "required_source_literals": [
+            "getitem Knife,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
