@@ -102413,6 +102413,573 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_4492_script_untranslated",
+      "unit": "E3-unknown-bonus2-breseff-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          4492
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 4492 is not summarized: the translator does not interpret the quoted statement (bonus2 bResEff (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            47423
+          ],
+          "required_source_literals": [
+            "bonus2 bResEff,Eff_Stun,((getrefine()>14)?6000:4000);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_5808_script_untranslated",
+      "unit": "E3-unknown-bonus2-breseff-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          5808
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 5808 is not summarized: the translator does not interpret the quoted statement (bonus2 bResEff (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            67005
+          ],
+          "required_source_literals": [
+            "bonus2 bResEff,Eff_Stone,2000+(getrefine()*200);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_24090_script_untranslated",
+      "unit": "E3-unknown-bonus2-breseff-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          24090
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 24090 is not summarized: the translator does not interpret the quoted statement (bonus2 bResEff (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            151770
+          ],
+          "required_source_literals": [
+            "bonus2 bResEff,Eff_Stun,getrefine()/2;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_24091_script_untranslated",
+      "unit": "E3-unknown-bonus2-breseff-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          24091
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 24091 is not summarized: the translator does not interpret the quoted statement (bonus2 bResEff (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            151789
+          ],
+          "required_source_literals": [
+            "bonus2 bResEff,Eff_Stone,getrefine();"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_24092_script_untranslated",
+      "unit": "E3-unknown-bonus2-breseff-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          24092
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 24092 is not summarized: the translator does not interpret the quoted statement (bonus2 bResEff (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            151801
+          ],
+          "required_source_literals": [
+            "bonus2 bResEff,Eff_Stone,getrefine();"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_24093_script_untranslated",
+      "unit": "E3-unknown-bonus2-breseff-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          24093
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 24093 is not summarized: the translator does not interpret the quoted statement (bonus2 bResEff (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            151813
+          ],
+          "required_source_literals": [
+            "bonus2 bResEff,Eff_Sleep,getrefine();"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_24094_script_untranslated",
+      "unit": "E3-unknown-bonus2-breseff-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          24094
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 24094 is not summarized: the translator does not interpret the quoted statement (bonus2 bResEff (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            151825
+          ],
+          "required_source_literals": [
+            "bonus2 bResEff,Eff_Sleep,getrefine();"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_24095_script_untranslated",
+      "unit": "E3-unknown-bonus2-breseff-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          24095
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 24095 is not summarized: the translator does not interpret the quoted statement (bonus2 bResEff (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            151837
+          ],
+          "required_source_literals": [
+            "bonus2 bResEff,Eff_Silence,getrefine();"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_24096_script_untranslated",
+      "unit": "E3-unknown-bonus2-breseff-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          24096
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 24096 is not summarized: the translator does not interpret the quoted statement (bonus2 bResEff (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            151849
+          ],
+          "required_source_literals": [
+            "bonus2 bResEff,Eff_Silence,getrefine();"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_24097_script_untranslated",
+      "unit": "E3-unknown-bonus2-breseff-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          24097
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 24097 is not summarized: the translator does not interpret the quoted statement (bonus2 bResEff (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            151861
+          ],
+          "required_source_literals": [
+            "bonus2 bResEff,Eff_Blind,getrefine();"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_24098_script_untranslated",
+      "unit": "E3-unknown-bonus2-breseff-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          24098
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 24098 is not summarized: the translator does not interpret the quoted statement (bonus2 bResEff (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            151873
+          ],
+          "required_source_literals": [
+            "bonus2 bResEff,Eff_Blind,getrefine();"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_24099_script_untranslated",
+      "unit": "E3-unknown-bonus2-breseff-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          24099
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 24099 is not summarized: the translator does not interpret the quoted statement (bonus2 bResEff (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            151885
+          ],
+          "required_source_literals": [
+            "bonus2 bResEff,Eff_Freeze,getrefine();"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_24100_script_untranslated",
+      "unit": "E3-unknown-bonus2-breseff-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          24100
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 24100 is not summarized: the translator does not interpret the quoted statement (bonus2 bResEff (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            151897
+          ],
+          "required_source_literals": [
+            "bonus2 bResEff,Eff_Freeze,getrefine();"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_24101_script_untranslated",
+      "unit": "E3-unknown-bonus2-breseff-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          24101
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 24101 is not summarized: the translator does not interpret the quoted statement (bonus2 bResEff (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            151909
+          ],
+          "required_source_literals": [
+            "bonus2 bResEff,Eff_Freeze,getrefine();"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_24102_script_untranslated",
+      "unit": "E3-unknown-bonus2-breseff-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          24102
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 24102 is not summarized: the translator does not interpret the quoted statement (bonus2 bResEff (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            151921
+          ],
+          "required_source_literals": [
+            "bonus2 bResEff,Eff_Bleeding,getrefine();"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_24103_script_untranslated",
+      "unit": "E3-unknown-bonus2-breseff-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          24103
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 24103 is not summarized: the translator does not interpret the quoted statement (bonus2 bResEff (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            151933
+          ],
+          "required_source_literals": [
+            "bonus2 bResEff,Eff_Bleeding,getrefine();"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_24104_script_untranslated",
+      "unit": "E3-unknown-bonus2-breseff-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          24104
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 24104 is not summarized: the translator does not interpret the quoted statement (bonus2 bResEff (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            151945
+          ],
+          "required_source_literals": [
+            "bonus2 bResEff,Eff_Stun,getrefine()/2;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_24105_script_untranslated",
+      "unit": "E3-unknown-bonus2-breseff-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          24105
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 24105 is not summarized: the translator does not interpret the quoted statement (bonus2 bResEff (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            151957
+          ],
+          "required_source_literals": [
+            "bonus2 bResEff,Eff_Stun,getrefine();"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_24106_script_untranslated",
+      "unit": "E3-unknown-bonus2-breseff-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          24106
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 24106 is not summarized: the translator does not interpret the quoted statement (bonus2 bResEff (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            151969
+          ],
+          "required_source_literals": [
+            "bonus2 bResEff,Eff_Stun,getrefine();"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_24107_script_untranslated",
+      "unit": "E3-unknown-bonus2-breseff-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          24107
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 24107 is not summarized: the translator does not interpret the quoted statement (bonus2 bResEff (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            151981
+          ],
+          "required_source_literals": [
+            "bonus2 bResEff,Eff_Curse,getrefine();"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_24108_script_untranslated",
+      "unit": "E3-unknown-bonus2-breseff-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          24108
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 24108 is not summarized: the translator does not interpret the quoted statement (bonus2 bResEff (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            151993
+          ],
+          "required_source_literals": [
+            "bonus2 bResEff,Eff_Curse,getrefine();"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
