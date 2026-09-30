@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 1221,
+    "E1_unknown": 1231,
     "E1_verified": 1
   },
   "entries": [
@@ -10404,6 +10404,256 @@
           ],
           "required_source_literals": [
             "delitem Unidentified_Mineral,3;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mid_camp_defaria_moc2_branch_for_11549_11643",
+      "unit": "E1-mid_camp_defaria_moc2_branch_for_11549",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Defaria#moc2"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Holy_Water,30; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_1.txt",
+          "lines": [
+            11643
+          ],
+          "required_source_literals": [
+            "delitem Holy_Water,30;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mid_camp_defaria_moc2_branch_for_11549_11644",
+      "unit": "E1-mid_camp_defaria_moc2_branch_for_11549",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Defaria#moc2"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Rune_Of_Darkness,30; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_1.txt",
+          "lines": [
+            11644
+          ],
+          "required_source_literals": [
+            "delitem Rune_Of_Darkness,30;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mid_camp_defaria_moc2_branch_for_11549_11645",
+      "unit": "E1-mid_camp_defaria_moc2_branch_for_11549",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Defaria#moc2"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Bloody_Rune,30; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_1.txt",
+          "lines": [
+            11645
+          ],
+          "required_source_literals": [
+            "delitem Bloody_Rune,30;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mid_camp_defaria_moc2_branch_for_11549_11646",
+      "unit": "E1-mid_camp_defaria_moc2_branch_for_11549",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Defaria#moc2"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Seal_Scroll,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_1.txt",
+          "lines": [
+            11646
+          ],
+          "required_source_literals": [
+            "delitem Seal_Scroll,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mid_camp_defaria_moc2_branch_for_11549_11695",
+      "unit": "E1-mid_camp_defaria_moc2_branch_for_11549",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Defaria#moc2"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Unsealed_Magic_Spell,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_1.txt",
+          "lines": [
+            11695
+          ],
+          "required_source_literals": [
+            "getitem Unsealed_Magic_Spell,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mid_camp_defaria_moc2_branch_for_11549_11823",
+      "unit": "E1-mid_camp_defaria_moc2_branch_for_11549",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Defaria#moc2"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Sweet_Potato,20; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_1.txt",
+          "lines": [
+            11823
+          ],
+          "required_source_literals": [
+            "delitem Sweet_Potato,20;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mid_camp_defaria_moc2_branch_for_11549_11824",
+      "unit": "E1-mid_camp_defaria_moc2_branch_for_11549",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Defaria#moc2"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Log,30; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_1.txt",
+          "lines": [
+            11824
+          ],
+          "required_source_literals": [
+            "delitem Log,30;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mid_camp_defaria_moc2_branch_for_11549_11860",
+      "unit": "E1-mid_camp_defaria_moc2_branch_for_11549",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Defaria#moc2"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Nice_Sweet_Potato,2; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_1.txt",
+          "lines": [
+            11860
+          ],
+          "required_source_literals": [
+            "getitem Nice_Sweet_Potato,2;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mid_camp_defaria_moc2_branch_for_11549_11907",
+      "unit": "E1-mid_camp_defaria_moc2_branch_for_11549",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Defaria#moc2"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Nice_Sweet_Potato,2; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_1.txt",
+          "lines": [
+            11907
+          ],
+          "required_source_literals": [
+            "getitem Nice_Sweet_Potato,2;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mid_camp_defaria_moc2_branch_for_11549_11942",
+      "unit": "E1-mid_camp_defaria_moc2_branch_for_11549",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Defaria#moc2"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Baked_Yam,5; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_1.txt",
+          "lines": [
+            11942
+          ],
+          "required_source_literals": [
+            "getitem Baked_Yam,5;"
           ]
         }
       ],
