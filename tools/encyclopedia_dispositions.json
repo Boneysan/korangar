@@ -41826,6 +41826,56 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_hu_in01_alex_branch_for_7692_7948",
+      "unit": "E1-hu_in01_alex_branch_for_7692",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Alex"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Rune_Of_Darkness,5; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_hugel.txt",
+          "lines": [
+            7948
+          ],
+          "required_source_literals": [
+            "delitem Rune_Of_Darkness,5;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_hu_in01_alex_branch_for_7692_7951",
+      "unit": "E1-hu_in01_alex_branch_for_7692",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Alex"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem 603,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_hugel.txt",
+          "lines": [
+            7951
+          ],
+          "required_source_literals": [
+            "getitem 603,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
