@@ -14376,6 +14376,56 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_yuno_little_kid_kh_branch_for_318_392",
+      "unit": "E1-yuno_little_kid_kh_branch_for_318",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Little Kid#kh"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Delivery_Box,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/kiel_hyre_quest.txt",
+          "lines": [
+            392
+          ],
+          "required_source_literals": [
+            "delitem Delivery_Box,1; //Delivery_Package"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_yuno_little_kid_kh_branch_for_318_393",
+      "unit": "E1-yuno_little_kid_kh_branch_for_318",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Little Kid#kh"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Delivery_Box,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/kiel_hyre_quest.txt",
+          "lines": [
+            393
+          ],
+          "required_source_literals": [
+            "getitem Delivery_Box,1; //Delivery_Package"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }

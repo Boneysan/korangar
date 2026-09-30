@@ -6725,7 +6725,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Little Kid#kh",
@@ -6744,7 +6744,25 @@
       ],
       "size_lines": 87,
       "reason": "refused by the braced one-item prover: braceless",
-      "history": []
+      "history": [
+        "2026-09-30T14:58:10Z activated",
+        "2026-09-30T14:58:10Z validated",
+        "2026-09-30T14:58:10Z verified: 2 claims supported",
+        "2026-09-30T14:58:41Z accepted",
+        "2026-09-30T14:58:41Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "8c0c2af0f32ab27fc7af7008cbaefba48e42415b264e6c557759077b5d21ef4a",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-lighthalzen_windmill_owner_kh_branch_for_407",
