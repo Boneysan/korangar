@@ -34699,7 +34699,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Wandering Merchant#ecl",
@@ -34718,7 +34718,25 @@
       ],
       "size_lines": 158,
       "reason": "refused by the braced one-item prover: switch",
-      "history": []
+      "history": [
+        "2026-09-30T19:15:51Z activated",
+        "2026-09-30T19:15:51Z validated",
+        "2026-09-30T19:15:51Z verified: 2 claims supported",
+        "2026-09-30T19:16:14Z accepted",
+        "2026-09-30T19:16:14Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "bc414da508c0a126e0517b2aa0a55477b85e92d9ea659f5fdaf379956106afd2",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-ecl_in02_eirinn_nk_branch_for_7974",

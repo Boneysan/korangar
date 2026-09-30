@@ -79251,6 +79251,56 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_eclage_wandering_merchant_ecl_branch_for_6432_6506",
+      "unit": "E1-eclage_wandering_merchant_ecl_branch_for_6432",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Wandering Merchant#ecl"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Center_Potion,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "lines": [
+            6506
+          ],
+          "required_source_literals": [
+            "getitem Center_Potion,1; //Center_Potion"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_eclage_wandering_merchant_ecl_branch_for_6432_6524",
+      "unit": "E1-eclage_wandering_merchant_ecl_branch_for_6432",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Wandering Merchant#ecl"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Center_Potion,2; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "lines": [
+            6524
+          ],
+          "required_source_literals": [
+            "getitem Center_Potion,2; //Center_Potion"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
