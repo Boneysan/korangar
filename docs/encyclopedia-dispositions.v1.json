@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 2903,
+    "E1_unknown": 2911,
     "E1_verified": 1
   },
   "entries": [
@@ -11179,6 +11179,206 @@
           ],
           "required_source_literals": [
             "delitem Splendide_Coin,10; //Splendide_Coin"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ecl_in01_replication_expert_paltu_branch_for_1035_1220",
+      "unit": "E1-ecl_in01_replication_expert_paltu_branch_for_1035",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Replication Expert Paltu"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Splendide_Coin,50; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/merchants/coin_exchange.txt",
+          "lines": [
+            1220
+          ],
+          "required_source_literals": [
+            "delitem Splendide_Coin,50;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ecl_in01_replication_expert_paltu_branch_for_1035_1221",
+      "unit": "E1-ecl_in01_replication_expert_paltu_branch_for_1035",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Replication Expert Paltu"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Crystal_Mirror,4; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/merchants/coin_exchange.txt",
+          "lines": [
+            1221
+          ],
+          "required_source_literals": [
+            "delitem Crystal_Mirror,4;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ecl_in01_replication_expert_paltu_branch_for_1035_1222",
+      "unit": "E1-ecl_in01_replication_expert_paltu_branch_for_1035",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Replication Expert Paltu"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Angel_Magic_Power,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/merchants/coin_exchange.txt",
+          "lines": [
+            1222
+          ],
+          "required_source_literals": [
+            "delitem Angel_Magic_Power,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ecl_in01_replication_expert_paltu_branch_for_1035_1223",
+      "unit": "E1-ecl_in01_replication_expert_paltu_branch_for_1035",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Replication Expert Paltu"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Azure_Jewel,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/merchants/coin_exchange.txt",
+          "lines": [
+            1223
+          ],
+          "required_source_literals": [
+            "delitem Azure_Jewel,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ecl_in01_replication_expert_paltu_branch_for_1035_1224",
+      "unit": "E1-ecl_in01_replication_expert_paltu_branch_for_1035",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Replication Expert Paltu"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Cardinal_Jewel,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/merchants/coin_exchange.txt",
+          "lines": [
+            1224
+          ],
+          "required_source_literals": [
+            "delitem Cardinal_Jewel,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ecl_in01_replication_expert_paltu_branch_for_1035_1225",
+      "unit": "E1-ecl_in01_replication_expert_paltu_branch_for_1035",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Replication Expert Paltu"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Blue_Jewel,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/merchants/coin_exchange.txt",
+          "lines": [
+            1225
+          ],
+          "required_source_literals": [
+            "delitem Blue_Jewel,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ecl_in01_replication_expert_paltu_branch_for_1035_1226",
+      "unit": "E1-ecl_in01_replication_expert_paltu_branch_for_1035",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Replication Expert Paltu"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Golden_Jewel,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/merchants/coin_exchange.txt",
+          "lines": [
+            1226
+          ],
+          "required_source_literals": [
+            "delitem Golden_Jewel,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ecl_in01_replication_expert_paltu_branch_for_1035_1227",
+      "unit": "E1-ecl_in01_replication_expert_paltu_branch_for_1035",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Replication Expert Paltu"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Bluish_Green_Jewel,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/merchants/coin_exchange.txt",
+          "lines": [
+            1227
+          ],
+          "required_source_literals": [
+            "delitem Bluish_Green_Jewel,10;"
           ]
         }
       ],
