@@ -5755,7 +5755,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Wooden Floor#paypuzz5",
@@ -5774,7 +5774,25 @@
       ],
       "size_lines": 99,
       "reason": "refused by the braced one-item prover: menu",
-      "history": []
+      "history": [
+        "2026-09-30T14:49:25Z activated",
+        "2026-09-30T14:49:25Z validated",
+        "2026-09-30T14:49:25Z verified: 4 claims supported",
+        "2026-09-30T14:49:49Z accepted",
+        "2026-09-30T14:49:49Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "73ae7f1a1eeca5e79f4b27ba2c476bf1ba0f6f1423ce2ac4a42814cb859b4b3e",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-pay_arche_buddha_statue_paypuzz6_branch_for_1811",

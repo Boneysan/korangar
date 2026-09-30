@@ -11876,6 +11876,106 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_wooden_floor_paypuzz5_branch_for_1711_1763",
+      "unit": "E1-payon_wooden_floor_paypuzz5_branch_for_1711",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Wooden Floor#paypuzz5"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Stone_Heart,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/eye_of_hellion.txt",
+          "lines": [
+            1763
+          ],
+          "required_source_literals": [
+            "delitem Stone_Heart,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_wooden_floor_paypuzz5_branch_for_1711_1764",
+      "unit": "E1-payon_wooden_floor_paypuzz5_branch_for_1711",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Wooden Floor#paypuzz5"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Green_Herb,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/eye_of_hellion.txt",
+          "lines": [
+            1764
+          ],
+          "required_source_literals": [
+            "delitem Green_Herb,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_wooden_floor_paypuzz5_branch_for_1711_1765",
+      "unit": "E1-payon_wooden_floor_paypuzz5_branch_for_1711",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Wooden Floor#paypuzz5"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Grape_Juice,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/eye_of_hellion.txt",
+          "lines": [
+            1765
+          ],
+          "required_source_literals": [
+            "delitem Grape_Juice,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_wooden_floor_paypuzz5_branch_for_1711_1766",
+      "unit": "E1-payon_wooden_floor_paypuzz5_branch_for_1711",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Wooden Floor#paypuzz5"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Skirt_Of_Virgin,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/eye_of_hellion.txt",
+          "lines": [
+            1766
+          ],
+          "required_source_literals": [
+            "delitem Skirt_Of_Virgin,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
