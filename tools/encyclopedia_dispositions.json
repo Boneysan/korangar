@@ -50551,6 +50551,31 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mjolnir_01_exhausted_looking_woman_branch_for_1757_1942",
+      "unit": "E1-mjolnir_01_exhausted_looking_woman_branch_for_1757",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Exhausted-Looking Woman"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Leather_Pouch,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_prontera.txt",
+          "lines": [
+            1942
+          ],
+          "required_source_literals": [
+            "getitem Leather_Pouch,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
