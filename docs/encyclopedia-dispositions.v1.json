@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 1655,
+    "E1_unknown": 1657,
     "E1_verified": 1
   },
   "entries": [
@@ -13629,6 +13629,56 @@
           ],
           "required_source_literals": [
             "delitem Bloody_Rune,1000;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_hugel_layoma_branch_for_5986_6029",
+      "unit": "E1-hugel_layoma_branch_for_5986",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Layoma"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Mushroom_Spore,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_hugel.txt",
+          "lines": [
+            6029
+          ],
+          "required_source_literals": [
+            "delitem Mushroom_Spore,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_hugel_layoma_branch_for_5986_6030",
+      "unit": "E1-hugel_layoma_branch_for_5986",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Layoma"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Fish_Ball_Soup,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_hugel.txt",
+          "lines": [
+            6030
+          ],
+          "required_source_literals": [
+            "delitem Fish_Ball_Soup,1;"
           ]
         }
       ],

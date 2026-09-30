@@ -41501,6 +41501,56 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_hugel_layoma_branch_for_5986_6029",
+      "unit": "E1-hugel_layoma_branch_for_5986",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Layoma"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Mushroom_Spore,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_hugel.txt",
+          "lines": [
+            6029
+          ],
+          "required_source_literals": [
+            "delitem Mushroom_Spore,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_hugel_layoma_branch_for_5986_6030",
+      "unit": "E1-hugel_layoma_branch_for_5986",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Layoma"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Fish_Ball_Soup,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_hugel.txt",
+          "lines": [
+            6030
+          ],
+          "required_source_literals": [
+            "delitem Fish_Ball_Soup,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
