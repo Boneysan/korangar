@@ -36762,7 +36762,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "#CornerLocker10",
@@ -36781,7 +36781,25 @@
       ],
       "size_lines": 30,
       "reason": "refused by the braced one-item prover: loop-or-random",
-      "history": []
+      "history": [
+        "2026-09-30T19:35:03Z activated",
+        "2026-09-30T19:35:03Z validated",
+        "2026-09-30T19:35:03Z verified: 1 claims supported",
+        "2026-09-30T19:35:26Z accepted",
+        "2026-09-30T19:35:26Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "ebe9c4d0a1698d4b8fc8bac375d970a440726ec026980788464827e32c048e1c",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-mal_in01_footholdtower11_branch_for_4317",
