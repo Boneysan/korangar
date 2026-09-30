@@ -23401,6 +23401,31 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_moc_ruins_jacob_thai_branch_for_637_715",
+      "unit": "E1-moc_ruins_jacob_thai_branch_for_637",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Jacob#thai"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem No_Recipient,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/obb_quest.txt",
+          "lines": [
+            715
+          ],
+          "required_source_literals": [
+            "delitem No_Recipient,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
