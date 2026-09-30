@@ -72251,6 +72251,31 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_izlude_refinery_owner_han_iz_branch_for_12578_12773",
+      "unit": "E1-izlude_refinery_owner_han_iz_branch_for_12578",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Refinery Owner Han#iz"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Cargo_Free_Ticket,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            12773
+          ],
+          "required_source_literals": [
+            "getitem(Cargo_Free_Ticket, 1); // Cargo_Free_Ticket"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
