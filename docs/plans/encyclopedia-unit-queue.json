@@ -38391,7 +38391,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "#buwaya_soil",
@@ -38410,7 +38410,22 @@
       ],
       "size_lines": 67,
       "reason": "refused by the braced one-item prover: menu",
-      "history": []
+      "history": [
+        "2026-09-30T19:50:04Z activated",
+        "2026-09-30T19:50:04Z validated",
+        "2026-09-30T19:50:04Z verified: 0 claims supported",
+        "2026-09-30T19:50:27Z accepted",
+        "2026-09-30T19:50:27Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "e5f83948370b96ffe3273d816fe665dfe44414cbd0a882694bac8d7ba4f65783",
+      "accepted_files": [
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-malaya_old_legend_teller_bako1_branch_for_5028",
