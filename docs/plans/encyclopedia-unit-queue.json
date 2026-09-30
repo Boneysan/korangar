@@ -38870,7 +38870,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Bushes#ma",
@@ -38889,7 +38889,22 @@
       ],
       "size_lines": 107,
       "reason": "refused by the braced one-item prover: switch",
-      "history": []
+      "history": [
+        "2026-09-30T19:54:29Z activated",
+        "2026-09-30T19:54:29Z validated",
+        "2026-09-30T19:54:29Z verified: 0 claims supported",
+        "2026-09-30T19:54:53Z accepted",
+        "2026-09-30T19:54:53Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "0c278548cd290c137ad0df7ffaa25a402c6865f2054e4e822a5d5f6fb52a28f4",
+      "accepted_files": [
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-ma_fild01_tattooist_pin_branch_for_8655",
