@@ -19551,6 +19551,306 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_yuno_old_blacksmith_hgear_branch_for_653_719",
+      "unit": "E1-yuno_old_blacksmith_hgear_branch_for_653",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Old Blacksmith#hgear"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Angelic_Chain,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2004_headgears.txt",
+          "lines": [
+            719
+          ],
+          "required_source_literals": [
+            "delitem Angelic_Chain,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_yuno_old_blacksmith_hgear_branch_for_653_720",
+      "unit": "E1-yuno_old_blacksmith_hgear_branch_for_653",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Old Blacksmith#hgear"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Elven_Ears,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2004_headgears.txt",
+          "lines": [
+            720
+          ],
+          "required_source_literals": [
+            "delitem Elven_Ears,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_yuno_old_blacksmith_hgear_branch_for_653_722",
+      "unit": "E1-yuno_old_blacksmith_hgear_branch_for_653",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Old Blacksmith#hgear"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Ear_Of_Angels_Wing,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2004_headgears.txt",
+          "lines": [
+            722
+          ],
+          "required_source_literals": [
+            "getitem Ear_Of_Angels_Wing,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_yuno_old_blacksmith_hgear_branch_for_653_774",
+      "unit": "E1-yuno_old_blacksmith_hgear_branch_for_653",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Old Blacksmith#hgear"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Satanic_Chain,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2004_headgears.txt",
+          "lines": [
+            774
+          ],
+          "required_source_literals": [
+            "delitem Satanic_Chain,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_yuno_old_blacksmith_hgear_branch_for_653_775",
+      "unit": "E1-yuno_old_blacksmith_hgear_branch_for_653",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Old Blacksmith#hgear"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Elven_Ears,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2004_headgears.txt",
+          "lines": [
+            775
+          ],
+          "required_source_literals": [
+            "delitem Elven_Ears,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_yuno_old_blacksmith_hgear_branch_for_653_777",
+      "unit": "E1-yuno_old_blacksmith_hgear_branch_for_653",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Old Blacksmith#hgear"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Ear_Of_Devils_Wing,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2004_headgears.txt",
+          "lines": [
+            777
+          ],
+          "required_source_literals": [
+            "getitem Ear_Of_Devils_Wing,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_yuno_old_blacksmith_hgear_branch_for_653_844",
+      "unit": "E1-yuno_old_blacksmith_hgear_branch_for_653",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Old Blacksmith#hgear"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Satanic_Chain,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2004_headgears.txt",
+          "lines": [
+            844
+          ],
+          "required_source_literals": [
+            "delitem Satanic_Chain,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_yuno_old_blacksmith_hgear_branch_for_653_845",
+      "unit": "E1-yuno_old_blacksmith_hgear_branch_for_653",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Old Blacksmith#hgear"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Elven_Ears,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2004_headgears.txt",
+          "lines": [
+            845
+          ],
+          "required_source_literals": [
+            "delitem Elven_Ears,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_yuno_old_blacksmith_hgear_branch_for_653_847",
+      "unit": "E1-yuno_old_blacksmith_hgear_branch_for_653",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Old Blacksmith#hgear"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Ear_Of_Devils_Wing,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2004_headgears.txt",
+          "lines": [
+            847
+          ],
+          "required_source_literals": [
+            "getitem Ear_Of_Devils_Wing,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_yuno_old_blacksmith_hgear_branch_for_653_898",
+      "unit": "E1-yuno_old_blacksmith_hgear_branch_for_653",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Old Blacksmith#hgear"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Angelic_Chain,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2004_headgears.txt",
+          "lines": [
+            898
+          ],
+          "required_source_literals": [
+            "delitem Angelic_Chain,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_yuno_old_blacksmith_hgear_branch_for_653_899",
+      "unit": "E1-yuno_old_blacksmith_hgear_branch_for_653",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Old Blacksmith#hgear"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Elven_Ears,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2004_headgears.txt",
+          "lines": [
+            899
+          ],
+          "required_source_literals": [
+            "delitem Elven_Ears,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_yuno_old_blacksmith_hgear_branch_for_653_901",
+      "unit": "E1-yuno_old_blacksmith_hgear_branch_for_653",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Old Blacksmith#hgear"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Ear_Of_Angels_Wing,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2004_headgears.txt",
+          "lines": [
+            901
+          ],
+          "required_source_literals": [
+            "getitem Ear_Of_Angels_Wing,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
