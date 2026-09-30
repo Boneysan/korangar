@@ -27076,6 +27076,31 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_aldebaran_promotional_staff_alde_branch_for_373_423",
+      "unit": "E1-aldebaran_promotional_staff_alde_branch_for_373",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Promotional Staff#alde"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Jellopy,300; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_1.txt",
+          "lines": [
+            423
+          ],
+          "required_source_literals": [
+            "delitem Jellopy,300;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }

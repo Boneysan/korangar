@@ -10046,7 +10046,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Promotional Staff#alde",
@@ -10065,7 +10065,26 @@
       ],
       "size_lines": 99,
       "reason": "refused by the braced one-item prover: menu",
-      "history": []
+      "history": [
+        "2026-09-30T15:28:37Z activated",
+        "2026-09-30T15:28:37Z validated",
+        "2026-09-30T15:28:37Z verified: 1 claims supported",
+        "2026-09-30T15:29:00Z accepted",
+        "2026-09-30T15:29:00Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "c2cb84e390d83b2f04980b2771121f10ca570f950f1c83aff6a65da945515f01",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "audit": "due",
+      "commit": "committed"
     },
     {
       "id": "E1-geffen_promotional_staff_gef_branch_for_473",
