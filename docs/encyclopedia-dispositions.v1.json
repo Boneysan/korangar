@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 1575,
+    "E1_unknown": 1576,
     "E1_verified": 1
   },
   "entries": [
@@ -9801,6 +9801,31 @@
           "path": "npc/quests/quests_ein.txt",
           "lines": [
             4929
+          ],
+          "required_source_literals": [
+            "delitem Violin,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ein_in01_megass_ein_branch_for_5027_5071",
+      "unit": "E1-ein_in01_megass_ein_branch_for_5027",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Megass#EIN"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Violin,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_ein.txt",
+          "lines": [
+            5071
           ],
           "required_source_literals": [
             "delitem Violin,1;"
