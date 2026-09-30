@@ -85801,6 +85801,156 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_bif_fild01_cheshire_ep14_1_xq04_branch_for_1589_1616",
+      "unit": "E1-bif_fild01_cheshire_ep14_1_xq04_branch_for_1589",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Cheshire#ep14_1_xq04"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Purified_Bradium,20; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_mora.txt",
+          "lines": [
+            1616
+          ],
+          "required_source_literals": [
+            "delitem Purified_Bradium,20;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_bif_fild01_cheshire_ep14_1_xq04_branch_for_1589_1619",
+      "unit": "E1-bif_fild01_cheshire_ep14_1_xq04_branch_for_1589",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Cheshire#ep14_1_xq04"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Sapa_Feat_Cert,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_mora.txt",
+          "lines": [
+            1619
+          ],
+          "required_source_literals": [
+            "getitem Sapa_Feat_Cert,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_bif_fild01_cheshire_ep14_1_xq04_branch_for_1589_1640",
+      "unit": "E1-bif_fild01_cheshire_ep14_1_xq04_branch_for_1589",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Cheshire#ep14_1_xq04"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Bradium_Box,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_mora.txt",
+          "lines": [
+            1640
+          ],
+          "required_source_literals": [
+            "delitem Bradium_Box,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_bif_fild01_cheshire_ep14_1_xq04_branch_for_1589_1641",
+      "unit": "E1-bif_fild01_cheshire_ep14_1_xq04_branch_for_1589",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Cheshire#ep14_1_xq04"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Sapa_Feat_Cert,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_mora.txt",
+          "lines": [
+            1641
+          ],
+          "required_source_literals": [
+            "getitem Sapa_Feat_Cert,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_bif_fild01_cheshire_ep14_1_xq04_branch_for_1589_1767",
+      "unit": "E1-bif_fild01_cheshire_ep14_1_xq04_branch_for_1589",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Cheshire#ep14_1_xq04"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Bradium_Box,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_mora.txt",
+          "lines": [
+            1767
+          ],
+          "required_source_literals": [
+            "delitem Bradium_Box,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_bif_fild01_cheshire_ep14_1_xq04_branch_for_1589_1770",
+      "unit": "E1-bif_fild01_cheshire_ep14_1_xq04_branch_for_1589",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Cheshire#ep14_1_xq04"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Sapa_Feat_Cert,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_mora.txt",
+          "lines": [
+            1770
+          ],
+          "required_source_literals": [
+            "getitem Sapa_Feat_Cert,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
