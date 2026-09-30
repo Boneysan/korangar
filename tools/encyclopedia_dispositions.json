@@ -108164,6 +108164,222 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_4366_script_untranslated",
+      "unit": "E3-unknown-bonus-bvariablecastrate-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          4366
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 4366 is not summarized: the translator does not interpret the quoted statement (bonus bVariableCastrate (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            45789
+          ],
+          "required_source_literals": [
+            "bonus bVariableCastrate,getrefine()*-1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_5226_script_untranslated",
+      "unit": "E3-unknown-bonus-bvariablecastrate-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          5226
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 5226 is not summarized: the translator does not interpret the quoted statement (bonus bVariableCastrate (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            56639
+          ],
+          "required_source_literals": [
+            "bonus bVariableCastrate,-getrefine();"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_5622_script_untranslated",
+      "unit": "E3-unknown-bonus-bvariablecastrate-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          5622
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 5622 is not summarized: the translator does not interpret the quoted statement (bonus bVariableCastrate (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            63787
+          ],
+          "required_source_literals": [
+            "bonus bVariableCastrate,-getrefine();"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_5705_script_untranslated",
+      "unit": "E3-unknown-bonus-bvariablecastrate-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          5705
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 5705 is not summarized: the translator does not interpret the quoted statement (bonus bVariableCastrate (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            65017
+          ],
+          "required_source_literals": [
+            "bonus bVariableCastrate,-getrefine();"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_24021_script_untranslated",
+      "unit": "E3-unknown-bonus-bvariablecastrate-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          24021
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 24021 is not summarized: the translator does not interpret the quoted statement (bonus bVariableCastrate (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            150889
+          ],
+          "required_source_literals": [
+            "Script: <\" bonus bVariableCastrate,-(getrefine()>=7)?2:1; \">"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_24048_script_untranslated",
+      "unit": "E3-unknown-bonus-bvariablecastrate-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          24048
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 24048 is not summarized: the translator does not interpret the quoted statement (bonus bVariableCastrate (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            151200
+          ],
+          "required_source_literals": [
+            "bonus bVariableCastrate,1+((getrefine()>=9)?2:(getrefine()>=7)?1:0);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_24109_script_untranslated",
+      "unit": "E3-unknown-bonus-bvariablecastrate-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          24109
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 24109 is not summarized: the translator does not interpret the quoted statement (bonus bVariableCastrate (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            152003
+          ],
+          "required_source_literals": [
+            "Script: <\" bonus bVariableCastrate,-1-((getrefine()>=7)?1:0); \">"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_24110_script_untranslated",
+      "unit": "E3-unknown-bonus-bvariablecastrate-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          24110
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 24110 is not summarized: the translator does not interpret the quoted statement (bonus bVariableCastrate (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            152013
+          ],
+          "required_source_literals": [
+            "bonus bVariableCastrate,-1-((getrefine()>=7)?1:0)-((getrefine()>=9)?2:0);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
