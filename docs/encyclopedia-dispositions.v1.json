@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 1743,
+    "E1_unknown": 1744,
     "E1_verified": 1
   },
   "entries": [
@@ -18829,6 +18829,31 @@
           ],
           "required_source_literals": [
             "getitem Delivery_Box,1; //Delivery_Package"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_lou_fild01_lady_delivery_branch_for_4103_4184",
+      "unit": "E1-lou_fild01_lady_delivery_branch_for_4103",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Lady#delivery"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Large_Jellopy,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_louyang.txt",
+          "lines": [
+            4184
+          ],
+          "required_source_literals": [
+            "getitem Large_Jellopy,1;"
           ]
         }
       ],

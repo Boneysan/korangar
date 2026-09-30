@@ -17643,7 +17643,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Lady#delivery",
@@ -17662,7 +17662,25 @@
       ],
       "size_lines": 150,
       "reason": "refused by the braced one-item prover: menu",
-      "history": []
+      "history": [
+        "2026-09-30T16:38:50Z activated",
+        "2026-09-30T16:38:50Z validated",
+        "2026-09-30T16:38:50Z verified: 1 claims supported",
+        "2026-09-30T16:39:14Z accepted",
+        "2026-09-30T16:39:14Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "ca7af47638e1ffd720c168616e30a853a513824409084f81e3e1696e7a004625",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-lou_in01_lou_drink1_branch_for_4348",

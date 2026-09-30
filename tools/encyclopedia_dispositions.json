@@ -43701,6 +43701,31 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_lou_fild01_lady_delivery_branch_for_4103_4184",
+      "unit": "E1-lou_fild01_lady_delivery_branch_for_4103",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Lady#delivery"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Large_Jellopy,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_louyang.txt",
+          "lines": [
+            4184
+          ],
+          "required_source_literals": [
+            "getitem Large_Jellopy,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
