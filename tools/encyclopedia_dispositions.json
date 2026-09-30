@@ -112619,6 +112619,33 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_4605_script_untranslated",
+      "unit": "E3-unknown-bonus-bhpgainvalue-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          4605
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 4605 is not summarized: the translator does not interpret the quoted statement (bonus bHPGainValue (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            48959
+          ],
+          "required_source_literals": [
+            "bonus bHPGainValue,200+10*getrefine();"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
