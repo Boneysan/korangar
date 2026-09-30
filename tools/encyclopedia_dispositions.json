@@ -132330,6 +132330,195 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_7000_npc_jobs_2_2_dancer_txt_202",
+      "unit": "E5-chain-7000",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7000
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 7000; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/dancer.txt",
+          "lines": [
+            202
+          ],
+          "required_source_literals": [
+            "setquest 7000;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_7000_npc_jobs_2_2_dancer_txt_257",
+      "unit": "E5-chain-7000",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7000
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 7000; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/dancer.txt",
+          "lines": [
+            257
+          ],
+          "required_source_literals": [
+            "changequest 7000,7001;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_7000_npc_jobs_2_2_dancer_txt_274",
+      "unit": "E5-chain-7000",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7000
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 7000; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/dancer.txt",
+          "lines": [
+            274
+          ],
+          "required_source_literals": [
+            "changequest 7000,7002;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_7000_npc_jobs_2_2_dancer_txt_286",
+      "unit": "E5-chain-7000",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7000
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 7000; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/dancer.txt",
+          "lines": [
+            286
+          ],
+          "required_source_literals": [
+            "changequest 7000,7003;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_7000_npc_jobs_2_2_dancer_txt_345",
+      "unit": "E5-chain-7000",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7001
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 7001; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/dancer.txt",
+          "lines": [
+            345
+          ],
+          "required_source_literals": [
+            "changequest 7001,7004;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_7000_npc_jobs_2_2_dancer_txt_348",
+      "unit": "E5-chain-7000",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7002
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 7002; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/dancer.txt",
+          "lines": [
+            348
+          ],
+          "required_source_literals": [
+            "changequest 7002,7004;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_7000_npc_jobs_2_2_dancer_txt_351",
+      "unit": "E5-chain-7000",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7003
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 7003; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/dancer.txt",
+          "lines": [
+            351
+          ],
+          "required_source_literals": [
+            "changequest 7003,7004;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
