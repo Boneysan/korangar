@@ -32320,7 +32320,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Tutorial Goal",
@@ -32339,7 +32339,25 @@
       ],
       "size_lines": 93,
       "reason": "refused by the braced one-item prover: menu",
-      "history": []
+      "history": [
+        "2026-09-30T18:54:02Z activated",
+        "2026-09-30T18:54:02Z validated",
+        "2026-09-30T18:54:02Z verified: 4 claims supported",
+        "2026-09-30T18:54:25Z accepted",
+        "2026-09-30T18:54:25Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "9e62750fc58a3e28d70247edab3c585bc16e94837d987880b04a9dc160a43d9d",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-job3_gen01_viorel_job3_gen01_branch_for_38",
