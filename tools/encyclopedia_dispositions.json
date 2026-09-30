@@ -9001,6 +9001,81 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ein_in01_paul_spanner_branch_for_319_346",
+      "unit": "E1-ein_in01_paul_spanner_branch_for_319",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Paul Spanner"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Anvil,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/merchants/refine.txt",
+          "lines": [
+            346
+          ],
+          "required_source_literals": [
+            "getitem Anvil,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ein_in01_paul_spanner_branch_for_319_358",
+      "unit": "E1-ein_in01_paul_spanner_branch_for_319",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Paul Spanner"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Oridecon_Anvil,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/merchants/refine.txt",
+          "lines": [
+            358
+          ],
+          "required_source_literals": [
+            "getitem Oridecon_Anvil,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ein_in01_paul_spanner_branch_for_319_370",
+      "unit": "E1-ein_in01_paul_spanner_branch_for_319",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Paul Spanner"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Golden_Anvil,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/merchants/refine.txt",
+          "lines": [
+            370
+          ],
+          "required_source_literals": [
+            "getitem Golden_Anvil,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
