@@ -55990,7 +55990,7 @@
       "package": "E3",
       "kind": "e3_dispose",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "key": "CharRename",
@@ -56016,7 +56016,25 @@
       ],
       "size_lines": 1,
       "reason": "1 item script(s) first stop at `CharRename`, which is control flow or undocumented",
-      "history": []
+      "history": [
+        "2026-09-30T20:35:11Z activated",
+        "2026-09-30T20:35:11Z validated",
+        "2026-09-30T20:35:11Z verification not required: tool-drafted, no behavior claim",
+        "2026-09-30T20:35:34Z accepted",
+        "2026-09-30T20:35:35Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "4f5d246be7c48452bcaccdc2faada06b8fed1c91c58d9791e0afb127397591a1",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E3-unknown-slotchange",
