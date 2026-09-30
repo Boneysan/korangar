@@ -68176,6 +68176,106 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_job3_rang01_ranger_master_jr_29_branch_for_1637_1745",
+      "unit": "E1-job3_rang01_ranger_master_jr_29_branch_for_1637",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Ranger Master#jr_29"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Bow__,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-1/ranger.txt",
+          "lines": [
+            1745
+          ],
+          "required_source_literals": [
+            "delitem Bow__,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_job3_rang01_ranger_master_jr_29_branch_for_1637_1749",
+      "unit": "E1-job3_rang01_ranger_master_jr_29_branch_for_1637",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Ranger Master#jr_29"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Sniper_Goggle,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-1/ranger.txt",
+          "lines": [
+            1749
+          ],
+          "required_source_literals": [
+            "getitem Sniper_Goggle,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_job3_rang01_ranger_master_jr_29_branch_for_1637_1750",
+      "unit": "E1-job3_rang01_ranger_master_jr_29_branch_for_1637",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Ranger Master#jr_29"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Green_Apple_Ring,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-1/ranger.txt",
+          "lines": [
+            1750
+          ],
+          "required_source_literals": [
+            "getitem Green_Apple_Ring,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_job3_rang01_ranger_master_jr_29_branch_for_1637_1751",
+      "unit": "E1-job3_rang01_ranger_master_jr_29_branch_for_1637",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Ranger Master#jr_29"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Wolfs_Flute,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-1/ranger.txt",
+          "lines": [
+            1751
+          ],
+          "required_source_literals": [
+            "getitem Wolfs_Flute,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }

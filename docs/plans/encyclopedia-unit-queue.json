@@ -28564,7 +28564,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Ranger Master#jr_29",
@@ -28583,7 +28583,25 @@
       ],
       "size_lines": 140,
       "reason": "refused by the braced one-item prover: braceless",
-      "history": []
+      "history": [
+        "2026-09-30T18:19:17Z activated",
+        "2026-09-30T18:19:17Z validated",
+        "2026-09-30T18:19:17Z verified: 4 claims supported",
+        "2026-09-30T18:19:40Z accepted",
+        "2026-09-30T18:19:41Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "10541e6e5b97414ca49a534505c1168606f265d398d7a9bdb4125d63a197a139",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-job3_rune01_rune_knight_captain_branch_for_317",
