@@ -22599,7 +22599,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Saraman",
@@ -22618,7 +22618,25 @@
       ],
       "size_lines": 347,
       "reason": "refused by the braced one-item prover: multi-item",
-      "history": []
+      "history": [
+        "2026-09-30T17:24:22Z activated",
+        "2026-09-30T17:24:23Z validated",
+        "2026-09-30T17:24:23Z verified: 5 claims supported",
+        "2026-09-30T17:24:46Z accepted",
+        "2026-09-30T17:24:46Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "8302fdb933bffd15c1b9159d968ce61cc42a0f43bb69ce66bd2f533427912db8",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-ve_fild07_silk_sand_camel_branch_for_4782",

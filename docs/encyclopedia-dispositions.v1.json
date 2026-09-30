@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 2070,
+    "E1_unknown": 2075,
     "E1_verified": 1
   },
   "entries": [
@@ -47629,6 +47629,131 @@
           ],
           "required_source_literals": [
             "delitem Yellow_Potion,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_veins_saraman_branch_for_4401_4559",
+      "unit": "E1-veins_saraman_branch_for_4401",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Saraman"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Monsters_Feed,5; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_veins.txt",
+          "lines": [
+            4559
+          ],
+          "required_source_literals": [
+            "delitem Monsters_Feed,5;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_veins_saraman_branch_for_4401_4560",
+      "unit": "E1-veins_saraman_branch_for_4401",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Saraman"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Yellow_Potion,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_veins.txt",
+          "lines": [
+            4560
+          ],
+          "required_source_literals": [
+            "delitem Yellow_Potion,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_veins_saraman_branch_for_4401_4561",
+      "unit": "E1-veins_saraman_branch_for_4401",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Saraman"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Unripe_Apple,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_veins.txt",
+          "lines": [
+            4561
+          ],
+          "required_source_literals": [
+            "delitem Unripe_Apple,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_veins_saraman_branch_for_4401_4562",
+      "unit": "E1-veins_saraman_branch_for_4401",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Saraman"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Empty_Bottle,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_veins.txt",
+          "lines": [
+            4562
+          ],
+          "required_source_literals": [
+            "delitem Empty_Bottle,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_veins_saraman_branch_for_4401_4717",
+      "unit": "E1-veins_saraman_branch_for_4401",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Saraman"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Old_Violet_Box,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_veins.txt",
+          "lines": [
+            4717
+          ],
+          "required_source_literals": [
+            "getitem Old_Violet_Box,1;"
           ]
         }
       ],
