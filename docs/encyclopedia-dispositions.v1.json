@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 466,
+    "E1_unknown": 470,
     "E1_verified": 1
   },
   "entries": [
@@ -7804,6 +7804,106 @@
           ],
           "required_source_literals": [
             "getitem Grimtooth_,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_grout_he_tuccok_hellion_branch_for_1305_1394",
+      "unit": "E1-payon_grout_he_tuccok_hellion_branch_for_1305",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Grout'he Tuccok#hellion"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Stone_Heart,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/eye_of_hellion.txt",
+          "lines": [
+            1394
+          ],
+          "required_source_literals": [
+            "getitem Stone_Heart,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_grout_he_tuccok_hellion_branch_for_1305_1395",
+      "unit": "E1-payon_grout_he_tuccok_hellion_branch_for_1305",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Grout'he Tuccok#hellion"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Green_Herb,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/eye_of_hellion.txt",
+          "lines": [
+            1395
+          ],
+          "required_source_literals": [
+            "getitem Green_Herb,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_grout_he_tuccok_hellion_branch_for_1305_1396",
+      "unit": "E1-payon_grout_he_tuccok_hellion_branch_for_1305",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Grout'he Tuccok#hellion"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Grape_Juice,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/eye_of_hellion.txt",
+          "lines": [
+            1396
+          ],
+          "required_source_literals": [
+            "getitem Grape_Juice,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_grout_he_tuccok_hellion_branch_for_1305_1397",
+      "unit": "E1-payon_grout_he_tuccok_hellion_branch_for_1305",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Grout'he Tuccok#hellion"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Skirt_Of_Virgin,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/eye_of_hellion.txt",
+          "lines": [
+            1397
+          ],
+          "required_source_literals": [
+            "getitem Skirt_Of_Virgin,1;"
           ]
         }
       ],
