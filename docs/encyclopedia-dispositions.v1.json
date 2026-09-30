@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 1487,
+    "E1_unknown": 1499,
     "E1_verified": 1
   },
   "entries": [
@@ -7704,6 +7704,306 @@
           ],
           "required_source_literals": [
             "getitem BF_Badge2,.@medal_gap;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_comodo_hair_ornament_girl_branch_for_52_134",
+      "unit": "E1-comodo_hair_ornament_girl_branch_for_52",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Hair Ornament Girl"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Circlet_,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_comodo.txt",
+          "lines": [
+            134
+          ],
+          "required_source_literals": [
+            "delitem Circlet_,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_comodo_hair_ornament_girl_branch_for_52_135",
+      "unit": "E1-comodo_hair_ornament_girl_branch_for_52",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Hair Ornament Girl"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Glass_Bead,20; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_comodo.txt",
+          "lines": [
+            135
+          ],
+          "required_source_literals": [
+            "delitem Glass_Bead,20;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_comodo_hair_ornament_girl_branch_for_52_139",
+      "unit": "E1-comodo_hair_ornament_girl_branch_for_52",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Hair Ornament Girl"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Light_Bulb_Band,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_comodo.txt",
+          "lines": [
+            139
+          ],
+          "required_source_literals": [
+            "getitem Light_Bulb_Band,1; // Light_Bulb_Band"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_comodo_hair_ornament_girl_branch_for_52_175",
+      "unit": "E1-comodo_hair_ornament_girl_branch_for_52",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Hair Ornament Girl"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Worn_Out_Prison_Uniform,1500; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_comodo.txt",
+          "lines": [
+            175
+          ],
+          "required_source_literals": [
+            "delitem Worn_Out_Prison_Uniform,1500;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_comodo_hair_ornament_girl_branch_for_52_179",
+      "unit": "E1-comodo_hair_ornament_girl_branch_for_52",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Hair Ornament Girl"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Stripe_Band,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_comodo.txt",
+          "lines": [
+            179
+          ],
+          "required_source_literals": [
+            "getitem Stripe_Band,1; // Stripe_Band"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_comodo_hair_ornament_girl_branch_for_52_217",
+      "unit": "E1-comodo_hair_ornament_girl_branch_for_52",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Hair Ornament Girl"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Bandana,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_comodo.txt",
+          "lines": [
+            217
+          ],
+          "required_source_literals": [
+            "delitem Bandana,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_comodo_hair_ornament_girl_branch_for_52_218",
+      "unit": "E1-comodo_hair_ornament_girl_branch_for_52",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Hair Ornament Girl"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Cobaltblue_Dyestuffs,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_comodo.txt",
+          "lines": [
+            218
+          ],
+          "required_source_literals": [
+            "delitem Cobaltblue_Dyestuffs,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_comodo_hair_ornament_girl_branch_for_52_219",
+      "unit": "E1-comodo_hair_ornament_girl_branch_for_52",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Hair Ornament Girl"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Anolian_Skin,300; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_comodo.txt",
+          "lines": [
+            219
+          ],
+          "required_source_literals": [
+            "delitem Anolian_Skin,300;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_comodo_hair_ornament_girl_branch_for_52_223",
+      "unit": "E1-comodo_hair_ornament_girl_branch_for_52",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Hair Ornament Girl"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Blue_Hair_Band,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_comodo.txt",
+          "lines": [
+            223
+          ],
+          "required_source_literals": [
+            "getitem Blue_Hair_Band,1; // Blue_Hair_Band"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_comodo_hair_ornament_girl_branch_for_52_89",
+      "unit": "E1-comodo_hair_ornament_girl_branch_for_52",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Hair Ornament Girl"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Rosary,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_comodo.txt",
+          "lines": [
+            89
+          ],
+          "required_source_literals": [
+            "delitem Rosary,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_comodo_hair_ornament_girl_branch_for_52_90",
+      "unit": "E1-comodo_hair_ornament_girl_branch_for_52",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Hair Ornament Girl"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Broken_Armor_Piece,500; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_comodo.txt",
+          "lines": [
+            90
+          ],
+          "required_source_literals": [
+            "delitem Broken_Armor_Piece,500;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_comodo_hair_ornament_girl_branch_for_52_94",
+      "unit": "E1-comodo_hair_ornament_girl_branch_for_52",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Hair Ornament Girl"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Cross_Band,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_comodo.txt",
+          "lines": [
+            94
+          ],
+          "required_source_literals": [
+            "getitem Cross_Band,1; // Cross_Band"
           ]
         }
       ],
