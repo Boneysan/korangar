@@ -15801,6 +15801,56 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_kh_kiehl01_big_door_bigdoorkhq5_branch_for_6003_6060",
+      "unit": "E1-kh_kiehl01_big_door_bigdoorkhq5_branch_for_6003",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Big Door#BigDoorKHQ5"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Sturdy_Iron_Piece,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/kiel_hyre_quest.txt",
+          "lines": [
+            6060
+          ],
+          "required_source_literals": [
+            "delitem Sturdy_Iron_Piece,1; //Hard_Piece_of_Steel"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_kh_kiehl01_big_door_bigdoorkhq5_branch_for_6003_6072",
+      "unit": "E1-kh_kiehl01_big_door_bigdoorkhq5_branch_for_6003",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Big Door#BigDoorKHQ5"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Sturdy_Iron_Piece,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/kiel_hyre_quest.txt",
+          "lines": [
+            6072
+          ],
+          "required_source_literals": [
+            "delitem Sturdy_Iron_Piece,1; //Hard_Piece_of_Steel"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }

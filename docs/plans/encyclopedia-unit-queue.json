@@ -7916,7 +7916,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Big Door#BigDoorKHQ5",
@@ -7935,7 +7935,25 @@
       ],
       "size_lines": 141,
       "reason": "refused by the braced one-item prover: switch",
-      "history": []
+      "history": [
+        "2026-09-30T15:09:00Z activated",
+        "2026-09-30T15:09:00Z validated",
+        "2026-09-30T15:09:00Z verified: 2 claims supported",
+        "2026-09-30T15:09:23Z accepted",
+        "2026-09-30T15:09:23Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "1b0ebe46f23dde32dd44929719855851d62c64f8d20fcd4557261a281a8f21f5",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-kh_kiehl02_kiehl_original_branch_for_6213",
