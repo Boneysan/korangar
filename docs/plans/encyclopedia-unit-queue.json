@@ -17904,7 +17904,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "William",
@@ -17923,7 +17923,22 @@
       ],
       "size_lines": 42,
       "reason": "refused by the braced one-item prover: switch",
-      "history": []
+      "history": [
+        "2026-09-30T16:41:15Z activated",
+        "2026-09-30T16:41:15Z validated",
+        "2026-09-30T16:41:15Z verified: 0 claims supported",
+        "2026-09-30T16:41:38Z accepted",
+        "2026-09-30T16:41:38Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "18c837a9a7f92420d8bdec65d1582b617f583db12539cd729b18960a20a986b1",
+      "accepted_files": [
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-moc_ruins_alchemist_branch_for_91",
