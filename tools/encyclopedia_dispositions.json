@@ -140835,6 +140835,33 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_8149_npc_quests_quests_moscovia_txt_9300",
+      "unit": "E5-chain-8149",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8149
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 8149; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_moscovia.txt",
+          "lines": [
+            9300
+          ],
+          "required_source_literals": [
+            "changequest(8149, 8150);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
