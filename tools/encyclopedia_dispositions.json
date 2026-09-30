@@ -78201,6 +78201,56 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_dic_in01_adventurer_clerk_ep133_branch_for_6760_6813",
+      "unit": "E1-dic_in01_adventurer_clerk_ep133_branch_for_6760",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Adventurer Clerk#ep133"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem El_Dicastes_Light,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_dicastes.txt",
+          "lines": [
+            6813
+          ],
+          "required_source_literals": [
+            "getitem El_Dicastes_Light,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_dic_in01_adventurer_clerk_ep133_branch_for_6760_6851",
+      "unit": "E1-dic_in01_adventurer_clerk_ep133_branch_for_6760",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Adventurer Clerk#ep133"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Sapa_Feat_Cert,3; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_dicastes.txt",
+          "lines": [
+            6851
+          ],
+          "required_source_literals": [
+            "delitem Sapa_Feat_Cert,3;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
