@@ -130737,6 +130737,33 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_8005_npc_jobs_2_1_assassin_txt_1604",
+      "unit": "E5-chain-8005",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8005
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 8005; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-1/assassin.txt",
+          "lines": [
+            1604
+          ],
+          "required_source_literals": [
+            "changequest 8005,8006;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
