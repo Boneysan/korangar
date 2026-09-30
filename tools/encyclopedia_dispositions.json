@@ -80876,6 +80876,81 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_eclage_eclage_guard_leo_tl_branch_for_17512_17614",
+      "unit": "E1-eclage_eclage_guard_leo_tl_branch_for_17512",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Eclage Guard Leo#tl"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Pinguiculas_fruit_Jam,3; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "lines": [
+            17614
+          ],
+          "required_source_literals": [
+            "delitem Pinguiculas_fruit_Jam,3;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_eclage_eclage_guard_leo_tl_branch_for_17512_17615",
+      "unit": "E1-eclage_eclage_guard_leo_tl_branch_for_17512",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Eclage Guard Leo#tl"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Luciolas_Honey_Jam,3; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "lines": [
+            17615
+          ],
+          "required_source_literals": [
+            "delitem Luciolas_Honey_Jam, 3;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_eclage_eclage_guard_leo_tl_branch_for_17512_17883",
+      "unit": "E1-eclage_eclage_guard_leo_tl_branch_for_17512",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Eclage Guard Leo#tl"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Splendide_Coin,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "lines": [
+            17883
+          ],
+          "required_source_literals": [
+            "getitem Splendide_Coin,1; //Splendide_Coin"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
