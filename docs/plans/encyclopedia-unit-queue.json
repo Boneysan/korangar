@@ -22775,7 +22775,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Wall Closet#vol",
@@ -22794,7 +22794,26 @@
       ],
       "size_lines": 26,
       "reason": "refused by the braced one-item prover: multi-item",
-      "history": []
+      "history": [
+        "2026-09-30T17:25:59Z activated",
+        "2026-09-30T17:25:59Z validated",
+        "2026-09-30T17:25:59Z verified: 1 claims supported",
+        "2026-09-30T17:26:23Z accepted",
+        "2026-09-30T17:26:23Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "0175558dfb5f22521c4c3ec869ce163c8161e813e0eb05c73392face5c78c7ae",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "audit": "due",
+      "commit": "committed"
     },
     {
       "id": "E1-ve_in_bookshelf_vol_branch_for_6045",
