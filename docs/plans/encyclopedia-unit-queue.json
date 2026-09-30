@@ -9526,7 +9526,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Hat Girl#Hair_Brush",
@@ -9545,7 +9545,22 @@
       ],
       "size_lines": 90,
       "reason": "refused by the braced one-item prover: menu",
-      "history": []
+      "history": [
+        "2026-09-30T15:23:50Z activated",
+        "2026-09-30T15:23:50Z validated",
+        "2026-09-30T15:23:50Z verified: 0 claims supported",
+        "2026-09-30T15:24:14Z accepted",
+        "2026-09-30T15:24:14Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "93eee19fee7ceace67c06823c3170e1a68cd578575e00a8d12515f759afb0491",
+      "accepted_files": [
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-alberta_bebete_baby_angel_status_branch_for_370",
