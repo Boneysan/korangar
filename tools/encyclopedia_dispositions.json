@@ -38651,6 +38651,481 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_einbroch_uwe_kleine_ein_branch_for_476_817",
+      "unit": "E1-einbroch_uwe_kleine_ein_branch_for_476",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Uwe Kleine#ein"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Golden_Hammer,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_ein.txt",
+          "lines": [
+            817
+          ],
+          "required_source_literals": [
+            "getitem Golden_Hammer, 1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_einbroch_uwe_kleine_ein_branch_for_476_818",
+      "unit": "E1-einbroch_uwe_kleine_ein_branch_for_476",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Uwe Kleine#ein"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Iron_Hammer,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_ein.txt",
+          "lines": [
+            818
+          ],
+          "required_source_literals": [
+            "getitem Iron_Hammer, 1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_einbroch_uwe_kleine_ein_branch_for_476_870",
+      "unit": "E1-einbroch_uwe_kleine_ein_branch_for_476",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Uwe Kleine#ein"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Large_Jellopy,6; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_ein.txt",
+          "lines": [
+            870
+          ],
+          "required_source_literals": [
+            "delitem Large_Jellopy, 6;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_einbroch_uwe_kleine_ein_branch_for_476_872",
+      "unit": "E1-einbroch_uwe_kleine_ein_branch_for_476",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Uwe Kleine#ein"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Coal,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_ein.txt",
+          "lines": [
+            872
+          ],
+          "required_source_literals": [
+            "getitem Coal, 1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_einbroch_uwe_kleine_ein_branch_for_476_873",
+      "unit": "E1-einbroch_uwe_kleine_ein_branch_for_476",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Uwe Kleine#ein"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Portable_Furnace,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_ein.txt",
+          "lines": [
+            873
+          ],
+          "required_source_literals": [
+            "getitem Portable_Furnace, 10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_einbroch_uwe_kleine_ein_branch_for_476_920",
+      "unit": "E1-einbroch_uwe_kleine_ein_branch_for_476",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Uwe Kleine#ein"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Portable_Furnace,(.@choice == 1 ? 11 : 10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_ein.txt",
+          "lines": [
+            920
+          ],
+          "required_source_literals": [
+            "getitem Portable_Furnace, (.@choice == 1 ? 11 : 10);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_einbroch_uwe_kleine_ein_branch_for_476_970",
+      "unit": "E1-einbroch_uwe_kleine_ein_branch_for_476",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Uwe Kleine#ein"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Portable_Furnace,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_ein.txt",
+          "lines": [
+            970
+          ],
+          "required_source_literals": [
+            "getitem Portable_Furnace, 10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_einbroch_uwe_kleine_ein_branch_for_476_1020",
+      "unit": "E1-einbroch_uwe_kleine_ein_branch_for_476",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Uwe Kleine#ein"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Portable_Furnace,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_ein.txt",
+          "lines": [
+            1020
+          ],
+          "required_source_literals": [
+            "getitem Portable_Furnace, 10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_einbroch_uwe_kleine_ein_branch_for_476_1048",
+      "unit": "E1-einbroch_uwe_kleine_ein_branch_for_476",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Uwe Kleine#ein"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Portable_Furnace,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_ein.txt",
+          "lines": [
+            1048
+          ],
+          "required_source_literals": [
+            "getitem Portable_Furnace, 10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_einbroch_uwe_kleine_ein_branch_for_476_1121",
+      "unit": "E1-einbroch_uwe_kleine_ein_branch_for_476",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Uwe Kleine#ein"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Emveretarcon,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_ein.txt",
+          "lines": [
+            1121
+          ],
+          "required_source_literals": [
+            "getitem Emveretarcon, 1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_einbroch_uwe_kleine_ein_branch_for_476_1145",
+      "unit": "E1-einbroch_uwe_kleine_ein_branch_for_476",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Uwe Kleine#ein"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Iron,2; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_ein.txt",
+          "lines": [
+            1145
+          ],
+          "required_source_literals": [
+            "getitem Iron, 2;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_einbroch_uwe_kleine_ein_branch_for_476_1182",
+      "unit": "E1-einbroch_uwe_kleine_ein_branch_for_476",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Uwe Kleine#ein"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Emveretarcon,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_ein.txt",
+          "lines": [
+            1182
+          ],
+          "required_source_literals": [
+            "getitem Emveretarcon, 1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_einbroch_uwe_kleine_ein_branch_for_476_1211",
+      "unit": "E1-einbroch_uwe_kleine_ein_branch_for_476",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Uwe Kleine#ein"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Iron_Hammer,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_ein.txt",
+          "lines": [
+            1211
+          ],
+          "required_source_literals": [
+            "getitem Iron_Hammer, 1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_einbroch_uwe_kleine_ein_branch_for_476_1402",
+      "unit": "E1-einbroch_uwe_kleine_ein_branch_for_476",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Uwe Kleine#ein"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Jubilee,30; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_ein.txt",
+          "lines": [
+            1402
+          ],
+          "required_source_literals": [
+            "delitem Jubilee, 30;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_einbroch_uwe_kleine_ein_branch_for_476_1403",
+      "unit": "E1-einbroch_uwe_kleine_ein_branch_for_476",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Uwe Kleine#ein"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Large_Jellopy,4; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_ein.txt",
+          "lines": [
+            1403
+          ],
+          "required_source_literals": [
+            "delitem Large_Jellopy, 4;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_einbroch_uwe_kleine_ein_branch_for_476_1404",
+      "unit": "E1-einbroch_uwe_kleine_ein_branch_for_476",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Uwe Kleine#ein"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Coal,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_ein.txt",
+          "lines": [
+            1404
+          ],
+          "required_source_literals": [
+            "getitem Coal, 1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_einbroch_uwe_kleine_ein_branch_for_476_1453",
+      "unit": "E1-einbroch_uwe_kleine_ein_branch_for_476",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Uwe Kleine#ein"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Well_Baked_Cookie,5; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_ein.txt",
+          "lines": [
+            1453
+          ],
+          "required_source_literals": [
+            "getitem Well_Baked_Cookie, 5;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_einbroch_uwe_kleine_ein_branch_for_476_1601",
+      "unit": "E1-einbroch_uwe_kleine_ein_branch_for_476",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Uwe Kleine#ein"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Large_Jellopy,6; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_ein.txt",
+          "lines": [
+            1601
+          ],
+          "required_source_literals": [
+            "delitem Large_Jellopy, 6;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_einbroch_uwe_kleine_ein_branch_for_476_1603",
+      "unit": "E1-einbroch_uwe_kleine_ein_branch_for_476",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Uwe Kleine#ein"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Coal,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_ein.txt",
+          "lines": [
+            1603
+          ],
+          "required_source_literals": [
+            "getitem Coal, 1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
