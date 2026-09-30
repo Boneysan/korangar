@@ -25680,7 +25680,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "strong",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Strange Guy#sign",
@@ -25699,7 +25699,25 @@
       ],
       "size_lines": 451,
       "reason": "refused by the braced one-item prover: braceless",
-      "history": []
+      "history": [
+        "2026-09-30T17:52:31Z activated",
+        "2026-09-30T17:52:32Z validated",
+        "2026-09-30T17:52:32Z verified: 17 claims supported",
+        "2026-09-30T17:52:55Z accepted",
+        "2026-09-30T17:52:55Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "b55a12e2bc1b39d7d6f9ce42f12c3822e4635abfe4e96d814cc0ba7e5c559a49",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-alberta_in_wealthy_looking_merchant_branch_for_5517",

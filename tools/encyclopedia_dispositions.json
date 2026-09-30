@@ -63901,6 +63901,431 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_cmd_in02_strange_guy_sign_branch_for_4432_4640",
+      "unit": "E1-cmd_in02_strange_guy_sign_branch_for_4432",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Strange Guy#sign"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Red_Frame,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/the_sign_quest.txt",
+          "lines": [
+            4640
+          ],
+          "required_source_literals": [
+            "if (countitem(Red_Frame)) delitem Red_Frame,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_cmd_in02_strange_guy_sign_branch_for_4432_4641",
+      "unit": "E1-cmd_in02_strange_guy_sign_branch_for_4432",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Strange Guy#sign"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Blue_Porcelain,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/the_sign_quest.txt",
+          "lines": [
+            4641
+          ],
+          "required_source_literals": [
+            "if (countitem(Blue_Porcelain)) delitem Blue_Porcelain,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_cmd_in02_strange_guy_sign_branch_for_4432_4642",
+      "unit": "E1-cmd_in02_strange_guy_sign_branch_for_4432",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Strange Guy#sign"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem White_Platter,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/the_sign_quest.txt",
+          "lines": [
+            4642
+          ],
+          "required_source_literals": [
+            "if (countitem(White_Platter)) delitem White_Platter,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_cmd_in02_strange_guy_sign_branch_for_4432_4643",
+      "unit": "E1-cmd_in02_strange_guy_sign_branch_for_4432",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Strange Guy#sign"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Yellow_Plate,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/the_sign_quest.txt",
+          "lines": [
+            4643
+          ],
+          "required_source_literals": [
+            "if (countitem(Yellow_Plate)) delitem Yellow_Plate,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_cmd_in02_strange_guy_sign_branch_for_4432_4644",
+      "unit": "E1-cmd_in02_strange_guy_sign_branch_for_4432",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Strange Guy#sign"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Crystal_Mirror,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/the_sign_quest.txt",
+          "lines": [
+            4644
+          ],
+          "required_source_literals": [
+            "if (countitem(Crystal_Mirror)) delitem Crystal_Mirror,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_cmd_in02_strange_guy_sign_branch_for_4432_4645",
+      "unit": "E1-cmd_in02_strange_guy_sign_branch_for_4432",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Strange Guy#sign"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Frozen_Rose,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/the_sign_quest.txt",
+          "lines": [
+            4645
+          ],
+          "required_source_literals": [
+            "if (countitem(Frozen_Rose)) delitem Frozen_Rose,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_cmd_in02_strange_guy_sign_branch_for_4432_4646",
+      "unit": "E1-cmd_in02_strange_guy_sign_branch_for_4432",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Strange Guy#sign"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Stuffed_Doll,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/the_sign_quest.txt",
+          "lines": [
+            4646
+          ],
+          "required_source_literals": [
+            "if (countitem(Stuffed_Doll)) delitem Stuffed_Doll,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_cmd_in02_strange_guy_sign_branch_for_4432_4647",
+      "unit": "E1-cmd_in02_strange_guy_sign_branch_for_4432",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Strange Guy#sign"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Poring_Doll,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/the_sign_quest.txt",
+          "lines": [
+            4647
+          ],
+          "required_source_literals": [
+            "if (countitem(Poring_Doll)) delitem Poring_Doll,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_cmd_in02_strange_guy_sign_branch_for_4432_4648",
+      "unit": "E1-cmd_in02_strange_guy_sign_branch_for_4432",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Strange Guy#sign"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Chonchon_Doll,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/the_sign_quest.txt",
+          "lines": [
+            4648
+          ],
+          "required_source_literals": [
+            "if (countitem(Chonchon_Doll)) delitem Chonchon_Doll,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_cmd_in02_strange_guy_sign_branch_for_4432_4649",
+      "unit": "E1-cmd_in02_strange_guy_sign_branch_for_4432",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Strange Guy#sign"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Spore_Doll,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/the_sign_quest.txt",
+          "lines": [
+            4649
+          ],
+          "required_source_literals": [
+            "if (countitem(Spore_Doll)) delitem Spore_Doll,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_cmd_in02_strange_guy_sign_branch_for_4432_4650",
+      "unit": "E1-cmd_in02_strange_guy_sign_branch_for_4432",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Strange Guy#sign"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Grasshopper_Doll,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/the_sign_quest.txt",
+          "lines": [
+            4650
+          ],
+          "required_source_literals": [
+            "if (countitem(Grasshopper_Doll)) delitem Grasshopper_Doll,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_cmd_in02_strange_guy_sign_branch_for_4432_4651",
+      "unit": "E1-cmd_in02_strange_guy_sign_branch_for_4432",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Strange Guy#sign"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Monkey_Doll,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/the_sign_quest.txt",
+          "lines": [
+            4651
+          ],
+          "required_source_literals": [
+            "if (countitem(Monkey_Doll)) delitem Monkey_Doll,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_cmd_in02_strange_guy_sign_branch_for_4432_4652",
+      "unit": "E1-cmd_in02_strange_guy_sign_branch_for_4432",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Strange Guy#sign"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Raccoondog_Doll,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/the_sign_quest.txt",
+          "lines": [
+            4652
+          ],
+          "required_source_literals": [
+            "if (countitem(Raccoondog_Doll)) delitem Raccoondog_Doll,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_cmd_in02_strange_guy_sign_branch_for_4432_4653",
+      "unit": "E1-cmd_in02_strange_guy_sign_branch_for_4432",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Strange Guy#sign"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Baphomet_Doll,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/the_sign_quest.txt",
+          "lines": [
+            4653
+          ],
+          "required_source_literals": [
+            "if (countitem(Baphomet_Doll)) delitem Baphomet_Doll,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_cmd_in02_strange_guy_sign_branch_for_4432_4654",
+      "unit": "E1-cmd_in02_strange_guy_sign_branch_for_4432",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Strange Guy#sign"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Osiris_Doll,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/the_sign_quest.txt",
+          "lines": [
+            4654
+          ],
+          "required_source_literals": [
+            "if (countitem(Osiris_Doll)) delitem Osiris_Doll,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_cmd_in02_strange_guy_sign_branch_for_4432_4746",
+      "unit": "E1-cmd_in02_strange_guy_sign_branch_for_4432",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Strange Guy#sign"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Part_Of_Stars_Sob,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/the_sign_quest.txt",
+          "lines": [
+            4746
+          ],
+          "required_source_literals": [
+            "getitem Part_Of_Stars_Sob,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_cmd_in02_strange_guy_sign_branch_for_4432_4783",
+      "unit": "E1-cmd_in02_strange_guy_sign_branch_for_4432",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Strange Guy#sign"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Part_Of_Stars_Sob,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/the_sign_quest.txt",
+          "lines": [
+            4783
+          ],
+          "required_source_literals": [
+            "getitem Part_Of_Stars_Sob,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
