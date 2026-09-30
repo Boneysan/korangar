@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 1287,
+    "E1_unknown": 1288,
     "E1_verified": 1
   },
   "entries": [
@@ -17829,6 +17829,31 @@
           ],
           "required_source_literals": [
             "getitem Bradium_Fragments,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_nyd_dun02_dragon_egg_ep13_degg_1_branch_for_3304_3311",
+      "unit": "E1-nyd_dun02_dragon_egg_ep13_degg_1_branch_for_3304",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Dragon Egg#ep13_degg_1"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Egg_Of_Draco,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_2.txt",
+          "lines": [
+            3311
+          ],
+          "required_source_literals": [
+            "getitem Egg_Of_Draco,1;"
           ]
         }
       ],

@@ -12463,7 +12463,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Dragon Egg#ep13_degg_1",
@@ -12482,7 +12482,25 @@
       ],
       "size_lines": 30,
       "reason": "refused by the braced one-item prover: multi-item",
-      "history": []
+      "history": [
+        "2026-09-30T15:51:16Z activated",
+        "2026-09-30T15:51:16Z validated",
+        "2026-09-30T15:51:16Z verified: 1 claims supported",
+        "2026-09-30T15:51:40Z accepted",
+        "2026-09-30T15:51:40Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "69dc6d8694987db81d7d1c04141073825bf2e74211105156440f8feb8f4e2e2b",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-nyd_dun02_dragon_egg_ep13_degg_2_branch_for_3335",
