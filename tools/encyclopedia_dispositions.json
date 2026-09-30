@@ -22076,6 +22076,106 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_rachel_branch_for_40_63",
+      "unit": "E1-rachel_branch_for_40",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "?"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Black_Dyestuffs,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2006_headgears.txt",
+          "lines": [
+            63
+          ],
+          "required_source_literals": [
+            "delitem Black_Dyestuffs,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_rachel_branch_for_40_64",
+      "unit": "E1-rachel_branch_for_40",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "?"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Smooth_Paper,100; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2006_headgears.txt",
+          "lines": [
+            64
+          ],
+          "required_source_literals": [
+            "delitem Smooth_Paper,100;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_rachel_branch_for_40_65",
+      "unit": "E1-rachel_branch_for_40",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "?"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Sticky_Mucus,99; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2006_headgears.txt",
+          "lines": [
+            65
+          ],
+          "required_source_literals": [
+            "delitem Sticky_Mucus,99;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_rachel_branch_for_40_67",
+      "unit": "E1-rachel_branch_for_40",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "?"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Censor_Bar,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2006_headgears.txt",
+          "lines": [
+            67
+          ],
+          "required_source_literals": [
+            "getitem Censor_Bar,1; //Anonimity_Request"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
