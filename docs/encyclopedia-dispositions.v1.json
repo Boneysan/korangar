@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 3362,
+    "E1_unknown": 3365,
     "E1_verified": 1
   },
   "entries": [
@@ -36526,6 +36526,81 @@
           "path": "npc/re/quests/quests_malaya.txt",
           "lines": [
             1318
+          ],
+          "required_source_literals": [
+            "delitem Soul_Protection, 1; // Soul_Protection"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_malaya_talah_malaya_branch_for_1339_1404",
+      "unit": "E1-malaya_talah_malaya_branch_for_1339",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Talah#malaya"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Blue_Gemstone,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malaya.txt",
+          "lines": [
+            1404
+          ],
+          "required_source_literals": [
+            "delitem Blue_Gemstone, 1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_malaya_talah_malaya_branch_for_1339_1405",
+      "unit": "E1-malaya_talah_malaya_branch_for_1339",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Talah#malaya"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Holy_Water,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malaya.txt",
+          "lines": [
+            1405
+          ],
+          "required_source_literals": [
+            "delitem Holy_Water, 1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_malaya_talah_malaya_branch_for_1339_1443",
+      "unit": "E1-malaya_talah_malaya_branch_for_1339",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Talah#malaya"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Soul_Protection,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malaya.txt",
+          "lines": [
+            1443
           ],
           "required_source_literals": [
             "delitem Soul_Protection, 1; // Soul_Protection"
