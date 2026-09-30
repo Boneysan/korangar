@@ -79751,6 +79751,31 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ecl_in02_clever_pa0829_branch_for_9574_9682",
+      "unit": "E1-ecl_in02_clever_pa0829_branch_for_9574",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Clever#pa0829"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Int_Dish01,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "lines": [
+            9682
+          ],
+          "required_source_literals": [
+            "delitem Int_Dish01,1; //Int_Dish01"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
