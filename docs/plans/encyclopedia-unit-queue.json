@@ -27338,7 +27338,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "strong",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Sorcerer#Bio4Reward",
@@ -27357,7 +27357,25 @@
       ],
       "size_lines": 647,
       "reason": "refused by the braced one-item prover: braceless",
-      "history": []
+      "history": [
+        "2026-09-30T18:07:56Z activated",
+        "2026-09-30T18:07:56Z validated",
+        "2026-09-30T18:07:56Z verified: 3 claims supported",
+        "2026-09-30T18:08:19Z accepted",
+        "2026-09-30T18:08:19Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "f2c36d8f4b4d08ace6dca2e17edb0634b1658207994cfb65800d5015986ae8e0",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-lhz_dun04_laboratory_entrance_memo_branch_for_1910",

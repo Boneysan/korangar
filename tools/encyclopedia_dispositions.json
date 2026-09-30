@@ -66476,6 +66476,81 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_lhz_cube_sorcerer_bio4reward_branch_for_688_1114",
+      "unit": "E1-lhz_cube_sorcerer_bio4reward_branch_for_688",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Sorcerer#Bio4Reward"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Goast_Chill,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/instances/WolfchevLaboratory.txt",
+          "lines": [
+            1114
+          ],
+          "required_source_literals": [
+            "delitem Goast_Chill, 10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_lhz_cube_sorcerer_bio4reward_branch_for_688_1309",
+      "unit": "E1-lhz_cube_sorcerer_bio4reward_branch_for_688",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Sorcerer#Bio4Reward"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Blood_Thirst,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/instances/WolfchevLaboratory.txt",
+          "lines": [
+            1309
+          ],
+          "required_source_literals": [
+            "delitem Blood_Thirst, 10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_lhz_cube_sorcerer_bio4reward_branch_for_688_1311",
+      "unit": "E1-lhz_cube_sorcerer_bio4reward_branch_for_688",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Sorcerer#Bio4Reward"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Will_Of_Warrior,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/instances/WolfchevLaboratory.txt",
+          "lines": [
+            1311
+          ],
+          "required_source_literals": [
+            "delitem Will_Of_Warrior, 10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
