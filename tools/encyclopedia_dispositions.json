@@ -138162,6 +138162,87 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_8057_npc_quests_quests_hugel_txt_4188",
+      "unit": "E5-chain-8057",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8057
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 8057; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_hugel.txt",
+          "lines": [
+            4188
+          ],
+          "required_source_literals": [
+            "setquest 8057;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_8057_npc_quests_quests_hugel_txt_4250",
+      "unit": "E5-chain-8057",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8057
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 8057; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_hugel.txt",
+          "lines": [
+            4250
+          ],
+          "required_source_literals": [
+            "changequest 8057,8058;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_8057_npc_quests_quests_hugel_txt_4292",
+      "unit": "E5-chain-8057",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8061
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 8061; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_hugel.txt",
+          "lines": [
+            4292
+          ],
+          "required_source_literals": [
+            "changequest 8061,8062;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
