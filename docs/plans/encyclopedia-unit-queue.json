@@ -63732,7 +63732,7 @@
       "package": "E4",
       "kind": "e4_formula",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "skill_names": [
@@ -63751,7 +63751,25 @@
       ],
       "size_lines": 3,
       "reason": "single skillratio expression",
-      "history": []
+      "history": [
+        "2026-09-30T21:15:15Z activated",
+        "2026-09-30T21:15:15Z validated",
+        "2026-09-30T21:15:15Z verified: 1 claims supported",
+        "2026-09-30T21:15:39Z accepted",
+        "2026-09-30T21:15:39Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "ac6e917e56dedb7d824ed10f23978446c465bf2456458b3bd43f73ab95f336ca",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E4-gn-cartcannon",
