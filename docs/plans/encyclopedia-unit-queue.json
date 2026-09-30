@@ -22687,7 +22687,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Drawer#vol3",
@@ -22706,7 +22706,25 @@
       ],
       "size_lines": 71,
       "reason": "refused by the braced one-item prover: menu",
-      "history": []
+      "history": [
+        "2026-09-30T17:25:10Z activated",
+        "2026-09-30T17:25:10Z validated",
+        "2026-09-30T17:25:11Z verified: 2 claims supported",
+        "2026-09-30T17:25:34Z accepted",
+        "2026-09-30T17:25:34Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "d1fa59e95636508bdd624912db189db004c28c79bec114ad01aa2f4ff3d5bc88",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-ve_in_drunken_man_vol_branch_for_5602",

@@ -52301,6 +52301,56 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ra_temin_drawer_vol3_branch_for_5440_5481",
+      "unit": "E1-ra_temin_drawer_vol3_branch_for_5440",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Drawer#vol3"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem File01,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_veins.txt",
+          "lines": [
+            5481
+          ],
+          "required_source_literals": [
+            "getitem File01,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ra_temin_drawer_vol3_branch_for_5440_5496",
+      "unit": "E1-ra_temin_drawer_vol3_branch_for_5440",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Drawer#vol3"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem File01,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_veins.txt",
+          "lines": [
+            5496
+          ],
+          "required_source_literals": [
+            "getitem File01,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }

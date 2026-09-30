@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 2087,
+    "E1_unknown": 2089,
     "E1_verified": 1
   },
   "entries": [
@@ -43879,6 +43879,56 @@
           ],
           "required_source_literals": [
             "getitem Old_Violet_Box,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ra_temin_drawer_vol3_branch_for_5440_5481",
+      "unit": "E1-ra_temin_drawer_vol3_branch_for_5440",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Drawer#vol3"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem File01,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_veins.txt",
+          "lines": [
+            5481
+          ],
+          "required_source_literals": [
+            "getitem File01,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ra_temin_drawer_vol3_branch_for_5440_5496",
+      "unit": "E1-ra_temin_drawer_vol3_branch_for_5440",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Drawer#vol3"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem File01,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_veins.txt",
+          "lines": [
+            5496
+          ],
+          "required_source_literals": [
+            "getitem File01,1;"
           ]
         }
       ],
