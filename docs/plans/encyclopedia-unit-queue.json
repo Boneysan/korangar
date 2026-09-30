@@ -56755,7 +56755,7 @@
       "package": "E3",
       "kind": "e3_dispose",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "key": "bonus2 bRaceTolerance",
@@ -56781,7 +56781,25 @@
       ],
       "size_lines": 1,
       "reason": "1 item script(s) first stop at `bonus2 bRaceTolerance`, which is control flow or undocumented",
-      "history": []
+      "history": [
+        "2026-09-30T20:41:10Z activated",
+        "2026-09-30T20:41:10Z validated",
+        "2026-09-30T20:41:10Z verification not required: tool-drafted, no behavior claim",
+        "2026-09-30T20:41:34Z accepted",
+        "2026-09-30T20:41:34Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "a25a3b1c3fa1b60d243671d48cd91cf653ea50181e2dad452f434d6a9cd86411",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E3-unknown-bonus2-bspdrainrate-expression",
