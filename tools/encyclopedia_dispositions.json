@@ -82251,6 +82251,56 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_malangdo_expert_cat_nya_01_branch_for_4664_4791",
+      "unit": "E1-malangdo_expert_cat_nya_01_branch_for_4664",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Expert Cat#nya_01"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Picture_Piece,6; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malangdo.txt",
+          "lines": [
+            4791
+          ],
+          "required_source_literals": [
+            "delitem Picture_Piece,6;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_malangdo_expert_cat_nya_01_branch_for_4664_4793",
+      "unit": "E1-malangdo_expert_cat_nya_01_branch_for_4664",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Expert Cat#nya_01"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Egrade_Coin,100; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malangdo.txt",
+          "lines": [
+            4793
+          ],
+          "required_source_literals": [
+            "getitem Egrade_Coin,100;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
