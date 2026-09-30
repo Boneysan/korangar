@@ -11,7 +11,7 @@
     "E2_conditional": 1,
     "E2_verified": 236,
     "E3_unknown": 973,
-    "E4_unknown": 208
+    "E4_unknown": 209
   },
   "entries": [
     {
@@ -101115,6 +101115,33 @@
           ],
           "required_source_literals": [
             "case RL_BANISHING_BUSTER:"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e4_rl_d_tail_formula",
+      "unit": "E4-rl-d-tail",
+      "package": "E4",
+      "subject": {
+        "kind": "skill",
+        "ids": [
+          2566
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted case is the ratio site for these skills; this record does not reduce it to a worked example.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "src/map/battle.c",
+          "lines": [
+            3036
+          ],
+          "required_source_literals": [
+            "case RL_D_TAIL:"
           ]
         }
       ],
