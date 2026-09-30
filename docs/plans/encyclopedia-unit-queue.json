@@ -16761,7 +16761,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "#li_Man",
@@ -16780,7 +16780,25 @@
       ],
       "size_lines": 135,
       "reason": "refused by the braced one-item prover: multi-item",
-      "history": []
+      "history": [
+        "2026-09-30T16:30:43Z activated",
+        "2026-09-30T16:30:43Z validated",
+        "2026-09-30T16:30:43Z verified: 1 claims supported",
+        "2026-09-30T16:31:06Z accepted",
+        "2026-09-30T16:31:06Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "8699fd435cdfea2c6b8dc67e4e68409f9241b501c4b9b51a0fbb2a00fb5c7c53",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-lighthalzen_elder_lhz_branch_for_4343",

@@ -42276,6 +42276,31 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_lhz_que01_li_man_branch_for_4192_4318",
+      "unit": "E1-lhz_que01_li_man_branch_for_4192",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "#li_Man"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Worn_Out_Pendant,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_lighthalzen.txt",
+          "lines": [
+            4318
+          ],
+          "required_source_literals": [
+            "getitem Worn_Out_Pendant,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
