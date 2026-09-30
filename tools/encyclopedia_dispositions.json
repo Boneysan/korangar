@@ -62901,6 +62901,31 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_tha_t12_bloody_knight_statue_tt_branch_for_1930_1943",
+      "unit": "E1-tha_t12_bloody_knight_statue_tt_branch_for_1930",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Bloody Knight Statue#tt"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Magic_Gem_Red,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/thana_quest.txt",
+          "lines": [
+            1943
+          ],
+          "required_source_literals": [
+            "delitem Magic_Gem_Red,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
