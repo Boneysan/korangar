@@ -85326,6 +85326,31 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_malaya_missing_person_s_mother_branch_for_6069_6102",
+      "unit": "E1-malaya_missing_person_s_mother_branch_for_6069",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Missing Person's Mother"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Lost_Belongings,5; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malaya.txt",
+          "lines": [
+            6102
+          ],
+          "required_source_literals": [
+            "delitem Lost_Belongings,5;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }

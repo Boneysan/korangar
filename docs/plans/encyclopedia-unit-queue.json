@@ -38697,7 +38697,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Missing Person's Mother",
@@ -38716,7 +38716,25 @@
       ],
       "size_lines": 53,
       "reason": "refused by the braced one-item prover: multi-item",
-      "history": []
+      "history": [
+        "2026-09-30T19:52:53Z activated",
+        "2026-09-30T19:52:53Z validated",
+        "2026-09-30T19:52:53Z verified: 1 claims supported",
+        "2026-09-30T19:53:16Z accepted",
+        "2026-09-30T19:53:16Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "2df7e9dcbba9f63976a89b7136605e7e5f74e56354903193b5e8c0b6633a5781",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-malaya_young_fortune_teller_branch_for_6123",
