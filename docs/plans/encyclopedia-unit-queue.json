@@ -25856,7 +25856,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Alchemist#sign",
@@ -25875,7 +25875,26 @@
       ],
       "size_lines": 308,
       "reason": "refused by the braced one-item prover: switch",
-      "history": []
+      "history": [
+        "2026-09-30T17:54:08Z activated",
+        "2026-09-30T17:54:08Z validated",
+        "2026-09-30T17:54:09Z verified: 13 claims supported",
+        "2026-09-30T17:54:32Z accepted",
+        "2026-09-30T17:54:32Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "f6b47a1b794565a1f036ee24559d97c46a39b603e4eecbd8bf92725a78bc06dc",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "audit": "due",
+      "commit": "committed"
     },
     {
       "id": "E1-alberta_in_refined_steward_branch_for_6455",

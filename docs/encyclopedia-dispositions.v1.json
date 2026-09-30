@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 2573,
+    "E1_unknown": 2586,
     "E1_verified": 1
   },
   "entries": [
@@ -2804,6 +2804,331 @@
           ],
           "required_source_literals": [
             "delitem Hammer_Of_Blacksmith,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_alde_alche_alchemist_sign_branch_for_6146_6356",
+      "unit": "E1-alde_alche_alchemist_sign_branch_for_6146",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Alchemist#sign"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Royal_Jelly,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/the_sign_quest.txt",
+          "lines": [
+            6356
+          ],
+          "required_source_literals": [
+            "delitem Royal_Jelly,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_alde_alche_alchemist_sign_branch_for_6146_6357",
+      "unit": "E1-alde_alche_alchemist_sign_branch_for_6146",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Alchemist#sign"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Honey,20; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/the_sign_quest.txt",
+          "lines": [
+            6357
+          ],
+          "required_source_literals": [
+            "delitem Honey,20;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_alde_alche_alchemist_sign_branch_for_6146_6358",
+      "unit": "E1-alde_alche_alchemist_sign_branch_for_6146",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Alchemist#sign"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Bears_Foot,30; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/the_sign_quest.txt",
+          "lines": [
+            6358
+          ],
+          "required_source_literals": [
+            "delitem Bears_Foot,30;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_alde_alche_alchemist_sign_branch_for_6146_6359",
+      "unit": "E1-alde_alche_alchemist_sign_branch_for_6146",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Alchemist#sign"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Leaflet_Of_Hinal,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/the_sign_quest.txt",
+          "lines": [
+            6359
+          ],
+          "required_source_literals": [
+            "delitem Leaflet_Of_Hinal,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_alde_alche_alchemist_sign_branch_for_6146_6360",
+      "unit": "E1-alde_alche_alchemist_sign_branch_for_6146",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Alchemist#sign"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Ment,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/the_sign_quest.txt",
+          "lines": [
+            6360
+          ],
+          "required_source_literals": [
+            "delitem Ment,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_alde_alche_alchemist_sign_branch_for_6146_6361",
+      "unit": "E1-alde_alche_alchemist_sign_branch_for_6146",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Alchemist#sign"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Empty_Bottle,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/the_sign_quest.txt",
+          "lines": [
+            6361
+          ],
+          "required_source_literals": [
+            "delitem Empty_Bottle,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_alde_alche_alchemist_sign_branch_for_6146_6363",
+      "unit": "E1-alde_alche_alchemist_sign_branch_for_6146",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Alchemist#sign"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Vigorgra,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/the_sign_quest.txt",
+          "lines": [
+            6363
+          ],
+          "required_source_literals": [
+            "getitem Vigorgra,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_alde_alche_alchemist_sign_branch_for_6146_6374",
+      "unit": "E1-alde_alche_alchemist_sign_branch_for_6146",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Alchemist#sign"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Royal_Jelly,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/the_sign_quest.txt",
+          "lines": [
+            6374
+          ],
+          "required_source_literals": [
+            "delitem Royal_Jelly,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_alde_alche_alchemist_sign_branch_for_6146_6375",
+      "unit": "E1-alde_alche_alchemist_sign_branch_for_6146",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Alchemist#sign"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Honey,20; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/the_sign_quest.txt",
+          "lines": [
+            6375
+          ],
+          "required_source_literals": [
+            "delitem Honey,20;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_alde_alche_alchemist_sign_branch_for_6146_6376",
+      "unit": "E1-alde_alche_alchemist_sign_branch_for_6146",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Alchemist#sign"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Bears_Foot,30; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/the_sign_quest.txt",
+          "lines": [
+            6376
+          ],
+          "required_source_literals": [
+            "delitem Bears_Foot,30;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_alde_alche_alchemist_sign_branch_for_6146_6377",
+      "unit": "E1-alde_alche_alchemist_sign_branch_for_6146",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Alchemist#sign"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Leaflet_Of_Hinal,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/the_sign_quest.txt",
+          "lines": [
+            6377
+          ],
+          "required_source_literals": [
+            "delitem Leaflet_Of_Hinal,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_alde_alche_alchemist_sign_branch_for_6146_6378",
+      "unit": "E1-alde_alche_alchemist_sign_branch_for_6146",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Alchemist#sign"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Ment,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/the_sign_quest.txt",
+          "lines": [
+            6378
+          ],
+          "required_source_literals": [
+            "delitem Ment,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_alde_alche_alchemist_sign_branch_for_6146_6379",
+      "unit": "E1-alde_alche_alchemist_sign_branch_for_6146",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Alchemist#sign"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Empty_Bottle,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/the_sign_quest.txt",
+          "lines": [
+            6379
+          ],
+          "required_source_literals": [
+            "delitem Empty_Bottle,1;"
           ]
         }
       ],
