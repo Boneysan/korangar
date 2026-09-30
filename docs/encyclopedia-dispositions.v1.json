@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 1927,
+    "E1_unknown": 1931,
     "E1_verified": 1
   },
   "entries": [
@@ -35654,6 +35654,106 @@
           ],
           "required_source_literals": [
             "getitem Arrow,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_in03_wola_branch_for_5690_5811",
+      "unit": "E1-payon_in03_wola_branch_for_5690",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Wola"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Fine_Sand,20; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_nameless.txt",
+          "lines": [
+            5811
+          ],
+          "required_source_literals": [
+            "delitem Fine_Sand,20;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_in03_wola_branch_for_5690_5812",
+      "unit": "E1-payon_in03_wola_branch_for_5690",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Wola"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Brigan,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_nameless.txt",
+          "lines": [
+            5812
+          ],
+          "required_source_literals": [
+            "delitem Brigan,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_in03_wola_branch_for_5690_5813",
+      "unit": "E1-payon_in03_wola_branch_for_5690",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Wola"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Soft_Leaf,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_nameless.txt",
+          "lines": [
+            5813
+          ],
+          "required_source_literals": [
+            "delitem Soft_Leaf,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_in03_wola_branch_for_5690_5814",
+      "unit": "E1-payon_in03_wola_branch_for_5690",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Wola"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Empty_Bottle,5; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_nameless.txt",
+          "lines": [
+            5814
+          ],
+          "required_source_literals": [
+            "delitem Empty_Bottle,5;"
           ]
         }
       ],
