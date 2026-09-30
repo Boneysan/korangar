@@ -7,3 +7,11 @@ Read the [loop plan](encyclopedia-local-model-plan.md) and [resume ledger](encyc
 - State: plan and ledger prepared; no Qwen3 unit has run.
 - Source heads recorded in the ledger. Both repositories contain prior uncommitted work; dirty-file digests and loaded-script scope still need to be captured at the first run.
 - Next unit: `E0-loaded-source-manifest` (loaded-script manifest + dirty-file digests), then `E0-baseline-and-claim-audit`.
+
+## 2026-09-30 E1-airplane_apple_merchant_airplane_branch_for_478 — accepted
+
+- Kind e1_exchange, package E1, model grok-4.7, attempts 1.
+- Reviews: none. Dispositions: 2 (airplane_apple_merchant_variable_apple_sale, airplane_apple_merchant_juice_branch).
+- Checks: validate; verifier: all claims supported; export_supported_data.py: passed; export_supported_data.py --check: passed; cargo test versioned_reference_data_loads_and_reconciles_all_links: passed.
+- Files: docs/encyclopedia-coverage.v1.json, docs/encyclopedia-dispositions.v1.json, docs/plans/encyclopedia-qwen3-journal.md, docs/plans/encyclopedia-qwen3-progress.json, docs/plans/encyclopedia-unit-queue.json, tools/encyclopedia_dispositions.json.
+- Not verified: the Guide screen for these records (E7 live pass).

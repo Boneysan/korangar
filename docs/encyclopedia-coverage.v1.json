@@ -204,7 +204,10 @@
         "basis": "configured weapon damage size table covering three target sizes and documented weapon types"
       }
     },
-    "unit_dispositions": {},
+    "unit_dispositions": {
+      "E1_unknown": 1,
+      "E1_verified": 1
+    },
     "crafting_and_mechanics": {
       "production_and_conversion_recipes": 919,
       "refinement_weapon_levels": 4

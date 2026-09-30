@@ -1,5 +1,89 @@
 {
   "schema_version": 1,
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
-  "entries": []
+  "entries": [
+    {
+      "id": "airplane_apple_merchant_variable_apple_sale",
+      "unit": "E1-airplane_apple_merchant_airplane_branch_for_478",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Apple Merchant#airplane"
+      },
+      "result": "unknown",
+      "statement": "Case 1 grants Apple with getitem Apple,.@input after Zeny -= .@pay, and .@input is the player's typed count rather than a fixed amount.",
+      "conditions": [
+        "input(.@input) below 1 closes with no grant, and a value above 500 repeats the input loop.",
+        "After a count from 1 through 500, .@pay is .@input * 15, and answering No to the confirm menu closes with no grant.",
+        "The grant is refused when Zeny is below .@pay or checkweight(Apple,.@input) is 0."
+      ],
+      "sources": [
+        {
+          "path": "npc/airports/airships.txt",
+          "lines": [
+            496,
+            497,
+            506,
+            516,
+            523,
+            534,
+            543,
+            552,
+            553
+          ],
+          "required_source_literals": [
+            "input(.@input);",
+            "if (.@input <= 0) {",
+            "if (.@input > 500) {",
+            ".@pay = .@input * 15;",
+            "if (select(\"Yes\", \"No\") == 2) {",
+            "if (Zeny < .@pay) {",
+            "else if (checkweight(Apple,.@input) == 0) {",
+            "Zeny -= .@pay;",
+            "getitem Apple,.@input;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "airplane_apple_merchant_juice_branch",
+      "unit": "E1-airplane_apple_merchant_airplane_branch_for_478",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Apple Merchant#airplane"
+      },
+      "result": "verified",
+      "statement": "Case 2 removes 3 Apples and 1 Empty Bottle and grants 1 Apple Juice when the player answers Yes and holds those items, and otherwise closes with no item change.",
+      "conditions": [
+        "The player must answer Yes; answering No closes with no item change.",
+        "countitem(Apple) below 3 or countitem(Empty_Bottle) below 1 closes with no item change."
+      ],
+      "sources": [
+        {
+          "path": "npc/airports/airships.txt",
+          "lines": [
+            567,
+            569,
+            588,
+            589,
+            590,
+            600
+          ],
+          "required_source_literals": [
+            "switch (select(\"Yes\", \"No\")) {",
+            "if (countitem(Apple) < 3 || countitem(Empty_Bottle) < 1) {",
+            "delitem Apple,3;",
+            "delitem Empty_Bottle,1;",
+            "getitem Apple_Juice,1;",
+            "case 2:"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    }
+  ]
 }

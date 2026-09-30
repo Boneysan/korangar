@@ -7,7 +7,7 @@
     "requested_family": "Qwen3",
     "preferred_tag": "qwen3-coder:30b",
     "fallback_tag": "qwen3:14b",
-    "actual_tag": null,
+    "actual_tag": "grok-4.7",
     "quantization": null,
     "ollama_version": null,
     "num_ctx": 229376,
@@ -177,28 +177,21 @@
     }
   ],
   "last_checks": [
-    "PASS coverage report defines exactly the evidence states verified, conditional, configured_estimate, source_clue, not_reviewed, unknown",
-    "PASS \"unknown\" (searched, no answer) and \"not reviewed\" (not searched) have different descriptions",
-    "PASS the client's EvidenceState enum has the same six states",
-    "PASS item 501 (Red Potion) is translated and has a summary",
-    "PASS no untranslated item carries a summary",
-    "PASS quest 12106's reviewed flow has a reviewed state and sources",
-    "PASS NPC 99 (Tool Dealer#alb): every listed offer points at a literal sellitem line",
-    "PASS no runtime map-flag clue is labeled as reviewed",
-    "PASS scripted spawn bakonawalake_onmobspawn_1_at_ma_b is reviewed, not a clue",
-    "PASS formula al_heal_renewal_formula is reviewed and cites sources",
-    "PASS every exported exchange carries a reviewed state"
+    "export_supported_data.py: passed",
+    "export_supported_data.py --check: passed",
+    "cargo test versioned_reference_data_loads_and_reconciles_all_links: passed"
   ],
   "last_coverage_delta": null,
-  "next_action": "Run python3 tools/encyclopedia_unit.py next",
-  "last_checkpoint_utc": "2026-09-30T07:00:54Z",
+  "next_action": "Run: python3 tools/encyclopedia_unit.py next",
+  "last_checkpoint_utc": "2026-09-30T07:16:13Z",
   "unit_queue": "docs/plans/encyclopedia-unit-queue.json",
   "queue_summary": {
     "E0": {
       "done": 1
     },
     "E1": {
-      "todo": 906
+      "done": 1,
+      "todo": 905
     },
     "E3": {
       "todo": 191
