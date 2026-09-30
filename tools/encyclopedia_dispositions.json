@@ -68276,6 +68276,56 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_job3_rune01_rune_knight_captain_branch_for_317_550",
+      "unit": "E1-job3_rune01_rune_knight_captain_branch_for_317",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Rune Knight Captain"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Rune_Circlet,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-1/rune_knight.txt",
+          "lines": [
+            550
+          ],
+          "required_source_literals": [
+            "getitem Rune_Circlet,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_job3_rune01_rune_knight_captain_branch_for_317_551",
+      "unit": "E1-job3_rune01_rune_knight_captain_branch_for_317",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Rune Knight Captain"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Green_Apple_Ring,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-1/rune_knight.txt",
+          "lines": [
+            551
+          ],
+          "required_source_literals": [
+            "getitem Green_Apple_Ring,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
