@@ -30426,6 +30426,31 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_man_fild03_ep13_man_fild03_mon_edq_branch_for_10404_10430",
+      "unit": "E1-man_fild03_ep13_man_fild03_mon_edq_branch_for_10404",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "ep13_man_fild03_mon_edq"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Some_Of_Report,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_1.txt",
+          "lines": [
+            10430
+          ],
+          "required_source_literals": [
+            "getitem Some_Of_Report,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
