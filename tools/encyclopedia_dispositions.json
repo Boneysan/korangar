@@ -132924,6 +132924,87 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2046_npc_jobs_2_2_sage_txt_1188",
+      "unit": "E5-chain-2046",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2046
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 2046; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/sage.txt",
+          "lines": [
+            1188
+          ],
+          "required_source_literals": [
+            "changequest 2046,2047;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2046_npc_jobs_2_2_sage_txt_1202",
+      "unit": "E5-chain-2046",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2046
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 2046; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/sage.txt",
+          "lines": [
+            1202
+          ],
+          "required_source_literals": [
+            "changequest 2046,2048;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2046_npc_jobs_2_2_sage_txt_1216",
+      "unit": "E5-chain-2046",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2046
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 2046; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/sage.txt",
+          "lines": [
+            1216
+          ],
+          "required_source_literals": [
+            "changequest 2046,2049;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
