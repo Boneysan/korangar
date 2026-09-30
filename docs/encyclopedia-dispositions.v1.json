@@ -8,7 +8,7 @@
     "E1_not_applicable": 1,
     "E1_unknown": 3464,
     "E1_verified": 1,
-    "E3_unknown": 968
+    "E3_unknown": 969
   },
   "entries": [
     {
@@ -107034,6 +107034,33 @@
           ],
           "required_source_literals": [
             ".@rate = (getrefine()>14)?7:5;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_4483_script_untranslated",
+      "unit": "E3-unknown-bonus2-bspdrainrate-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          4483
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 4483 is not summarized: the translator does not interpret the quoted statement (bonus2 bSPDrainRate (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            47314
+          ],
+          "required_source_literals": [
+            "Script: <\" bonus2 bSPDrainRate,((getrefine()>14)?70:50),5; \">"
           ]
         }
       ],

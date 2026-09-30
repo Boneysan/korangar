@@ -56806,7 +56806,7 @@
       "package": "E3",
       "kind": "e3_dispose",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "key": "bonus2 bSPDrainRate (expression)",
@@ -56832,7 +56832,25 @@
       ],
       "size_lines": 1,
       "reason": "1 item script(s) first stop at `bonus2 bSPDrainRate (expression)`, which is control flow or undocumented",
-      "history": []
+      "history": [
+        "2026-09-30T20:41:34Z activated",
+        "2026-09-30T20:41:35Z validated",
+        "2026-09-30T20:41:35Z verification not required: tool-drafted, no behavior claim",
+        "2026-09-30T20:41:58Z accepted",
+        "2026-09-30T20:41:58Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "ebaf46c3a133964ec39e5264c4739f2896b939bf5cff0ebab5b41c08bf827a60",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E3-unknown-bonus2-bspregenrate-expression",
