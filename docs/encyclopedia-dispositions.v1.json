@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 3008,
+    "E1_unknown": 3035,
     "E1_verified": 1
   },
   "entries": [
@@ -34504,6 +34504,681 @@
           ],
           "required_source_literals": [
             "if (.@quest == 5057) delitem Festival_Mask,30;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_moc_para01_reno_2012hat_branch_for_37_580",
+      "unit": "E1-moc_para01_reno_2012hat_branch_for_37",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Reno#2012hat"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Ring_,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/newgears/2012_headgears.txt",
+          "lines": [
+            580
+          ],
+          "required_source_literals": [
+            "delitem Ring_,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_moc_para01_reno_2012hat_branch_for_37_581",
+      "unit": "E1-moc_para01_reno_2012hat_branch_for_37",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Reno#2012hat"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Earring_,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/newgears/2012_headgears.txt",
+          "lines": [
+            581
+          ],
+          "required_source_literals": [
+            "delitem Earring_,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_moc_para01_reno_2012hat_branch_for_37_582",
+      "unit": "E1-moc_para01_reno_2012hat_branch_for_37",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Reno#2012hat"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Glove_,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/newgears/2012_headgears.txt",
+          "lines": [
+            582
+          ],
+          "required_source_literals": [
+            "delitem Glove_,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_moc_para01_reno_2012hat_branch_for_37_583",
+      "unit": "E1-moc_para01_reno_2012hat_branch_for_37",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Reno#2012hat"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Brooch_,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/newgears/2012_headgears.txt",
+          "lines": [
+            583
+          ],
+          "required_source_literals": [
+            "delitem Brooch_,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_moc_para01_reno_2012hat_branch_for_37_584",
+      "unit": "E1-moc_para01_reno_2012hat_branch_for_37",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Reno#2012hat"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Necklace_,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/newgears/2012_headgears.txt",
+          "lines": [
+            584
+          ],
+          "required_source_literals": [
+            "delitem Necklace_,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_moc_para01_reno_2012hat_branch_for_37_585",
+      "unit": "E1-moc_para01_reno_2012hat_branch_for_37",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Reno#2012hat"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Rosary_,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/newgears/2012_headgears.txt",
+          "lines": [
+            585
+          ],
+          "required_source_literals": [
+            "delitem Rosary_,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_moc_para01_reno_2012hat_branch_for_37_662",
+      "unit": "E1-moc_para01_reno_2012hat_branch_for_37",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Reno#2012hat"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Remodel_Magician_Hat,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/newgears/2012_headgears.txt",
+          "lines": [
+            662
+          ],
+          "required_source_literals": [
+            "else if (.@r <= 4)  getitem Remodel_Magician_Hat,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_moc_para01_reno_2012hat_branch_for_37_663",
+      "unit": "E1-moc_para01_reno_2012hat_branch_for_37",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Reno#2012hat"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Remodel_Mask_Of_Fox,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/newgears/2012_headgears.txt",
+          "lines": [
+            663
+          ],
+          "required_source_literals": [
+            "else if (.@r <= 6)  getitem Remodel_Mask_Of_Fox,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_moc_para01_reno_2012hat_branch_for_37_664",
+      "unit": "E1-moc_para01_reno_2012hat_branch_for_37",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Reno#2012hat"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Remodel_Joker_Jester,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/newgears/2012_headgears.txt",
+          "lines": [
+            664
+          ],
+          "required_source_literals": [
+            "else if (.@r <= 8)  getitem Remodel_Joker_Jester,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_moc_para01_reno_2012hat_branch_for_37_665",
+      "unit": "E1-moc_para01_reno_2012hat_branch_for_37",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Reno#2012hat"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Remodel_Bunny_Band,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/newgears/2012_headgears.txt",
+          "lines": [
+            665
+          ],
+          "required_source_literals": [
+            "else if (.@r <= 10) getitem Remodel_Bunny_Band,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_moc_para01_reno_2012hat_branch_for_37_666",
+      "unit": "E1-moc_para01_reno_2012hat_branch_for_37",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Reno#2012hat"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Remodel_Munak_Turban,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/newgears/2012_headgears.txt",
+          "lines": [
+            666
+          ],
+          "required_source_literals": [
+            "else if (.@r <= 13) getitem Remodel_Munak_Turban,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_moc_para01_reno_2012hat_branch_for_37_667",
+      "unit": "E1-moc_para01_reno_2012hat_branch_for_37",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Reno#2012hat"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Remodel_Bongun_Hat,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/newgears/2012_headgears.txt",
+          "lines": [
+            667
+          ],
+          "required_source_literals": [
+            "else if (.@r <= 16) getitem Remodel_Bongun_Hat,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_moc_para01_reno_2012hat_branch_for_37_668",
+      "unit": "E1-moc_para01_reno_2012hat_branch_for_37",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Reno#2012hat"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Remodel_Opera_Mask,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/newgears/2012_headgears.txt",
+          "lines": [
+            668
+          ],
+          "required_source_literals": [
+            "else                getitem Remodel_Opera_Mask,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_moc_para01_reno_2012hat_branch_for_37_679",
+      "unit": "E1-moc_para01_reno_2012hat_branch_for_37",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Reno#2012hat"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Improved_Fin_Helm,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/newgears/2012_headgears.txt",
+          "lines": [
+            679
+          ],
+          "required_source_literals": [
+            "else if (.@r <= 6)  getitem Improved_Fin_Helm,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_moc_para01_reno_2012hat_branch_for_37_680",
+      "unit": "E1-moc_para01_reno_2012hat_branch_for_37",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Reno#2012hat"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Improved_Assassin_Mask,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/newgears/2012_headgears.txt",
+          "lines": [
+            680
+          ],
+          "required_source_literals": [
+            "else if (.@r <= 9)  getitem Improved_Assassin_Mask,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_moc_para01_reno_2012hat_branch_for_37_681",
+      "unit": "E1-moc_para01_reno_2012hat_branch_for_37",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Reno#2012hat"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Improved_Welding_Mask,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/newgears/2012_headgears.txt",
+          "lines": [
+            681
+          ],
+          "required_source_literals": [
+            "else if (.@r <= 12) getitem Improved_Welding_Mask,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_moc_para01_reno_2012hat_branch_for_37_682",
+      "unit": "E1-moc_para01_reno_2012hat_branch_for_37",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Reno#2012hat"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Safety_Ring_,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/newgears/2012_headgears.txt",
+          "lines": [
+            682
+          ],
+          "required_source_literals": [
+            "else if (.@r <= 13) getitem Safety_Ring_,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_moc_para01_reno_2012hat_branch_for_37_683",
+      "unit": "E1-moc_para01_reno_2012hat_branch_for_37",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Reno#2012hat"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Im_Angels_Protection,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/newgears/2012_headgears.txt",
+          "lines": [
+            683
+          ],
+          "required_source_literals": [
+            "else if (.@r <= 14) getitem Im_Angels_Protection,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_moc_para01_reno_2012hat_branch_for_37_684",
+      "unit": "E1-moc_para01_reno_2012hat_branch_for_37",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Reno#2012hat"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Impr_Angels_Safeguard,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/newgears/2012_headgears.txt",
+          "lines": [
+            684
+          ],
+          "required_source_literals": [
+            "else if (.@r <= 15) getitem Impr_Angels_Safeguard,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_moc_para01_reno_2012hat_branch_for_37_685",
+      "unit": "E1-moc_para01_reno_2012hat_branch_for_37",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Reno#2012hat"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Impr_Angels_Arrival,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/newgears/2012_headgears.txt",
+          "lines": [
+            685
+          ],
+          "required_source_literals": [
+            "else if (.@r <= 16) getitem Impr_Angels_Arrival,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_moc_para01_reno_2012hat_branch_for_37_686",
+      "unit": "E1-moc_para01_reno_2012hat_branch_for_37",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Reno#2012hat"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Impr_Angels_Warmth,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/newgears/2012_headgears.txt",
+          "lines": [
+            686
+          ],
+          "required_source_literals": [
+            "else if (.@r <= 17) getitem Impr_Angels_Warmth,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_moc_para01_reno_2012hat_branch_for_37_687",
+      "unit": "E1-moc_para01_reno_2012hat_branch_for_37",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Reno#2012hat"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Improved_Kiss_Of_Angel,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/newgears/2012_headgears.txt",
+          "lines": [
+            687
+          ],
+          "required_source_literals": [
+            "else                getitem Improved_Kiss_Of_Angel,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_moc_para01_reno_2012hat_branch_for_37_698",
+      "unit": "E1-moc_para01_reno_2012hat_branch_for_37",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Reno#2012hat"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Enhanced_Bone_Helm,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/newgears/2012_headgears.txt",
+          "lines": [
+            698
+          ],
+          "required_source_literals": [
+            "else if (.@r <= 20) getitem Enhanced_Bone_Helm,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_moc_para01_reno_2012hat_branch_for_37_699",
+      "unit": "E1-moc_para01_reno_2012hat_branch_for_37",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Reno#2012hat"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Enhanced_Helm_Of_Angel,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/newgears/2012_headgears.txt",
+          "lines": [
+            699
+          ],
+          "required_source_literals": [
+            "else if (.@r <= 25) getitem Enhanced_Helm_Of_Angel,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_moc_para01_reno_2012hat_branch_for_37_700",
+      "unit": "E1-moc_para01_reno_2012hat_branch_for_37",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Reno#2012hat"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Enhanced_Variant_Shoes,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/newgears/2012_headgears.txt",
+          "lines": [
+            700
+          ],
+          "required_source_literals": [
+            "else if (.@r <= 30) getitem Enhanced_Variant_Shoes,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_moc_para01_reno_2012hat_branch_for_37_701",
+      "unit": "E1-moc_para01_reno_2012hat_branch_for_37",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Reno#2012hat"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Good_Ring_Of_Flame_Lord,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/newgears/2012_headgears.txt",
+          "lines": [
+            701
+          ],
+          "required_source_literals": [
+            "else if (.@r <= 31) getitem Good_Ring_Of_Flame_Lord,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_moc_para01_reno_2012hat_branch_for_37_702",
+      "unit": "E1-moc_para01_reno_2012hat_branch_for_37",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Reno#2012hat"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Good_Ring_Of_Resonance,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/newgears/2012_headgears.txt",
+          "lines": [
+            702
+          ],
+          "required_source_literals": [
+            "else                getitem Good_Ring_Of_Resonance,1;"
           ]
         }
       ],
