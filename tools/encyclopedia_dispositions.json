@@ -78276,6 +78276,56 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ecl_fild01_golie_ep14_2_branch_for_830_872",
+      "unit": "E1-ecl_fild01_golie_ep14_2_branch_for_830",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Golie#ep14_2"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Leaf_Made_Wood,2; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "lines": [
+            872
+          ],
+          "required_source_literals": [
+            "getitem Leaf_Made_Wood,2; //Leaf_Made_Wood"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ecl_fild01_golie_ep14_2_branch_for_830_881",
+      "unit": "E1-ecl_fild01_golie_ep14_2_branch_for_830",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Golie#ep14_2"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Leaf_Made_Wood,2-countitem(Leaf_Made_Wood; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "lines": [
+            881
+          ],
+          "required_source_literals": [
+            "getitem Leaf_Made_Wood,2-countitem(Leaf_Made_Wood); //Leaf_Made_Wood"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }

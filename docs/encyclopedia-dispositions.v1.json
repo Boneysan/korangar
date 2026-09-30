@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 3126,
+    "E1_unknown": 3128,
     "E1_verified": 1
   },
   "entries": [
@@ -13304,6 +13304,56 @@
           ],
           "required_source_literals": [
             "getitem Sapa_Feat_Cert,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ecl_fild01_golie_ep14_2_branch_for_830_872",
+      "unit": "E1-ecl_fild01_golie_ep14_2_branch_for_830",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Golie#ep14_2"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Leaf_Made_Wood,2; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "lines": [
+            872
+          ],
+          "required_source_literals": [
+            "getitem Leaf_Made_Wood,2; //Leaf_Made_Wood"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ecl_fild01_golie_ep14_2_branch_for_830_881",
+      "unit": "E1-ecl_fild01_golie_ep14_2_branch_for_830",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Golie#ep14_2"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Leaf_Made_Wood,2-countitem(Leaf_Made_Wood; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "lines": [
+            881
+          ],
+          "required_source_literals": [
+            "getitem Leaf_Made_Wood,2-countitem(Leaf_Made_Wood); //Leaf_Made_Wood"
           ]
         }
       ],
