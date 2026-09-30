@@ -12,7 +12,7 @@
     "E2_verified": 236,
     "E3_unknown": 973,
     "E4_unknown": 213,
-    "E5_unknown": 438
+    "E5_unknown": 439
   },
   "entries": [
     {
@@ -106499,6 +106499,33 @@
           ],
           "required_source_literals": [
             "changequest 17009,17010;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_17005_npc_quests_quests_nameless_txt_683",
+      "unit": "E5-chain-17005",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          17005
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 17005; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_nameless.txt",
+          "lines": [
+            683
+          ],
+          "required_source_literals": [
+            "changequest 17005,17006;"
           ]
         }
       ],
