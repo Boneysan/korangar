@@ -47876,6 +47876,31 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_nameless_n_larjes_boat1_branch_for_1251_1296",
+      "unit": "E1-nameless_n_larjes_boat1_branch_for_1251",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Larjes#Boat1"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Token_Of_King,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_nameless.txt",
+          "lines": [
+            1296
+          ],
+          "required_source_literals": [
+            "delitem Token_Of_King,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
