@@ -110243,6 +110243,114 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_1835_script_untranslated",
+      "unit": "E3-unknown-bonus-batkrate-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          1835
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 1835 is not summarized: the translator does not interpret the quoted statement (bonus bAtkRate (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            21443
+          ],
+          "required_source_literals": [
+            "bonus bAtkRate,getrefine();"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_21018_script_untranslated",
+      "unit": "E3-unknown-bonus-batkrate-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          21018
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 21018 is not summarized: the translator does not interpret the quoted statement (bonus bAtkRate (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            148171
+          ],
+          "required_source_literals": [
+            "bonus bAtkRate,getrefine()/2;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_24233_script_untranslated",
+      "unit": "E3-unknown-bonus-batkrate-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          24233
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 24233 is not summarized: the translator does not interpret the quoted statement (bonus bAtkRate (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            153417
+          ],
+          "required_source_literals": [
+            "bonus bAtkRate,getrefine();"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_28010_script_untranslated",
+      "unit": "E3-unknown-bonus-batkrate-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          28010
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 28010 is not summarized: the translator does not interpret the quoted statement (bonus bAtkRate (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            155794
+          ],
+          "required_source_literals": [
+            "bonus bAtkRate,getrefine()/2;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
