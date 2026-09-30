@@ -5791,3 +5791,11 @@ Read the [loop plan](encyclopedia-local-model-plan.md) and [resume ledger](encyc
 - Checks: validate; verifier: all claims supported; export_supported_data.py: passed; export_supported_data.py --check: passed.
 - Files: docs/plans/encyclopedia-qwen3-journal.md, docs/plans/encyclopedia-qwen3-progress.json, docs/plans/encyclopedia-unit-queue.json.
 - Not verified: the Guide screen for these records (E7 live pass).
+
+## 2026-09-30 E1-moc_para01_gelkah_1_branch_for_42 — accepted
+
+- Kind e1_exchange, package E1, model grok-4.7, attempts 0.
+- Reviews: none. Dispositions: 9 (e1_moc_para01_gelkah_1_branch_for_42_160, e1_moc_para01_gelkah_1_branch_for_42_163, e1_moc_para01_gelkah_1_branch_for_42_697, e1_moc_para01_gelkah_1_branch_for_42_707, e1_moc_para01_gelkah_1_branch_for_42_832 ...).
+- Checks: validate; verifier: all claims supported; export_supported_data.py: passed; export_supported_data.py --check: passed.
+- Files: docs/encyclopedia-coverage.v1.json, docs/encyclopedia-dispositions.v1.json, docs/plans/encyclopedia-qwen3-journal.md, docs/plans/encyclopedia-qwen3-progress.json, docs/plans/encyclopedia-unit-queue.json, tools/encyclopedia_dispositions.json.
+- Not verified: the Guide screen for these records (E7 live pass).

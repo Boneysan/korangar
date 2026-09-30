@@ -73126,6 +73126,231 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_moc_para01_gelkah_1_branch_for_42_160",
+      "unit": "E1-moc_para01_gelkah_1_branch_for_42",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Gelkah#1"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Brigan,50; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/100-110.txt",
+          "lines": [
+            160
+          ],
+          "required_source_literals": [
+            "delitem Brigan,50;// Brigan"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_moc_para01_gelkah_1_branch_for_42_163",
+      "unit": "E1-moc_para01_gelkah_1_branch_for_42",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Gelkah#1"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Courtesy_Ticket,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/100-110.txt",
+          "lines": [
+            163
+          ],
+          "required_source_literals": [
+            "getitem Courtesy_Ticket,1;// Courtesy_Ticket"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_moc_para01_gelkah_1_branch_for_42_697",
+      "unit": "E1-moc_para01_gelkah_1_branch_for_42",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Gelkah#1"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Seed_Of_Yggdrasil,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/100-110.txt",
+          "lines": [
+            697
+          ],
+          "required_source_literals": [
+            "getitem Seed_Of_Yggdrasil,1;// Seed_Of_Yggdrasil"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_moc_para01_gelkah_1_branch_for_42_707",
+      "unit": "E1-moc_para01_gelkah_1_branch_for_42",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Gelkah#1"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Yggdrasilberry,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/100-110.txt",
+          "lines": [
+            707
+          ],
+          "required_source_literals": [
+            "getitem Yggdrasilberry,1;// Yggdrasilberry"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_moc_para01_gelkah_1_branch_for_42_832",
+      "unit": "E1-moc_para01_gelkah_1_branch_for_42",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Gelkah#1"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Courtesy_Ticket,.@amount; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/100-110.txt",
+          "lines": [
+            832
+          ],
+          "required_source_literals": [
+            "delitem Courtesy_Ticket,.@amount;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_moc_para01_gelkah_1_branch_for_42_881",
+      "unit": "E1-moc_para01_gelkah_1_branch_for_42",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Gelkah#1"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Courtesy_Ticket,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/100-110.txt",
+          "lines": [
+            881
+          ],
+          "required_source_literals": [
+            "delitem Courtesy_Ticket,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_moc_para01_gelkah_1_branch_for_42_918",
+      "unit": "E1-moc_para01_gelkah_1_branch_for_42",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Gelkah#1"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Courtesy_Ticket,20; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/100-110.txt",
+          "lines": [
+            918
+          ],
+          "required_source_literals": [
+            "delitem Courtesy_Ticket,20;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_moc_para01_gelkah_1_branch_for_42_948",
+      "unit": "E1-moc_para01_gelkah_1_branch_for_42",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Gelkah#1"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Courtesy_Ticket,30; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/100-110.txt",
+          "lines": [
+            948
+          ],
+          "required_source_literals": [
+            "delitem Courtesy_Ticket,30;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_moc_para01_gelkah_1_branch_for_42_995",
+      "unit": "E1-moc_para01_gelkah_1_branch_for_42",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Gelkah#1"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Courtesy_Ticket,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/100-110.txt",
+          "lines": [
+            995
+          ],
+          "required_source_literals": [
+            "getitem Courtesy_Ticket,1;// Courtesy_Ticket"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
