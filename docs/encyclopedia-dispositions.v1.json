@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 3082,
+    "E1_unknown": 3083,
     "E1_verified": 1
   },
   "entries": [
@@ -11929,6 +11929,31 @@
           ],
           "required_source_literals": [
             "getitem Palm_O,.@i[2];"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_dew_fild01_poby_dew_drink_branch_for_1351_1490",
+      "unit": "E1-dew_fild01_poby_dew_drink_branch_for_1351",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Poby#dew_drink"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Palm_O,.@new_count; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_dewata.txt",
+          "lines": [
+            1490
+          ],
+          "required_source_literals": [
+            "getitem Palm_O,.@new_count;"
           ]
         }
       ],

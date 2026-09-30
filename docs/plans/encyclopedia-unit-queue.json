@@ -33332,7 +33332,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Poby#dew_drink",
@@ -33351,7 +33351,25 @@
       ],
       "size_lines": 165,
       "reason": "refused by the braced one-item prover: braceless",
-      "history": []
+      "history": [
+        "2026-09-30T19:03:23Z activated",
+        "2026-09-30T19:03:23Z validated",
+        "2026-09-30T19:03:24Z verified: 1 claims supported",
+        "2026-09-30T19:03:47Z accepted",
+        "2026-09-30T19:03:47Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "81f7f8b8d58ee6f74a689b73bc0df614465d7179edfa3da8c2c66ba09eb94254",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-dew_fild01_gatti_weapon_branch_for_1685",
