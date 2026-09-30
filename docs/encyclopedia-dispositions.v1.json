@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 2954,
+    "E1_unknown": 2955,
     "E1_verified": 1
   },
   "entries": [
@@ -33454,6 +33454,31 @@
           ],
           "required_source_literals": [
             "if (.@quest == 5057) delitem Festival_Mask,30;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_moc_para01_secretary_lime_evenor_branch_for_38_129",
+      "unit": "E1-moc_para01_secretary_lime_evenor_branch_for_38",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Secretary Lime Evenor"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Para_Team_Mark_,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/eden_common.txt",
+          "lines": [
+            129
+          ],
+          "required_source_literals": [
+            "getitem Para_Team_Mark_,1;"
           ]
         }
       ],

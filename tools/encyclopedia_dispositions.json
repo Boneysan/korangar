@@ -73976,6 +73976,31 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_moc_para01_secretary_lime_evenor_branch_for_38_129",
+      "unit": "E1-moc_para01_secretary_lime_evenor_branch_for_38",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Secretary Lime Evenor"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Para_Team_Mark_,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/eden_common.txt",
+          "lines": [
+            129
+          ],
+          "required_source_literals": [
+            "getitem Para_Team_Mark_,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
