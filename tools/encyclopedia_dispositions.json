@@ -47801,6 +47801,31 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_treasure01_old_treasure_box_rus37_branch_for_10919_10959",
+      "unit": "E1-treasure01_old_treasure_box_rus37_branch_for_10919",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Old Treasure Box#rus37"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Babayaga_Silver_Spoon,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_moscovia.txt",
+          "lines": [
+            10959
+          ],
+          "required_source_literals": [
+            "getitem Babayaga_Silver_Spoon,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
