@@ -8,7 +8,7 @@
     "E1_not_applicable": 1,
     "E1_unknown": 3464,
     "E1_verified": 1,
-    "E3_unknown": 301
+    "E3_unknown": 361
   },
   "entries": [
     {
@@ -86791,6 +86791,60 @@
       "reviewed_on": "2026-09-30"
     },
     {
+      "id": "item_1182_script_untranslated",
+      "unit": "E3-unknown-control-autobonus",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          1182
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 1182 is not summarized: the translator does not interpret the quoted statement (control:autobonus).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            6276
+          ],
+          "required_source_literals": [
+            "autobonus \"{ bonus bCritical,100; bonus bBaseAtk,50; }\",1,5000,0,\"{ specialeffect(EF_FIRESPLASHHIT, AREA, playerattached()); }\";"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_1185_script_untranslated",
+      "unit": "E3-unknown-control-autobonus",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          1185
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 1185 is not summarized: the translator does not interpret the quoted statement (control:autobonus).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            6369
+          ],
+          "required_source_literals": [
+            "autobonus \"{ bonus bIgnoreDefRace,RC_NonBoss; }\",50,5000;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
       "id": "item_1186_script_untranslated",
       "unit": "E3-unknown-control-if",
       "package": "E3",
@@ -87223,6 +87277,33 @@
       "reviewed_on": "2026-09-30"
     },
     {
+      "id": "item_12514_script_untranslated",
+      "unit": "E3-unknown-control-autobonus",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          12514
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 12514 is not summarized: the translator does not interpret the quoted statement (control:autobonus).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            92730
+          ],
+          "required_source_literals": [
+            "autobonus(\"{ bonus(bCriticalRate, 30); }\", 100, 1000);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
       "id": "item_1268_script_untranslated",
       "unit": "E3-unknown-control-if",
       "package": "E3",
@@ -87358,6 +87439,195 @@
       "reviewed_on": "2026-09-30"
     },
     {
+      "id": "item_12876_script_untranslated",
+      "unit": "E3-unknown-control-autobonus",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          12876
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 12876 is not summarized: the translator does not interpret the quoted statement (control:autobonus).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            96517
+          ],
+          "required_source_literals": [
+            "Script: <\" autobonus \"{ heal -3000,0; bonus2 bResEff,Eff_Stun,10000; }\",10,0,0,SI_GVG_STUN; \">"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_12877_script_untranslated",
+      "unit": "E3-unknown-control-autobonus",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          12877
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 12877 is not summarized: the translator does not interpret the quoted statement (control:autobonus).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            96525
+          ],
+          "required_source_literals": [
+            "Script: <\" autobonus \"{ heal -3000,0; bonus2 bResEff,Eff_Stone,10000; }\",10,0,0,SI_GVG_STONE; \">"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_12878_script_untranslated",
+      "unit": "E3-unknown-control-autobonus",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          12878
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 12878 is not summarized: the translator does not interpret the quoted statement (control:autobonus).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            96533
+          ],
+          "required_source_literals": [
+            "Script: <\" autobonus \"{ heal -3000,0; bonus2 bResEff,Eff_Freeze,10000; }\",10,0,0,SI_GVG_FREEZ; \">"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_12879_script_untranslated",
+      "unit": "E3-unknown-control-autobonus",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          12879
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 12879 is not summarized: the translator does not interpret the quoted statement (control:autobonus).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            96541
+          ],
+          "required_source_literals": [
+            "Script: <\" autobonus \"{ heal -3000,0; bonus2 bResEff,Eff_Sleep,10000; }\",10,0,0,SI_GVG_SLEEP; \">"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_12880_script_untranslated",
+      "unit": "E3-unknown-control-autobonus",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          12880
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 12880 is not summarized: the translator does not interpret the quoted statement (control:autobonus).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            96549
+          ],
+          "required_source_literals": [
+            "Script: <\" autobonus \"{ heal -3000,0; bonus2 bResEff,Eff_Curse,10000; }\",10,0,0,SI_GVG_CURSE; \">"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_12881_script_untranslated",
+      "unit": "E3-unknown-control-autobonus",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          12881
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 12881 is not summarized: the translator does not interpret the quoted statement (control:autobonus).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            96557
+          ],
+          "required_source_literals": [
+            "Script: <\" autobonus \"{ heal -3000,0; bonus2 bResEff,Eff_Silence,10000; }\",10,0,0,SI_GVG_SILENCE; \">"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_12882_script_untranslated",
+      "unit": "E3-unknown-control-autobonus",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          12882
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 12882 is not summarized: the translator does not interpret the quoted statement (control:autobonus).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            96565
+          ],
+          "required_source_literals": [
+            "Script: <\" autobonus \"{ heal -3000,0; bonus2 bResEff,Eff_Blind,10000; }\",10,0,0,SI_GVG_BLIND; \">"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
       "id": "item_1295_script_untranslated",
       "unit": "E3-unknown-control-if",
       "package": "E3",
@@ -87405,6 +87675,33 @@
           ],
           "required_source_literals": [
             "if(getrefine()>=9) {"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_13037_script_untranslated",
+      "unit": "E3-unknown-control-autobonus",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          13037
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 13037 is not summarized: the translator does not interpret the quoted statement (control:autobonus).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            99725
+          ],
+          "required_source_literals": [
+            "autobonus \"{ bonus bDefRatioAtkRace, RC_All; }\",10,6000,BF_WEAPON,\"{ specialeffect(EF_HASTEUP, AREA, playerattached()); }\";"
           ]
         }
       ],
@@ -87466,6 +87763,60 @@
       "reviewed_on": "2026-09-30"
     },
     {
+      "id": "item_13068_script_untranslated",
+      "unit": "E3-unknown-control-autobonus",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          13068
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 13068 is not summarized: the translator does not interpret the quoted statement (control:autobonus).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            100768
+          ],
+          "required_source_literals": [
+            "autobonus \"{ bonus bBaseAtk,30; }\",10,7000,BF_WEAPON,\"{ specialeffect(EF_ENHANCE, AREA, playerattached()); }\";"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_13090_script_untranslated",
+      "unit": "E3-unknown-control-autobonus",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          13090
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 13090 is not summarized: the translator does not interpret the quoted statement (control:autobonus).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            101234
+          ],
+          "required_source_literals": [
+            "autobonus(\"{ bonus3(bAutoSpell, NPC_EARTHQUAKE, 1, 200); }\", 8, 5000, BF_NORMAL, \"{ specialeffect(EF_POTION_BERSERK, AREA, playerattached()); montransform(FACEWORM_QUEEN, 5000); }\");"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
       "id": "item_13106_script_untranslated",
       "unit": "E3-unknown-control-if",
       "package": "E3",
@@ -87520,6 +87871,114 @@
       "reviewed_on": "2026-09-30"
     },
     {
+      "id": "item_13306_script_untranslated",
+      "unit": "E3-unknown-control-autobonus",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          13306
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 13306 is not summarized: the translator does not interpret the quoted statement (control:autobonus).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            104652
+          ],
+          "required_source_literals": [
+            "autobonus \"{ bonus2 bSkillAtk,NJ_HUUMA,100; bonus2 bSkillAtk,NJ_ISSEN,100; }\",50,10000,BF_WEAPON,\"{specialeffect(EF_POTION_BERSERK, AREA, playerattached()); }\";"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_13412_script_untranslated",
+      "unit": "E3-unknown-control-autobonus",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          13412
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 13412 is not summarized: the translator does not interpret the quoted statement (control:autobonus).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            105517
+          ],
+          "required_source_literals": [
+            "autobonus \"{ bonus bIgnoreDefRace,RC_NonBoss; }\",50,5000;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_13413_script_untranslated",
+      "unit": "E3-unknown-control-autobonus",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          13413
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 13413 is not summarized: the translator does not interpret the quoted statement (control:autobonus).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            105549
+          ],
+          "required_source_literals": [
+            "autobonus \"{ bonus bIgnoreDefRace,RC_NonBoss; }\",50,5000;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_13421_script_untranslated",
+      "unit": "E3-unknown-control-autobonus",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          13421
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 13421 is not summarized: the translator does not interpret the quoted statement (control:autobonus).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            105833
+          ],
+          "required_source_literals": [
+            "Script: <\" autobonus \"{ bonus2 bSkillAtk,KN_BOWLINGBASH,20; bonus2 bSkillAtk,SM_BASH,20; }\",5,15000,BF_WEAPON,\"{ specialeffect(EF_ENHANCE, AREA, playerattached()); }\"; \">"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
       "id": "item_1370_script_untranslated",
       "unit": "E3-unknown-control-if",
       "package": "E3",
@@ -87567,6 +88026,33 @@
           ],
           "required_source_literals": [
             "if(readparam(bStr)>=95) {"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_1380_script_untranslated",
+      "unit": "E3-unknown-control-autobonus",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          1380
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 1380 is not summarized: the translator does not interpret the quoted statement (control:autobonus).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            10977
+          ],
+          "required_source_literals": [
+            "autobonus \"{ bonus bBreakArmorRate,10000; }\",20,3000,BF_WEAPON,\"{ specialeffect(EF_POTION_BERSERK, AREA, playerattached()); }\";"
           ]
         }
       ],
@@ -87844,6 +88330,60 @@
       "reviewed_on": "2026-09-30"
     },
     {
+      "id": "item_1530_script_untranslated",
+      "unit": "E3-unknown-control-autobonus",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          1530
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 1530 is not summarized: the translator does not interpret the quoted statement (control:autobonus).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            14543
+          ],
+          "required_source_literals": [
+            "autobonus \"{ bonus bSplashRange,1; }\",50,10000,BF_WEAPON,\"{ specialeffect(EF_ENHANCE, AREA, playerattached()); }\";"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_1543_script_untranslated",
+      "unit": "E3-unknown-control-autobonus",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          1543
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 1543 is not summarized: the translator does not interpret the quoted statement (control:autobonus).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            14933
+          ],
+          "required_source_literals": [
+            "autobonus \"{ bonus2 bAddEff,Eff_Stun,5000; }\",10,6000,BF_WEAPON,\"{ specialeffect(EF_POTION_BERSERK, AREA, playerattached()); }\";"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
       "id": "item_1544_script_untranslated",
       "unit": "E3-unknown-control-if",
       "package": "E3",
@@ -87918,6 +88458,87 @@
           ],
           "required_source_literals": [
             "if (getrefine() >= 6) {"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_16013_script_untranslated",
+      "unit": "E3-unknown-control-autobonus",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          16013
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 16013 is not summarized: the translator does not interpret the quoted statement (control:autobonus).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            126507
+          ],
+          "required_source_literals": [
+            "autobonus \"{ bonus2 bMagicAddRace,RC_Demon,20; }\",30,7000,BF_MAGIC,\"{ specialeffect(EF_SPELLBREAKER, AREA, playerattached()); }\";"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_16018_script_untranslated",
+      "unit": "E3-unknown-control-autobonus",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          16018
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 16018 is not summarized: the translator does not interpret the quoted statement (control:autobonus).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            126661
+          ],
+          "required_source_literals": [
+            "autobonus \"{ bonus2 bMagicAddRace,RC_Demon,40; }\",60,7000,BF_MAGIC,\"{ specialeffect(EF_SPELLBREAKER, AREA, playerattached()); }\";"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_1630_script_untranslated",
+      "unit": "E3-unknown-control-autobonus",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          1630
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 1630 is not summarized: the translator does not interpret the quoted statement (control:autobonus).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            17153
+          ],
+          "required_source_literals": [
+            "autobonus \"{ bonus2 bSPRegenRate,100,2000; bonus2 bHPRegenRate,50,2000; }\",10,10000,BF_MAGIC,\"{ specialeffect(EF_HEAL, AREA, playerattached()); }\";"
           ]
         }
       ],
@@ -88087,6 +88708,60 @@
       "reviewed_on": "2026-09-30"
     },
     {
+      "id": "item_1737_script_untranslated",
+      "unit": "E3-unknown-control-autobonus",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          1737
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 1737 is not summarized: the translator does not interpret the quoted statement (control:autobonus).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            19683
+          ],
+          "required_source_literals": [
+            "autobonus \"{ bonus bAspdRate,7; }\",10+(getrefine()*2),7000,BF_WEAPON,\"{ specialeffect(EF_HASTEUP, AREA, playerattached()); }\";"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_18108_script_untranslated",
+      "unit": "E3-unknown-control-autobonus",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          18108
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 18108 is not summarized: the translator does not interpret the quoted statement (control:autobonus).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            131986
+          ],
+          "required_source_literals": [
+            "autobonus \"{ bonus bAspd,2; }\",10,7000,BF_WEAPON,\"{ specialeffect(EF_HASTEUP, AREA, playerattached()); }\";"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
       "id": "item_18116_script_untranslated",
       "unit": "E3-unknown-control-if",
       "package": "E3",
@@ -88188,6 +88863,33 @@
           ],
           "required_source_literals": [
             "if(getrefine()>6) { bonus2 bAddMonsterDropItem,522,(getrefine()*100)-600; } /* Custom - KRO */"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_18514_script_untranslated",
+      "unit": "E3-unknown-control-autobonus",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          18514
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 18514 is not summarized: the translator does not interpret the quoted statement (control:autobonus).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            132832
+          ],
+          "required_source_literals": [
+            "autobonus \"{ bonus bBaseAtk,10; }\",50,5000,BF_WEAPON,\"{ specialeffect(EF_ENHANCE, AREA, playerattached()); }\";"
           ]
         }
       ],
@@ -88303,6 +89005,33 @@
       "reviewed_on": "2026-09-30"
     },
     {
+      "id": "item_18595_script_untranslated",
+      "unit": "E3-unknown-control-autobonus",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          18595
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 18595 is not summarized: the translator does not interpret the quoted statement (control:autobonus).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            134124
+          ],
+          "required_source_literals": [
+            "Script: <\" autobonus \"{ bonus bBaseAtk,100; }\",5,10000,0,\"{ specialeffect(EF_POTION_BERSERK, AREA, playerattached()); }\"; \">"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
       "id": "item_18597_script_untranslated",
       "unit": "E3-unknown-control-if",
       "package": "E3",
@@ -88384,6 +89113,33 @@
       "reviewed_on": "2026-09-30"
     },
     {
+      "id": "item_18605_script_untranslated",
+      "unit": "E3-unknown-control-autobonus",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          18605
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 18605 is not summarized: the translator does not interpret the quoted statement (control:autobonus).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            134287
+          ],
+          "required_source_literals": [
+            "autobonus \"{ bonus bAtkEle,Ele_Dark; }\",30,60000;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
       "id": "item_18626_script_untranslated",
       "unit": "E3-unknown-control-if",
       "package": "E3",
@@ -88458,6 +89214,33 @@
           ],
           "required_source_literals": [
             "if(getrefine()>6) {"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_18659_script_untranslated",
+      "unit": "E3-unknown-control-autobonus",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          18659
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 18659 is not summarized: the translator does not interpret the quoted statement (control:autobonus).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            135153
+          ],
+          "required_source_literals": [
+            "autobonus \"{ bonus bAtkEle,Ele_Fire; }\",10000,1800000;"
           ]
         }
       ],
@@ -88728,6 +89511,33 @@
           ],
           "required_source_literals": [
             "if (getrefine() > 7) { bonus bMaxHPrate, getrefine()-7; }"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_18845_script_untranslated",
+      "unit": "E3-unknown-control-autobonus",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          18845
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 18845 is not summarized: the translator does not interpret the quoted statement (control:autobonus).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            138285
+          ],
+          "required_source_literals": [
+            "autobonus2 \"{ bonus2 bAddRaceTolerance, RC_DemiPlayer, 100; }\", 10, 3000, BF_WEAPON|BF_MAGIC, \"{ specialeffect(EF_POTION_BERSERK, AREA, playerattached()); }\";"
           ]
         }
       ],
@@ -89410,6 +90220,33 @@
       "reviewed_on": "2026-09-30"
     },
     {
+      "id": "item_2134_script_untranslated",
+      "unit": "E3-unknown-control-autobonus",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          2134
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 2134 is not summarized: the translator does not interpret the quoted statement (control:autobonus).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            25162
+          ],
+          "required_source_literals": [
+            "autobonus2 \"{ bonus bShortWeaponDamageReturn,(getrefine()*3); }\",10,5000,BF_WEAPON,\"{ specialeffect(EF_GUARD, AREA, playerattached()); }\";"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
       "id": "item_2153_script_untranslated",
       "unit": "E3-unknown-control-if",
       "package": "E3",
@@ -89484,6 +90321,33 @@
           ],
           "required_source_literals": [
             "Script: <\" if (getrefine()>5) bonus2 bSubEle,Ele_Neutral,min(getrefine(),12)-5; \">"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_2172_script_untranslated",
+      "unit": "E3-unknown-control-autobonus",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          2172
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 2172 is not summarized: the translator does not interpret the quoted statement (control:autobonus).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            25914
+          ],
+          "required_source_literals": [
+            "Script: <\" autobonus \"{ bonus bBaseAtk,100; bonus bFlee,-50; }\",10,5000,BF_WEAPON,\"{ specialeffect(EF_ENHANCE, AREA, playerattached()); }\"; \">"
           ]
         }
       ],
@@ -89707,6 +90571,33 @@
       "reviewed_on": "2026-09-30"
     },
     {
+      "id": "item_22067_script_untranslated",
+      "unit": "E3-unknown-control-autobonus",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          22067
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 22067 is not summarized: the translator does not interpret the quoted statement (control:autobonus).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            149037
+          ],
+          "required_source_literals": [
+            "autobonus3 \"{ }\", 1000, 7000, ALL_CATCRY, \"{ montransform LOLI_RURI, 420000; }\";"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
       "id": "item_2357_script_untranslated",
       "unit": "E3-unknown-control-if",
       "package": "E3",
@@ -89727,6 +90618,33 @@
           ],
           "required_source_literals": [
             "if(BaseClass==Job_Mage||BaseClass==Job_Archer||BaseClass==Job_Acolyte) bonus2 bResEff,Eff_Silence,5000;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_2389_script_untranslated",
+      "unit": "E3-unknown-control-autobonus",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          2389
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 2389 is not summarized: the translator does not interpret the quoted statement (control:autobonus).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            29781
+          ],
+          "required_source_literals": [
+            "autobonus \"{ bonus bBaseAtk,20; }\",10,10000,BF_WEAPON,\"{ specialeffect(EF_ENHANCE, AREA, playerattached()); }\";"
           ]
         }
       ],
@@ -89997,6 +90915,33 @@
           ],
           "required_source_literals": [
             "if (getrefine()>=7) {"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_24216_script_untranslated",
+      "unit": "E3-unknown-control-autobonus",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          24216
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 24216 is not summarized: the translator does not interpret the quoted statement (control:autobonus).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            153188
+          ],
+          "required_source_literals": [
+            "autobonus \"{ bonus bAtk2,(getrefine()*5); }\",(getrefine()*20)+100,3000,BF_NORMAL;"
           ]
         }
       ],
@@ -90328,6 +91273,33 @@
       "reviewed_on": "2026-09-30"
     },
     {
+      "id": "item_2580_script_untranslated",
+      "unit": "E3-unknown-control-autobonus",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          2580
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 2580 is not summarized: the translator does not interpret the quoted statement (control:autobonus).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            34076
+          ],
+          "required_source_literals": [
+            "autobonus2 \"{ bonus bFlee,20; }\",10,7000,BF_LONG,\"{ specialeffect(EF_WIND, AREA, playerattached()); }\";"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
       "id": "item_2581_script_untranslated",
       "unit": "E3-unknown-control-if",
       "package": "E3",
@@ -90375,6 +91347,33 @@
           ],
           "required_source_literals": [
             "if(readparam(bStr)>=90) {"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_2743_script_untranslated",
+      "unit": "E3-unknown-control-autobonus",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          2743
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 2743 is not summarized: the translator does not interpret the quoted statement (control:autobonus).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            37321
+          ],
+          "required_source_literals": [
+            "autobonus3 \"{ bonus bHealPower,20; }\",50,3000,AL_HEAL;"
           ]
         }
       ],
@@ -90436,6 +91435,33 @@
       "reviewed_on": "2026-09-30"
     },
     {
+      "id": "item_2780_script_untranslated",
+      "unit": "E3-unknown-control-autobonus",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          2780
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 2780 is not summarized: the translator does not interpret the quoted statement (control:autobonus).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            38092
+          ],
+          "required_source_literals": [
+            "Script: <\" autobonus \"{ bonus bAspdRate,2; }\",10,10000,0,\"{ specialeffect(EF_POTION_BERSERK, AREA, playerattached()); }\"; \">"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
       "id": "item_2795_script_untranslated",
       "unit": "E3-unknown-control-if",
       "package": "E3",
@@ -90483,6 +91509,60 @@
           ],
           "required_source_literals": [
             "if(strcharinfo(PC_MAP)==\"job3_arch02\") {"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_2827_script_untranslated",
+      "unit": "E3-unknown-control-autobonus",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          2827
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 2827 is not summarized: the translator does not interpret the quoted statement (control:autobonus).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            39166
+          ],
+          "required_source_literals": [
+            "Script: <\" autobonus \"{ bonus bMaxHPrate,10; }\",10,10000,0,\"{ specialeffect(EF_POTION_BERSERK, AREA, playerattached()); }\"; \">"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_28332_script_untranslated",
+      "unit": "E3-unknown-control-autobonus",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          28332
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 28332 is not summarized: the translator does not interpret the quoted statement (control:autobonus).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            156274
+          ],
+          "required_source_literals": [
+            "autobonus \"{ bonus bAspd,2; }\",50,2000,BF_WEAPON|BF_MAGIC;"
           ]
         }
       ],
@@ -91219,6 +92299,114 @@
       "reviewed_on": "2026-09-30"
     },
     {
+      "id": "item_4411_script_untranslated",
+      "unit": "E3-unknown-control-autobonus",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          4411
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 4411 is not summarized: the translator does not interpret the quoted statement (control:autobonus).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            46362
+          ],
+          "required_source_literals": [
+            "autobonus \"{ bonus bCritical,100; }\",5,5000,0,\"{ specialeffect(EF_ENHANCE, AREA, playerattached()); }\";"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_4412_script_untranslated",
+      "unit": "E3-unknown-control-autobonus",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          4412
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 4412 is not summarized: the translator does not interpret the quoted statement (control:autobonus).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            46375
+          ],
+          "required_source_literals": [
+            "autobonus \"{ bonus bVariableCastrate,-50; bonus bFlee,30; }\",50,5000,BF_MAGIC,\"{ specialeffect(EF_SUFFRAGIUM, AREA, playerattached()); }\";"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_4413_script_untranslated",
+      "unit": "E3-unknown-control-autobonus",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          4413
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 4413 is not summarized: the translator does not interpret the quoted statement (control:autobonus).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            46390
+          ],
+          "required_source_literals": [
+            "autobonus2 \"{ bonus bFlee2,30; }\",3,10000,BF_WEAPON|BF_MAGIC,\"{ specialeffect(EF_WIND, AREA, playerattached()); }\";"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_4417_script_untranslated",
+      "unit": "E3-unknown-control-autobonus",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          4417
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 4417 is not summarized: the translator does not interpret the quoted statement (control:autobonus).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            46443
+          ],
+          "required_source_literals": [
+            "autobonus2 \"{ bonus bDef,10; }\",3,10000,BF_WEAPON|BF_MAGIC,\"{ specialeffect(EF_FREEZED, AREA, playerattached()); }\";"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
       "id": "item_4421_script_untranslated",
       "unit": "E3-unknown-control-if",
       "package": "E3",
@@ -91239,6 +92427,33 @@
           ],
           "required_source_literals": [
             "Script: <\" if(getiteminfo(getequipid(EQI_HAND_R),9)>3) bonus bCritical,15; \">"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_4425_script_untranslated",
+      "unit": "E3-unknown-control-autobonus",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          4425
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 4425 is not summarized: the translator does not interpret the quoted statement (control:autobonus).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            46543
+          ],
+          "required_source_literals": [
+            "autobonus \"{ bonus bAspdRate,100; }\",5,10000,0,\"{ specialeffect(EF_POTION_BERSERK, AREA, playerattached()); }\";"
           ]
         }
       ],
@@ -91374,6 +92589,87 @@
           ],
           "required_source_literals": [
             "if (Class == Job_High_Wizard || Class == Job_Baby_Warlock || Class == Job_Warlock || Class == Job_Warlock_T) bonus bFixedCastrate,-50;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_4458_script_untranslated",
+      "unit": "E3-unknown-control-autobonus",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          4458
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 4458 is not summarized: the translator does not interpret the quoted statement (control:autobonus).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            46996
+          ],
+          "required_source_literals": [
+            "autobonus \"{ bonus bFlee2,10; }\",10,10000,0,\"{ specialeffect(EF_ENHANCE, AREA, playerattached()); }\";"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_4459_script_untranslated",
+      "unit": "E3-unknown-control-autobonus",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          4459
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 4459 is not summarized: the translator does not interpret the quoted statement (control:autobonus).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            47009
+          ],
+          "required_source_literals": [
+            "autobonus \"{ bonus bFixedCastrate,-50; }\",5,4000,BF_MAGIC,\"{ specialeffect(EF_SUFFRAGIUM, AREA, playerattached()); }\";"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_4461_script_untranslated",
+      "unit": "E3-unknown-control-autobonus",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          4461
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 4461 is not summarized: the translator does not interpret the quoted statement (control:autobonus).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            47036
+          ],
+          "required_source_literals": [
+            "autobonus \"{ bonus bCritical,20; }\",15,4000,0,\"{ specialeffect(EF_ENHANCE, AREA, playerattached()); }\";"
           ]
         }
       ],
@@ -92103,6 +93399,33 @@
           ],
           "required_source_literals": [
             "if(getiteminfo(getequipid(EQI_HAND_R),11)==8) {"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_4581_script_untranslated",
+      "unit": "E3-unknown-control-autobonus",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          4581
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 4581 is not summarized: the translator does not interpret the quoted statement (control:autobonus).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            48651
+          ],
+          "required_source_literals": [
+            "autobonus \"{ sc_start SC_MOVHASTE_HORSE, 3000, 25; bonus bAgi, 44; heal 0, -40; }\", 3, 3000, 0, \"{ specialeffect(EF_WIND, AREA, playerattached()); }\";"
           ]
         }
       ],
@@ -93028,6 +94351,168 @@
       "reviewed_on": "2026-09-30"
     },
     {
+      "id": "item_4875_script_untranslated",
+      "unit": "E3-unknown-control-autobonus",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          4875
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 4875 is not summarized: the translator does not interpret the quoted statement (control:autobonus).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            51755
+          ],
+          "required_source_literals": [
+            "Script: <\" autobonus2 \"{ bonus bStr, 200; bonus2 bHPLossRate, 500, 1000; montransform BIGFOOT, 5000; }\", 20, 5000, BF_WEAPON, \"{ specialeffect(EF_POTION_BERSERK, AREA, playerattached()); showscript \\\"?!!!!\\\"; }\"; \">"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_4876_script_untranslated",
+      "unit": "E3-unknown-control-autobonus",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          4876
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 4876 is not summarized: the translator does not interpret the quoted statement (control:autobonus).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            51764
+          ],
+          "required_source_literals": [
+            "Script: <\" autobonus \"{ bonus bInt, 200; bonus2 bSPLossRate, 200, 1000; }\", 15, 10000, BF_MAGIC, \"{ specialeffect(EF_POTION_BERSERK, AREA, playerattached()); showscript \\\"YOooooooo!!!!!\\\"; }\"; \">"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_4877_script_untranslated",
+      "unit": "E3-unknown-control-autobonus",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          4877
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 4877 is not summarized: the translator does not interpret the quoted statement (control:autobonus).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            51773
+          ],
+          "required_source_literals": [
+            "Script: <\" autobonus \"{ bonus bAspdRate, 100; bonus bFlee2, 100; bonus2 bHPLossRate, 400, 1000; bonus2 bSPLossRate, 40, 1000; }\", 10, 5000, BF_WEAPON, \"{ specialeffect(EF_FLASHER, AREA, playerattached()); }\"; \">"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_4878_script_untranslated",
+      "unit": "E3-unknown-control-autobonus",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          4878
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 4878 is not summarized: the translator does not interpret the quoted statement (control:autobonus).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            51782
+          ],
+          "required_source_literals": [
+            "Script: <\" autobonus2 \"{ bonus bDef, 1000; bonus bMatkRate, -50; bonus bAtkRate, -50; }\", 20, 5000, BF_WEAPON, \"{ specialeffect(EF_MAGNUMBREAK, AREA, playerattached()); }\"; \">"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_4879_script_untranslated",
+      "unit": "E3-unknown-control-autobonus",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          4879
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 4879 is not summarized: the translator does not interpret the quoted statement (control:autobonus).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            51791
+          ],
+          "required_source_literals": [
+            "Script: <\" autobonus \"{ bonus bDex, 200; bonus2 bSPLossRate, 50, 1000; }\", 30, 5000, BF_WEAPON, \"{ specialeffect(EF_FLASHER, AREA, playerattached()); }\"; \">"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_4880_script_untranslated",
+      "unit": "E3-unknown-control-autobonus",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          4880
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 4880 is not summarized: the translator does not interpret the quoted statement (control:autobonus).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            51801
+          ],
+          "required_source_literals": [
+            "autobonus \"{ bonus2 bAddMonsterDropItem, Treasure_Box, 10; bonus bLuk, 200; }\", 15, 5000, BF_WEAPON | BF_MAGIC, \"{ specialeffect(EF_MVP, AREA, playerattached()); }\";"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
       "id": "item_4995_script_untranslated",
       "unit": "E3-unknown-control-if",
       "package": "E3",
@@ -93379,6 +94864,60 @@
       "reviewed_on": "2026-09-30"
     },
     {
+      "id": "item_5342_script_untranslated",
+      "unit": "E3-unknown-control-autobonus",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          5342
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 5342 is not summarized: the translator does not interpret the quoted statement (control:autobonus).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            58816
+          ],
+          "required_source_literals": [
+            "autobonus \"{ bonus bBaseAtk,50; }\",20,10000,0,\"{ specialeffect(EF_POTION_BERSERK, AREA, playerattached()); }\";"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_5344_script_untranslated",
+      "unit": "E3-unknown-control-autobonus",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          5344
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 5344 is not summarized: the translator does not interpret the quoted statement (control:autobonus).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            58851
+          ],
+          "required_source_literals": [
+            "autobonus \"{ bonus bAspdRate,5; }\",20,30000,0,\"{ specialeffect(EF_HASTEUP, AREA, playerattached()); }\";"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
       "id": "item_5361_script_untranslated",
       "unit": "E3-unknown-control-if",
       "package": "E3",
@@ -93453,6 +94992,33 @@
           ],
           "required_source_literals": [
             "if(getrefine()>5) {"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_5454_script_untranslated",
+      "unit": "E3-unknown-control-autobonus",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          5454
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 5454 is not summarized: the translator does not interpret the quoted statement (control:autobonus).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            60807
+          ],
+          "required_source_literals": [
+            "autobonus \"{ bonus bCritical,100; }\",10,3000,BF_WEAPON,\"{ specialeffect(EF_ENHANCE, AREA, playerattached()); }\";"
           ]
         }
       ],
@@ -94000,6 +95566,33 @@
       "reviewed_on": "2026-09-30"
     },
     {
+      "id": "item_5655_script_untranslated",
+      "unit": "E3-unknown-control-autobonus",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          5655
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 5655 is not summarized: the translator does not interpret the quoted statement (control:autobonus).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            64289
+          ],
+          "required_source_literals": [
+            "autobonus \"{ bonus bVariableCastrate,-50; bonus bFlee,30; }\",50,5000,BF_MAGIC,\"{ specialeffect(EF_SUFFRAGIUM, AREA, playerattached()); }\";"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
       "id": "item_5667_script_untranslated",
       "unit": "E3-unknown-control-if",
       "package": "E3",
@@ -94398,6 +95991,33 @@
           ],
           "required_source_literals": [
             "if(readparam(bStr)>=120) {"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_5770_script_untranslated",
+      "unit": "E3-unknown-control-autobonus",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          5770
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 5770 is not summarized: the translator does not interpret the quoted statement (control:autobonus).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            66286
+          ],
+          "required_source_literals": [
+            "Script: <\" autobonus \"{ sc_start SC_PROPERTYWIND,180000,1; }\",3,180000,BF_WEAPON,\"{ specialeffect(EF_ENHANCE, AREA, playerattached()); }\"; \">"
           ]
         }
       ],

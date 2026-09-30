@@ -44981,7 +44981,7 @@
       "package": "E3",
       "kind": "e3_dispose",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "key": "control:autobonus",
@@ -45774,7 +45774,25 @@
       ],
       "size_lines": 60,
       "reason": "60 item script(s) first stop at `control:autobonus`, which is control flow or undocumented",
-      "history": []
+      "history": [
+        "2026-09-30T20:07:12Z activated",
+        "2026-09-30T20:07:12Z validated",
+        "2026-09-30T20:07:12Z verification not required: tool-drafted, no behavior claim",
+        "2026-09-30T20:07:35Z accepted",
+        "2026-09-30T20:07:35Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "2b8f175e67101e7dedede864148daf7b42f1eb775d02ca12dedb375ed35af3d5",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E3-unknown-bonus2-bskillusesp-expression",
