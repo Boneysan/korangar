@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 1912,
+    "E1_unknown": 1913,
     "E1_verified": 1
   },
   "entries": [
@@ -204,6 +204,31 @@
           ],
           "required_source_literals": [
             "getitem Research_Note,1; // Reasearch_Note"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_abbey03_dead_man_king_branch_for_1421_1443",
+      "unit": "E1-abbey03_dead_man_king_branch_for_1421",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Dead Man#King"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Token_Of_King,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_nameless.txt",
+          "lines": [
+            1443
+          ],
+          "required_source_literals": [
+            "getitem Token_Of_King,1; //Token_of_King"
           ]
         }
       ],

@@ -47926,6 +47926,31 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_abbey03_dead_man_king_branch_for_1421_1443",
+      "unit": "E1-abbey03_dead_man_king_branch_for_1421",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Dead Man#King"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Token_Of_King,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_nameless.txt",
+          "lines": [
+            1443
+          ],
+          "required_source_literals": [
+            "getitem Token_Of_King,1; //Token_of_King"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
