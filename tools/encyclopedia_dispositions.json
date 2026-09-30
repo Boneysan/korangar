@@ -41151,6 +41151,256 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_hu_in01_cellette_lavit_branch_for_5459_5518",
+      "unit": "E1-hu_in01_cellette_lavit_branch_for_5459",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Cellette Lavit"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Fish_Ball_Soup,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_hugel.txt",
+          "lines": [
+            5518
+          ],
+          "required_source_literals": [
+            "getitem Fish_Ball_Soup,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_hu_in01_cellette_lavit_branch_for_5459_5529",
+      "unit": "E1-hu_in01_cellette_lavit_branch_for_5459",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Cellette Lavit"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Fish_Ball_Soup,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_hugel.txt",
+          "lines": [
+            5529
+          ],
+          "required_source_literals": [
+            "getitem Fish_Ball_Soup,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_hu_in01_cellette_lavit_branch_for_5459_5541",
+      "unit": "E1-hu_in01_cellette_lavit_branch_for_5459",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Cellette Lavit"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Fish_Ball_Soup,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_hugel.txt",
+          "lines": [
+            5541
+          ],
+          "required_source_literals": [
+            "getitem Fish_Ball_Soup,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_hu_in01_cellette_lavit_branch_for_5459_5553",
+      "unit": "E1-hu_in01_cellette_lavit_branch_for_5459",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Cellette Lavit"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Fish_Ball_Soup,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_hugel.txt",
+          "lines": [
+            5553
+          ],
+          "required_source_literals": [
+            "getitem Fish_Ball_Soup,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_hu_in01_cellette_lavit_branch_for_5459_5573",
+      "unit": "E1-hu_in01_cellette_lavit_branch_for_5459",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Cellette Lavit"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Fish_Ball_Soup,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_hugel.txt",
+          "lines": [
+            5573
+          ],
+          "required_source_literals": [
+            "getitem Fish_Ball_Soup,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_hu_in01_cellette_lavit_branch_for_5459_5631",
+      "unit": "E1-hu_in01_cellette_lavit_branch_for_5459",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Cellette Lavit"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Fish_Ball_Soup,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_hugel.txt",
+          "lines": [
+            5631
+          ],
+          "required_source_literals": [
+            "getitem Fish_Ball_Soup,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_hu_in01_cellette_lavit_branch_for_5459_5672",
+      "unit": "E1-hu_in01_cellette_lavit_branch_for_5459",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Cellette Lavit"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Fish_Ball_Soup,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_hugel.txt",
+          "lines": [
+            5672
+          ],
+          "required_source_literals": [
+            "getitem Fish_Ball_Soup,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_hu_in01_cellette_lavit_branch_for_5459_5714",
+      "unit": "E1-hu_in01_cellette_lavit_branch_for_5459",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Cellette Lavit"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Fish_Ball_Soup,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_hugel.txt",
+          "lines": [
+            5714
+          ],
+          "required_source_literals": [
+            "getitem Fish_Ball_Soup,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_hu_in01_cellette_lavit_branch_for_5459_5755",
+      "unit": "E1-hu_in01_cellette_lavit_branch_for_5459",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Cellette Lavit"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Fish_Ball_Soup,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_hugel.txt",
+          "lines": [
+            5755
+          ],
+          "required_source_literals": [
+            "getitem Fish_Ball_Soup,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_hu_in01_cellette_lavit_branch_for_5459_5790",
+      "unit": "E1-hu_in01_cellette_lavit_branch_for_5459",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Cellette Lavit"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Fish_Ball_Soup,3; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_hugel.txt",
+          "lines": [
+            5790
+          ],
+          "required_source_literals": [
+            "getitem Fish_Ball_Soup,3;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }

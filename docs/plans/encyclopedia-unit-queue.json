@@ -15967,7 +15967,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Cellette Lavit",
@@ -15986,7 +15986,25 @@
       ],
       "size_lines": 351,
       "reason": "refused by the braced one-item prover: braceless",
-      "history": []
+      "history": [
+        "2026-09-30T16:23:31Z activated",
+        "2026-09-30T16:23:32Z validated",
+        "2026-09-30T16:23:32Z verified: 10 claims supported",
+        "2026-09-30T16:23:55Z accepted",
+        "2026-09-30T16:23:55Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "6d08f1e44808e1f5ca18c7db21dd0a5f02721aa76f84229e5273b0976cc98f38",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-hugel_neha_branch_for_5811",
