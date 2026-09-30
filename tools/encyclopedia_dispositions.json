@@ -109325,6 +109325,141 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_1548_script_untranslated",
+      "unit": "E3-unknown-bonus-bhealpower-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          1548
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 1548 is not summarized: the translator does not interpret the quoted statement (bonus bHealPower (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            15097
+          ],
+          "required_source_literals": [
+            "bonus bHealPower,getskilllv(AL_DP);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_1625_script_untranslated",
+      "unit": "E3-unknown-bonus-bhealpower-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          1625
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 1625 is not summarized: the translator does not interpret the quoted statement (bonus bHealPower (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            16999
+          ],
+          "required_source_literals": [
+            "bonus bHealPower,(getrefine()*3/2);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_1638_script_untranslated",
+      "unit": "E3-unknown-bonus-bhealpower-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          1638
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 1638 is not summarized: the translator does not interpret the quoted statement (bonus bHealPower (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            17429
+          ],
+          "required_source_literals": [
+            "bonus bHealPower,(getrefine()*3/2);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_1659_script_untranslated",
+      "unit": "E3-unknown-bonus-bhealpower-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          1659
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 1659 is not summarized: the translator does not interpret the quoted statement (bonus bHealPower (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            18086
+          ],
+          "required_source_literals": [
+            "bonus bHealPower,(getrefine()*6);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_1666_script_untranslated",
+      "unit": "E3-unknown-bonus-bhealpower-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          1666
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 1666 is not summarized: the translator does not interpret the quoted statement (bonus bHealPower (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            18287
+          ],
+          "required_source_literals": [
+            "bonus bHealPower,(getrefine()*3/2);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
