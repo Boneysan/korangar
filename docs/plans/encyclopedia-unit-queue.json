@@ -7960,7 +7960,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "strong",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Kiehl#Original",
@@ -7979,7 +7979,25 @@
       ],
       "size_lines": 498,
       "reason": "refused by the braced one-item prover: multi-item",
-      "history": []
+      "history": [
+        "2026-09-30T15:09:24Z activated",
+        "2026-09-30T15:09:24Z validated",
+        "2026-09-30T15:09:24Z verified: 2 claims supported",
+        "2026-09-30T15:09:47Z accepted",
+        "2026-09-30T15:09:47Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "d21b221eba26df2768aa1e3b620e92dea9b7c1b444b1c62b64ce9dbefc8040c2",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-umbala_bazo_lv4_branch_for_41",

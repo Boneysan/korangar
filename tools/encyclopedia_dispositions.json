@@ -15851,6 +15851,56 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_kh_kiehl02_kiehl_original_branch_for_6213_6629",
+      "unit": "E1-kh_kiehl02_kiehl_original_branch_for_6213",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Kiehl#Original"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Toy_Motor,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/kiel_hyre_quest.txt",
+          "lines": [
+            6629
+          ],
+          "required_source_literals": [
+            "delitem Toy_Motor,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_kh_kiehl02_kiehl_original_branch_for_6213_6643",
+      "unit": "E1-kh_kiehl02_kiehl_original_branch_for_6213",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Kiehl#Original"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Elysia_Ring,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/kiel_hyre_quest.txt",
+          "lines": [
+            6643
+          ],
+          "required_source_literals": [
+            "getitem Elysia_Ring,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
