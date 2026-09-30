@@ -46951,6 +46951,31 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_moscovia_little_boy_rus09_branch_for_8343_8381",
+      "unit": "E1-moscovia_little_boy_rus09_branch_for_8343",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Little Boy#rus09"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Candy,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_moscovia.txt",
+          "lines": [
+            8381
+          ],
+          "required_source_literals": [
+            "if (countitem(Candy)) delitem Candy,1; else delitem Well_Baked_Cookie,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
