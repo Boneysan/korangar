@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 1397,
+    "E1_unknown": 1417,
     "E1_verified": 1
   },
   "entries": [
@@ -3354,6 +3354,506 @@
           ],
           "required_source_literals": [
             "delitem Jellopy,300;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_amatsu_publisher_ama_branch_for_45_170",
+      "unit": "E1-amatsu_publisher_ama_branch_for_45",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Publisher#ama"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Heart_Of_Her,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_amatsu.txt",
+          "lines": [
+            170
+          ],
+          "required_source_literals": [
+            "getitem Heart_Of_Her,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_amatsu_publisher_ama_branch_for_45_173",
+      "unit": "E1-amatsu_publisher_ama_branch_for_45",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Publisher#ama"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Baked_Yam,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_amatsu.txt",
+          "lines": [
+            173
+          ],
+          "required_source_literals": [
+            "getitem Baked_Yam,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_amatsu_publisher_ama_branch_for_45_176",
+      "unit": "E1-amatsu_publisher_ama_branch_for_45",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Publisher#ama"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Tropical_Banana,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_amatsu.txt",
+          "lines": [
+            176
+          ],
+          "required_source_literals": [
+            "getitem Tropical_Banana,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_amatsu_publisher_ama_branch_for_45_179",
+      "unit": "E1-amatsu_publisher_ama_branch_for_45",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Publisher#ama"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Armlet_Of_Obedience,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_amatsu.txt",
+          "lines": [
+            179
+          ],
+          "required_source_literals": [
+            "getitem Armlet_Of_Obedience,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_amatsu_publisher_ama_branch_for_45_182",
+      "unit": "E1-amatsu_publisher_ama_branch_for_45",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Publisher#ama"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem No_Recipient,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_amatsu.txt",
+          "lines": [
+            182
+          ],
+          "required_source_literals": [
+            "getitem No_Recipient,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_amatsu_publisher_ama_branch_for_45_185",
+      "unit": "E1-amatsu_publisher_ama_branch_for_45",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Publisher#ama"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Well_Dried_Bone,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_amatsu.txt",
+          "lines": [
+            185
+          ],
+          "required_source_literals": [
+            "getitem Well_Dried_Bone,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_amatsu_publisher_ama_branch_for_45_188",
+      "unit": "E1-amatsu_publisher_ama_branch_for_45",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Publisher#ama"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Old_Broom,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_amatsu.txt",
+          "lines": [
+            188
+          ],
+          "required_source_literals": [
+            "getitem Old_Broom,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_amatsu_publisher_ama_branch_for_45_191",
+      "unit": "E1-amatsu_publisher_ama_branch_for_45",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Publisher#ama"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Horror_Of_Tribe,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_amatsu.txt",
+          "lines": [
+            191
+          ],
+          "required_source_literals": [
+            "getitem Horror_Of_Tribe,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_amatsu_publisher_ama_branch_for_45_194",
+      "unit": "E1-amatsu_publisher_ama_branch_for_45",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Publisher#ama"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Monster_Juice,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_amatsu.txt",
+          "lines": [
+            194
+          ],
+          "required_source_literals": [
+            "getitem Monster_Juice,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_amatsu_publisher_ama_branch_for_45_197",
+      "unit": "E1-amatsu_publisher_ama_branch_for_45",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Publisher#ama"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Contracts_In_Shadow,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_amatsu.txt",
+          "lines": [
+            197
+          ],
+          "required_source_literals": [
+            "getitem Contracts_In_Shadow,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_amatsu_publisher_ama_branch_for_45_203",
+      "unit": "E1-amatsu_publisher_ama_branch_for_45",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Publisher#ama"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Rainbow_Carrot,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_amatsu.txt",
+          "lines": [
+            203
+          ],
+          "required_source_literals": [
+            "getitem Rainbow_Carrot,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_amatsu_publisher_ama_branch_for_45_206",
+      "unit": "E1-amatsu_publisher_ama_branch_for_45",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Publisher#ama"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Sweet_Milk,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_amatsu.txt",
+          "lines": [
+            206
+          ],
+          "required_source_literals": [
+            "getitem Sweet_Milk,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_amatsu_publisher_ama_branch_for_45_209",
+      "unit": "E1-amatsu_publisher_ama_branch_for_45",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Publisher#ama"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Singing_Flower,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_amatsu.txt",
+          "lines": [
+            209
+          ],
+          "required_source_literals": [
+            "getitem Singing_Flower,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_amatsu_publisher_ama_branch_for_45_212",
+      "unit": "E1-amatsu_publisher_ama_branch_for_45",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Publisher#ama"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Fatty_Chubby_Earthworm,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_amatsu.txt",
+          "lines": [
+            212
+          ],
+          "required_source_literals": [
+            "getitem Fatty_Chubby_Earthworm,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_amatsu_publisher_ama_branch_for_45_215",
+      "unit": "E1-amatsu_publisher_ama_branch_for_45",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Publisher#ama"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Earthworm_The_Dude,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_amatsu.txt",
+          "lines": [
+            215
+          ],
+          "required_source_literals": [
+            "getitem Earthworm_The_Dude,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_amatsu_publisher_ama_branch_for_45_218",
+      "unit": "E1-amatsu_publisher_ama_branch_for_45",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Publisher#ama"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Unripe_Apple,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_amatsu.txt",
+          "lines": [
+            218
+          ],
+          "required_source_literals": [
+            "getitem Unripe_Apple,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_amatsu_publisher_ama_branch_for_45_221",
+      "unit": "E1-amatsu_publisher_ama_branch_for_45",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Publisher#ama"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Bitter_Herb,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_amatsu.txt",
+          "lines": [
+            221
+          ],
+          "required_source_literals": [
+            "getitem Bitter_Herb,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_amatsu_publisher_ama_branch_for_45_224",
+      "unit": "E1-amatsu_publisher_ama_branch_for_45",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Publisher#ama"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Orange_Juice,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_amatsu.txt",
+          "lines": [
+            224
+          ],
+          "required_source_literals": [
+            "getitem Orange_Juice,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_amatsu_publisher_ama_branch_for_45_227",
+      "unit": "E1-amatsu_publisher_ama_branch_for_45",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Publisher#ama"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Lusty_Iron,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_amatsu.txt",
+          "lines": [
+            227
+          ],
+          "required_source_literals": [
+            "getitem Lusty_Iron,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_amatsu_publisher_ama_branch_for_45_230",
+      "unit": "E1-amatsu_publisher_ama_branch_for_45",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Publisher#ama"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Rotten_Fish,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_amatsu.txt",
+          "lines": [
+            230
+          ],
+          "required_source_literals": [
+            "getitem Rotten_Fish,1;"
           ]
         }
       ],
