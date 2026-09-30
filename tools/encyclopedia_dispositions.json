@@ -22751,6 +22751,356 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_in03_han_garam_branch_for_820_861",
+      "unit": "E1-payon_in03_han_garam_branch_for_820",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Han Garam"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Shining_Scales,300; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2006_headgears.txt",
+          "lines": [
+            861
+          ],
+          "required_source_literals": [
+            "delitem Shining_Scales,300;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_in03_han_garam_branch_for_820_862",
+      "unit": "E1-payon_in03_han_garam_branch_for_820",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Han Garam"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Crystal_Jewel___,5; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2006_headgears.txt",
+          "lines": [
+            862
+          ],
+          "required_source_literals": [
+            "delitem Crystal_Jewel___,5;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_in03_han_garam_branch_for_820_863",
+      "unit": "E1-payon_in03_han_garam_branch_for_820",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Han Garam"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Scarlet_Dyestuffs,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2006_headgears.txt",
+          "lines": [
+            863
+          ],
+          "required_source_literals": [
+            "delitem Scarlet_Dyestuffs,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_in03_han_garam_branch_for_820_864",
+      "unit": "E1-payon_in03_han_garam_branch_for_820",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Han Garam"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Soft_Silk_Cloth,50; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2006_headgears.txt",
+          "lines": [
+            864
+          ],
+          "required_source_literals": [
+            "delitem Soft_Silk_Cloth,50;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_in03_han_garam_branch_for_820_866",
+      "unit": "E1-payon_in03_han_garam_branch_for_820",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Han Garam"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Ayam,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2006_headgears.txt",
+          "lines": [
+            866
+          ],
+          "required_source_literals": [
+            "getitem Ayam,1; //A_yam"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_in03_han_garam_branch_for_820_923",
+      "unit": "E1-payon_in03_han_garam_branch_for_820",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Han Garam"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Shining_Scales,300; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2006_headgears.txt",
+          "lines": [
+            923
+          ],
+          "required_source_literals": [
+            "delitem Shining_Scales,300;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_in03_han_garam_branch_for_820_924",
+      "unit": "E1-payon_in03_han_garam_branch_for_820",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Han Garam"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Crystal_Jewel___,5; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2006_headgears.txt",
+          "lines": [
+            924
+          ],
+          "required_source_literals": [
+            "delitem Crystal_Jewel___,5;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_in03_han_garam_branch_for_820_925",
+      "unit": "E1-payon_in03_han_garam_branch_for_820",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Han Garam"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Black_Dyestuffs,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2006_headgears.txt",
+          "lines": [
+            925
+          ],
+          "required_source_literals": [
+            "delitem Black_Dyestuffs,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_in03_han_garam_branch_for_820_926",
+      "unit": "E1-payon_in03_han_garam_branch_for_820",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Han Garam"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Hat_,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2006_headgears.txt",
+          "lines": [
+            926
+          ],
+          "required_source_literals": [
+            "delitem Hat_,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_in03_han_garam_branch_for_820_928",
+      "unit": "E1-payon_in03_han_garam_branch_for_820",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Han Garam"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Satto_Hat,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2006_headgears.txt",
+          "lines": [
+            928
+          ],
+          "required_source_literals": [
+            "getitem Satto_Hat,1; //Judge_Hat"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_in03_han_garam_branch_for_820_1082",
+      "unit": "E1-payon_in03_han_garam_branch_for_820",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Han Garam"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Dragonball_Blue,7; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2006_headgears.txt",
+          "lines": [
+            1082
+          ],
+          "required_source_literals": [
+            "delitem Dragonball_Blue,7; //Blue_Orb"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_in03_han_garam_branch_for_820_1083",
+      "unit": "E1-payon_in03_han_garam_branch_for_820",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Han Garam"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Dragonball_Yellow,7; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2006_headgears.txt",
+          "lines": [
+            1083
+          ],
+          "required_source_literals": [
+            "delitem Dragonball_Yellow,7; //Yellow_Orb"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_in03_han_garam_branch_for_820_1084",
+      "unit": "E1-payon_in03_han_garam_branch_for_820",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Han Garam"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Dragonball_Green,7; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2006_headgears.txt",
+          "lines": [
+            1084
+          ],
+          "required_source_literals": [
+            "delitem Dragonball_Green,7; //Green_Orb"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_in03_han_garam_branch_for_820_1085",
+      "unit": "E1-payon_in03_han_garam_branch_for_820",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Han Garam"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Dragonball_Red,7; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2006_headgears.txt",
+          "lines": [
+            1085
+          ],
+          "required_source_literals": [
+            "delitem Dragonball_Red,7; //Red_Orb"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
