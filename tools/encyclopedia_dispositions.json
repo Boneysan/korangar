@@ -42451,6 +42451,56 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_lhz_in01_secretary_slierre_li_branch_for_5799_6239",
+      "unit": "E1-lhz_in01_secretary_slierre_li_branch_for_5799",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Secretary Slierre#li"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Old_Blue_Box,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_lighthalzen.txt",
+          "lines": [
+            6239
+          ],
+          "required_source_literals": [
+            "getitem Old_Blue_Box,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_lhz_in01_secretary_slierre_li_branch_for_5799_6240",
+      "unit": "E1-lhz_in01_secretary_slierre_li_branch_for_5799",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Secretary Slierre#li"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Speed_Up_Potion,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_lighthalzen.txt",
+          "lines": [
+            6240
+          ],
+          "required_source_literals": [
+            "getitem Speed_Up_Potion,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
