@@ -9537,7 +9537,8 @@
           "source": "npc/merchants/shops.txt:793"
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Restores 105–145 HP; Applies Freeze for 10 seconds at 25% chance",
       "type": "IT_HEALING",
       "buy": 150,
       "weight": 80
@@ -10772,7 +10773,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Restores 50–100 HP; Applies Stun for 3 seconds at 15% chance",
       "type": "IT_HEALING",
       "buy": 180,
       "weight": 80
@@ -11057,7 +11059,8 @@
           "source": "npc/merchants/shops.txt:826"
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Restores 105–145 HP; Applies Stun for 3 seconds (no explicit chance limit); Applies Blind for 2 seconds at 15% chance",
       "type": "IT_HEALING",
       "buy": 100,
       "weight": 80
@@ -55750,7 +55753,8 @@
           "source": "npc/merchants/shops.txt:874"
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Applies status SC_ATTHASTE_POTION1 for 1800 seconds, value 4 (no explicit chance limit)",
       "type": "IT_USABLE",
       "buy": 800,
       "weight": 100
@@ -56229,7 +56233,8 @@
           "source": "npc/merchants/shops.txt:875"
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Applies status SC_ATTHASTE_POTION2 for 1800 seconds, value 6 (no explicit chance limit)",
       "type": "IT_USABLE",
       "buy": 1500,
       "weight": 150,
@@ -56343,7 +56348,8 @@
           "source": "npc/merchants/shops.txt:1056"
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Applies status SC_ATTHASTE_POTION3 for 1800 seconds, value 9 (no explicit chance limit)",
       "type": "IT_USABLE",
       "buy": 3000,
       "weight": 200,
@@ -56861,7 +56867,8 @@
           "source_record": "db/re/mob_db.conf:Id=2809"
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Applies status SC_MOVHASTE_HORSE for 180 seconds, value 25 (no explicit chance limit)",
       "type": "IT_USABLE",
       "buy": 1450,
       "weight": 30
@@ -61610,7 +61617,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Applies status SC_PLUSATTACKPOWER for 60 seconds, value 30 (no explicit chance limit)",
       "type": "IT_USABLE",
       "weight": 100
     },
@@ -61675,7 +61683,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Applies status SC_PLUSMAGICPOWER for 60 seconds, value 30 (no explicit chance limit)",
       "type": "IT_USABLE",
       "weight": 50
     },
@@ -61688,7 +61697,8 @@
         "record": "Id=684"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Applies status SC_PLUSATTACKPOWER for 60 seconds, value 10 (no explicit chance limit); Applies status SC_PLUSMAGICPOWER for 60 seconds, value 10 (no explicit chance limit)",
       "type": "IT_USABLE",
       "buy": 15000,
       "weight": 300
@@ -294495,7 +294505,8 @@
         "record": "Id=11719"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Applies status SC_CASH_PLUSEXP for 1800 seconds, value 100 (no explicit chance limit)",
       "type": "IT_HEALING",
       "weight": 200
     },
@@ -295215,7 +295226,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Applies status SC_MOVHASTE_POTION for 5 seconds, value 100 (no explicit chance limit)",
       "type": "IT_USABLE",
       "buy": 2,
       "weight": 100
@@ -295281,7 +295293,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Applies status SC_MOVESLOW_POTION for 5 seconds, value 100 (no explicit chance limit)",
       "type": "IT_USABLE",
       "buy": 2,
       "weight": 100
@@ -299407,7 +299420,8 @@
         "record": "Id=12027"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "restores 9% HP; Applies Curse for 30 seconds at 30% chance",
       "type": "IT_USABLE",
       "buy": 1000,
       "weight": 200
@@ -299421,7 +299435,8 @@
         "record": "Id=12028"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Applies status SC_MOVHASTE_HORSE for 20 seconds, value 25 (no explicit chance limit)",
       "type": "IT_USABLE",
       "buy": 1000,
       "weight": 200
@@ -299458,7 +299473,8 @@
           "source_record": "db/re/mob_db.conf:Id=1874"
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Applies status SC_PLUSATTACKPOWER for 60 seconds, value 20 (no explicit chance limit)",
       "type": "IT_USABLE",
       "buy": 1000,
       "weight": 200
@@ -299472,7 +299488,8 @@
         "record": "Id=12031"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Applies status SC_PLUSMAGICPOWER for 60 seconds, value 20 (no explicit chance limit)",
       "type": "IT_USABLE",
       "buy": 1000,
       "weight": 200
@@ -299501,7 +299518,8 @@
         "record": "Id=12033"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Applies status SC_CLAIRVOYANCE for 30 seconds (no explicit chance limit)",
       "type": "IT_USABLE",
       "buy": 1000,
       "weight": 200
@@ -299515,7 +299533,8 @@
         "record": "Id=12034"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "restores 9% SP; Applies Silence for 30 seconds at 30% chance",
       "type": "IT_USABLE",
       "buy": 1000,
       "weight": 200
@@ -301688,7 +301707,8 @@
         "record": "Id=12101"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Applies status SC_FOOD_BASICAVOIDANCE for 180 seconds, value 30 (no explicit chance limit)",
       "type": "IT_HEALING",
       "buy": 20,
       "weight": 300
@@ -301702,7 +301722,8 @@
         "record": "Id=12102"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Applies status SC_FOOD_BASICHIT for 180 seconds, value 30 (no explicit chance limit)",
       "type": "IT_HEALING",
       "buy": 20,
       "weight": 300
@@ -305122,7 +305143,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Applies status SC_FOOD_BASICHIT for 1200 seconds, value 30 (no explicit chance limit)",
       "type": "IT_USABLE",
       "buy": 2,
       "weight": 70
@@ -305152,7 +305174,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Applies status SC_FOOD_BASICAVOIDANCE for 1200 seconds, value 30 (no explicit chance limit)",
       "type": "IT_USABLE",
       "buy": 2,
       "weight": 70
@@ -305182,7 +305205,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Applies status SC_PLUSATTACKPOWER for 1200 seconds, value 10 (no explicit chance limit); Applies status SC_PLUSMAGICPOWER for 120 seconds, value 10 (no explicit chance limit)",
       "type": "IT_USABLE",
       "buy": 2,
       "weight": 70
@@ -306006,7 +306030,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Applies status SC_XMAS for 600 seconds (no explicit chance limit); Applies status SC_MOVHASTE_HORSE for 600 seconds, value 25 (no explicit chance limit)",
       "type": "IT_USABLE",
       "weight": 200
     },
@@ -306046,7 +306071,8 @@
         "record": "Id=12135"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "restores 50% HP; restores 50% SP; Applies Confusion for 10 seconds at 10% chance",
       "type": "IT_USABLE",
       "buy": 20,
       "weight": 30
@@ -307336,7 +307362,8 @@
         "record": "Id=12190"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Applies status SC_MOVHASTE_INFINITY for 180 seconds, value 25 (no explicit chance limit)",
       "type": "IT_USABLE",
       "buy": 2,
       "weight": 300
@@ -307350,7 +307377,8 @@
         "record": "Id=12191"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Applies status SC_ATTHASTE_POTION1 for 600 seconds, value 4 (no explicit chance limit); Applies status SC_MOVHASTE_HORSE for 600 seconds, value 25 (no explicit chance limit)",
       "type": "IT_USABLE",
       "buy": 2,
       "weight": 500
@@ -307633,7 +307661,8 @@
         "record": "Id=12202"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Applies status SC_FOOD_STR_CASH for 1800 seconds, value 10 (no explicit chance limit); restores 20% HP; restores 10% SP",
       "type": "IT_HEALING",
       "buy": 2,
       "weight": 10
@@ -307647,7 +307676,8 @@
         "record": "Id=12203"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Applies status SC_FOOD_AGI_CASH for 1800 seconds, value 10 (no explicit chance limit); restores 15% HP; restores 5% SP",
       "type": "IT_HEALING",
       "buy": 2,
       "weight": 10
@@ -307661,7 +307691,8 @@
         "record": "Id=12204"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Applies status SC_FOOD_INT_CASH for 1800 seconds, value 10 (no explicit chance limit); restores 10% HP; restores 20% SP",
       "type": "IT_HEALING",
       "buy": 2,
       "weight": 10
@@ -307675,7 +307706,8 @@
         "record": "Id=12205"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Applies status SC_FOOD_DEX_CASH for 1800 seconds, value 10 (no explicit chance limit); restores 10% HP; restores 10% SP",
       "type": "IT_HEALING",
       "buy": 2,
       "weight": 10
@@ -307689,7 +307721,8 @@
         "record": "Id=12206"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Applies status SC_FOOD_LUK_CASH for 1800 seconds, value 10 (no explicit chance limit); restores 14% HP; restores 8% SP",
       "type": "IT_HEALING",
       "buy": 2,
       "weight": 10
@@ -307703,7 +307736,8 @@
         "record": "Id=12207"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Applies status SC_FOOD_VIT_CASH for 1800 seconds, value 10 (no explicit chance limit); restores 25% HP",
       "type": "IT_HEALING",
       "buy": 2,
       "weight": 10
@@ -307717,7 +307751,8 @@
         "record": "Id=12208"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Applies status SC_CASH_PLUSEXP for 1800 seconds, value 50 (no explicit chance limit)",
       "type": "IT_USABLE",
       "buy": 2,
       "weight": 10
@@ -307731,7 +307766,8 @@
         "record": "Id=12209"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Applies status SC_CASH_DEATHPENALTY for 1800 seconds (no explicit chance limit)",
       "type": "IT_USABLE",
       "buy": 2,
       "weight": 10
@@ -307745,7 +307781,8 @@
         "record": "Id=12210"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Applies status SC_CASH_RECEIVEITEM for 1800 seconds, value 200 (no explicit chance limit)",
       "type": "IT_USABLE",
       "buy": 2,
       "weight": 10
@@ -307800,7 +307837,8 @@
         "record": "Id=12214"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Applies status SC_CASH_BOSS_ALARM for 600 seconds (no explicit chance limit)",
       "type": "IT_USABLE",
       "buy": 2,
       "weight": 10
@@ -307940,7 +307978,8 @@
         "record": "Id=12226"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Applies status SC_MOVHASTE_INFINITY for 5400 seconds, value 100 (no explicit chance limit); restores 100% HP; restores 100% SP; Applies STR food for 5400 seconds, value 10 (no explicit chance limit); Applies DEX food for 5400 seconds, value 5 (no explicit chance limit); Applies status SC_PLUSATTACKPOWER for 5400 seconds, value 22 (no explicit chance limit); Applies status SC_PLUSMAGICPOWER for 5400 seconds, value 15 (no explicit chance limit)",
       "type": "IT_HEALING",
       "buy": 20,
       "weight": 50
@@ -307954,7 +307993,8 @@
         "record": "Id=12227"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Applies status SC_MOVHASTE_INFINITY for 5400 seconds, value 100 (no explicit chance limit); restores 100% HP; restores 100% SP; Applies INT food for 5400 seconds, value 8 (no explicit chance limit); Applies VIT food for 5400 seconds, value 7 (no explicit chance limit); Applies LUK food for 5400 seconds, value 7 (no explicit chance limit); Applies status SC_PLUSATTACKPOWER for 3600 seconds, value 20 (no explicit chance limit)",
       "type": "IT_HEALING",
       "buy": 20,
       "weight": 50
@@ -307968,7 +308008,8 @@
         "record": "Id=12228"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Applies status SC_MOVHASTE_INFINITY for 5400 seconds, value 100 (no explicit chance limit); restores 100% HP; restores 100% SP; Applies AGI food for 5400 seconds, value 15 (no explicit chance limit); Applies status SC_PLUSATTACKPOWER for 5400 seconds, value 52 (no explicit chance limit); Applies status SC_PLUSMAGICPOWER for 5400 seconds, value 10 (no explicit chance limit)",
       "type": "IT_HEALING",
       "buy": 20,
       "weight": 50
@@ -307982,7 +308023,8 @@
         "record": "Id=12229"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Applies status SC_MOVHASTE_INFINITY for 5400 seconds, value 100 (no explicit chance limit); restores 100% HP; restores 100% SP; Applies STR food for 5400 seconds, value 3 (no explicit chance limit); Applies AGI food for 5400 seconds, value 5 (no explicit chance limit); Applies VIT food for 5400 seconds, value 10 (no explicit chance limit); Applies status SC_PLUSMAGICPOWER for 5400 seconds, value 52 (no explicit chance limit)",
       "type": "IT_HEALING",
       "buy": 20,
       "weight": 50
@@ -307996,7 +308038,8 @@
         "record": "Id=12230"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Applies status SC_MOVHASTE_INFINITY for 5400 seconds, value 100 (no explicit chance limit); restores 100% HP; restores 100% SP; Applies INT food for 5400 seconds, value 3 (no explicit chance limit); Applies DEX food for 5400 seconds, value 12 (no explicit chance limit); Applies status SC_PLUSATTACKPOWER for 5400 seconds, value 20 (no explicit chance limit); Applies status SC_PLUSMAGICPOWER for 5400 seconds, value 20 (no explicit chance limit)",
       "type": "IT_HEALING",
       "buy": 20,
       "weight": 50
@@ -308010,7 +308053,8 @@
         "record": "Id=12231"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "restores 100% HP; restores 100% SP; Applies STR food for 5400 seconds, value 6 (no explicit chance limit); Applies DEX food for 5400 seconds, value 6 (no explicit chance limit); Applies AGI food for 5400 seconds, value 6 (no explicit chance limit); Applies INT food for 5400 seconds, value 6 (no explicit chance limit); Applies VIT food for 5400 seconds, value 6 (no explicit chance limit); Applies LUK food for 5400 seconds, value 6 (no explicit chance limit); Applies status SC_PLUSATTACKPOWER for 5400 seconds, value 24 (no explicit chance limit); Applies status SC_PLUSMAGICPOWER for 5400 seconds, value 24 (no explicit chance limit)",
       "type": "IT_HEALING",
       "buy": 20,
       "weight": 50
@@ -308024,7 +308068,8 @@
         "record": "Id=12232"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Applies status SC_ATTHASTE_POTION2 for 900 seconds, value 6 (no explicit chance limit); Applies status SC_MOVHASTE_INFINITY for 900 seconds, value 100 (no explicit chance limit)",
       "type": "IT_USABLE",
       "buy": 20,
       "weight": 150
@@ -308098,7 +308143,8 @@
         "record": "Id=12237"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "restores 5% SP; Applies Poison for 18 seconds (no explicit chance limit); Applies status SC_BLOODING for 18 seconds (no explicit chance limit)",
       "type": "IT_USABLE",
       "weight": 100
     },
@@ -308119,7 +308165,8 @@
           "source_record": "db/re/mob_db.conf:Id=1840"
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Applies status SC_DPOISON for 10 seconds at 10% chance; Applies Poison for 50 seconds (no explicit chance limit)",
       "type": "IT_USABLE",
       "buy": 20,
       "weight": 100
@@ -308141,7 +308188,8 @@
           "source_record": "db/re/mob_db.conf:Id=1840"
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Applies status SC_DPOISON for 10 seconds at 10% chance; Applies Poison for 50 seconds (no explicit chance limit)",
       "type": "IT_USABLE",
       "buy": 20,
       "weight": 100
@@ -309137,7 +309185,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Applies status SC_SUMMER for 600 seconds (no explicit chance limit)",
       "type": "IT_USABLE",
       "weight": 100
     },
@@ -309162,7 +309211,8 @@
         "record": "Id=12262"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Applies status SC_MOVHASTE_HORSE for 180 seconds, value 25 (no explicit chance limit)",
       "type": "IT_USABLE",
       "weight": 10
     },
@@ -309175,7 +309225,8 @@
         "record": "Id=12263"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Applies status SC_CASH_PLUSEXP for 1800 seconds, value 50 (no explicit chance limit)",
       "type": "IT_USABLE",
       "buy": 2,
       "weight": 10
@@ -309189,7 +309240,8 @@
         "record": "Id=12264"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Applies status SC_CASH_RECEIVEITEM for 1800 seconds, value 200 (no explicit chance limit)",
       "type": "IT_USABLE",
       "buy": 2,
       "weight": 10
@@ -309203,7 +309255,8 @@
         "record": "Id=12265"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Applies status SC_CASH_DEATHPENALTY for 1800 seconds (no explicit chance limit)",
       "type": "IT_USABLE",
       "buy": 2,
       "weight": 10
@@ -309217,7 +309270,8 @@
         "record": "Id=12266"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Applies status SC_FOOD_BASICHIT for 1200 seconds, value 30 (no explicit chance limit)",
       "type": "IT_USABLE",
       "buy": 2,
       "weight": 70
@@ -309231,7 +309285,8 @@
         "record": "Id=12267"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Applies status SC_FOOD_BASICAVOIDANCE for 1200 seconds, value 30 (no explicit chance limit)",
       "type": "IT_USABLE",
       "buy": 2,
       "weight": 70
@@ -309245,7 +309300,8 @@
         "record": "Id=12268"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Applies status SC_PLUSATTACKPOWER for 60 seconds, value 10 (no explicit chance limit); Applies status SC_PLUSMAGICPOWER for 60 seconds, value 10 (no explicit chance limit)",
       "type": "IT_USABLE",
       "buy": 2,
       "weight": 70
@@ -309259,7 +309315,8 @@
         "record": "Id=12269"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Applies status SC_PLUSATTACKPOWER for 600 seconds, value 15 (no explicit chance limit)",
       "type": "IT_USABLE",
       "buy": 2,
       "weight": 70
@@ -309273,7 +309330,8 @@
         "record": "Id=12270"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Applies status SC_PLUSMAGICPOWER for 600 seconds, value 15 (no explicit chance limit)",
       "type": "IT_USABLE",
       "buy": 2,
       "weight": 70
@@ -309302,7 +309360,8 @@
         "record": "Id=12272"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Applies status SC_FOOD_BASICHIT for 600 seconds, value 33 (no explicit chance limit)",
       "type": "IT_USABLE",
       "buy": 2,
       "weight": 70
@@ -309316,7 +309375,8 @@
         "record": "Id=12273"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Applies status SC_FOOD_BASICAVOIDANCE for 600 seconds, value 33 (no explicit chance limit)",
       "type": "IT_USABLE",
       "buy": 2,
       "weight": 70
@@ -309718,7 +309778,8 @@
         "record": "Id=12282"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Applies STR food for 5400 seconds, value 3 (no explicit chance limit); Applies DEX food for 5400 seconds, value 3 (no explicit chance limit); Applies AGI food for 5400 seconds, value 3 (no explicit chance limit); Applies INT food for 5400 seconds, value 3 (no explicit chance limit); Applies VIT food for 5400 seconds, value 3 (no explicit chance limit); Applies LUK food for 5400 seconds, value 3 (no explicit chance limit); Applies status SC_PLUSATTACKPOWER for 5400 seconds, value 15 (no explicit chance limit); Applies status SC_PLUSMAGICPOWER for 5400 seconds, value 15 (no explicit chance limit)",
       "type": "IT_USABLE",
       "weight": 10
     },
@@ -309731,7 +309792,8 @@
         "record": "Id=12283"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Applies STR food for 5400 seconds, value 8 (no explicit chance limit); Applies DEX food for 5400 seconds, value 4 (no explicit chance limit); Applies AGI food for 5400 seconds, value 6 (no explicit chance limit); Applies status SC_PLUSATTACKPOWER for 5400 seconds, value 32 (no explicit chance limit); Applies status SC_FOOD_BASICAVOIDANCE for 5400 seconds, value 5 (no explicit chance limit)",
       "type": "IT_USABLE",
       "weight": 10
     },
@@ -309744,7 +309806,8 @@
         "record": "Id=12284"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Applies INT food for 5400 seconds, value 8 (no explicit chance limit); Applies VIT food for 5400 seconds, value 4 (no explicit chance limit); Applies DEX food for 5400 seconds, value 6 (no explicit chance limit); Applies status SC_PLUSMAGICPOWER for 5400 seconds, value 40 (no explicit chance limit)",
       "type": "IT_USABLE",
       "weight": 10
     },
@@ -309757,7 +309820,8 @@
         "record": "Id=12285"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Applies DEX food for 5400 seconds, value 8 (no explicit chance limit); Applies LUK food for 5400 seconds, value 4 (no explicit chance limit); Applies AGI food for 5400 seconds, value 6 (no explicit chance limit); Applies status SC_PLUSATTACKPOWER for 5400 seconds, value 24 (no explicit chance limit); Applies status SC_PLUSMAGICPOWER for 5400 seconds, value 24 (no explicit chance limit)",
       "type": "IT_USABLE",
       "weight": 10
     },
@@ -310144,7 +310208,8 @@
         "record": "Id=12310"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Applies status SC_FOOD_BASICAVOIDANCE for 600 seconds, value 10 (no explicit chance limit)",
       "type": "IT_USABLE",
       "weight": 50
     },
@@ -310171,7 +310236,8 @@
         "record": "Id=12312"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Applies status SC_CASH_PLUSEXP for 3600 seconds, value 50 (no explicit chance limit)",
       "type": "IT_USABLE"
     },
     {
@@ -310261,7 +310327,8 @@
         "record": "Id=12319"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Applies status SC_PLUSATTACKPOWER for 600 seconds, value 5 (no explicit chance limit); Applies status SC_PLUSMAGICPOWER for 600 seconds, value 5 (no explicit chance limit)",
       "type": "IT_USABLE",
       "weight": 300
     },
@@ -310274,7 +310341,8 @@
         "record": "Id=12320"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Applies status SC_FOOD_BASICHIT for 600 seconds, value 10 (no explicit chance limit); Applies status SC_FOOD_BASICAVOIDANCE for 600 seconds, value 20 (no explicit chance limit)",
       "type": "IT_USABLE",
       "weight": 300
     },
@@ -310287,7 +310355,8 @@
         "record": "Id=12321"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Applies status SC_FOOD_CRITICALSUCCESSVALUE for 600 seconds, value 7 (no explicit chance limit)",
       "type": "IT_USABLE",
       "weight": 300
     },
@@ -310923,7 +310992,8 @@
           "source_record": "db/re/mob_db.conf:Id=2371"
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Applies status SC_PROPERTYWATER for 90 seconds, value 1 (no explicit chance limit)",
       "type": "IT_USABLE",
       "buy": 600,
       "weight": 10
@@ -312357,7 +312427,8 @@
         "record": "Id=12411"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Applies status SC_CASH_PLUSEXP for 900 seconds, value 200 (no explicit chance limit)",
       "type": "IT_USABLE",
       "weight": 10
     },
@@ -312370,7 +312441,8 @@
         "record": "Id=12412"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Applies status SC_CASH_RECEIVEITEM for 900 seconds, value 300 (no explicit chance limit)",
       "type": "IT_USABLE",
       "weight": 10
     },
@@ -312413,7 +312485,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Applies status SC_ATTHASTE_POTION1 for 1800 seconds (no explicit chance limit); grants access to Increase AGI at level 5, instantly, on yourself, without a target cursor",
       "type": "IT_USABLE",
       "buy": 20,
       "weight": 10
@@ -312454,7 +312527,8 @@
         "record": "Id=12417"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Applies status SC_BOOST500 for 500 seconds, value 10 (no explicit chance limit)",
       "type": "IT_USABLE",
       "buy": 100,
       "weight": 50
@@ -312468,7 +312542,8 @@
         "record": "Id=12418"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Applies status SC_FULL_SWING_K for 500 seconds, value 50 (no explicit chance limit)",
       "type": "IT_USABLE",
       "buy": 100,
       "weight": 50
@@ -312482,7 +312557,8 @@
         "record": "Id=12419"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Applies status SC_MANA_PLUS for 500 seconds, value 50 (no explicit chance limit)",
       "type": "IT_USABLE",
       "buy": 100,
       "weight": 50
@@ -312496,7 +312572,8 @@
         "record": "Id=12420"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Applies status SC_MUSTLE_M for 500 seconds, value 5 (no explicit chance limit)",
       "type": "IT_USABLE",
       "buy": 100,
       "weight": 50
@@ -312510,7 +312587,8 @@
         "record": "Id=12421"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Applies status SC_LIFE_FORCE_F for 500 seconds, value 5 (no explicit chance limit)",
       "type": "IT_USABLE",
       "buy": 100,
       "weight": 50
@@ -312622,7 +312700,8 @@
         "record": "Id=12429"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Applies status SC_SAVAGE_STEAK for 300 seconds, value 20 (no explicit chance limit)",
       "type": "IT_USABLE",
       "buy": 1000,
       "weight": 50
@@ -312636,7 +312715,8 @@
         "record": "Id=12430"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Applies status SC_COCKTAIL_WARG_BLOOD for 300 seconds, value 20 (no explicit chance limit)",
       "type": "IT_USABLE",
       "buy": 1000,
       "weight": 50
@@ -312650,7 +312730,8 @@
         "record": "Id=12431"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Applies status SC_MINOR_BBQ for 300 seconds, value 20 (no explicit chance limit)",
       "type": "IT_USABLE",
       "buy": 1000,
       "weight": 50
@@ -312664,7 +312745,8 @@
         "record": "Id=12432"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Applies status SC_SIROMA_ICE_TEA for 300 seconds, value 20 (no explicit chance limit)",
       "type": "IT_USABLE",
       "buy": 1000,
       "weight": 50
@@ -312678,7 +312760,8 @@
         "record": "Id=12433"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Applies status SC_DROCERA_HERB_STEAMED for 300 seconds, value 20 (no explicit chance limit)",
       "type": "IT_USABLE",
       "buy": 1000,
       "weight": 50
@@ -312692,7 +312775,8 @@
         "record": "Id=12434"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Applies status SC_PUTTI_TAILS_NOODLES for 300 seconds, value 20 (no explicit chance limit)",
       "type": "IT_USABLE",
       "buy": 1000,
       "weight": 50
@@ -312734,7 +312818,8 @@
         "record": "Id=12437"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Applies status SC_EXTRACT_SALAMINE_JUICE for 500 seconds, value 10 (no explicit chance limit)",
       "type": "IT_USABLE",
       "buy": 100,
       "weight": 50
@@ -319389,7 +319474,8 @@
         "record": "Id=12646"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Applies LUK food for 6 seconds, value 10 (no explicit chance limit); Applies status SC_PLUSATTACKPOWER for 6 seconds, value 20 (no explicit chance limit); Applies status SC_PLUSMAGICPOWER for 6 seconds, value 20 (no explicit chance limit)",
       "type": "IT_USABLE",
       "buy": 20,
       "weight": 30
@@ -327974,7 +328060,8 @@
         "record": "Id=12705"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Applies status SC_CASH_PLUSEXP for 1800 seconds, value 100 (no explicit chance limit)",
       "type": "IT_USABLE",
       "weight": 100,
       "equiplv": 90
@@ -328044,7 +328131,8 @@
         "record": "Id=12710"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Applies status SC_MOVHASTE_POTION for 300 seconds, value 100 (no explicit chance limit)",
       "type": "IT_USABLE",
       "weight": 200
     },
@@ -329013,7 +329101,8 @@
         "record": "Id=12745"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Applies status SC_SKELSCROLL for 1800 seconds, value 5 (no explicit chance limit)",
       "type": "IT_USABLE",
       "buy": 20,
       "weight": 10
@@ -329027,7 +329116,8 @@
         "record": "Id=12746"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Applies status SC_DISTRUCTIONSCROLL for 1800 seconds, value 5 (no explicit chance limit)",
       "type": "IT_USABLE",
       "buy": 20,
       "weight": 10
@@ -329041,7 +329131,8 @@
         "record": "Id=12747"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Applies status SC_ROYALSCROLL for 1800 seconds, value 5 (no explicit chance limit)",
       "type": "IT_USABLE",
       "buy": 20,
       "weight": 10
@@ -329055,7 +329146,8 @@
         "record": "Id=12748"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Applies status SC_IMMUNITYSCROLL for 1800 seconds, value 5 (no explicit chance limit)",
       "type": "IT_USABLE",
       "buy": 20,
       "weight": 10
@@ -329069,7 +329161,8 @@
         "record": "Id=12749"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Applies status SC_MYSTICSCROLL for 1800 seconds, value 5 (no explicit chance limit)",
       "type": "IT_USABLE",
       "buy": 20,
       "weight": 10
@@ -329083,7 +329176,8 @@
         "record": "Id=12750"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Applies status SC_BATTLESCROLL for 1800 seconds, value 5 (no explicit chance limit)",
       "type": "IT_USABLE",
       "buy": 20,
       "weight": 10
@@ -329125,7 +329219,8 @@
         "record": "Id=12753"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Applies status SC_SOULSCROLL for 1800 seconds, value 5 (no explicit chance limit)",
       "type": "IT_USABLE",
       "buy": 20,
       "weight": 10
@@ -329303,7 +329398,8 @@
         "record": "Id=12766"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Applies status SC_CASH_PLUSONLYJOBEXP for 1800 seconds, value 25 (no explicit chance limit)",
       "type": "IT_USABLE",
       "weight": 10
     },
@@ -343075,7 +343171,8 @@
         "record": "Id=13268"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Applies status SC_MYSTERIOUS_POWDER for 10 seconds, value 2 (no explicit chance limit)",
       "type": "IT_AMMO",
       "buy": 100,
       "weight": 10,
@@ -343094,7 +343191,8 @@
         "record": "Id=13269"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Applies status SC_BOOST500 for 500 seconds, value 10 (no explicit chance limit)",
       "type": "IT_AMMO",
       "buy": 100,
       "weight": 10,
@@ -343113,7 +343211,8 @@
         "record": "Id=13270"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Applies status SC_FULL_SWING_K for 500 seconds, value 50 (no explicit chance limit)",
       "type": "IT_AMMO",
       "buy": 100,
       "weight": 50,
@@ -343132,7 +343231,8 @@
         "record": "Id=13271"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Applies status SC_MANA_PLUS for 500 seconds, value 50 (no explicit chance limit)",
       "type": "IT_AMMO",
       "buy": 100,
       "weight": 50,
@@ -343170,7 +343270,8 @@
         "record": "Id=13273"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Applies status SC_MUSTLE_M for 500 seconds, value 5 (no explicit chance limit)",
       "type": "IT_AMMO",
       "buy": 100,
       "weight": 10,
@@ -343189,7 +343290,8 @@
         "record": "Id=13274"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Applies status SC_LIFE_FORCE_F for 500 seconds, value 5 (no explicit chance limit)",
       "type": "IT_AMMO",
       "buy": 100,
       "weight": 10,
@@ -343360,7 +343462,8 @@
         "record": "Id=13283"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Applies status SC_EXTRACT_SALAMINE_JUICE for 500 seconds, value 10 (no explicit chance limit)",
       "type": "IT_AMMO",
       "buy": 100,
       "weight": 50,
@@ -343379,7 +343482,8 @@
         "record": "Id=13284"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Applies status SC_SAVAGE_STEAK for 300 seconds, value 20 (no explicit chance limit)",
       "type": "IT_AMMO",
       "buy": 100,
       "weight": 50,
@@ -343398,7 +343502,8 @@
         "record": "Id=13285"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Applies status SC_COCKTAIL_WARG_BLOOD for 300 seconds, value 20 (no explicit chance limit)",
       "type": "IT_AMMO",
       "buy": 100,
       "weight": 50,
@@ -343417,7 +343522,8 @@
         "record": "Id=13286"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Applies status SC_MINOR_BBQ for 300 seconds, value 20 (no explicit chance limit)",
       "type": "IT_AMMO",
       "buy": 100,
       "weight": 50,
@@ -343436,7 +343542,8 @@
         "record": "Id=13287"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Applies status SC_SIROMA_ICE_TEA for 300 seconds, value 20 (no explicit chance limit)",
       "type": "IT_AMMO",
       "buy": 100,
       "weight": 50,
@@ -343455,7 +343562,8 @@
         "record": "Id=13288"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Applies status SC_DROCERA_HERB_STEAMED for 300 seconds, value 20 (no explicit chance limit)",
       "type": "IT_AMMO",
       "buy": 100,
       "weight": 50,
@@ -343474,7 +343582,8 @@
         "record": "Id=13289"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Applies status SC_PUTTI_TAILS_NOODLES for 300 seconds, value 20 (no explicit chance limit)",
       "type": "IT_AMMO",
       "buy": 100,
       "weight": 50,
@@ -350663,7 +350772,8 @@
         "record": "Id=13830"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Applies status SC_CHASEWALK2 for 60 seconds, value 5 (no explicit chance limit); Applies status SC_INCAGI for 60 seconds, value 5 (no explicit chance limit); Applies status SC_INCVIT for 60 seconds, value 5 (no explicit chance limit)",
       "type": "IT_USABLE",
       "buy": 20,
       "weight": 10
@@ -350677,7 +350787,8 @@
         "record": "Id=13831"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Applies status SC_INCINT for 60 seconds, value 5 (no explicit chance limit); Applies status SC_INCLUK for 60 seconds, value 5 (no explicit chance limit); Applies status SC_INCDEX for 60 seconds, value 5 (no explicit chance limit)",
       "type": "IT_USABLE",
       "buy": 20,
       "weight": 10
@@ -350691,7 +350802,8 @@
         "record": "Id=13832"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Applies status SC_INCAGI for 60 seconds, value 5 (no explicit chance limit); Applies status SC_INCVIT for 60 seconds, value 5 (no explicit chance limit); Applies status SC_INCDEX for 60 seconds, value 5 (no explicit chance limit)",
       "type": "IT_USABLE",
       "buy": 20,
       "weight": 10
@@ -350705,7 +350817,8 @@
         "record": "Id=13833"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Applies status SC_INCINT for 60 seconds, value 5 (no explicit chance limit); Applies status SC_INCVIT for 60 seconds, value 5 (no explicit chance limit); Applies status SC_INCDEX for 60 seconds, value 5 (no explicit chance limit)",
       "type": "IT_USABLE",
       "buy": 20,
       "weight": 10
@@ -358437,7 +358550,8 @@
         "record": "Id=14500"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Applies status SC_CASH_DEATHPENALTY for 3600 seconds (no explicit chance limit)",
       "type": "IT_USABLE",
       "buy": 2,
       "weight": 10
@@ -358464,7 +358578,8 @@
         "record": "Id=14509"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Applies status SC_ATTHASTE_POTION1 for 1800 seconds, value 4 (no explicit chance limit)",
       "type": "IT_USABLE",
       "buy": 800,
       "weight": 20
@@ -358478,7 +358593,8 @@
         "record": "Id=14510"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Applies status SC_ATTHASTE_POTION2 for 1800 seconds, value 6 (no explicit chance limit)",
       "type": "IT_USABLE",
       "buy": 1500,
       "weight": 20,
@@ -358521,7 +358637,8 @@
         "record": "Id=14511"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Applies status SC_ATTHASTE_POTION3 for 1800 seconds, value 9 (no explicit chance limit)",
       "type": "IT_USABLE",
       "buy": 3000,
       "weight": 20,
@@ -358732,7 +358849,8 @@
         "record": "Id=14525"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Applies status SC_PLUSATTACKPOWER for 1800 seconds, value 10 (no explicit chance limit)",
       "type": "IT_USABLE",
       "weight": 10
     },
@@ -358745,7 +358863,8 @@
         "record": "Id=14526"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Applies status SC_PLUSMAGICPOWER for 1800 seconds, value 10 (no explicit chance limit)",
       "type": "IT_USABLE",
       "weight": 10
     },
@@ -358798,7 +358917,8 @@
         "record": "Id=14530"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Applies status SC_FOOD_BASICAVOIDANCE for 1800 seconds, value 30 (no explicit chance limit)",
       "type": "IT_USABLE",
       "weight": 10
     },
@@ -358811,7 +358931,8 @@
         "record": "Id=14531"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Applies status SC_FOOD_BASICHIT for 1800 seconds, value 30 (no explicit chance limit)",
       "type": "IT_USABLE",
       "weight": 10
     },
@@ -358824,7 +358945,8 @@
         "record": "Id=14532"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Applies status SC_CASH_PLUSEXP for 1800 seconds, value 25 (no explicit chance limit)",
       "type": "IT_USABLE",
       "buy": 2,
       "weight": 10
@@ -358838,7 +358960,8 @@
         "record": "Id=14533"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Applies status SC_CASH_PLUSEXP for 1800 seconds, value 100 (no explicit chance limit)",
       "type": "IT_USABLE",
       "buy": 2,
       "weight": 10
@@ -358995,7 +359118,8 @@
         "record": "Id=14545"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Applies status SC_CASH_PLUSEXP for 1800 seconds, value 300 (no explicit chance limit)",
       "type": "IT_USABLE",
       "weight": 10
     },
@@ -359706,7 +359830,8 @@
         "record": "Id=14592"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Applies status SC_CASH_PLUSONLYJOBEXP for 1800 seconds, value 50 (no explicit chance limit)",
       "type": "IT_USABLE",
       "weight": 10
     },
@@ -360167,7 +360292,8 @@
         "record": "Id=14597"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Applies status SC_FOOD_BASICHIT for 180 seconds, value 100 (no explicit chance limit)",
       "type": "IT_USABLE",
       "weight": 10
     },
@@ -360220,7 +360346,8 @@
         "record": "Id=14601"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Applies status SC_FOOD_BASICAVOIDANCE for 300 seconds, value 30 (no explicit chance limit); Applies status SC_FOOD_BASICHIT for 300 seconds, value 30 (no explicit chance limit); Applies status SC_PLUSATTACKPOWER for 300 seconds, value 20 (no explicit chance limit); Applies status SC_PLUSMAGICPOWER for 300 seconds, value 20 (no explicit chance limit)",
       "type": "IT_USABLE",
       "weight": 10
     },
@@ -360259,7 +360386,8 @@
         "record": "Id=14604"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Applies status SC_MVPCARD_ORCHERO for 180 seconds, value 100 (no explicit chance limit)",
       "type": "IT_USABLE",
       "weight": 10
     },
@@ -360285,7 +360413,8 @@
         "record": "Id=14606"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Applies status SC_CASH_PLUSONLYJOBEXP for 1800 seconds, value 25 (no explicit chance limit)",
       "type": "IT_USABLE",
       "weight": 10
     },

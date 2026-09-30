@@ -619,21 +619,27 @@ def translate_simple_effect(script: str) -> str | None:
             effects.append(f"Cures {cures[match.group(1).upper()]}")
             continue
         match = re.fullmatch(
-            r"sc_start\s+(SC_[A-Z0-9_]+)\s*,\s*(\d+)\s*,\s*(-?\d+)(?:\s*,\s*(\d+))?", statement, re.I
+            r"sc_start\s+(SC_[A-Z0-9_]+)\s*,\s*(\d+)\s*,\s*(-?\d+)(?:\s*,\s*(\d+))?(?:\s*,\s*(SCFLAG_[A-Z0-9_]+))?",
+            statement,
+            re.I,
         ) or re.fullmatch(
-            r"sc_start\(\s*(SC_[A-Z0-9_]+)\s*,\s*(\d+)\s*,\s*(-?\d+)(?:\s*,\s*(\d+))?\s*\)", statement, re.I
+            r"sc_start\(\s*(SC_[A-Z0-9_]+)\s*,\s*(\d+)\s*,\s*(-?\d+)(?:\s*,\s*(\d+))?(?:\s*,\s*(SCFLAG_[A-Z0-9_]+))?\s*\)",
+            statement,
+            re.I,
         )
         if match:
-            status, duration_ms, value1, raw_rate = match.groups()
+            status, duration_ms, value1, raw_rate, flag = match.groups()
             status = status.upper()
-            label = status_names.get(status)
-            if label is None:
-                return None
+            # script_commands.txt names the constant and the tick unit, not every status title.
+            label = status_names.get(status) or f"status {status}"
             duration_ms = int(duration_ms)
             duration = f"{duration_ms / 1000:g} seconds" if duration_ms % 1000 else f"{duration_ms // 1000} seconds"
             rate_note = f" at {int(raw_rate) / 100:g}% chance" if raw_rate is not None else " (no explicit chance limit)"
             value_note = f", value {value1}" if int(value1) != 0 else ""
-            effects.append(f"Applies {label} for {duration}{value_note}{rate_note}")
+            flag_note = ""
+            if flag and flag.upper() != "SCFLAG_NONE":
+                flag_note = f", flag {flag.upper()}"
+            effects.append(f"Applies {label} for {duration}{value_note}{rate_note}{flag_note}")
             continue
         match = re.fullmatch(r"getitem\s+(-?\d+)\s*,\s*(\d+)", statement, re.I)
         if match:

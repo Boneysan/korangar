@@ -39749,7 +39749,7 @@
       "package": "E3",
       "kind": "e3_translator",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "key": "sc_start",
@@ -41001,7 +41001,26 @@
       ],
       "size_lines": 37,
       "reason": "150 item script(s) first stop at documented `sc_start`",
-      "history": []
+      "history": [
+        "2026-09-30T20:02:32Z activated",
+        "2026-09-30T20:05:43Z validated",
+        "2026-09-30T20:05:57Z verified: 1 claims supported",
+        "2026-09-30T20:06:28Z accepted",
+        "2026-09-30T20:06:28Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "9af9cf37015a95ddd5e03564f796b485a4183fc4da84d8f6f54fd9d786e2a470",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/items.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/export_item_reference.py",
+        "tools/tests/test_export_item_effect_phrases.py"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E3-translate-getitem",

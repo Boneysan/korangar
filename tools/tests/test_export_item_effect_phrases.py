@@ -20,6 +20,17 @@ class ItemEffectPhraseTests(unittest.TestCase):
         self.assertIn("on yourself, without a target cursor", text)
         self.assertNotIn("checking the skill's conditions", text)
 
+    def test_sc_start_flag_uses_the_documented_rate(self):
+        self.assertEqual(
+            translate_simple_effect("sc_start SC_FREEZE,10000,0,2500,SCFLAG_NONE;"),
+            "Applies Freeze for 10 seconds at 25% chance",
+        )
+        self.assertEqual(
+            translate_simple_effect("sc_start SC_ATTHASTE_POTION1,1800000,4;"),
+            "Applies status SC_ATTHASTE_POTION1 for 1800 seconds, value 4 (no explicit chance limit)",
+        )
+        self.assertIsNone(translate_simple_effect("sc_start SC_FREEZE,10000,0,2500,SCFLAG_NONE,1;"))
+
     def test_unknown_itemskill_flag_stays_untranslated(self):
         self.assertIsNone(translate_simple_effect("itemskill(AL_BLESSING, 10, ISF_NOT_A_FLAG);"))
 
