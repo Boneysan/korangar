@@ -61026,6 +61026,31 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_gef_fild13_soldier_277_branch_for_302_409",
+      "unit": "E1-gef_fild13_soldier_277_branch_for_302",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Soldier#277"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Red_Potion,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/skills/crusader_skills.txt",
+          "lines": [
+            409
+          ],
+          "required_source_literals": [
+            "delitem Red_Potion,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
