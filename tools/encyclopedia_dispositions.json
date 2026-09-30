@@ -23951,6 +23951,1231 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_gatan_payon_relaygatan_branch_for_403_442",
+      "unit": "E1-payon_gatan_payon_relaygatan_branch_for_403",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Gatan#payon::RelayGatan"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Mission_Certificate10,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/partyrelay.txt",
+          "lines": [
+            442
+          ],
+          "required_source_literals": [
+            "getitem Mission_Certificate10,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_gatan_payon_relaygatan_branch_for_403_443",
+      "unit": "E1-payon_gatan_payon_relaygatan_branch_for_403",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Gatan#payon::RelayGatan"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Leaf_Of_Yggdrasil,2; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/partyrelay.txt",
+          "lines": [
+            443
+          ],
+          "required_source_literals": [
+            "getitem Leaf_Of_Yggdrasil,2;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_gatan_payon_relaygatan_branch_for_403_444",
+      "unit": "E1-payon_gatan_payon_relaygatan_branch_for_403",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Gatan#payon::RelayGatan"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Yggdrasilberry,2; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/partyrelay.txt",
+          "lines": [
+            444
+          ],
+          "required_source_literals": [
+            "getitem Yggdrasilberry,2;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_gatan_payon_relaygatan_branch_for_403_593",
+      "unit": "E1-payon_gatan_payon_relaygatan_branch_for_403",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Gatan#payon::RelayGatan"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Mission_Certificate9,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/partyrelay.txt",
+          "lines": [
+            593
+          ],
+          "required_source_literals": [
+            "delitem Mission_Certificate9,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_gatan_payon_relaygatan_branch_for_403_610",
+      "unit": "E1-payon_gatan_payon_relaygatan_branch_for_403",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Gatan#payon::RelayGatan"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Mission_Certificate9,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/partyrelay.txt",
+          "lines": [
+            610
+          ],
+          "required_source_literals": [
+            "delitem Mission_Certificate9,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_gatan_payon_relaygatan_branch_for_403_629",
+      "unit": "E1-payon_gatan_payon_relaygatan_branch_for_403",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Gatan#payon::RelayGatan"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Mission_Certificate9,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/partyrelay.txt",
+          "lines": [
+            629
+          ],
+          "required_source_literals": [
+            "delitem Mission_Certificate9,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_gatan_payon_relaygatan_branch_for_403_648",
+      "unit": "E1-payon_gatan_payon_relaygatan_branch_for_403",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Gatan#payon::RelayGatan"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Mission_Certificate9,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/partyrelay.txt",
+          "lines": [
+            648
+          ],
+          "required_source_literals": [
+            "delitem Mission_Certificate9,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_gatan_payon_relaygatan_branch_for_403_667",
+      "unit": "E1-payon_gatan_payon_relaygatan_branch_for_403",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Gatan#payon::RelayGatan"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Mission_Certificate9,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/partyrelay.txt",
+          "lines": [
+            667
+          ],
+          "required_source_literals": [
+            "delitem Mission_Certificate9,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_gatan_payon_relaygatan_branch_for_403_686",
+      "unit": "E1-payon_gatan_payon_relaygatan_branch_for_403",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Gatan#payon::RelayGatan"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Mission_Certificate9,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/partyrelay.txt",
+          "lines": [
+            686
+          ],
+          "required_source_literals": [
+            "delitem Mission_Certificate9,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_gatan_payon_relaygatan_branch_for_403_705",
+      "unit": "E1-payon_gatan_payon_relaygatan_branch_for_403",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Gatan#payon::RelayGatan"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Mission_Certificate9,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/partyrelay.txt",
+          "lines": [
+            705
+          ],
+          "required_source_literals": [
+            "delitem Mission_Certificate9,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_gatan_payon_relaygatan_branch_for_403_741",
+      "unit": "E1-payon_gatan_payon_relaygatan_branch_for_403",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Gatan#payon::RelayGatan"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Mission_Certificate9,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/partyrelay.txt",
+          "lines": [
+            741
+          ],
+          "required_source_literals": [
+            "delitem Mission_Certificate9,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_gatan_payon_relaygatan_branch_for_403_758",
+      "unit": "E1-payon_gatan_payon_relaygatan_branch_for_403",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Gatan#payon::RelayGatan"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Mission_Certificate9,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/partyrelay.txt",
+          "lines": [
+            758
+          ],
+          "required_source_literals": [
+            "delitem Mission_Certificate9,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_gatan_payon_relaygatan_branch_for_403_777",
+      "unit": "E1-payon_gatan_payon_relaygatan_branch_for_403",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Gatan#payon::RelayGatan"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Mission_Certificate9,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/partyrelay.txt",
+          "lines": [
+            777
+          ],
+          "required_source_literals": [
+            "delitem Mission_Certificate9,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_gatan_payon_relaygatan_branch_for_403_796",
+      "unit": "E1-payon_gatan_payon_relaygatan_branch_for_403",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Gatan#payon::RelayGatan"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Mission_Certificate9,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/partyrelay.txt",
+          "lines": [
+            796
+          ],
+          "required_source_literals": [
+            "delitem Mission_Certificate9,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_gatan_payon_relaygatan_branch_for_403_815",
+      "unit": "E1-payon_gatan_payon_relaygatan_branch_for_403",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Gatan#payon::RelayGatan"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Mission_Certificate9,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/partyrelay.txt",
+          "lines": [
+            815
+          ],
+          "required_source_literals": [
+            "delitem Mission_Certificate9,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_gatan_payon_relaygatan_branch_for_403_834",
+      "unit": "E1-payon_gatan_payon_relaygatan_branch_for_403",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Gatan#payon::RelayGatan"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Mission_Certificate9,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/partyrelay.txt",
+          "lines": [
+            834
+          ],
+          "required_source_literals": [
+            "delitem Mission_Certificate9,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_gatan_payon_relaygatan_branch_for_403_853",
+      "unit": "E1-payon_gatan_payon_relaygatan_branch_for_403",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Gatan#payon::RelayGatan"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Mission_Certificate9,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/partyrelay.txt",
+          "lines": [
+            853
+          ],
+          "required_source_literals": [
+            "delitem Mission_Certificate9,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_gatan_payon_relaygatan_branch_for_403_908",
+      "unit": "E1-payon_gatan_payon_relaygatan_branch_for_403",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Gatan#payon::RelayGatan"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Mission_Certificate6,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/partyrelay.txt",
+          "lines": [
+            908
+          ],
+          "required_source_literals": [
+            "getitem Mission_Certificate6,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_gatan_payon_relaygatan_branch_for_403_909",
+      "unit": "E1-payon_gatan_payon_relaygatan_branch_for_403",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Gatan#payon::RelayGatan"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Leaf_Of_Yggdrasil,2; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/partyrelay.txt",
+          "lines": [
+            909
+          ],
+          "required_source_literals": [
+            "getitem Leaf_Of_Yggdrasil,2;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_gatan_payon_relaygatan_branch_for_403_1058",
+      "unit": "E1-payon_gatan_payon_relaygatan_branch_for_403",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Gatan#payon::RelayGatan"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Mission_Certificate5,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/partyrelay.txt",
+          "lines": [
+            1058
+          ],
+          "required_source_literals": [
+            "delitem Mission_Certificate5,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_gatan_payon_relaygatan_branch_for_403_1075",
+      "unit": "E1-payon_gatan_payon_relaygatan_branch_for_403",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Gatan#payon::RelayGatan"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Mission_Certificate5,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/partyrelay.txt",
+          "lines": [
+            1075
+          ],
+          "required_source_literals": [
+            "delitem Mission_Certificate5,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_gatan_payon_relaygatan_branch_for_403_1094",
+      "unit": "E1-payon_gatan_payon_relaygatan_branch_for_403",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Gatan#payon::RelayGatan"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Mission_Certificate5,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/partyrelay.txt",
+          "lines": [
+            1094
+          ],
+          "required_source_literals": [
+            "delitem Mission_Certificate5,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_gatan_payon_relaygatan_branch_for_403_1113",
+      "unit": "E1-payon_gatan_payon_relaygatan_branch_for_403",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Gatan#payon::RelayGatan"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Mission_Certificate5,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/partyrelay.txt",
+          "lines": [
+            1113
+          ],
+          "required_source_literals": [
+            "delitem Mission_Certificate5,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_gatan_payon_relaygatan_branch_for_403_1132",
+      "unit": "E1-payon_gatan_payon_relaygatan_branch_for_403",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Gatan#payon::RelayGatan"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Mission_Certificate5,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/partyrelay.txt",
+          "lines": [
+            1132
+          ],
+          "required_source_literals": [
+            "delitem Mission_Certificate5,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_gatan_payon_relaygatan_branch_for_403_1151",
+      "unit": "E1-payon_gatan_payon_relaygatan_branch_for_403",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Gatan#payon::RelayGatan"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Mission_Certificate5,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/partyrelay.txt",
+          "lines": [
+            1151
+          ],
+          "required_source_literals": [
+            "delitem Mission_Certificate5,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_gatan_payon_relaygatan_branch_for_403_1170",
+      "unit": "E1-payon_gatan_payon_relaygatan_branch_for_403",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Gatan#payon::RelayGatan"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Mission_Certificate5,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/partyrelay.txt",
+          "lines": [
+            1170
+          ],
+          "required_source_literals": [
+            "delitem Mission_Certificate5,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_gatan_payon_relaygatan_branch_for_403_1206",
+      "unit": "E1-payon_gatan_payon_relaygatan_branch_for_403",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Gatan#payon::RelayGatan"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Mission_Certificate5,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/partyrelay.txt",
+          "lines": [
+            1206
+          ],
+          "required_source_literals": [
+            "delitem Mission_Certificate5,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_gatan_payon_relaygatan_branch_for_403_1223",
+      "unit": "E1-payon_gatan_payon_relaygatan_branch_for_403",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Gatan#payon::RelayGatan"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Mission_Certificate5,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/partyrelay.txt",
+          "lines": [
+            1223
+          ],
+          "required_source_literals": [
+            "delitem Mission_Certificate5,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_gatan_payon_relaygatan_branch_for_403_1242",
+      "unit": "E1-payon_gatan_payon_relaygatan_branch_for_403",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Gatan#payon::RelayGatan"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Mission_Certificate5,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/partyrelay.txt",
+          "lines": [
+            1242
+          ],
+          "required_source_literals": [
+            "delitem Mission_Certificate5,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_gatan_payon_relaygatan_branch_for_403_1261",
+      "unit": "E1-payon_gatan_payon_relaygatan_branch_for_403",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Gatan#payon::RelayGatan"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Mission_Certificate5,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/partyrelay.txt",
+          "lines": [
+            1261
+          ],
+          "required_source_literals": [
+            "delitem Mission_Certificate5,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_gatan_payon_relaygatan_branch_for_403_1280",
+      "unit": "E1-payon_gatan_payon_relaygatan_branch_for_403",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Gatan#payon::RelayGatan"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Mission_Certificate5,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/partyrelay.txt",
+          "lines": [
+            1280
+          ],
+          "required_source_literals": [
+            "delitem Mission_Certificate5,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_gatan_payon_relaygatan_branch_for_403_1299",
+      "unit": "E1-payon_gatan_payon_relaygatan_branch_for_403",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Gatan#payon::RelayGatan"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Mission_Certificate5,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/partyrelay.txt",
+          "lines": [
+            1299
+          ],
+          "required_source_literals": [
+            "delitem Mission_Certificate5,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_gatan_payon_relaygatan_branch_for_403_1318",
+      "unit": "E1-payon_gatan_payon_relaygatan_branch_for_403",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Gatan#payon::RelayGatan"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Mission_Certificate5,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/partyrelay.txt",
+          "lines": [
+            1318
+          ],
+          "required_source_literals": [
+            "delitem Mission_Certificate5,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_gatan_payon_relaygatan_branch_for_403_1379",
+      "unit": "E1-payon_gatan_payon_relaygatan_branch_for_403",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Gatan#payon::RelayGatan"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Mission_Certificate2,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/partyrelay.txt",
+          "lines": [
+            1379
+          ],
+          "required_source_literals": [
+            "getitem Mission_Certificate2,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_gatan_payon_relaygatan_branch_for_403_1380",
+      "unit": "E1-payon_gatan_payon_relaygatan_branch_for_403",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Gatan#payon::RelayGatan"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Yggdrasilberry,2; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/partyrelay.txt",
+          "lines": [
+            1380
+          ],
+          "required_source_literals": [
+            "getitem Yggdrasilberry,2;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_gatan_payon_relaygatan_branch_for_403_1533",
+      "unit": "E1-payon_gatan_payon_relaygatan_branch_for_403",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Gatan#payon::RelayGatan"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Mission_Certificate1,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/partyrelay.txt",
+          "lines": [
+            1533
+          ],
+          "required_source_literals": [
+            "delitem Mission_Certificate1,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_gatan_payon_relaygatan_branch_for_403_1550",
+      "unit": "E1-payon_gatan_payon_relaygatan_branch_for_403",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Gatan#payon::RelayGatan"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Mission_Certificate1,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/partyrelay.txt",
+          "lines": [
+            1550
+          ],
+          "required_source_literals": [
+            "delitem Mission_Certificate1,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_gatan_payon_relaygatan_branch_for_403_1569",
+      "unit": "E1-payon_gatan_payon_relaygatan_branch_for_403",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Gatan#payon::RelayGatan"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Mission_Certificate1,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/partyrelay.txt",
+          "lines": [
+            1569
+          ],
+          "required_source_literals": [
+            "delitem Mission_Certificate1,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_gatan_payon_relaygatan_branch_for_403_1588",
+      "unit": "E1-payon_gatan_payon_relaygatan_branch_for_403",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Gatan#payon::RelayGatan"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Mission_Certificate1,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/partyrelay.txt",
+          "lines": [
+            1588
+          ],
+          "required_source_literals": [
+            "delitem Mission_Certificate1,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_gatan_payon_relaygatan_branch_for_403_1607",
+      "unit": "E1-payon_gatan_payon_relaygatan_branch_for_403",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Gatan#payon::RelayGatan"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Mission_Certificate1,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/partyrelay.txt",
+          "lines": [
+            1607
+          ],
+          "required_source_literals": [
+            "delitem Mission_Certificate1,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_gatan_payon_relaygatan_branch_for_403_1626",
+      "unit": "E1-payon_gatan_payon_relaygatan_branch_for_403",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Gatan#payon::RelayGatan"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Mission_Certificate1,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/partyrelay.txt",
+          "lines": [
+            1626
+          ],
+          "required_source_literals": [
+            "delitem Mission_Certificate1,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_gatan_payon_relaygatan_branch_for_403_1645",
+      "unit": "E1-payon_gatan_payon_relaygatan_branch_for_403",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Gatan#payon::RelayGatan"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Mission_Certificate1,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/partyrelay.txt",
+          "lines": [
+            1645
+          ],
+          "required_source_literals": [
+            "delitem Mission_Certificate1,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_gatan_payon_relaygatan_branch_for_403_1682",
+      "unit": "E1-payon_gatan_payon_relaygatan_branch_for_403",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Gatan#payon::RelayGatan"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Mission_Certificate1,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/partyrelay.txt",
+          "lines": [
+            1682
+          ],
+          "required_source_literals": [
+            "delitem Mission_Certificate1,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_gatan_payon_relaygatan_branch_for_403_1699",
+      "unit": "E1-payon_gatan_payon_relaygatan_branch_for_403",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Gatan#payon::RelayGatan"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Mission_Certificate1,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/partyrelay.txt",
+          "lines": [
+            1699
+          ],
+          "required_source_literals": [
+            "delitem Mission_Certificate1,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_gatan_payon_relaygatan_branch_for_403_1718",
+      "unit": "E1-payon_gatan_payon_relaygatan_branch_for_403",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Gatan#payon::RelayGatan"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Mission_Certificate1,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/partyrelay.txt",
+          "lines": [
+            1718
+          ],
+          "required_source_literals": [
+            "delitem Mission_Certificate1,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_gatan_payon_relaygatan_branch_for_403_1737",
+      "unit": "E1-payon_gatan_payon_relaygatan_branch_for_403",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Gatan#payon::RelayGatan"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Mission_Certificate1,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/partyrelay.txt",
+          "lines": [
+            1737
+          ],
+          "required_source_literals": [
+            "delitem Mission_Certificate1,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_gatan_payon_relaygatan_branch_for_403_1756",
+      "unit": "E1-payon_gatan_payon_relaygatan_branch_for_403",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Gatan#payon::RelayGatan"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Mission_Certificate1,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/partyrelay.txt",
+          "lines": [
+            1756
+          ],
+          "required_source_literals": [
+            "delitem Mission_Certificate1,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_gatan_payon_relaygatan_branch_for_403_1775",
+      "unit": "E1-payon_gatan_payon_relaygatan_branch_for_403",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Gatan#payon::RelayGatan"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Mission_Certificate1,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/partyrelay.txt",
+          "lines": [
+            1775
+          ],
+          "required_source_literals": [
+            "delitem Mission_Certificate1,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_payon_gatan_payon_relaygatan_branch_for_403_1794",
+      "unit": "E1-payon_gatan_payon_relaygatan_branch_for_403",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Gatan#payon::RelayGatan"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Mission_Certificate1,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/partyrelay.txt",
+          "lines": [
+            1794
+          ],
+          "required_source_literals": [
+            "delitem Mission_Certificate1,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
