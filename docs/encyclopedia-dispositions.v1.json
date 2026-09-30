@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 3263,
+    "E1_unknown": 3267,
     "E1_verified": 1
   },
   "entries": [
@@ -34004,6 +34004,106 @@
           ],
           "required_source_literals": [
             "getitem Egrade_Coin,30;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_malangdo_gobonge_ml_branch_for_2903_3027",
+      "unit": "E1-malangdo_gobonge_ml_branch_for_2903",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Gobonge#ml"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Malang_Sp_Can,20; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malangdo.txt",
+          "lines": [
+            3027
+          ],
+          "required_source_literals": [
+            "getitem Malang_Sp_Can,20;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_malangdo_gobonge_ml_branch_for_2903_3028",
+      "unit": "E1-malangdo_gobonge_ml_branch_for_2903",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Gobonge#ml"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Bad_Can_Sack,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malangdo.txt",
+          "lines": [
+            3028
+          ],
+          "required_source_literals": [
+            "delitem Bad_Can_Sack,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_malangdo_gobonge_ml_branch_for_2903_3029",
+      "unit": "E1-malangdo_gobonge_ml_branch_for_2903",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Gobonge#ml"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Bad_Can,30; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malangdo.txt",
+          "lines": [
+            3029
+          ],
+          "required_source_literals": [
+            "delitem Bad_Can,30;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_malangdo_gobonge_ml_branch_for_2903_3090",
+      "unit": "E1-malangdo_gobonge_ml_branch_for_2903",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Gobonge#ml"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Egrade_Coin,5; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malangdo.txt",
+          "lines": [
+            3090
+          ],
+          "required_source_literals": [
+            "getitem Egrade_Coin,5;"
           ]
         }
       ],

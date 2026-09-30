@@ -36321,7 +36321,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Gobonge#ml",
@@ -36340,7 +36340,25 @@
       ],
       "size_lines": 203,
       "reason": "refused by the braced one-item prover: switch",
-      "history": []
+      "history": [
+        "2026-09-30T19:30:52Z activated",
+        "2026-09-30T19:30:52Z validated",
+        "2026-09-30T19:30:52Z verified: 4 claims supported",
+        "2026-09-30T19:31:16Z accepted",
+        "2026-09-30T19:31:16Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "84002a02dcc93ad908e17e198ace872db9bb509a2962cb498dd96bf0ee2b7dbc",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-mal_in02_ml3_branch_for_3392",
