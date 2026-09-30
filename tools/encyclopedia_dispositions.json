@@ -127927,6 +127927,33 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e4_ra_aimedbolt_formula",
+      "unit": "E4-ra-aimedbolt",
+      "package": "E4",
+      "subject": {
+        "kind": "skill",
+        "ids": [
+          2236
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted case is the ratio site for these skills; this record does not reduce it to a worked example.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "src/map/battle.c",
+          "lines": [
+            2622
+          ],
+          "required_source_literals": [
+            "case RA_AIMEDBOLT:"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
