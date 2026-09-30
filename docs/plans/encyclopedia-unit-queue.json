@@ -11455,7 +11455,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "strong",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Mr. Kidd#ep13_dan01",
@@ -11474,7 +11474,25 @@
       ],
       "size_lines": 639,
       "reason": "refused by the braced one-item prover: braceless",
-      "history": []
+      "history": [
+        "2026-09-30T15:41:30Z activated",
+        "2026-09-30T15:41:30Z validated",
+        "2026-09-30T15:41:31Z verified: 5 claims supported",
+        "2026-09-30T15:41:54Z accepted",
+        "2026-09-30T15:41:54Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "2a55df76b367e60d273590b59a6f5e643767630c48937310364d6b2003d5e182",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-mid_camp_defaria_moc2_branch_for_11549",

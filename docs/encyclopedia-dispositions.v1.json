@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 1216,
+    "E1_unknown": 1221,
     "E1_verified": 1
   },
   "entries": [
@@ -11554,6 +11554,131 @@
           ],
           "required_source_literals": [
             "delitem Horn_Of_Tendrilion,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mid_camp_mr_kidd_ep13_dan01_branch_for_10898_11071",
+      "unit": "E1-mid_camp_mr_kidd_ep13_dan01_branch_for_10898",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Mr. Kidd#ep13_dan01"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Morocc_Tracing_Log,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_1.txt",
+          "lines": [
+            11071
+          ],
+          "required_source_literals": [
+            "delitem Morocc_Tracing_Log,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mid_camp_mr_kidd_ep13_dan01_branch_for_10898_11072",
+      "unit": "E1-mid_camp_mr_kidd_ep13_dan01_branch_for_10898",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Mr. Kidd#ep13_dan01"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Crystal_Of_Feardoom,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_1.txt",
+          "lines": [
+            11072
+          ],
+          "required_source_literals": [
+            "delitem Crystal_Of_Feardoom,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mid_camp_mr_kidd_ep13_dan01_branch_for_10898_11368",
+      "unit": "E1-mid_camp_mr_kidd_ep13_dan01_branch_for_10898",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Mr. Kidd#ep13_dan01"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Crystal_Of_Feardoom,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_1.txt",
+          "lines": [
+            11368
+          ],
+          "required_source_literals": [
+            "getitem Crystal_Of_Feardoom,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mid_camp_mr_kidd_ep13_dan01_branch_for_10898_11369",
+      "unit": "E1-mid_camp_mr_kidd_ep13_dan01_branch_for_10898",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Mr. Kidd#ep13_dan01"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Morocc_Tracing_Log,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_1.txt",
+          "lines": [
+            11369
+          ],
+          "required_source_literals": [
+            "getitem Morocc_Tracing_Log,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mid_camp_mr_kidd_ep13_dan01_branch_for_10898_11470",
+      "unit": "E1-mid_camp_mr_kidd_ep13_dan01_branch_for_10898",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Mr. Kidd#ep13_dan01"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Nice_Sweet_Potato,2; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_1.txt",
+          "lines": [
+            11470
+          ],
+          "required_source_literals": [
+            "delitem Nice_Sweet_Potato,2;"
           ]
         }
       ],
