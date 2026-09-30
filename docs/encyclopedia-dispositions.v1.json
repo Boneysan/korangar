@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 123,
+    "E1_unknown": 124,
     "E1_verified": 1
   },
   "entries": [
@@ -2479,6 +2479,31 @@
           ],
           "required_source_literals": [
             "getitem Speed_Up_Potion,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_man_in01_neat_etorr_edq_branch_for_1108_1297",
+      "unit": "E1-man_in01_neat_etorr_edq_branch_for_1108",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Neat Etorr#edq"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Manuk_Coin,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/instances/NydhoggsNest.txt",
+          "lines": [
+            1297
+          ],
+          "required_source_literals": [
+            "getitem(Manuk_Coin, 10);"
           ]
         }
       ],
