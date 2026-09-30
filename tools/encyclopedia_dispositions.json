@@ -48451,6 +48451,31 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prt_in_valdes_branch_for_6696_6772",
+      "unit": "E1-prt_in_valdes_branch_for_6696",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Valdes"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Int_Dish04,5; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_nameless.txt",
+          "lines": [
+            6772
+          ],
+          "required_source_literals": [
+            "delitem Int_Dish04,5;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
