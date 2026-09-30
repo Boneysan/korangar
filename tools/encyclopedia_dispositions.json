@@ -32076,6 +32076,56 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_man_in01_manuk_engineer_ep13_2_branch_for_2819_2851",
+      "unit": "E1-man_in01_manuk_engineer_ep13_2_branch_for_2819",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manuk Engineer#ep13_2"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Purified_Bradium,20; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_2.txt",
+          "lines": [
+            2851
+          ],
+          "required_source_literals": [
+            "delitem Purified_Bradium,20;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_man_in01_manuk_engineer_ep13_2_branch_for_2819_2855",
+      "unit": "E1-man_in01_manuk_engineer_ep13_2_branch_for_2819",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Manuk Engineer#ep13_2"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Manuk_Coin,3; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_2.txt",
+          "lines": [
+            2855
+          ],
+          "required_source_literals": [
+            "getitem Manuk_Coin,3;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
