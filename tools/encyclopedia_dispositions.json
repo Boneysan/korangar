@@ -130791,6 +130791,114 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_4000_npc_jobs_2_1_hunter_txt_173",
+      "unit": "E5-chain-4000",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          4013
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 4013; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-1/hunter.txt",
+          "lines": [
+            173
+          ],
+          "required_source_literals": [
+            "completequest 4013;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_4000_npc_jobs_2_1_hunter_txt_216",
+      "unit": "E5-chain-4000",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          4000
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 4000; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-1/hunter.txt",
+          "lines": [
+            216
+          ],
+          "required_source_literals": [
+            "setquest 4000;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_4000_npc_jobs_2_1_hunter_txt_368",
+      "unit": "E5-chain-4000",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          4000
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 4000; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-1/hunter.txt",
+          "lines": [
+            368
+          ],
+          "required_source_literals": [
+            "changequest 4000,4001;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_4000_npc_jobs_2_1_hunter_txt_378",
+      "unit": "E5-chain-4000",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          4000
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 4000; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-1/hunter.txt",
+          "lines": [
+            378
+          ],
+          "required_source_literals": [
+            "changequest 4000,4001;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
