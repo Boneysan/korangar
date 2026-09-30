@@ -130359,6 +130359,222 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_3135_npc_instances_nydhoggsnest_txt_191",
+      "unit": "E5-chain-3135",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          3135
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 3135; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/instances/NydhoggsNest.txt",
+          "lines": [
+            191
+          ],
+          "required_source_literals": [
+            "erasequest(3135);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_3135_npc_instances_nydhoggsnest_txt_192",
+      "unit": "E5-chain-3135",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          3136
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 3136; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/instances/NydhoggsNest.txt",
+          "lines": [
+            192
+          ],
+          "required_source_literals": [
+            "erasequest(3136);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_3135_npc_instances_nydhoggsnest_txt_226",
+      "unit": "E5-chain-3135",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          3135
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 3135; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/instances/NydhoggsNest.txt",
+          "lines": [
+            226
+          ],
+          "required_source_literals": [
+            "setquest(3135);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_3135_npc_instances_nydhoggsnest_txt_228",
+      "unit": "E5-chain-3135",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          3136
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 3136; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/instances/NydhoggsNest.txt",
+          "lines": [
+            228
+          ],
+          "required_source_literals": [
+            "setquest(3136);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_3135_npc_instances_nydhoggsnest_txt_2223",
+      "unit": "E5-chain-3135",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          3135
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 3135; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/instances/NydhoggsNest.txt",
+          "lines": [
+            2223
+          ],
+          "required_source_literals": [
+            "erasequest(3135);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_3135_npc_instances_nydhoggsnest_txt_2247",
+      "unit": "E5-chain-3135",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          3135
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 3135; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/instances/NydhoggsNest.txt",
+          "lines": [
+            2247
+          ],
+          "required_source_literals": [
+            "erasequest(3135);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_3135_npc_instances_nydhoggsnest_txt_2298",
+      "unit": "E5-chain-3135",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          3135
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 3135; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/instances/NydhoggsNest.txt",
+          "lines": [
+            2298
+          ],
+          "required_source_literals": [
+            "erasequest(3135);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_3135_npc_instances_nydhoggsnest_txt_2299",
+      "unit": "E5-chain-3135",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          3136
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 3136; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/instances/NydhoggsNest.txt",
+          "lines": [
+            2299
+          ],
+          "required_source_literals": [
+            "erasequest(3136);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
