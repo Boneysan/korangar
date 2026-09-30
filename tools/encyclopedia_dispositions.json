@@ -65426,6 +65426,31 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_himinn_valkyrie_sign_branch_for_8199_8325",
+      "unit": "E1-himinn_valkyrie_sign_branch_for_8199",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Valkyrie#sign"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem The_Sign,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/the_sign_quest.txt",
+          "lines": [
+            8325
+          ],
+          "required_source_literals": [
+            "getitem The_Sign,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }

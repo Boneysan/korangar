@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 2612,
+    "E1_unknown": 2613,
     "E1_verified": 1
   },
   "entries": [
@@ -15279,6 +15279,31 @@
           ],
           "required_source_literals": [
             "delitem Green_Potion,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_himinn_valkyrie_sign_branch_for_8199_8325",
+      "unit": "E1-himinn_valkyrie_sign_branch_for_8199",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Valkyrie#sign"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem The_Sign,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/the_sign_quest.txt",
+          "lines": [
+            8325
+          ],
+          "required_source_literals": [
+            "getitem The_Sign,1;"
           ]
         }
       ],
