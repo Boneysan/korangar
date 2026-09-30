@@ -24448,7 +24448,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Charlron",
@@ -24467,7 +24467,25 @@
       ],
       "size_lines": 152,
       "reason": "refused by the braced one-item prover: switch",
-      "history": []
+      "history": [
+        "2026-09-30T17:41:17Z activated",
+        "2026-09-30T17:41:17Z validated",
+        "2026-09-30T17:41:18Z verified: 3 claims supported",
+        "2026-09-30T17:41:41Z accepted",
+        "2026-09-30T17:41:41Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "a8bdaeb35f11c08363faaaef1aa6d251b62af954ccb1bd58df7ebfb6bef8f8b3",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-monk_test_monk_qsk_mo_branch_for_237",
