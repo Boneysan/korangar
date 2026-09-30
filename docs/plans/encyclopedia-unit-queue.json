@@ -62829,7 +62829,7 @@
       "package": "E4",
       "kind": "e4_formula",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "skill_names": [
@@ -62853,7 +62853,25 @@
       ],
       "size_lines": 29,
       "reason": "single skillratio expression",
-      "history": []
+      "history": [
+        "2026-09-30T21:07:37Z activated",
+        "2026-09-30T21:07:37Z validated",
+        "2026-09-30T21:07:37Z verified: 1 claims supported",
+        "2026-09-30T21:08:01Z accepted",
+        "2026-09-30T21:08:01Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "57be514a36927141bbf765c79bd4dd6b644a619601cecfa6f642c280b7c0340b",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E4-tk-turnkick",
