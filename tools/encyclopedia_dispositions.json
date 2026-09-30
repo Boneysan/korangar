@@ -129495,6 +129495,168 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2070_400",
+      "unit": "E5-chain-2070",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2070
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 2070; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/battleground/flavius/flavius01.txt",
+          "lines": [
+            400
+          ],
+          "required_source_literals": [
+            "setquest 2070;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2070_407",
+      "unit": "E5-chain-2070",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2070
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 2070; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/battleground/flavius/flavius01.txt",
+          "lines": [
+            407
+          ],
+          "required_source_literals": [
+            "setquest 2070;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2070_68",
+      "unit": "E5-chain-2070",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2070
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 2070; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/battleground/flavius/flavius_enter.txt",
+          "lines": [
+            68
+          ],
+          "required_source_literals": [
+            "erasequest 2070;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2070_128",
+      "unit": "E5-chain-2070",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2070
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 2070; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/battleground/flavius/flavius_enter.txt",
+          "lines": [
+            128
+          ],
+          "required_source_literals": [
+            "erasequest 2070;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2070_277",
+      "unit": "E5-chain-2070",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2070
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 2070; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/battleground/flavius/flavius_enter.txt",
+          "lines": [
+            277
+          ],
+          "required_source_literals": [
+            "erasequest 2070;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2070_337",
+      "unit": "E5-chain-2070",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2070
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 2070; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/battleground/flavius/flavius_enter.txt",
+          "lines": [
+            337
+          ],
+          "required_source_literals": [
+            "erasequest 2070;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
