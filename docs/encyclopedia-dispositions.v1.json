@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 1137,
+    "E1_unknown": 1145,
     "E1_verified": 1
   },
   "entries": [
@@ -10104,6 +10104,206 @@
           ],
           "required_source_literals": [
             "getitem Decaying_Stem,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mid_camp_breeder_taab_ep13_alba_branch_for_7043_7234",
+      "unit": "E1-mid_camp_breeder_taab_ep13_alba_branch_for_7043",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Breeder Taab#ep13_alba"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Delicious_Fish,50; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_1.txt",
+          "lines": [
+            7234
+          ],
+          "required_source_literals": [
+            "delitem Delicious_Fish,50;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mid_camp_breeder_taab_ep13_alba_branch_for_7043_7272",
+      "unit": "E1-mid_camp_breeder_taab_ep13_alba_branch_for_7043",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Breeder Taab#ep13_alba"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Great_Leaf,30; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_1.txt",
+          "lines": [
+            7272
+          ],
+          "required_source_literals": [
+            "delitem Great_Leaf,30;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mid_camp_breeder_taab_ep13_alba_branch_for_7043_7273",
+      "unit": "E1-mid_camp_breeder_taab_ep13_alba_branch_for_7043",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Breeder Taab#ep13_alba"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Browny_Root,30; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_1.txt",
+          "lines": [
+            7273
+          ],
+          "required_source_literals": [
+            "delitem Browny_Root,30;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mid_camp_breeder_taab_ep13_alba_branch_for_7043_7316",
+      "unit": "E1-mid_camp_breeder_taab_ep13_alba_branch_for_7043",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Breeder Taab#ep13_alba"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Monsters_Feed,20; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_1.txt",
+          "lines": [
+            7316
+          ],
+          "required_source_literals": [
+            "delitem Monsters_Feed,20;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mid_camp_breeder_taab_ep13_alba_branch_for_7043_7317",
+      "unit": "E1-mid_camp_breeder_taab_ep13_alba_branch_for_7043",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Breeder Taab#ep13_alba"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Pet_Food,30; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_1.txt",
+          "lines": [
+            7317
+          ],
+          "required_source_literals": [
+            "delitem Pet_Food,30;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mid_camp_breeder_taab_ep13_alba_branch_for_7043_7357",
+      "unit": "E1-mid_camp_breeder_taab_ep13_alba_branch_for_7043",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Breeder Taab#ep13_alba"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Meat,50; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_1.txt",
+          "lines": [
+            7357
+          ],
+          "required_source_literals": [
+            "delitem Meat,50;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mid_camp_breeder_taab_ep13_alba_branch_for_7043_7358",
+      "unit": "E1-mid_camp_breeder_taab_ep13_alba_branch_for_7043",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Breeder Taab#ep13_alba"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Pet_Food,30; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_1.txt",
+          "lines": [
+            7358
+          ],
+          "required_source_literals": [
+            "delitem Pet_Food,30;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mid_camp_breeder_taab_ep13_alba_branch_for_7043_7396",
+      "unit": "E1-mid_camp_breeder_taab_ep13_alba_branch_for_7043",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Breeder Taab#ep13_alba"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Fur,30; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_1.txt",
+          "lines": [
+            7396
+          ],
+          "required_source_literals": [
+            "delitem Fur,30;"
           ]
         }
       ],

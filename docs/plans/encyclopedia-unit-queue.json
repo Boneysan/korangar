@@ -10749,7 +10749,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "strong",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Breeder Taab#ep13_alba",
@@ -10768,7 +10768,25 @@
       ],
       "size_lines": 428,
       "reason": "refused by the braced one-item prover: switch",
-      "history": []
+      "history": [
+        "2026-09-30T15:35:07Z activated",
+        "2026-09-30T15:35:07Z validated",
+        "2026-09-30T15:35:07Z verified: 8 claims supported",
+        "2026-09-30T15:35:30Z accepted",
+        "2026-09-30T15:35:30Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "e1d9a5827254d99d57359f19b0ea45429c420a22bfd741eb7382190380555542",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-mid_camp_ferocious_gorurug_branch_for_8105",
