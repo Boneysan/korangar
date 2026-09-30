@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 3436,
+    "E1_unknown": 3438,
     "E1_verified": 1
   },
   "entries": [
@@ -46754,6 +46754,56 @@
           ],
           "required_source_literals": [
             "getitem Pendant_Of_Guardian,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mora_pitt_pa_branch_for_2272_2328",
+      "unit": "E1-mora_pitt_pa_branch_for_2272",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Pitt#pa"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Clue_Of_Lope,5; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_mora.txt",
+          "lines": [
+            2328
+          ],
+          "required_source_literals": [
+            "delitem Clue_Of_Lope,5;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mora_pitt_pa_branch_for_2272_2402",
+      "unit": "E1-mora_pitt_pa_branch_for_2272",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Pitt#pa"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Ring_Of_Lope,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_mora.txt",
+          "lines": [
+            2402
+          ],
+          "required_source_literals": [
+            "getitem Ring_Of_Lope,1;"
           ]
         }
       ],
