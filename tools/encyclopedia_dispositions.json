@@ -86551,6 +86551,31 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mora_hotcha_pa0829_branch_for_4497_4561",
+      "unit": "E1-mora_hotcha_pa0829_branch_for_4497",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Hotcha#pa0829"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Mora_Coin,3; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_mora.txt",
+          "lines": [
+            4561
+          ],
+          "required_source_literals": [
+            "getitem Mora_Coin,3;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }

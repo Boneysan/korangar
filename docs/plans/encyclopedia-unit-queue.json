@@ -39529,7 +39529,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Hotcha#pa0829",
@@ -39548,7 +39548,25 @@
       ],
       "size_lines": 74,
       "reason": "refused by the braced one-item prover: braceless",
-      "history": []
+      "history": [
+        "2026-09-30T20:00:31Z activated",
+        "2026-09-30T20:00:31Z validated",
+        "2026-09-30T20:00:31Z verified: 1 claims supported",
+        "2026-09-30T20:00:54Z accepted",
+        "2026-09-30T20:00:55Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "c5a80a807f4ec930c308055cdb49e0f8056cb5cd9198714e437bac8cfb705998",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-mora_general_good_dealer_pa0_branch_for_4680",
