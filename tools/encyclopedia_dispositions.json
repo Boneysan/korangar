@@ -1276,6 +1276,31 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_bat_a01_guillaume_blacksmith_a01_branch_for_315_367",
+      "unit": "E1-bat_a01_guillaume_blacksmith_a01_branch_for_315",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Guillaume Blacksmith#a01"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Stone,50; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/battleground/tierra/tierra01.txt",
+          "lines": [
+            367
+          ],
+          "required_source_literals": [
+            "delitem Stone,50;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }

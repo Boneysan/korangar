@@ -689,7 +689,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Guillaume Blacksmith#a01",
@@ -708,7 +708,25 @@
       ],
       "size_lines": 83,
       "reason": "refused by the braced one-item prover: switch",
-      "history": []
+      "history": [
+        "2026-09-30T14:02:04Z activated",
+        "2026-09-30T14:02:04Z validated",
+        "2026-09-30T14:02:04Z verified: 1 claims supported",
+        "2026-09-30T14:02:27Z accepted",
+        "2026-09-30T14:02:27Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "b90d4b8592a90a39bf125d28722b9bb1aac901369c86855a0e4aa9e4dfc0cef7",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-bat_a01_croix_blacksmith_bat_a01_branch_for_399",
