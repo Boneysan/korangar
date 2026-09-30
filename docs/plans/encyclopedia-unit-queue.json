@@ -11763,7 +11763,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Cat Hand Agent#spl",
@@ -11782,7 +11782,22 @@
       ],
       "size_lines": 363,
       "reason": "refused by the braced one-item prover: braceless",
-      "history": []
+      "history": [
+        "2026-09-30T15:44:21Z activated",
+        "2026-09-30T15:44:21Z validated",
+        "2026-09-30T15:44:21Z verified: 0 claims supported",
+        "2026-09-30T15:44:46Z accepted",
+        "2026-09-30T15:44:46Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "0b106d5b6bb6c238e4b70ae3f4d7ec47c2c1b97a19bdf878fbfc9816d9b34150",
+      "accepted_files": [
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-spl_fild03_school_of_fish_5_fishinghole_spl3_branch_for_456",
