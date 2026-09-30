@@ -141186,6 +141186,33 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_17001_npc_quests_quests_nameless_txt_195",
+      "unit": "E5-chain-17001",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          17001
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 17001; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_nameless.txt",
+          "lines": [
+            195
+          ],
+          "required_source_literals": [
+            "changequest 17001,17002;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
