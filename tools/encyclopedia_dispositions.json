@@ -131412,6 +131412,33 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_9009_npc_jobs_2_1_knight_txt_1881",
+      "unit": "E5-chain-9009",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          9009
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 9009; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-1/knight.txt",
+          "lines": [
+            1881
+          ],
+          "required_source_literals": [
+            "changequest 9009,9010;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
