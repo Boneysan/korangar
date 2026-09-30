@@ -8,7 +8,7 @@
     "E1_not_applicable": 1,
     "E1_unknown": 3464,
     "E1_verified": 1,
-    "E3_unknown": 879
+    "E3_unknown": 883
   },
   "entries": [
     {
@@ -91597,6 +91597,33 @@
       "reviewed_on": "2026-09-30"
     },
     {
+      "id": "item_1690_script_untranslated",
+      "unit": "E3-unknown-bonus-bmaxsp-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          1690
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 1690 is not summarized: the translator does not interpret the quoted statement (bonus bMaxSP (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            18634
+          ],
+          "required_source_literals": [
+            "bonus bMaxSP, 10 * (getrefine() / 3) + 50;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
       "id": "item_1691_script_untranslated",
       "unit": "E3-unknown-bonus-bmatkrate-expression",
       "package": "E3",
@@ -92724,6 +92751,33 @@
           ],
           "required_source_literals": [
             "bonus bMatk,getrefine();"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_18761_script_untranslated",
+      "unit": "E3-unknown-bonus-bmaxsp-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          18761
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 18761 is not summarized: the translator does not interpret the quoted statement (bonus bMaxSP (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            136750
+          ],
+          "required_source_literals": [
+            "bonus bMaxSP,50+(getrefine()*5);"
           ]
         }
       ],
@@ -100048,6 +100102,33 @@
       "reviewed_on": "2026-09-30"
     },
     {
+      "id": "item_24181_script_untranslated",
+      "unit": "E3-unknown-bonus-bmaxsp-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          24181
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 24181 is not summarized: the translator does not interpret the quoted statement (bonus bMaxSP (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            152783
+          ],
+          "required_source_literals": [
+            "Script: <\" bonus bMaxSP,50+(5*(getrefine()/2)); \">"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
       "id": "item_24182_script_untranslated",
       "unit": "E3-unknown-bonus-bdef-expression",
       "package": "E3",
@@ -101661,6 +101742,33 @@
           ],
           "required_source_literals": [
             "bonus3 bAutoSpellWhenHit,AL_HEAL,max(getskilllv(AL_HEAL),1),20;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_2554_script_untranslated",
+      "unit": "E3-unknown-bonus-bmaxsp-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          2554
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 2554 is not summarized: the translator does not interpret the quoted statement (bonus bMaxSP (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            33555
+          ],
+          "required_source_literals": [
+            "bonus bMaxSP,(BaseLevel/3)+(getrefine()*10);"
           ]
         }
       ],
