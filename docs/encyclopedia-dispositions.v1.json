@@ -8,7 +8,7 @@
     "E1_not_applicable": 1,
     "E1_unknown": 3464,
     "E1_verified": 1,
-    "E2_verified": 178,
+    "E2_verified": 186,
     "E3_unknown": 973
   },
   "entries": [
@@ -94196,6 +94196,372 @@
             "OnInit:",
             "sellitem Surface_Paint;",
             "sellitem Face_Paint;",
+            "}"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_re_merchants_shops_txt_252_252",
+      "unit": "E2-npc-re-merchants-shops-txt-252",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Trap Specialist#lhz"
+      },
+      "result": "verified",
+      "statement": "Trap Specialist#lhz is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/merchants/shops.txt",
+          "lines": [
+            252,
+            253,
+            254,
+            255,
+            256
+          ],
+          "required_source_literals": [
+            "lighthalzen,337,240,4\ttrader\tTrap Specialist#lhz\t1_F_01,{",
+            "OnInit:",
+            "sellitem Special_Alloy_Trap;",
+            "sellitem Special_Alloy_Trap_Box;",
+            "}"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_re_merchants_shops_txt_252_258",
+      "unit": "E2-npc-re-merchants-shops-txt-252",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Black Marketeer#lhz"
+      },
+      "result": "verified",
+      "statement": "Black Marketeer#lhz is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/merchants/shops.txt",
+          "lines": [
+            258,
+            259,
+            260,
+            261,
+            262,
+            263,
+            264,
+            265,
+            266,
+            267,
+            268,
+            269,
+            270,
+            271,
+            272,
+            273,
+            274,
+            275,
+            276,
+            277,
+            278,
+            279,
+            280,
+            281,
+            282
+          ],
+          "required_source_literals": [
+            "lhz_in03,181,17,4\ttrader\tBlack Marketeer#lhz\t1_M_03,{",
+            "OnInit:",
+            "sellitem Flame_Thrower;",
+            "sellitem Accelerator;",
+            "sellitem Hovering_Booster;",
+            "sellitem Suicidal_Device;",
+            "sellitem Shape_Shifter;",
+            "sellitem Cooling_Device;",
+            "sellitem Mag_Field_Generator;",
+            "sellitem Barrier_Builder;",
+            "sellitem Repair_Kit;",
+            "sellitem Cannon_Ball;",
+            "sellitem Holy_Cannon_Ball;",
+            "sellitem Dark_Cannon_Ball;",
+            "sellitem Soul_Cannon_Ball;",
+            "sellitem Iron_Cannon_Ball;",
+            "sellitem Vulcan_Bullet;",
+            "sellitem Magic_Gear_Fuel;",
+            "sellitem Liquid_Condensed_Bullet;",
+            "sellitem Monkey_Wrench;",
+            "sellitem Camouflage_Generator;",
+            "sellitem RepairA;",
+            "sellitem RepairB;",
+            "sellitem RepairC;",
+            "}"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_re_merchants_shops_txt_252_284",
+      "unit": "E2-npc-re-merchants-shops-txt-252",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Part-Timer#sc_lgt"
+      },
+      "result": "verified",
+      "statement": "Part-Timer#sc_lgt is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/merchants/shops.txt",
+          "lines": [
+            284,
+            285,
+            286,
+            287,
+            288
+          ],
+          "required_source_literals": [
+            "s_atelier,15,65,5\ttrader\tPart-Timer#sc_lgt\t4_M_ORIENT02,{",
+            "OnInit:",
+            "sellitem Surface_Paint;",
+            "sellitem Face_Paint;",
+            "}"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_re_merchants_shops_txt_252_291",
+      "unit": "E2-npc-re-merchants-shops-txt-252",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Tool Dealer Myo"
+      },
+      "result": "verified",
+      "statement": "Tool Dealer Myo is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/merchants/shops.txt",
+          "lines": [
+            291,
+            292,
+            293,
+            294,
+            295,
+            296,
+            297,
+            298,
+            299,
+            300,
+            301
+          ],
+          "required_source_literals": [
+            "malangdo,232,163,5\ttrader\tTool Dealer Myo\t4_CAT_ADV2,{",
+            "OnInit:",
+            "sellitem Spectacles;",
+            "sellitem Arrow;",
+            "sellitem Center_Potion;",
+            "sellitem Awakening_Potion;",
+            "sellitem Wing_Of_Fly;",
+            "sellitem Wing_Of_Butterfly;",
+            "sellitem Booby_Trap;",
+            "sellitem Empty_Bottle;",
+            "}"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_re_merchants_shops_txt_252_304",
+      "unit": "E2-npc-re-merchants-shops-txt-252",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Tool Dealer#mora"
+      },
+      "result": "verified",
+      "statement": "Tool Dealer#mora is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/merchants/shops.txt",
+          "lines": [
+            304,
+            305,
+            306,
+            307,
+            308,
+            309,
+            310,
+            311,
+            312,
+            313,
+            314
+          ],
+          "required_source_literals": [
+            "mora,100,118,4\ttrader\tTool Dealer#mora\t4_M_RAFLE_OLD,{",
+            "OnInit:",
+            "sellitem Red_Raffle_Sap;",
+            "sellitem Yellow_Raffle_Sap;",
+            "sellitem White_Raffle_Sap;",
+            "sellitem Wing_Of_Butterfly;",
+            "sellitem Wing_Of_Fly;",
+            "sellitem Spectacles;",
+            "sellitem Arrow_Of_Elf;",
+            "sellitem Hunting_Arrow;",
+            "}"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_re_merchants_shops_txt_252_316",
+      "unit": "E2-npc-re-merchants-shops-txt-252",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Mora Chef"
+      },
+      "result": "verified",
+      "statement": "Mora Chef is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/merchants/shops.txt",
+          "lines": [
+            316,
+            317,
+            318,
+            319
+          ],
+          "required_source_literals": [
+            "mora,138,110,4\ttrader\tMora Chef\t4_F_RAFLE_PK,{",
+            "OnInit:",
+            "sellitem Beef_Toast;",
+            "}"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_re_merchants_shops_txt_252_322",
+      "unit": "E2-npc-re-merchants-shops-txt-252",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Trap Specialist#mid"
+      },
+      "result": "verified",
+      "statement": "Trap Specialist#mid is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/merchants/shops.txt",
+          "lines": [
+            322,
+            323,
+            324,
+            325,
+            326
+          ],
+          "required_source_literals": [
+            "mid_camp,129,284,4\ttrader\tTrap Specialist#mid\t1_F_01,{",
+            "OnInit:",
+            "sellitem Special_Alloy_Trap;",
+            "sellitem Special_Alloy_Trap_Box;",
+            "}"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_re_merchants_shops_txt_252_328",
+      "unit": "E2-npc-re-merchants-shops-txt-252",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Black Marketeer#mid"
+      },
+      "result": "verified",
+      "statement": "Black Marketeer#mid is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/merchants/shops.txt",
+          "lines": [
+            328,
+            329,
+            330,
+            331,
+            332,
+            333,
+            334,
+            335,
+            336,
+            337,
+            338,
+            339,
+            340,
+            341,
+            342,
+            343,
+            344,
+            345,
+            346,
+            347,
+            348,
+            349,
+            350,
+            351,
+            352
+          ],
+          "required_source_literals": [
+            "mid_camp,184,263,4\ttrader\tBlack Marketeer#mid\t1_M_03,{",
+            "OnInit:",
+            "sellitem Flame_Thrower;",
+            "sellitem Accelerator;",
+            "sellitem Hovering_Booster;",
+            "sellitem Suicidal_Device;",
+            "sellitem Shape_Shifter;",
+            "sellitem Cooling_Device;",
+            "sellitem Mag_Field_Generator;",
+            "sellitem Barrier_Builder;",
+            "sellitem Repair_Kit;",
+            "sellitem Cannon_Ball;",
+            "sellitem Holy_Cannon_Ball;",
+            "sellitem Dark_Cannon_Ball;",
+            "sellitem Soul_Cannon_Ball;",
+            "sellitem Iron_Cannon_Ball;",
+            "sellitem Vulcan_Bullet;",
+            "sellitem Magic_Gear_Fuel;",
+            "sellitem Liquid_Condensed_Bullet;",
+            "sellitem Monkey_Wrench;",
+            "sellitem Camouflage_Generator;",
+            "sellitem RepairA;",
+            "sellitem RepairB;",
+            "sellitem RepairC;",
             "}"
           ]
         }
