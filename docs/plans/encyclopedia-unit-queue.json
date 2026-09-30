@@ -17945,7 +17945,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Alchemist",
@@ -17964,7 +17964,23 @@
       ],
       "size_lines": 72,
       "reason": "refused by the braced one-item prover: switch",
-      "history": []
+      "history": [
+        "2026-09-30T16:41:38Z activated",
+        "2026-09-30T16:41:39Z validated",
+        "2026-09-30T16:41:39Z verified: 0 claims supported",
+        "2026-09-30T16:42:02Z accepted",
+        "2026-09-30T16:42:02Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "50146e4e24970bac4a9a06df0b53f2ed685d8152c5192e812d020a6cb6e9ac42",
+      "accepted_files": [
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "audit": "due",
+      "commit": "committed"
     },
     {
       "id": "E1-morocc_chief_balrog_branch_for_1280",
