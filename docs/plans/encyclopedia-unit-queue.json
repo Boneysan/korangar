@@ -8659,7 +8659,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Meruntei#1",
@@ -8678,7 +8678,25 @@
       ],
       "size_lines": 51,
       "reason": "refused by the braced one-item prover: multi-item",
-      "history": []
+      "history": [
+        "2026-09-30T15:15:53Z activated",
+        "2026-09-30T15:15:53Z validated",
+        "2026-09-30T15:15:53Z verified: 4 claims supported",
+        "2026-09-30T15:16:16Z accepted",
+        "2026-09-30T15:16:16Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "b30f7a1ac5c70bf0e5ae1aac176abd30b6f1f916642303b6f0e1ff10f29a85a6",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-yuno_old_blacksmith_hgear_branch_for_653",

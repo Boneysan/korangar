@@ -19451,6 +19451,106 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_comodo_meruntei_1_branch_for_521_536",
+      "unit": "E1-comodo_meruntei_1_branch_for_521",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Meruntei#1"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Indian_Hair_Piece,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2004_headgears.txt",
+          "lines": [
+            536
+          ],
+          "required_source_literals": [
+            "delitem Indian_Hair_Piece,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_comodo_meruntei_1_branch_for_521_537",
+      "unit": "E1-comodo_meruntei_1_branch_for_521",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Meruntei#1"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Stripe_Band,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2004_headgears.txt",
+          "lines": [
+            537
+          ],
+          "required_source_literals": [
+            "delitem Stripe_Band,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_comodo_meruntei_1_branch_for_521_538",
+      "unit": "E1-comodo_meruntei_1_branch_for_521",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Meruntei#1"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Peco_Wing_Feather,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2004_headgears.txt",
+          "lines": [
+            538
+          ],
+          "required_source_literals": [
+            "delitem Peco_Wing_Feather,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_comodo_meruntei_1_branch_for_521_540",
+      "unit": "E1-comodo_meruntei_1_branch_for_521",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Meruntei#1"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Indian_Headband,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2004_headgears.txt",
+          "lines": [
+            540
+          ],
+          "required_source_literals": [
+            "getitem Indian_Headband,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
