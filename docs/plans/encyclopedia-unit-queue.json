@@ -2398,7 +2398,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Baisulist#BLS",
@@ -2417,7 +2417,22 @@
       ],
       "size_lines": 74,
       "reason": "refused by the braced one-item prover: menu",
-      "history": []
+      "history": [
+        "2026-09-30T14:18:32Z activated",
+        "2026-09-30T14:18:32Z validated",
+        "2026-09-30T14:18:32Z verified: 0 claims supported",
+        "2026-09-30T14:18:55Z accepted",
+        "2026-09-30T14:18:55Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "680c5f53a8b2e8657981634c75b13e7bfbd2b42f0b79b25225c9b33d50315184",
+      "accepted_files": [
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-morocc_wickebine_bls_branch_for_1025",
