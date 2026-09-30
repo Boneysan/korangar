@@ -133653,6 +133653,438 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1100_npc_quests_newgears_2010_headgears_txt_891",
+      "unit": "E5-chain-1100",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          1100
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 1100; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2010_headgears.txt",
+          "lines": [
+            891
+          ],
+          "required_source_literals": [
+            "setquest 1100;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1100_npc_quests_newgears_2010_headgears_txt_892",
+      "unit": "E5-chain-1100",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          1101
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 1101; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2010_headgears.txt",
+          "lines": [
+            892
+          ],
+          "required_source_literals": [
+            "setquest 1101;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1100_npc_quests_newgears_2010_headgears_txt_921",
+      "unit": "E5-chain-1100",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          1100
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 1100; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2010_headgears.txt",
+          "lines": [
+            921
+          ],
+          "required_source_literals": [
+            "changequest 1100,1102;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1100_npc_quests_newgears_2010_headgears_txt_922",
+      "unit": "E5-chain-1100",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          1101
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 1101; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2010_headgears.txt",
+          "lines": [
+            922
+          ],
+          "required_source_literals": [
+            "changequest 1101,1103;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1100_npc_quests_newgears_2010_headgears_txt_959",
+      "unit": "E5-chain-1100",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          1102
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 1102; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2010_headgears.txt",
+          "lines": [
+            959
+          ],
+          "required_source_literals": [
+            "changequest 1102,1108;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1100_npc_quests_newgears_2010_headgears_txt_960",
+      "unit": "E5-chain-1100",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          1103
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 1103; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2010_headgears.txt",
+          "lines": [
+            960
+          ],
+          "required_source_literals": [
+            "changequest 1103,1105;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1100_npc_quests_newgears_2010_headgears_txt_997",
+      "unit": "E5-chain-1100",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          1108
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 1108; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2010_headgears.txt",
+          "lines": [
+            997
+          ],
+          "required_source_literals": [
+            "changequest 1108,1106;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1100_npc_quests_newgears_2010_headgears_txt_998",
+      "unit": "E5-chain-1100",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          1105
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 1105; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2010_headgears.txt",
+          "lines": [
+            998
+          ],
+          "required_source_literals": [
+            "changequest 1105,1107;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1100_npc_quests_newgears_2010_headgears_txt_1027",
+      "unit": "E5-chain-1100",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          1104
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 1104; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2010_headgears.txt",
+          "lines": [
+            1027
+          ],
+          "required_source_literals": [
+            "changequest 1104,1106;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1100_npc_quests_newgears_2010_headgears_txt_1028",
+      "unit": "E5-chain-1100",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          1105
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 1105; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2010_headgears.txt",
+          "lines": [
+            1028
+          ],
+          "required_source_literals": [
+            "changequest 1105,1107;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1100_npc_quests_newgears_2010_headgears_txt_1038",
+      "unit": "E5-chain-1100",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          1104
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 1104; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2010_headgears.txt",
+          "lines": [
+            1038
+          ],
+          "required_source_literals": [
+            "erasequest 1104;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1100_npc_quests_newgears_2010_headgears_txt_1039",
+      "unit": "E5-chain-1100",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          1108
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 1108; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2010_headgears.txt",
+          "lines": [
+            1039
+          ],
+          "required_source_literals": [
+            "setquest 1108;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1100_npc_quests_newgears_2010_headgears_txt_1081",
+      "unit": "E5-chain-1100",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          1106
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 1106; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2010_headgears.txt",
+          "lines": [
+            1081
+          ],
+          "required_source_literals": [
+            "completequest 1106;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1100_npc_quests_newgears_2010_headgears_txt_1082",
+      "unit": "E5-chain-1100",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          1107
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 1107; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2010_headgears.txt",
+          "lines": [
+            1082
+          ],
+          "required_source_literals": [
+            "completequest 1107;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1100_npc_quests_newgears_2010_headgears_txt_1107",
+      "unit": "E5-chain-1100",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          1106
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 1106; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2010_headgears.txt",
+          "lines": [
+            1107
+          ],
+          "required_source_literals": [
+            "completequest 1106;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1100_npc_quests_newgears_2010_headgears_txt_1108",
+      "unit": "E5-chain-1100",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          1107
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 1107; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/newgears/2010_headgears.txt",
+          "lines": [
+            1108
+          ],
+          "required_source_literals": [
+            "completequest 1107;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
