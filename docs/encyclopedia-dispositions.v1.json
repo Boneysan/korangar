@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 565,
+    "E1_unknown": 568,
     "E1_verified": 1
   },
   "entries": [
@@ -11554,6 +11554,81 @@
           ],
           "required_source_literals": [
             "getitem Red_Potion,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prt_in_morrison_juice_branch_for_102_124",
+      "unit": "E1-prt_in_morrison_juice_branch_for_102",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Morrison#juice"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Candy,3; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/juice_maker.txt",
+          "lines": [
+            124
+          ],
+          "required_source_literals": [
+            "getitem Candy,3;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prt_in_morrison_juice_branch_for_102_125",
+      "unit": "E1-prt_in_morrison_juice_branch_for_102",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Morrison#juice"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Candy_Striper,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/juice_maker.txt",
+          "lines": [
+            125
+          ],
+          "required_source_literals": [
+            "getitem Candy_Striper,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prt_in_morrison_juice_branch_for_102_151",
+      "unit": "E1-prt_in_morrison_juice_branch_for_102",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Morrison#juice"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Meat,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/juice_maker.txt",
+          "lines": [
+            151
+          ],
+          "required_source_literals": [
+            "delitem Meat,1;"
           ]
         }
       ],
