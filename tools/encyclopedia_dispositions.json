@@ -66326,6 +66326,31 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ma_dun01_nurse_ma_dun01_branch_for_37_180",
+      "unit": "E1-ma_dun01_nurse_ma_dun01_branch_for_37",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Nurse#ma_dun01"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Ancient_Grudge,7; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/instances/BangungotHospital.txt",
+          "lines": [
+            180
+          ],
+          "required_source_literals": [
+            "getitem Ancient_Grudge,7;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
