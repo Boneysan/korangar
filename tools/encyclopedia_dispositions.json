@@ -119709,6 +119709,169 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_merchants_shops_txt_1840_1840",
+      "unit": "E2-npc-merchants-shops-txt-1840",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Chef Assistant#lou"
+      },
+      "result": "verified",
+      "statement": "Chef Assistant#lou is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/merchants/shops.txt",
+          "lines": [
+            1840,
+            1841,
+            1842,
+            1843,
+            1844
+          ],
+          "required_source_literals": [
+            "louyang,256,123,5\ttrader\tChef Assistant#lou\t4_M_CHNCOOK,{",
+            "OnInit:",
+            "sellitem Plain_Sauce;",
+            "sellitem Grain;",
+            "}"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_merchants_shops_txt_1840_1846",
+      "unit": "E2-npc-merchants-shops-txt-1840",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Chef Assistant#gon"
+      },
+      "result": "verified",
+      "statement": "Chef Assistant#gon is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/merchants/shops.txt",
+          "lines": [
+            1846,
+            1847,
+            1848,
+            1849,
+            1850
+          ],
+          "required_source_literals": [
+            "gonryun,147,101,5\ttrader\tChef Assistant#gon\t4_M_01,{",
+            "OnInit:",
+            "sellitem Yellow_Spice;",
+            "sellitem Bread;",
+            "}"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_merchants_shops_txt_1840_1852",
+      "unit": "E2-npc-merchants-shops-txt-1840",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Chef Assistant#ayo"
+      },
+      "result": "verified",
+      "statement": "Chef Assistant#ayo is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/merchants/shops.txt",
+          "lines": [
+            1852,
+            1853,
+            1854,
+            1855,
+            1856
+          ],
+          "required_source_literals": [
+            "ayothaya,203,178,3\ttrader\tChef Assistant#ayo\t4_M_01,{",
+            "OnInit:",
+            "sellitem Hot_Sauce;",
+            "sellitem Grain;",
+            "}"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_merchants_shops_txt_1840_1858",
+      "unit": "E2-npc-merchants-shops-txt-1840",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Chef Assistant#xmas"
+      },
+      "result": "verified",
+      "statement": "Chef Assistant#xmas is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/merchants/shops.txt",
+          "lines": [
+            1858,
+            1859,
+            1860,
+            1861,
+            1862
+          ],
+          "required_source_literals": [
+            "xmas,152,137,5\ttrader\tChef Assistant#xmas\t4_M_01,{",
+            "OnInit:",
+            "sellitem Cooking_Oil;",
+            "sellitem Grain;",
+            "}"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_merchants_shops_txt_1840_1864",
+      "unit": "E2-npc-merchants-shops-txt-1840",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Chef Assistant#nif"
+      },
+      "result": "verified",
+      "statement": "Chef Assistant#nif is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/merchants/shops.txt",
+          "lines": [
+            1864,
+            1865,
+            1866,
+            1867
+          ],
+          "required_source_literals": [
+            "niflheim,209,180,5\ttrader\tChef Assistant#nif\t4_M_01,{",
+            "OnInit:",
+            "sellitem Mushroom;",
+            "}"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }

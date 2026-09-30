@@ -59856,7 +59856,7 @@
       "package": "E2",
       "kind": "e2_stock",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "declarations": [
@@ -59936,7 +59936,25 @@
       ],
       "size_lines": 24,
       "reason": "5 stock declaration(s) not covered by the 107 literal service calls",
-      "history": []
+      "history": [
+        "2026-09-30T20:51:24Z activated",
+        "2026-09-30T20:51:24Z validated",
+        "2026-09-30T20:51:24Z verified: 5 claims supported",
+        "2026-09-30T20:51:47Z accepted",
+        "2026-09-30T20:51:47Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "41cea5a7473991c576be726112637c1ca7634b1c30796d19a1658e0f1310173d",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E2-npc-other-turbo-track-txt-3704",
