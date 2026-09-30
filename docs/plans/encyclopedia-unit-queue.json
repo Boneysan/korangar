@@ -2562,7 +2562,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Bismarc#BLS",
@@ -2581,7 +2581,22 @@
       ],
       "size_lines": 96,
       "reason": "refused by the braced one-item prover: menu",
-      "history": []
+      "history": [
+        "2026-09-30T14:20:07Z activated",
+        "2026-09-30T14:20:07Z validated",
+        "2026-09-30T14:20:07Z verified: 0 claims supported",
+        "2026-09-30T14:20:30Z accepted",
+        "2026-09-30T14:20:30Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "9612a979fd16f049ff7afbbede83e8265f31a21794baa0a2577bb16a361ee238",
+      "accepted_files": [
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-ein_in01_blacksmith_guildsman_moc_branch_for_1375",
