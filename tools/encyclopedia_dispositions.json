@@ -66551,6 +66551,31 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prt_church_cleric_aco_branch_for_37_112",
+      "unit": "E1-prt_church_cleric_aco_branch_for_37",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Cleric#aco"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem N_Mace,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/1-1/acolyte.txt",
+          "lines": [
+            112
+          ],
+          "required_source_literals": [
+            "getitem N_Mace,1;\t// N_Mace"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
