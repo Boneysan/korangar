@@ -111242,6 +111242,87 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_2173_script_untranslated",
+      "unit": "E3-unknown-bonus-bdelayrate-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          2173
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 2173 is not summarized: the translator does not interpret the quoted statement (bonus bDelayrate (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            25933
+          ],
+          "required_source_literals": [
+            "Script: <\" bonus bDelayrate,-(getrefine()*2); \">"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_4480_script_untranslated",
+      "unit": "E3-unknown-bonus-bdelayrate-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          4480
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 4480 is not summarized: the translator does not interpret the quoted statement (bonus bDelayrate (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            47275
+          ],
+          "required_source_literals": [
+            "Script: <\" bonus bDelayrate,((getrefine()>14)?-20:-15); \">"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_18563_script_untranslated",
+      "unit": "E3-unknown-bonus-bdelayrate-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          18563
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 18563 is not summarized: the translator does not interpret the quoted statement (bonus bDelayrate (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            133601
+          ],
+          "required_source_literals": [
+            "bonus bDelayrate,-(5+(3*(getrefine()/3)));"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }

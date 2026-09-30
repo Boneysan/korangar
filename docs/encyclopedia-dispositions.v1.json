@@ -8,7 +8,7 @@
     "E1_not_applicable": 1,
     "E1_unknown": 3464,
     "E1_verified": 1,
-    "E3_unknown": 908
+    "E3_unknown": 911
   },
   "entries": [
     {
@@ -92542,6 +92542,33 @@
       "reviewed_on": "2026-09-30"
     },
     {
+      "id": "item_18563_script_untranslated",
+      "unit": "E3-unknown-bonus-bdelayrate-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          18563
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 18563 is not summarized: the translator does not interpret the quoted statement (bonus bDelayrate (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            133601
+          ],
+          "required_source_literals": [
+            "bonus bDelayrate,-(5+(3*(getrefine()/3)));"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
       "id": "item_18570_script_untranslated",
       "unit": "E3-unknown-control-if",
       "package": "E3",
@@ -95397,6 +95424,33 @@
           ],
           "required_source_literals": [
             "Script: <\" autobonus \"{ bonus bBaseAtk,100; bonus bFlee,-50; }\",10,5000,BF_WEAPON,\"{ specialeffect(EF_ENHANCE, AREA, playerattached()); }\"; \">"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_2173_script_untranslated",
+      "unit": "E3-unknown-bonus-bdelayrate-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          2173
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 2173 is not summarized: the translator does not interpret the quoted statement (bonus bDelayrate (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            25933
+          ],
+          "required_source_literals": [
+            "Script: <\" bonus bDelayrate,-(getrefine()*2); \">"
           ]
         }
       ],
@@ -105711,6 +105765,33 @@
           ],
           "required_source_literals": [
             "if(getiteminfo(getequipid(EQI_HAND_R),11)==11) {"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_4480_script_untranslated",
+      "unit": "E3-unknown-bonus-bdelayrate-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          4480
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 4480 is not summarized: the translator does not interpret the quoted statement (bonus bDelayrate (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            47275
+          ],
+          "required_source_literals": [
+            "Script: <\" bonus bDelayrate,((getrefine()>14)?-20:-15); \">"
           ]
         }
       ],

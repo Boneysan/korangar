@@ -54696,7 +54696,7 @@
       "package": "E3",
       "kind": "e3_dispose",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "key": "bonus bDelayrate (expression)",
@@ -54748,7 +54748,25 @@
       ],
       "size_lines": 3,
       "reason": "3 item script(s) first stop at `bonus bDelayrate (expression)`, which is control flow or undocumented",
-      "history": []
+      "history": [
+        "2026-09-30T20:26:30Z activated",
+        "2026-09-30T20:26:30Z validated",
+        "2026-09-30T20:26:30Z verification not required: tool-drafted, no behavior claim",
+        "2026-09-30T20:26:54Z accepted",
+        "2026-09-30T20:26:54Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "b7bf98b8da15f4ed52b14456309563760016e8df755000858ecd50a028d09acd",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E3-unknown-bonus-bflee2-expression",
