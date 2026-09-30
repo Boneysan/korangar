@@ -19836,7 +19836,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Strange Machine",
@@ -19855,7 +19855,25 @@
       ],
       "size_lines": 375,
       "reason": "refused by the braced one-item prover: switch",
-      "history": []
+      "history": [
+        "2026-09-30T16:58:56Z activated",
+        "2026-09-30T16:58:56Z validated",
+        "2026-09-30T16:58:56Z verified: 1 claims supported",
+        "2026-09-30T16:59:19Z accepted",
+        "2026-09-30T16:59:20Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "81bae803f4897d11c1e213274edd497a1ca124a67ca20d960754d20a4550f61d",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-moc_ruins_ibrahim_branch_for_4659",
