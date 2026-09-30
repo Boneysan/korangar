@@ -54276,6 +54276,231 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prt_in_librarian_megin_branch_for_796_847",
+      "unit": "E1-prt_in_librarian_megin_branch_for_796",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Librarian#megin"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Lantern,countitem(Lantern; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/megingard_seal.txt",
+          "lines": [
+            847
+          ],
+          "required_source_literals": [
+            "delitem Lantern,countitem(Lantern);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prt_in_librarian_megin_branch_for_796_848",
+      "unit": "E1-prt_in_librarian_megin_branch_for_796",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Librarian#megin"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Glasses,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/megingard_seal.txt",
+          "lines": [
+            848
+          ],
+          "required_source_literals": [
+            "delitem Glasses,1; //Spectacles"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prt_in_librarian_megin_branch_for_796_851",
+      "unit": "E1-prt_in_librarian_megin_branch_for_796",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Librarian#megin"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem 2203,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/megingard_seal.txt",
+          "lines": [
+            851
+          ],
+          "required_source_literals": [
+            "delitem 2203,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prt_in_librarian_megin_branch_for_796_854",
+      "unit": "E1-prt_in_librarian_megin_branch_for_796",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Librarian#megin"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem 1041,countitem(Lantern; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/megingard_seal.txt",
+          "lines": [
+            854
+          ],
+          "required_source_literals": [
+            "delitem 1041,countitem(Lantern);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prt_in_librarian_megin_branch_for_796_1088",
+      "unit": "E1-prt_in_librarian_megin_branch_for_796",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Librarian#megin"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Smooth_Paper,2; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/megingard_seal.txt",
+          "lines": [
+            1088
+          ],
+          "required_source_literals": [
+            "delitem Smooth_Paper,2;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prt_in_librarian_megin_branch_for_796_1089",
+      "unit": "E1-prt_in_librarian_megin_branch_for_796",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Librarian#megin"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Oil_Paper,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/megingard_seal.txt",
+          "lines": [
+            1089
+          ],
+          "required_source_literals": [
+            "delitem Oil_Paper,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prt_in_librarian_megin_branch_for_796_1090",
+      "unit": "E1-prt_in_librarian_megin_branch_for_796",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Librarian#megin"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Chinese_Ink,3; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/megingard_seal.txt",
+          "lines": [
+            1090
+          ],
+          "required_source_literals": [
+            "delitem Chinese_Ink,3;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prt_in_librarian_megin_branch_for_796_1091",
+      "unit": "E1-prt_in_librarian_megin_branch_for_796",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Librarian#megin"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Feather_Of_Birds,3; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/megingard_seal.txt",
+          "lines": [
+            1091
+          ],
+          "required_source_literals": [
+            "delitem Feather_Of_Birds,3;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prt_in_librarian_megin_branch_for_796_1092",
+      "unit": "E1-prt_in_librarian_megin_branch_for_796",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Librarian#megin"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Blue_Gemstone,20; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/seals/megingard_seal.txt",
+          "lines": [
+            1092
+          ],
+          "required_source_literals": [
+            "delitem Blue_Gemstone,20;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }

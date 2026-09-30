@@ -23302,7 +23302,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "strong",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Librarian#megin",
@@ -23321,7 +23321,25 @@
       ],
       "size_lines": 757,
       "reason": "refused by the braced one-item prover: switch",
-      "history": []
+      "history": [
+        "2026-09-30T17:30:46Z activated",
+        "2026-09-30T17:30:47Z validated",
+        "2026-09-30T17:30:47Z verified: 9 claims supported",
+        "2026-09-30T17:31:10Z accepted",
+        "2026-09-30T17:31:10Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "9369a0fda43dcbc8773fa67f732b0c021edd3ebde684bfa6c441c1c8e8c16e7c",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-aldebaran_lady_megin_branch_for_2474",
