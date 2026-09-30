@@ -14168,7 +14168,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Powerful-Looking Woman",
@@ -14187,7 +14187,25 @@
       ],
       "size_lines": 396,
       "reason": "refused by the braced one-item prover: braceless",
-      "history": []
+      "history": [
+        "2026-09-30T16:07:00Z activated",
+        "2026-09-30T16:07:01Z validated",
+        "2026-09-30T16:07:01Z verified: 1 claims supported",
+        "2026-09-30T16:07:24Z accepted",
+        "2026-09-30T16:07:24Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "b04c3fb9e962123013a27f798530c86d840302eb077ad3b48f03092a4109dec0",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-ayo_dun02_haggard_man_branch_for_583",

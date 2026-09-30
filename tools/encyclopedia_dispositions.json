@@ -36376,6 +36376,31 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_ayothaya_powerful_looking_woman_branch_for_46_152",
+      "unit": "E1-ayothaya_powerful_looking_woman_branch_for_46",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Powerful-Looking Woman"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Thai_Ring,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_ayothaya.txt",
+          "lines": [
+            152
+          ],
+          "required_source_literals": [
+            "delitem Thai_Ring,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
