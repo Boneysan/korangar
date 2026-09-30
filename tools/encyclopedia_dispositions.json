@@ -66901,6 +66901,156 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_job_gun_elwin_conick_3_branch_for_705_726",
+      "unit": "E1-job_gun_elwin_conick_3_branch_for_705",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Elwin Conick#3"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Tiny_Flame,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/2e/rebellion.txt",
+          "lines": [
+            726
+          ],
+          "required_source_literals": [
+            "delitem(Tiny_Flame, 1);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_job_gun_elwin_conick_3_branch_for_705_735",
+      "unit": "E1-job_gun_elwin_conick_3_branch_for_705",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Elwin Conick#3"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Steel_Article,.@st_job1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/2e/rebellion.txt",
+          "lines": [
+            735
+          ],
+          "required_source_literals": [
+            "delitem(Steel_Article, .@st_job1);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_job_gun_elwin_conick_3_branch_for_705_738",
+      "unit": "E1-job_gun_elwin_conick_3_branch_for_705",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Elwin Conick#3"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Steel_Article_,.@st_job2; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/2e/rebellion.txt",
+          "lines": [
+            738
+          ],
+          "required_source_literals": [
+            "delitem(Steel_Article_, .@st_job2);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_job_gun_elwin_conick_3_branch_for_705_770",
+      "unit": "E1-job_gun_elwin_conick_3_branch_for_705",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Elwin Conick#3"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Steel_Article,.@st_job1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/2e/rebellion.txt",
+          "lines": [
+            770
+          ],
+          "required_source_literals": [
+            "delitem(Steel_Article, .@st_job1);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_job_gun_elwin_conick_3_branch_for_705_773",
+      "unit": "E1-job_gun_elwin_conick_3_branch_for_705",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Elwin Conick#3"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Steel_Article_,.@st_job2; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/2e/rebellion.txt",
+          "lines": [
+            773
+          ],
+          "required_source_literals": [
+            "delitem(Steel_Article_, .@st_job2);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_job_gun_elwin_conick_3_branch_for_705_776",
+      "unit": "E1-job_gun_elwin_conick_3_branch_for_705",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Elwin Conick#3"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Tiny_Flame,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/2e/rebellion.txt",
+          "lines": [
+            776
+          ],
+          "required_source_literals": [
+            "delitem(Tiny_Flame, 1);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
