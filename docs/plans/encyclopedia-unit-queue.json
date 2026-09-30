@@ -31671,7 +31671,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Peco Peco Remover",
@@ -31690,7 +31690,22 @@
       ],
       "size_lines": 28,
       "reason": "refused by the braced one-item prover: switch",
-      "history": []
+      "history": [
+        "2026-09-30T18:48:01Z activated",
+        "2026-09-30T18:48:01Z validated",
+        "2026-09-30T18:48:01Z verified: 0 claims supported",
+        "2026-09-30T18:48:24Z accepted",
+        "2026-09-30T18:48:24Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "8c875ace195811a0f41b221e31b6737db0e1bf28b0a7b1a7c5329b72b5955879",
+      "accepted_files": [
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-moc_para01_gelkah_1_branch_for_42",
