@@ -40976,6 +40976,31 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_einbech_bomb_maker_branch_for_3432_3470",
+      "unit": "E1-einbech_bomb_maker_branch_for_3432",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Bomb Maker"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Mini_Bottle,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_hugel.txt",
+          "lines": [
+            3470
+          ],
+          "required_source_literals": [
+            "getitem Mini_Bottle,1; //Marine Sphere Bottle"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
