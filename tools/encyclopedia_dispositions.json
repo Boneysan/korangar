@@ -112943,6 +112943,33 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_1661_script_untranslated",
+      "unit": "E3-unknown-bonus3-bspvanishrate-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          1661
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 1661 is not summarized: the translator does not interpret the quoted statement (bonus3 bSPVanishRate (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            18140
+          ],
+          "required_source_literals": [
+            "bonus3 bSPVanishRate, 1000, 5, BF_NORMAL | BF_SKILL;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
