@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 86,
+    "E1_unknown": 88,
     "E1_verified": 1
   },
   "entries": [
@@ -2229,6 +2229,56 @@
           ],
           "required_source_literals": [
             "delitem Free_Flying_Ship_Ticket,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_lighthalzen_lucius_zen5_branch_for_548_616",
+      "unit": "E1-lighthalzen_lucius_zen5_branch_for_548",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Lucius#zen5"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Old_Blue_Box,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/cities/lighthalzen.txt",
+          "lines": [
+            616
+          ],
+          "required_source_literals": [
+            "getitem Old_Blue_Box,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_lighthalzen_lucius_zen5_branch_for_548_617",
+      "unit": "E1-lighthalzen_lucius_zen5_branch_for_548",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Lucius#zen5"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Speed_Up_Potion,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/cities/lighthalzen.txt",
+          "lines": [
+            617
+          ],
+          "required_source_literals": [
+            "getitem Speed_Up_Potion,1;"
           ]
         }
       ],
