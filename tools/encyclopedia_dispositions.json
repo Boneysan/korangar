@@ -61451,6 +61451,56 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prt_in_knight_kabuto_branch_for_39_204",
+      "unit": "E1-prt_in_knight_kabuto_branch_for_39",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Knight#kabuto"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Candy_Striper,5; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/skills/knight_skills.txt",
+          "lines": [
+            204
+          ],
+          "required_source_literals": [
+            "delitem Candy_Striper,5;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_prt_in_knight_kabuto_branch_for_39_205",
+      "unit": "E1-prt_in_knight_kabuto_branch_for_39",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Knight#kabuto"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Witherless_Rose,3; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/skills/knight_skills.txt",
+          "lines": [
+            205
+          ],
+          "required_source_literals": [
+            "delitem Witherless_Rose,3;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }

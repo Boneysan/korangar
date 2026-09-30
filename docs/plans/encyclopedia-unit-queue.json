@@ -24316,7 +24316,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Knight#kabuto",
@@ -24335,7 +24335,25 @@
       ],
       "size_lines": 294,
       "reason": "refused by the braced one-item prover: menu",
-      "history": []
+      "history": [
+        "2026-09-30T17:40:05Z activated",
+        "2026-09-30T17:40:06Z validated",
+        "2026-09-30T17:40:06Z verified: 2 claims supported",
+        "2026-09-30T17:40:29Z accepted",
+        "2026-09-30T17:40:29Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "7a30a7eaf78fa6630401491c6362055b9bf88ce8ff5daa6df244ccb05d342edf",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-geffen_in_great_wizard_branch_for_41",
