@@ -4491,7 +4491,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Ticket Helper#single",
@@ -4510,7 +4510,25 @@
       ],
       "size_lines": 56,
       "reason": "refused by the braced one-item prover: braceless",
-      "history": []
+      "history": [
+        "2026-09-30T14:37:45Z activated",
+        "2026-09-30T14:37:45Z validated",
+        "2026-09-30T14:37:45Z verified: 1 claims supported",
+        "2026-09-30T14:38:09Z accepted",
+        "2026-09-30T14:38:09Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "5393735837c9fd12d9c625e229be9cc3a31196df3f350648cb5db209de924fef",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-p_track01_medal_distributor_single_branch_for_302",
