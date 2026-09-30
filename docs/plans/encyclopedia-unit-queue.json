@@ -37115,7 +37115,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "strong",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Cat Gamers Director",
@@ -37134,7 +37134,25 @@
       ],
       "size_lines": 793,
       "reason": "refused by the braced one-item prover: braceless",
-      "history": []
+      "history": [
+        "2026-09-30T19:38:15Z activated",
+        "2026-09-30T19:38:15Z validated",
+        "2026-09-30T19:38:15Z verified: 11 claims supported",
+        "2026-09-30T19:38:38Z accepted",
+        "2026-09-30T19:38:39Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "8d68b55e1143ae5e2049244f3e1aab2658a223c759e29ffebc04a6afc238157f",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-mal_in01_ser_gamer_branch_for_8511",

@@ -6,7 +6,7 @@
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",
   "counts": {
     "E1_not_applicable": 1,
-    "E1_unknown": 3310,
+    "E1_unknown": 3321,
     "E1_verified": 1
   },
   "entries": [
@@ -33554,6 +33554,281 @@
           ],
           "required_source_literals": [
             "getitem Egrade_Coin,5;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mal_in01_cat_gamers_director_branch_for_6530_6979",
+      "unit": "E1-mal_in01_cat_gamers_director_branch_for_6530",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Cat Gamers Director"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Egrade_Coin,100; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malangdo.txt",
+          "lines": [
+            6979
+          ],
+          "required_source_literals": [
+            "getitem Egrade_Coin,100;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mal_in01_cat_gamers_director_branch_for_6530_7002",
+      "unit": "E1-mal_in01_cat_gamers_director_branch_for_6530",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Cat Gamers Director"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Egrade_Coin,100; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malangdo.txt",
+          "lines": [
+            7002
+          ],
+          "required_source_literals": [
+            "getitem Egrade_Coin,100;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mal_in01_cat_gamers_director_branch_for_6530_7071",
+      "unit": "E1-mal_in01_cat_gamers_director_branch_for_6530",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Cat Gamers Director"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem G_Honor_Certificate,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malangdo.txt",
+          "lines": [
+            7071
+          ],
+          "required_source_literals": [
+            "getitem G_Honor_Certificate,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mal_in01_cat_gamers_director_branch_for_6530_7156",
+      "unit": "E1-mal_in01_cat_gamers_director_branch_for_6530",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Cat Gamers Director"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Fish_Tail,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malangdo.txt",
+          "lines": [
+            7156
+          ],
+          "required_source_literals": [
+            "delitem Fish_Tail,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mal_in01_cat_gamers_director_branch_for_6530_7168",
+      "unit": "E1-mal_in01_cat_gamers_director_branch_for_6530",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Cat Gamers Director"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Milk,30; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malangdo.txt",
+          "lines": [
+            7168
+          ],
+          "required_source_literals": [
+            "delitem Milk,30;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mal_in01_cat_gamers_director_branch_for_6530_7214",
+      "unit": "E1-mal_in01_cat_gamers_director_branch_for_6530",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Cat Gamers Director"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Yarn,20; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malangdo.txt",
+          "lines": [
+            7214
+          ],
+          "required_source_literals": [
+            "delitem Yarn,20;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mal_in01_cat_gamers_director_branch_for_6530_7226",
+      "unit": "E1-mal_in01_cat_gamers_director_branch_for_6530",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Cat Gamers Director"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Rat_Tail,30; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malangdo.txt",
+          "lines": [
+            7226
+          ],
+          "required_source_literals": [
+            "delitem Rat_Tail,30;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mal_in01_cat_gamers_director_branch_for_6530_7238",
+      "unit": "E1-mal_in01_cat_gamers_director_branch_for_6530",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Cat Gamers Director"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Lemon,5; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malangdo.txt",
+          "lines": [
+            7238
+          ],
+          "required_source_literals": [
+            "delitem Lemon,5;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mal_in01_cat_gamers_director_branch_for_6530_7250",
+      "unit": "E1-mal_in01_cat_gamers_director_branch_for_6530",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Cat Gamers Director"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Ice_Piece,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malangdo.txt",
+          "lines": [
+            7250
+          ],
+          "required_source_literals": [
+            "delitem Ice_Piece,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mal_in01_cat_gamers_director_branch_for_6530_7254",
+      "unit": "E1-mal_in01_cat_gamers_director_branch_for_6530",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Cat Gamers Director"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is delitem Ice_Cream,10; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malangdo.txt",
+          "lines": [
+            7254
+          ],
+          "required_source_literals": [
+            "delitem Ice_Cream,10;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_mal_in01_cat_gamers_director_branch_for_6530_7314",
+      "unit": "E1-mal_in01_cat_gamers_director_branch_for_6530",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Cat Gamers Director"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Malang_Sp_Can,3; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malangdo.txt",
+          "lines": [
+            7314
+          ],
+          "required_source_literals": [
+            "getitem Malang_Sp_Can,3;"
           ]
         }
       ],
