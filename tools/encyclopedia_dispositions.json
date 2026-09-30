@@ -68526,6 +68526,56 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_spl_in02_assistant_warlock1_branch_for_222_323",
+      "unit": "E1-spl_in02_assistant_warlock1_branch_for_222",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Assistant#Warlock1"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Magical_Stone,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-1/warlock.txt",
+          "lines": [
+            323
+          ],
+          "required_source_literals": [
+            "getitem Magical_Stone,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e1_spl_in02_assistant_warlock1_branch_for_222_324",
+      "unit": "E1-spl_in02_assistant_warlock1_branch_for_222",
+      "package": "E1",
+      "subject": {
+        "kind": "npc",
+        "name": "Assistant#Warlock1"
+      },
+      "result": "unknown",
+      "statement": "The quoted line is getitem Magical_Stone_,1; this record does not decide which branch reaches that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-1/warlock.txt",
+          "lines": [
+            324
+          ],
+          "required_source_literals": [
+            "getitem Magical_Stone_,1;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
