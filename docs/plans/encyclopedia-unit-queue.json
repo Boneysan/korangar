@@ -31418,7 +31418,7 @@
       "package": "E1",
       "kind": "e1_exchange",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "npc": "Master Tailor#pa0829",
@@ -31437,7 +31437,22 @@
       ],
       "size_lines": 91,
       "reason": "refused by the braced one-item prover: switch",
-      "history": []
+      "history": [
+        "2026-09-30T18:45:37Z activated",
+        "2026-09-30T18:45:37Z validated",
+        "2026-09-30T18:45:37Z verified: 0 claims supported",
+        "2026-09-30T18:46:00Z accepted",
+        "2026-09-30T18:46:00Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "bf1b144fc272fc93c0be16171c5775b5e5c09b3fdba5ee0b97dc637f694b1e85",
+      "accepted_files": [
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E1-mora_pendant_crafter_pa0829_branch_for_1613",
