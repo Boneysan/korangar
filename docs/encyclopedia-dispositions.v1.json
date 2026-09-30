@@ -8,7 +8,7 @@
     "E1_not_applicable": 1,
     "E1_unknown": 3464,
     "E1_verified": 1,
-    "E3_unknown": 953
+    "E3_unknown": 954
   },
   "entries": [
     {
@@ -87702,6 +87702,33 @@
           ],
           "required_source_literals": [
             "if(getrefine()>=9) {"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_12786_script_untranslated",
+      "unit": "E3-unknown-slotchange",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          12786
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 12786 is not summarized: the translator does not interpret the quoted statement (SlotChange).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            96000
+          ],
+          "required_source_literals": [
+            "Script: <\" SlotChange += 1; \">"
           ]
         }
       ],
