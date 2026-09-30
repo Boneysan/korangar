@@ -8,7 +8,7 @@
     "E1_not_applicable": 1,
     "E1_unknown": 3464,
     "E1_verified": 1,
-    "E2_verified": 226,
+    "E2_verified": 234,
     "E3_unknown": 973
   },
   "entries": [
@@ -96854,6 +96854,446 @@
             "sellitem Sunset_On_The_Rock;",
             "sellitem Morning_Dew;",
             "sellitem Grilled_Rice_Cake;",
+            "}"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_re_merchants_shops_txt_902_1002",
+      "unit": "E2-npc-re-merchants-shops-txt-902",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Chef Assistant#gef"
+      },
+      "result": "verified",
+      "statement": "Chef Assistant#gef is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/merchants/shops.txt",
+          "lines": [
+            1002,
+            1003,
+            1004,
+            1005,
+            1006,
+            1007,
+            1008,
+            1009,
+            1010,
+            1011,
+            1012,
+            1013,
+            1014,
+            1015,
+            1016,
+            1017,
+            1018,
+            1019
+          ],
+          "required_source_literals": [
+            "geffen,196,111,3\ttrader\tChef Assistant#gef\t4_M_03,{",
+            "OnInit:",
+            "sellitem Combination_Kit;",
+            "sellitem Mushroom;",
+            "sellitem Pot;",
+            "sellitem Bread;",
+            "sellitem Grain;",
+            "sellitem Cooking_Oil;",
+            "sellitem Plain_Sauce;",
+            "sellitem Hot_Sauce;",
+            "sellitem Sweet_Sauce;",
+            "sellitem Red_Spice;",
+            "sellitem Yellow_Spice;",
+            "sellitem Delicious_Fish;",
+            "sellitem Outdoor_Cooking_Kits;",
+            "sellitem Indoor_Cooking_Kits;",
+            "sellitem High_end_Cooking_Kits;",
+            "}"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_re_merchants_shops_txt_902_1021",
+      "unit": "E2-npc-re-merchants-shops-txt-902",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Chef Assistant#alb"
+      },
+      "result": "verified",
+      "statement": "Chef Assistant#alb is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/merchants/shops.txt",
+          "lines": [
+            1021,
+            1022,
+            1023,
+            1024,
+            1025,
+            1026,
+            1027,
+            1028,
+            1029,
+            1030,
+            1031,
+            1032,
+            1033,
+            1034,
+            1035,
+            1036,
+            1037,
+            1038
+          ],
+          "required_source_literals": [
+            "alberta,167,135,5\ttrader\tChef Assistant#alb\t4_M_05,{",
+            "OnInit:",
+            "sellitem Combination_Kit;",
+            "sellitem Mushroom;",
+            "sellitem Pot;",
+            "sellitem Bread;",
+            "sellitem Grain;",
+            "sellitem Cooking_Oil;",
+            "sellitem Plain_Sauce;",
+            "sellitem Hot_Sauce;",
+            "sellitem Sweet_Sauce;",
+            "sellitem Red_Spice;",
+            "sellitem Yellow_Spice;",
+            "sellitem Delicious_Fish;",
+            "sellitem Outdoor_Cooking_Kits;",
+            "sellitem Indoor_Cooking_Kits;",
+            "sellitem High_end_Cooking_Kits;",
+            "}"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_re_merchants_shops_txt_902_902",
+      "unit": "E2-npc-re-merchants-shops-txt-902",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Tool Dealer#pay2"
+      },
+      "result": "verified",
+      "statement": "Tool Dealer#pay2 is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/merchants/shops.txt",
+          "lines": [
+            902,
+            903,
+            904,
+            905,
+            906,
+            907,
+            908,
+            909,
+            910,
+            911,
+            912,
+            913,
+            914,
+            915,
+            916,
+            917
+          ],
+          "required_source_literals": [
+            "payon_in02,87,34,0\ttrader\tTool Dealer#pay2\t1_F_ORIENT_01,{",
+            "OnInit:",
+            "sellitem Arrow;",
+            "sellitem Silver_Arrow;",
+            "sellitem Spectacles;",
+            "sellitem Red_Potion;",
+            "sellitem Orange_Potion;",
+            "sellitem Yellow_Potion;",
+            "sellitem White_Potion;",
+            "sellitem Center_Potion;",
+            "sellitem Awakening_Potion;",
+            "sellitem Empty_Bottle;",
+            "sellitem Wing_Of_Fly;",
+            "sellitem Wing_Of_Butterfly;",
+            "sellitem Booby_Trap;",
+            "}"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_re_merchants_shops_txt_902_920",
+      "unit": "E2-npc-re-merchants-shops-txt-902",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Trap Specialist#ra"
+      },
+      "result": "verified",
+      "statement": "Trap Specialist#ra is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/merchants/shops.txt",
+          "lines": [
+            920,
+            921,
+            922,
+            923,
+            924
+          ],
+          "required_source_literals": [
+            "ra_in01,263,281,4\ttrader\tTrap Specialist#ra\t1_F_01,{",
+            "OnInit:",
+            "sellitem Special_Alloy_Trap;",
+            "sellitem Special_Alloy_Trap_Box;",
+            "}"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_re_merchants_shops_txt_902_926",
+      "unit": "E2-npc-re-merchants-shops-txt-902",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Black Marketeer#ra"
+      },
+      "result": "verified",
+      "statement": "Black Marketeer#ra is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/merchants/shops.txt",
+          "lines": [
+            926,
+            927,
+            928,
+            929,
+            930,
+            931,
+            932,
+            933,
+            934,
+            935,
+            936,
+            937,
+            938,
+            939,
+            940,
+            941,
+            942,
+            943,
+            944,
+            945,
+            946,
+            947,
+            948,
+            949,
+            950
+          ],
+          "required_source_literals": [
+            "ra_in01,257,266,4\ttrader\tBlack Marketeer#ra\t1_M_03,{",
+            "OnInit:",
+            "sellitem Flame_Thrower;",
+            "sellitem Accelerator;",
+            "sellitem Hovering_Booster;",
+            "sellitem Suicidal_Device;",
+            "sellitem Shape_Shifter;",
+            "sellitem Cooling_Device;",
+            "sellitem Mag_Field_Generator;",
+            "sellitem Barrier_Builder;",
+            "sellitem Repair_Kit;",
+            "sellitem Cannon_Ball;",
+            "sellitem Holy_Cannon_Ball;",
+            "sellitem Dark_Cannon_Ball;",
+            "sellitem Soul_Cannon_Ball;",
+            "sellitem Iron_Cannon_Ball;",
+            "sellitem Vulcan_Bullet;",
+            "sellitem Magic_Gear_Fuel;",
+            "sellitem Liquid_Condensed_Bullet;",
+            "sellitem Monkey_Wrench;",
+            "sellitem Camouflage_Generator;",
+            "sellitem RepairA;",
+            "sellitem RepairB;",
+            "sellitem RepairC;",
+            "}"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_re_merchants_shops_txt_902_952",
+      "unit": "E2-npc-re-merchants-shops-txt-902",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Part-Timer#sc_ra"
+      },
+      "result": "verified",
+      "statement": "Part-Timer#sc_ra is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/merchants/shops.txt",
+          "lines": [
+            952,
+            953,
+            954,
+            955,
+            956
+          ],
+          "required_source_literals": [
+            "s_atelier,137,60,3\ttrader\tPart-Timer#sc_ra\t1_F_GYPSY,{",
+            "OnInit:",
+            "sellitem Surface_Paint;",
+            "sellitem Face_Paint;",
+            "}"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_re_merchants_shops_txt_902_959",
+      "unit": "E2-npc-re-merchants-shops-txt-902",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Chef Assistant#prt"
+      },
+      "result": "verified",
+      "statement": "Chef Assistant#prt is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/merchants/shops.txt",
+          "lines": [
+            959,
+            960,
+            961,
+            962,
+            963,
+            964,
+            965,
+            966,
+            967,
+            968,
+            969,
+            970,
+            971,
+            972,
+            973,
+            974,
+            975,
+            976,
+            977,
+            978,
+            979,
+            980,
+            981
+          ],
+          "required_source_literals": [
+            "prontera,156,212,1\ttrader\tChef Assistant#prt\t8_F_GIRL,{",
+            "OnInit:",
+            "sellitem Combination_Kit;",
+            "sellitem Mushroom;",
+            "sellitem Pot;",
+            "sellitem Bread;",
+            "sellitem Grain;",
+            "sellitem Cooking_Oil;",
+            "sellitem Plain_Sauce;",
+            "sellitem Hot_Sauce;",
+            "sellitem Sweet_Sauce;",
+            "sellitem Red_Spice;",
+            "sellitem Yellow_Spice;",
+            "sellitem Delicious_Fish;",
+            "sellitem Outdoor_Cooking_Kits;",
+            "sellitem Indoor_Cooking_Kits;",
+            "sellitem High_end_Cooking_Kits;",
+            "sellitem Cookbook01;",
+            "sellitem Cookbook02;",
+            "sellitem Cookbook03;",
+            "sellitem Cookbook04;",
+            "sellitem Cookbook05;",
+            "}"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e2_npc_re_merchants_shops_txt_902_983",
+      "unit": "E2-npc-re-merchants-shops-txt-902",
+      "package": "E2",
+      "subject": {
+        "kind": "npc",
+        "name": "Chef Assistant#moc"
+      },
+      "result": "verified",
+      "statement": "Chef Assistant#moc is a fixed stock declaration; the quoted lines are the header and the item lines in this block.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/merchants/shops.txt",
+          "lines": [
+            983,
+            984,
+            985,
+            986,
+            987,
+            988,
+            989,
+            990,
+            991,
+            992,
+            993,
+            994,
+            995,
+            996,
+            997,
+            998,
+            999,
+            1000
+          ],
+          "required_source_literals": [
+            "moc_ruins,115,123,5\ttrader\tChef Assistant#moc\t4_M_04,{",
+            "OnInit:",
+            "sellitem Combination_Kit;",
+            "sellitem Mushroom;",
+            "sellitem Pot;",
+            "sellitem Bread;",
+            "sellitem Grain;",
+            "sellitem Cooking_Oil;",
+            "sellitem Plain_Sauce;",
+            "sellitem Hot_Sauce;",
+            "sellitem Sweet_Sauce;",
+            "sellitem Red_Spice;",
+            "sellitem Yellow_Spice;",
+            "sellitem Delicious_Fish;",
+            "sellitem Outdoor_Cooking_Kits;",
+            "sellitem Indoor_Cooking_Kits;",
+            "sellitem High_end_Cooking_Kits;",
             "}"
           ]
         }
