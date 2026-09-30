@@ -111161,6 +111161,87 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_24218_script_untranslated",
+      "unit": "E3-unknown-bonus-batk2-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          24218
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 24218 is not summarized: the translator does not interpret the quoted statement (bonus bAtk2 (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            153211
+          ],
+          "required_source_literals": [
+            "bonus bAtk2,(getrefine()/2)+5;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_24225_script_untranslated",
+      "unit": "E3-unknown-bonus-batk2-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          24225
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 24225 is not summarized: the translator does not interpret the quoted statement (bonus bAtk2 (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            153304
+          ],
+          "required_source_literals": [
+            "bonus bAtk2,(5+getrefine());"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_24226_script_untranslated",
+      "unit": "E3-unknown-bonus-batk2-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          24226
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 24226 is not summarized: the translator does not interpret the quoted statement (bonus bAtk2 (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            153318
+          ],
+          "required_source_literals": [
+            "bonus bAtk2,5+getrefine();"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
