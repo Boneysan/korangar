@@ -8,7 +8,7 @@
     "E1_not_applicable": 1,
     "E1_unknown": 3464,
     "E1_verified": 1,
-    "E3_unknown": 433
+    "E3_unknown": 466
   },
   "entries": [
     {
@@ -87871,6 +87871,60 @@
       "reviewed_on": "2026-09-30"
     },
     {
+      "id": "item_13127_script_untranslated",
+      "unit": "E3-unknown-bonus-batk-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          13127
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 13127 is not summarized: the translator does not interpret the quoted statement (bonus bAtk (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            101937
+          ],
+          "required_source_literals": [
+            "bonus bAtk,((min(getrefine(),15)) ** (2));"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_13128_script_untranslated",
+      "unit": "E3-unknown-bonus-batk-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          13128
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 13128 is not summarized: the translator does not interpret the quoted statement (bonus bAtk (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            101958
+          ],
+          "required_source_literals": [
+            "Script: <\" bonus bAtk,((min(getrefine(),15)) ** (2)); \">"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
       "id": "item_13306_script_untranslated",
       "unit": "E3-unknown-control-autobonus",
       "package": "E3",
@@ -87891,6 +87945,60 @@
           ],
           "required_source_literals": [
             "autobonus \"{ bonus2 bSkillAtk,NJ_HUUMA,100; bonus2 bSkillAtk,NJ_ISSEN,100; }\",50,10000,BF_WEAPON,\"{specialeffect(EF_POTION_BERSERK, AREA, playerattached()); }\";"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_13327_script_untranslated",
+      "unit": "E3-unknown-bonus-batk-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          13327
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 13327 is not summarized: the translator does not interpret the quoted statement (bonus bAtk (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            104988
+          ],
+          "required_source_literals": [
+            "bonus bAtk,((min(getrefine(),15)) ** (2));"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_13328_script_untranslated",
+      "unit": "E3-unknown-bonus-batk-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          13328
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 13328 is not summarized: the translator does not interpret the quoted statement (bonus bAtk (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            105013
+          ],
+          "required_source_literals": [
+            "bonus bAtk,((min(getrefine(),15)) ** (2));"
           ]
         }
       ],
@@ -87972,6 +88080,60 @@
           ],
           "required_source_literals": [
             "Script: <\" autobonus \"{ bonus2 bSkillAtk,KN_BOWLINGBASH,20; bonus2 bSkillAtk,SM_BASH,20; }\",5,15000,BF_WEAPON,\"{ specialeffect(EF_ENHANCE, AREA, playerattached()); }\"; \">"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_13454_script_untranslated",
+      "unit": "E3-unknown-bonus-batk-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          13454
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 13454 is not summarized: the translator does not interpret the quoted statement (bonus bAtk (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            106393
+          ],
+          "required_source_literals": [
+            "bonus bAtk,((min(getrefine(),15)) ** (2));"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_13455_script_untranslated",
+      "unit": "E3-unknown-bonus-batk-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          13455
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 13455 is not summarized: the translator does not interpret the quoted statement (bonus bAtk (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            106423
+          ],
+          "required_source_literals": [
+            "Script: <\" bonus bAtk,((min(getrefine(),15)) ** (2)); \">"
           ]
         }
       ],
@@ -88141,6 +88303,33 @@
       "reviewed_on": "2026-09-30"
     },
     {
+      "id": "item_1400_script_untranslated",
+      "unit": "E3-unknown-bonus-batk-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          1400
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 1400 is not summarized: the translator does not interpret the quoted statement (bonus bAtk (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            11577
+          ],
+          "required_source_literals": [
+            "bonus bAtk,((min(getrefine(),15)) ** (2));"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
       "id": "item_1436_script_untranslated",
       "unit": "E3-unknown-control-if",
       "package": "E3",
@@ -88168,6 +88357,60 @@
       "reviewed_on": "2026-09-30"
     },
     {
+      "id": "item_1443_script_untranslated",
+      "unit": "E3-unknown-bonus-batk-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          1443
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 1443 is not summarized: the translator does not interpret the quoted statement (bonus bAtk (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            12599
+          ],
+          "required_source_literals": [
+            "bonus bAtk,((min(getrefine(),15)) ** (2));"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_1450_script_untranslated",
+      "unit": "E3-unknown-bonus-batk-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          1450
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 1450 is not summarized: the translator does not interpret the quoted statement (bonus bAtk (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            12625
+          ],
+          "required_source_literals": [
+            "bonus bAtk,((min(getrefine(),15)) ** (2));"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
       "id": "item_1492_script_untranslated",
       "unit": "E3-unknown-control-if",
       "package": "E3",
@@ -88188,6 +88431,33 @@
           ],
           "required_source_literals": [
             "if(getrefine()>=6) {"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_1498_script_untranslated",
+      "unit": "E3-unknown-bonus-batk-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          1498
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 1498 is not summarized: the translator does not interpret the quoted statement (bonus bAtk (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            13778
+          ],
+          "required_source_literals": [
+            "bonus bAtk,((min(getrefine(),15)) ** (2));"
           ]
         }
       ],
@@ -88546,6 +88816,60 @@
       "reviewed_on": "2026-09-30"
     },
     {
+      "id": "item_16040_script_untranslated",
+      "unit": "E3-unknown-bonus-batk-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          16040
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 16040 is not summarized: the translator does not interpret the quoted statement (bonus bAtk (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            127090
+          ],
+          "required_source_literals": [
+            "bonus bAtk,((min(getrefine(),15)) ** (2));"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_16041_script_untranslated",
+      "unit": "E3-unknown-bonus-batk-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          16041
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 16041 is not summarized: the translator does not interpret the quoted statement (bonus bAtk (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            127121
+          ],
+          "required_source_literals": [
+            "bonus bAtk,((min(getrefine(),15)) ** (2));"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
       "id": "item_1630_script_untranslated",
       "unit": "E3-unknown-control-autobonus",
       "package": "E3",
@@ -88762,6 +89086,33 @@
       "reviewed_on": "2026-09-30"
     },
     {
+      "id": "item_1800_script_untranslated",
+      "unit": "E3-unknown-bonus-batk-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          1800
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 1800 is not summarized: the translator does not interpret the quoted statement (bonus bAtk (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            20599
+          ],
+          "required_source_literals": [
+            "bonus bAtk,((min(getrefine(),15)) ** (2));"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
       "id": "item_18108_script_untranslated",
       "unit": "E3-unknown-control-autobonus",
       "package": "E3",
@@ -88816,6 +89167,60 @@
       "reviewed_on": "2026-09-30"
     },
     {
+      "id": "item_18121_script_untranslated",
+      "unit": "E3-unknown-bonus-batk-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          18121
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 18121 is not summarized: the translator does not interpret the quoted statement (bonus bAtk (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            132328
+          ],
+          "required_source_literals": [
+            "Script: <\" bonus bAtk,((min(getrefine(),15)) ** (2)); \">"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_18130_script_untranslated",
+      "unit": "E3-unknown-bonus-batk-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          18130
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 18130 is not summarized: the translator does not interpret the quoted statement (bonus bAtk (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            132478
+          ],
+          "required_source_literals": [
+            "bonus bAtk,((min(getrefine(),15)) ** (2));"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
       "id": "item_1830_script_untranslated",
       "unit": "E3-unknown-control-if",
       "package": "E3",
@@ -88863,6 +89268,33 @@
           ],
           "required_source_literals": [
             "if(getrefine()>7) {"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_1839_script_untranslated",
+      "unit": "E3-unknown-bonus-batk-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          1839
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 1839 is not summarized: the translator does not interpret the quoted statement (bonus bAtk (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            21495
+          ],
+          "required_source_literals": [
+            "bonus bAtk,((min(getrefine(),15)) ** (2));"
           ]
         }
       ],
@@ -89869,6 +90301,33 @@
       "reviewed_on": "2026-09-30"
     },
     {
+      "id": "item_1900_script_untranslated",
+      "unit": "E3-unknown-bonus-batk-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          1900
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 1900 is not summarized: the translator does not interpret the quoted statement (bonus bAtk (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            21551
+          ],
+          "required_source_literals": [
+            "bonus bAtk,((min(getrefine(),15)) ** (2));"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
       "id": "item_19020_script_untranslated",
       "unit": "E3-unknown-control-if",
       "package": "E3",
@@ -90031,6 +90490,33 @@
       "reviewed_on": "2026-09-30"
     },
     {
+      "id": "item_1939_script_untranslated",
+      "unit": "E3-unknown-bonus-batk-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          1939
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 1939 is not summarized: the translator does not interpret the quoted statement (bonus bAtk (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            22485
+          ],
+          "required_source_literals": [
+            "bonus bAtk,((min(getrefine(),15)) ** (2));"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
       "id": "item_1972_script_untranslated",
       "unit": "E3-unknown-control-if",
       "package": "E3",
@@ -90132,6 +90618,60 @@
           ],
           "required_source_literals": [
             "if(getrefine()>5) {"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_1995_script_untranslated",
+      "unit": "E3-unknown-bonus-batk-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          1995
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 1995 is not summarized: the translator does not interpret the quoted statement (bonus bAtk (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            23531
+          ],
+          "required_source_literals": [
+            "bonus bAtk,((min(getrefine(),15)) ** (2));"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_1996_script_untranslated",
+      "unit": "E3-unknown-bonus-batk-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          1996
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 1996 is not summarized: the translator does not interpret the quoted statement (bonus bAtk (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            23554
+          ],
+          "required_source_literals": [
+            "bonus bAtk,((min(getrefine(),15)) ** (2));"
           ]
         }
       ],
@@ -90456,6 +90996,87 @@
           ],
           "required_source_literals": [
             "if(readparam(bStr)<110) {"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_21015_script_untranslated",
+      "unit": "E3-unknown-bonus-batk-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          21015
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 21015 is not summarized: the translator does not interpret the quoted statement (bonus bAtk (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            148123
+          ],
+          "required_source_literals": [
+            "bonus bAtk,((min(getrefine(),15)) ** (2));"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_21016_script_untranslated",
+      "unit": "E3-unknown-bonus-batk-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          21016
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 21016 is not summarized: the translator does not interpret the quoted statement (bonus bAtk (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            148147
+          ],
+          "required_source_literals": [
+            "Script: <\" bonus bAtk,((min(getrefine(),15)) ** (2)); \">"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_21019_script_untranslated",
+      "unit": "E3-unknown-bonus-batk-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          21019
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 21019 is not summarized: the translator does not interpret the quoted statement (bonus bAtk (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            148193
+          ],
+          "required_source_literals": [
+            "bonus bAtk,min(readparam(bStr),120);"
           ]
         }
       ],
@@ -92839,6 +93460,33 @@
       "reviewed_on": "2026-09-30"
     },
     {
+      "id": "item_2589_script_untranslated",
+      "unit": "E3-unknown-bonus-batk-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          2589
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 2589 is not summarized: the translator does not interpret the quoted statement (bonus bAtk (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            34225
+          ],
+          "required_source_literals": [
+            "bonus bAtk,readparam(bStr)/20;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
       "id": "item_2593_script_untranslated",
       "unit": "E3-unknown-bonus3-bsubdefele-expression",
       "package": "E3",
@@ -93244,6 +93892,114 @@
       "reviewed_on": "2026-09-30"
     },
     {
+      "id": "item_28007_script_untranslated",
+      "unit": "E3-unknown-bonus-batk-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          28007
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 28007 is not summarized: the translator does not interpret the quoted statement (bonus bAtk (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            155750
+          ],
+          "required_source_literals": [
+            "bonus bAtk,((min(getrefine(),15)) ** (2));"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_28008_script_untranslated",
+      "unit": "E3-unknown-bonus-batk-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          28008
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 28008 is not summarized: the translator does not interpret the quoted statement (bonus bAtk (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            155772
+          ],
+          "required_source_literals": [
+            "bonus bAtk,((min(getrefine(),15)) ** (2));"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_28106_script_untranslated",
+      "unit": "E3-unknown-bonus-batk-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          28106
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 28106 is not summarized: the translator does not interpret the quoted statement (bonus bAtk (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            155954
+          ],
+          "required_source_literals": [
+            "bonus bAtk,((min(getrefine(),15)) ** (2));"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_28107_script_untranslated",
+      "unit": "E3-unknown-bonus-batk-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          28107
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 28107 is not summarized: the translator does not interpret the quoted statement (bonus bAtk (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            155981
+          ],
+          "required_source_literals": [
+            "bonus bAtk,((min(getrefine(),15)) ** (2));"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
       "id": "item_2827_script_untranslated",
       "unit": "E3-unknown-control-autobonus",
       "package": "E3",
@@ -93291,6 +94047,114 @@
           ],
           "required_source_literals": [
             "autobonus \"{ bonus bAspd,2; }\",50,2000,BF_WEAPON|BF_MAGIC;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_28604_script_untranslated",
+      "unit": "E3-unknown-bonus-batk-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          28604
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 28604 is not summarized: the translator does not interpret the quoted statement (bonus bAtk (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            156759
+          ],
+          "required_source_literals": [
+            "bonus bAtk,((min(getrefine(),15)) ** (2));"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_28605_script_untranslated",
+      "unit": "E3-unknown-bonus-batk-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          28605
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 28605 is not summarized: the translator does not interpret the quoted statement (bonus bAtk (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            156784
+          ],
+          "required_source_literals": [
+            "bonus bAtk,((min(getrefine(),15)) ** (2));"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_28705_script_untranslated",
+      "unit": "E3-unknown-bonus-batk-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          28705
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 28705 is not summarized: the translator does not interpret the quoted statement (bonus bAtk (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            156926
+          ],
+          "required_source_literals": [
+            "bonus bAtk,((min(getrefine(),15)) ** (2));"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_28706_script_untranslated",
+      "unit": "E3-unknown-bonus-batk-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          28706
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 28706 is not summarized: the translator does not interpret the quoted statement (bonus bAtk (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            156968
+          ],
+          "required_source_literals": [
+            "bonus bAtk,((min(getrefine(),15)) ** (2));"
           ]
         }
       ],
@@ -95397,6 +96261,33 @@
           ],
           "required_source_literals": [
             "if(getskilllv(SA_VIOLENTGALE)==5) {"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "item_4662_script_untranslated",
+      "unit": "E3-unknown-bonus-batk-expression",
+      "package": "E3",
+      "subject": {
+        "kind": "item",
+        "ids": [
+          4662
+        ]
+      },
+      "result": "unknown",
+      "statement": "The Script of item 4662 is not summarized: the translator does not interpret the quoted statement (bonus bAtk (expression)).",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/item_db.conf",
+          "lines": [
+            49535
+          ],
+          "required_source_literals": [
+            "bonus bAtk,-5/(readparam(bStr)*10);"
           ]
         }
       ],
