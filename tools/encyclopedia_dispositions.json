@@ -188760,6 +188760,249 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_8256_npc_re_jobs_3_1_ranger_txt_398",
+      "unit": "E5-chain-8256",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8256
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 8256; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-1/ranger.txt",
+          "lines": [
+            398
+          ],
+          "required_source_literals": [
+            "changequest 8256,8257;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_8256_npc_re_jobs_3_1_ranger_txt_418",
+      "unit": "E5-chain-8256",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8257
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 8257; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-1/ranger.txt",
+          "lines": [
+            418
+          ],
+          "required_source_literals": [
+            "changequest 8257,8258;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_8256_npc_re_jobs_3_1_ranger_txt_679",
+      "unit": "E5-chain-8256",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8258
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 8258; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-1/ranger.txt",
+          "lines": [
+            679
+          ],
+          "required_source_literals": [
+            "changequest 8258,8259;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_8256_npc_re_jobs_3_1_ranger_txt_681",
+      "unit": "E5-chain-8256",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8260
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 8260; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-1/ranger.txt",
+          "lines": [
+            681
+          ],
+          "required_source_literals": [
+            "erasequest 8260;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_8256_npc_re_jobs_3_1_ranger_txt_682",
+      "unit": "E5-chain-8256",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8261
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 8261; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-1/ranger.txt",
+          "lines": [
+            682
+          ],
+          "required_source_literals": [
+            "erasequest 8261;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_8256_npc_re_jobs_3_1_ranger_txt_1201",
+      "unit": "E5-chain-8256",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8260
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 8260; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-1/ranger.txt",
+          "lines": [
+            1201
+          ],
+          "required_source_literals": [
+            "setquest 8260;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_8256_npc_re_jobs_3_1_ranger_txt_1322",
+      "unit": "E5-chain-8256",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8260
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 8260; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-1/ranger.txt",
+          "lines": [
+            1322
+          ],
+          "required_source_literals": [
+            "erasequest 8260;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_8256_npc_re_jobs_3_1_ranger_txt_1491",
+      "unit": "E5-chain-8256",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8261
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 8261; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-1/ranger.txt",
+          "lines": [
+            1491
+          ],
+          "required_source_literals": [
+            "setquest 8261;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_8256_npc_re_jobs_3_1_ranger_txt_1495",
+      "unit": "E5-chain-8256",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8261
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 8261; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-1/ranger.txt",
+          "lines": [
+            1495
+          ],
+          "required_source_literals": [
+            "erasequest 8261;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
