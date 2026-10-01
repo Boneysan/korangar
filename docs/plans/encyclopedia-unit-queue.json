@@ -143521,7 +143521,7 @@
       "package": "E3",
       "kind": "e3_translator",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "key": "bonus2 bMagicAddRace",
@@ -143558,9 +143558,24 @@
       "reason": "1 item script(s) first stop at documented `bonus2 bMagicAddRace`",
       "history": [
         "2026-10-01T06:26:00Z activated",
-        "2026-10-01T06:26:00Z blocked: No item in this cluster is fully translated. The remaining scripts use a conditional, an expression, or a command whose meaning is outside this excerpt."
+        "2026-10-01T06:26:00Z blocked: No item in this cluster is fully translated. The remaining scripts use a conditional, an expression, or a command whose meaning is outside this excerpt.",
+        "2026-10-01T07:33:52Z activated",
+        "2026-10-01T07:33:52Z validated",
+        "2026-10-01T07:33:52Z verified: 1 claims supported",
+        "2026-10-01T07:34:16Z accepted",
+        "2026-10-01T07:34:16Z committed"
       ],
-      "baseline_dirty": []
+      "baseline_dirty": [],
+      "draft_sha256": "05559712c14aa14453247b0788c57c77d2e9bac9cde3a3b0d37eb0bd0f721673",
+      "accepted_files": [
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/export_item_reference.py",
+        "tools/tests/test_export_item_effect_phrases.py"
+      ],
+      "accepted_on": "2026-10-01",
+      "commit": "committed"
     },
     {
       "id": "E3-translate-bonus2-bsplossrate",
