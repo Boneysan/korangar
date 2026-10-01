@@ -140940,7 +140940,7 @@
       "package": "E3",
       "kind": "e3_translator",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "key": "bonus3 bAddEffOnSkill",
@@ -141014,7 +141014,24 @@
       ],
       "size_lines": 35,
       "reason": "4 item script(s) first stop at documented `bonus3 bAddEffOnSkill`",
-      "history": []
+      "history": [
+        "2026-10-01T06:14:00Z activated",
+        "2026-10-01T06:14:00Z validated",
+        "2026-10-01T06:14:01Z verified: 1 claims supported",
+        "2026-10-01T06:14:25Z accepted",
+        "2026-10-01T06:14:25Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "06673a669af62cf62f49d70a50a26c5ff87c186f154aa965173d2911407434c4",
+      "accepted_files": [
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/export_item_reference.py",
+        "tools/tests/test_export_item_effect_phrases.py"
+      ],
+      "accepted_on": "2026-10-01",
+      "commit": "committed"
     },
     {
       "id": "E3-translate-monster",
