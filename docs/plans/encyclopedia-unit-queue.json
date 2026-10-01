@@ -142446,7 +142446,7 @@
       "package": "E3",
       "kind": "e3_translator",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "key": "bonus2 bSPDrainValue",
@@ -142494,7 +142494,24 @@
       ],
       "size_lines": 33,
       "reason": "2 item script(s) first stop at documented `bonus2 bSPDrainValue`",
-      "history": []
+      "history": [
+        "2026-10-01T06:21:27Z activated",
+        "2026-10-01T06:21:27Z validated",
+        "2026-10-01T06:21:27Z verified: 1 claims supported",
+        "2026-10-01T06:21:51Z accepted",
+        "2026-10-01T06:21:51Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "db95413b0a710c659a8e75ece9a0433af761c6b5220cef001a9d3964d1103e1a",
+      "accepted_files": [
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/export_item_reference.py",
+        "tools/tests/test_export_item_effect_phrases.py"
+      ],
+      "accepted_on": "2026-10-01",
+      "commit": "committed"
     },
     {
       "id": "E3-translate-bonus4-bautospell",
