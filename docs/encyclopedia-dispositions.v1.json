@@ -12,7 +12,7 @@
     "E2_verified": 236,
     "E3_unknown": 973,
     "E4_unknown": 213,
-    "E5_unknown": 1853
+    "E5_unknown": 1858
   },
   "entries": [
     {
@@ -147485,6 +147485,141 @@
           ],
           "required_source_literals": [
             "changequest 8104,8105;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_8107_npc_quests_quests_rachel_txt_1261",
+      "unit": "E5-chain-8107",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8121
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 8121; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_rachel.txt",
+          "lines": [
+            1261
+          ],
+          "required_source_literals": [
+            "changequest 8121,8122;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_8107_npc_quests_quests_rachel_txt_1447",
+      "unit": "E5-chain-8107",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8120
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 8120; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_rachel.txt",
+          "lines": [
+            1447
+          ],
+          "required_source_literals": [
+            "changequest 8120,8121;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_8107_npc_quests_quests_rachel_txt_1795",
+      "unit": "E5-chain-8107",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8119
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 8119; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_rachel.txt",
+          "lines": [
+            1795
+          ],
+          "required_source_literals": [
+            "changequest 8119,8120;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_8107_npc_quests_quests_rachel_txt_1843",
+      "unit": "E5-chain-8107",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8114
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 8114; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_rachel.txt",
+          "lines": [
+            1843
+          ],
+          "required_source_literals": [
+            "changequest 8114,8115;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_8107_npc_quests_quests_rachel_txt_1878",
+      "unit": "E5-chain-8107",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8107
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 8107; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_rachel.txt",
+          "lines": [
+            1878
+          ],
+          "required_source_literals": [
+            "changequest 8107,8108;"
           ]
         }
       ],
