@@ -139300,7 +139300,7 @@
       "package": "E3",
       "kind": "e3_translator",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "key": "bonus2 bAddSkillBlow",
@@ -139400,7 +139400,24 @@
       ],
       "size_lines": 37,
       "reason": "6 item script(s) first stop at documented `bonus2 bAddSkillBlow`",
-      "history": []
+      "history": [
+        "2026-10-01T06:07:48Z activated",
+        "2026-10-01T06:07:48Z validated",
+        "2026-10-01T06:07:48Z verified: 1 claims supported",
+        "2026-10-01T06:08:13Z accepted",
+        "2026-10-01T06:08:13Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "b0b47f71a91a82c4e6915c712a0cda9552fe6d1838be3916cf2b6fb86914bc3d",
+      "accepted_files": [
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/export_item_reference.py",
+        "tools/tests/test_export_item_effect_phrases.py"
+      ],
+      "accepted_on": "2026-10-01",
+      "commit": "committed"
     },
     {
       "id": "E3-translate-bonus4-bautospellwhenhit",
