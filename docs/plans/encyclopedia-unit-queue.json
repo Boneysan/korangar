@@ -142302,7 +142302,7 @@
       "package": "E3",
       "kind": "e3_translator",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "key": "bonus bPerfectHitRate",
@@ -142350,7 +142350,24 @@
       ],
       "size_lines": 33,
       "reason": "2 item script(s) first stop at documented `bonus bPerfectHitRate`",
-      "history": []
+      "history": [
+        "2026-10-01T06:20:37Z activated",
+        "2026-10-01T06:20:37Z validated",
+        "2026-10-01T06:20:37Z verified: 1 claims supported",
+        "2026-10-01T06:21:01Z accepted",
+        "2026-10-01T06:21:02Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "572fa095cacc63253a34dc6bb442b42bff8947be3c9852feeaa2e1d39a2eb3a9",
+      "accepted_files": [
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/export_item_reference.py",
+        "tools/tests/test_export_item_effect_phrases.py"
+      ],
+      "accepted_on": "2026-10-01",
+      "commit": "committed"
     },
     {
       "id": "E3-translate-bonus2-bgetzenynum",
