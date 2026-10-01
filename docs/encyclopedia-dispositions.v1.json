@@ -12,7 +12,7 @@
     "E2_verified": 236,
     "E3_unknown": 973,
     "E4_unknown": 213,
-    "E5_unknown": 856
+    "E5_unknown": 859
   },
   "entries": [
     {
@@ -110738,6 +110738,87 @@
           ],
           "required_source_literals": [
             "setquest 13046;// Tendrilion Request"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_14126_npc_re_quests_quests_eclage_txt_4206",
+      "unit": "E5-chain-14126",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          14126
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 14126; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "lines": [
+            4206
+          ],
+          "required_source_literals": [
+            "setquest 14126;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_14126_npc_re_quests_quests_eclage_txt_4258",
+      "unit": "E5-chain-14126",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          14126
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 14126; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "lines": [
+            4258
+          ],
+          "required_source_literals": [
+            "changequest 14126,14127;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_14126_npc_re_quests_quests_eclage_txt_4291",
+      "unit": "E5-chain-14126",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          14134
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 14134; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "lines": [
+            4291
+          ],
+          "required_source_literals": [
+            "changequest 14134,14135;"
           ]
         }
       ],
