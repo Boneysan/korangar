@@ -152472,6 +152472,87 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_11331_npc_re_quests_quests_eclage_txt_2404",
+      "unit": "E5-chain-11331",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          11331
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 11331; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "lines": [
+            2404
+          ],
+          "required_source_literals": [
+            "changequest 11331,11332;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_11331_npc_re_quests_quests_eclage_txt_2427",
+      "unit": "E5-chain-11331",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          11332
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 11332; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "lines": [
+            2427
+          ],
+          "required_source_literals": [
+            "changequest 11332,11333;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_11331_npc_re_quests_quests_eclage_txt_2492",
+      "unit": "E5-chain-11331",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          11334
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 11334; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "lines": [
+            2492
+          ],
+          "required_source_literals": [
+            "changequest 11334,11335;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
