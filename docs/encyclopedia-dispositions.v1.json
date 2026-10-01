@@ -12,7 +12,7 @@
     "E2_verified": 236,
     "E3_unknown": 973,
     "E4_unknown": 213,
-    "E5_unknown": 830
+    "E5_unknown": 833
   },
   "entries": [
     {
@@ -107390,6 +107390,87 @@
           ],
           "required_source_literals": [
             "changequest 11175,11176;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_11310_npc_re_quests_quests_eclage_txt_157",
+      "unit": "E5-chain-11310",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          11310
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 11310; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "lines": [
+            157
+          ],
+          "required_source_literals": [
+            "setquest 11310;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_11310_npc_re_quests_quests_eclage_txt_177",
+      "unit": "E5-chain-11310",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          11311
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 11311; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "lines": [
+            177
+          ],
+          "required_source_literals": [
+            "completequest 11311;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_11310_npc_re_quests_quests_eclage_txt_352",
+      "unit": "E5-chain-11310",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          11310
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 11310; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "lines": [
+            352
+          ],
+          "required_source_literals": [
+            "changequest 11310,11311;"
           ]
         }
       ],
