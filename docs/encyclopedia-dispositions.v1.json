@@ -12,7 +12,7 @@
     "E2_verified": 236,
     "E3_unknown": 973,
     "E4_unknown": 213,
-    "E5_unknown": 944
+    "E5_unknown": 951
   },
   "entries": [
     {
@@ -105932,6 +105932,195 @@
           ],
           "required_source_literals": [
             "changequest 11097,11098;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1109_npc_re_quests_quests_mora_txt_2039",
+      "unit": "E5-chain-1109",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          1109
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 1109; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_mora.txt",
+          "lines": [
+            2039
+          ],
+          "required_source_literals": [
+            "setquest 1109;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1109_npc_re_quests_quests_mora_txt_2068",
+      "unit": "E5-chain-1109",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          1110
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 1110; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_mora.txt",
+          "lines": [
+            2068
+          ],
+          "required_source_literals": [
+            "changequest 1110,1111;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1109_npc_re_quests_quests_mora_txt_2111",
+      "unit": "E5-chain-1109",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          1112
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 1112; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_mora.txt",
+          "lines": [
+            2111
+          ],
+          "required_source_literals": [
+            "changequest 1112,1113;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1109_npc_re_quests_quests_mora_txt_2157",
+      "unit": "E5-chain-1109",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          1116
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 1116; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_mora.txt",
+          "lines": [
+            2157
+          ],
+          "required_source_literals": [
+            "changequest 1116,1117;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1109_npc_re_quests_quests_mora_txt_2298",
+      "unit": "E5-chain-1109",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          1109
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 1109; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_mora.txt",
+          "lines": [
+            2298
+          ],
+          "required_source_literals": [
+            "changequest 1109,1110;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1109_npc_re_quests_quests_mora_txt_2339",
+      "unit": "E5-chain-1109",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          1111
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 1111; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_mora.txt",
+          "lines": [
+            2339
+          ],
+          "required_source_literals": [
+            "changequest 1111,1112;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1109_npc_re_quests_quests_mora_txt_2400",
+      "unit": "E5-chain-1109",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          1113
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 1113; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_mora.txt",
+          "lines": [
+            2400
+          ],
+          "required_source_literals": [
+            "changequest 1113,1114;"
           ]
         }
       ],
