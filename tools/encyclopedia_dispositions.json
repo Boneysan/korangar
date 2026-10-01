@@ -153660,6 +153660,60 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_11234_npc_re_quests_quests_malangdo_txt_2679",
+      "unit": "E5-chain-11234",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          11234
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 11234; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malangdo.txt",
+          "lines": [
+            2679
+          ],
+          "required_source_literals": [
+            "changequest 11234,11235;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_11234_npc_re_quests_quests_malangdo_txt_2685",
+      "unit": "E5-chain-11234",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          11234
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 11234; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malangdo.txt",
+          "lines": [
+            2685
+          ],
+          "required_source_literals": [
+            "changequest 11234,11235;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
