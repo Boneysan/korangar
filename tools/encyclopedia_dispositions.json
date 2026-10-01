@@ -238392,6 +238392,34 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e6_boss_1112_boss",
+      "unit": "E6-boss-1112",
+      "package": "E6",
+      "subject": {
+        "kind": "monster",
+        "name": "DRAKE",
+        "ids": [
+          1112
+        ]
+      },
+      "result": "unknown",
+      "statement": "Monster 1112 (DRAKE) has configured database rows in the packet; this record does not enumerate each skill.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/mob_db.conf",
+          "lines": [
+            5375
+          ],
+          "required_source_literals": [
+            "{"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
