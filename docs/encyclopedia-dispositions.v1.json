@@ -12,7 +12,7 @@
     "E2_verified": 236,
     "E3_unknown": 973,
     "E4_unknown": 213,
-    "E5_unknown": 1106
+    "E5_unknown": 1112
   },
   "entries": [
     {
@@ -132716,6 +132716,168 @@
           ],
           "required_source_literals": [
             "changequest 9003,9004;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_9004_npc_jobs_2_1_knight_txt_1114",
+      "unit": "E5-chain-9004",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          9004
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 9004; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-1/knight.txt",
+          "lines": [
+            1114
+          ],
+          "required_source_literals": [
+            "changequest 9004,9005;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_9004_npc_jobs_2_1_knight_txt_1131",
+      "unit": "E5-chain-9004",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          9005
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 9005; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-1/knight.txt",
+          "lines": [
+            1131
+          ],
+          "required_source_literals": [
+            "changequest 9005,9006;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_9004_npc_jobs_2_1_knight_txt_1416",
+      "unit": "E5-chain-9004",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          9006
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 9006; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-1/knight.txt",
+          "lines": [
+            1416
+          ],
+          "required_source_literals": [
+            "changequest 9006,9007;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_9004_npc_jobs_2_1_knight_txt_1543",
+      "unit": "E5-chain-9004",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          9007
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 9007; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-1/knight.txt",
+          "lines": [
+            1543
+          ],
+          "required_source_literals": [
+            "changequest 9007,9008;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_9004_npc_jobs_2_1_knight_txt_1713",
+      "unit": "E5-chain-9004",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          9008
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 9008; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-1/knight.txt",
+          "lines": [
+            1713
+          ],
+          "required_source_literals": [
+            "changequest 9008,9009;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_9004_npc_jobs_2_1_knight_txt_1722",
+      "unit": "E5-chain-9004",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          9008
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 9008; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-1/knight.txt",
+          "lines": [
+            1722
+          ],
+          "required_source_literals": [
+            "changequest 9008,9009;"
           ]
         }
       ],
