@@ -157332,6 +157332,492 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_3040_npc_instances_sealedshrine_txt_165",
+      "unit": "E5-chain-3040",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          3040
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 3040; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/instances/SealedShrine.txt",
+          "lines": [
+            165
+          ],
+          "required_source_literals": [
+            "erasequest(3040);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_3040_npc_instances_sealedshrine_txt_167",
+      "unit": "E5-chain-3040",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          3041
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 3041; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/instances/SealedShrine.txt",
+          "lines": [
+            167
+          ],
+          "required_source_literals": [
+            "erasequest(3041);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_3040_npc_instances_sealedshrine_txt_169",
+      "unit": "E5-chain-3040",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          3045
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 3045; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/instances/SealedShrine.txt",
+          "lines": [
+            169
+          ],
+          "required_source_literals": [
+            "erasequest(3045);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_3040_npc_instances_sealedshrine_txt_197",
+      "unit": "E5-chain-3040",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          3042
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 3042; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/instances/SealedShrine.txt",
+          "lines": [
+            197
+          ],
+          "required_source_literals": [
+            "setquest(3042);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_3040_npc_instances_sealedshrine_txt_232",
+      "unit": "E5-chain-3040",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          3040
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 3040; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/instances/SealedShrine.txt",
+          "lines": [
+            232
+          ],
+          "required_source_literals": [
+            "setquest(3040);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_3040_npc_instances_sealedshrine_txt_248",
+      "unit": "E5-chain-3040",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          3040
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 3040; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/instances/SealedShrine.txt",
+          "lines": [
+            248
+          ],
+          "required_source_literals": [
+            "erasequest(3040);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_3040_npc_instances_sealedshrine_txt_250",
+      "unit": "E5-chain-3040",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          3041
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 3041; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/instances/SealedShrine.txt",
+          "lines": [
+            250
+          ],
+          "required_source_literals": [
+            "erasequest(3041);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_3040_npc_instances_sealedshrine_txt_252",
+      "unit": "E5-chain-3040",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          3045
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 3045; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/instances/SealedShrine.txt",
+          "lines": [
+            252
+          ],
+          "required_source_literals": [
+            "erasequest(3045);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_3040_npc_instances_sealedshrine_txt_290",
+      "unit": "E5-chain-3040",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          3043
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 3043; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/instances/SealedShrine.txt",
+          "lines": [
+            290
+          ],
+          "required_source_literals": [
+            "completequest(3043);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_3040_npc_instances_sealedshrine_txt_347",
+      "unit": "E5-chain-3040",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          3042
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 3042; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/instances/SealedShrine.txt",
+          "lines": [
+            347
+          ],
+          "required_source_literals": [
+            "erasequest(3042);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_3040_npc_instances_sealedshrine_txt_348",
+      "unit": "E5-chain-3040",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          3043
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 3043; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/instances/SealedShrine.txt",
+          "lines": [
+            348
+          ],
+          "required_source_literals": [
+            "setquest(3043);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_3040_npc_instances_sealedshrine_txt_402",
+      "unit": "E5-chain-3040",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          3042
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 3042; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/instances/SealedShrine.txt",
+          "lines": [
+            402
+          ],
+          "required_source_literals": [
+            "erasequest(3042);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_3040_npc_instances_sealedshrine_txt_403",
+      "unit": "E5-chain-3040",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          3043
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 3043; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/instances/SealedShrine.txt",
+          "lines": [
+            403
+          ],
+          "required_source_literals": [
+            "erasequest(3043);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_3040_npc_instances_sealedshrine_txt_404",
+      "unit": "E5-chain-3040",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          3043
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 3043; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/instances/SealedShrine.txt",
+          "lines": [
+            404
+          ],
+          "required_source_literals": [
+            "setquest(3043);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_3040_npc_instances_sealedshrine_txt_1070",
+      "unit": "E5-chain-3040",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          3041
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 3041; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/instances/SealedShrine.txt",
+          "lines": [
+            1070
+          ],
+          "required_source_literals": [
+            "erasequest(3041);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_3040_npc_instances_sealedshrine_txt_1086",
+      "unit": "E5-chain-3040",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          3041
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 3041; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/instances/SealedShrine.txt",
+          "lines": [
+            1086
+          ],
+          "required_source_literals": [
+            "setquest(3041);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_3040_npc_instances_sealedshrine_txt_1135",
+      "unit": "E5-chain-3040",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          3041
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 3041; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/instances/SealedShrine.txt",
+          "lines": [
+            1135
+          ],
+          "required_source_literals": [
+            "erasequest(3041);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_3040_npc_instances_sealedshrine_txt_1224",
+      "unit": "E5-chain-3040",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          3041
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 3041; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/instances/SealedShrine.txt",
+          "lines": [
+            1224
+          ],
+          "required_source_literals": [
+            "erasequest(3041);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
