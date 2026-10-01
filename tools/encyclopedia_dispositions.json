@@ -170157,6 +170157,222 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_12035_npc_quests_quests_ayothaya_txt_1315",
+      "unit": "E5-chain-12035",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          12035
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 12035; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_ayothaya.txt",
+          "lines": [
+            1315
+          ],
+          "required_source_literals": [
+            "setquest 12035;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_12035_npc_quests_quests_ayothaya_txt_1469",
+      "unit": "E5-chain-12035",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          12035
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 12035; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_ayothaya.txt",
+          "lines": [
+            1469
+          ],
+          "required_source_literals": [
+            "changequest 12035,12036;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_12035_npc_quests_quests_ayothaya_txt_1508",
+      "unit": "E5-chain-12035",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          12036
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 12036; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_ayothaya.txt",
+          "lines": [
+            1508
+          ],
+          "required_source_literals": [
+            "changequest 12036,12037;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_12035_npc_quests_quests_ayothaya_txt_1620",
+      "unit": "E5-chain-12035",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          12037
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 12037; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_ayothaya.txt",
+          "lines": [
+            1620
+          ],
+          "required_source_literals": [
+            "changequest 12037,12038;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_12035_npc_quests_quests_ayothaya_txt_1656",
+      "unit": "E5-chain-12035",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          12038
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 12038; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_ayothaya.txt",
+          "lines": [
+            1656
+          ],
+          "required_source_literals": [
+            "changequest 12038,12039;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_12035_npc_quests_quests_ayothaya_txt_1755",
+      "unit": "E5-chain-12035",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          12039
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 12039; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_ayothaya.txt",
+          "lines": [
+            1755
+          ],
+          "required_source_literals": [
+            "completequest 12039;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_12035_npc_quests_quests_ayothaya_txt_2050",
+      "unit": "E5-chain-12035",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          12036
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 12036; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_ayothaya.txt",
+          "lines": [
+            2050
+          ],
+          "required_source_literals": [
+            "setquest 12036;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_12035_npc_quests_quests_ayothaya_txt_2099",
+      "unit": "E5-chain-12035",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          12039
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 12039; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_ayothaya.txt",
+          "lines": [
+            2099
+          ],
+          "required_source_literals": [
+            "completequest 12039;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
