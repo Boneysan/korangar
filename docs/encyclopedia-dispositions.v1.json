@@ -12,7 +12,7 @@
     "E2_verified": 236,
     "E3_unknown": 973,
     "E4_unknown": 213,
-    "E5_unknown": 686
+    "E5_unknown": 688
   },
   "entries": [
     {
@@ -118919,6 +118919,60 @@
           ],
           "required_source_literals": [
             "setquest 7176;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_7177_npc_re_jobs_3_2_shadow_chaser_txt_1246",
+      "unit": "E5-chain-7177",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7177
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 7177; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-2/shadow_chaser.txt",
+          "lines": [
+            1246
+          ],
+          "required_source_literals": [
+            "changequest 7177,7178;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_7177_npc_re_jobs_3_2_shadow_chaser_txt_1323",
+      "unit": "E5-chain-7177",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7179
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 7179; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-2/shadow_chaser.txt",
+          "lines": [
+            1323
+          ],
+          "required_source_literals": [
+            "erasequest 7179;"
           ]
         }
       ],
