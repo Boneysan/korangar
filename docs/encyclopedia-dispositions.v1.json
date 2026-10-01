@@ -12,7 +12,7 @@
     "E2_verified": 236,
     "E3_unknown": 973,
     "E4_unknown": 213,
-    "E5_unknown": 768
+    "E5_unknown": 774
   },
   "entries": [
     {
@@ -124022,6 +124022,168 @@
           ],
           "required_source_literals": [
             "changequest 9017,9018;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_9030_npc_re_quests_quests_brasilis_txt_120",
+      "unit": "E5-chain-9030",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          9030
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 9030; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_brasilis.txt",
+          "lines": [
+            120
+          ],
+          "required_source_literals": [
+            "erasequest 9030;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_9030_npc_re_quests_quests_brasilis_txt_121",
+      "unit": "E5-chain-9030",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          9031
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 9031; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_brasilis.txt",
+          "lines": [
+            121
+          ],
+          "required_source_literals": [
+            "setquest 9031;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_9030_npc_re_quests_quests_brasilis_txt_52",
+      "unit": "E5-chain-9030",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          9032
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 9032; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_brasilis.txt",
+          "lines": [
+            52
+          ],
+          "required_source_literals": [
+            "erasequest 9032;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_9030_npc_re_quests_quests_brasilis_txt_73",
+      "unit": "E5-chain-9030",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          9031
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 9031; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_brasilis.txt",
+          "lines": [
+            73
+          ],
+          "required_source_literals": [
+            "erasequest 9031;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_9030_npc_re_quests_quests_brasilis_txt_74",
+      "unit": "E5-chain-9030",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          9032
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 9032; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_brasilis.txt",
+          "lines": [
+            74
+          ],
+          "required_source_literals": [
+            "setquest 9032;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_9030_npc_re_quests_quests_brasilis_txt_90",
+      "unit": "E5-chain-9030",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          9030
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 9030; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_brasilis.txt",
+          "lines": [
+            90
+          ],
+          "required_source_literals": [
+            "setquest 9030;"
           ]
         }
       ],
