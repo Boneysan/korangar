@@ -149880,6 +149880,114 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_12072_npc_re_quests_eden_41_55_txt_85",
+      "unit": "E5-chain-12072",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          12088
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 12088; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/41-55.txt",
+          "lines": [
+            85
+          ],
+          "required_source_literals": [
+            "erasequest 12088;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_12072_npc_re_quests_eden_41_55_txt_86",
+      "unit": "E5-chain-12072",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          12072
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 12072; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/41-55.txt",
+          "lines": [
+            86
+          ],
+          "required_source_literals": [
+            "erasequest 12072+.@i;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_12072_npc_re_quests_eden_41_55_txt_96",
+      "unit": "E5-chain-12072",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          12088
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 12088; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/41-55.txt",
+          "lines": [
+            96
+          ],
+          "required_source_literals": [
+            "erasequest 12088;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_12072_npc_re_quests_eden_41_55_txt_108",
+      "unit": "E5-chain-12072",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          12088
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 12088; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/41-55.txt",
+          "lines": [
+            108
+          ],
+          "required_source_literals": [
+            "setquest 12088;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
