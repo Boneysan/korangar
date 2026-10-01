@@ -14,7 +14,7 @@
     "E4_unknown": 213,
     "E5_absent": 644,
     "E5_unknown": 3383,
-    "E6_unknown": 60
+    "E6_unknown": 61
   },
   "entries": [
     {
@@ -196306,6 +196306,34 @@
           "path": "db/re/mob_db.conf",
           "lines": [
             50721
+          ],
+          "required_source_literals": [
+            "{"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e6_boss_2108_boss",
+      "unit": "E6-boss-2108",
+      "package": "E6",
+      "subject": {
+        "kind": "monster",
+        "name": "E_GLOOMUNDERNIGHT",
+        "ids": [
+          2108
+        ]
+      },
+      "result": "unknown",
+      "statement": "Monster 2108 (E_GLOOMUNDERNIGHT) has configured database rows in the packet; this record does not enumerate each skill.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/mob_db.conf",
+          "lines": [
+            50780
           ],
           "required_source_literals": [
             "{"
