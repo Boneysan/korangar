@@ -170373,6 +170373,141 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_8123_npc_quests_quests_ayothaya_txt_2145",
+      "unit": "E5-chain-8123",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8123
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 8123; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_ayothaya.txt",
+          "lines": [
+            2145
+          ],
+          "required_source_literals": [
+            "setquest 8123;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_8123_npc_quests_quests_ayothaya_txt_2236",
+      "unit": "E5-chain-8123",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8123
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 8123; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_ayothaya.txt",
+          "lines": [
+            2236
+          ],
+          "required_source_literals": [
+            "changequest 8123,8124;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_8123_npc_quests_quests_ayothaya_txt_2294",
+      "unit": "E5-chain-8123",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8124
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 8124; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_ayothaya.txt",
+          "lines": [
+            2294
+          ],
+          "required_source_literals": [
+            "changequest 8124,8125;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_8123_npc_quests_quests_ayothaya_txt_2375",
+      "unit": "E5-chain-8123",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8125
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 8125; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_ayothaya.txt",
+          "lines": [
+            2375
+          ],
+          "required_source_literals": [
+            "changequest 8125,8126;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_8123_npc_quests_quests_ayothaya_txt_2473",
+      "unit": "E5-chain-8123",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8126
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 8126; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_ayothaya.txt",
+          "lines": [
+            2473
+          ],
+          "required_source_literals": [
+            "completequest 8126;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
