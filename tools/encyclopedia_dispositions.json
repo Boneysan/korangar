@@ -174531,6 +174531,87 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2063_npc_quests_quests_morocc_txt_2229",
+      "unit": "E5-chain-2063",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2063
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 2063; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_morocc.txt",
+          "lines": [
+            2229
+          ],
+          "required_source_literals": [
+            "setquest 2063;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2063_npc_quests_quests_morocc_txt_2351",
+      "unit": "E5-chain-2063",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2067
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 2067; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_morocc.txt",
+          "lines": [
+            2351
+          ],
+          "required_source_literals": [
+            "changequest 2067,2068;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2063_npc_quests_quests_morocc_txt_2522",
+      "unit": "E5-chain-2063",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2063
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 2063; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_morocc.txt",
+          "lines": [
+            2522
+          ],
+          "required_source_literals": [
+            "changequest 2063,2064;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
