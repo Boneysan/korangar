@@ -12,7 +12,7 @@
     "E2_verified": 236,
     "E3_unknown": 973,
     "E4_unknown": 213,
-    "E5_unknown": 2643
+    "E5_unknown": 2679
   },
   "entries": [
     {
@@ -174458,6 +174458,978 @@
           ],
           "required_source_literals": [
             "setquest 9030;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_9225_npc_re_quests_quests_eclage_txt_5041",
+      "unit": "E5-chain-9225",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          9225
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 9225; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "lines": [
+            5041
+          ],
+          "required_source_literals": [
+            "setquest 9225;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_9225_npc_re_quests_quests_eclage_txt_5189",
+      "unit": "E5-chain-9225",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          9225
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 9225; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "lines": [
+            5189
+          ],
+          "required_source_literals": [
+            "changequest 9225,9226;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_9225_npc_re_quests_quests_eclage_txt_5296",
+      "unit": "E5-chain-9225",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          9229
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 9229; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "lines": [
+            5296
+          ],
+          "required_source_literals": [
+            "changequest 9229,9230;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_9225_npc_re_quests_quests_eclage_txt_5446",
+      "unit": "E5-chain-9225",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          9226
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 9226; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "lines": [
+            5446
+          ],
+          "required_source_literals": [
+            "changequest 9226,9227;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_9225_npc_re_quests_quests_eclage_txt_5448",
+      "unit": "E5-chain-9225",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          9241
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 9241; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "lines": [
+            5448
+          ],
+          "required_source_literals": [
+            "setquest 9241;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_9225_npc_re_quests_quests_eclage_txt_5451",
+      "unit": "E5-chain-9225",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          9240
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 9240; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "lines": [
+            5451
+          ],
+          "required_source_literals": [
+            "setquest 9240;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_9225_npc_re_quests_quests_eclage_txt_5545",
+      "unit": "E5-chain-9225",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          9226
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 9226; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "lines": [
+            5545
+          ],
+          "required_source_literals": [
+            "changequest 9226,9227;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_9225_npc_re_quests_quests_eclage_txt_5547",
+      "unit": "E5-chain-9225",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          9243
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 9243; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "lines": [
+            5547
+          ],
+          "required_source_literals": [
+            "setquest 9243;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_9225_npc_re_quests_quests_eclage_txt_5550",
+      "unit": "E5-chain-9225",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          9242
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 9242; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "lines": [
+            5550
+          ],
+          "required_source_literals": [
+            "setquest 9242;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_9225_npc_re_quests_quests_eclage_txt_5635",
+      "unit": "E5-chain-9225",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          9252
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 9252; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "lines": [
+            5635
+          ],
+          "required_source_literals": [
+            "completequest 9252;\t//Followed by erasequest"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_9225_npc_re_quests_quests_eclage_txt_5636",
+      "unit": "E5-chain-9225",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          9253
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 9253; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "lines": [
+            5636
+          ],
+          "required_source_literals": [
+            "completequest 9253;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_9225_npc_re_quests_quests_eclage_txt_5637",
+      "unit": "E5-chain-9225",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          9254
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 9254; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "lines": [
+            5637
+          ],
+          "required_source_literals": [
+            "completequest 9254;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_9225_npc_re_quests_quests_eclage_txt_5638",
+      "unit": "E5-chain-9225",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          9255
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 9255; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "lines": [
+            5638
+          ],
+          "required_source_literals": [
+            "completequest 9255;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_9225_npc_re_quests_quests_eclage_txt_5639",
+      "unit": "E5-chain-9225",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          9256
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 9256; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "lines": [
+            5639
+          ],
+          "required_source_literals": [
+            "completequest 9256;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_9225_npc_re_quests_quests_eclage_txt_5640",
+      "unit": "E5-chain-9225",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          9230
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 9230; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "lines": [
+            5640
+          ],
+          "required_source_literals": [
+            "changequest 9230,9231;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_9225_npc_re_quests_quests_eclage_txt_5641",
+      "unit": "E5-chain-9225",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          9257
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 9257; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "lines": [
+            5641
+          ],
+          "required_source_literals": [
+            "changequest 9257,9258;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_9225_npc_re_quests_quests_eclage_txt_5679",
+      "unit": "E5-chain-9225",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          9234
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 9234; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "lines": [
+            5679
+          ],
+          "required_source_literals": [
+            "changequest 9234,9235;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_9225_npc_re_quests_quests_eclage_txt_5706",
+      "unit": "E5-chain-9225",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          9236
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 9236; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "lines": [
+            5706
+          ],
+          "required_source_literals": [
+            "changequest 9236,9237;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_9225_npc_re_quests_quests_eclage_txt_5844",
+      "unit": "E5-chain-9225",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          9227
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 9227; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "lines": [
+            5844
+          ],
+          "required_source_literals": [
+            "changequest 9227,9228;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_9225_npc_re_quests_quests_eclage_txt_5847",
+      "unit": "E5-chain-9225",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          9244
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 9244; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "lines": [
+            5847
+          ],
+          "required_source_literals": [
+            "setquest 9244;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_9225_npc_re_quests_quests_eclage_txt_5849",
+      "unit": "E5-chain-9225",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          9245
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 9245; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "lines": [
+            5849
+          ],
+          "required_source_literals": [
+            "setquest 9245;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_9225_npc_re_quests_quests_eclage_txt_5854",
+      "unit": "E5-chain-9225",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          9246
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 9246; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "lines": [
+            5854
+          ],
+          "required_source_literals": [
+            "setquest 9246;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_9225_npc_re_quests_quests_eclage_txt_5856",
+      "unit": "E5-chain-9225",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          9247
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 9247; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "lines": [
+            5856
+          ],
+          "required_source_literals": [
+            "setquest 9247;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_9225_npc_re_quests_quests_eclage_txt_5912",
+      "unit": "E5-chain-9225",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          9237
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 9237; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "lines": [
+            5912
+          ],
+          "required_source_literals": [
+            "changequest 9237,9238;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_9225_npc_re_quests_quests_eclage_txt_6065",
+      "unit": "E5-chain-9225",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          9228
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 9228; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "lines": [
+            6065
+          ],
+          "required_source_literals": [
+            "changequest 9228,9229;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_9225_npc_re_quests_quests_eclage_txt_6068",
+      "unit": "E5-chain-9225",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          9248
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 9248; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "lines": [
+            6068
+          ],
+          "required_source_literals": [
+            "setquest 9248;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_9225_npc_re_quests_quests_eclage_txt_6070",
+      "unit": "E5-chain-9225",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          9249
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 9249; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "lines": [
+            6070
+          ],
+          "required_source_literals": [
+            "setquest 9249;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_9225_npc_re_quests_quests_eclage_txt_6075",
+      "unit": "E5-chain-9225",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          9250
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 9250; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "lines": [
+            6075
+          ],
+          "required_source_literals": [
+            "setquest 9250;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_9225_npc_re_quests_quests_eclage_txt_6077",
+      "unit": "E5-chain-9225",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          9251
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 9251; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "lines": [
+            6077
+          ],
+          "required_source_literals": [
+            "setquest 9251;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_9225_npc_re_quests_quests_eclage_txt_6148",
+      "unit": "E5-chain-9225",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          9238
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 9238; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "lines": [
+            6148
+          ],
+          "required_source_literals": [
+            "changequest 9238,9239;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_9225_npc_re_quests_quests_eclage_txt_6646",
+      "unit": "E5-chain-9225",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          9252
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 9252; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "lines": [
+            6646
+          ],
+          "required_source_literals": [
+            "setquest 9252;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_9225_npc_re_quests_quests_eclage_txt_6728",
+      "unit": "E5-chain-9225",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          9253
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 9253; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "lines": [
+            6728
+          ],
+          "required_source_literals": [
+            "setquest 9253;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_9225_npc_re_quests_quests_eclage_txt_6817",
+      "unit": "E5-chain-9225",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          9254
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 9254; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "lines": [
+            6817
+          ],
+          "required_source_literals": [
+            "setquest 9254;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_9225_npc_re_quests_quests_eclage_txt_6921",
+      "unit": "E5-chain-9225",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          9255
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 9255; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "lines": [
+            6921
+          ],
+          "required_source_literals": [
+            "setquest 9255;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_9225_npc_re_quests_quests_eclage_txt_7032",
+      "unit": "E5-chain-9225",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          9256
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 9256; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "lines": [
+            7032
+          ],
+          "required_source_literals": [
+            "setquest 9256;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_9225_npc_re_quests_quests_eclage_txt_7130",
+      "unit": "E5-chain-9225",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          9257
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 9257; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "lines": [
+            7130
+          ],
+          "required_source_literals": [
+            "setquest 9257;"
           ]
         }
       ],
