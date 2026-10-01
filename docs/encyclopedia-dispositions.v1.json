@@ -14,7 +14,7 @@
     "E4_unknown": 213,
     "E5_absent": 644,
     "E5_unknown": 3383,
-    "E6_unknown": 29
+    "E6_unknown": 30
   },
   "entries": [
     {
@@ -195438,6 +195438,34 @@
           "path": "db/re/mob_db.conf",
           "lines": [
             29854
+          ],
+          "required_source_literals": [
+            "{"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e6_boss_1650_boss",
+      "unit": "E6-boss-1650",
+      "package": "E6",
+      "subject": {
+        "kind": "monster",
+        "name": "B_SHECIL",
+        "ids": [
+          1650
+        ]
+      },
+      "result": "unknown",
+      "statement": "Monster 1650 (B_SHECIL) has configured database rows in the packet; this record does not enumerate each skill.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/mob_db.conf",
+          "lines": [
+            29914
           ],
           "required_source_literals": [
             "{"
