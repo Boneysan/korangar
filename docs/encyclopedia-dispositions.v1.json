@@ -12,7 +12,7 @@
     "E2_verified": 236,
     "E3_unknown": 973,
     "E4_unknown": 213,
-    "E5_unknown": 1443
+    "E5_unknown": 1451
   },
   "entries": [
     {
@@ -106715,6 +106715,222 @@
           ],
           "required_source_literals": [
             "changequest 1113,1114;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_11101_npc_quests_quests_13_2_txt_6334",
+      "unit": "E5-chain-11101",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          11101
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 11101; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_2.txt",
+          "lines": [
+            6334
+          ],
+          "required_source_literals": [
+            "setquest 11101;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_11101_npc_quests_quests_13_2_txt_6375",
+      "unit": "E5-chain-11101",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          11101
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 11101; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_2.txt",
+          "lines": [
+            6375
+          ],
+          "required_source_literals": [
+            "setquest 11101;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_11101_npc_quests_quests_13_2_txt_6483",
+      "unit": "E5-chain-11101",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          11101
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 11101; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_2.txt",
+          "lines": [
+            6483
+          ],
+          "required_source_literals": [
+            "setquest 11101;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_11101_npc_quests_quests_13_2_txt_6513",
+      "unit": "E5-chain-11101",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          11101
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 11101; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_2.txt",
+          "lines": [
+            6513
+          ],
+          "required_source_literals": [
+            "changequest 11101,11102;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_11101_npc_quests_quests_13_2_txt_6556",
+      "unit": "E5-chain-11101",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          11102
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 11102; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_2.txt",
+          "lines": [
+            6556
+          ],
+          "required_source_literals": [
+            "erasequest 11102;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_11101_npc_quests_quests_13_2_txt_6557",
+      "unit": "E5-chain-11101",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          11104
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 11104; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_2.txt",
+          "lines": [
+            6557
+          ],
+          "required_source_literals": [
+            "setquest 11104;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_11101_npc_quests_quests_13_2_txt_6593",
+      "unit": "E5-chain-11101",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          11102
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 11102; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_2.txt",
+          "lines": [
+            6593
+          ],
+          "required_source_literals": [
+            "erasequest 11102;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_11101_npc_quests_quests_13_2_txt_6594",
+      "unit": "E5-chain-11101",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          11104
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 11104; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_2.txt",
+          "lines": [
+            6594
+          ],
+          "required_source_literals": [
+            "setquest 11104;"
           ]
         }
       ],
