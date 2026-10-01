@@ -135790,7 +135790,7 @@
       "package": "E3",
       "kind": "e3_translator",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "key": "sc_start2",
@@ -135962,7 +135962,25 @@
       ],
       "size_lines": 37,
       "reason": "15 item script(s) first stop at documented `sc_start2`",
-      "history": []
+      "history": [
+        "2026-10-01T05:58:44Z activated",
+        "2026-10-01T05:58:44Z validated",
+        "2026-10-01T05:58:44Z verified: 1 claims supported",
+        "2026-10-01T05:59:08Z accepted",
+        "2026-10-01T05:59:08Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "3edc2876255f074a905bfb088d6341b36b329dbcb68ec40e144c11db9f0345e0",
+      "accepted_files": [
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/export_item_reference.py",
+        "tools/tests/test_export_item_effect_phrases.py"
+      ],
+      "accepted_on": "2026-09-30",
+      "audit": "due",
+      "commit": "committed"
     },
     {
       "id": "E3-translate-sc-start4",
