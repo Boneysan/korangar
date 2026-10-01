@@ -20,6 +20,23 @@ class ItemEffectPhraseTests(unittest.TestCase):
         self.assertIn("on yourself, without a target cursor", text)
         self.assertNotIn("checking the skill's conditions", text)
 
+    def test_callfunc_stays_untranslated(self):
+        self.assertIsNone(translate_simple_effect('callfunc("F_Nope");'))
+
+    def test_documented_bonus_row_fills_its_placeholders(self):
+        self.assertEqual(
+            translate_simple_effect("bonus2 bIgnoreDefRate,RC_DemiPlayer,20;"),
+            "Disregard 20% of the target's DEF if the target belongs to race player",
+        )
+        self.assertIsNone(translate_simple_effect("bonus2 bIgnoreDefRate,RC_DemiPlayer,getrefine();"))
+
+    def test_mercenary_scroll_uses_milliseconds(self):
+        self.assertEqual(
+            translate_simple_effect("mercenary_create MER_ARCHER01, 1800000;"),
+            "summons mercenary MER_ARCHER01 for 1800 seconds",
+        )
+        self.assertIsNone(translate_simple_effect("mercenary_create MER_ARCHER01, 1800000, 1;"))
+
     def test_pet_taming_cursor_uses_the_constant(self):
         self.assertEqual(
             translate_simple_effect("pet PORING;"),
