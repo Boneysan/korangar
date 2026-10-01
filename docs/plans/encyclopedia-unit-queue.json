@@ -143143,7 +143143,7 @@
       "package": "E3",
       "kind": "e3_translator",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "key": "bonus bNoSizeFix",
@@ -143178,7 +143178,24 @@
       ],
       "size_lines": 32,
       "reason": "1 item script(s) first stop at documented `bonus bNoSizeFix`",
-      "history": []
+      "history": [
+        "2026-10-01T06:25:10Z activated",
+        "2026-10-01T06:25:11Z validated",
+        "2026-10-01T06:25:11Z verified: 1 claims supported",
+        "2026-10-01T06:25:35Z accepted",
+        "2026-10-01T06:25:35Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "26125160215551432380b52b15d0dbdf84c963f6415502c94406b6965945bd0e",
+      "accepted_files": [
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/export_item_reference.py",
+        "tools/tests/test_export_item_effect_phrases.py"
+      ],
+      "accepted_on": "2026-10-01",
+      "commit": "committed"
     },
     {
       "id": "E3-translate-bonus-brestartfullrecover",
