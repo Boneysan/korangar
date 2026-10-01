@@ -12,7 +12,7 @@
     "E2_verified": 236,
     "E3_unknown": 973,
     "E4_unknown": 213,
-    "E5_unknown": 1335
+    "E5_unknown": 1367
   },
   "entries": [
     {
@@ -121457,6 +121457,870 @@
           ],
           "required_source_literals": [
             "changequest 2155,2156;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2158_npc_quests_quests_13_1_txt_4880",
+      "unit": "E5-chain-2158",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2158
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 2158; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_1.txt",
+          "lines": [
+            4880
+          ],
+          "required_source_literals": [
+            "setquest 2158;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2158_npc_quests_quests_13_1_txt_4917",
+      "unit": "E5-chain-2158",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2159
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 2159; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_1.txt",
+          "lines": [
+            4917
+          ],
+          "required_source_literals": [
+            "setquest 2159;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2158_npc_quests_quests_13_1_txt_4961",
+      "unit": "E5-chain-2158",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2158
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 2158; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_1.txt",
+          "lines": [
+            4961
+          ],
+          "required_source_literals": [
+            "completequest 2158;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2158_npc_quests_quests_13_1_txt_4982",
+      "unit": "E5-chain-2158",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2159
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 2159; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_1.txt",
+          "lines": [
+            4982
+          ],
+          "required_source_literals": [
+            "completequest 2159;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2158_npc_quests_quests_13_2_txt_3529",
+      "unit": "E5-chain-2158",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8243
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 8243; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_2.txt",
+          "lines": [
+            3529
+          ],
+          "required_source_literals": [
+            "setquest 8243;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2158_npc_quests_quests_13_2_txt_3581",
+      "unit": "E5-chain-2158",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8248
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 8248; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_2.txt",
+          "lines": [
+            3581
+          ],
+          "required_source_literals": [
+            "completequest 8248;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2158_npc_quests_quests_13_2_txt_3582",
+      "unit": "E5-chain-2158",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8249
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 8249; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_2.txt",
+          "lines": [
+            3582
+          ],
+          "required_source_literals": [
+            "setquest 8249;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2158_npc_quests_quests_13_2_txt_3625",
+      "unit": "E5-chain-2158",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8252
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 8252; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_2.txt",
+          "lines": [
+            3625
+          ],
+          "required_source_literals": [
+            "completequest 8252;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2158_npc_quests_quests_13_2_txt_3626",
+      "unit": "E5-chain-2158",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8253
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 8253; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_2.txt",
+          "lines": [
+            3626
+          ],
+          "required_source_literals": [
+            "setquest 8253;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2158_npc_quests_quests_13_2_txt_3694",
+      "unit": "E5-chain-2158",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8253
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 8253; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_2.txt",
+          "lines": [
+            3694
+          ],
+          "required_source_literals": [
+            "completequest 8253;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2158_npc_quests_quests_13_2_txt_3828",
+      "unit": "E5-chain-2158",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8243
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 8243; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_2.txt",
+          "lines": [
+            3828
+          ],
+          "required_source_literals": [
+            "completequest 8243;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2158_npc_quests_quests_13_2_txt_3829",
+      "unit": "E5-chain-2158",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8244
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 8244; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_2.txt",
+          "lines": [
+            3829
+          ],
+          "required_source_literals": [
+            "setquest 8244;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2158_npc_quests_quests_13_2_txt_3854",
+      "unit": "E5-chain-2158",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8243
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 8243; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_2.txt",
+          "lines": [
+            3854
+          ],
+          "required_source_literals": [
+            "completequest 8243;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2158_npc_quests_quests_13_2_txt_3855",
+      "unit": "E5-chain-2158",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8244
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 8244; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_2.txt",
+          "lines": [
+            3855
+          ],
+          "required_source_literals": [
+            "setquest 8244;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2158_npc_quests_quests_13_2_txt_4083",
+      "unit": "E5-chain-2158",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8244
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 8244; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_2.txt",
+          "lines": [
+            4083
+          ],
+          "required_source_literals": [
+            "completequest 8244;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2158_npc_quests_quests_13_2_txt_4084",
+      "unit": "E5-chain-2158",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8245
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 8245; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_2.txt",
+          "lines": [
+            4084
+          ],
+          "required_source_literals": [
+            "setquest 8245;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2158_npc_quests_quests_13_2_txt_4118",
+      "unit": "E5-chain-2158",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8247
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 8247; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_2.txt",
+          "lines": [
+            4118
+          ],
+          "required_source_literals": [
+            "completequest 8247;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2158_npc_quests_quests_13_2_txt_4119",
+      "unit": "E5-chain-2158",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8248
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 8248; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_2.txt",
+          "lines": [
+            4119
+          ],
+          "required_source_literals": [
+            "setquest 8248;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2158_npc_quests_quests_13_2_txt_4238",
+      "unit": "E5-chain-2158",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8245
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 8245; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_2.txt",
+          "lines": [
+            4238
+          ],
+          "required_source_literals": [
+            "completequest 8245;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2158_npc_quests_quests_13_2_txt_4239",
+      "unit": "E5-chain-2158",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8246
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 8246; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_2.txt",
+          "lines": [
+            4239
+          ],
+          "required_source_literals": [
+            "setquest 8246;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2158_npc_quests_quests_13_2_txt_4265",
+      "unit": "E5-chain-2158",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8241
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 8241; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_2.txt",
+          "lines": [
+            4265
+          ],
+          "required_source_literals": [
+            "completequest 8241;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2158_npc_quests_quests_13_2_txt_4266",
+      "unit": "E5-chain-2158",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8242
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 8242; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_2.txt",
+          "lines": [
+            4266
+          ],
+          "required_source_literals": [
+            "completequest 8242;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2158_npc_quests_quests_13_2_txt_4267",
+      "unit": "E5-chain-2158",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8246
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 8246; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_2.txt",
+          "lines": [
+            4267
+          ],
+          "required_source_literals": [
+            "completequest 8246;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2158_npc_quests_quests_13_2_txt_4268",
+      "unit": "E5-chain-2158",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8247
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 8247; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_2.txt",
+          "lines": [
+            4268
+          ],
+          "required_source_literals": [
+            "setquest 8247;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2158_npc_quests_quests_13_2_txt_4332",
+      "unit": "E5-chain-2158",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8249
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 8249; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_2.txt",
+          "lines": [
+            4332
+          ],
+          "required_source_literals": [
+            "completequest 8249;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2158_npc_quests_quests_13_2_txt_4333",
+      "unit": "E5-chain-2158",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8250
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 8250; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_2.txt",
+          "lines": [
+            4333
+          ],
+          "required_source_literals": [
+            "setquest 8250;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2158_npc_quests_quests_13_2_txt_4368",
+      "unit": "E5-chain-2158",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8250
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 8250; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_2.txt",
+          "lines": [
+            4368
+          ],
+          "required_source_literals": [
+            "completequest 8250;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2158_npc_quests_quests_13_2_txt_4369",
+      "unit": "E5-chain-2158",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8251
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 8251; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_2.txt",
+          "lines": [
+            4369
+          ],
+          "required_source_literals": [
+            "setquest 8251;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2158_npc_quests_quests_13_2_txt_4407",
+      "unit": "E5-chain-2158",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8251
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 8251; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_2.txt",
+          "lines": [
+            4407
+          ],
+          "required_source_literals": [
+            "completequest 8251;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2158_npc_quests_quests_13_2_txt_4408",
+      "unit": "E5-chain-2158",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8252
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 8252; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_2.txt",
+          "lines": [
+            4408
+          ],
+          "required_source_literals": [
+            "setquest 8252;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2158_npc_quests_quests_13_2_txt_4627",
+      "unit": "E5-chain-2158",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2158
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 2158; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_2.txt",
+          "lines": [
+            4627
+          ],
+          "required_source_literals": [
+            "setquest 2158;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2158_npc_quests_quests_13_2_txt_4628",
+      "unit": "E5-chain-2158",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2159
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 2159; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_2.txt",
+          "lines": [
+            4628
+          ],
+          "required_source_literals": [
+            "setquest 2159;"
           ]
         }
       ],
