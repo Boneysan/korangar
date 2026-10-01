@@ -139424,7 +139424,7 @@
       "package": "E3",
       "kind": "e3_translator",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "key": "bonus4 bAutoSpellWhenHit",
@@ -139524,7 +139524,24 @@
       ],
       "size_lines": 37,
       "reason": "6 item script(s) first stop at documented `bonus4 bAutoSpellWhenHit`",
-      "history": []
+      "history": [
+        "2026-10-01T06:08:13Z activated",
+        "2026-10-01T06:08:13Z validated",
+        "2026-10-01T06:08:14Z verified: 1 claims supported",
+        "2026-10-01T06:08:37Z accepted",
+        "2026-10-01T06:08:38Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "1ba86260cf12e1a49ea42b63185492882ee2ec1c27bce5d5fb7c74af60dfc041",
+      "accepted_files": [
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/export_item_reference.py",
+        "tools/tests/test_export_item_effect_phrases.py"
+      ],
+      "accepted_on": "2026-10-01",
+      "commit": "committed"
     },
     {
       "id": "E3-translate-rentitem",
