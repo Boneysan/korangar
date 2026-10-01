@@ -12,7 +12,7 @@
     "E2_verified": 236,
     "E3_unknown": 973,
     "E4_unknown": 213,
-    "E5_unknown": 1593
+    "E5_unknown": 1598
   },
   "entries": [
     {
@@ -111521,6 +111521,141 @@
           ],
           "required_source_literals": [
             "changequest 11336,11337;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_12000_npc_quests_quests_lighthalzen_txt_2145",
+      "unit": "E5-chain-12000",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          12005
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 12005; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_lighthalzen.txt",
+          "lines": [
+            2145
+          ],
+          "required_source_literals": [
+            "changequest 12005,12006;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_12000_npc_quests_quests_lighthalzen_txt_2353",
+      "unit": "E5-chain-12000",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          12002
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 12002; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_lighthalzen.txt",
+          "lines": [
+            2353
+          ],
+          "required_source_literals": [
+            "changequest 12002,12003;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_12000_npc_quests_quests_lighthalzen_txt_2515",
+      "unit": "E5-chain-12000",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          12000
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 12000; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_lighthalzen.txt",
+          "lines": [
+            2515
+          ],
+          "required_source_literals": [
+            "changequest 12000,12001;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_12000_npc_quests_quests_lighthalzen_txt_2975",
+      "unit": "E5-chain-12000",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          12001
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 12001; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_lighthalzen.txt",
+          "lines": [
+            2975
+          ],
+          "required_source_literals": [
+            "changequest 12001,12002;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_12000_npc_quests_quests_lighthalzen_txt_3030",
+      "unit": "E5-chain-12000",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          12000
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 12000; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_lighthalzen.txt",
+          "lines": [
+            3030
+          ],
+          "required_source_literals": [
+            "setquest 12000;"
           ]
         }
       ],
