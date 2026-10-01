@@ -44,13 +44,13 @@
     "items": {
       "records": 13183,
       "translated_effects": {
-        "observed": 4680,
+        "observed": 5246,
         "total": 13183,
         "basis": "records with a supported natural-language effect summary"
       },
       "noncard_records": 12171,
       "noncard_translated_effects": {
-        "observed": 4045,
+        "observed": 4457,
         "total": 12171,
         "basis": "non-card item records with a supported natural-language effect summary"
       },
@@ -77,7 +77,7 @@
     "cards": {
       "records": 1012,
       "translated_effects": {
-        "observed": 635,
+        "observed": 789,
         "total": 1012,
         "basis": "card records with a supported natural-language effect summary"
       },
@@ -91,7 +91,7 @@
     "combos_and_groups": {
       "combos": 436,
       "translated_combo_effects": {
-        "observed": 269,
+        "observed": 288,
         "total": 436,
         "basis": "distinct combo records with translated script summaries"
       },

@@ -3152,7 +3152,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "grants Hiding at level 1; removes status SC_HIDING",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -3212,7 +3213,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Adds 35% damage reduction against ranged physical attacks",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -5190,7 +5192,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Prevents casting from being interrupted when hit (does not work in GvG | 0 is meaningless); increases variable cast time of all skills by 25%",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -5843,7 +5846,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "grants Cloaking at level 1; removes status SC_CLOAKING",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -6766,7 +6770,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "grants Sight at level 1; removes status SC_SIGHT",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -6946,7 +6951,8 @@
               "name": "Ancient Mummy Card"
             }
           ],
-          "effect_status": "scripted_not_translated",
+          "effect_status": "translated",
+          "effect_summary": "On-target impact attack probability + 20%",
           "source": {
             "path": "db/re/item_combo_db.conf",
             "record": "combo_db[222]"
@@ -7557,7 +7563,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "3% probability to drain 15% HP when attacking",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -7783,7 +7790,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "grants Double Attack at level 1; Double Attack probability +n% (works with all weapons | only the highest among all is applied)",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -8078,7 +8086,8 @@
           "source_record": "db/re/mob_db.conf:Id=1115"
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "reduces maximum HP by 25%; Applies status SC_ENDURE for 60 seconds, values 10, 0, 0, 1 (no explicit chance limit); removes status SC_ENDURE",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -8381,7 +8390,8 @@
           "source_record": "db/re/mob_db.conf:Id=1086"
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Prevents from receiving 100% magical effect (Attack, Healing, Support spells are all blocked); increases the SP cost of skills by 100%",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -8529,7 +8539,8 @@
           "source_record": "db/re/mob_db.conf:Id=2099"
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Skills requiring Gemstones do no require them (Hocus Pocus will still require 1 Yellow Gemstone); increases the SP cost of skills by 25%",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -8631,7 +8642,8 @@
           "source_record": "db/re/mob_db.conf:Id=2097"
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "10% probability to drain 5% SP when attacking",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -8654,7 +8666,8 @@
           "source_record": "db/re/mob_db.conf:Id=1190"
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Reflects 30% of received melee damage back to the enemy that caused it",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -8731,7 +8744,8 @@
           "source_record": "db/re/mob_db.conf:Id=1112"
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "The attack revision with the size of the monster is not received",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -9025,7 +9039,8 @@
           "source_record": "db/re/mob_db.conf:Id=2096"
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "When reviving, HP and SP are fully healed",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -9072,7 +9087,8 @@
           "source_record": "db/re/mob_db.conf:Id=1147"
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Adds a 50% chance to reflect targetted magic spells back to the enemy that caused it",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -9109,7 +9125,8 @@
           "source_record": "db/re/mob_db.conf:Id=2100"
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "reduces HIT by 10; Splash attack radius +1 (highest is applied)",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -9204,7 +9221,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Adds a 1% chance for item id to be dropped, when killing any monster of race insect.",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -9362,7 +9380,8 @@
               "name": "Flying Galapagos"
             }
           ],
-          "effect_status": "scripted_not_translated",
+          "effect_status": "translated",
+          "effect_summary": "Increases HP recovered by 1000% for item Apple Juice; Increases HP recovered by 1000% for item Banana Juice; Increases HP recovered by 1000% for item Carrot Juice",
           "source": {
             "path": "db/re/item_combo_db.conf",
             "record": "combo_db[225]"
@@ -9402,7 +9421,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Increases HP recovered by 50% for item Apple Juice; Increases HP recovered by 50% for item Banana Juice; Increases HP recovered by 50% for item Carrot Juice; Adds a 3% chance for item id to be dropped, when killing any monster of race insect.; Adds a 3% chance for item id to be dropped, when killing any monster of race insect.; Adds a 3% chance for item id to be dropped, when killing any monster of race insect.",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -9444,7 +9464,8 @@
               "name": "Shell Fish Card"
             }
           ],
-          "effect_status": "scripted_not_translated",
+          "effect_status": "translated",
+          "effect_summary": "Adds a 30% chance for item id to be dropped, when killing any monster of race fish.; increases physical damage against Water element targets by 30%",
           "source": {
             "path": "db/re/item_combo_db.conf",
             "record": "combo_db[226]"
@@ -9484,7 +9505,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases basic attack power by 5; +n% extra physical damage against monsters of class 1266",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -9544,7 +9566,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Increases HP recovered by 50% for item Candy; Increases HP recovered by 50% for item Candy Cane; Adds a 3% chance for item id to be dropped, when killing any monster of race player.; Adds a 1% chance for item id to be dropped, when killing any monster of race player.",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -9583,7 +9606,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "+n% Damage Against monster race RC2 Goblin",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -9636,7 +9660,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases critical damage by 10%; +7 Critical Against race formless",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -9689,7 +9714,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases critical damage by 10%; +7 Critical Against race undead",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -9742,7 +9768,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "reduces HP regeneration rate by 100%; When killing a monster by physical attack, you gain 100 HP",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -10231,7 +10258,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "When killing a monster of race insect by physical attack gain 5 SP; heals 0 HP and -5 SP",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -10391,7 +10419,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "When killing a monster of race brute by physical attack gain 5 SP; heals 0 HP and -5 SP",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -10630,7 +10659,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Add the (50/10)% chance of decreasing enemy SP amount by 10% when attacking; For the Sage job: on a weapon attack against a monster, recovers 1 SP",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -10682,7 +10712,8 @@
               "name": "Zhu Po Long Card"
             }
           ],
-          "effect_status": "scripted_not_translated",
+          "effect_status": "translated",
+          "effect_summary": "increases AGI by 5; increases STR by 5; increases attack speed by 5%; increases movement speed by 25% (only the highest bonus applies); When hitting a monster by physical attack x: Gain 1 SP; For the Thief class: Skills requiring Gemstones do no require them (Hocus Pocus will still require 1 Yellow Gemstone)",
           "source": {
             "path": "db/re/item_combo_db.conf",
             "record": "combo_db[230]"
@@ -10722,7 +10753,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases critical damage by 20%; When hitting a monster by physical attack x: Gain -1 SP",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -10890,7 +10922,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "on a normal attack, has a 2% chance to cast Envenom Lv 1; Knockbacks the target by 5 cells when using skill 52",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -10943,7 +10976,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases critical damage by 10%; +7 Critical Against race dragon",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -11003,7 +11037,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Adds a 1% chance for item id to be dropped, when killing any monster of race plant.; reduces damage from Earth element attacks by 10%",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -11281,7 +11316,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "When killing a monster of race dragon by physical attack gain 5 SP; heals 0 HP and -5 SP",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -11394,7 +11430,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "When killing a monster of race demon by physical attack gain 5 SP; heals 0 HP and -5 SP",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -11526,7 +11563,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "+n% Damage Against monster race RC2 Golem",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -11854,7 +11892,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Adds a 1% chance for item id to be dropped, when killing any monster of race demon.",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -11914,7 +11953,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "reduces damage from Fire element attacks by 10%; Adds a 1% chance for item id to be dropped, when killing any monster of race brute.",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -12025,7 +12065,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Adds a 1% chance for item id to be dropped, when killing any monster of race undead.",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -12183,7 +12224,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases critical damage by 10%; +7 Critical Against race fish",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -12381,7 +12423,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "reduces damage from Water element attacks by 10%; Adds a 1% chance for item id to be dropped, when killing any monster of race fish.",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -12452,7 +12495,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Adds a 20% chance for item id to be dropped, when killing any monster.; Adds a 0.1% chance for item id to be dropped, when killing any monster.",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -12570,7 +12614,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Always see Hiding and Cloaking players/mobs 0: is meaningless",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -13023,7 +13068,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Adds a 0.1% chance for item id to be dropped, when killing any monster.",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -13122,7 +13168,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Adds a 0.3% chance for item id to be dropped, when killing any monster.",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -13494,7 +13541,8 @@
               "name": "Zhu Po Long Card"
             }
           ],
-          "effect_status": "scripted_not_translated",
+          "effect_status": "translated",
+          "effect_summary": "increases AGI by 5; increases STR by 5; increases attack speed by 5%; increases movement speed by 25% (only the highest bonus applies); When hitting a monster by physical attack x: Gain 1 SP; For the Thief class: Skills requiring Gemstones do no require them (Hocus Pocus will still require 1 Yellow Gemstone)",
           "source": {
             "path": "db/re/item_combo_db.conf",
             "record": "combo_db[230]"
@@ -13698,7 +13746,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "on a normal attack, has a 2% chance to cast Bash Lv 1; Knockbacks the target by 5 cells when using skill Bash; +n% physical damage reduction against monsters of class 1026",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -13805,7 +13854,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases critical damage by 10%; +7 Critical Against race insect",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -13858,7 +13908,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Able to get Item of chain ITMCHAIN FOOD when you kill a monster",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -14143,7 +14194,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Adds a 0.3% chance for item id to be dropped, when killing any monster.; Adds a 0.3% chance for item id to be dropped, when killing any monster.; Adds a 0.3% chance for item id to be dropped, when killing any monster.",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -14515,7 +14567,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Adds a 1% chance for item id to be dropped, when killing any monster of race brute.",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -14683,7 +14736,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Increases HP recovered by 50% for item Meat; Increases HP recovered by 50% for item Monster's Feed; Adds a 2% chance for item id to be dropped, when killing any monster of race brute.; Adds a 2% chance for item id to be dropped, when killing any monster of race brute.",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -14750,7 +14804,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Adds a 1% chance for item id to be dropped, when killing any monster of race fish.",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -14936,7 +14991,8 @@
               "name": "Zhu Po Long Card"
             }
           ],
-          "effect_status": "scripted_not_translated",
+          "effect_status": "translated",
+          "effect_summary": "increases AGI by 5; increases STR by 5; increases attack speed by 5%; increases movement speed by 25% (only the highest bonus applies); When hitting a monster by physical attack x: Gain 1 SP; For the Thief class: Skills requiring Gemstones do no require them (Hocus Pocus will still require 1 Yellow Gemstone)",
           "source": {
             "path": "db/re/item_combo_db.conf",
             "record": "combo_db[230]"
@@ -15038,7 +15094,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "+n% Damage reduction against monster race RC2 Guardian",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -15091,7 +15148,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Increases HP recovered by 50% for item Red Herb; Increases HP recovered by 50% for item Yellow Herb; Increases HP recovered by 50% for item White Herb; Adds a 3% chance for item id to be dropped, when killing any monster of race plant.; Adds a 2% chance for item id to be dropped, when killing any monster of race plant.; Adds a 1% chance for item id to be dropped, when killing any monster of race plant.",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -16178,7 +16236,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases critical damage by 10%; +7 Critical Against race player",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -16220,7 +16279,8 @@
               "name": "Shell Fish Card"
             }
           ],
-          "effect_status": "scripted_not_translated",
+          "effect_status": "translated",
+          "effect_summary": "Adds a 30% chance for item id to be dropped, when killing any monster of race fish.; increases physical damage against Water element targets by 30%",
           "source": {
             "path": "db/re/item_combo_db.conf",
             "record": "combo_db[226]"
@@ -16260,7 +16320,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases basic attack power by 5; +n% extra physical damage against monsters of class 1074",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -16304,7 +16365,8 @@
               "name": "Ancient Mummy Card"
             }
           ],
-          "effect_status": "scripted_not_translated",
+          "effect_status": "translated",
+          "effect_summary": "On-target impact attack probability + 20%",
           "source": {
             "path": "db/re/item_combo_db.conf",
             "record": "combo_db[222]"
@@ -16506,7 +16568,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "+n% Damage Against monster race RC2 Guardian",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -16640,7 +16703,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Adds 5% damage reduction against ranged physical attacks",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -16808,7 +16872,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "+n% Damage Against monster race RC2 Orc",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -16861,7 +16926,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Adds a 1% chance for item id to be dropped, when killing any monster of race player.",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -16954,7 +17020,8 @@
               "name": "Zhu Po Long Card"
             }
           ],
-          "effect_status": "scripted_not_translated",
+          "effect_status": "translated",
+          "effect_summary": "increases AGI by 5; increases STR by 5; increases attack speed by 5%; increases movement speed by 25% (only the highest bonus applies); When hitting a monster by physical attack x: Gain 1 SP; For the Thief class: Skills requiring Gemstones do no require them (Hocus Pocus will still require 1 Yellow Gemstone)",
           "source": {
             "path": "db/re/item_combo_db.conf",
             "record": "combo_db[230]"
@@ -17370,7 +17437,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Adds a 1% chance for item id to be dropped, when killing any monster of race plant.",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -17513,7 +17581,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Adds a 1% chance for item id to be dropped, when killing any monster of race angel.",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -17936,7 +18005,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "reduces damage from Wind element attacks by 10%; Adds a 1% chance for item id to be dropped, when killing any monster of race insect.",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -17999,7 +18069,8 @@
               "name": "Zhu Po Long Card"
             }
           ],
-          "effect_status": "scripted_not_translated",
+          "effect_status": "translated",
+          "effect_summary": "increases AGI by 5; increases STR by 5; increases attack speed by 5%; increases movement speed by 25% (only the highest bonus applies); When hitting a monster by physical attack x: Gain 1 SP; For the Thief class: Skills requiring Gemstones do no require them (Hocus Pocus will still require 1 Yellow Gemstone)",
           "source": {
             "path": "db/re/item_combo_db.conf",
             "record": "combo_db[230]"
@@ -18089,7 +18160,8 @@
               "name": "Shell Fish Card"
             }
           ],
-          "effect_status": "scripted_not_translated",
+          "effect_status": "translated",
+          "effect_summary": "Adds a 30% chance for item id to be dropped, when killing any monster of race fish.; increases physical damage against Water element targets by 30%",
           "source": {
             "path": "db/re/item_combo_db.conf",
             "record": "combo_db[226]"
@@ -18129,7 +18201,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases basic attack power by 5; +n% extra physical damage against monsters of class 1073",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -18189,7 +18262,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "When killing a monster of race undead by physical attack gain 5 SP; heals 0 HP and -5 SP",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -18273,7 +18347,8 @@
           "source_record": "db/re/mob_db.conf:Id=1373"
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Adds a 5% chance to cause effect Stun to the target when attacking for target abf; Adds a 5% chance to cause effect Curse to the target when attacking for target abf; Adds a 5% chance to cause effect Silence to the target when attacking for target abf; Adds a 5% chance to cause effect Poison to the target when attacking for target abf; Adds a 5% chance to cause effect Bleeding to the target when attacking for target abf; Adds a 0.01% chance to cause Coma when attacking a monster of race nonboss with a weapon attack",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -18462,7 +18537,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "reduces SP regeneration rate by 100%; When killing a monster by physical attack, you gain 10 SP; heals 0 HP and -100 SP",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -18695,7 +18771,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases basic attack power by 30; When hitting a monster by physical attack x: Gain -1 SP; For the Merchant class: the equipped weapon cannot be broken",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -18748,7 +18825,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Able to get Item of chain ITMCHAIN HEAL when you kill a monster",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -18875,7 +18953,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "5% chance to cast skill Heal of level 5 when attacking",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -19188,7 +19267,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "When killing a monster of race plant by physical attack gain 5 SP; heals 0 HP and -5 SP",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -19255,7 +19335,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases equipment MDEF by 3; Adds a 5% chance to reflect targetted magic spells back to the enemy that caused it",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -19308,7 +19389,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "+n% Damage Against monster race RC2 Kobold",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -19368,7 +19450,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases critical damage by 10%; +7 Critical Against race plant",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -19708,7 +19791,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "When killing a monster, there is a 1% chance of gaining 1~x zeny (only the highest among all is applied).",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -19839,7 +19923,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases critical damage by 10%; +7 Critical Against race brute",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -20139,7 +20224,8 @@
           "source_record": "db/re/mob_db.conf:Id=1583"
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases maximum HP by 100%; Equipment DEF + -50%; Equipment MDEF + -50%",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -20403,7 +20489,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "When killing a monster of race fish by physical attack gain 5 SP; heals 0 HP and -5 SP",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -20456,7 +20543,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "When killing a monster of race formless by physical attack gain 5 SP; heals 0 HP and -5 SP",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -20614,7 +20702,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases critical damage by 10%; +7 Critical Against race demon",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -21140,7 +21229,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "When killing a monster of race angel by physical attack gain 5 SP; heals 0 HP and -5 SP",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -21513,7 +21603,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Gives a 1% chance to change the attacked monster's class with normal attack.",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -21573,7 +21664,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases equipment DEF by 1; Reflects 5% of received melee damage back to the enemy that caused it",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -22047,7 +22139,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases variable cast time of all skills by 30%; Prevents casting from being interrupted when hit (does not work in GvG | 0 is meaningless); increases Fire Wall damage by 5%",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -22191,7 +22284,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "When killing a monster of race player by physical attack gain 5 SP; heals 0 HP and -5 SP",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -22516,7 +22610,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Adds 10% damage reduction against ranged physical attacks; reduces damage from Neutral element attacks by 10%",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -22586,7 +22681,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases Earth Spike damage by 5%; increases Heaven's Drive damage by 5%; heals 0 HP and -50 SP",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -22908,7 +23004,8 @@
           "source_record": "db/re/mob_db.conf:Id=1623"
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases VIT by 3; the equipped armor cannot be broken; Character is no longer knocked back by enemy skills with such effect (0 is meaningless)",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -23051,7 +23148,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Adds a 0.5% chance for item id to be dropped, when killing any monster of race insect.",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -23135,7 +23233,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases Thunderstorm damage by 5%; increases Jupitel Thunder damage by 5%; increases Lord of Vermilion damage by 5%; heals 0 HP and -50 SP",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -23213,7 +23312,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Adds a 0.5% chance for item id to be dropped, when killing any monster of race fish.",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -23402,7 +23502,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases Frost Nova damage by 3%; increases Storm Gust damage by 3%; heals 0 HP and -50 SP",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -23464,7 +23565,8 @@
           "source_record": "db/re/mob_db.conf:Id=1658"
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases maximum HP by 10%; increases maximum SP by 10%; Gain 50 HP every 10000 milliseconds; Gain 10 SP every 10000 milliseconds",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -23606,7 +23708,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Adds a 0.5% chance for item id to be dropped, when killing any monster of race brute.",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -23747,7 +23850,8 @@
           "source_record": "db/re/mob_db.conf:Id=2113"
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "grants Cloaking at level 3; removes status SC_CLOAKING",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -23786,7 +23890,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "+10 Critical Against race player",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -23944,7 +24049,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases INT by 1; 15% chance to cast skill Lex Divina of level 5 when being hit by a direct attack i: 0 = cast on self 1 = cast on enemy, not on self 2 = use random skill lv in [1..y] 3 = 1+2 (random lv on enemy)",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -23971,7 +24077,8 @@
           "source_record": "db/re/mob_db.conf:Id=1651"
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Disregard MDEF against enemies of race nonboss; increases variable cast time of all skills by 100%; reduces SP regeneration rate by 100%; heals 0 HP and -2000 SP",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -24041,7 +24148,8 @@
           "source_record": "db/re/mob_db.conf:Id=1650"
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "1% probability to drain 20% HP when attacking; reduces HP regeneration rate by 10%",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -24415,7 +24523,8 @@
           "source_record": "db/re/mob_db.conf:Id=2106"
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases DEX by 2; Disregard 30% of the target's MDEF if the target belongs to race boss",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -24481,7 +24590,8 @@
           "source_record": "db/re/mob_db.conf:Id=1688"
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "reduces maximum HP by 40%; increases maximum SP by 50%; Adds a 2% chance for item id to be dropped, when killing any monster.; Increases HP recovered by 100% for item Banana",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -24527,7 +24637,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Adds a 0.5% chance for item id to be dropped, when killing any monster of race formless.",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -24686,7 +24797,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases Fire Pillar damage by 5%; increases Meteor Storm damage by 5%; heals 0 HP and -50 SP",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -25011,7 +25123,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Adds a 0.5% chance for item id to be dropped, when killing any monster of race dragon.",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -25034,7 +25147,8 @@
           "source_record": "db/re/mob_db.conf:Id=1719"
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "reduces equipment MDEF by 20; increases tolerance to Freeze by 100%; 7% chance to cast skill Magnetic Earth of level 1 when being hit by a direct attack i: 0 = cast on self 1 = cast on enemy, not on self 2 = use random skill lv in [1..y] 3 = 1+2 (random lv on enemy)",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -25164,7 +25278,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases Napalm Beat damage by 5%; increases Soul Strike damage by 5%; increases Napalm Vulcan damage by 5%; heals 0 HP and -50 SP",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -25238,7 +25353,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Adds a 0.5% chance for item id to be dropped, when killing any monster.; Adds a 0.5% chance for item id to be dropped, when killing any monster.; Adds a 0.5% chance for item id to be dropped, when killing any monster.; Adds a 0.5% chance for item id to be dropped, when killing any monster.",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -25352,7 +25468,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Adds a 0.5% chance for item id to be dropped, when killing any monster of race angel.",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -25714,7 +25831,8 @@
           "source_record": "db/re/mob_db.conf:Id=1708"
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Deals more damage to enemies of race all with higher defense; on a weapon attack against a monster, reduces the recovery by 1 SP; reduces equipment DEF by 30; reduces FLEE by 30",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -26492,7 +26610,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Adds a 5% chance for item id to be dropped, when killing any monster.; Increases HP recovered by 100% for item Ice Cream",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -26552,7 +26671,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases Cold Bolt damage by 25%; Increases variable cast time of skill Cold Bolt by -25%",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -26877,7 +26997,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases FLEE by 5; increases Perfect Dodge by 3; increases physical damage against Water element targets by 10%; +15 Critical Against race fish",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -27393,7 +27514,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases basic attack power by 5; increases physical damage against Earth element targets by 10%; +15 Critical Against race brute",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -27446,7 +27568,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases Fire Bolt damage by 25%; Increases variable cast time of skill Fire Bolt by -25%",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -27506,7 +27629,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases damage against formless targets by 5%; Adds a 0.1% chance for item id to be dropped, when killing any monster of race formless.; Adds a 0.1% chance for item id to be dropped, when killing any monster of race formless.",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -27554,7 +27678,8 @@
               "name": "Ragged Zombie Card"
             }
           ],
-          "effect_status": "scripted_not_translated",
+          "effect_status": "translated",
+          "effect_summary": "When killing a monster of race player by physical attack gain 2 SP",
           "source": {
             "path": "db/re/item_combo_db.conf",
             "record": "combo_db[251]"
@@ -27594,7 +27719,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases damage against player targets by 1%; increases magic damage against player targets by 1%; When killing a monster by physical attack, you gain 50 HP",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -27631,7 +27757,8 @@
               "name": "Ragged Zombie Card"
             }
           ],
-          "effect_status": "scripted_not_translated",
+          "effect_status": "translated",
+          "effect_summary": "When killing a monster of race player by physical attack gain 2 SP",
           "source": {
             "path": "db/re/item_combo_db.conf",
             "record": "combo_db[251]"
@@ -27671,7 +27798,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "+5 Critical Against race player; increases damage against player targets by 1%; increases magic damage against player targets by 1%; on attack, has a 0.1% chance to inflict Bleeding on the wearer",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -27724,7 +27852,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases HIT by 1; Increases HP recovered by 100% for item Meat; Adds a 0.5% chance to cause effect Bleeding to the target when attacking for target abf",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -28958,7 +29087,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases basic attack power by 10; Adds a 0.1% chance for item id to be dropped, when killing any monster.; Adds a 0.1% chance for item id to be dropped, when killing any monster.; Adds a 0.1% chance for item id to be dropped, when killing any monster.; Adds a 0.1% chance for item id to be dropped, when killing any monster.; Adds a 0.1% chance for item id to be dropped, when killing any monster.; Adds a 0.1% chance for item id to be dropped, when killing any monster.",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -29939,7 +30069,8 @@
               "name": "Queen Scaraba Crown"
             }
           ],
-          "effect_status": "scripted_not_translated",
+          "effect_status": "translated",
+          "effect_summary": "+n% Damage Against monster race 7",
           "source": {
             "path": "db/re/item_combo_db.conf",
             "record": "combo_db[254]"
@@ -29949,7 +30080,8 @@
       "belongs_to_combos": [
         "Q_Scaraba_Card_Queen_Scaraba_Crown"
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "+n% Damage Against monster race RC2 Scaraba; Adds a 0.3% chance for item id to be dropped, when killing any monster.",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -30132,7 +30264,8 @@
           "source_record": "db/re/mob_db.conf:Id=2777"
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Adds a 5% chance to cause effect Silence to the target when attacking for target abf",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -30409,7 +30542,8 @@
           "source_record": "db/re/mob_db.conf:Id=2156"
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases STR by 3; on attack, has a 50% chance to inflict Confusion; Adds a 50% chance to cause effect Confusion to the target when attacking for target abf",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -30488,7 +30622,8 @@
           "source_record": "db/re/mob_db.conf:Id=2201"
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Adds a 5% chance to cause effect Cold to the target when attacking for target ATF SHORT for 3000 milliseconds (Note:The effect can't be avoided nor its duration reduced. Duration: 0-65535)",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -30562,7 +30697,8 @@
           "source_record": "db/re/mob_db.conf:Id=2202"
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases FLEE by 10; grants Hiding at level 1; grants Sightless Mind at level 1; Adds a 10% chance to cause effect Bleeding on enemy when using skill Sightless Mind; removes status SC_HIDING",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -30721,7 +30857,8 @@
           "source_record": "db/re/mob_db.conf:Id=2689"
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Adds a 5% chance to cause effect Curse to the target when attacking for target abf",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -30768,7 +30905,8 @@
           "source_record": "db/re/mob_db.conf:Id=2192"
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Adds a 5% chance to cause effect Blindness to the target when attacking for target abf",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -31050,7 +31188,8 @@
         "record": "Id=4549"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Always see Hiding and Cloaking players/mobs 0: is meaningless; increases all six primary stats (STR, AGI, VIT, INT, DEX, and LUK) by 1; grants Ruwach at level 1",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -31277,7 +31416,8 @@
           "source_record": "db/re/mob_db.conf:Id=2237"
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases magic damage by 7%; With DEX at least 110: increases magic damage by 7%; 7% chance to cast skill Magnetic Earth of level 5 when being hit by a direct attack i: 0 = cast on self 1 = cast on enemy, not on self 2 = use random skill lv in [1..y] 3 = 1+2 (random lv on enemy)",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -31300,7 +31440,8 @@
           "source_record": "db/re/mob_db.conf:Id=2238"
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases physical damage by 7%; With AGI at least 110: increases physical damage by 7%; 7% chance to cast skill Occult Impaction of level 5 when being hit by a direct attack i: 0 = cast on self 1 = cast on enemy, not on self 2 = use random skill lv in [1..y] 3 = 1+2 (random lv on enemy)",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -31323,7 +31464,8 @@
           "source_record": "db/re/mob_db.conf:Id=2236"
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases critical chance by 20%; With STR at least 110: increases critical chance by 20%; 7% chance to cast skill Acid Terror of level 5 when being hit by a direct attack i: 0 = cast on self 1 = cast on enemy, not on self 2 = use random skill lv in [1..y] 3 = 1+2 (random lv on enemy)",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -31346,7 +31488,8 @@
           "source_record": "db/re/mob_db.conf:Id=2239"
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases HIT by 20; With LUK at least 110: increases HIT by 20; 7% chance to cast skill Divest All of level 1 when being hit by a direct attack i: 0 = cast on self 1 = cast on enemy, not on self 2 = use random skill lv in [1..y] 3 = 1+2 (random lv on enemy)",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -31369,7 +31512,8 @@
           "source_record": "db/re/mob_db.conf:Id=2235"
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases maximum HP by 10%; With INT at least 110: increases maximum HP by 10%; 7% chance to cast skill Grand Cross of level 10 when being hit by a direct attack i: 0 = cast on self 1 = cast on enemy, not on self 2 = use random skill lv in [1..y] 3 = 1+2 (random lv on enemy)",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -31493,7 +31637,8 @@
           "source_record": "db/re/mob_db.conf:Id=2222"
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases FLEE by 10; Increases HP recovered by 200% for item Red Potion; Increases HP recovered by 200% for item Orange Potion; Increases HP recovered by 200% for item Yellow Potion; Increases HP recovered by 200% for item White Potion",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -31809,7 +31954,8 @@
           "source_record": "db/re/mob_db.conf:Id=2310"
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases physical damage against Poison element targets by 30%; Disregard 30% of the target's DEF if the target belongs to race plant",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -31867,7 +32013,8 @@
           "source_record": "db/re/mob_db.conf:Id=2312"
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases maximum SP by 10%; When killing a monster by physical attack, you gain -666 HP",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -31925,7 +32072,8 @@
           "source_record": "db/re/mob_db.conf:Id=2631"
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "+12 Critical Against race player; +12 Critical Against race fish; +12 Critical Against race brute",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -31994,7 +32142,8 @@
           "source_record": "db/re/mob_db.conf:Id=2317"
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases INT by 4; 250% chance to cast skill Wide Sleep of level 3 when being hit by a direct attack i: 0 = cast on self 1 = cast on enemy, not on self 2 = use random skill lv in [1..y] 3 = 1+2 (random lv on enemy)",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -32041,7 +32190,8 @@
           "source_record": "db/re/mob_db.conf:Id=2319"
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases VIT by 4; 250% chance to cast skill Wide Petrify of level 3 when being hit by a direct attack i: 0 = cast on self 1 = cast on enemy, not on self 2 = use random skill lv in [1..y] 3 = 1+2 (random lv on enemy)",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -32292,7 +32442,8 @@
           "source_record": "db/re/mob_db.conf:Id=2476"
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases physical damage by 15%; increases magic damage by 15%; Lose 666 HP every 4000 millisecond; Lose 66 SP every 4000 milliseconds; heals -6666 HP and -666 SP",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -32307,7 +32458,8 @@
         "record": "Id=4602"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases physical damage by 20%; increases magic damage by 20%; Lose 666 HP every 6000 millisecond; Lose 66 SP every 6000 milliseconds; heals -6666 HP and -666 SP",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -32330,7 +32482,8 @@
           "source_record": "db/re/mob_db.conf:Id=2475"
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases basic attack power by 20; 7% chance to cast skill Wide Petrify of level 1 when being hit by a direct attack i: 0 = cast on self 1 = cast on enemy, not on self 2 = use random skill lv in [1..y] 3 = 1+2 (random lv on enemy); 7% chance to cast skill Wide Sleep of level 1 when being hit by a direct attack i: 0 = cast on self 1 = cast on enemy, not on self 2 = use random skill lv in [1..y] 3 = 1+2 (random lv on enemy); 7% chance to cast skill Wide Curse of level 1 when being hit by a direct attack i: 0 = cast on self 1 = cast on enemy, not on self 2 = use random skill lv in [1..y] 3 = 1+2 (random lv on enemy)",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -32345,7 +32498,8 @@
         "record": "Id=4604"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases basic attack power by 30; 7% chance to cast skill Wide Petrify of level 2 when being hit by a direct attack i: 0 = cast on self 1 = cast on enemy, not on self 2 = use random skill lv in [1..y] 3 = 1+2 (random lv on enemy); 7% chance to cast skill Wide Sleep of level 2 when being hit by a direct attack i: 0 = cast on self 1 = cast on enemy, not on self 2 = use random skill lv in [1..y] 3 = 1+2 (random lv on enemy); 7% chance to cast skill Wide Curse of level 2 when being hit by a direct attack i: 0 = cast on self 1 = cast on enemy, not on self 2 = use random skill lv in [1..y] 3 = 1+2 (random lv on enemy)",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -32861,7 +33015,8 @@
         "record": "Id=4637"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "When killing a monster by physical attack, you gain 50 HP; When killing a monster by physical attack, you gain 5 SP; reduces HP regeneration rate by 100%; heals -1000 HP and 100 SP",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -33208,7 +33363,8 @@
         "record": "Id=4647"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "When killing a monster by physical attack, you gain 300 HP",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -33255,7 +33411,8 @@
         "record": "Id=4650"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases VIT by 3; Adds a 100% chance to cause effect Stun to the enemy when being hit by physical damage",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -33320,7 +33477,8 @@
               "name": "Nightmare Mimic Card"
             }
           ],
-          "effect_status": "scripted_not_translated",
+          "effect_status": "translated",
+          "effect_summary": "reduces damage from brute targets by 5%; reduces damage from undead targets by 5%; Disregard RC Brute% of the target's MDEF if the target belongs to race 50; Disregard RC Undead% of the target's MDEF if the target belongs to race 50",
           "source": {
             "path": "db/re/item_combo_db.conf",
             "record": "combo_db[264]"
@@ -33339,7 +33497,8 @@
               "name": "Nightmare Minorous Card"
             }
           ],
-          "effect_status": "scripted_not_translated",
+          "effect_status": "translated",
+          "effect_summary": "reduces damage from brute targets by 5%; reduces damage from undead targets by 5%; Disregard RC Brute% of the target's DEF if the target belongs to race 50; Disregard RC Undead% of the target's DEF if the target belongs to race 50",
           "source": {
             "path": "db/re/item_combo_db.conf",
             "record": "combo_db[265]"
@@ -33380,7 +33539,8 @@
               "name": "Nightmare Mimic Card"
             }
           ],
-          "effect_status": "scripted_not_translated",
+          "effect_status": "translated",
+          "effect_summary": "reduces damage from brute targets by 5%; reduces damage from undead targets by 5%; Disregard RC Brute% of the target's MDEF if the target belongs to race 50; Disregard RC Undead% of the target's MDEF if the target belongs to race 50",
           "source": {
             "path": "db/re/item_combo_db.conf",
             "record": "combo_db[264]"
@@ -33420,7 +33580,8 @@
               "name": "Nightmare Minorous Card"
             }
           ],
-          "effect_status": "scripted_not_translated",
+          "effect_status": "translated",
+          "effect_summary": "reduces damage from brute targets by 5%; reduces damage from undead targets by 5%; Disregard RC Brute% of the target's DEF if the target belongs to race 50; Disregard RC Undead% of the target's DEF if the target belongs to race 50",
           "source": {
             "path": "db/re/item_combo_db.conf",
             "record": "combo_db[265]"
@@ -35473,7 +35634,8 @@
         "record": "Id=4760"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases magic damage by 1%; Increases fixed cast time of all skills by -1%",
       "type": "IT_CARD",
       "loc": [
         "EQP_HELM",
@@ -35493,7 +35655,8 @@
         "record": "Id=4761"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases magic damage by 2%; Increases fixed cast time of all skills by -1%",
       "type": "IT_CARD",
       "loc": [
         "EQP_HELM",
@@ -36437,7 +36600,8 @@
         "record": "Id=4806"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases magic damage by 3%; Increases fixed cast time of all skills by -1%",
       "type": "IT_CARD",
       "loc": [
         "EQP_HELM",
@@ -39024,7 +39188,8 @@
         "record": "Id=4931"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Gain 10 HP every 10000 milliseconds",
       "type": "IT_CARD",
       "loc": [
         "EQP_HELM",
@@ -39044,7 +39209,8 @@
         "record": "Id=4932"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "When killing a monster by physical attack, you gain 1 SP",
       "type": "IT_CARD",
       "loc": [
         "EQP_HELM",
@@ -39542,7 +39708,8 @@
         "record": "Id=4956"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Increase heal amount of skill Heal by 2%; Increase heal amount of skill Sanctuary by 2%; Increase heal amount of skill Aid Potion by 2%; Increase heal amount of skill Ab Highness Heal by 2%; Increase heal amount of skill Coluceo Heal by 2%; Increase heal amount if you are healed by skill Heal by 2%; Increase heal amount if you are healed by skill Sanctuary by 2%; Increase heal amount if you are healed by skill Aid Potion by 2%; Increase heal amount if you are healed by skill Ab Highness Heal by 2%; Increase heal amount if you are healed by skill Coluceo Heal by 2%; increases HP recovered from healing items by 2%",
       "type": "IT_CARD",
       "loc": [
         "EQP_HELM",
@@ -39792,7 +39959,8 @@
         "record": "Id=4968"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Increase heal amount of skill Heal by 1%; Increase heal amount of skill Sanctuary by 1%; Increase heal amount of skill Aid Potion by 1%; Increase heal amount of skill Ab Highness Heal by 1%; Increase heal amount of skill Coluceo Heal by 1%",
       "type": "IT_CARD",
       "loc": [
         "EQP_HELM",
@@ -39812,7 +39980,8 @@
         "record": "Id=4969"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Increase heal amount if you are healed by skill Heal by 1%; Increase heal amount if you are healed by skill Sanctuary by 1%; Increase heal amount if you are healed by skill Aid Potion by 1%; Increase heal amount if you are healed by skill Ab Highness Heal by 1%; Increase heal amount if you are healed by skill Coluceo Heal by 1%; increases HP recovered from healing items by 1%",
       "type": "IT_CARD",
       "loc": [
         "EQP_HELM",
@@ -40290,7 +40459,8 @@
         "record": "Id=4992"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "0.1% probability to drain 1% HP when attacking",
       "type": "IT_CARD",
       "loc": [
         "EQP_HELM",
@@ -40310,7 +40480,8 @@
         "record": "Id=4993"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "0.1% probability to drain 1% SP when attacking",
       "type": "IT_CARD",
       "loc": [
         "EQP_HELM",
@@ -40835,7 +41006,8 @@
         "record": "Id=29013"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "0.1% probability to drain 3% HP when attacking",
       "type": "IT_CARD",
       "loc": [
         "EQP_HELM",
