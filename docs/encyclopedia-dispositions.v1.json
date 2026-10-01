@@ -12,7 +12,7 @@
     "E2_verified": 236,
     "E3_unknown": 973,
     "E4_unknown": 213,
-    "E5_unknown": 2857
+    "E5_unknown": 2885
   },
   "entries": [
     {
@@ -115058,6 +115058,762 @@
           ],
           "required_source_literals": [
             "changequest 11336,11337;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1145_npc_re_quests_quests_malangdo_txt_2917",
+      "unit": "E5-chain-1145",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          1152
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 1152; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malangdo.txt",
+          "lines": [
+            2917
+          ],
+          "required_source_literals": [
+            "erasequest 1152;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1145_npc_re_quests_quests_malangdo_txt_2920",
+      "unit": "E5-chain-1145",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          1152
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 1152; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malangdo.txt",
+          "lines": [
+            2920
+          ],
+          "required_source_literals": [
+            "completequest 1152;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1145_npc_re_quests_quests_malangdo_txt_2921",
+      "unit": "E5-chain-1145",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          1152
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 1152; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malangdo.txt",
+          "lines": [
+            2921
+          ],
+          "required_source_literals": [
+            "erasequest 1152;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1145_npc_re_quests_quests_malangdo_txt_2987",
+      "unit": "E5-chain-1145",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          1145
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 1145; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malangdo.txt",
+          "lines": [
+            2987
+          ],
+          "required_source_literals": [
+            "setquest 1145;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1145_npc_re_quests_quests_malangdo_txt_3025",
+      "unit": "E5-chain-1145",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          1151
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 1151; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malangdo.txt",
+          "lines": [
+            3025
+          ],
+          "required_source_literals": [
+            "erasequest 1151;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1145_npc_re_quests_quests_malangdo_txt_3053",
+      "unit": "E5-chain-1145",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          1152
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 1152; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malangdo.txt",
+          "lines": [
+            3053
+          ],
+          "required_source_literals": [
+            "setquest 1152;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1145_npc_re_quests_quests_malangdo_txt_3060",
+      "unit": "E5-chain-1145",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          1153
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 1153; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malangdo.txt",
+          "lines": [
+            3060
+          ],
+          "required_source_literals": [
+            "setquest 1153;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1145_npc_re_quests_quests_malangdo_txt_3087",
+      "unit": "E5-chain-1145",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          1155
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 1155; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malangdo.txt",
+          "lines": [
+            3087
+          ],
+          "required_source_literals": [
+            "erasequest 1155;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1145_npc_re_quests_quests_malangdo_txt_3088",
+      "unit": "E5-chain-1145",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          1152
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 1152; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malangdo.txt",
+          "lines": [
+            3088
+          ],
+          "required_source_literals": [
+            "setquest 1152;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1145_npc_re_quests_quests_malangdo_txt_3191",
+      "unit": "E5-chain-1145",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          1145
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 1145; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malangdo.txt",
+          "lines": [
+            3191
+          ],
+          "required_source_literals": [
+            "erasequest 1145;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1145_npc_re_quests_quests_malangdo_txt_3192",
+      "unit": "E5-chain-1145",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          1146
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 1146; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malangdo.txt",
+          "lines": [
+            3192
+          ],
+          "required_source_literals": [
+            "setquest 1146;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1145_npc_re_quests_quests_malangdo_txt_3215",
+      "unit": "E5-chain-1145",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          1147
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 1147; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malangdo.txt",
+          "lines": [
+            3215
+          ],
+          "required_source_literals": [
+            "erasequest 1147;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1145_npc_re_quests_quests_malangdo_txt_3216",
+      "unit": "E5-chain-1145",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          1148
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 1148; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malangdo.txt",
+          "lines": [
+            3216
+          ],
+          "required_source_literals": [
+            "setquest 1148;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1145_npc_re_quests_quests_malangdo_txt_3245",
+      "unit": "E5-chain-1145",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          1146
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 1146; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malangdo.txt",
+          "lines": [
+            3245
+          ],
+          "required_source_literals": [
+            "erasequest 1146;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1145_npc_re_quests_quests_malangdo_txt_3246",
+      "unit": "E5-chain-1145",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          1147
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 1147; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malangdo.txt",
+          "lines": [
+            3246
+          ],
+          "required_source_literals": [
+            "setquest 1147;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1145_npc_re_quests_quests_malangdo_txt_3281",
+      "unit": "E5-chain-1145",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          1148
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 1148; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malangdo.txt",
+          "lines": [
+            3281
+          ],
+          "required_source_literals": [
+            "erasequest 1148;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1145_npc_re_quests_quests_malangdo_txt_3282",
+      "unit": "E5-chain-1145",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          1149
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 1149; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malangdo.txt",
+          "lines": [
+            3282
+          ],
+          "required_source_literals": [
+            "setquest 1149;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1145_npc_re_quests_quests_malangdo_txt_3360",
+      "unit": "E5-chain-1145",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          1150
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 1150; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malangdo.txt",
+          "lines": [
+            3360
+          ],
+          "required_source_literals": [
+            "erasequest 1150;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1145_npc_re_quests_quests_malangdo_txt_3361",
+      "unit": "E5-chain-1145",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          1151
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 1151; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malangdo.txt",
+          "lines": [
+            3361
+          ],
+          "required_source_literals": [
+            "setquest 1151;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1145_npc_re_quests_quests_malangdo_txt_3412",
+      "unit": "E5-chain-1145",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          1149
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 1149; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malangdo.txt",
+          "lines": [
+            3412
+          ],
+          "required_source_literals": [
+            "erasequest 1149;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1145_npc_re_quests_quests_malangdo_txt_3413",
+      "unit": "E5-chain-1145",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          1150
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 1150; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malangdo.txt",
+          "lines": [
+            3413
+          ],
+          "required_source_literals": [
+            "setquest 1150;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1145_npc_re_quests_quests_malangdo_txt_3463",
+      "unit": "E5-chain-1145",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          1153
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 1153; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malangdo.txt",
+          "lines": [
+            3463
+          ],
+          "required_source_literals": [
+            "erasequest 1153;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1145_npc_re_quests_quests_malangdo_txt_3464",
+      "unit": "E5-chain-1145",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          1154
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 1154; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malangdo.txt",
+          "lines": [
+            3464
+          ],
+          "required_source_literals": [
+            "setquest 1154;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1145_npc_re_quests_quests_malangdo_txt_3489",
+      "unit": "E5-chain-1145",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          1154
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 1154; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malangdo.txt",
+          "lines": [
+            3489
+          ],
+          "required_source_literals": [
+            "erasequest 1154;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1145_npc_re_quests_quests_malangdo_txt_3490",
+      "unit": "E5-chain-1145",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          1155
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 1155; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malangdo.txt",
+          "lines": [
+            3490
+          ],
+          "required_source_literals": [
+            "setquest 1155;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1145_npc_re_quests_quests_malangdo_txt_3557",
+      "unit": "E5-chain-1145",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          1152
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 1152; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malangdo.txt",
+          "lines": [
+            3557
+          ],
+          "required_source_literals": [
+            "erasequest 1152;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1145_npc_re_quests_quests_malangdo_txt_3567",
+      "unit": "E5-chain-1145",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          1150
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 1150; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malangdo.txt",
+          "lines": [
+            3567
+          ],
+          "required_source_literals": [
+            "erasequest 1150;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1145_npc_re_quests_quests_malangdo_txt_3568",
+      "unit": "E5-chain-1145",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          1151
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 1151; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malangdo.txt",
+          "lines": [
+            3568
+          ],
+          "required_source_literals": [
+            "setquest 1151;"
           ]
         }
       ],
