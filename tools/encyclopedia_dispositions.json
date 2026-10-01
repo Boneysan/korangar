@@ -143778,6 +143778,33 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2117_npc_quests_quests_veins_txt_6134",
+      "unit": "E5-chain-2117",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2117
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 2117; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_veins.txt",
+          "lines": [
+            6134
+          ],
+          "required_source_literals": [
+            "changequest 2117,2118;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
