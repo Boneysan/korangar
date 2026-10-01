@@ -157980,6 +157980,141 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_6015_npc_jobs_1_1e_ninja_txt_212",
+      "unit": "E5-chain-6015",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          6015
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 6015; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/1-1e/ninja.txt",
+          "lines": [
+            212
+          ],
+          "required_source_literals": [
+            "setquest 6015;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_6015_npc_jobs_1_1e_ninja_txt_279",
+      "unit": "E5-chain-6015",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          6017
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 6017; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/1-1e/ninja.txt",
+          "lines": [
+            279
+          ],
+          "required_source_literals": [
+            "changequest 6017,6018;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_6015_npc_jobs_1_1e_ninja_txt_360",
+      "unit": "E5-chain-6015",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          6018
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 6018; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/1-1e/ninja.txt",
+          "lines": [
+            360
+          ],
+          "required_source_literals": [
+            "completequest 6018;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_6015_npc_jobs_1_1e_ninja_txt_456",
+      "unit": "E5-chain-6015",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          6015
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 6015; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/1-1e/ninja.txt",
+          "lines": [
+            456
+          ],
+          "required_source_literals": [
+            "changequest 6015,6016;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_6015_npc_jobs_1_1e_ninja_txt_550",
+      "unit": "E5-chain-6015",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          6016
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 6016; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/1-1e/ninja.txt",
+          "lines": [
+            550
+          ],
+          "required_source_literals": [
+            "changequest 6016,6017;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
