@@ -160248,6 +160248,87 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2032_npc_jobs_2_2_alchemist_txt_1045",
+      "unit": "E5-chain-2032",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2032
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 2032; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/alchemist.txt",
+          "lines": [
+            1045
+          ],
+          "required_source_literals": [
+            "changequest 2032,2033;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2032_npc_jobs_2_2_alchemist_txt_1223",
+      "unit": "E5-chain-2032",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2033
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 2033; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/alchemist.txt",
+          "lines": [
+            1223
+          ],
+          "required_source_literals": [
+            "changequest 2033,2034;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2032_npc_jobs_2_2_alchemist_txt_1405",
+      "unit": "E5-chain-2032",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2033
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 2033; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/alchemist.txt",
+          "lines": [
+            1405
+          ],
+          "required_source_literals": [
+            "changequest 2033,2035;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
