@@ -156738,6 +156738,222 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2289_npc_re_quests_quests_morocc_txt_145",
+      "unit": "E5-chain-2289",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2290
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 2290; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_morocc.txt",
+          "lines": [
+            145
+          ],
+          "required_source_literals": [
+            "erasequest 2290;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2289_npc_re_quests_quests_morocc_txt_170",
+      "unit": "E5-chain-2289",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2289
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 2289; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_morocc.txt",
+          "lines": [
+            170
+          ],
+          "required_source_literals": [
+            "setquest 2289;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2289_npc_re_quests_quests_morocc_txt_189",
+      "unit": "E5-chain-2289",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2289
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 2289; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_morocc.txt",
+          "lines": [
+            189
+          ],
+          "required_source_literals": [
+            "erasequest 2289;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2289_npc_re_quests_quests_morocc_txt_196",
+      "unit": "E5-chain-2289",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2289
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 2289; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_morocc.txt",
+          "lines": [
+            196
+          ],
+          "required_source_literals": [
+            "changequest 2289,2290;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2289_npc_re_quests_quests_morocc_txt_207",
+      "unit": "E5-chain-2289",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2291
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 2291; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_morocc.txt",
+          "lines": [
+            207
+          ],
+          "required_source_literals": [
+            "erasequest 2291;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2289_npc_re_quests_quests_morocc_txt_230",
+      "unit": "E5-chain-2289",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2292
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 2292; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_morocc.txt",
+          "lines": [
+            230
+          ],
+          "required_source_literals": [
+            "setquest 2292;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2289_npc_re_quests_quests_morocc_txt_249",
+      "unit": "E5-chain-2289",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2292
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 2292; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_morocc.txt",
+          "lines": [
+            249
+          ],
+          "required_source_literals": [
+            "erasequest 2292;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2289_npc_re_quests_quests_morocc_txt_256",
+      "unit": "E5-chain-2289",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2292
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 2292; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_morocc.txt",
+          "lines": [
+            256
+          ],
+          "required_source_literals": [
+            "changequest 2292,2291;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
