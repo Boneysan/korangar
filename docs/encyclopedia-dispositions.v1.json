@@ -12,7 +12,7 @@
     "E2_verified": 236,
     "E3_unknown": 973,
     "E4_unknown": 213,
-    "E5_unknown": 548
+    "E5_unknown": 553
   },
   "entries": [
     {
@@ -115598,6 +115598,141 @@
           ],
           "required_source_literals": [
             "setquest 7081;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_7211_npc_re_instances_hazyforest_txt_1096",
+      "unit": "E5-chain-7211",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7211
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 7211; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/instances/HazyForest.txt",
+          "lines": [
+            1096
+          ],
+          "required_source_literals": [
+            "setquest(7211);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_7211_npc_re_instances_hazyforest_txt_149",
+      "unit": "E5-chain-7211",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7211
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 7211; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/instances/HazyForest.txt",
+          "lines": [
+            149
+          ],
+          "required_source_literals": [
+            "erasequest(7211);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_7211_npc_re_instances_hazyforest_txt_176",
+      "unit": "E5-chain-7211",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7211
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 7211; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/instances/HazyForest.txt",
+          "lines": [
+            176
+          ],
+          "required_source_literals": [
+            "erasequest(7211);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_7211_npc_re_instances_hazyforest_txt_178",
+      "unit": "E5-chain-7211",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7211
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 7211; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/instances/HazyForest.txt",
+          "lines": [
+            178
+          ],
+          "required_source_literals": [
+            "setquest(7211);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_7211_npc_re_instances_hazyforest_txt_82",
+      "unit": "E5-chain-7211",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7211
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 7211; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/instances/HazyForest.txt",
+          "lines": [
+            82
+          ],
+          "required_source_literals": [
+            "erasequest(7211);"
           ]
         }
       ],
