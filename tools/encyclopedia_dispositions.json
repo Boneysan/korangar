@@ -239596,6 +239596,34 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e6_boss_2096_boss",
+      "unit": "E6-boss-2096",
+      "package": "E6",
+      "subject": {
+        "kind": "monster",
+        "name": "E_OSIRIS2",
+        "ids": [
+          2096
+        ]
+      },
+      "result": "unknown",
+      "statement": "Monster 2096 (E_OSIRIS2) has configured database rows in the packet; this record does not enumerate each skill.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/mob_db.conf",
+          "lines": [
+            50072
+          ],
+          "required_source_literals": [
+            "{"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
