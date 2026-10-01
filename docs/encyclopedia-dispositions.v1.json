@@ -14,7 +14,7 @@
     "E4_unknown": 213,
     "E5_absent": 644,
     "E5_unknown": 3383,
-    "E6_unknown": 67
+    "E6_unknown": 68
   },
   "entries": [
     {
@@ -196502,6 +196502,34 @@
           "path": "db/re/mob_db.conf",
           "lines": [
             54982
+          ],
+          "required_source_literals": [
+            "{"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e6_boss_2249_boss",
+      "unit": "E6-boss-2249",
+      "package": "E6",
+      "subject": {
+        "kind": "monster",
+        "name": "PYURIEL",
+        "ids": [
+          2249
+        ]
+      },
+      "result": "unknown",
+      "statement": "Monster 2249 (PYURIEL) has configured database rows in the packet; this record does not enumerate each skill.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/mob_db.conf",
+          "lines": [
+            57082
           ],
           "required_source_literals": [
             "{"
