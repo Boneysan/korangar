@@ -142085,7 +142085,7 @@
       "package": "E3",
       "kind": "e3_translator",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "key": "bonus bIgnoreMdefRace",
@@ -142133,7 +142133,25 @@
       ],
       "size_lines": 33,
       "reason": "2 item script(s) first stop at documented `bonus bIgnoreMdefRace`",
-      "history": []
+      "history": [
+        "2026-10-01T06:19:22Z activated",
+        "2026-10-01T06:19:22Z validated",
+        "2026-10-01T06:19:22Z verified: 1 claims supported",
+        "2026-10-01T06:19:46Z accepted",
+        "2026-10-01T06:19:46Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "9f22024081c526c43bb449fa921792b7041b742ab213be69606c18ab76e910fc",
+      "accepted_files": [
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/export_item_reference.py",
+        "tools/tests/test_export_item_effect_phrases.py"
+      ],
+      "accepted_on": "2026-10-01",
+      "audit": "due",
+      "commit": "committed"
     },
     {
       "id": "E3-translate-bonus-bintravision",
