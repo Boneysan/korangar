@@ -12,7 +12,7 @@
     "E2_verified": 236,
     "E3_unknown": 973,
     "E4_unknown": 213,
-    "E5_unknown": 1248
+    "E5_unknown": 1278
   },
   "entries": [
     {
@@ -135389,6 +135389,816 @@
           ],
           "required_source_literals": [
             "changequest 8225,8226;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_8229_npc_quests_first_class_tu_merchant_txt_143",
+      "unit": "E5-chain-8229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8239
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 8239; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/first_class/tu_merchant.txt",
+          "lines": [
+            143
+          ],
+          "required_source_literals": [
+            "completequest 8239;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_8229_npc_quests_first_class_tu_merchant_txt_157",
+      "unit": "E5-chain-8229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8239
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 8239; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/first_class/tu_merchant.txt",
+          "lines": [
+            157
+          ],
+          "required_source_literals": [
+            "completequest 8239;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_8229_npc_quests_first_class_tu_merchant_txt_164",
+      "unit": "E5-chain-8229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8239
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 8239; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/first_class/tu_merchant.txt",
+          "lines": [
+            164
+          ],
+          "required_source_literals": [
+            "changequest 8239, 8240;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_8229_npc_quests_first_class_tu_merchant_txt_197",
+      "unit": "E5-chain-8229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8238
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 8238; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/first_class/tu_merchant.txt",
+          "lines": [
+            197
+          ],
+          "required_source_literals": [
+            "changequest 8238, 8239;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_8229_npc_quests_first_class_tu_merchant_txt_208",
+      "unit": "E5-chain-8229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8238
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 8238; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/first_class/tu_merchant.txt",
+          "lines": [
+            208
+          ],
+          "required_source_literals": [
+            "changequest 8238, 8239;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_8229_npc_quests_first_class_tu_merchant_txt_249",
+      "unit": "E5-chain-8229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8237
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 8237; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/first_class/tu_merchant.txt",
+          "lines": [
+            249
+          ],
+          "required_source_literals": [
+            "changequest 8237, 8239;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_8229_npc_quests_first_class_tu_merchant_txt_261",
+      "unit": "E5-chain-8229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8237
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 8237; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/first_class/tu_merchant.txt",
+          "lines": [
+            261
+          ],
+          "required_source_literals": [
+            "changequest 8237, 8239;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_8229_npc_quests_first_class_tu_merchant_txt_275",
+      "unit": "E5-chain-8229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8237
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 8237; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/first_class/tu_merchant.txt",
+          "lines": [
+            275
+          ],
+          "required_source_literals": [
+            "changequest 8237, 8238;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_8229_npc_quests_first_class_tu_merchant_txt_293",
+      "unit": "E5-chain-8229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8236
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 8236; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/first_class/tu_merchant.txt",
+          "lines": [
+            293
+          ],
+          "required_source_literals": [
+            "changequest 8236, 8237;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_8229_npc_quests_first_class_tu_merchant_txt_306",
+      "unit": "E5-chain-8229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8236
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 8236; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/first_class/tu_merchant.txt",
+          "lines": [
+            306
+          ],
+          "required_source_literals": [
+            "changequest 8236, 8237;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_8229_npc_quests_first_class_tu_merchant_txt_338",
+      "unit": "E5-chain-8229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8235
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 8235; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/first_class/tu_merchant.txt",
+          "lines": [
+            338
+          ],
+          "required_source_literals": [
+            "changequest 8235, 8237;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_8229_npc_quests_first_class_tu_merchant_txt_349",
+      "unit": "E5-chain-8229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8235
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 8235; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/first_class/tu_merchant.txt",
+          "lines": [
+            349
+          ],
+          "required_source_literals": [
+            "changequest 8235, 8237;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_8229_npc_quests_first_class_tu_merchant_txt_360",
+      "unit": "E5-chain-8229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8235
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 8235; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/first_class/tu_merchant.txt",
+          "lines": [
+            360
+          ],
+          "required_source_literals": [
+            "changequest 8235, 8236;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_8229_npc_quests_first_class_tu_merchant_txt_393",
+      "unit": "E5-chain-8229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8234
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 8234; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/first_class/tu_merchant.txt",
+          "lines": [
+            393
+          ],
+          "required_source_literals": [
+            "changequest 8234,8235;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_8229_npc_quests_first_class_tu_merchant_txt_431",
+      "unit": "E5-chain-8229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8233
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 8233; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/first_class/tu_merchant.txt",
+          "lines": [
+            431
+          ],
+          "required_source_literals": [
+            "changequest 8233, 8234;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_8229_npc_quests_first_class_tu_merchant_txt_444",
+      "unit": "E5-chain-8229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8232
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 8232; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/first_class/tu_merchant.txt",
+          "lines": [
+            444
+          ],
+          "required_source_literals": [
+            "changequest 8232, 8233;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_8229_npc_quests_first_class_tu_merchant_txt_454",
+      "unit": "E5-chain-8229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8232
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 8232; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/first_class/tu_merchant.txt",
+          "lines": [
+            454
+          ],
+          "required_source_literals": [
+            "changequest 8232, 8233;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_8229_npc_quests_first_class_tu_merchant_txt_488",
+      "unit": "E5-chain-8229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8231
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 8231; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/first_class/tu_merchant.txt",
+          "lines": [
+            488
+          ],
+          "required_source_literals": [
+            "changequest 8231, 8233;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_8229_npc_quests_first_class_tu_merchant_txt_499",
+      "unit": "E5-chain-8229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8231
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 8231; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/first_class/tu_merchant.txt",
+          "lines": [
+            499
+          ],
+          "required_source_literals": [
+            "changequest 8231, 8233;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_8229_npc_quests_first_class_tu_merchant_txt_516",
+      "unit": "E5-chain-8229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8231
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 8231; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/first_class/tu_merchant.txt",
+          "lines": [
+            516
+          ],
+          "required_source_literals": [
+            "changequest 8231, 8232;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_8229_npc_quests_first_class_tu_merchant_txt_539",
+      "unit": "E5-chain-8229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8230
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 8230; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/first_class/tu_merchant.txt",
+          "lines": [
+            539
+          ],
+          "required_source_literals": [
+            "changequest 8230, 8231;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_8229_npc_quests_first_class_tu_merchant_txt_548",
+      "unit": "E5-chain-8229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8230
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 8230; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/first_class/tu_merchant.txt",
+          "lines": [
+            548
+          ],
+          "required_source_literals": [
+            "changequest 8230,8231;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_8229_npc_quests_first_class_tu_merchant_txt_576",
+      "unit": "E5-chain-8229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8229
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 8229; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/first_class/tu_merchant.txt",
+          "lines": [
+            576
+          ],
+          "required_source_literals": [
+            "changequest 8229, 8230;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_8229_npc_quests_first_class_tu_merchant_txt_594",
+      "unit": "E5-chain-8229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8229
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 8229; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/first_class/tu_merchant.txt",
+          "lines": [
+            594
+          ],
+          "required_source_literals": [
+            "changequest 8229, 8230;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_8229_npc_quests_first_class_tu_merchant_txt_603",
+      "unit": "E5-chain-8229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8229
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 8229; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/first_class/tu_merchant.txt",
+          "lines": [
+            603
+          ],
+          "required_source_literals": [
+            "setquest 8229;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_8229_npc_quests_first_class_tu_merchant_txt_642",
+      "unit": "E5-chain-8229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8230
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 8230; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/first_class/tu_merchant.txt",
+          "lines": [
+            642
+          ],
+          "required_source_literals": [
+            "setquest 8230;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_8229_npc_quests_first_class_tu_merchant_txt_661",
+      "unit": "E5-chain-8229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8230
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 8230; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/first_class/tu_merchant.txt",
+          "lines": [
+            661
+          ],
+          "required_source_literals": [
+            "setquest 8230;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_8229_npc_quests_first_class_tu_merchant_txt_81",
+      "unit": "E5-chain-8229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8240
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 8240; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/first_class/tu_merchant.txt",
+          "lines": [
+            81
+          ],
+          "required_source_literals": [
+            "completequest 8240;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_8229_npc_quests_first_class_tu_merchant_txt_88",
+      "unit": "E5-chain-8229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8240
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 8240; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/first_class/tu_merchant.txt",
+          "lines": [
+            88
+          ],
+          "required_source_literals": [
+            "completequest 8240;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_8229_npc_quests_quests_13_2_txt_4482",
+      "unit": "E5-chain-8229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8240
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 8240; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_2.txt",
+          "lines": [
+            4482
+          ],
+          "required_source_literals": [
+            "setquest 8240+getarg(1);"
           ]
         }
       ],
