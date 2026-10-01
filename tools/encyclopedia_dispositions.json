@@ -145533,6 +145533,33 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2190_npc_re_jobs_3_1_archbishop_txt_941",
+      "unit": "E5-chain-2190",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2190
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 2190; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-1/archbishop.txt",
+          "lines": [
+            941
+          ],
+          "required_source_literals": [
+            "changequest 2190,2191;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
