@@ -12,7 +12,7 @@
     "E2_verified": 236,
     "E3_unknown": 973,
     "E4_unknown": 213,
-    "E5_unknown": 1451
+    "E5_unknown": 1458
   },
   "entries": [
     {
@@ -120053,6 +120053,195 @@
           ],
           "required_source_literals": [
             "changequest 2076,2077;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2079_npc_quests_quests_airship_txt_524",
+      "unit": "E5-chain-2079",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2081
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 2081; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_airship.txt",
+          "lines": [
+            524
+          ],
+          "required_source_literals": [
+            "changequest(2081, 2082);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2079_npc_quests_quests_airship_txt_583",
+      "unit": "E5-chain-2079",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2084
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 2084; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_airship.txt",
+          "lines": [
+            583
+          ],
+          "required_source_literals": [
+            "completequest(2084);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2079_npc_quests_quests_airship_txt_699",
+      "unit": "E5-chain-2079",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2079
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 2079; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_airship.txt",
+          "lines": [
+            699
+          ],
+          "required_source_literals": [
+            "changequest(2079, 2080);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2079_npc_quests_quests_airship_txt_72",
+      "unit": "E5-chain-2079",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2079
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 2079; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_airship.txt",
+          "lines": [
+            72
+          ],
+          "required_source_literals": [
+            "setquest(2079);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2079_npc_quests_quests_airship_txt_739",
+      "unit": "E5-chain-2079",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2083
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 2083; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_airship.txt",
+          "lines": [
+            739
+          ],
+          "required_source_literals": [
+            "changequest(2083, 2084);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2079_npc_quests_quests_airship_txt_900",
+      "unit": "E5-chain-2079",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2080
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 2080; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_airship.txt",
+          "lines": [
+            900
+          ],
+          "required_source_literals": [
+            "changequest(2080, 2081);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2079_npc_quests_quests_airship_txt_995",
+      "unit": "E5-chain-2079",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2083
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 2083; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_airship.txt",
+          "lines": [
+            995
+          ],
+          "required_source_literals": [
+            "changequest(2083, 2084);"
           ]
         }
       ],
