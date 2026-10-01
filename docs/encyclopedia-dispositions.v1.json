@@ -12,7 +12,7 @@
     "E2_verified": 236,
     "E3_unknown": 973,
     "E4_unknown": 213,
-    "E5_unknown": 1017
+    "E5_unknown": 1031
   },
   "entries": [
     {
@@ -117866,6 +117866,384 @@
           ],
           "required_source_literals": [
             "changequest 2140,2141;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2143_npc_events_gdevent_aru_txt_179",
+      "unit": "E5-chain-2143",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2144
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 2144; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/events/gdevent_aru.txt",
+          "lines": [
+            179
+          ],
+          "required_source_literals": [
+            "setquest 2144;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2143_npc_events_gdevent_aru_txt_311",
+      "unit": "E5-chain-2143",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2144
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 2144; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/events/gdevent_aru.txt",
+          "lines": [
+            311
+          ],
+          "required_source_literals": [
+            "setquest 2144;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2143_npc_events_gdevent_aru_txt_454",
+      "unit": "E5-chain-2143",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2144
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 2144; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/events/gdevent_aru.txt",
+          "lines": [
+            454
+          ],
+          "required_source_literals": [
+            "setquest 2144;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2143_npc_events_gdevent_aru_txt_607",
+      "unit": "E5-chain-2143",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2143
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 2143; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/events/gdevent_aru.txt",
+          "lines": [
+            607
+          ],
+          "required_source_literals": [
+            "setquest 2143;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2143_npc_events_gdevent_aru_txt_683",
+      "unit": "E5-chain-2143",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2143
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 2143; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/events/gdevent_aru.txt",
+          "lines": [
+            683
+          ],
+          "required_source_literals": [
+            "erasequest 2143;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2143_npc_events_gdevent_aru_txt_790",
+      "unit": "E5-chain-2143",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2143
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 2143; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/events/gdevent_aru.txt",
+          "lines": [
+            790
+          ],
+          "required_source_literals": [
+            "erasequest 2143;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2143_npc_events_gdevent_aru_txt_826",
+      "unit": "E5-chain-2143",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2144
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 2144; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/events/gdevent_aru.txt",
+          "lines": [
+            826
+          ],
+          "required_source_literals": [
+            "erasequest 2144;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2143_npc_events_gdevent_sch_txt_179",
+      "unit": "E5-chain-2143",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2144
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 2144; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/events/gdevent_sch.txt",
+          "lines": [
+            179
+          ],
+          "required_source_literals": [
+            "setquest 2144;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2143_npc_events_gdevent_sch_txt_311",
+      "unit": "E5-chain-2143",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2144
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 2144; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/events/gdevent_sch.txt",
+          "lines": [
+            311
+          ],
+          "required_source_literals": [
+            "setquest 2144;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2143_npc_events_gdevent_sch_txt_453",
+      "unit": "E5-chain-2143",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2144
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 2144; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/events/gdevent_sch.txt",
+          "lines": [
+            453
+          ],
+          "required_source_literals": [
+            "setquest 2144;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2143_npc_events_gdevent_sch_txt_606",
+      "unit": "E5-chain-2143",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2143
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 2143; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/events/gdevent_sch.txt",
+          "lines": [
+            606
+          ],
+          "required_source_literals": [
+            "setquest 2143;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2143_npc_events_gdevent_sch_txt_682",
+      "unit": "E5-chain-2143",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2143
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 2143; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/events/gdevent_sch.txt",
+          "lines": [
+            682
+          ],
+          "required_source_literals": [
+            "erasequest 2143;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2143_npc_events_gdevent_sch_txt_789",
+      "unit": "E5-chain-2143",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2143
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 2143; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/events/gdevent_sch.txt",
+          "lines": [
+            789
+          ],
+          "required_source_literals": [
+            "erasequest 2143;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2143_npc_events_gdevent_sch_txt_825",
+      "unit": "E5-chain-2143",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2144
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 2144; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/events/gdevent_sch.txt",
+          "lines": [
+            825
+          ],
+          "required_source_literals": [
+            "erasequest 2144;"
           ]
         }
       ],
