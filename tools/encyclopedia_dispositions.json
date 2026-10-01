@@ -154551,6 +154551,87 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_11190_npc_re_quests_quests_mora_txt_1232",
+      "unit": "E5-chain-11190",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          11190
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 11190; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_mora.txt",
+          "lines": [
+            1232
+          ],
+          "required_source_literals": [
+            "changequest 11190,11191;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_11190_npc_re_quests_quests_mora_txt_1235",
+      "unit": "E5-chain-11190",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          11196
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 11196; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_mora.txt",
+          "lines": [
+            1235
+          ],
+          "required_source_literals": [
+            "changequest 11196,11197;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_11190_npc_re_quests_quests_mora_txt_1238",
+      "unit": "E5-chain-11190",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          11202
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 11202; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_mora.txt",
+          "lines": [
+            1238
+          ],
+          "required_source_literals": [
+            "changequest 11202,11203;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
