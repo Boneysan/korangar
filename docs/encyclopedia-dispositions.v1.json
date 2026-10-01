@@ -12,7 +12,7 @@
     "E2_verified": 236,
     "E3_unknown": 973,
     "E4_unknown": 213,
-    "E5_unknown": 597
+    "E5_unknown": 601
   },
   "entries": [
     {
@@ -116624,6 +116624,114 @@
           ],
           "required_source_literals": [
             "setquest 7081;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_7096_npc_re_jobs_3_1_guillotine_cross_txt_3717",
+      "unit": "E5-chain-7096",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7096
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 7096; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-1/guillotine_cross.txt",
+          "lines": [
+            3717
+          ],
+          "required_source_literals": [
+            "erasequest 7096;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_7096_npc_re_jobs_3_1_guillotine_cross_txt_3720",
+      "unit": "E5-chain-7096",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7097
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 7097; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-1/guillotine_cross.txt",
+          "lines": [
+            3720
+          ],
+          "required_source_literals": [
+            "erasequest 7097;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_7096_npc_re_jobs_3_1_guillotine_cross_txt_3723",
+      "unit": "E5-chain-7096",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7098
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 7098; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-1/guillotine_cross.txt",
+          "lines": [
+            3723
+          ],
+          "required_source_literals": [
+            "erasequest 7098;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_7096_npc_re_jobs_3_1_guillotine_cross_txt_3726",
+      "unit": "E5-chain-7096",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7099
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 7099; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-1/guillotine_cross.txt",
+          "lines": [
+            3726
+          ],
+          "required_source_literals": [
+            "erasequest 7099;"
           ]
         }
       ],
