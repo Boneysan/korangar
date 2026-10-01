@@ -12,7 +12,7 @@
     "E2_verified": 236,
     "E3_unknown": 973,
     "E4_unknown": 213,
-    "E5_unknown": 2209
+    "E5_unknown": 2232
   },
   "entries": [
     {
@@ -131717,6 +131717,627 @@
           ],
           "required_source_literals": [
             "changequest 2208,60351;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2209_npc_re_jobs_3_2_genetic_txt_415",
+      "unit": "E5-chain-2209",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2209
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 2209; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-2/genetic.txt",
+          "lines": [
+            415
+          ],
+          "required_source_literals": [
+            "if (questprogress(2209) == 1) erasequest 2209;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2209_npc_re_jobs_3_2_genetic_txt_416",
+      "unit": "E5-chain-2209",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2210
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 2210; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-2/genetic.txt",
+          "lines": [
+            416
+          ],
+          "required_source_literals": [
+            "if (questprogress(2210) == 1) erasequest 2210;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2209_npc_re_jobs_3_2_genetic_txt_417",
+      "unit": "E5-chain-2209",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2211
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 2211; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-2/genetic.txt",
+          "lines": [
+            417
+          ],
+          "required_source_literals": [
+            "if (questprogress(2211) == 1) erasequest 2211;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2209_npc_re_jobs_3_2_genetic_txt_418",
+      "unit": "E5-chain-2209",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2212
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 2212; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-2/genetic.txt",
+          "lines": [
+            418
+          ],
+          "required_source_literals": [
+            "if (questprogress(2212) == 1) erasequest 2212;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2209_npc_re_jobs_3_2_genetic_txt_419",
+      "unit": "E5-chain-2209",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2213
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 2213; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-2/genetic.txt",
+          "lines": [
+            419
+          ],
+          "required_source_literals": [
+            "if (questprogress(2213) == 1) erasequest 2213;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2209_npc_re_jobs_3_2_genetic_txt_420",
+      "unit": "E5-chain-2209",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2214
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 2214; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-2/genetic.txt",
+          "lines": [
+            420
+          ],
+          "required_source_literals": [
+            "if (questprogress(2214) == 1) erasequest 2214;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2209_npc_re_jobs_3_2_genetic_txt_486",
+      "unit": "E5-chain-2209",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2215
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 2215; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-2/genetic.txt",
+          "lines": [
+            486
+          ],
+          "required_source_literals": [
+            "changequest 2215,2216;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2209_npc_re_jobs_3_2_genetic_txt_498",
+      "unit": "E5-chain-2209",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2209
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 2209; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-2/genetic.txt",
+          "lines": [
+            498
+          ],
+          "required_source_literals": [
+            "if (questprogress(2209) == 1) erasequest 2209;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2209_npc_re_jobs_3_2_genetic_txt_499",
+      "unit": "E5-chain-2209",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2210
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 2210; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-2/genetic.txt",
+          "lines": [
+            499
+          ],
+          "required_source_literals": [
+            "if (questprogress(2210) == 1) erasequest 2210;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2209_npc_re_jobs_3_2_genetic_txt_500",
+      "unit": "E5-chain-2209",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2211
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 2211; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-2/genetic.txt",
+          "lines": [
+            500
+          ],
+          "required_source_literals": [
+            "if (questprogress(2211) == 1) erasequest 2211;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2209_npc_re_jobs_3_2_genetic_txt_501",
+      "unit": "E5-chain-2209",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2212
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 2212; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-2/genetic.txt",
+          "lines": [
+            501
+          ],
+          "required_source_literals": [
+            "if (questprogress(2212) == 1) erasequest 2212;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2209_npc_re_jobs_3_2_genetic_txt_502",
+      "unit": "E5-chain-2209",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2213
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 2213; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-2/genetic.txt",
+          "lines": [
+            502
+          ],
+          "required_source_literals": [
+            "if (questprogress(2213) == 1) erasequest 2213;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2209_npc_re_jobs_3_2_genetic_txt_503",
+      "unit": "E5-chain-2209",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2214
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 2214; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-2/genetic.txt",
+          "lines": [
+            503
+          ],
+          "required_source_literals": [
+            "if (questprogress(2214) == 1) erasequest 2214;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2209_npc_re_jobs_3_2_genetic_txt_511",
+      "unit": "E5-chain-2209",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2223
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 2223; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-2/genetic.txt",
+          "lines": [
+            511
+          ],
+          "required_source_literals": [
+            "completequest 2223;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2209_npc_re_jobs_3_2_genetic_txt_775",
+      "unit": "E5-chain-2209",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2209
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 2209; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-2/genetic.txt",
+          "lines": [
+            775
+          ],
+          "required_source_literals": [
+            "if (questprogress(2209) == 1) erasequest 2209;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2209_npc_re_jobs_3_2_genetic_txt_776",
+      "unit": "E5-chain-2209",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2210
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 2210; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-2/genetic.txt",
+          "lines": [
+            776
+          ],
+          "required_source_literals": [
+            "if (questprogress(2210) == 1) erasequest 2210;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2209_npc_re_jobs_3_2_genetic_txt_777",
+      "unit": "E5-chain-2209",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2211
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 2211; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-2/genetic.txt",
+          "lines": [
+            777
+          ],
+          "required_source_literals": [
+            "if (questprogress(2211) == 1) erasequest 2211;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2209_npc_re_jobs_3_2_genetic_txt_778",
+      "unit": "E5-chain-2209",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2212
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 2212; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-2/genetic.txt",
+          "lines": [
+            778
+          ],
+          "required_source_literals": [
+            "if (questprogress(2212) == 1) erasequest 2212;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2209_npc_re_jobs_3_2_genetic_txt_779",
+      "unit": "E5-chain-2209",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2213
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 2213; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-2/genetic.txt",
+          "lines": [
+            779
+          ],
+          "required_source_literals": [
+            "if (questprogress(2213) == 1) erasequest 2213;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2209_npc_re_jobs_3_2_genetic_txt_780",
+      "unit": "E5-chain-2209",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2214
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 2214; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-2/genetic.txt",
+          "lines": [
+            780
+          ],
+          "required_source_literals": [
+            "if (questprogress(2214) == 1) erasequest 2214;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2209_npc_re_jobs_3_2_genetic_txt_82",
+      "unit": "E5-chain-2209",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2215
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 2215; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-2/genetic.txt",
+          "lines": [
+            82
+          ],
+          "required_source_literals": [
+            "setquest 2215;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2209_npc_re_jobs_3_2_genetic_txt_824",
+      "unit": "E5-chain-2209",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2216
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 2216; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-2/genetic.txt",
+          "lines": [
+            824
+          ],
+          "required_source_literals": [
+            "changequest 2216,2217;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2209_npc_re_jobs_3_2_genetic_txt_934",
+      "unit": "E5-chain-2209",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2217
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 2217; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-2/genetic.txt",
+          "lines": [
+            934
+          ],
+          "required_source_literals": [
+            "changequest 2217,2223;"
           ]
         }
       ],
