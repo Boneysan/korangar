@@ -12,7 +12,7 @@
     "E2_verified": 236,
     "E3_unknown": 973,
     "E4_unknown": 213,
-    "E5_unknown": 2493
+    "E5_unknown": 2537
   },
   "entries": [
     {
@@ -156962,6 +156962,1194 @@
           ],
           "required_source_literals": [
             "completequest(7213);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_7214_npc_re_quests_eden_eden_quests_txt_2527",
+      "unit": "E5-chain-7214",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7214
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 7214; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/eden_quests.txt",
+          "lines": [
+            2527
+          ],
+          "required_source_literals": [
+            "setquest 7214;\t// Advanced Training at Comodo"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_7214_npc_re_quests_eden_eden_quests_txt_2544",
+      "unit": "E5-chain-7214",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7219
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 7219; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/eden_quests.txt",
+          "lines": [
+            2544
+          ],
+          "required_source_literals": [
+            "setquest 7219;\t// Advanced Training at Glast Heim"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_7214_npc_re_quests_eden_eden_quests_txt_2557",
+      "unit": "E5-chain-7214",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7223
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 7223; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/eden_quests.txt",
+          "lines": [
+            2557
+          ],
+          "required_source_literals": [
+            "setquest 7223;\t// Advanced Training in Einbroch"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_7214_npc_re_quests_eden_eden_quests_txt_2581",
+      "unit": "E5-chain-7214",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7218
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 7218; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/eden_quests.txt",
+          "lines": [
+            2581
+          ],
+          "required_source_literals": [
+            "erasequest 7218;\t// Report to Instructor Ur"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_7214_npc_re_quests_eden_eden_quests_txt_2617",
+      "unit": "E5-chain-7214",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7219
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 7219; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/eden_quests.txt",
+          "lines": [
+            2617
+          ],
+          "required_source_literals": [
+            "setquest 7219;\t// Advanced Training at Glast Heim"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_7214_npc_re_quests_eden_eden_quests_txt_2653",
+      "unit": "E5-chain-7214",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7222
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 7222; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/eden_quests.txt",
+          "lines": [
+            2653
+          ],
+          "required_source_literals": [
+            "erasequest 7222;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_7214_npc_re_quests_eden_eden_quests_txt_2700",
+      "unit": "E5-chain-7214",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7228
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 7228; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/eden_quests.txt",
+          "lines": [
+            2700
+          ],
+          "required_source_literals": [
+            "erasequest 7228;\t// Report to Instructor Ur"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_7214_npc_re_quests_eden_eden_quests_txt_2737",
+      "unit": "E5-chain-7214",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7232
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 7232; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/eden_quests.txt",
+          "lines": [
+            2737
+          ],
+          "required_source_literals": [
+            "erasequest 7232;\t//Report to Instructor Ur"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_7214_npc_re_quests_eden_eden_quests_txt_2758",
+      "unit": "E5-chain-7214",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7237
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 7237; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/eden_quests.txt",
+          "lines": [
+            2758
+          ],
+          "required_source_literals": [
+            "erasequest 7237;\t// Report to Instructor Ur"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_7214_npc_re_quests_eden_eden_quests_txt_2819",
+      "unit": "E5-chain-7214",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7223
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 7223; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/eden_quests.txt",
+          "lines": [
+            2819
+          ],
+          "required_source_literals": [
+            "setquest 7223;\t// Advanced Training in Einbroch"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_7214_npc_re_quests_eden_eden_quests_txt_2832",
+      "unit": "E5-chain-7214",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7229
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 7229; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/eden_quests.txt",
+          "lines": [
+            2832
+          ],
+          "required_source_literals": [
+            "setquest 7229;\t// Advanced Training in Ice Dungeon"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_7214_npc_re_quests_eden_eden_quests_txt_2864",
+      "unit": "E5-chain-7214",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7233
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 7233; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/eden_quests.txt",
+          "lines": [
+            2864
+          ],
+          "required_source_literals": [
+            "setquest 7233;\t// Advanced Training at Ash Vacuum"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_7214_npc_re_quests_eden_eden_quests_txt_2912",
+      "unit": "E5-chain-7214",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7214
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 7214; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/eden_quests.txt",
+          "lines": [
+            2912
+          ],
+          "required_source_literals": [
+            "erasequest 7214;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_7214_npc_re_quests_eden_eden_quests_txt_2913",
+      "unit": "E5-chain-7214",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7215
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 7215; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/eden_quests.txt",
+          "lines": [
+            2913
+          ],
+          "required_source_literals": [
+            "setquest 7215;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_7214_npc_re_quests_eden_eden_quests_txt_2940",
+      "unit": "E5-chain-7214",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7215
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 7215; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/eden_quests.txt",
+          "lines": [
+            2940
+          ],
+          "required_source_literals": [
+            "erasequest 7215;\t// Stalactic Golem Hunt"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_7214_npc_re_quests_eden_eden_quests_txt_2941",
+      "unit": "E5-chain-7214",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7216
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 7216; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/eden_quests.txt",
+          "lines": [
+            2941
+          ],
+          "required_source_literals": [
+            "setquest 7216;\t// More Golem Hunting"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_7214_npc_re_quests_eden_eden_quests_txt_2999",
+      "unit": "E5-chain-7214",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7216
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 7216; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/eden_quests.txt",
+          "lines": [
+            2999
+          ],
+          "required_source_literals": [
+            "erasequest 7216;\t// More Golem Hunting"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_7214_npc_re_quests_eden_eden_quests_txt_3000",
+      "unit": "E5-chain-7214",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7217
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 7217; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/eden_quests.txt",
+          "lines": [
+            3000
+          ],
+          "required_source_literals": [
+            "setquest 7217;\t// Field drops"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_7214_npc_re_quests_eden_eden_quests_txt_3025",
+      "unit": "E5-chain-7214",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7217
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 7217; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/eden_quests.txt",
+          "lines": [
+            3025
+          ],
+          "required_source_literals": [
+            "erasequest 7217;\t// Field drops"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_7214_npc_re_quests_eden_eden_quests_txt_3026",
+      "unit": "E5-chain-7214",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7218
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 7218; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/eden_quests.txt",
+          "lines": [
+            3026
+          ],
+          "required_source_literals": [
+            "setquest 7218;\t// Report to Instructor Ur"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_7214_npc_re_quests_eden_eden_quests_txt_3099",
+      "unit": "E5-chain-7214",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7219
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 7219; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/eden_quests.txt",
+          "lines": [
+            3099
+          ],
+          "required_source_literals": [
+            "erasequest 7219;\t// Advanced Training at Glast Heim"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_7214_npc_re_quests_eden_eden_quests_txt_3100",
+      "unit": "E5-chain-7214",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7220
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 7220; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/eden_quests.txt",
+          "lines": [
+            3100
+          ],
+          "required_source_literals": [
+            "setquest 7220;\t// Wraith Hunt"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_7214_npc_re_quests_eden_eden_quests_txt_3119",
+      "unit": "E5-chain-7214",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7220
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 7220; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/eden_quests.txt",
+          "lines": [
+            3119
+          ],
+          "required_source_literals": [
+            "erasequest 7220;\t// Wraith Hunt"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_7214_npc_re_quests_eden_eden_quests_txt_3120",
+      "unit": "E5-chain-7214",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7221
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 7221; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/eden_quests.txt",
+          "lines": [
+            3120
+          ],
+          "required_source_literals": [
+            "setquest 7221;\t// Evil Druid hunt"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_7214_npc_re_quests_eden_eden_quests_txt_3151",
+      "unit": "E5-chain-7214",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7221
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 7221; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/eden_quests.txt",
+          "lines": [
+            3151
+          ],
+          "required_source_literals": [
+            "erasequest 7221;\t// Evil Druid hunt"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_7214_npc_re_quests_eden_eden_quests_txt_3152",
+      "unit": "E5-chain-7214",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7222
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 7222; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/eden_quests.txt",
+          "lines": [
+            3152
+          ],
+          "required_source_literals": [
+            "setquest 7222;\t// Report to Instructor Ur"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_7214_npc_re_quests_eden_eden_quests_txt_3214",
+      "unit": "E5-chain-7214",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7223
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 7223; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/eden_quests.txt",
+          "lines": [
+            3214
+          ],
+          "required_source_literals": [
+            "erasequest 7223;\t// Advanced Training in Einbroch"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_7214_npc_re_quests_eden_eden_quests_txt_3215",
+      "unit": "E5-chain-7214",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7224
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 7224; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/eden_quests.txt",
+          "lines": [
+            3215
+          ],
+          "required_source_literals": [
+            "setquest 7224;\t// Porcellio hunting"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_7214_npc_re_quests_eden_eden_quests_txt_3251",
+      "unit": "E5-chain-7214",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7224
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 7224; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/eden_quests.txt",
+          "lines": [
+            3251
+          ],
+          "required_source_literals": [
+            "erasequest 7224;\t// Porcellio hunting"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_7214_npc_re_quests_eden_eden_quests_txt_3252",
+      "unit": "E5-chain-7214",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7226
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 7226; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/eden_quests.txt",
+          "lines": [
+            3252
+          ],
+          "required_source_literals": [
+            "setquest 7226;\t// Venomous hunting"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_7214_npc_re_quests_eden_eden_quests_txt_3253",
+      "unit": "E5-chain-7214",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7227
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 7227; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/eden_quests.txt",
+          "lines": [
+            3253
+          ],
+          "required_source_literals": [
+            "setquest 7227;\t// Teddy Bear hunting"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_7214_npc_re_quests_eden_eden_quests_txt_3281",
+      "unit": "E5-chain-7214",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7226
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 7226; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/eden_quests.txt",
+          "lines": [
+            3281
+          ],
+          "required_source_literals": [
+            "erasequest 7226;\t// Venomous hunting"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_7214_npc_re_quests_eden_eden_quests_txt_3282",
+      "unit": "E5-chain-7214",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7227
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 7227; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/eden_quests.txt",
+          "lines": [
+            3282
+          ],
+          "required_source_literals": [
+            "erasequest 7227;\t// Teddy Bear hunting"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_7214_npc_re_quests_eden_eden_quests_txt_3283",
+      "unit": "E5-chain-7214",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7228
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 7228; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/eden_quests.txt",
+          "lines": [
+            3283
+          ],
+          "required_source_literals": [
+            "setquest 7228;\t// Report to Instructor Ur"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_7214_npc_re_quests_eden_eden_quests_txt_3358",
+      "unit": "E5-chain-7214",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7229
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 7229; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/eden_quests.txt",
+          "lines": [
+            3358
+          ],
+          "required_source_literals": [
+            "erasequest 7229;\t// Advanced Training in Ice Dungeon"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_7214_npc_re_quests_eden_eden_quests_txt_3359",
+      "unit": "E5-chain-7214",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7230
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 7230; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/eden_quests.txt",
+          "lines": [
+            3359
+          ],
+          "required_source_literals": [
+            "setquest 7230;\t// Siroma hunting"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_7214_npc_re_quests_eden_eden_quests_txt_3398",
+      "unit": "E5-chain-7214",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7230
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 7230; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/eden_quests.txt",
+          "lines": [
+            3398
+          ],
+          "required_source_literals": [
+            "erasequest 7230;\t// Siroma hunting"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_7214_npc_re_quests_eden_eden_quests_txt_3399",
+      "unit": "E5-chain-7214",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7231
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 7231; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/eden_quests.txt",
+          "lines": [
+            3399
+          ],
+          "required_source_literals": [
+            "setquest 7231;\t// Hunting and Gathering"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_7214_npc_re_quests_eden_eden_quests_txt_3442",
+      "unit": "E5-chain-7214",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7231
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 7231; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/eden_quests.txt",
+          "lines": [
+            3442
+          ],
+          "required_source_literals": [
+            "erasequest 7231;\t// Hunting and Gathering"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_7214_npc_re_quests_eden_eden_quests_txt_3443",
+      "unit": "E5-chain-7214",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7232
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 7232; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/eden_quests.txt",
+          "lines": [
+            3443
+          ],
+          "required_source_literals": [
+            "setquest 7232;\t// Report to Instructor Ur"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_7214_npc_re_quests_eden_eden_quests_txt_3506",
+      "unit": "E5-chain-7214",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7233
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 7233; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/eden_quests.txt",
+          "lines": [
+            3506
+          ],
+          "required_source_literals": [
+            "erasequest 7233;\t//  Advanced Training at Ash Vacuum"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_7214_npc_re_quests_eden_eden_quests_txt_3507",
+      "unit": "E5-chain-7214",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7234
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 7234; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/eden_quests.txt",
+          "lines": [
+            3507
+          ],
+          "required_source_literals": [
+            "setquest 7234;\t// Margaret's favor"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_7214_npc_re_quests_eden_eden_quests_txt_3529",
+      "unit": "E5-chain-7214",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7234
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 7234; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/eden_quests.txt",
+          "lines": [
+            3529
+          ],
+          "required_source_literals": [
+            "erasequest 7234;\t// Margaret's favor"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_7214_npc_re_quests_eden_eden_quests_txt_3530",
+      "unit": "E5-chain-7214",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7237
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 7237; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/eden_quests.txt",
+          "lines": [
+            3530
+          ],
+          "required_source_literals": [
+            "setquest 7237;\t// Report to Instructor Ur"
           ]
         }
       ],
