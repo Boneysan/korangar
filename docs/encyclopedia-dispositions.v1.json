@@ -14,7 +14,7 @@
     "E4_unknown": 213,
     "E5_absent": 644,
     "E5_unknown": 3383,
-    "E6_unknown": 30
+    "E6_unknown": 31
   },
   "entries": [
     {
@@ -195466,6 +195466,34 @@
           "path": "db/re/mob_db.conf",
           "lines": [
             29914
+          ],
+          "required_source_literals": [
+            "{"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e6_boss_1651_boss",
+      "unit": "E6-boss-1651",
+      "package": "E6",
+      "subject": {
+        "kind": "monster",
+        "name": "B_KATRINN",
+        "ids": [
+          1651
+        ]
+      },
+      "result": "unknown",
+      "statement": "Monster 1651 (B_KATRINN) has configured database rows in the packet; this record does not enumerate each skill.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/mob_db.conf",
+          "lines": [
+            29974
           ],
           "required_source_literals": [
             "{"
