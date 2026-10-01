@@ -143265,6 +143265,60 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2110_npc_quests_quests_rachel_txt_3307",
+      "unit": "E5-chain-2110",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2110
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 2110; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_rachel.txt",
+          "lines": [
+            3307
+          ],
+          "required_source_literals": [
+            "changequest 2110,2111;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2110_npc_quests_quests_rachel_txt_3377",
+      "unit": "E5-chain-2110",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2111
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 2111; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_rachel.txt",
+          "lines": [
+            3377
+          ],
+          "required_source_literals": [
+            "changequest 2111,2112;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
