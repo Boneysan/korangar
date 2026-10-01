@@ -198804,6 +198804,33 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_5222_npc_re_quests_newgears_2012_headgears_txt_99",
+      "unit": "E5-chain-5222",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          5222
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 5222; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/newgears/2012_headgears.txt",
+          "lines": [
+            99
+          ],
+          "required_source_literals": [
+            "erasequest 5222 + .@i;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
