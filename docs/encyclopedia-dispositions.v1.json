@@ -12,7 +12,7 @@
     "E2_verified": 236,
     "E3_unknown": 973,
     "E4_unknown": 213,
-    "E5_unknown": 1149
+    "E5_unknown": 1161
   },
   "entries": [
     {
@@ -120404,6 +120404,330 @@
           ],
           "required_source_literals": [
             "completequest 3004;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_3006_npc_jobs_2_2_crusader_txt_148",
+      "unit": "E5-chain-3006",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          3009
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 3009; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/crusader.txt",
+          "lines": [
+            148
+          ],
+          "required_source_literals": [
+            "setquest 3009;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_3006_npc_jobs_2_2_crusader_txt_164",
+      "unit": "E5-chain-3006",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          3006
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 3006; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/crusader.txt",
+          "lines": [
+            164
+          ],
+          "required_source_literals": [
+            "setquest 3006;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_3006_npc_jobs_2_2_crusader_txt_173",
+      "unit": "E5-chain-3006",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          3007
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 3007; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/crusader.txt",
+          "lines": [
+            173
+          ],
+          "required_source_literals": [
+            "setquest 3007;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_3006_npc_jobs_2_2_crusader_txt_182",
+      "unit": "E5-chain-3006",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          3008
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 3008; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/crusader.txt",
+          "lines": [
+            182
+          ],
+          "required_source_literals": [
+            "setquest 3008;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_3006_npc_jobs_2_2_crusader_txt_224",
+      "unit": "E5-chain-3006",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          3006
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 3006; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/crusader.txt",
+          "lines": [
+            224
+          ],
+          "required_source_literals": [
+            "changequest 3006,3009;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_3006_npc_jobs_2_2_crusader_txt_226",
+      "unit": "E5-chain-3006",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          3007
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 3007; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/crusader.txt",
+          "lines": [
+            226
+          ],
+          "required_source_literals": [
+            "changequest 3007,3009;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_3006_npc_jobs_2_2_crusader_txt_228",
+      "unit": "E5-chain-3006",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          3008
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 3008; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/crusader.txt",
+          "lines": [
+            228
+          ],
+          "required_source_literals": [
+            "changequest 3008,3009;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_3006_npc_jobs_2_2_crusader_txt_268",
+      "unit": "E5-chain-3006",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          3006
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 3006; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/crusader.txt",
+          "lines": [
+            268
+          ],
+          "required_source_literals": [
+            "changequest 3006,3009;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_3006_npc_jobs_2_2_crusader_txt_271",
+      "unit": "E5-chain-3006",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          3007
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 3007; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/crusader.txt",
+          "lines": [
+            271
+          ],
+          "required_source_literals": [
+            "changequest 3007,3009;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_3006_npc_jobs_2_2_crusader_txt_274",
+      "unit": "E5-chain-3006",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          3008
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 3008; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/crusader.txt",
+          "lines": [
+            274
+          ],
+          "required_source_literals": [
+            "changequest 3008,3009;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_3006_npc_jobs_2_2_crusader_txt_304",
+      "unit": "E5-chain-3006",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          3015
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 3015; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/crusader.txt",
+          "lines": [
+            304
+          ],
+          "required_source_literals": [
+            "completequest 3015;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_3006_npc_jobs_2_2_crusader_txt_403",
+      "unit": "E5-chain-3006",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          3009
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 3009; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/crusader.txt",
+          "lines": [
+            403
+          ],
+          "required_source_literals": [
+            "changequest 3009,3010;"
           ]
         }
       ],
