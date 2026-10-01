@@ -12,7 +12,7 @@
     "E2_verified": 236,
     "E3_unknown": 973,
     "E4_unknown": 213,
-    "E5_unknown": 702
+    "E5_unknown": 703
   },
   "entries": [
     {
@@ -106796,6 +106796,33 @@
           ],
           "required_source_literals": [
             "changequest 11156,11157;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_11157_npc_re_jobs_3_2_sura_txt_494",
+      "unit": "E5-chain-11157",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          11157
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 11157; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-2/sura.txt",
+          "lines": [
+            494
+          ],
+          "required_source_literals": [
+            "changequest 11157,11158;"
           ]
         }
       ],
