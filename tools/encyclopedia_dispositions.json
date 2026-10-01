@@ -171264,6 +171264,87 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_8082_npc_quests_quests_ein_txt_5188",
+      "unit": "E5-chain-8082",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8084
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 8084; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_ein.txt",
+          "lines": [
+            5188
+          ],
+          "required_source_literals": [
+            "changequest 8084,8085;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_8082_npc_quests_quests_ein_txt_5412",
+      "unit": "E5-chain-8082",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8083
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 8083; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_ein.txt",
+          "lines": [
+            5412
+          ],
+          "required_source_literals": [
+            "changequest 8083,8084;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_8082_npc_quests_quests_ein_txt_5563",
+      "unit": "E5-chain-8082",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8082
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 8082; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_ein.txt",
+          "lines": [
+            5563
+          ],
+          "required_source_literals": [
+            "changequest 8082,8083;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
