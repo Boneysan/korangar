@@ -14,7 +14,7 @@
     "E4_unknown": 213,
     "E5_absent": 644,
     "E5_unknown": 3383,
-    "E6_unknown": 11
+    "E6_unknown": 12
   },
   "entries": [
     {
@@ -194934,6 +194934,34 @@
           "path": "db/re/mob_db.conf",
           "lines": [
             7704
+          ],
+          "required_source_literals": [
+            "{"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e6_boss_1190_boss",
+      "unit": "E6-boss-1190",
+      "package": "E6",
+      "subject": {
+        "kind": "monster",
+        "name": "ORC_LORD",
+        "ids": [
+          1190
+        ]
+      },
+      "result": "unknown",
+      "statement": "Monster 1190 (ORC_LORD) has configured database rows in the packet; this record does not enumerate each skill.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/mob_db.conf",
+          "lines": [
+            9123
           ],
           "required_source_literals": [
             "{"
