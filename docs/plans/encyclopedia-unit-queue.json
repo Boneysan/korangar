@@ -144369,7 +144369,7 @@
       "package": "E3",
       "kind": "e3_translator",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "key": "input",
@@ -144406,9 +144406,24 @@
       "reason": "1 item script(s) first stop at documented `input`",
       "history": [
         "2026-10-01T06:30:09Z activated",
-        "2026-10-01T06:30:10Z blocked: No item in this cluster is fully translated. The remaining scripts use a conditional, an expression, or a command whose meaning is outside this excerpt."
+        "2026-10-01T06:30:10Z blocked: No item in this cluster is fully translated. The remaining scripts use a conditional, an expression, or a command whose meaning is outside this excerpt.",
+        "2026-10-01T07:35:29Z activated",
+        "2026-10-01T07:35:30Z validated",
+        "2026-10-01T07:35:30Z verified: 1 claims supported",
+        "2026-10-01T07:35:54Z accepted",
+        "2026-10-01T07:35:54Z committed"
       ],
-      "baseline_dirty": []
+      "baseline_dirty": [],
+      "draft_sha256": "a11145672d8a0cd12150bc44d72a23d47ad30c3c3f382c8b7a53ac34b7c8d6be",
+      "accepted_files": [
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/export_item_reference.py",
+        "tools/tests/test_export_item_effect_phrases.py"
+      ],
+      "accepted_on": "2026-10-01",
+      "commit": "committed"
     },
     {
       "id": "E3-translate-itemheal",
