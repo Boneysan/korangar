@@ -189003,6 +189003,141 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_11106_npc_re_jobs_3_1_warlock_txt_202",
+      "unit": "E5-chain-11106",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          11106
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 11106; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-1/warlock.txt",
+          "lines": [
+            202
+          ],
+          "required_source_literals": [
+            "setquest 11106;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_11106_npc_re_jobs_3_1_warlock_txt_325",
+      "unit": "E5-chain-11106",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          11106
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 11106; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-1/warlock.txt",
+          "lines": [
+            325
+          ],
+          "required_source_literals": [
+            "changequest 11106,11107;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_11106_npc_re_jobs_3_1_warlock_txt_620",
+      "unit": "E5-chain-11106",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          11106
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 11106; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-1/warlock.txt",
+          "lines": [
+            620
+          ],
+          "required_source_literals": [
+            "setquest 11106;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_11106_npc_re_jobs_3_1_warlock_txt_665",
+      "unit": "E5-chain-11106",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          11108
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 11108; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-1/warlock.txt",
+          "lines": [
+            665
+          ],
+          "required_source_literals": [
+            "changequest 11108,11109;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_11106_npc_re_jobs_3_1_warlock_txt_717",
+      "unit": "E5-chain-11106",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          11112
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 11112; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-1/warlock.txt",
+          "lines": [
+            717
+          ],
+          "required_source_literals": [
+            "completequest 11112;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
