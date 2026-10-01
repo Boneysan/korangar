@@ -12,7 +12,7 @@
     "E2_verified": 236,
     "E3_unknown": 973,
     "E4_unknown": 213,
-    "E5_unknown": 560
+    "E5_unknown": 575
   },
   "entries": [
     {
@@ -106634,6 +106634,411 @@
           ],
           "required_source_literals": [
             "setquest(12254);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_12316_npc_re_instances_oldglastheim_txt_103",
+      "unit": "E5-chain-12316",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          12318
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 12318; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/instances/OldGlastHeim.txt",
+          "lines": [
+            103
+          ],
+          "required_source_literals": [
+            "setquest(12318);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_12316_npc_re_instances_oldglastheim_txt_1289",
+      "unit": "E5-chain-12316",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          12318
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 12318; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/instances/OldGlastHeim.txt",
+          "lines": [
+            1289
+          ],
+          "required_source_literals": [
+            "erasequest(12318);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_12316_npc_re_instances_oldglastheim_txt_1291",
+      "unit": "E5-chain-12316",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          12319
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 12319; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/instances/OldGlastHeim.txt",
+          "lines": [
+            1291
+          ],
+          "required_source_literals": [
+            "setquest(12319);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_12316_npc_re_instances_oldglastheim_txt_1292",
+      "unit": "E5-chain-12316",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          12320
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 12320; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/instances/OldGlastHeim.txt",
+          "lines": [
+            1292
+          ],
+          "required_source_literals": [
+            "setquest(12320);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_12316_npc_re_instances_oldglastheim_txt_1293",
+      "unit": "E5-chain-12316",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          12320
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 12320; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/instances/OldGlastHeim.txt",
+          "lines": [
+            1293
+          ],
+          "required_source_literals": [
+            "erasequest(12320);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_12316_npc_re_instances_oldglastheim_txt_136",
+      "unit": "E5-chain-12316",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          12317
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 12317; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/instances/OldGlastHeim.txt",
+          "lines": [
+            136
+          ],
+          "required_source_literals": [
+            "setquest(12317);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_12316_npc_re_instances_oldglastheim_txt_146",
+      "unit": "E5-chain-12316",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          12322
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 12322; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/instances/OldGlastHeim.txt",
+          "lines": [
+            146
+          ],
+          "required_source_literals": [
+            "erasequest(12322);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_12316_npc_re_instances_oldglastheim_txt_153",
+      "unit": "E5-chain-12316",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          12317
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 12317; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/instances/OldGlastHeim.txt",
+          "lines": [
+            153
+          ],
+          "required_source_literals": [
+            "erasequest(12317);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_12316_npc_re_instances_oldglastheim_txt_155",
+      "unit": "E5-chain-12316",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          12318
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 12318; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/instances/OldGlastHeim.txt",
+          "lines": [
+            155
+          ],
+          "required_source_literals": [
+            "erasequest(12318);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_12316_npc_re_instances_oldglastheim_txt_157",
+      "unit": "E5-chain-12316",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          12319
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 12319; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/instances/OldGlastHeim.txt",
+          "lines": [
+            157
+          ],
+          "required_source_literals": [
+            "erasequest(12319);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_12316_npc_re_instances_oldglastheim_txt_2015",
+      "unit": "E5-chain-12316",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          12319
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 12319; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/instances/OldGlastHeim.txt",
+          "lines": [
+            2015
+          ],
+          "required_source_literals": [
+            "erasequest(12319);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_12316_npc_re_instances_oldglastheim_txt_2016",
+      "unit": "E5-chain-12316",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          12321
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 12321; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/instances/OldGlastHeim.txt",
+          "lines": [
+            2016
+          ],
+          "required_source_literals": [
+            "setquest(12321);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_12316_npc_re_instances_oldglastheim_txt_2017",
+      "unit": "E5-chain-12316",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          12322
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 12322; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/instances/OldGlastHeim.txt",
+          "lines": [
+            2017
+          ],
+          "required_source_literals": [
+            "setquest(12322);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_12316_npc_re_instances_oldglastheim_txt_2018",
+      "unit": "E5-chain-12316",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          12321
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 12321; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/instances/OldGlastHeim.txt",
+          "lines": [
+            2018
+          ],
+          "required_source_literals": [
+            "erasequest(12321);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_12316_npc_re_instances_oldglastheim_txt_87",
+      "unit": "E5-chain-12316",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          12316
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 12316; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/instances/OldGlastHeim.txt",
+          "lines": [
+            87
+          ],
+          "required_source_literals": [
+            "setquest(12316);"
           ]
         }
       ],
