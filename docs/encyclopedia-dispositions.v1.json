@@ -14,7 +14,7 @@
     "E4_unknown": 213,
     "E5_absent": 644,
     "E5_unknown": 3383,
-    "E6_unknown": 17
+    "E6_unknown": 18
   },
   "entries": [
     {
@@ -195102,6 +195102,34 @@
           "path": "db/re/mob_db.conf",
           "lines": [
             17891
+          ],
+          "required_source_literals": [
+            "{"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e6_boss_1389_boss",
+      "unit": "E6-boss-1389",
+      "package": "E6",
+      "subject": {
+        "kind": "monster",
+        "name": "DRACULA",
+        "ids": [
+          1389
+        ]
+      },
+      "result": "unknown",
+      "statement": "Monster 1389 (DRACULA) has configured database rows in the packet; this record does not enumerate each skill.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/mob_db.conf",
+          "lines": [
+            18675
           ],
           "required_source_literals": [
             "{"
