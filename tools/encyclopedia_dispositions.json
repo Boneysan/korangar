@@ -148152,6 +148152,87 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_7174_npc_re_jobs_3_2_shadow_chaser_txt_1914",
+      "unit": "E5-chain-7174",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7174
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 7174; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-2/shadow_chaser.txt",
+          "lines": [
+            1914
+          ],
+          "required_source_literals": [
+            "erasequest 7174;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_7174_npc_re_jobs_3_2_shadow_chaser_txt_1915",
+      "unit": "E5-chain-7174",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7175
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 7175; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-2/shadow_chaser.txt",
+          "lines": [
+            1915
+          ],
+          "required_source_literals": [
+            "setquest 7175;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_7174_npc_re_jobs_3_2_shadow_chaser_txt_1922",
+      "unit": "E5-chain-7174",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7175
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 7175; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-2/shadow_chaser.txt",
+          "lines": [
+            1922
+          ],
+          "required_source_literals": [
+            "erasequest 7175;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
