@@ -12,7 +12,7 @@
     "E2_verified": 236,
     "E3_unknown": 973,
     "E4_unknown": 213,
-    "E5_unknown": 1077
+    "E5_unknown": 1099
   },
   "entries": [
     {
@@ -115652,6 +115652,600 @@
           ],
           "required_source_literals": [
             "completequest(18121);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2000_npc_jobs_2_1_blacksmith_txt_177",
+      "unit": "E5-chain-2000",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2000
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 2000; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-1/blacksmith.txt",
+          "lines": [
+            177
+          ],
+          "required_source_literals": [
+            "setquest 2000;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2000_npc_jobs_2_1_blacksmith_txt_232",
+      "unit": "E5-chain-2000",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2013
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 2013; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-1/blacksmith.txt",
+          "lines": [
+            232
+          ],
+          "required_source_literals": [
+            "changequest 2013,2014;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2000_npc_jobs_2_1_blacksmith_txt_268",
+      "unit": "E5-chain-2000",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2015
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 2015; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-1/blacksmith.txt",
+          "lines": [
+            268
+          ],
+          "required_source_literals": [
+            "changequest 2015,2016;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2000_npc_jobs_2_1_blacksmith_txt_279",
+      "unit": "E5-chain-2000",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2016
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 2016; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-1/blacksmith.txt",
+          "lines": [
+            279
+          ],
+          "required_source_literals": [
+            "completequest 2016;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2000_npc_jobs_2_1_blacksmith_txt_503",
+      "unit": "E5-chain-2000",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2001
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 2001; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-1/blacksmith.txt",
+          "lines": [
+            503
+          ],
+          "required_source_literals": [
+            "changequest 2001,2002;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2000_npc_jobs_2_1_blacksmith_txt_505",
+      "unit": "E5-chain-2000",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2000
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 2000; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-1/blacksmith.txt",
+          "lines": [
+            505
+          ],
+          "required_source_literals": [
+            "changequest 2000,2002;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2000_npc_jobs_2_1_blacksmith_txt_520",
+      "unit": "E5-chain-2000",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2000
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 2000; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-1/blacksmith.txt",
+          "lines": [
+            520
+          ],
+          "required_source_literals": [
+            "changequest 2000,2001;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2000_npc_jobs_2_1_blacksmith_txt_585",
+      "unit": "E5-chain-2000",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2002
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 2002; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-1/blacksmith.txt",
+          "lines": [
+            585
+          ],
+          "required_source_literals": [
+            "case 1: setarray .@items[0], 999,1, 930,1, 717,2, 1610,1, 4; changequest 2002,2003; break;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2000_npc_jobs_2_1_blacksmith_txt_587",
+      "unit": "E5-chain-2000",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2002
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 2002; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-1/blacksmith.txt",
+          "lines": [
+            587
+          ],
+          "required_source_literals": [
+            "case 2: setarray .@items[0], 1001,2, 932,1, 912,1, 1219,1, 5; changequest 2002,2004; break;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2000_npc_jobs_2_1_blacksmith_txt_589",
+      "unit": "E5-chain-2000",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2002
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 2002; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-1/blacksmith.txt",
+          "lines": [
+            589
+          ],
+          "required_source_literals": [
+            "case 3: setarray .@items[0], 1003,1, 935,2, 990,2, 1119,1, 6; changequest 2002,2005; break;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2000_npc_jobs_2_1_blacksmith_txt_591",
+      "unit": "E5-chain-2000",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2002
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 2002; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-1/blacksmith.txt",
+          "lines": [
+            591
+          ],
+          "required_source_literals": [
+            "case 4: setarray .@items[0], 1002,1, 2212,1, 717,2, 1713,1, 7; changequest 2002,2006; break;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2000_npc_jobs_2_1_blacksmith_txt_593",
+      "unit": "E5-chain-2000",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2002
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 2002; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-1/blacksmith.txt",
+          "lines": [
+            593
+          ],
+          "required_source_literals": [
+            "default: setarray .@items[0], 998,1, 511,1, 919,2, 1122,1, 8; changequest 2002,2007; break;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2000_npc_jobs_2_1_blacksmith_txt_673",
+      "unit": "E5-chain-2000",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2003
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 2003; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-1/blacksmith.txt",
+          "lines": [
+            673
+          ],
+          "required_source_literals": [
+            "changequest 2003,2008;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2000_npc_jobs_2_1_blacksmith_txt_698",
+      "unit": "E5-chain-2000",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2004
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 2004; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-1/blacksmith.txt",
+          "lines": [
+            698
+          ],
+          "required_source_literals": [
+            "changequest 2004,2009;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2000_npc_jobs_2_1_blacksmith_txt_723",
+      "unit": "E5-chain-2000",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2005
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 2005; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-1/blacksmith.txt",
+          "lines": [
+            723
+          ],
+          "required_source_literals": [
+            "changequest 2005,2010;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2000_npc_jobs_2_1_blacksmith_txt_749",
+      "unit": "E5-chain-2000",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2006
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 2006; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-1/blacksmith.txt",
+          "lines": [
+            749
+          ],
+          "required_source_literals": [
+            "changequest 2006,2011;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2000_npc_jobs_2_1_blacksmith_txt_773",
+      "unit": "E5-chain-2000",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2007
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 2007; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-1/blacksmith.txt",
+          "lines": [
+            773
+          ],
+          "required_source_literals": [
+            "changequest 2007,2012;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2000_npc_jobs_2_1_blacksmith_txt_870",
+      "unit": "E5-chain-2000",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2008
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 2008; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-1/blacksmith.txt",
+          "lines": [
+            870
+          ],
+          "required_source_literals": [
+            "changequest 2008,2013;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2000_npc_jobs_2_1_blacksmith_txt_873",
+      "unit": "E5-chain-2000",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2009
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 2009; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-1/blacksmith.txt",
+          "lines": [
+            873
+          ],
+          "required_source_literals": [
+            "changequest 2009,2013;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2000_npc_jobs_2_1_blacksmith_txt_876",
+      "unit": "E5-chain-2000",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2010
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 2010; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-1/blacksmith.txt",
+          "lines": [
+            876
+          ],
+          "required_source_literals": [
+            "changequest 2010,2013;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2000_npc_jobs_2_1_blacksmith_txt_879",
+      "unit": "E5-chain-2000",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2011
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 2011; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-1/blacksmith.txt",
+          "lines": [
+            879
+          ],
+          "required_source_literals": [
+            "changequest 2011,2013;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2000_npc_jobs_2_1_blacksmith_txt_882",
+      "unit": "E5-chain-2000",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2012
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 2012; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-1/blacksmith.txt",
+          "lines": [
+            882
+          ],
+          "required_source_literals": [
+            "changequest 2012,2013;"
           ]
         }
       ],
