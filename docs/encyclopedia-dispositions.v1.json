@@ -12,7 +12,7 @@
     "E2_verified": 236,
     "E3_unknown": 973,
     "E4_unknown": 213,
-    "E5_unknown": 1570
+    "E5_unknown": 1580
   },
   "entries": [
     {
@@ -111953,6 +111953,276 @@
           ],
           "required_source_literals": [
             "completequest 12039;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_12040_npc_quests_quests_hugel_txt_6917",
+      "unit": "E5-chain-12040",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          12040
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 12040; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_hugel.txt",
+          "lines": [
+            6917
+          ],
+          "required_source_literals": [
+            "setquest 12040;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_12040_npc_quests_quests_hugel_txt_6988",
+      "unit": "E5-chain-12040",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          12043
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 12043; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_hugel.txt",
+          "lines": [
+            6988
+          ],
+          "required_source_literals": [
+            "erasequest 12043;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_12040_npc_quests_quests_hugel_txt_7090",
+      "unit": "E5-chain-12040",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          12043
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 12043; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_hugel.txt",
+          "lines": [
+            7090
+          ],
+          "required_source_literals": [
+            "erasequest 12043;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_12040_npc_quests_quests_hugel_txt_7111",
+      "unit": "E5-chain-12040",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          12043
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 12043; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_hugel.txt",
+          "lines": [
+            7111
+          ],
+          "required_source_literals": [
+            "erasequest 12043;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_12040_npc_quests_quests_hugel_txt_7133",
+      "unit": "E5-chain-12040",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          12043
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 12043; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_hugel.txt",
+          "lines": [
+            7133
+          ],
+          "required_source_literals": [
+            "erasequest 12043;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_12040_npc_quests_quests_hugel_txt_7157",
+      "unit": "E5-chain-12040",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          12043
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 12043; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_hugel.txt",
+          "lines": [
+            7157
+          ],
+          "required_source_literals": [
+            "erasequest 12043;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_12040_npc_quests_quests_hugel_txt_7179",
+      "unit": "E5-chain-12040",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          12043
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 12043; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_hugel.txt",
+          "lines": [
+            7179
+          ],
+          "required_source_literals": [
+            "erasequest 12043;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_12040_npc_quests_quests_hugel_txt_7264",
+      "unit": "E5-chain-12040",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          12040
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 12040; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_hugel.txt",
+          "lines": [
+            7264
+          ],
+          "required_source_literals": [
+            "changequest 12040,12041;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_12040_npc_quests_quests_hugel_txt_7295",
+      "unit": "E5-chain-12040",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          12041
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 12041; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_hugel.txt",
+          "lines": [
+            7295
+          ],
+          "required_source_literals": [
+            "changequest 12041,12042;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_12040_npc_quests_quests_hugel_txt_7660",
+      "unit": "E5-chain-12040",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          12043
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 12043; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_hugel.txt",
+          "lines": [
+            7660
+          ],
+          "required_source_literals": [
+            "setquest 12043;"
           ]
         }
       ],
