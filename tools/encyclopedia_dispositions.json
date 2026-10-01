@@ -190137,6 +190137,4380 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1229_npc_re_jobs_novice_academy_txt_327",
+      "unit": "E5-chain-1229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7471
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 7471; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            327
+          ],
+          "required_source_literals": [
+            "setquest(7471);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1229_npc_re_jobs_novice_academy_txt_328",
+      "unit": "E5-chain-1229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7471
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 7471; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            328
+          ],
+          "required_source_literals": [
+            "completequest(7471);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1229_npc_re_jobs_novice_academy_txt_452",
+      "unit": "E5-chain-1229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7472
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 7472; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            452
+          ],
+          "required_source_literals": [
+            "setquest(7472);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1229_npc_re_jobs_novice_academy_txt_605",
+      "unit": "E5-chain-1229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7472
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 7472; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            605
+          ],
+          "required_source_literals": [
+            "setquest(7472);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1229_npc_re_jobs_novice_academy_txt_830",
+      "unit": "E5-chain-1229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7472
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 7472; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            830
+          ],
+          "required_source_literals": [
+            "completequest(7472);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1229_npc_re_jobs_novice_academy_txt_832",
+      "unit": "E5-chain-1229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7473
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 7473; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            832
+          ],
+          "required_source_literals": [
+            "setquest(7473);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1229_npc_re_jobs_novice_academy_txt_880",
+      "unit": "E5-chain-1229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7473
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 7473; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            880
+          ],
+          "required_source_literals": [
+            "setquest(7473);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1229_npc_re_jobs_novice_academy_txt_924",
+      "unit": "E5-chain-1229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7473
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 7473; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            924
+          ],
+          "required_source_literals": [
+            "completequest(7473);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1229_npc_re_jobs_novice_academy_txt_943",
+      "unit": "E5-chain-1229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7473
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 7473; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            943
+          ],
+          "required_source_literals": [
+            "completequest(7473);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1229_npc_re_jobs_novice_academy_txt_1177",
+      "unit": "E5-chain-1229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7474
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 7474; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            1177
+          ],
+          "required_source_literals": [
+            "setquest(7474);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1229_npc_re_jobs_novice_academy_txt_1431",
+      "unit": "E5-chain-1229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7474
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 7474; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            1431
+          ],
+          "required_source_literals": [
+            "completequest(7474);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1229_npc_re_jobs_novice_academy_txt_1432",
+      "unit": "E5-chain-1229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7475
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 7475; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            1432
+          ],
+          "required_source_literals": [
+            "erasequest(7475);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1229_npc_re_jobs_novice_academy_txt_1433",
+      "unit": "E5-chain-1229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7476
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 7476; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            1433
+          ],
+          "required_source_literals": [
+            "erasequest(7476);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1229_npc_re_jobs_novice_academy_txt_1434",
+      "unit": "E5-chain-1229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7477
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 7477; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            1434
+          ],
+          "required_source_literals": [
+            "erasequest(7477);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1229_npc_re_jobs_novice_academy_txt_1684",
+      "unit": "E5-chain-1229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7475
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 7475; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            1684
+          ],
+          "required_source_literals": [
+            "setquest(7475);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1229_npc_re_jobs_novice_academy_txt_1712",
+      "unit": "E5-chain-1229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7475
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 7475; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            1712
+          ],
+          "required_source_literals": [
+            "setquest(7475);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1229_npc_re_jobs_novice_academy_txt_1734",
+      "unit": "E5-chain-1229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7475
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 7475; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            1734
+          ],
+          "required_source_literals": [
+            "setquest(7475);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1229_npc_re_jobs_novice_academy_txt_1760",
+      "unit": "E5-chain-1229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7475
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 7475; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            1760
+          ],
+          "required_source_literals": [
+            "setquest(7475);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1229_npc_re_jobs_novice_academy_txt_1827",
+      "unit": "E5-chain-1229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7476
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 7476; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            1827
+          ],
+          "required_source_literals": [
+            "setquest(7476);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1229_npc_re_jobs_novice_academy_txt_1855",
+      "unit": "E5-chain-1229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7476
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 7476; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            1855
+          ],
+          "required_source_literals": [
+            "setquest(7476);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1229_npc_re_jobs_novice_academy_txt_1877",
+      "unit": "E5-chain-1229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7476
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 7476; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            1877
+          ],
+          "required_source_literals": [
+            "setquest(7476);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1229_npc_re_jobs_novice_academy_txt_1903",
+      "unit": "E5-chain-1229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7476
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 7476; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            1903
+          ],
+          "required_source_literals": [
+            "setquest(7476);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1229_npc_re_jobs_novice_academy_txt_1978",
+      "unit": "E5-chain-1229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7477
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 7477; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            1978
+          ],
+          "required_source_literals": [
+            "setquest(7477);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1229_npc_re_jobs_novice_academy_txt_2006",
+      "unit": "E5-chain-1229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7477
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 7477; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            2006
+          ],
+          "required_source_literals": [
+            "setquest(7477);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1229_npc_re_jobs_novice_academy_txt_2028",
+      "unit": "E5-chain-1229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7477
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 7477; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            2028
+          ],
+          "required_source_literals": [
+            "setquest(7477);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1229_npc_re_jobs_novice_academy_txt_2052",
+      "unit": "E5-chain-1229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7477
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 7477; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            2052
+          ],
+          "required_source_literals": [
+            "setquest(7477);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1229_npc_re_jobs_novice_academy_txt_2203",
+      "unit": "E5-chain-1229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7478
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 7478; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            2203
+          ],
+          "required_source_literals": [
+            "setquest(7478);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1229_npc_re_jobs_novice_academy_txt_2229",
+      "unit": "E5-chain-1229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7478
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 7478; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            2229
+          ],
+          "required_source_literals": [
+            "completequest(7478);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1229_npc_re_jobs_novice_academy_txt_2387",
+      "unit": "E5-chain-1229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7479
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 7479; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            2387
+          ],
+          "required_source_literals": [
+            "setquest(7479);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1229_npc_re_jobs_novice_academy_txt_2388",
+      "unit": "E5-chain-1229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7479
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 7479; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            2388
+          ],
+          "required_source_literals": [
+            "completequest(7479);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1229_npc_re_jobs_novice_academy_txt_2609",
+      "unit": "E5-chain-1229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7117
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 7117; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            2609
+          ],
+          "required_source_literals": [
+            "if (questprogress(7117) == 1) { erasequest(7117); }"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1229_npc_re_jobs_novice_academy_txt_2610",
+      "unit": "E5-chain-1229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7118
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 7118; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            2610
+          ],
+          "required_source_literals": [
+            "if (questprogress(7118) == 1) { erasequest(7118); }"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1229_npc_re_jobs_novice_academy_txt_2611",
+      "unit": "E5-chain-1229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7119
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 7119; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            2611
+          ],
+          "required_source_literals": [
+            "if (questprogress(7119) == 1) { erasequest(7119); }"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1229_npc_re_jobs_novice_academy_txt_2612",
+      "unit": "E5-chain-1229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7120
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 7120; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            2612
+          ],
+          "required_source_literals": [
+            "if (questprogress(7120) == 1) { erasequest(7120); }"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1229_npc_re_jobs_novice_academy_txt_2613",
+      "unit": "E5-chain-1229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7121
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 7121; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            2613
+          ],
+          "required_source_literals": [
+            "if (questprogress(7121) == 1) {\terasequest(7121); }"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1229_npc_re_jobs_novice_academy_txt_2614",
+      "unit": "E5-chain-1229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7122
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 7122; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            2614
+          ],
+          "required_source_literals": [
+            "if (questprogress(7122) == 1) { erasequest(7122); }"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1229_npc_re_jobs_novice_academy_txt_2615",
+      "unit": "E5-chain-1229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7123
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 7123; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            2615
+          ],
+          "required_source_literals": [
+            "if (questprogress(7123) == 1) {\terasequest(7123); }"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1229_npc_re_jobs_novice_academy_txt_2616",
+      "unit": "E5-chain-1229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7124
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 7124; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            2616
+          ],
+          "required_source_literals": [
+            "if (questprogress(7124) == 1) {\terasequest(7124); }"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1229_npc_re_jobs_novice_academy_txt_2617",
+      "unit": "E5-chain-1229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7126
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 7126; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            2617
+          ],
+          "required_source_literals": [
+            "if (questprogress(7126) == 1) {\terasequest(7126); }"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1229_npc_re_jobs_novice_academy_txt_2618",
+      "unit": "E5-chain-1229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7127
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 7127; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            2618
+          ],
+          "required_source_literals": [
+            "if (questprogress(7127) == 1) {\terasequest(7127); }"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1229_npc_re_jobs_novice_academy_txt_2654",
+      "unit": "E5-chain-1229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          4269
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 4269; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            2654
+          ],
+          "required_source_literals": [
+            "setquest(4269);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1229_npc_re_jobs_novice_academy_txt_2655",
+      "unit": "E5-chain-1229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          4269
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 4269; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            2655
+          ],
+          "required_source_literals": [
+            "completequest(4269);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1229_npc_re_jobs_novice_academy_txt_2980",
+      "unit": "E5-chain-1229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          15000
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 15000; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            2980
+          ],
+          "required_source_literals": [
+            "completequest(15000);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1229_npc_re_jobs_novice_academy_txt_3102",
+      "unit": "E5-chain-1229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          15000
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 15000; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            3102
+          ],
+          "required_source_literals": [
+            "setquest(15000);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1229_npc_re_jobs_novice_academy_txt_4598",
+      "unit": "E5-chain-1229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          11338
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 11338; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            4598
+          ],
+          "required_source_literals": [
+            "setquest(11338);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1229_npc_re_jobs_novice_academy_txt_4599",
+      "unit": "E5-chain-1229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          11338
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 11338; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            4599
+          ],
+          "required_source_literals": [
+            "completequest(11338);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1229_npc_re_jobs_novice_academy_txt_4612",
+      "unit": "E5-chain-1229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          11338
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 11338; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            4612
+          ],
+          "required_source_literals": [
+            "setquest(11338);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1229_npc_re_jobs_novice_academy_txt_4613",
+      "unit": "E5-chain-1229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          11338
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 11338; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            4613
+          ],
+          "required_source_literals": [
+            "completequest(11338);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1229_npc_re_jobs_novice_academy_txt_4630",
+      "unit": "E5-chain-1229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          11338
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 11338; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            4630
+          ],
+          "required_source_literals": [
+            "setquest(11338);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1229_npc_re_jobs_novice_academy_txt_4631",
+      "unit": "E5-chain-1229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          11338
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 11338; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            4631
+          ],
+          "required_source_literals": [
+            "completequest(11338);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1229_npc_re_jobs_novice_academy_txt_4645",
+      "unit": "E5-chain-1229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          11338
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 11338; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            4645
+          ],
+          "required_source_literals": [
+            "setquest(11338);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1229_npc_re_jobs_novice_academy_txt_4646",
+      "unit": "E5-chain-1229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          11338
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 11338; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            4646
+          ],
+          "required_source_literals": [
+            "completequest(11338);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1229_npc_re_jobs_novice_academy_txt_4660",
+      "unit": "E5-chain-1229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          11338
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 11338; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            4660
+          ],
+          "required_source_literals": [
+            "setquest(11338);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1229_npc_re_jobs_novice_academy_txt_4661",
+      "unit": "E5-chain-1229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          11338
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 11338; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            4661
+          ],
+          "required_source_literals": [
+            "completequest(11338);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1229_npc_re_jobs_novice_academy_txt_7639",
+      "unit": "E5-chain-1229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          5148
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 5148; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            7639
+          ],
+          "required_source_literals": [
+            "erasequest(5148);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1229_npc_re_jobs_novice_academy_txt_7702",
+      "unit": "E5-chain-1229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          5149
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 5149; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            7702
+          ],
+          "required_source_literals": [
+            "erasequest(5149);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1229_npc_re_jobs_novice_academy_txt_7719",
+      "unit": "E5-chain-1229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          5150
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 5150; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            7719
+          ],
+          "required_source_literals": [
+            "erasequest(5150);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1229_npc_re_jobs_novice_academy_txt_7736",
+      "unit": "E5-chain-1229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          5151
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 5151; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            7736
+          ],
+          "required_source_literals": [
+            "erasequest(5151);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1229_npc_re_jobs_novice_academy_txt_7753",
+      "unit": "E5-chain-1229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          5152
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 5152; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            7753
+          ],
+          "required_source_literals": [
+            "erasequest(5152);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1229_npc_re_jobs_novice_academy_txt_7804",
+      "unit": "E5-chain-1229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          5149
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 5149; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            7804
+          ],
+          "required_source_literals": [
+            "erasequest(5149);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1229_npc_re_jobs_novice_academy_txt_7828",
+      "unit": "E5-chain-1229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          5150
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 5150; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            7828
+          ],
+          "required_source_literals": [
+            "erasequest(5150);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1229_npc_re_jobs_novice_academy_txt_7852",
+      "unit": "E5-chain-1229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          5151
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 5151; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            7852
+          ],
+          "required_source_literals": [
+            "erasequest(5151);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1229_npc_re_jobs_novice_academy_txt_7875",
+      "unit": "E5-chain-1229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          5152
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 5152; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            7875
+          ],
+          "required_source_literals": [
+            "erasequest(5152);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1229_npc_re_jobs_novice_academy_txt_7926",
+      "unit": "E5-chain-1229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          5149
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 5149; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            7926
+          ],
+          "required_source_literals": [
+            "erasequest(5149);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1229_npc_re_jobs_novice_academy_txt_7928",
+      "unit": "E5-chain-1229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          5150
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 5150; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            7928
+          ],
+          "required_source_literals": [
+            "erasequest(5150);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1229_npc_re_jobs_novice_academy_txt_7930",
+      "unit": "E5-chain-1229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          5151
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 5151; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            7930
+          ],
+          "required_source_literals": [
+            "erasequest(5151);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1229_npc_re_jobs_novice_academy_txt_7932",
+      "unit": "E5-chain-1229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          5152
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 5152; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            7932
+          ],
+          "required_source_literals": [
+            "erasequest(5152);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1229_npc_re_jobs_novice_academy_txt_8125",
+      "unit": "E5-chain-1229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          5149
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 5149; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            8125
+          ],
+          "required_source_literals": [
+            "setquest(5149);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1229_npc_re_jobs_novice_academy_txt_8146",
+      "unit": "E5-chain-1229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          5150
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 5150; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            8146
+          ],
+          "required_source_literals": [
+            "setquest(5150);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1229_npc_re_jobs_novice_academy_txt_8167",
+      "unit": "E5-chain-1229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          5151
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 5151; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            8167
+          ],
+          "required_source_literals": [
+            "setquest(5151);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1229_npc_re_jobs_novice_academy_txt_8188",
+      "unit": "E5-chain-1229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          5152
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 5152; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            8188
+          ],
+          "required_source_literals": [
+            "setquest(5152);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1229_npc_re_jobs_novice_academy_txt_8465",
+      "unit": "E5-chain-1229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          13101
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 13101; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            8465
+          ],
+          "required_source_literals": [
+            "setquest(13101);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1229_npc_re_jobs_novice_academy_txt_8524",
+      "unit": "E5-chain-1229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          13102
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 13102; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            8524
+          ],
+          "required_source_literals": [
+            "setquest(13102);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1229_npc_re_jobs_novice_academy_txt_8577",
+      "unit": "E5-chain-1229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          13102
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 13102; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            8577
+          ],
+          "required_source_literals": [
+            "erasequest(13102);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1229_npc_re_jobs_novice_academy_txt_8580",
+      "unit": "E5-chain-1229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          13102
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 13102; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            8580
+          ],
+          "required_source_literals": [
+            "erasequest(13102);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1229_npc_re_jobs_novice_academy_txt_8750",
+      "unit": "E5-chain-1229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          14158
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 14158; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            8750
+          ],
+          "required_source_literals": [
+            "setquest(14158);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1229_npc_re_jobs_novice_academy_txt_8751",
+      "unit": "E5-chain-1229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          14158
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 14158; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            8751
+          ],
+          "required_source_literals": [
+            "completequest(14158);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1229_npc_re_jobs_novice_academy_txt_8819",
+      "unit": "E5-chain-1229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          14142
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 14142; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            8819
+          ],
+          "required_source_literals": [
+            "setquest(14142);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1229_npc_re_jobs_novice_academy_txt_8955",
+      "unit": "E5-chain-1229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          1229
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 1229; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            8955
+          ],
+          "required_source_literals": [
+            "setquest(1229);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1229_npc_re_jobs_novice_academy_txt_8981",
+      "unit": "E5-chain-1229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          1230
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 1230; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            8981
+          ],
+          "required_source_literals": [
+            "erasequest(1230);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1229_npc_re_jobs_novice_academy_txt_9040",
+      "unit": "E5-chain-1229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          1229
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 1229; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            9040
+          ],
+          "required_source_literals": [
+            "erasequest(1229);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1229_npc_re_jobs_novice_academy_txt_9041",
+      "unit": "E5-chain-1229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          1230
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 1230; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            9041
+          ],
+          "required_source_literals": [
+            "setquest(1230);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1229_npc_re_jobs_novice_academy_txt_9054",
+      "unit": "E5-chain-1229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          1230
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 1230; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            9054
+          ],
+          "required_source_literals": [
+            "erasequest(1230);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1229_npc_re_jobs_novice_academy_txt_9094",
+      "unit": "E5-chain-1229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          1230
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 1230; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            9094
+          ],
+          "required_source_literals": [
+            "erasequest(1230);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1229_npc_re_jobs_novice_academy_txt_9109",
+      "unit": "E5-chain-1229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          1230
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 1230; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            9109
+          ],
+          "required_source_literals": [
+            "erasequest(1230);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1229_npc_re_jobs_novice_academy_txt_9125",
+      "unit": "E5-chain-1229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          1230
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 1230; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            9125
+          ],
+          "required_source_literals": [
+            "erasequest(1230);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1229_npc_re_jobs_novice_academy_txt_9151",
+      "unit": "E5-chain-1229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          1230
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 1230; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            9151
+          ],
+          "required_source_literals": [
+            "erasequest(1230);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1229_npc_re_jobs_novice_academy_txt_9215",
+      "unit": "E5-chain-1229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          1230
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 1230; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            9215
+          ],
+          "required_source_literals": [
+            "erasequest(1230);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1229_npc_re_jobs_novice_academy_txt_9525",
+      "unit": "E5-chain-1229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          9264
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 9264; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            9525
+          ],
+          "required_source_literals": [
+            "setquest(9264);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1229_npc_re_jobs_novice_academy_txt_9589",
+      "unit": "E5-chain-1229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          9264
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 9264; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            9589
+          ],
+          "required_source_literals": [
+            "completequest(9264);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1229_npc_re_jobs_novice_academy_txt_9590",
+      "unit": "E5-chain-1229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          9264
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 9264; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            9590
+          ],
+          "required_source_literals": [
+            "erasequest(9264);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1229_npc_re_jobs_novice_academy_txt_9591",
+      "unit": "E5-chain-1229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          9265
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 9265; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            9591
+          ],
+          "required_source_literals": [
+            "setquest(9265);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1229_npc_re_jobs_novice_academy_txt_9640",
+      "unit": "E5-chain-1229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          9265
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 9265; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            9640
+          ],
+          "required_source_literals": [
+            "completequest(9265);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1229_npc_re_jobs_novice_academy_txt_9641",
+      "unit": "E5-chain-1229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          9265
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 9265; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            9641
+          ],
+          "required_source_literals": [
+            "erasequest(9265);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1229_npc_re_jobs_novice_academy_txt_9642",
+      "unit": "E5-chain-1229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          9266
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 9266; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            9642
+          ],
+          "required_source_literals": [
+            "setquest(9266);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1229_npc_re_jobs_novice_academy_txt_9733",
+      "unit": "E5-chain-1229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          12307
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 12307; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            9733
+          ],
+          "required_source_literals": [
+            "setquest(12307);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1229_npc_re_jobs_novice_academy_txt_9784",
+      "unit": "E5-chain-1229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          12302
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 12302; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            9784
+          ],
+          "required_source_literals": [
+            "setquest(12302);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1229_npc_re_jobs_novice_academy_txt_9785",
+      "unit": "E5-chain-1229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          12302
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 12302; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            9785
+          ],
+          "required_source_literals": [
+            "completequest(12302);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1229_npc_re_jobs_novice_academy_txt_9827",
+      "unit": "E5-chain-1229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          12303
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 12303; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            9827
+          ],
+          "required_source_literals": [
+            "setquest(12303);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1229_npc_re_jobs_novice_academy_txt_9846",
+      "unit": "E5-chain-1229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          12303
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 12303; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            9846
+          ],
+          "required_source_literals": [
+            "completequest(12303);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1229_npc_re_jobs_novice_academy_txt_9864",
+      "unit": "E5-chain-1229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          12303
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 12303; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            9864
+          ],
+          "required_source_literals": [
+            "erasequest(12303);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1229_npc_re_jobs_novice_academy_txt_9878",
+      "unit": "E5-chain-1229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          12304
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 12304; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            9878
+          ],
+          "required_source_literals": [
+            "setquest(12304);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1229_npc_re_jobs_novice_academy_txt_9910",
+      "unit": "E5-chain-1229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          12305
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 12305; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            9910
+          ],
+          "required_source_literals": [
+            "setquest(12305);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1229_npc_re_jobs_novice_academy_txt_9994",
+      "unit": "E5-chain-1229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          12305
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 12305; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            9994
+          ],
+          "required_source_literals": [
+            "completequest(12305);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1229_npc_re_jobs_novice_academy_txt_10026",
+      "unit": "E5-chain-1229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          12306
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 12306; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            10026
+          ],
+          "required_source_literals": [
+            "setquest(12306);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1229_npc_re_jobs_novice_academy_txt_10059",
+      "unit": "E5-chain-1229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          12306
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 12306; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            10059
+          ],
+          "required_source_literals": [
+            "completequest(12306);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1229_npc_re_jobs_novice_academy_txt_10126",
+      "unit": "E5-chain-1229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          12304
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 12304; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            10126
+          ],
+          "required_source_literals": [
+            "completequest(12304);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1229_npc_re_jobs_novice_academy_txt_10302",
+      "unit": "E5-chain-1229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7480
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 7480; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            10302
+          ],
+          "required_source_literals": [
+            "setquest(7480);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1229_npc_re_jobs_novice_academy_txt_10329",
+      "unit": "E5-chain-1229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7480
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 7480; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            10329
+          ],
+          "required_source_literals": [
+            "completequest(7480);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1229_npc_re_jobs_novice_academy_txt_10330",
+      "unit": "E5-chain-1229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7481
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 7481; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            10330
+          ],
+          "required_source_literals": [
+            "erasequest(7481);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1229_npc_re_jobs_novice_academy_txt_10331",
+      "unit": "E5-chain-1229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7482
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 7482; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            10331
+          ],
+          "required_source_literals": [
+            "erasequest(7482);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1229_npc_re_jobs_novice_academy_txt_10332",
+      "unit": "E5-chain-1229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7483
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 7483; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            10332
+          ],
+          "required_source_literals": [
+            "setquest(7483);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1229_npc_re_jobs_novice_academy_txt_10333",
+      "unit": "E5-chain-1229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7483
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 7483; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            10333
+          ],
+          "required_source_literals": [
+            "completequest(7483);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1229_npc_re_jobs_novice_academy_txt_10348",
+      "unit": "E5-chain-1229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7480
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 7480; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            10348
+          ],
+          "required_source_literals": [
+            "completequest(7480);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1229_npc_re_jobs_novice_academy_txt_10349",
+      "unit": "E5-chain-1229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7481
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 7481; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            10349
+          ],
+          "required_source_literals": [
+            "erasequest(7481);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1229_npc_re_jobs_novice_academy_txt_10350",
+      "unit": "E5-chain-1229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7482
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 7482; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            10350
+          ],
+          "required_source_literals": [
+            "erasequest(7482);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1229_npc_re_jobs_novice_academy_txt_10351",
+      "unit": "E5-chain-1229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7483
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 7483; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            10351
+          ],
+          "required_source_literals": [
+            "setquest(7483);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1229_npc_re_jobs_novice_academy_txt_10374",
+      "unit": "E5-chain-1229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7480
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 7480; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            10374
+          ],
+          "required_source_literals": [
+            "erasequest(7480);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1229_npc_re_jobs_novice_academy_txt_10403",
+      "unit": "E5-chain-1229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7480
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 7480; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            10403
+          ],
+          "required_source_literals": [
+            "completequest(7480);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1229_npc_re_jobs_novice_academy_txt_10404",
+      "unit": "E5-chain-1229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7481
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 7481; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            10404
+          ],
+          "required_source_literals": [
+            "erasequest(7481);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1229_npc_re_jobs_novice_academy_txt_10405",
+      "unit": "E5-chain-1229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7482
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 7482; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            10405
+          ],
+          "required_source_literals": [
+            "erasequest(7482);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1229_npc_re_jobs_novice_academy_txt_10406",
+      "unit": "E5-chain-1229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7483
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 7483; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            10406
+          ],
+          "required_source_literals": [
+            "setquest(7483);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1229_npc_re_jobs_novice_academy_txt_10407",
+      "unit": "E5-chain-1229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7483
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 7483; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            10407
+          ],
+          "required_source_literals": [
+            "completequest(7483);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1229_npc_re_jobs_novice_academy_txt_10422",
+      "unit": "E5-chain-1229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7480
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 7480; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            10422
+          ],
+          "required_source_literals": [
+            "completequest(7480);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1229_npc_re_jobs_novice_academy_txt_10423",
+      "unit": "E5-chain-1229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7481
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 7481; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            10423
+          ],
+          "required_source_literals": [
+            "erasequest(7481);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1229_npc_re_jobs_novice_academy_txt_10424",
+      "unit": "E5-chain-1229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7482
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 7482; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            10424
+          ],
+          "required_source_literals": [
+            "erasequest(7482);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1229_npc_re_jobs_novice_academy_txt_10425",
+      "unit": "E5-chain-1229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7483
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 7483; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            10425
+          ],
+          "required_source_literals": [
+            "setquest(7483);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1229_npc_re_jobs_novice_academy_txt_10455",
+      "unit": "E5-chain-1229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7483
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 7483; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            10455
+          ],
+          "required_source_literals": [
+            "completequest(7483);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1229_npc_re_jobs_novice_academy_txt_10498",
+      "unit": "E5-chain-1229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7483
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 7483; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            10498
+          ],
+          "required_source_literals": [
+            "erasequest(7483);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1229_npc_re_jobs_novice_academy_txt_10499",
+      "unit": "E5-chain-1229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7484
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 7484; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            10499
+          ],
+          "required_source_literals": [
+            "erasequest(7484);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1229_npc_re_jobs_novice_academy_txt_10500",
+      "unit": "E5-chain-1229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7485
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 7485; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            10500
+          ],
+          "required_source_literals": [
+            "erasequest(7485);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1229_npc_re_jobs_novice_academy_txt_10949",
+      "unit": "E5-chain-1229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7481
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 7481; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            10949
+          ],
+          "required_source_literals": [
+            "setquest(7481);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1229_npc_re_jobs_novice_academy_txt_10973",
+      "unit": "E5-chain-1229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7481
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 7481; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            10973
+          ],
+          "required_source_literals": [
+            "setquest(7481);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1229_npc_re_jobs_novice_academy_txt_11020",
+      "unit": "E5-chain-1229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7486
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 7486; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            11020
+          ],
+          "required_source_literals": [
+            "setquest(7486);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1229_npc_re_jobs_novice_academy_txt_11021",
+      "unit": "E5-chain-1229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7486
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 7486; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            11021
+          ],
+          "required_source_literals": [
+            "completequest(7486);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1229_npc_re_jobs_novice_academy_txt_11036",
+      "unit": "E5-chain-1229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7486
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 7486; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            11036
+          ],
+          "required_source_literals": [
+            "setquest(7486);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1229_npc_re_jobs_novice_academy_txt_11037",
+      "unit": "E5-chain-1229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7486
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 7486; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            11037
+          ],
+          "required_source_literals": [
+            "completequest(7486);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1229_npc_re_jobs_novice_academy_txt_11109",
+      "unit": "E5-chain-1229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7484
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 7484; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            11109
+          ],
+          "required_source_literals": [
+            "setquest(7484);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1229_npc_re_jobs_novice_academy_txt_11110",
+      "unit": "E5-chain-1229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7484
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 7484; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            11110
+          ],
+          "required_source_literals": [
+            "completequest(7484);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1229_npc_re_jobs_novice_academy_txt_11120",
+      "unit": "E5-chain-1229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7484
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 7484; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            11120
+          ],
+          "required_source_literals": [
+            "completequest(7484);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1229_npc_re_jobs_novice_academy_txt_11175",
+      "unit": "E5-chain-1229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7484
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 7484; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            11175
+          ],
+          "required_source_literals": [
+            "setquest(7484);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1229_npc_re_jobs_novice_academy_txt_11176",
+      "unit": "E5-chain-1229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7484
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 7484; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            11176
+          ],
+          "required_source_literals": [
+            "completequest(7484);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1229_npc_re_jobs_novice_academy_txt_11208",
+      "unit": "E5-chain-1229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7484
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 7484; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            11208
+          ],
+          "required_source_literals": [
+            "setquest(7484);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1229_npc_re_jobs_novice_academy_txt_11220",
+      "unit": "E5-chain-1229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7484
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 7484; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            11220
+          ],
+          "required_source_literals": [
+            "completequest(7484);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1229_npc_re_jobs_novice_academy_txt_11252",
+      "unit": "E5-chain-1229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7484
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 7484; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            11252
+          ],
+          "required_source_literals": [
+            "erasequest(7484);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1229_npc_re_jobs_novice_academy_txt_11529",
+      "unit": "E5-chain-1229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7482
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 7482; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            11529
+          ],
+          "required_source_literals": [
+            "setquest(7482);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1229_npc_re_jobs_novice_academy_txt_11579",
+      "unit": "E5-chain-1229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7485
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 7485; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            11579
+          ],
+          "required_source_literals": [
+            "setquest(7485);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1229_npc_re_jobs_novice_academy_txt_11580",
+      "unit": "E5-chain-1229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7485
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 7485; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            11580
+          ],
+          "required_source_literals": [
+            "completequest(7485);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1229_npc_re_jobs_novice_academy_txt_11594",
+      "unit": "E5-chain-1229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7485
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 7485; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            11594
+          ],
+          "required_source_literals": [
+            "completequest(7485);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1229_npc_re_jobs_novice_academy_txt_11615",
+      "unit": "E5-chain-1229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7485
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 7485; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            11615
+          ],
+          "required_source_literals": [
+            "completequest(7485);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1229_npc_re_jobs_novice_academy_txt_11641",
+      "unit": "E5-chain-1229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7485
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 7485; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            11641
+          ],
+          "required_source_literals": [
+            "setquest(7485);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1229_npc_re_jobs_novice_academy_txt_11668",
+      "unit": "E5-chain-1229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7485
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 7485; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            11668
+          ],
+          "required_source_literals": [
+            "completequest(7485);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1229_npc_re_jobs_novice_academy_txt_11694",
+      "unit": "E5-chain-1229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7485
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 7485; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            11694
+          ],
+          "required_source_literals": [
+            "erasequest(7485);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1229_npc_re_jobs_novice_academy_txt_11860",
+      "unit": "E5-chain-1229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7487
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 7487; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            11860
+          ],
+          "required_source_literals": [
+            "setquest(7487);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1229_npc_re_jobs_novice_academy_txt_11887",
+      "unit": "E5-chain-1229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7487
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 7487; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            11887
+          ],
+          "required_source_literals": [
+            "erasequest(7487);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1229_npc_re_jobs_novice_academy_txt_11910",
+      "unit": "E5-chain-1229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7487
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 7487; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            11910
+          ],
+          "required_source_literals": [
+            "completequest(7487);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1229_npc_re_jobs_novice_academy_txt_11929",
+      "unit": "E5-chain-1229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7487
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 7487; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            11929
+          ],
+          "required_source_literals": [
+            "completequest(7487);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1229_npc_re_jobs_novice_academy_txt_12113",
+      "unit": "E5-chain-1229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          11343
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 11343; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            12113
+          ],
+          "required_source_literals": [
+            "setquest(11343);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1229_npc_re_jobs_novice_academy_txt_12114",
+      "unit": "E5-chain-1229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          11343
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 11343; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            12114
+          ],
+          "required_source_literals": [
+            "completequest(11343);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1229_npc_re_jobs_novice_academy_txt_12122",
+      "unit": "E5-chain-1229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          11343
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 11343; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            12122
+          ],
+          "required_source_literals": [
+            "completequest(11343);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1229_npc_re_jobs_novice_academy_txt_12362",
+      "unit": "E5-chain-1229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          4268
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 4268; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            12362
+          ],
+          "required_source_literals": [
+            "setquest(4268);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1229_npc_re_jobs_novice_academy_txt_14294",
+      "unit": "E5-chain-1229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7117
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 7117; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            14294
+          ],
+          "required_source_literals": [
+            "erasequest(7117, 7127);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
