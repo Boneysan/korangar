@@ -12,7 +12,7 @@
     "E2_verified": 236,
     "E3_unknown": 973,
     "E4_unknown": 213,
-    "E5_unknown": 695
+    "E5_unknown": 699
   },
   "entries": [
     {
@@ -107741,6 +107741,114 @@
           ],
           "required_source_literals": [
             "erasequest 12094;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_12096_npc_re_jobs_3_2_sorcerer_txt_136",
+      "unit": "E5-chain-12096",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          12096
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 12096; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-2/sorcerer.txt",
+          "lines": [
+            136
+          ],
+          "required_source_literals": [
+            "setquest 12096;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_12096_npc_re_jobs_3_2_sorcerer_txt_249",
+      "unit": "E5-chain-12096",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          12096
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 12096; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-2/sorcerer.txt",
+          "lines": [
+            249
+          ],
+          "required_source_literals": [
+            "changequest 12096,12097;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_12096_npc_re_jobs_3_2_sorcerer_txt_320",
+      "unit": "E5-chain-12096",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          12097
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 12097; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-2/sorcerer.txt",
+          "lines": [
+            320
+          ],
+          "required_source_literals": [
+            "changequest 12097,12098;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_12096_npc_re_jobs_3_2_sorcerer_txt_346",
+      "unit": "E5-chain-12096",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          12098
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 12098; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-2/sorcerer.txt",
+          "lines": [
+            346
+          ],
+          "required_source_literals": [
+            "completequest 12098;"
           ]
         }
       ],
