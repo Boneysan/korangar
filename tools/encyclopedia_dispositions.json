@@ -171615,6 +171615,276 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_8064_npc_quests_quests_hugel_txt_5517",
+      "unit": "E5-chain-8064",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8064
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 8064; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_hugel.txt",
+          "lines": [
+            5517
+          ],
+          "required_source_literals": [
+            "setquest 8064;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_8064_npc_quests_quests_hugel_txt_5528",
+      "unit": "E5-chain-8064",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8065
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 8065; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_hugel.txt",
+          "lines": [
+            5528
+          ],
+          "required_source_literals": [
+            "setquest 8065;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_8064_npc_quests_quests_hugel_txt_5540",
+      "unit": "E5-chain-8064",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8066
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 8066; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_hugel.txt",
+          "lines": [
+            5540
+          ],
+          "required_source_literals": [
+            "setquest 8066;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_8064_npc_quests_quests_hugel_txt_5552",
+      "unit": "E5-chain-8064",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8067
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 8067; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_hugel.txt",
+          "lines": [
+            5552
+          ],
+          "required_source_literals": [
+            "setquest 8067;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_8064_npc_quests_quests_hugel_txt_5932",
+      "unit": "E5-chain-8064",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8065
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 8065; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_hugel.txt",
+          "lines": [
+            5932
+          ],
+          "required_source_literals": [
+            "changequest 8065,8069;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_8064_npc_quests_quests_hugel_txt_5956",
+      "unit": "E5-chain-8064",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8069
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 8069; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_hugel.txt",
+          "lines": [
+            5956
+          ],
+          "required_source_literals": [
+            "changequest 8069,8073;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_8064_npc_quests_quests_hugel_txt_6005",
+      "unit": "E5-chain-8064",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8066
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 8066; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_hugel.txt",
+          "lines": [
+            6005
+          ],
+          "required_source_literals": [
+            "changequest 8066,8070;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_8064_npc_quests_quests_hugel_txt_6032",
+      "unit": "E5-chain-8064",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8070
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 8070; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_hugel.txt",
+          "lines": [
+            6032
+          ],
+          "required_source_literals": [
+            "changequest 8070,8074;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_8064_npc_quests_quests_hugel_txt_6073",
+      "unit": "E5-chain-8064",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8067
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 8067; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_hugel.txt",
+          "lines": [
+            6073
+          ],
+          "required_source_literals": [
+            "changequest 8067,8071;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_8064_npc_quests_quests_hugel_txt_6117",
+      "unit": "E5-chain-8064",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8071
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 8071; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_hugel.txt",
+          "lines": [
+            6117
+          ],
+          "required_source_literals": [
+            "changequest 8071,8075;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
