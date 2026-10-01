@@ -160329,6 +160329,195 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_3000_npc_jobs_2_2_bard_txt_170",
+      "unit": "E5-chain-3000",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          3000
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 3000; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/bard.txt",
+          "lines": [
+            170
+          ],
+          "required_source_literals": [
+            "setquest 3000;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_3000_npc_jobs_2_2_bard_txt_227",
+      "unit": "E5-chain-3000",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          3000
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 3000; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/bard.txt",
+          "lines": [
+            227
+          ],
+          "required_source_literals": [
+            "changequest 3000,3001;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_3000_npc_jobs_2_2_bard_txt_430",
+      "unit": "E5-chain-3000",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          3001
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 3001; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/bard.txt",
+          "lines": [
+            430
+          ],
+          "required_source_literals": [
+            "changequest 3001,3002;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_3000_npc_jobs_2_2_bard_txt_452",
+      "unit": "E5-chain-3000",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          3002
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 3002; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/bard.txt",
+          "lines": [
+            452
+          ],
+          "required_source_literals": [
+            "changequest 3002,3003;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_3000_npc_jobs_2_2_bard_txt_894",
+      "unit": "E5-chain-3000",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          3003
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 3003; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/bard.txt",
+          "lines": [
+            894
+          ],
+          "required_source_literals": [
+            "completequest 3003;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_3000_npc_jobs_2_2_bard_txt_909",
+      "unit": "E5-chain-3000",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          3003
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 3003; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/bard.txt",
+          "lines": [
+            909
+          ],
+          "required_source_literals": [
+            "changequest 3003,3004;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_3000_npc_jobs_2_2_bard_txt_929",
+      "unit": "E5-chain-3000",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          3004
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 3004; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/bard.txt",
+          "lines": [
+            929
+          ],
+          "required_source_literals": [
+            "completequest 3004;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
