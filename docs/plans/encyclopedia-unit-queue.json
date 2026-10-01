@@ -138383,7 +138383,7 @@
       "package": "E3",
       "kind": "e3_translator",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "key": "heal",
@@ -138499,7 +138499,24 @@
       ],
       "size_lines": 37,
       "reason": "8 item script(s) first stop at documented `heal`",
-      "history": []
+      "history": [
+        "2026-10-01T06:04:55Z activated",
+        "2026-10-01T06:04:55Z validated",
+        "2026-10-01T06:04:55Z verified: 1 claims supported",
+        "2026-10-01T06:05:19Z accepted",
+        "2026-10-01T06:05:20Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "b31a9b8710d1b3a93d65d82dcc63702b2d91c741edbbf3a0651d43edcdbc753d",
+      "accepted_files": [
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/export_item_reference.py",
+        "tools/tests/test_export_item_effect_phrases.py"
+      ],
+      "accepted_on": "2026-10-01",
+      "commit": "committed"
     },
     {
       "id": "E3-translate-bonus2-bhpregenrate",
