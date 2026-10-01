@@ -143162,7 +143162,7 @@
       "package": "E3",
       "kind": "e3_translator",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "key": "bonus bIgnoreMdefRate",
@@ -143199,9 +143199,24 @@
       "reason": "1 item script(s) first stop at documented `bonus bIgnoreMdefRate`",
       "history": [
         "2026-10-01T06:23:56Z activated",
-        "2026-10-01T06:23:56Z blocked: No item in this cluster is fully translated. The remaining scripts use a conditional, an expression, or a command whose meaning is outside this excerpt."
+        "2026-10-01T06:23:56Z blocked: No item in this cluster is fully translated. The remaining scripts use a conditional, an expression, or a command whose meaning is outside this excerpt.",
+        "2026-10-01T07:33:27Z activated",
+        "2026-10-01T07:33:28Z validated",
+        "2026-10-01T07:33:28Z verified: 1 claims supported",
+        "2026-10-01T07:33:52Z accepted",
+        "2026-10-01T07:33:52Z committed"
       ],
-      "baseline_dirty": []
+      "baseline_dirty": [],
+      "draft_sha256": "ed1d617a0124622a4b63a748c814b6df08a1983184c9ad43254096126ca5cd7c",
+      "accepted_files": [
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/export_item_reference.py",
+        "tools/tests/test_export_item_effect_phrases.py"
+      ],
+      "accepted_on": "2026-10-01",
+      "commit": "committed"
     },
     {
       "id": "E3-translate-bonus-bmagichpgainvalue",
