@@ -152553,6 +152553,33 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_11335_npc_re_quests_quests_eclage_txt_2654",
+      "unit": "E5-chain-11335",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          11335
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 11335; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "lines": [
+            2654
+          ],
+          "required_source_literals": [
+            "changequest 11335,11336;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
