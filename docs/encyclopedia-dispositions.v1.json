@@ -12,7 +12,7 @@
     "E2_verified": 236,
     "E3_unknown": 973,
     "E4_unknown": 213,
-    "E5_unknown": 528
+    "E5_unknown": 529
   },
   "entries": [
     {
@@ -113033,6 +113033,33 @@
           ],
           "required_source_literals": [
             "setquest(60201);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_60212_npc_quests_quests_veins_txt_6090",
+      "unit": "E5-chain-60212",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          60212
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 60212; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_veins.txt",
+          "lines": [
+            6090
+          ],
+          "required_source_literals": [
+            "changequest 60212,60213;"
           ]
         }
       ],
