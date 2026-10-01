@@ -12,7 +12,7 @@
     "E2_verified": 236,
     "E3_unknown": 973,
     "E4_unknown": 213,
-    "E5_unknown": 2130
+    "E5_unknown": 2152
   },
   "entries": [
     {
@@ -119108,6 +119108,600 @@
           ],
           "required_source_literals": [
             "setquest(12316);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_12340_npc_re_jobs_2e_rebellion_txt_346",
+      "unit": "E5-chain-12340",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          12340
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 12340; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/2e/rebellion.txt",
+          "lines": [
+            346
+          ],
+          "required_source_literals": [
+            "setquest(12340);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_12340_npc_re_jobs_2e_rebellion_txt_483",
+      "unit": "E5-chain-12340",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          12341
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 12341; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/2e/rebellion.txt",
+          "lines": [
+            483
+          ],
+          "required_source_literals": [
+            "setquest(12341);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_12340_npc_re_jobs_2e_rebellion_txt_484",
+      "unit": "E5-chain-12340",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          12340
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 12340; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/2e/rebellion.txt",
+          "lines": [
+            484
+          ],
+          "required_source_literals": [
+            "completequest(12340);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_12340_npc_re_jobs_2e_rebellion_txt_652",
+      "unit": "E5-chain-12340",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          12342
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 12342; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/2e/rebellion.txt",
+          "lines": [
+            652
+          ],
+          "required_source_literals": [
+            "setquest(12342);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_12340_npc_re_jobs_2e_rebellion_txt_653",
+      "unit": "E5-chain-12340",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          12341
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 12341; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/2e/rebellion.txt",
+          "lines": [
+            653
+          ],
+          "required_source_literals": [
+            "completequest(12341);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_12340_npc_re_jobs_2e_rebellion_txt_743",
+      "unit": "E5-chain-12340",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          12342
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 12342; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/2e/rebellion.txt",
+          "lines": [
+            743
+          ],
+          "required_source_literals": [
+            "completequest(12342);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_12340_npc_re_jobs_2e_rebellion_txt_824",
+      "unit": "E5-chain-12340",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          12343
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 12343; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/2e/rebellion.txt",
+          "lines": [
+            824
+          ],
+          "required_source_literals": [
+            "setquest(12343);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_12340_npc_re_jobs_2e_rebellion_txt_825",
+      "unit": "E5-chain-12340",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          12344
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 12344; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/2e/rebellion.txt",
+          "lines": [
+            825
+          ],
+          "required_source_literals": [
+            "setquest(12344);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_12340_npc_re_jobs_2e_rebellion_txt_845",
+      "unit": "E5-chain-12340",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          12343
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 12343; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/2e/rebellion.txt",
+          "lines": [
+            845
+          ],
+          "required_source_literals": [
+            "completequest(12343);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_12340_npc_re_jobs_2e_rebellion_txt_846",
+      "unit": "E5-chain-12340",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          12344
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 12344; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/2e/rebellion.txt",
+          "lines": [
+            846
+          ],
+          "required_source_literals": [
+            "completequest(12344);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_12340_npc_re_jobs_2e_rebellion_txt_847",
+      "unit": "E5-chain-12340",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          12345
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 12345; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/2e/rebellion.txt",
+          "lines": [
+            847
+          ],
+          "required_source_literals": [
+            "setquest(12345);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_12340_npc_re_jobs_2e_rebellion_txt_857",
+      "unit": "E5-chain-12340",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          12343
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 12343; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/2e/rebellion.txt",
+          "lines": [
+            857
+          ],
+          "required_source_literals": [
+            "erasequest(12343);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_12340_npc_re_jobs_2e_rebellion_txt_858",
+      "unit": "E5-chain-12340",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          12344
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 12344; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/2e/rebellion.txt",
+          "lines": [
+            858
+          ],
+          "required_source_literals": [
+            "erasequest(12344);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_12340_npc_re_jobs_2e_rebellion_txt_863",
+      "unit": "E5-chain-12340",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          12343
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 12343; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/2e/rebellion.txt",
+          "lines": [
+            863
+          ],
+          "required_source_literals": [
+            "erasequest(12343);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_12340_npc_re_jobs_2e_rebellion_txt_864",
+      "unit": "E5-chain-12340",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          12344
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 12344; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/2e/rebellion.txt",
+          "lines": [
+            864
+          ],
+          "required_source_literals": [
+            "erasequest(12344);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_12340_npc_re_jobs_2e_rebellion_txt_869",
+      "unit": "E5-chain-12340",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          12343
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 12343; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/2e/rebellion.txt",
+          "lines": [
+            869
+          ],
+          "required_source_literals": [
+            "erasequest(12343);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_12340_npc_re_jobs_2e_rebellion_txt_870",
+      "unit": "E5-chain-12340",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          12344
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 12344; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/2e/rebellion.txt",
+          "lines": [
+            870
+          ],
+          "required_source_literals": [
+            "erasequest(12344);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_12340_npc_re_jobs_2e_rebellion_txt_875",
+      "unit": "E5-chain-12340",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          12343
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 12343; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/2e/rebellion.txt",
+          "lines": [
+            875
+          ],
+          "required_source_literals": [
+            "erasequest(12343);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_12340_npc_re_jobs_2e_rebellion_txt_876",
+      "unit": "E5-chain-12340",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          12344
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 12344; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/2e/rebellion.txt",
+          "lines": [
+            876
+          ],
+          "required_source_literals": [
+            "erasequest(12344);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_12340_npc_re_jobs_2e_rebellion_txt_883",
+      "unit": "E5-chain-12340",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          12343
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 12343; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/2e/rebellion.txt",
+          "lines": [
+            883
+          ],
+          "required_source_literals": [
+            "setquest(12343);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_12340_npc_re_jobs_2e_rebellion_txt_884",
+      "unit": "E5-chain-12340",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          12344
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 12344; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/2e/rebellion.txt",
+          "lines": [
+            884
+          ],
+          "required_source_literals": [
+            "setquest(12344);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_12340_npc_re_jobs_2e_rebellion_txt_943",
+      "unit": "E5-chain-12340",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          12345
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 12345; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/2e/rebellion.txt",
+          "lines": [
+            943
+          ],
+          "required_source_literals": [
+            "completequest(12345);"
           ]
         }
       ],
