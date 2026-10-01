@@ -143562,6 +143562,168 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_3070_npc_quests_quests_veins_txt_4807",
+      "unit": "E5-chain-3070",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          3070
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 3070; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_veins.txt",
+          "lines": [
+            4807
+          ],
+          "required_source_literals": [
+            "changequest 3070,3071;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_3070_npc_quests_quests_veins_txt_4861",
+      "unit": "E5-chain-3070",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          3071
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 3071; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_veins.txt",
+          "lines": [
+            4861
+          ],
+          "required_source_literals": [
+            "changequest 3071,3072;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_3070_npc_quests_quests_veins_txt_4868",
+      "unit": "E5-chain-3070",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          3072
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 3072; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_veins.txt",
+          "lines": [
+            4868
+          ],
+          "required_source_literals": [
+            "changequest 3072,3073;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_3070_npc_quests_quests_veins_txt_4876",
+      "unit": "E5-chain-3070",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          3073
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 3073; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_veins.txt",
+          "lines": [
+            4876
+          ],
+          "required_source_literals": [
+            "changequest 3073,3074;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_3070_npc_quests_quests_veins_txt_4884",
+      "unit": "E5-chain-3070",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          3074
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 3074; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_veins.txt",
+          "lines": [
+            4884
+          ],
+          "required_source_literals": [
+            "changequest 3074,3075;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_3070_npc_quests_quests_veins_txt_4911",
+      "unit": "E5-chain-3070",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          3075
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 3075; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_veins.txt",
+          "lines": [
+            4911
+          ],
+          "required_source_literals": [
+            "changequest 3075,3076;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
