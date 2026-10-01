@@ -220458,6 +220458,384 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_16000_npc_re_quests_skills_merchant_skills_txt_214",
+      "unit": "E5-chain-16000",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          16000
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 16000; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/skills/merchant_skills.txt",
+          "lines": [
+            214
+          ],
+          "required_source_literals": [
+            "setquest(16000);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_16000_npc_re_quests_skills_merchant_skills_txt_230",
+      "unit": "E5-chain-16000",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          16001
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 16001; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/skills/merchant_skills.txt",
+          "lines": [
+            230
+          ],
+          "required_source_literals": [
+            "setquest(16001);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_16000_npc_re_quests_skills_merchant_skills_txt_231",
+      "unit": "E5-chain-16000",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          16002
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 16002; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/skills/merchant_skills.txt",
+          "lines": [
+            231
+          ],
+          "required_source_literals": [
+            "setquest(16002);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_16000_npc_re_quests_skills_merchant_skills_txt_250",
+      "unit": "E5-chain-16000",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          16003
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 16003; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/skills/merchant_skills.txt",
+          "lines": [
+            250
+          ],
+          "required_source_literals": [
+            "setquest(16003);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_16000_npc_re_quests_skills_merchant_skills_txt_436",
+      "unit": "E5-chain-16000",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          16000
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 16000; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/skills/merchant_skills.txt",
+          "lines": [
+            436
+          ],
+          "required_source_literals": [
+            "if (questprogress(16000) > 0) erasequest(16000);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_16000_npc_re_quests_skills_merchant_skills_txt_437",
+      "unit": "E5-chain-16000",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          16001
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 16001; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/skills/merchant_skills.txt",
+          "lines": [
+            437
+          ],
+          "required_source_literals": [
+            "if (questprogress(16001) > 0) erasequest(16001);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_16000_npc_re_quests_skills_merchant_skills_txt_438",
+      "unit": "E5-chain-16000",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          16002
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 16002; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/skills/merchant_skills.txt",
+          "lines": [
+            438
+          ],
+          "required_source_literals": [
+            "if (questprogress(16002) > 0) erasequest(16002);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_16000_npc_re_quests_skills_merchant_skills_txt_439",
+      "unit": "E5-chain-16000",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          16003
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 16003; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/skills/merchant_skills.txt",
+          "lines": [
+            439
+          ],
+          "required_source_literals": [
+            "if (questprogress(16003) > 0) erasequest(16003);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_16000_npc_re_quests_skills_merchant_skills_txt_440",
+      "unit": "E5-chain-16000",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          16004
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 16004; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/skills/merchant_skills.txt",
+          "lines": [
+            440
+          ],
+          "required_source_literals": [
+            "if (questprogress(16004) > 0) erasequest(16004);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_16000_npc_re_quests_skills_merchant_skills_txt_441",
+      "unit": "E5-chain-16000",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          16005
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 16005; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/skills/merchant_skills.txt",
+          "lines": [
+            441
+          ],
+          "required_source_literals": [
+            "if (questprogress(16005) > 0) erasequest(16005);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_16000_npc_re_quests_skills_merchant_skills_txt_442",
+      "unit": "E5-chain-16000",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          16006
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 16006; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/skills/merchant_skills.txt",
+          "lines": [
+            442
+          ],
+          "required_source_literals": [
+            "if (questprogress(16006) > 0) erasequest(16006);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_16000_npc_re_quests_skills_merchant_skills_txt_443",
+      "unit": "E5-chain-16000",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          16007
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 16007; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/skills/merchant_skills.txt",
+          "lines": [
+            443
+          ],
+          "required_source_literals": [
+            "if (questprogress(16007) > 0) erasequest(16007);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_16000_npc_re_quests_skills_merchant_skills_txt_668",
+      "unit": "E5-chain-16000",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          16004
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 16004; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/skills/merchant_skills.txt",
+          "lines": [
+            668
+          ],
+          "required_source_literals": [
+            "changequest(16004, 16006);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_16000_npc_re_quests_skills_merchant_skills_txt_670",
+      "unit": "E5-chain-16000",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          16005
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 16005; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/skills/merchant_skills.txt",
+          "lines": [
+            670
+          ],
+          "required_source_literals": [
+            "changequest(16005, 16007);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }

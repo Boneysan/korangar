@@ -110025,7 +110025,7 @@
       "package": "E5",
       "kind": "e5_quest",
       "tier": "strong",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "quest_ids": [
@@ -110093,7 +110093,25 @@
       ],
       "size_lines": 527,
       "reason": "8 quest ID(s) set or checked by 2 NPC block(s)",
-      "history": []
+      "history": [
+        "2026-10-01T02:24:55Z activated",
+        "2026-10-01T02:24:55Z validated",
+        "2026-10-01T02:24:56Z verified: 14 claims supported",
+        "2026-10-01T02:25:19Z accepted",
+        "2026-10-01T02:25:19Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "106d7835fd526e5b1d9212437655c08bcdc9296e81a87a40d768993d761d1a76",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E5-absent-from-loaded-scripts",
