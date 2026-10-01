@@ -142518,7 +142518,7 @@
       "package": "E3",
       "kind": "e3_translator",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "key": "bonus4 bAutoSpell",
@@ -142566,7 +142566,24 @@
       ],
       "size_lines": 33,
       "reason": "2 item script(s) first stop at documented `bonus4 bAutoSpell`",
-      "history": []
+      "history": [
+        "2026-10-01T06:21:51Z activated",
+        "2026-10-01T06:21:52Z validated",
+        "2026-10-01T06:21:52Z verified: 1 claims supported",
+        "2026-10-01T06:22:16Z accepted",
+        "2026-10-01T06:22:16Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "2bf2e45b3733dcea4c06bbe1b0f9224157deb213e9059cb885ea174c4f87fa6a",
+      "accepted_files": [
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/export_item_reference.py",
+        "tools/tests/test_export_item_effect_phrases.py"
+      ],
+      "accepted_on": "2026-10-01",
+      "commit": "committed"
     },
     {
       "id": "E3-translate-bonus5-bautospell",
