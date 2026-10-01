@@ -12,7 +12,7 @@
     "E2_verified": 236,
     "E3_unknown": 973,
     "E4_unknown": 213,
-    "E5_unknown": 774
+    "E5_unknown": 779
   },
   "entries": [
     {
@@ -113654,6 +113654,141 @@
           ],
           "required_source_literals": [
             "completequest 2191;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2201_npc_re_quests_quests_brasilis_txt_1088",
+      "unit": "E5-chain-2201",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2201
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 2201; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_brasilis.txt",
+          "lines": [
+            1088
+          ],
+          "required_source_literals": [
+            "setquest 2201;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2201_npc_re_quests_quests_brasilis_txt_1109",
+      "unit": "E5-chain-2201",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2207
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 2207; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_brasilis.txt",
+          "lines": [
+            1109
+          ],
+          "required_source_literals": [
+            "completequest 2207;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2201_npc_re_quests_quests_brasilis_txt_1602",
+      "unit": "E5-chain-2201",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2201
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 2201; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_brasilis.txt",
+          "lines": [
+            1602
+          ],
+          "required_source_literals": [
+            "changequest 2201,2202;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2201_npc_re_quests_quests_brasilis_txt_1649",
+      "unit": "E5-chain-2201",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2204
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 2204; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_brasilis.txt",
+          "lines": [
+            1649
+          ],
+          "required_source_literals": [
+            "changequest 2204,2205;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2201_npc_re_quests_quests_brasilis_txt_1688",
+      "unit": "E5-chain-2201",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2206
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 2206; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_brasilis.txt",
+          "lines": [
+            1688
+          ],
+          "required_source_literals": [
+            "changequest 2206,2207;"
           ]
         }
       ],
