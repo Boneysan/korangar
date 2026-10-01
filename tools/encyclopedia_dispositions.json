@@ -161895,6 +161895,357 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2041_npc_jobs_2_2_sage_txt_346",
+      "unit": "E5-chain-2041",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2041
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 2041; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/sage.txt",
+          "lines": [
+            346
+          ],
+          "required_source_literals": [
+            "setquest 2041;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2041_npc_jobs_2_2_sage_txt_364",
+      "unit": "E5-chain-2041",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2041
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 2041; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/sage.txt",
+          "lines": [
+            364
+          ],
+          "required_source_literals": [
+            "setquest 2041;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2041_npc_jobs_2_2_sage_txt_383",
+      "unit": "E5-chain-2041",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2041
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 2041; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/sage.txt",
+          "lines": [
+            383
+          ],
+          "required_source_literals": [
+            "setquest 2041;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2041_npc_jobs_2_2_sage_txt_422",
+      "unit": "E5-chain-2041",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2041
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 2041; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/sage.txt",
+          "lines": [
+            422
+          ],
+          "required_source_literals": [
+            "setquest 2041;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2041_npc_jobs_2_2_sage_txt_455",
+      "unit": "E5-chain-2041",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2043
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 2043; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/sage.txt",
+          "lines": [
+            455
+          ],
+          "required_source_literals": [
+            "setquest 2043;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2041_npc_jobs_2_2_sage_txt_467",
+      "unit": "E5-chain-2041",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2044
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 2044; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/sage.txt",
+          "lines": [
+            467
+          ],
+          "required_source_literals": [
+            "setquest 2044;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2041_npc_jobs_2_2_sage_txt_479",
+      "unit": "E5-chain-2041",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2045
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 2045; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/sage.txt",
+          "lines": [
+            479
+          ],
+          "required_source_literals": [
+            "setquest 2045;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2041_npc_jobs_2_2_sage_txt_612",
+      "unit": "E5-chain-2041",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2043
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 2043; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/sage.txt",
+          "lines": [
+            612
+          ],
+          "required_source_literals": [
+            "changequest 2043,2041;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2041_npc_jobs_2_2_sage_txt_615",
+      "unit": "E5-chain-2041",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2044
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 2044; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/sage.txt",
+          "lines": [
+            615
+          ],
+          "required_source_literals": [
+            "changequest 2044,2041;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2041_npc_jobs_2_2_sage_txt_618",
+      "unit": "E5-chain-2041",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2045
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 2045; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/sage.txt",
+          "lines": [
+            618
+          ],
+          "required_source_literals": [
+            "changequest 2045,2041;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2041_npc_jobs_2_2_sage_txt_621",
+      "unit": "E5-chain-2041",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2041
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 2041; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/sage.txt",
+          "lines": [
+            621
+          ],
+          "required_source_literals": [
+            "setquest 2041;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2041_npc_jobs_2_2_sage_txt_1008",
+      "unit": "E5-chain-2041",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2041
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 2041; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/sage.txt",
+          "lines": [
+            1008
+          ],
+          "required_source_literals": [
+            "changequest 2041,2046;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2041_npc_jobs_2_2_sage_txt_1016",
+      "unit": "E5-chain-2041",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2041
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 2041; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/sage.txt",
+          "lines": [
+            1016
+          ],
+          "required_source_literals": [
+            "changequest 2041,2046;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
