@@ -141673,7 +141673,7 @@
       "package": "E3",
       "kind": "e3_translator",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "key": "bonus3 bSubEle",
@@ -141734,7 +141734,24 @@
       ],
       "size_lines": 34,
       "reason": "3 item script(s) first stop at documented `bonus3 bSubEle`",
-      "history": []
+      "history": [
+        "2026-10-01T06:17:18Z activated",
+        "2026-10-01T06:17:19Z validated",
+        "2026-10-01T06:17:19Z verified: 1 claims supported",
+        "2026-10-01T06:17:43Z accepted",
+        "2026-10-01T06:17:43Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "b42e48ce0fd648f5cbeb172a52240382c309925e7cb0b2df8d9336a4a9909834",
+      "accepted_files": [
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/export_item_reference.py",
+        "tools/tests/test_export_item_effect_phrases.py"
+      ],
+      "accepted_on": "2026-10-01",
+      "commit": "committed"
     },
     {
       "id": "E3-translate-getrandgroupitem",
