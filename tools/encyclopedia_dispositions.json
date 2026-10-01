@@ -165378,6 +165378,168 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2147_npc_quests_quests_13_1_txt_3843",
+      "unit": "E5-chain-2147",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2147
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 2147; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_1.txt",
+          "lines": [
+            3843
+          ],
+          "required_source_literals": [
+            "setquest 2147;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2147_npc_quests_quests_13_1_txt_3962",
+      "unit": "E5-chain-2147",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2147
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 2147; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_1.txt",
+          "lines": [
+            3962
+          ],
+          "required_source_literals": [
+            "changequest 2147,2148;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2147_npc_quests_quests_13_1_txt_4066",
+      "unit": "E5-chain-2147",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2148
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 2148; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_1.txt",
+          "lines": [
+            4066
+          ],
+          "required_source_literals": [
+            "changequest 2148,2149;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2147_npc_quests_quests_13_1_txt_4120",
+      "unit": "E5-chain-2147",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2153
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 2153; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_1.txt",
+          "lines": [
+            4120
+          ],
+          "required_source_literals": [
+            "changequest 2153,2154;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2147_npc_quests_quests_13_1_txt_4165",
+      "unit": "E5-chain-2147",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2156
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 2156; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_1.txt",
+          "lines": [
+            4165
+          ],
+          "required_source_literals": [
+            "changequest 2156,2157;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2147_npc_quests_quests_13_1_txt_4229",
+      "unit": "E5-chain-2147",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2157
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 2157; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_1.txt",
+          "lines": [
+            4229
+          ],
+          "required_source_literals": [
+            "completequest 2157;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
