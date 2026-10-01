@@ -143202,7 +143202,7 @@
       "package": "E3",
       "kind": "e3_translator",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "key": "bonus bRestartFullRecover",
@@ -143237,7 +143237,24 @@
       ],
       "size_lines": 32,
       "reason": "1 item script(s) first stop at documented `bonus bRestartFullRecover`",
-      "history": []
+      "history": [
+        "2026-10-01T06:25:35Z activated",
+        "2026-10-01T06:25:35Z validated",
+        "2026-10-01T06:25:35Z verified: 1 claims supported",
+        "2026-10-01T06:26:00Z accepted",
+        "2026-10-01T06:26:00Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "7c5a86f39e2fa99518fcc8febf4a462a5ba24684adf2e853a14c49272ee3a4e9",
+      "accepted_files": [
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/export_item_reference.py",
+        "tools/tests/test_export_item_effect_phrases.py"
+      ],
+      "accepted_on": "2026-10-01",
+      "commit": "committed"
     },
     {
       "id": "E3-translate-bonus2-bmagicaddrace",
