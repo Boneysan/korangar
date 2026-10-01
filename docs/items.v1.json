@@ -56650,7 +56650,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "grants the character's guild a random 600000 to 1200000 guild experience, and does nothing when the character has no guild",
       "type": "IT_USABLE",
       "buy": 2,
       "weight": 500
@@ -110270,7 +110271,8 @@
         "Mobster_Card_Shiver_Katar",
         "Sedora_Card_Shiver_Katar"
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Critical + (refine)",
       "type": "IT_WEAPON",
       "buy": 60000,
       "weight": 2700,
@@ -112833,7 +112835,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "reduces attack speed by 40%; increases the SP cost of skills by 100%; With STR at least 95: increases basic attack power by 340; on attack, has a 30% chance to inflict Stun; on a physical attack, has a 5% chance to break the target's armor",
       "type": "IT_WEAPON",
       "buy": 20,
       "weight": 6000,
@@ -112898,7 +112901,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "reduces attack speed by 40%; increases the SP cost of skills by 100%; With STR at least 95: increases basic attack power by 340; on attack, has a 30% chance to inflict Stun; on a physical attack, has a 5% chance to break the target's armor",
       "type": "IT_WEAPON",
       "buy": 20,
       "weight": 6000,
@@ -113511,7 +113515,8 @@
         "record": "Id=1386"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "reduces attack speed by 25%; increases the SP cost of skills by 100%; With STR at least 95: increases basic attack power by 400; on attack, has a 30% chance to inflict Stun; on a physical attack, has a 5% chance to break the target's armor",
       "type": "IT_WEAPON",
       "atk": 20,
       "range": 1,
@@ -113626,7 +113631,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases Cart Termination damage by 15%; With STR at least 95: increases HIT by 10; increases attack speed by 3%",
       "type": "IT_WEAPON",
       "buy": 20,
       "weight": 4000,
@@ -114010,7 +114016,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "the equipped weapon cannot be broken; increases damage against player targets by 40%; Disregard 30% of the target's DEF if the target belongs to race player; At refine level at least +6: increases Axe Boomerang damage by 80%; increases Power Swing damage by 80%; At refine level at least +9: increases damage against player targets by 60%",
       "type": "IT_WEAPON",
       "buy": 20,
       "weight": 5500,
@@ -116439,7 +116446,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases damage against player targets by 60%; At refine level at least +6: increases Hundred Spear damage by 80%; increases Pinpoint Attack damage by 80%; At refine level at least +9: increases damage against player targets by 30%",
       "type": "IT_WEAPON",
       "buy": 20,
       "weight": 850,
@@ -122359,7 +122367,8 @@
           "source_record": "db/re/mob_db.conf:Id=2637"
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "With STR at least 77: increases attack speed by 4%; on attack, has a 15% chance to inflict Stun; Adds a 5% chance for item id to be dropped, when killing any monster of race plant.; Adds a 5% chance for item id to be dropped, when killing any monster of race brute.; Adds a 5% chance for item id to be dropped, when killing any monster of race fish.",
       "type": "IT_WEAPON",
       "buy": 20,
       "weight": 700,
@@ -124226,7 +124235,8 @@
         "record": "Id=1577"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases damage against player targets by 80%; Disregard 25% of the target's DEF if the target belongs to race player; the equipped weapon cannot be broken; At refine level above +5: Disregard 5% of the target's DEF if the target belongs to race player; At refine level above +8: increases magic damage by 5%; reduces variable cast time of all skills by 5%; reduces attack delay by 5%",
       "type": "IT_WEAPON",
       "buy": 20,
       "atk": 90,
@@ -136605,7 +136615,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases damage against player targets by 100%; At refine level above +7: increases damage against player targets by 20%; At refine level above +9: Increases variable cast time of skill Asura Strike by -100%; when using Fury, has a 1000% chance to cast Zen Lv 1; Lose 500 HP every 3000 millisecond",
       "type": "IT_WEAPON",
       "buy": 20,
       "weight": 650,
@@ -136676,7 +136687,8 @@
         "record": "Id=1835"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "the equipped weapon cannot be broken; Attack Power + (refine)%; At refine level above +9: The attack revision with the size of the monster is not received",
       "type": "IT_WEAPON",
       "buy": 20,
       "weight": 600,
@@ -142129,7 +142141,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "the equipped weapon cannot be broken; increases magic damage against player targets by 25%; Disregard 25% of the target's MDEF; At refine level above +5: increases magic damage against player targets by 15%; At refine level above +8: reduces variable cast time of all skills by 20%; Increases fixed cast time of all skills by -200 milliseconds",
       "type": "IT_WEAPON",
       "buy": 20,
       "weight": 800,
@@ -146120,7 +146133,8 @@
       "belongs_to_combos": [
         "Geffenia_Book_Water_Lacryma_Stick"
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases equipment MDEF by 2; increases INT by 1; With INT at least 120: increases MATK by 10; increases maximum HP by 800",
       "type": "IT_ARMOR",
       "buy": 56000,
       "weight": 1000,
@@ -171957,7 +171971,8 @@
       "belongs_to_combos": [
         "Sabah_Cloth_Sabah_Hood_Sabah_Ring_Sabah_Shoes"
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases FLEE by 12; Critical + (refine)",
       "type": "IT_ARMOR",
       "buy": 20,
       "weight": 100,
@@ -174879,7 +174894,8 @@
         "Black_Cat_Ring_Of_Rogue",
         "Cold_Heart_Ring_Of_Rogue"
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "With STR at least 90: increases HIT by 10; increases FLEE by 10; With AGI at least 90: increases basic attack power by 10; increases critical chance by 10%",
       "type": "IT_ARMOR",
       "buy": 10000,
       "weight": 100,
@@ -189426,7 +189442,8 @@
               "name": "Holden Card"
             }
           ],
-          "effect_status": "scripted_not_translated",
+          "effect_status": "translated",
+          "effect_summary": "increases STR by 4; increases maximum HP by 7%; increases maximum SP by 7%; increases Mammonite damage by 20%; on a weapon attack against a monster, recovers 1 SP; For the Alchemist job: on a normal attack, has a 1% chance to cast Adrenaline Rush Lv 1; Adds a 0.03% chance for item id to be dropped, when killing any monster.; Adds a 0.1% chance for item id to be dropped, when killing any monster.",
           "source": {
             "path": "db/re/item_combo_db.conf",
             "record": "combo_db[217]"
@@ -196851,7 +196868,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases STR by 2; At refine level above +8: increases maximum HP by 10%; increases maximum SP by 10%",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -198076,7 +198094,8 @@
               "name": "Cruiser Card"
             }
           ],
-          "effect_status": "scripted_not_translated",
+          "effect_status": "translated",
+          "effect_summary": "increases AGI by 5; increases DEX by 3; increases ranged (long-range) physical damage by 20%; On-target impact attack probability + 20%; For the Archer class: increases EXP gained from brute targets by 5%; Adds a 1% chance to cause Coma when attacking a monster of race brute with a weapon attack",
           "source": {
             "path": "db/re/item_combo_db.conf",
             "record": "combo_db[231]"
@@ -198605,7 +198624,8 @@
               "name": "Fur Seal Card"
             }
           ],
-          "effect_status": "scripted_not_translated",
+          "effect_status": "translated",
+          "effect_summary": "increases VIT by 10; reduces variable cast time of all skills by 10%; reduces the SP cost of skills by 10%; For the Acolyte class: increases EXP gained from undead targets by 5%; increases EXP gained from demon targets by 5%; reduces damage from undead targets by 30%; reduces damage from demon targets by 30%",
           "source": {
             "path": "db/re/item_combo_db.conf",
             "record": "combo_db[233]"
@@ -198634,7 +198654,8 @@
               "name": "Waste Stove Card"
             }
           ],
-          "effect_status": "scripted_not_translated",
+          "effect_status": "translated",
+          "effect_summary": "increases STR by 3; increases maximum SP by 80; increases basic attack power by 25; on a normal attack, has a 1% chance to cast Signum Crucis Lv 5; increases Asura Strike damage by 10%; For the Monk job: reduces the SP cost of skills by 10%; Prevents casting from being interrupted when hit (does not work in GvG | 0 is meaningless)",
           "source": {
             "path": "db/re/item_combo_db.conf",
             "record": "combo_db[234]"
@@ -198675,7 +198696,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases INT by 1; For the Acolyte class: increases INT by 1; increases equipment MDEF by 1",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -198738,7 +198760,8 @@
               "name": "Holden Card"
             }
           ],
-          "effect_status": "scripted_not_translated",
+          "effect_status": "translated",
+          "effect_summary": "increases STR by 4; increases maximum HP by 7%; increases maximum SP by 7%; increases Mammonite damage by 20%; on a weapon attack against a monster, recovers 1 SP; For the Alchemist job: on a normal attack, has a 1% chance to cast Adrenaline Rush Lv 1; Adds a 0.03% chance for item id to be dropped, when killing any monster.; Adds a 0.1% chance for item id to be dropped, when killing any monster.",
           "source": {
             "path": "db/re/item_combo_db.conf",
             "record": "combo_db[217]"
@@ -198772,7 +198795,8 @@
               "name": "Hylozoist Card"
             }
           ],
-          "effect_status": "scripted_not_translated",
+          "effect_status": "translated",
+          "effect_summary": "increases LUK by 10; When hitting a monster by physical attack x: Gain 2 SP; increases 42 damage by 20%; For the Merchant class: Adds a 0.05% chance for item id to be dropped, when killing any monster.; Adds a 20% chance to reflect targetted magic spells back to the enemy that caused it",
           "source": {
             "path": "db/re/item_combo_db.conf",
             "record": "combo_db[235]"
@@ -199105,7 +199129,8 @@
               "name": "Bloody Butterfly Card"
             }
           ],
-          "effect_status": "scripted_not_translated",
+          "effect_status": "translated",
+          "effect_summary": "increases maximum HP by 500; increases equipment DEF by 5; increases equipment MDEF by 5; increases 14 damage by 10%; increases 19 damage by 10%; increases 20 damage by 10%; For the Mage class: increases magic damage by 3%; reduces variable cast time of all skills by 15%",
           "source": {
             "path": "db/re/item_combo_db.conf",
             "record": "combo_db[236]"
@@ -199653,7 +199678,8 @@
               "name": "Cruiser Card"
             }
           ],
-          "effect_status": "scripted_not_translated",
+          "effect_status": "translated",
+          "effect_summary": "increases AGI by 5; increases DEX by 3; increases ranged (long-range) physical damage by 20%; On-target impact attack probability + 20%; For the Archer class: increases EXP gained from brute targets by 5%; Adds a 1% chance to cause Coma when attacking a monster of race brute with a weapon attack",
           "source": {
             "path": "db/re/item_combo_db.conf",
             "record": "combo_db[231]"
@@ -200103,7 +200129,8 @@
               "name": "Hylozoist Card"
             }
           ],
-          "effect_status": "scripted_not_translated",
+          "effect_status": "translated",
+          "effect_summary": "increases LUK by 10; When hitting a monster by physical attack x: Gain 2 SP; increases 42 damage by 20%; For the Merchant class: Adds a 0.05% chance for item id to be dropped, when killing any monster.; Adds a 20% chance to reflect targetted magic spells back to the enemy that caused it",
           "source": {
             "path": "db/re/item_combo_db.conf",
             "record": "combo_db[235]"
@@ -200266,7 +200293,8 @@
               "name": "Bloody Butterfly Card"
             }
           ],
-          "effect_status": "scripted_not_translated",
+          "effect_status": "translated",
+          "effect_summary": "increases maximum HP by 500; increases equipment DEF by 5; increases equipment MDEF by 5; increases 14 damage by 10%; increases 19 damage by 10%; increases 20 damage by 10%; For the Mage class: increases magic damage by 3%; reduces variable cast time of all skills by 15%",
           "source": {
             "path": "db/re/item_combo_db.conf",
             "record": "combo_db[236]"
@@ -200300,7 +200328,8 @@
               "name": "Yellow Novus Card"
             }
           ],
-          "effect_status": "scripted_not_translated",
+          "effect_status": "translated",
+          "effect_summary": "increases INT by 3; increases Heaven's Drive damage by 10%; increases Thunderstorm damage by 10%; For the Sage job: Adds a 20% chance to reflect targetted magic spells back to the enemy that caused it; Adds a 1% chance for item id to be dropped, when killing any monster.; Adds a 1% chance for item id to be dropped, when killing any monster.; reduces variable cast time of all skills by 20%",
           "source": {
             "path": "db/re/item_combo_db.conf",
             "record": "combo_db[238]"
@@ -200997,7 +201026,8 @@
               "name": "Fur Seal Card"
             }
           ],
-          "effect_status": "scripted_not_translated",
+          "effect_status": "translated",
+          "effect_summary": "increases VIT by 10; reduces variable cast time of all skills by 10%; reduces the SP cost of skills by 10%; For the Acolyte class: increases EXP gained from undead targets by 5%; increases EXP gained from demon targets by 5%; reduces damage from undead targets by 30%; reduces damage from demon targets by 30%",
           "source": {
             "path": "db/re/item_combo_db.conf",
             "record": "combo_db[233]"
@@ -201229,7 +201259,8 @@
               "name": "Heater Card"
             }
           ],
-          "effect_status": "scripted_not_translated",
+          "effect_status": "translated",
+          "effect_summary": "increases STR by 10; increases maximum HP by 20%; increases HP regeneration rate by 50%; on a normal attack, has a 0.3% chance to cast Weapon Perfection Lv 1; Adds a 5% chance for item id to be dropped, when killing any monster.; For the Swordman class: Increases HP recovered by 50% for item Red Potion; Increases HP recovered by 50% for item Yellow Potion; Increases HP recovered by 50% for item Orange Potion; Increases HP recovered by 50% for item White Potion",
           "source": {
             "path": "db/re/item_combo_db.conf",
             "record": "combo_db[240]"
@@ -202176,7 +202207,8 @@
               "name": "Holden Card"
             }
           ],
-          "effect_status": "scripted_not_translated",
+          "effect_status": "translated",
+          "effect_summary": "increases STR by 4; increases maximum HP by 7%; increases maximum SP by 7%; increases Mammonite damage by 20%; on a weapon attack against a monster, recovers 1 SP; For the Alchemist job: on a normal attack, has a 1% chance to cast Adrenaline Rush Lv 1; Adds a 0.03% chance for item id to be dropped, when killing any monster.; Adds a 0.1% chance for item id to be dropped, when killing any monster.",
           "source": {
             "path": "db/re/item_combo_db.conf",
             "record": "combo_db[217]"
@@ -202210,7 +202242,8 @@
               "name": "Hylozoist Card"
             }
           ],
-          "effect_status": "scripted_not_translated",
+          "effect_status": "translated",
+          "effect_summary": "increases LUK by 10; When hitting a monster by physical attack x: Gain 2 SP; increases 42 damage by 20%; For the Merchant class: Adds a 0.05% chance for item id to be dropped, when killing any monster.; Adds a 20% chance to reflect targetted magic spells back to the enemy that caused it",
           "source": {
             "path": "db/re/item_combo_db.conf",
             "record": "combo_db[235]"
@@ -202311,7 +202344,8 @@
               "name": "Cruiser Card"
             }
           ],
-          "effect_status": "scripted_not_translated",
+          "effect_status": "translated",
+          "effect_summary": "increases AGI by 5; increases DEX by 3; increases ranged (long-range) physical damage by 20%; On-target impact attack probability + 20%; For the Archer class: increases EXP gained from brute targets by 5%; Adds a 1% chance to cause Coma when attacking a monster of race brute with a weapon attack",
           "source": {
             "path": "db/re/item_combo_db.conf",
             "record": "combo_db[231]"
@@ -202844,7 +202878,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases maximum HP by 300; With LUK at least 77: increases HP regeneration rate by 100%; increases SP regeneration rate by 100%",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -203171,7 +203206,8 @@
               "name": "Heater Card"
             }
           ],
-          "effect_status": "scripted_not_translated",
+          "effect_status": "translated",
+          "effect_summary": "increases STR by 10; increases maximum HP by 20%; increases HP regeneration rate by 50%; on a normal attack, has a 0.3% chance to cast Weapon Perfection Lv 1; Adds a 5% chance for item id to be dropped, when killing any monster.; For the Swordman class: Increases HP recovered by 50% for item Red Potion; Increases HP recovered by 50% for item Yellow Potion; Increases HP recovered by 50% for item Orange Potion; Increases HP recovered by 50% for item White Potion",
           "source": {
             "path": "db/re/item_combo_db.conf",
             "record": "combo_db[240]"
@@ -203603,7 +203639,8 @@
               "name": "Cruiser Card"
             }
           ],
-          "effect_status": "scripted_not_translated",
+          "effect_status": "translated",
+          "effect_summary": "increases AGI by 5; increases DEX by 3; increases ranged (long-range) physical damage by 20%; On-target impact attack probability + 20%; For the Archer class: increases EXP gained from brute targets by 5%; Adds a 1% chance to cause Coma when attacking a monster of race brute with a weapon attack",
           "source": {
             "path": "db/re/item_combo_db.conf",
             "record": "combo_db[231]"
@@ -204102,7 +204139,8 @@
               "name": "Bloody Butterfly Card"
             }
           ],
-          "effect_status": "scripted_not_translated",
+          "effect_status": "translated",
+          "effect_summary": "increases maximum HP by 500; increases equipment DEF by 5; increases equipment MDEF by 5; increases 14 damage by 10%; increases 19 damage by 10%; increases 20 damage by 10%; For the Mage class: increases magic damage by 3%; reduces variable cast time of all skills by 15%",
           "source": {
             "path": "db/re/item_combo_db.conf",
             "record": "combo_db[236]"
@@ -204136,7 +204174,8 @@
               "name": "Yellow Novus Card"
             }
           ],
-          "effect_status": "scripted_not_translated",
+          "effect_status": "translated",
+          "effect_summary": "increases INT by 3; increases Heaven's Drive damage by 10%; increases Thunderstorm damage by 10%; For the Sage job: Adds a 20% chance to reflect targetted magic spells back to the enemy that caused it; Adds a 1% chance for item id to be dropped, when killing any monster.; Adds a 1% chance for item id to be dropped, when killing any monster.; reduces variable cast time of all skills by 20%",
           "source": {
             "path": "db/re/item_combo_db.conf",
             "record": "combo_db[238]"
@@ -205579,7 +205618,8 @@
               "name": "Fur Seal Card"
             }
           ],
-          "effect_status": "scripted_not_translated",
+          "effect_status": "translated",
+          "effect_summary": "increases VIT by 10; reduces variable cast time of all skills by 10%; reduces the SP cost of skills by 10%; For the Acolyte class: increases EXP gained from undead targets by 5%; increases EXP gained from demon targets by 5%; reduces damage from undead targets by 30%; reduces damage from demon targets by 30%",
           "source": {
             "path": "db/re/item_combo_db.conf",
             "record": "combo_db[233]"
@@ -205671,7 +205711,8 @@
               "name": "Holden Card"
             }
           ],
-          "effect_status": "scripted_not_translated",
+          "effect_status": "translated",
+          "effect_summary": "increases STR by 4; increases maximum HP by 7%; increases maximum SP by 7%; increases Mammonite damage by 20%; on a weapon attack against a monster, recovers 1 SP; For the Alchemist job: on a normal attack, has a 1% chance to cast Adrenaline Rush Lv 1; Adds a 0.03% chance for item id to be dropped, when killing any monster.; Adds a 0.1% chance for item id to be dropped, when killing any monster.",
           "source": {
             "path": "db/re/item_combo_db.conf",
             "record": "combo_db[217]"
@@ -205705,7 +205746,8 @@
               "name": "Hylozoist Card"
             }
           ],
-          "effect_status": "scripted_not_translated",
+          "effect_status": "translated",
+          "effect_summary": "increases LUK by 10; When hitting a monster by physical attack x: Gain 2 SP; increases 42 damage by 20%; For the Merchant class: Adds a 0.05% chance for item id to be dropped, when killing any monster.; Adds a 20% chance to reflect targetted magic spells back to the enemy that caused it",
           "source": {
             "path": "db/re/item_combo_db.conf",
             "record": "combo_db[235]"
@@ -206485,7 +206527,8 @@
               "name": "Fur Seal Card"
             }
           ],
-          "effect_status": "scripted_not_translated",
+          "effect_status": "translated",
+          "effect_summary": "increases VIT by 10; reduces variable cast time of all skills by 10%; reduces the SP cost of skills by 10%; For the Acolyte class: increases EXP gained from undead targets by 5%; increases EXP gained from demon targets by 5%; reduces damage from undead targets by 30%; reduces damage from demon targets by 30%",
           "source": {
             "path": "db/re/item_combo_db.conf",
             "record": "combo_db[233]"
@@ -206514,7 +206557,8 @@
               "name": "Waste Stove Card"
             }
           ],
-          "effect_status": "scripted_not_translated",
+          "effect_status": "translated",
+          "effect_summary": "increases STR by 3; increases maximum SP by 80; increases basic attack power by 25; on a normal attack, has a 1% chance to cast Signum Crucis Lv 5; increases Asura Strike damage by 10%; For the Monk job: reduces the SP cost of skills by 10%; Prevents casting from being interrupted when hit (does not work in GvG | 0 is meaningless)",
           "source": {
             "path": "db/re/item_combo_db.conf",
             "record": "combo_db[234]"
@@ -206823,7 +206867,8 @@
               "name": "Cruiser Card"
             }
           ],
-          "effect_status": "scripted_not_translated",
+          "effect_status": "translated",
+          "effect_summary": "increases AGI by 5; increases DEX by 3; increases ranged (long-range) physical damage by 20%; On-target impact attack probability + 20%; For the Archer class: increases EXP gained from brute targets by 5%; Adds a 1% chance to cause Coma when attacking a monster of race brute with a weapon attack",
           "source": {
             "path": "db/re/item_combo_db.conf",
             "record": "combo_db[231]"
@@ -207583,7 +207628,8 @@
               "name": "Bloody Butterfly Card"
             }
           ],
-          "effect_status": "scripted_not_translated",
+          "effect_status": "translated",
+          "effect_summary": "increases maximum HP by 500; increases equipment DEF by 5; increases equipment MDEF by 5; increases 14 damage by 10%; increases 19 damage by 10%; increases 20 damage by 10%; For the Mage class: increases magic damage by 3%; reduces variable cast time of all skills by 15%",
           "source": {
             "path": "db/re/item_combo_db.conf",
             "record": "combo_db[236]"
@@ -207730,7 +207776,8 @@
               "name": "Heater Card"
             }
           ],
-          "effect_status": "scripted_not_translated",
+          "effect_status": "translated",
+          "effect_summary": "increases STR by 10; increases maximum HP by 20%; increases HP regeneration rate by 50%; on a normal attack, has a 0.3% chance to cast Weapon Perfection Lv 1; Adds a 5% chance for item id to be dropped, when killing any monster.; For the Swordman class: Increases HP recovered by 50% for item Red Potion; Increases HP recovered by 50% for item Yellow Potion; Increases HP recovered by 50% for item Orange Potion; Increases HP recovered by 50% for item White Potion",
           "source": {
             "path": "db/re/item_combo_db.conf",
             "record": "combo_db[240]"
@@ -207865,7 +207912,8 @@
               "name": "Fur Seal Card"
             }
           ],
-          "effect_status": "scripted_not_translated",
+          "effect_status": "translated",
+          "effect_summary": "increases VIT by 10; reduces variable cast time of all skills by 10%; reduces the SP cost of skills by 10%; For the Acolyte class: increases EXP gained from undead targets by 5%; increases EXP gained from demon targets by 5%; reduces damage from undead targets by 30%; reduces damage from demon targets by 30%",
           "source": {
             "path": "db/re/item_combo_db.conf",
             "record": "combo_db[233]"
@@ -207894,7 +207942,8 @@
               "name": "Waste Stove Card"
             }
           ],
-          "effect_status": "scripted_not_translated",
+          "effect_status": "translated",
+          "effect_summary": "increases STR by 3; increases maximum SP by 80; increases basic attack power by 25; on a normal attack, has a 1% chance to cast Signum Crucis Lv 5; increases Asura Strike damage by 10%; For the Monk job: reduces the SP cost of skills by 10%; Prevents casting from being interrupted when hit (does not work in GvG | 0 is meaningless)",
           "source": {
             "path": "db/re/item_combo_db.conf",
             "record": "combo_db[234]"
@@ -207935,7 +207984,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases FLEE by 3; increases HIT by 10; For the Acolyte class: +9 Critical Against race undead; +9 Critical Against race demon",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -208360,7 +208410,8 @@
               "name": "Heater Card"
             }
           ],
-          "effect_status": "scripted_not_translated",
+          "effect_status": "translated",
+          "effect_summary": "increases STR by 10; increases maximum HP by 20%; increases HP regeneration rate by 50%; on a normal attack, has a 0.3% chance to cast Weapon Perfection Lv 1; Adds a 5% chance for item id to be dropped, when killing any monster.; For the Swordman class: Increases HP recovered by 50% for item Red Potion; Increases HP recovered by 50% for item Yellow Potion; Increases HP recovered by 50% for item Orange Potion; Increases HP recovered by 50% for item White Potion",
           "source": {
             "path": "db/re/item_combo_db.conf",
             "record": "combo_db[240]"
@@ -208538,7 +208589,8 @@
               "name": "Hylozoist Card"
             }
           ],
-          "effect_status": "scripted_not_translated",
+          "effect_status": "translated",
+          "effect_summary": "increases LUK by 10; When hitting a monster by physical attack x: Gain 2 SP; increases 42 damage by 20%; For the Merchant class: Adds a 0.05% chance for item id to be dropped, when killing any monster.; Adds a 20% chance to reflect targetted magic spells back to the enemy that caused it",
           "source": {
             "path": "db/re/item_combo_db.conf",
             "record": "combo_db[235]"
@@ -208839,7 +208891,8 @@
               "name": "Bloody Butterfly Card"
             }
           ],
-          "effect_status": "scripted_not_translated",
+          "effect_status": "translated",
+          "effect_summary": "increases maximum HP by 500; increases equipment DEF by 5; increases equipment MDEF by 5; increases 14 damage by 10%; increases 19 damage by 10%; increases 20 damage by 10%; For the Mage class: increases magic damage by 3%; reduces variable cast time of all skills by 15%",
           "source": {
             "path": "db/re/item_combo_db.conf",
             "record": "combo_db[236]"
@@ -208873,7 +208926,8 @@
               "name": "Yellow Novus Card"
             }
           ],
-          "effect_status": "scripted_not_translated",
+          "effect_status": "translated",
+          "effect_summary": "increases INT by 3; increases Heaven's Drive damage by 10%; increases Thunderstorm damage by 10%; For the Sage job: Adds a 20% chance to reflect targetted magic spells back to the enemy that caused it; Adds a 1% chance for item id to be dropped, when killing any monster.; Adds a 1% chance for item id to be dropped, when killing any monster.; reduces variable cast time of all skills by 20%",
           "source": {
             "path": "db/re/item_combo_db.conf",
             "record": "combo_db[238]"
@@ -209039,7 +209093,8 @@
               "name": "Bloody Butterfly Card"
             }
           ],
-          "effect_status": "scripted_not_translated",
+          "effect_status": "translated",
+          "effect_summary": "increases maximum HP by 500; increases equipment DEF by 5; increases equipment MDEF by 5; increases 14 damage by 10%; increases 19 damage by 10%; increases 20 damage by 10%; For the Mage class: increases magic damage by 3%; reduces variable cast time of all skills by 15%",
           "source": {
             "path": "db/re/item_combo_db.conf",
             "record": "combo_db[236]"
@@ -209073,7 +209128,8 @@
               "name": "Yellow Novus Card"
             }
           ],
-          "effect_status": "scripted_not_translated",
+          "effect_status": "translated",
+          "effect_summary": "increases INT by 3; increases Heaven's Drive damage by 10%; increases Thunderstorm damage by 10%; For the Sage job: Adds a 20% chance to reflect targetted magic spells back to the enemy that caused it; Adds a 1% chance for item id to be dropped, when killing any monster.; Adds a 1% chance for item id to be dropped, when killing any monster.; reduces variable cast time of all skills by 20%",
           "source": {
             "path": "db/re/item_combo_db.conf",
             "record": "combo_db[238]"
@@ -209347,7 +209403,8 @@
               "name": "Heater Card"
             }
           ],
-          "effect_status": "scripted_not_translated",
+          "effect_status": "translated",
+          "effect_summary": "increases STR by 10; increases maximum HP by 20%; increases HP regeneration rate by 50%; on a normal attack, has a 0.3% chance to cast Weapon Perfection Lv 1; Adds a 5% chance for item id to be dropped, when killing any monster.; For the Swordman class: Increases HP recovered by 50% for item Red Potion; Increases HP recovered by 50% for item Yellow Potion; Increases HP recovered by 50% for item Orange Potion; Increases HP recovered by 50% for item White Potion",
           "source": {
             "path": "db/re/item_combo_db.conf",
             "record": "combo_db[240]"
@@ -209466,7 +209523,8 @@
               "name": "Waste Stove Card"
             }
           ],
-          "effect_status": "scripted_not_translated",
+          "effect_status": "translated",
+          "effect_summary": "increases STR by 3; increases maximum SP by 80; increases basic attack power by 25; on a normal attack, has a 1% chance to cast Signum Crucis Lv 5; increases Asura Strike damage by 10%; For the Monk job: reduces the SP cost of skills by 10%; Prevents casting from being interrupted when hit (does not work in GvG | 0 is meaningless)",
           "source": {
             "path": "db/re/item_combo_db.conf",
             "record": "combo_db[234]"
@@ -210039,7 +210097,8 @@
               "name": "Holden Card"
             }
           ],
-          "effect_status": "scripted_not_translated",
+          "effect_status": "translated",
+          "effect_summary": "increases STR by 4; increases maximum HP by 7%; increases maximum SP by 7%; increases Mammonite damage by 20%; on a weapon attack against a monster, recovers 1 SP; For the Alchemist job: on a normal attack, has a 1% chance to cast Adrenaline Rush Lv 1; Adds a 0.03% chance for item id to be dropped, when killing any monster.; Adds a 0.1% chance for item id to be dropped, when killing any monster.",
           "source": {
             "path": "db/re/item_combo_db.conf",
             "record": "combo_db[217]"
@@ -210640,7 +210699,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "With AGI at least 90: increases tolerance to Silence by 30%; increases tolerance to Stun by 30%; With VIT at least 80: increases tolerance to Stone Curse by 50%; increases tolerance to Sleep by 50%",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -211911,7 +211971,8 @@
               "name": "Yellow Novus Card"
             }
           ],
-          "effect_status": "scripted_not_translated",
+          "effect_status": "translated",
+          "effect_summary": "increases INT by 3; increases Heaven's Drive damage by 10%; increases Thunderstorm damage by 10%; For the Sage job: Adds a 20% chance to reflect targetted magic spells back to the enemy that caused it; Adds a 1% chance for item id to be dropped, when killing any monster.; Adds a 1% chance for item id to be dropped, when killing any monster.; reduces variable cast time of all skills by 20%",
           "source": {
             "path": "db/re/item_combo_db.conf",
             "record": "combo_db[238]"
@@ -214171,7 +214232,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "For the Rogue job: increases magic damage by 10%; increases damage against all targets by 10%",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -214888,7 +214950,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "For the Mage class: increases maximum SP by 100; reduces maximum HP by 100; increases Napalm Beat damage by 20%; increases Soul Strike damage by 20%; increases Napalm Vulcan damage by 20%",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -215794,7 +215857,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases equipment DEF by 5; At refine level at least +12: increases equipment DEF by 20; increases maximum HP by 10%; At refine level at least +14: increases maximum HP by 3%",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -218534,7 +218598,8 @@
           "source_record": "db/re/mob_db.conf:Id=2226"
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases FLEE by 10; For the Bard job: increases maximum HP by 10%; increases maximum SP by 5%",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -218684,7 +218749,8 @@
           "source_record": "db/re/mob_db.conf:Id=2227"
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases FLEE by 10; For the Dancer job: increases maximum HP by 10%; increases maximum SP by 5%",
       "type": "IT_CARD",
       "buy": 20,
       "weight": 10,
@@ -224561,7 +224627,8 @@
         "record": "Id=4853"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases STR by 1; At refine level at least +8: increases STR by 3; At refine level at least +9: increases damage against all targets by 1%; At refine level at least +12: increases attack speed by 1; Increases fixed cast time of all skills by -7%",
       "type": "IT_CARD",
       "loc": [
         "EQP_HELM",
@@ -224581,7 +224648,8 @@
         "record": "Id=4854"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases AGI by 1; At refine level at least +8: increases AGI by 3; At refine level at least +9: increases damage against all targets by 1%; At refine level at least +12: increases attack speed by 1; Increases fixed cast time of all skills by -7%",
       "type": "IT_CARD",
       "loc": [
         "EQP_HELM",
@@ -224601,7 +224669,8 @@
         "record": "Id=4855"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases VIT by 1; At refine level at least +8: increases VIT by 3; At refine level at least +9: increases maximum SP by 1%; At refine level at least +12: increases attack speed by 1; Increases fixed cast time of all skills by -7%",
       "type": "IT_CARD",
       "loc": [
         "EQP_HELM",
@@ -224621,7 +224690,8 @@
         "record": "Id=4856"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases INT by 1; At refine level at least +8: increases INT by 3; At refine level at least +9: increases magic damage by 1%; At refine level at least +12: increases attack speed by 1; Increases fixed cast time of all skills by -7%",
       "type": "IT_CARD",
       "loc": [
         "EQP_HELM",
@@ -224641,7 +224711,8 @@
         "record": "Id=4857"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases DEX by 1; At refine level at least +8: increases DEX by 3; At refine level at least +9: increases magic damage by 1%; At refine level at least +12: increases attack speed by 1; Increases fixed cast time of all skills by -7%",
       "type": "IT_CARD",
       "loc": [
         "EQP_HELM",
@@ -224661,7 +224732,8 @@
         "record": "Id=4858"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases LUK by 1; At refine level at least +8: increases LUK by 3; At refine level at least +9: increases maximum HP by 1%; At refine level at least +12: increases attack speed by 1; Increases fixed cast time of all skills by -7%",
       "type": "IT_CARD",
       "loc": [
         "EQP_HELM",
@@ -227497,7 +227569,8 @@
         "record": "Id=4995"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "At refine level at least +7: increases STR by 6; At refine level at least +11: increases STR by 1; increases physical damage by 7%",
       "type": "IT_CARD",
       "loc": [
         "EQP_HELM",
@@ -227517,7 +227590,8 @@
         "record": "Id=4996"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "At refine level at least +7: increases STR by 7; At refine level at least +12: increases STR by 1; increases physical damage by 8%; At refine level at least +13: increases STR by 1; increases physical damage by 2%",
       "type": "IT_CARD",
       "loc": [
         "EQP_HELM",
@@ -227558,7 +227632,8 @@
         "record": "Id=4998"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "At refine level at least +7: increases AGI by 6; At refine level at least +11: increases AGI by 1; increases Perfect Dodge by 7",
       "type": "IT_CARD",
       "loc": [
         "EQP_HELM",
@@ -227578,7 +227653,8 @@
         "record": "Id=4999"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "At refine level at least +7: increases AGI by 7; At refine level at least +12: increases AGI by 1; increases Perfect Dodge by 5; At refine level at least +13: increases AGI by 1; increases Perfect Dodge by 5",
       "type": "IT_CARD",
       "loc": [
         "EQP_HELM",
@@ -233548,7 +233624,8 @@
         "record": "Id=5169"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "For the Taekwon class: increases LUK by 2; increases critical chance by 5%",
       "type": "IT_ARMOR",
       "buy": 30000,
       "weight": 500,
@@ -233733,7 +233810,8 @@
         "record": "Id=5173"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "For the Taekwon class: increases AGI by 1; increases HP regeneration rate by 3%",
       "type": "IT_ARMOR",
       "buy": 30000,
       "weight": 400,
@@ -233751,7 +233829,8 @@
         "record": "Id=5174"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "For the Taekwon class: increases INT by 1; increases SP regeneration rate by 3%",
       "type": "IT_ARMOR",
       "buy": 30000,
       "weight": 400,
@@ -233843,7 +233922,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "For the Taekwon class: increases LUK by 1; increases Perfect Dodge by 2",
       "type": "IT_ARMOR",
       "buy": 30000,
       "weight": 100,
@@ -234673,7 +234753,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases equipment MDEF by 7; increases STR by 1; increases INT by 1; increases damage against all targets by 2%; increases magic damage by 2%; increases healing from skills you cast on yourself by 5%; At refine level at least +7: increases damage against all targets by 1%; increases magic damage by 1%; increases healing from skills you cast on yourself by 1%",
       "type": "IT_ARMOR",
       "weight": 200,
       "def": 3,
@@ -240921,7 +241002,8 @@
         "record": "Id=5512"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases STR by 2; increases FLEE by 10; reduces damage from Wind element attacks by 5%; At refine level above +6: increases equipment DEF by 1; increases basic attack power by 15",
       "type": "IT_ARMOR",
       "buy": 20,
       "weight": 300,
@@ -240938,7 +241020,8 @@
         "record": "Id=5513"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases STR by 2; increases FLEE by 10; reduces damage from Wind element attacks by 5%; At refine level above +6: increases equipment DEF by 1; increases basic attack power by 15",
       "type": "IT_ARMOR",
       "buy": 20,
       "weight": 300,
@@ -240955,7 +241038,8 @@
         "record": "Id=5514"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases INT by 2; increases equipment MDEF by 5; reduces damage from Water element attacks by 5%; At refine level above +6: increases equipment DEF by 1; increases magic damage by 2%",
       "type": "IT_ARMOR",
       "buy": 20,
       "weight": 300,
@@ -240972,7 +241056,8 @@
         "record": "Id=5515"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases INT by 2; increases equipment MDEF by 5; reduces damage from Water element attacks by 5%; At refine level above +6: increases equipment DEF by 1; increases magic damage by 2%",
       "type": "IT_ARMOR",
       "buy": 20,
       "weight": 300,
@@ -241538,7 +241623,8 @@
         "record": "Id=5545"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases VIT by 2; reduces damage from Fire element attacks by 5%; At refine level above +6: increases equipment DEF by 1; increases VIT by 1",
       "type": "IT_ARMOR",
       "buy": 20,
       "weight": 400,
@@ -241555,7 +241641,8 @@
         "record": "Id=5546"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases LUK by 2; increases VIT by 2; reduces damage from Fire element attacks by 5%; At refine level above +6: increases equipment DEF by 1; increases VIT by 1",
       "type": "IT_ARMOR",
       "buy": 20,
       "weight": 400,
@@ -241607,7 +241694,8 @@
         "record": "Id=5549"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases DEX by 2; reduces attack delay by 2%; reduces damage from Earth element attacks by 5%; At refine level above +6: increases DEX by 1; increases magic damage by 1%",
       "type": "IT_ARMOR",
       "buy": 20,
       "weight": 300,
@@ -241624,7 +241712,8 @@
         "record": "Id=5550"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases AGI by 2; increases DEX by 2; reduces attack delay by 2%; reduces damage from Earth element attacks by 5%; At refine level above +6: increases DEX by 1; increases magic damage by 1%",
       "type": "IT_ARMOR",
       "buy": 20,
       "weight": 300,
@@ -241977,7 +242066,8 @@
         "record": "Id=5569"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases DEX by 2; increases AGI by 2; increases magic damage by 2%; At refine level above +6: increases equipment MDEF by 7; increases magic damage by 8%; reduces damage from Wind element attacks by 5%",
       "type": "IT_ARMOR",
       "buy": 20,
       "weight": 300,
@@ -241994,7 +242084,8 @@
         "record": "Id=5570"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases AGI by 2; increases basic attack power by 2; increases equipment MDEF by 5; At refine level above +6: increases equipment DEF by 1; increases MATK by 15; increases FLEE by 10; reduces damage from Wind element attacks by 5%",
       "type": "IT_ARMOR",
       "buy": 20,
       "weight": 300,
@@ -242211,7 +242302,8 @@
         "record": "Id=5579"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases AGI by 2; increases FLEE by 3; At refine level above +6: increases FLEE by 2; increases AGI by 2; At refine level above +8: increases critical chance by 10%; increases attack speed by 8%",
       "type": "IT_ARMOR",
       "buy": 20,
       "weight": 300,
@@ -242249,7 +242341,8 @@
         "record": "Id=5581"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases INT by 2; reduces damage from Water element attacks by 5%; At refine level above +6: increases equipment MDEF by 1; increases healing from skills you cast on yourself by 3%; increases magic damage by 2%",
       "type": "IT_ARMOR",
       "buy": 20,
       "weight": 300,
@@ -242266,7 +242359,8 @@
         "record": "Id=5582"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases STR by 2; reduces damage from Water element attacks by 5%; At refine level above +6: increases equipment DEF by 1; increases basic attack power by 15; increases FLEE by 10",
       "type": "IT_ARMOR",
       "buy": 20,
       "weight": 300,
@@ -242375,7 +242469,8 @@
         "record": "Id=5588"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases STR by 2; reduces damage from Fire element attacks by 5%; At refine level above +6: increases equipment DEF by 1; increases FLEE by 10; on a normal attack, has a 5% chance to cast Mild Wind Lv 4",
       "type": "IT_ARMOR",
       "buy": 20,
       "weight": 300,
@@ -244406,7 +244501,8 @@
       "belongs_to_combos": [
         "Priest_Sword_Red_Wing_Hat"
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "At refine level above +6: increases damage against all targets by 2%; increases magic damage by 2%; At refine level above +8: increases damage against all targets by 2%; increases magic damage by 2%",
       "type": "IT_ARMOR",
       "buy": 20,
       "weight": 600,
@@ -245358,7 +245454,8 @@
         "record": "Id=5740"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases DEX by 2; increases equipment MDEF by 3; reduces damage from Fire element attacks by 7%; At refine level above +6: reduces variable cast time of all skills by 3%; At refine level above +7: 0.5% chance to cast skill Sightrasher of level 1 when attacking; At refine level above +8: reduces variable cast time of all skills by 2%; At refine level above +9: increases magic damage by 4%",
       "type": "IT_ARMOR",
       "buy": 20,
       "weight": 300,
@@ -245461,7 +245558,8 @@
         "record": "Id=5746"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases STR by 1; increases INT by 1; increases equipment MDEF by 5; With STR at least 120: increases basic attack power by 10; increases MATK by 5",
       "type": "IT_ARMOR",
       "buy": 20,
       "weight": 100,
@@ -245504,7 +245602,8 @@
         "record": "Id=5748"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases AGI by 1; increases DEX by 1; increases equipment MDEF by 5; With AGI at least 120: increases ranged (long-range) physical damage by 4%; increases attack speed by 1",
       "type": "IT_ARMOR",
       "buy": 20,
       "weight": 100,
@@ -245528,7 +245627,8 @@
         "record": "Id=5749"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases STR by 1; increases DEX by 1; increases equipment MDEF by 5; With STR at least 120: increases basic attack power by 10; increases critical chance by 3%",
       "type": "IT_ARMOR",
       "buy": 20,
       "weight": 100,
@@ -245549,7 +245649,8 @@
         "record": "Id=5750"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases AGI by 1; increases INT by 1; increases equipment MDEF by 5; With AGI at least 120: increases basic attack power by 10; increases FLEE by 3",
       "type": "IT_ARMOR",
       "buy": 20,
       "weight": 100,
@@ -245592,7 +245693,8 @@
         "record": "Id=5752"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases STR by 1; increases DEX by 1; increases equipment MDEF by 5; With STR at least 120: increases basic attack power by 5; increases attack speed by 1",
       "type": "IT_ARMOR",
       "buy": 20,
       "weight": 100,
@@ -245613,7 +245715,8 @@
         "record": "Id=5753"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases INT by 1; increases DEX by 1; increases equipment MDEF by 5; With DEX at least 120: increases magic damage by 10%; reduces variable cast time of all skills by 2%",
       "type": "IT_ARMOR",
       "buy": 20,
       "weight": 100,
@@ -245634,7 +245737,8 @@
         "record": "Id=5754"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases STR by 1; increases VIT by 1; increases equipment MDEF by 5; With STR at least 120: increases basic attack power by 10; increases HIT by 3",
       "type": "IT_ARMOR",
       "buy": 20,
       "weight": 100,
@@ -245655,7 +245759,8 @@
         "record": "Id=5755"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases AGI by 1; increases equipment MDEF by 5; With AGI at least 120: increases basic attack power by 10; increases Perfect Dodge by 5",
       "type": "IT_ARMOR",
       "buy": 20,
       "weight": 100,
@@ -245679,7 +245784,8 @@
         "record": "Id=5756"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases INT by 1; increases DEX by 1; increases equipment MDEF by 5; With INT at least 120: increases magic damage by 10%; increases FLEE by 3",
       "type": "IT_ARMOR",
       "buy": 20,
       "weight": 100,
@@ -245700,7 +245806,8 @@
         "record": "Id=5757"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases VIT by 2; increases INT by 1; increases equipment MDEF by 5; With INT at least 120: increases magic damage by 10%; increases equipment DEF by 5",
       "type": "IT_ARMOR",
       "buy": 20,
       "weight": 100,
@@ -245764,7 +245871,8 @@
         "record": "Id=5760"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases STR by 1; increases DEX by 1; increases equipment MDEF by 5; With STR at least 120: increases basic attack power by 10; increases critical chance by 3%",
       "type": "IT_ARMOR",
       "buy": 20,
       "weight": 100,
@@ -246380,7 +246488,8 @@
         "record": "Id=5783"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases STR by 1; increases INT by 1; increases DEX by 2; At refine level above +8: increases physical damage by 2%; increases magic damage by 2%; At refine level above +9: increases physical damage by 2%; increases magic damage by 2%",
       "type": "IT_ARMOR",
       "buy": 20,
       "weight": 200,
@@ -246396,7 +246505,8 @@
         "record": "Id=5784"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases STR by 1; increases INT by 2; increases DEX by 1; At refine level above +8: increases physical damage by 2%; increases magic damage by 2%; At refine level above +9: increases physical damage by 2%; increases magic damage by 2%",
       "type": "IT_ARMOR",
       "buy": 20,
       "weight": 200,
@@ -246412,7 +246522,8 @@
         "record": "Id=5785"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases STR by 2; increases INT by 1; increases DEX by 1; At refine level above +8: increases physical damage by 2%; increases magic damage by 2%; At refine level above +9: increases physical damage by 2%; increases magic damage by 2%",
       "type": "IT_ARMOR",
       "buy": 20,
       "weight": 200,
@@ -246643,7 +246754,8 @@
         "record": "Id=5795"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases equipment MDEF by 7; increases physical damage by 4%; increases magic damage by 4%; increases healing from skills you cast on yourself by 5%; At refine level above +6: increases physical damage by 2%; increases magic damage by 2%; increases healing from skills you cast on yourself by 1%; increases INT by 2; increases STR by 2",
       "type": "IT_ARMOR",
       "buy": 20,
       "loc": "EQP_HEAD_TOP"
@@ -247878,7 +247990,8 @@
         "record": "Id=5881"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases maximum HP by 3%; increases maximum SP by 3%; reduces DEX by 10; 80% chance to cast skill Sense of level 1 when attacking; 50% chance to cast skill Item Appraisal of level 1 when attacking; 100% chance to cast skill Find Stone of level 1 when attacking; 10% chance to cast skill Greed of level 1 when attacking; 20% chance to cast skill Running of level 5 when being hit by a direct attack i: 0 = cast on self 1 = cast on enemy, not on self 2 = use random skill lv in [1..y] 3 = 1+2 (random lv on enemy); 30% chance to cast skill Taekwon Jump of level 3 when being hit by a direct attack i: 0 = cast on self 1 = cast on enemy, not on self 2 = use random skill lv in [1..y] 3 = 1+2 (random lv on enemy); 100% chance to cast skill First Aid of level 1 when being hit by a direct attack i: 0 = cast on self 1 = cast on enemy, not on self 2 = use random skill lv in [1..y] 3 = 1+2 (random lv on enemy); 50% chance to cast skill Back Slide of level 1 when being hit by a direct attack i: 0 = cast on self 1 = cast on enemy, not on self 2 = use random skill lv in [1..y] 3 = 1+2 (random lv on enemy); At refine level above +6: increases maximum HP by 5%; increases maximum SP by 5%; reduces DEX by 5",
       "type": "IT_ARMOR",
       "weight": 300,
       "def": 4,
@@ -248317,7 +248430,8 @@
         "record": "Id=5933"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases physical damage by 1%; increases ranged (long-range) physical damage by 2%; With STR at least 108: increases physical damage by 1%; increases ranged (long-range) physical damage by 2%; With STR at least 120: increases physical damage by 2%; increases ranged (long-range) physical damage by 3%",
       "type": "IT_ARMOR",
       "buy": 20,
       "weight": 300,
@@ -248559,7 +248673,8 @@
         "record": "Id=5969"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases STR by 5; increases damage against all targets by 7%; At refine level above +4: increases damage against all targets by 2%; At refine level above +6: increases damage against all targets by 1%; At refine level above +8: increases damage against all targets by 1%; The attack revision with the size of the monster is not received",
       "type": "IT_ARMOR",
       "weight": 400,
       "def": 7,
@@ -294554,7 +294669,8 @@
         "record": "Id=11605"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "heals a random 50 to 100 HP and 0 SP, then applies potion bonuses",
       "type": "IT_HEALING",
       "weight": 50
     },
@@ -308430,7 +308546,8 @@
         "record": "Id=12221"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "opens an input box and stores the text in @megaphone$; announces the text in @megaphone$ as a shout; stops this script",
       "type": "IT_USABLE",
       "buy": 2,
       "weight": 10
@@ -310407,7 +310524,8 @@
         "record": "Id=12287"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "sets the client interface font to RixLoveangel (id 1); When the current interface font id is 1: sets the client interface font to the default font (id 0)",
       "type": "IT_DELAYCONSUME"
     },
     {
@@ -310419,7 +310537,8 @@
         "record": "Id=12288"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "sets the client interface font to RixSquirrel (id 2); When the current interface font id is 2: sets the client interface font to the default font (id 0)",
       "type": "IT_DELAYCONSUME"
     },
     {
@@ -310431,7 +310550,8 @@
         "record": "Id=12289"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "sets the client interface font to NHCgogo (id 3); When the current interface font id is 3: sets the client interface font to the default font (id 0)",
       "type": "IT_DELAYCONSUME"
     },
     {
@@ -310642,7 +310762,8 @@
         "record": "Id=12304"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "sets the client interface font to RixDiary (id 4); When the current interface font id is 4: sets the client interface font to the default font (id 0)",
       "type": "IT_DELAYCONSUME"
     },
     {
@@ -310654,7 +310775,8 @@
         "record": "Id=12305"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "sets the client interface font to RixMiniHeart (id 5); When the current interface font id is 5: sets the client interface font to the default font (id 0)",
       "type": "IT_DELAYCONSUME"
     },
     {
@@ -310666,7 +310788,8 @@
         "record": "Id=12306"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "sets the client interface font to RixFreshman (id 6); When the current interface font id is 6: sets the client interface font to the default font (id 0)",
       "type": "IT_DELAYCONSUME"
     },
     {
@@ -310678,7 +310801,8 @@
         "record": "Id=12307"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "sets the client interface font to RixKid (id 7); When the current interface font id is 7: sets the client interface font to the default font (id 0)",
       "type": "IT_DELAYCONSUME"
     },
     {
@@ -310690,7 +310814,8 @@
         "record": "Id=12308"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "sets the client interface font to RixMagic (id 8); When the current interface font id is 8: sets the client interface font to the default font (id 0)",
       "type": "IT_DELAYCONSUME"
     },
     {
@@ -310702,7 +310827,8 @@
         "record": "Id=12309"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "sets the client interface font to RixJJangu (id 9); When the current interface font id is 9: sets the client interface font to the default font (id 0)",
       "type": "IT_DELAYCONSUME"
     },
     {
@@ -330433,7 +330559,8 @@
         "record": "Id=12796"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "uses Improve Concentration at level 3, or at the character's own level of that skill when it is already 3 or higher",
       "type": "IT_USABLE",
       "buy": 20,
       "weight": 10
@@ -338636,7 +338763,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases Fatal Menace damage by 30%; At refine level at least +6: Fatal Menace damage increases by 2% per refine level of the weapon; MATK increases by 3% per refine level of the weapon",
       "type": "IT_WEAPON",
       "buy": 20,
       "weight": 600,
@@ -361309,7 +361437,8 @@
         "record": "Id=14617"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Applies VIT food for 180 seconds, value 15 (no explicit chance limit); heals a random 11% to 33% of max HP and 0% of max SP",
       "type": "IT_USABLE",
       "weight": 10
     },
@@ -363239,7 +363368,8 @@
       "belongs_to_combos": [
         "Siege_Greave_Siege_Manteau_Siege_Plate"
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases equipment MDEF by 5; increases tolerance against player targets by 2%; At refine level above +5: increases healing received from other players' skills by 12%; increases HP recovered from healing items by 12%; At refine level above +8: increases maximum HP by 25%",
       "type": "IT_ARMOR",
       "buy": 10,
       "weight": 3300,
@@ -363297,7 +363427,8 @@
       "belongs_to_combos": [
         "Siege_Boots_Siege_Manteau_Siege_Suits"
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases equipment MDEF by 10; increases tolerance against player targets by 2%; At refine level above +5: increases Perfect Dodge by 5; Adds 20% damage reduction against ranged physical attacks; At refine level above +8: increases maximum HP by 15%",
       "type": "IT_ARMOR",
       "buy": 10,
       "weight": 750,
@@ -363364,7 +363495,8 @@
       "belongs_to_combos": [
         "Siege_Muffler_Siege_Robe_Siege_Shoes"
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases equipment MDEF by 20; increases tolerance against player targets by 2%; At refine level above +5: increases FLEE by 5; Adds 15% damage reduction against ranged physical attacks; At refine level above +8: increases maximum HP by 1000; increases maximum SP by 100",
       "type": "IT_ARMOR",
       "buy": 10,
       "weight": 500,
@@ -364457,7 +364589,8 @@
       "belongs_to_combos": [
         "Felock_Armor_Felock_Boots_Felock_Cape"
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases maximum HP by 500; increases maximum SP by 50; increases equipment MDEF by 10; increases all six primary stats (STR, AGI, VIT, INT, DEX, and LUK) by 1; At refine level at least +7: increases maximum HP by 500; increases maximum SP by 50; At refine level at least +9: increases maximum HP by 200; increases maximum SP by 20; At refine level at least +12: increases maximum HP by 300; increases maximum SP by 30",
       "type": "IT_ARMOR",
       "buy": 20,
       "weight": 750,
@@ -365981,7 +366114,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "the equipped weapon cannot be broken; Set target to a no recovery state based on race player at 10000% for 10000 milliseconds with normal attack.; Hit + (refine / 2); Critical + (refine)",
       "type": "IT_WEAPON",
       "buy": 20,
       "weight": 1500,
@@ -373866,7 +374000,8 @@
         "record": "Id=18522"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases STR by 2; increases damage against all targets by 2%; At refine level above +6: Critical + 10%; At refine level above +8: increases ranged (long-range) physical damage by 5%; increases physical damage by 5%",
       "type": "IT_ARMOR",
       "buy": 20,
       "weight": 500,
@@ -375540,7 +375675,8 @@
         "record": "Id=18597"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases attack speed by 3%; increases critical chance by 3%; At refine level at least +7: increases attack speed by 2%; increases critical chance by 2%; At refine level at least +9: increases attack speed by 2%; increases critical chance by 2%",
       "type": "IT_ARMOR",
       "buy": 45000,
       "weight": 400,
@@ -376231,7 +376367,8 @@
         "record": "Id=18631"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases DEX by 3; increases LUK by 1; At refine level above +6: Adds a 5% chance for item id to be dropped, when killing any monster.; Adds a 5% chance for item id to be dropped, when killing any monster.; Adds a 4% chance for item id to be dropped, when killing any monster.; Adds a 3% chance for item id to be dropped, when killing any monster.; Adds a 2% chance for item id to be dropped, when killing any monster.",
       "type": "IT_ARMOR",
       "buy": 20,
       "weight": 300,
@@ -378904,7 +379041,8 @@
         "record": "Id=18766"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases AGI by 1; increases LUK by 1; increases equipment MDEF by 3; At refine level at least +7: increases AGI by 2; increases LUK by 2; At refine level at least +9: increases attack speed by 1",
       "type": "IT_ARMOR",
       "buy": 20,
       "weight": 1600,
@@ -378936,7 +379074,8 @@
         "record": "Id=18767"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases STR by 3; increases INT by 2; increases ATK by 10; increases MATK by 10; At refine level at least +7: increases ATK by 15; increases MATK by 15; At refine level at least +9: increases ATK by 15; increases MATK by 15",
       "type": "IT_ARMOR",
       "buy": 20,
       "weight": 2400,
@@ -379791,7 +379930,8 @@
       "belongs_to_combos": [
         "Thorn_Staff_Thornwood_Band"
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases DEX by 1; increases INT by 1; increases magic damage against Fire element targets by 5%; increases magic damage against Wind element targets by 5%; increases magic damage against Water element targets by 5%; increases magic damage against Earth element targets by 5%; At refine level above +4: increases magic damage against Fire element targets by 5%; increases magic damage against Wind element targets by 5%; increases magic damage against Water element targets by 5%; increases magic damage against Earth element targets by 5%",
       "type": "IT_ARMOR",
       "weight": 300,
       "def": 5,
@@ -380268,7 +380408,8 @@
         "Imperial_Feather_Imperial_Guard_Imperial_Spear",
         "Imperial_Feather_Imperial_Ring"
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases attack speed by 1%; reduces damage from Wind element attacks by 5%; With AGI at least 108: increases attack speed by 1%; increases attack speed by 1",
       "type": "IT_ARMOR",
       "weight": 500,
       "loc": "EQP_HEAD_MID",
@@ -380328,7 +380469,8 @@
         "Bankruptcy_Of_Heart_Mask_Of_Bankrupt",
         "Bankruptcy_Of_Heart__Mask_Of_Bankrupt"
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "does not apply bonus3 bHPDrainRate,10,1,0 because item_bonus.md documents bonus2 bHPDrainRate with two arguments, and the server reports this three-argument form as an unknown bonus; When attacking there is a 1% chance to either gain SP equivalent to 1% of damage dealt, OR drain the amount of sp from the enemy. y: Gain SP",
       "type": "IT_ARMOR",
       "weight": 490,
       "loc": [
@@ -381124,7 +381266,8 @@
         "record": "Id=18887"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases VIT by 3; increases equipment MDEF by 5; increases magic damage by 2%; At refine level above +8: increases equipment MDEF by 5; increases magic damage by 4%; At refine level above +11: Increases fixed cast time of all skills by -10%",
       "type": "IT_ARMOR",
       "weight": 100,
       "def": 2,
@@ -381140,7 +381283,8 @@
         "record": "Id=18888"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases INT by 5; increases LUK by 5; increases physical damage by 2%; increases magic damage by 5%; At refine level above +8: increases physical damage by 4%; increases magic damage by 4%; At refine level above +11: Increases fixed cast time of all skills by -10%",
       "type": "IT_ARMOR",
       "weight": 100,
       "def": 2,
@@ -381156,7 +381300,8 @@
         "record": "Id=18889"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases AGI by 5; increases LUK by 5; increases physical damage by 5%; At refine level above +8: increases physical damage by 5%; increases magic damage by 5%; At refine level above +11: Increases fixed cast time of all skills by -10%",
       "type": "IT_ARMOR",
       "weight": 100,
       "def": 2,
@@ -381172,7 +381317,8 @@
         "record": "Id=18890"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases INT by 5; increases LUK by 5; increases physical damage by 2%; increases magic damage by 5%; At refine level above +8: increases physical damage by 4%; increases magic damage by 4%; At refine level above +11: Increases fixed cast time of all skills by -10%",
       "type": "IT_ARMOR",
       "def": 2,
       "slots": 1,
@@ -381203,7 +381349,8 @@
         "record": "Id=18892"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases equipment MDEF by 5; increases FLEE by 5; increases critical chance by 5%; increases HIT by 5; increases Perfect Dodge by 5; At refine level above +6: reduces variable cast time of all skills by 5%; At refine level above +8: reduces attack delay by 5%; increases attack speed by 5%",
       "type": "IT_ARMOR",
       "weight": 1000,
       "def": 5,
@@ -381220,7 +381367,8 @@
         "record": "Id=18893"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases tolerance against player targets by 8%; increases tolerance against dragon targets by 8%; Increases HP recovered by 200% for item Meat; At refine level above +11: increases maximum HP by 7%; increases maximum SP by 3%",
       "type": "IT_ARMOR",
       "weight": 1000,
       "def": 5,
@@ -382077,7 +382225,8 @@
       "belongs_to_combos": [
         "Feather_Beret_Protect_Feathers"
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases equipment MDEF by 2; increases tolerance against player targets by 2%; reduces attack speed by 5%; With VIT at least 108: reduces attack speed by 5%; increases tolerance against player targets by 2%; With VIT at least 120: increases equipment MDEF by 3; increases maximum HP by 3%",
       "type": "IT_ARMOR",
       "buy": 20,
       "weight": 500,
@@ -397578,7 +397727,8 @@
         "record": "Id=22034"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases critical chance by 2%; increases critical damage by 2%; At refine level at least +6: increases critical chance by 3%; increases critical damage by 3%",
       "type": "IT_ARMOR",
       "buy": 10,
       "weight": 500,
@@ -397649,7 +397799,8 @@
         "record": "Id=22038"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases maximum HP by 5%; increases maximum SP by 5%; At refine level at least +6: increases maximum HP by 5%; increases maximum SP by 5%",
       "type": "IT_ARMOR",
       "buy": 10,
       "weight": 100,
@@ -397854,7 +398005,8 @@
       "belongs_to_combos": [
         "Felock_Armor_Felock_Boots_Felock_Cape"
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases AGI by 1; increases attack speed by 5%; At refine level above +6: increases AGI by 1; increases attack speed by 5%; At refine level above +8: increases AGI by 1; increases attack speed by 5%; At refine level above +11: increases attack speed by 1",
       "type": "IT_ARMOR",
       "buy": 20,
       "weight": 250,
@@ -402966,7 +403118,8 @@
       "belongs_to_combos": [
         "S_Champion_Shoes_S_Hard_Armor"
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases maximum HP by 20; increases maximum SP by 10; At refine level at least +7: increases maximum HP by 1%; increases maximum SP by 1%",
       "type": "IT_ARMOR",
       "buy": 10,
       "loc": "EQP_SHADOW_SHOES"
@@ -403531,7 +403684,8 @@
       "belongs_to_combos": [
         "S_Lucky_Armor_S_Lucky_Weapon"
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases LUK by 1; Critical + (refine / 2)",
       "type": "IT_ARMOR",
       "buy": 10,
       "loc": "EQP_SHADOW_ARMOR"
@@ -403648,7 +403802,8 @@
       "belongs_to_combos": [
         "S_Dexterous_Armor_S_Dexterous_Weapon"
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases DEX by 1; Hit + (refine)",
       "type": "IT_ARMOR",
       "buy": 10,
       "loc": "EQP_SHADOW_WEAPON"
@@ -404326,7 +404481,8 @@
       "belongs_to_combos": [
         "S_Bloody_Shoes_S_Cranial_Shield"
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases damage against player targets by 2%; increases magic damage against player targets by 2%; At refine level at least +7: increases damage against player targets by 1%; increases magic damage against player targets by 1%; At refine level at least +9: increases damage against player targets by 2%; increases magic damage against player targets by 2%",
       "type": "IT_ARMOR",
       "buy": 10,
       "loc": "EQP_SHADOW_SHOES"
@@ -404365,7 +404521,8 @@
       "belongs_to_combos": [
         "S_Liberation_Shoes_S_Safeguard_Shield"
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases damage against boss targets by 2%; increases magic damage against boss targets by 2%; At refine level at least +7: increases damage against boss targets by 1%; increases magic damage against boss targets by 1%; At refine level at least +9: increases damage against boss targets by 2%; increases magic damage against boss targets by 2%",
       "type": "IT_ARMOR",
       "buy": 10,
       "loc": "EQP_SHADOW_SHOES"
@@ -404404,7 +404561,8 @@
       "belongs_to_combos": [
         "S_Cadi_Shield_S_Chemical_Shoes"
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases damage against plant targets by 2%; increases magic damage against plant targets by 2%; At refine level at least +7: increases damage against plant targets by 1%; increases magic damage against plant targets by 1%; At refine level at least +9: increases damage against plant targets by 2%; increases magic damage against plant targets by 2%",
       "type": "IT_ARMOR",
       "buy": 10,
       "loc": "EQP_SHADOW_SHOES"
@@ -404443,7 +404601,8 @@
       "belongs_to_combos": [
         "S_Brutal_Shield_S_Clamorous_Shoes"
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases damage against brute targets by 2%; Magical damage against brute +2%; At refine level at least +7: increases damage against brute targets by 1%; Magical damage against brute +1%; At refine level at least +9: increases damage against brute targets by 2%; Magical damage against brute +2%",
       "type": "IT_ARMOR",
       "buy": 10,
       "loc": "EQP_SHADOW_SHOES"
@@ -404482,7 +404641,8 @@
       "belongs_to_combos": [
         "S_Gargantua_Shield_S_Insecticide_Shoes"
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases damage against insect targets by 2%; increases magic damage against insect targets by 2%; At refine level at least +7: increases damage against insect targets by 1%; increases magic damage against insect targets by 1%; At refine level at least +9: increases damage against insect targets by 2%; increases magic damage against insect targets by 2%",
       "type": "IT_ARMOR",
       "buy": 10,
       "loc": "EQP_SHADOW_SHOES"
@@ -404521,7 +404681,8 @@
       "belongs_to_combos": [
         "S_Fisher_Shoes_S_Homers_Shield"
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases damage against fish targets by 2%; increases magic damage against fish targets by 2%; At refine level at least +7: increases damage against fish targets by 1%; increases magic damage against fish targets by 1%; At refine level at least +9: increases damage against fish targets by 2%; increases magic damage against fish targets by 2%",
       "type": "IT_ARMOR",
       "buy": 10,
       "loc": "EQP_SHADOW_SHOES"
@@ -404560,7 +404721,8 @@
       "belongs_to_combos": [
         "S_Satanic_Shield_S_Seraphim_Shoes"
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases damage against angel targets by 2%; increases magic damage against angel targets by 2%; At refine level at least +7: increases damage against angel targets by 1%; increases magic damage against angel targets by 1%; At refine level at least +9: increases damage against angel targets by 2%; increases magic damage against angel targets by 2%",
       "type": "IT_ARMOR",
       "buy": 10,
       "loc": "EQP_SHADOW_SHOES"
@@ -404599,7 +404761,8 @@
       "belongs_to_combos": [
         "S_Beholder_Shoes_S_Flameguard_Shield"
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases damage against formless targets by 2%; increases magic damage against formless targets by 2%; At refine level at least +7: increases damage against formless targets by 1%; increases magic damage against formless targets by 1%; At refine level at least +9: increases damage against formless targets by 2%; increases magic damage against formless targets by 2%",
       "type": "IT_ARMOR",
       "buy": 10,
       "loc": "EQP_SHADOW_SHOES"
@@ -404638,7 +404801,8 @@
       "belongs_to_combos": [
         "S_Divine_Shoes_S_Requiem_Shield"
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases damage against undead targets by 2%; increases magic damage against undead targets by 2%; At refine level at least +7: increases damage against undead targets by 1%; increases magic damage against undead targets by 1%; At refine level at least +9: increases damage against undead targets by 2%; increases magic damage against undead targets by 2%",
       "type": "IT_ARMOR",
       "buy": 10,
       "loc": "EQP_SHADOW_SHOES"
@@ -404677,7 +404841,8 @@
       "belongs_to_combos": [
         "S_Dragoon_Shield_S_Dragoon_Shoes"
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "increases damage against dragon targets by 2%; increases magic damage against dragon targets by 2%; At refine level at least +7: increases damage against dragon targets by 1%; increases magic damage against dragon targets by 1%; At refine level at least +9: increases damage against dragon targets by 2%; increases magic damage against dragon targets by 2%",
       "type": "IT_ARMOR",
       "buy": 10,
       "loc": "EQP_SHADOW_SHOES"
@@ -411111,7 +411276,8 @@
         "record": "Id=24223"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "ATK2 + 10; Attack Power + (refine / 2)%",
       "type": "IT_ARMOR",
       "buy": 10,
       "loc": "EQP_SHADOW_WEAPON",
@@ -418661,7 +418827,8 @@
         "record": "Id=29001"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "At refine level at least +7: increases INT by 6; At refine level at least +11: increases INT by 1; increases magic damage by 7%",
       "type": "IT_CARD",
       "loc": [
         "EQP_HELM",
@@ -418681,7 +418848,8 @@
         "record": "Id=29002"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "At refine level at least +7: increases INT by 7; At refine level at least +12: increases INT by 1; increases magic damage by 8%; At refine level at least +13: increases INT by 1; increases magic damage by 2%",
       "type": "IT_CARD",
       "loc": [
         "EQP_HELM",
@@ -418722,7 +418890,8 @@
         "record": "Id=29004"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "At refine level at least +7: increases DEX by 6; At refine level at least +11: increases DEX by 1; increases ranged (long-range) physical damage by 7%",
       "type": "IT_CARD",
       "loc": [
         "EQP_HELM",
@@ -418742,7 +418911,8 @@
         "record": "Id=29005"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "At refine level at least +7: increases DEX by 7; At refine level at least +12: increases DEX by 1; increases ranged (long-range) physical damage by 8%; At refine level at least +13: increases DEX by 1; increases ranged (long-range) physical damage by 2%",
       "type": "IT_CARD",
       "loc": [
         "EQP_HELM",
@@ -418783,7 +418953,8 @@
         "record": "Id=29007"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "At refine level at least +7: increases LUK by 6; At refine level at least +11: increases LUK by 1; increases critical damage by 7%",
       "type": "IT_CARD",
       "loc": [
         "EQP_HELM",
@@ -418803,7 +418974,8 @@
         "record": "Id=29008"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "At refine level at least +7: increases LUK by 7; At refine level at least +12: increases LUK by 1; increases critical damage by 8%; At refine level at least +13: increases LUK by 1; increases critical damage by 6%",
       "type": "IT_CARD",
       "loc": [
         "EQP_HELM",
@@ -418844,7 +419016,8 @@
         "record": "Id=29010"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "At refine level at least +7: increases VIT by 6; At refine level at least +11: increases VIT by 1; increases maximum HP by 7%",
       "type": "IT_CARD",
       "loc": [
         "EQP_HELM",
@@ -418864,7 +419037,8 @@
         "record": "Id=29011"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "At refine level at least +7: increases VIT by 7; At refine level at least +12: increases VIT by 1; increases maximum HP by 8%; At refine level at least +13: increases VIT by 1; increases maximum HP by 2%",
       "type": "IT_CARD",
       "loc": [
         "EQP_HELM",

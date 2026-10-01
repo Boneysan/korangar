@@ -138311,7 +138311,7 @@
       "package": "E3",
       "kind": "e3_translator",
       "tier": "local",
-      "state": "blocked",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "key": "setfont",
@@ -138437,10 +138437,29 @@
       "reason": "9 item script(s) first stop at documented `setfont`",
       "history": [
         "2026-10-01T06:04:29Z activated",
-        "2026-10-01T06:04:29Z blocked: No item in this cluster is fully translated. The remaining scripts use a conditional, an expression, or a command whose meaning is outside this excerpt."
+        "2026-10-01T06:04:29Z blocked: No item in this cluster is fully translated. The remaining scripts use a conditional, an expression, or a command whose meaning is outside this excerpt.",
+        "2026-10-01T07:32:24Z activated",
+        "2026-10-01T07:32:24Z validated",
+        "2026-10-01T07:32:25Z verified: 1 claims supported",
+        "2026-10-01T07:33:02Z accepted",
+        "2026-10-01T07:33:03Z committed"
       ],
-      "baseline_dirty": [],
-      "blocker": "No item in this cluster is fully translated. The remaining scripts use a conditional, an expression, or a command whose meaning is outside this excerpt."
+      "baseline_dirty": [
+        "docs/plans/encyclopedia-unit-queue.json"
+      ],
+      "draft_sha256": "158a5a92c4d11447eb8b4db66b61e14dc3168de53bf2febb91ce5ac9907e55cb",
+      "accepted_files": [
+        "docs/cards.v1.json",
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/items.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/export_item_reference.py",
+        "tools/tests/test_export_item_effect_phrases.py"
+      ],
+      "accepted_on": "2026-10-01",
+      "commit": "committed"
     },
     {
       "id": "E3-translate-bonus-bdefrate",
@@ -141535,9 +141554,8 @@
         "tools/tests/test_export_item_effect_phrases.py"
       ],
       "accepted_on": "2026-10-01",
-      "audit": "failed: The queued excerpt documents skillpointcount, not skill(name, level). The four granting scripts are translated by the skill-name rule, but this unit's documentation window does not define them.",
-      "commit": "committed",
-      "blocker": "Audit failed: The queued excerpt documents skillpointcount, not skill(name, level). The four granting scripts are translated by the skill-name rule, but this unit's documentation window does not define them.. The accepted records need correction in a separate unit."
+      "audit": "passed",
+      "commit": "committed"
     },
     {
       "id": "E3-translate-bonus-bdefratioatkrace",
@@ -143018,7 +143036,7 @@
       "package": "E3",
       "kind": "e3_translator",
       "tier": "local",
-      "state": "blocked",
+      "state": "todo",
       "attempts": 0,
       "subject": {
         "key": "bonus bAtk2",
@@ -143057,8 +143075,7 @@
         "2026-10-01T06:23:31Z activated",
         "2026-10-01T06:23:31Z blocked: No item in this cluster is fully translated. The remaining scripts use a conditional, an expression, or a command whose meaning is outside this excerpt."
       ],
-      "baseline_dirty": [],
-      "blocker": "No item in this cluster is fully translated. The remaining scripts use a conditional, an expression, or a command whose meaning is outside this excerpt."
+      "baseline_dirty": []
     },
     {
       "id": "E3-translate-bonus-bhitrate",
@@ -143129,7 +143146,7 @@
       "package": "E3",
       "kind": "e3_translator",
       "tier": "local",
-      "state": "blocked",
+      "state": "todo",
       "attempts": 0,
       "subject": {
         "key": "bonus bIgnoreMdefRate",
@@ -143168,8 +143185,7 @@
         "2026-10-01T06:23:56Z activated",
         "2026-10-01T06:23:56Z blocked: No item in this cluster is fully translated. The remaining scripts use a conditional, an expression, or a command whose meaning is outside this excerpt."
       ],
-      "baseline_dirty": [],
-      "blocker": "No item in this cluster is fully translated. The remaining scripts use a conditional, an expression, or a command whose meaning is outside this excerpt."
+      "baseline_dirty": []
     },
     {
       "id": "E3-translate-bonus-bmagichpgainvalue",
@@ -143474,7 +143490,7 @@
       "package": "E3",
       "kind": "e3_translator",
       "tier": "local",
-      "state": "blocked",
+      "state": "todo",
       "attempts": 0,
       "subject": {
         "key": "bonus2 bMagicAddRace",
@@ -143513,8 +143529,7 @@
         "2026-10-01T06:26:00Z activated",
         "2026-10-01T06:26:00Z blocked: No item in this cluster is fully translated. The remaining scripts use a conditional, an expression, or a command whose meaning is outside this excerpt."
       ],
-      "baseline_dirty": [],
-      "blocker": "No item in this cluster is fully translated. The remaining scripts use a conditional, an expression, or a command whose meaning is outside this excerpt."
+      "baseline_dirty": []
     },
     {
       "id": "E3-translate-bonus2-bsplossrate",
@@ -143821,7 +143836,7 @@
       "package": "E3",
       "kind": "e3_translator",
       "tier": "local",
-      "state": "blocked",
+      "state": "todo",
       "attempts": 0,
       "subject": {
         "key": "bonus3 bHPDrainRate",
@@ -143860,8 +143875,7 @@
         "2026-10-01T06:28:04Z activated",
         "2026-10-01T06:28:04Z blocked: No item in this cluster is fully translated. The remaining scripts use a conditional, an expression, or a command whose meaning is outside this excerpt."
       ],
-      "baseline_dirty": [],
-      "blocker": "No item in this cluster is fully translated. The remaining scripts use a conditional, an expression, or a command whose meaning is outside this excerpt."
+      "baseline_dirty": []
     },
     {
       "id": "E3-translate-bonus3-bhpvanishrate",
@@ -143930,7 +143944,7 @@
       "package": "E3",
       "kind": "e3_translator",
       "tier": "local",
-      "state": "blocked",
+      "state": "todo",
       "attempts": 0,
       "subject": {
         "key": "bonus3 bStateNoRecoverRace",
@@ -143969,8 +143983,7 @@
         "2026-10-01T06:28:29Z activated",
         "2026-10-01T06:28:29Z blocked: No item in this cluster is fully translated. The remaining scripts use a conditional, an expression, or a command whose meaning is outside this excerpt."
       ],
-      "baseline_dirty": [],
-      "blocker": "No item in this cluster is fully translated. The remaining scripts use a conditional, an expression, or a command whose meaning is outside this excerpt."
+      "baseline_dirty": []
     },
     {
       "id": "E3-translate-bpet",
@@ -144098,7 +144111,7 @@
       "package": "E3",
       "kind": "e3_translator",
       "tier": "local",
-      "state": "blocked",
+      "state": "todo",
       "attempts": 0,
       "subject": {
         "key": "guildgetexp",
@@ -144137,8 +144150,7 @@
         "2026-10-01T06:29:19Z activated",
         "2026-10-01T06:29:19Z blocked: No item in this cluster is fully translated. The remaining scripts use a conditional, an expression, or a command whose meaning is outside this excerpt."
       ],
-      "baseline_dirty": [],
-      "blocker": "No item in this cluster is fully translated. The remaining scripts use a conditional, an expression, or a command whose meaning is outside this excerpt."
+      "baseline_dirty": []
     },
     {
       "id": "E3-translate-hateffect",
@@ -144266,7 +144278,7 @@
       "package": "E3",
       "kind": "e3_translator",
       "tier": "local",
-      "state": "blocked",
+      "state": "todo",
       "attempts": 0,
       "subject": {
         "key": "input",
@@ -144305,15 +144317,14 @@
         "2026-10-01T06:30:09Z activated",
         "2026-10-01T06:30:10Z blocked: No item in this cluster is fully translated. The remaining scripts use a conditional, an expression, or a command whose meaning is outside this excerpt."
       ],
-      "baseline_dirty": [],
-      "blocker": "No item in this cluster is fully translated. The remaining scripts use a conditional, an expression, or a command whose meaning is outside this excerpt."
+      "baseline_dirty": []
     },
     {
       "id": "E3-translate-itemheal",
       "package": "E3",
       "kind": "e3_translator",
       "tier": "local",
-      "state": "blocked",
+      "state": "todo",
       "attempts": 0,
       "subject": {
         "key": "itemheal",
@@ -144355,15 +144366,14 @@
       "baseline_dirty": [
         "docs/plans/encyclopedia-qwen3-progress.json",
         "docs/plans/encyclopedia-unit-queue.json"
-      ],
-      "blocker": "No item in this cluster is fully translated. The remaining scripts use a conditional, an expression, or a command whose meaning is outside this excerpt."
+      ]
     },
     {
       "id": "E3-translate-itemskill",
       "package": "E3",
       "kind": "e3_translator",
       "tier": "local",
-      "state": "blocked",
+      "state": "todo",
       "attempts": 0,
       "subject": {
         "key": "itemskill",
@@ -144405,8 +144415,7 @@
       "baseline_dirty": [
         "docs/plans/encyclopedia-qwen3-progress.json",
         "docs/plans/encyclopedia-unit-queue.json"
-      ],
-      "blocker": "No item in this cluster is fully translated. The remaining scripts use a conditional, an expression, or a command whose meaning is outside this excerpt."
+      ]
     },
     {
       "id": "E3-translate-openreformui",
@@ -144534,7 +144543,7 @@
       "package": "E3",
       "kind": "e3_translator",
       "tier": "local",
-      "state": "blocked",
+      "state": "todo",
       "attempts": 0,
       "subject": {
         "key": "percentheal",
@@ -144573,8 +144582,7 @@
         "2026-10-01T06:31:00Z activated",
         "2026-10-01T06:31:00Z blocked: No item in this cluster is fully translated. The remaining scripts use a conditional, an expression, or a command whose meaning is outside this excerpt."
       ],
-      "baseline_dirty": [],
-      "blocker": "No item in this cluster is fully translated. The remaining scripts use a conditional, an expression, or a command whose meaning is outside this excerpt."
+      "baseline_dirty": []
     },
     {
       "id": "E3-translate-setcashmount",
