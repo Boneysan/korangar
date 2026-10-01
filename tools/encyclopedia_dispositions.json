@@ -160086,6 +160086,114 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_7007_npc_jobs_2_1e_stargladiator_txt_124",
+      "unit": "E5-chain-7007",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7007
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 7007; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-1e/StarGladiator.txt",
+          "lines": [
+            124
+          ],
+          "required_source_literals": [
+            "setquest 7007;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_7007_npc_jobs_2_1e_stargladiator_txt_443",
+      "unit": "E5-chain-7007",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7007
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 7007; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-1e/StarGladiator.txt",
+          "lines": [
+            443
+          ],
+          "required_source_literals": [
+            "changequest 7007,7008;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_7007_npc_jobs_2_1e_stargladiator_txt_508",
+      "unit": "E5-chain-7007",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7008
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 7008; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-1e/StarGladiator.txt",
+          "lines": [
+            508
+          ],
+          "required_source_literals": [
+            "changequest 7008,7009;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_7007_npc_jobs_2_1e_stargladiator_txt_696",
+      "unit": "E5-chain-7007",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7011
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 7011; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-1e/StarGladiator.txt",
+          "lines": [
+            696
+          ],
+          "required_source_literals": [
+            "completequest 7011;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
