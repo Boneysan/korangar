@@ -137347,7 +137347,7 @@
       "package": "E3",
       "kind": "e3_translator",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "key": "bonus2 bAddDamageClass",
@@ -137479,7 +137479,24 @@
       ],
       "size_lines": 37,
       "reason": "10 item script(s) first stop at documented `bonus2 bAddDamageClass`",
-      "history": []
+      "history": [
+        "2026-10-01T06:02:26Z activated",
+        "2026-10-01T06:02:27Z validated",
+        "2026-10-01T06:02:27Z verified: 1 claims supported",
+        "2026-10-01T06:02:51Z accepted",
+        "2026-10-01T06:02:51Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "fa752273706af471577179d3d67ec330a2a3abc8efcc8f010c4754cf818120a2",
+      "accepted_files": [
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/export_item_reference.py",
+        "tools/tests/test_export_item_effect_phrases.py"
+      ],
+      "accepted_on": "2026-10-01",
+      "commit": "committed"
     },
     {
       "id": "E3-translate-bonus2-bhplossrate",
