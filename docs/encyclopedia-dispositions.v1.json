@@ -14,7 +14,7 @@
     "E4_unknown": 213,
     "E5_absent": 644,
     "E5_unknown": 3383,
-    "E6_configured_estimate": 11,
+    "E6_configured_estimate": 12,
     "E6_unknown": 83
   },
   "entries": [
@@ -197371,6 +197371,39 @@
             "disabled_items: {",
             "/* cashshop disabled in pvp maps */",
             "mapflags: ("
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e6_zone_woe_te_zone",
+      "unit": "E6-zone-woe-te",
+      "package": "E6",
+      "subject": {
+        "kind": "zone",
+        "name": "WoE TE"
+      },
+      "result": "configured_estimate",
+      "statement": "Zone WoE TE sets the quoted configured restrictions; maps that use the zone are not claimed.",
+      "conditions": [
+        "Configured line: name: \"WoE TE\"",
+        "Configured line: inherit: ( \"GvG\" ) /* will import all gvg has */",
+        "Configured line: disabled_items: {"
+      ],
+      "sources": [
+        {
+          "path": "db/re/map_zone_db.conf",
+          "lines": [
+            454,
+            455,
+            457
+          ],
+          "required_source_literals": [
+            "name: \"WoE TE\"",
+            "inherit: ( \"GvG\" ) /* will import all gvg has */",
+            "disabled_items: {"
           ]
         }
       ],
