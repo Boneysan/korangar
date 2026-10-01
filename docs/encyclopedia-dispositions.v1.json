@@ -14,7 +14,7 @@
     "E4_unknown": 213,
     "E5_absent": 644,
     "E5_unknown": 3383,
-    "E6_configured_estimate": 4,
+    "E6_configured_estimate": 5,
     "E6_unknown": 83
   },
   "entries": [
@@ -197074,6 +197074,42 @@
           "required_source_literals": [
             "/* However, it wont be applied to maps with its own zones (specified through mapflag) */",
             "name: \"Normal\" /* changing this name requires MAP_ZONE_NORMAL_NAME to also be changed in src/map/map.h file */",
+            "disabled_skills: {",
+            "disabled_items: {",
+            "mapflags: ("
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e6_zone_pk_mode_zone",
+      "unit": "E6-zone-pk-mode",
+      "package": "E6",
+      "subject": {
+        "kind": "zone",
+        "name": "PK Mode"
+      },
+      "result": "configured_estimate",
+      "statement": "Zone PK Mode sets the quoted configured restrictions; maps that use the zone are not claimed.",
+      "conditions": [
+        "Configured line: name: \"PK Mode\" /* changing this name requires MAP_ZONE_PK_NAME to also be changed in src/map/map.h file */",
+        "Configured line: disabled_skills: {",
+        "Configured line: disabled_items: {",
+        "Configured line: mapflags: ("
+      ],
+      "sources": [
+        {
+          "path": "db/re/map_zone_db.conf",
+          "lines": [
+            209,
+            211,
+            215,
+            225
+          ],
+          "required_source_literals": [
+            "name: \"PK Mode\" /* changing this name requires MAP_ZONE_PK_NAME to also be changed in src/map/map.h file */",
             "disabled_skills: {",
             "disabled_items: {",
             "mapflags: ("
