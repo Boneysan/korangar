@@ -14,7 +14,7 @@
     "E4_unknown": 213,
     "E5_absent": 644,
     "E5_unknown": 3383,
-    "E6_unknown": 2
+    "E6_unknown": 3
   },
   "entries": [
     {
@@ -194682,6 +194682,34 @@
           "path": "db/re/mob_db.conf",
           "lines": [
             1878
+          ],
+          "required_source_literals": [
+            "{"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e6_boss_1046_boss",
+      "unit": "E6-boss-1046",
+      "package": "E6",
+      "subject": {
+        "kind": "monster",
+        "name": "DOPPELGANGER",
+        "ids": [
+          1046
+        ]
+      },
+      "result": "unknown",
+      "statement": "Monster 1046 (DOPPELGANGER) has configured database rows in the packet; this record does not enumerate each skill.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/mob_db.conf",
+          "lines": [
+            2218
           ],
           "required_source_literals": [
             "{"
