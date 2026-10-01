@@ -143607,7 +143607,7 @@
       "package": "E3",
       "kind": "e3_translator",
       "tier": "local",
-      "state": "todo",
+      "state": "blocked",
       "attempts": 0,
       "subject": {
         "key": "bonus3 bHPDrainRate",
@@ -143642,14 +143642,19 @@
       ],
       "size_lines": 32,
       "reason": "1 item script(s) first stop at documented `bonus3 bHPDrainRate`",
-      "history": []
+      "history": [
+        "2026-10-01T06:28:04Z activated",
+        "2026-10-01T06:28:04Z blocked: No item in this cluster is fully translated. The remaining scripts use a conditional, an expression, or a command whose meaning is outside this excerpt."
+      ],
+      "baseline_dirty": [],
+      "blocker": "No item in this cluster is fully translated. The remaining scripts use a conditional, an expression, or a command whose meaning is outside this excerpt."
     },
     {
       "id": "E3-translate-bonus3-bhpvanishrate",
       "package": "E3",
       "kind": "e3_translator",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "key": "bonus3 bHPVanishRate",
@@ -143684,7 +143689,27 @@
       ],
       "size_lines": 32,
       "reason": "1 item script(s) first stop at documented `bonus3 bHPVanishRate`",
-      "history": []
+      "history": [
+        "2026-10-01T06:28:05Z activated",
+        "2026-10-01T06:28:05Z validated",
+        "2026-10-01T06:28:05Z verified: 1 claims supported",
+        "2026-10-01T06:28:29Z accepted",
+        "2026-10-01T06:28:29Z committed"
+      ],
+      "baseline_dirty": [
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json"
+      ],
+      "draft_sha256": "0eb9dacea52dbb791b6ecbd7a5740db4af8e81eed5821fab6b83514794ebd038",
+      "accepted_files": [
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/export_item_reference.py",
+        "tools/tests/test_export_item_effect_phrases.py"
+      ],
+      "accepted_on": "2026-10-01",
+      "commit": "committed"
     },
     {
       "id": "E3-translate-bonus3-bstatenorecoverrace",
