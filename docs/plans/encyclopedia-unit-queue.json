@@ -141588,7 +141588,7 @@
       "package": "E3",
       "kind": "e3_translator",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "key": "bonus3 bSPVanishRate",
@@ -141649,7 +141649,24 @@
       ],
       "size_lines": 34,
       "reason": "3 item script(s) first stop at documented `bonus3 bSPVanishRate`",
-      "history": []
+      "history": [
+        "2026-10-01T06:16:53Z activated",
+        "2026-10-01T06:16:53Z validated",
+        "2026-10-01T06:16:54Z verified: 1 claims supported",
+        "2026-10-01T06:17:18Z accepted",
+        "2026-10-01T06:17:18Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "3abfdac987a63112410a88d0b268d27bdb0263645c2909b7927386f04b3f37e8",
+      "accepted_files": [
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/export_item_reference.py",
+        "tools/tests/test_export_item_effect_phrases.py"
+      ],
+      "accepted_on": "2026-10-01",
+      "commit": "committed"
     },
     {
       "id": "E3-translate-bonus3-bsubele",
