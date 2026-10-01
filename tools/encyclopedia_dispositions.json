@@ -159519,6 +159519,87 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_9011_npc_jobs_2_1_knight_txt_2404",
+      "unit": "E5-chain-9011",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          9011
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 9011; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-1/knight.txt",
+          "lines": [
+            2404
+          ],
+          "required_source_literals": [
+            "changequest 9011,9012;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_9011_npc_jobs_2_1_knight_txt_2418",
+      "unit": "E5-chain-9011",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          9011
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 9011; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-1/knight.txt",
+          "lines": [
+            2418
+          ],
+          "required_source_literals": [
+            "changequest 9011,9012;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_9011_npc_jobs_2_1_knight_txt_2428",
+      "unit": "E5-chain-9011",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          9011
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 9011; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-1/knight.txt",
+          "lines": [
+            2428
+          ],
+          "required_source_literals": [
+            "changequest 9011,9012;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
