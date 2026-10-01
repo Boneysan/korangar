@@ -157818,6 +157818,168 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_6020_npc_jobs_1_1e_gunslinger_txt_106",
+      "unit": "E5-chain-6020",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          6020
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 6020; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/1-1e/gunslinger.txt",
+          "lines": [
+            106
+          ],
+          "required_source_literals": [
+            "setquest 6020;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_6020_npc_jobs_1_1e_gunslinger_txt_199",
+      "unit": "E5-chain-6020",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          6024
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 6024; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/1-1e/gunslinger.txt",
+          "lines": [
+            199
+          ],
+          "required_source_literals": [
+            "completequest 6024;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_6020_npc_jobs_1_1e_gunslinger_txt_280",
+      "unit": "E5-chain-6020",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          6020
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 6020; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/1-1e/gunslinger.txt",
+          "lines": [
+            280
+          ],
+          "required_source_literals": [
+            "changequest 6020,6021;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_6020_npc_jobs_1_1e_gunslinger_txt_317",
+      "unit": "E5-chain-6020",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          6021
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 6021; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/1-1e/gunslinger.txt",
+          "lines": [
+            317
+          ],
+          "required_source_literals": [
+            "changequest 6021,6022;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_6020_npc_jobs_1_1e_gunslinger_txt_364",
+      "unit": "E5-chain-6020",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          6022
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 6022; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/1-1e/gunslinger.txt",
+          "lines": [
+            364
+          ],
+          "required_source_literals": [
+            "changequest 6022,6023;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_6020_npc_jobs_1_1e_gunslinger_txt_379",
+      "unit": "E5-chain-6020",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          6023
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 6023; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/1-1e/gunslinger.txt",
+          "lines": [
+            379
+          ],
+          "required_source_literals": [
+            "changequest 6023,6024;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
