@@ -159168,6 +159168,195 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_9000_npc_jobs_2_1_knight_txt_138",
+      "unit": "E5-chain-9000",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          9000
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 9000; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-1/knight.txt",
+          "lines": [
+            138
+          ],
+          "required_source_literals": [
+            "setquest 9000;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_9000_npc_jobs_2_1_knight_txt_428",
+      "unit": "E5-chain-9000",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          9012
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 9012; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-1/knight.txt",
+          "lines": [
+            428
+          ],
+          "required_source_literals": [
+            "completequest 9012;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_9000_npc_jobs_2_1_knight_txt_564",
+      "unit": "E5-chain-9000",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          9000
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 9000; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-1/knight.txt",
+          "lines": [
+            564
+          ],
+          "required_source_literals": [
+            "changequest 9000,9003;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_9000_npc_jobs_2_1_knight_txt_582",
+      "unit": "E5-chain-9000",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          9000
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 9000; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-1/knight.txt",
+          "lines": [
+            582
+          ],
+          "required_source_literals": [
+            "if (KNIGHT_Q == 2) changequest 9000,9001;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_9000_npc_jobs_2_1_knight_txt_583",
+      "unit": "E5-chain-9000",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          9000
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 9000; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-1/knight.txt",
+          "lines": [
+            583
+          ],
+          "required_source_literals": [
+            "else changequest 9000,9002;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_9000_npc_jobs_2_1_knight_txt_628",
+      "unit": "E5-chain-9000",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          9001
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 9001; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-1/knight.txt",
+          "lines": [
+            628
+          ],
+          "required_source_literals": [
+            "if (KNIGHT_Q == 2) changequest 9001,9003;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_9000_npc_jobs_2_1_knight_txt_629",
+      "unit": "E5-chain-9000",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          9002
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 9002; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-1/knight.txt",
+          "lines": [
+            629
+          ],
+          "required_source_literals": [
+            "else changequest 9002,9003;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
