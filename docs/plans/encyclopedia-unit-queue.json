@@ -136175,7 +136175,7 @@
       "package": "E3",
       "kind": "e3_translator",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "key": "bonus2 bAddItemHealRate",
@@ -136331,7 +136331,24 @@
       ],
       "size_lines": 37,
       "reason": "13 item script(s) first stop at documented `bonus2 bAddItemHealRate`",
-      "history": []
+      "history": [
+        "2026-10-01T05:59:33Z activated",
+        "2026-10-01T05:59:33Z validated",
+        "2026-10-01T05:59:33Z verified: 1 claims supported",
+        "2026-10-01T05:59:57Z accepted",
+        "2026-10-01T05:59:57Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "822124d126242ede3961fb09792e17c3e4d2018291913c3e6e1692d6373c20fa",
+      "accepted_files": [
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/export_item_reference.py",
+        "tools/tests/test_export_item_effect_phrases.py"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E3-translate-bonus3-baddeff",
