@@ -12,7 +12,7 @@
     "E2_verified": 236,
     "E3_unknown": 973,
     "E4_unknown": 213,
-    "E5_unknown": 1767
+    "E5_unknown": 1772
   },
   "entries": [
     {
@@ -146513,6 +146513,141 @@
           ],
           "required_source_literals": [
             "changequest 8134,8135;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_8136_npc_quests_quests_moscovia_txt_6840",
+      "unit": "E5-chain-8136",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8136
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 8136; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_moscovia.txt",
+          "lines": [
+            6840
+          ],
+          "required_source_literals": [
+            "setquest(8136);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_8136_npc_quests_quests_moscovia_txt_6989",
+      "unit": "E5-chain-8136",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8136
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 8136; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_moscovia.txt",
+          "lines": [
+            6989
+          ],
+          "required_source_literals": [
+            "changequest(8136, 8137);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_8136_npc_quests_quests_moscovia_txt_7156",
+      "unit": "E5-chain-8136",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8167
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 8167; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_moscovia.txt",
+          "lines": [
+            7156
+          ],
+          "required_source_literals": [
+            "changequest(8167, 8168);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_8136_npc_quests_quests_moscovia_txt_7197",
+      "unit": "E5-chain-8136",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8168
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 8168; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_moscovia.txt",
+          "lines": [
+            7197
+          ],
+          "required_source_literals": [
+            "changequest(8168, 8169);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_8136_npc_quests_quests_moscovia_txt_7332",
+      "unit": "E5-chain-8136",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8171
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 8171; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_moscovia.txt",
+          "lines": [
+            7332
+          ],
+          "required_source_literals": [
+            "completequest(8171);"
           ]
         }
       ],
