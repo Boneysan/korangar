@@ -151095,6 +151095,60 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_7198_npc_re_quests_quests_dicastes_txt_1352",
+      "unit": "E5-chain-7198",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7198
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 7198; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_dicastes.txt",
+          "lines": [
+            1352
+          ],
+          "required_source_literals": [
+            "erasequest 7198;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_7198_npc_re_quests_quests_dicastes_txt_1557",
+      "unit": "E5-chain-7198",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7198
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 7198; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_dicastes.txt",
+          "lines": [
+            1557
+          ],
+          "required_source_literals": [
+            "erasequest 7198;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
