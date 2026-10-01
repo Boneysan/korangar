@@ -14,7 +14,7 @@
     "E4_unknown": 213,
     "E5_absent": 644,
     "E5_unknown": 3383,
-    "E6_unknown": 18
+    "E6_unknown": 19
   },
   "entries": [
     {
@@ -195130,6 +195130,34 @@
           "path": "db/re/mob_db.conf",
           "lines": [
             18675
+          ],
+          "required_source_literals": [
+            "{"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e6_boss_1399_boss",
+      "unit": "E6-boss-1399",
+      "package": "E6",
+      "subject": {
+        "kind": "monster",
+        "name": "EVENT_BAPHO",
+        "ids": [
+          1399
+        ]
+      },
+      "result": "unknown",
+      "statement": "Monster 1399 (EVENT_BAPHO) has configured database rows in the packet; this record does not enumerate each skill.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/mob_db.conf",
+          "lines": [
+            19140
           ],
           "required_source_literals": [
             "{"
