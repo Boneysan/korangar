@@ -141843,7 +141843,7 @@
       "package": "E3",
       "kind": "e3_translator",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "key": "mercenary_sc_start",
@@ -141904,7 +141904,24 @@
       ],
       "size_lines": 34,
       "reason": "3 item script(s) first stop at documented `mercenary_sc_start`",
-      "history": []
+      "history": [
+        "2026-10-01T06:18:08Z activated",
+        "2026-10-01T06:18:09Z validated",
+        "2026-10-01T06:18:09Z verified: 1 claims supported",
+        "2026-10-01T06:18:33Z accepted",
+        "2026-10-01T06:18:33Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "611b513f3bbac6f69b9d003523cbe0776041981782b3a29d7a747311dc4c22ca",
+      "accepted_files": [
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/export_item_reference.py",
+        "tools/tests/test_export_item_effect_phrases.py"
+      ],
+      "accepted_on": "2026-10-01",
+      "commit": "committed"
     },
     {
       "id": "E3-translate-searchstores",
