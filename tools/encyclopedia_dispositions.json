@@ -238756,6 +238756,34 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e6_boss_1418_boss",
+      "unit": "E6-boss-1418",
+      "package": "E6",
+      "subject": {
+        "kind": "monster",
+        "name": "DARK_SNAKE_LORD",
+        "ids": [
+          1418
+        ]
+      },
+      "result": "unknown",
+      "statement": "Monster 1418 (DARK_SNAKE_LORD) has configured database rows in the packet; this record does not enumerate each skill.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/mob_db.conf",
+          "lines": [
+            20014
+          ],
+          "required_source_literals": [
+            "{"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
