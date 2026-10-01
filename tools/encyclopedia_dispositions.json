@@ -238588,6 +238588,34 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e6_boss_1252_boss",
+      "unit": "E6-boss-1252",
+      "package": "E6",
+      "subject": {
+        "kind": "monster",
+        "name": "GARM",
+        "ids": [
+          1252
+        ]
+      },
+      "result": "unknown",
+      "statement": "Monster 1252 (GARM) has configured database rows in the packet; this record does not enumerate each skill.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/mob_db.conf",
+          "lines": [
+            12070
+          ],
+          "required_source_literals": [
+            "{"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
