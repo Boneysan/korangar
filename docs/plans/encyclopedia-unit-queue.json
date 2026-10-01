@@ -138655,7 +138655,7 @@
       "package": "E3",
       "kind": "e3_translator",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "key": "bonus2 bWeaponComaRace",
@@ -138763,7 +138763,24 @@
       ],
       "size_lines": 37,
       "reason": "7 item script(s) first stop at documented `bonus2 bWeaponComaRace`",
-      "history": []
+      "history": [
+        "2026-10-01T06:05:44Z activated",
+        "2026-10-01T06:05:45Z validated",
+        "2026-10-01T06:05:45Z verified: 1 claims supported",
+        "2026-10-01T06:06:09Z accepted",
+        "2026-10-01T06:06:09Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "9a755b4ed3913a4fc9a653e83fc934f6342a2c1ae79d2bdb159b29f68ac2a357",
+      "accepted_files": [
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/export_item_reference.py",
+        "tools/tests/test_export_item_effect_phrases.py"
+      ],
+      "accepted_on": "2026-10-01",
+      "commit": "committed"
     },
     {
       "id": "E3-translate-end",
