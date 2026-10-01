@@ -12,7 +12,7 @@
     "E2_verified": 236,
     "E3_unknown": 973,
     "E4_unknown": 213,
-    "E5_unknown": 841
+    "E5_unknown": 842
   },
   "entries": [
     {
@@ -107687,6 +107687,33 @@
           ],
           "required_source_literals": [
             "changequest 11318,11319;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_11319_npc_re_quests_quests_eclage_txt_1684",
+      "unit": "E5-chain-11319",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          11319
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 11319; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "lines": [
+            1684
+          ],
+          "required_source_literals": [
+            "changequest 11319,11320;"
           ]
         }
       ],
