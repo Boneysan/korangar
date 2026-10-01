@@ -238672,6 +238672,34 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e6_boss_1373_boss",
+      "unit": "E6-boss-1373",
+      "package": "E6",
+      "subject": {
+        "kind": "monster",
+        "name": "LORD_OF_DEATH",
+        "ids": [
+          1373
+        ]
+      },
+      "result": "unknown",
+      "statement": "Monster 1373 (LORD_OF_DEATH) has configured database rows in the packet; this record does not enumerate each skill.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/mob_db.conf",
+          "lines": [
+            17891
+          ],
+          "required_source_literals": [
+            "{"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
