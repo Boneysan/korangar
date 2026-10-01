@@ -134246,7 +134246,7 @@
       "package": "E3",
       "kind": "e3_translator",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "key": "bonus2 bAddMonsterDropItem",
@@ -134578,7 +134578,24 @@
       ],
       "size_lines": 37,
       "reason": "35 item script(s) first stop at documented `bonus2 bAddMonsterDropItem`",
-      "history": []
+      "history": [
+        "2026-10-01T05:56:17Z activated",
+        "2026-10-01T05:56:17Z validated",
+        "2026-10-01T05:56:17Z verified: 1 claims supported",
+        "2026-10-01T05:56:40Z accepted",
+        "2026-10-01T05:56:40Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "171402be5784727fa706da34cd79c162e44045e557733bbf4028b129d49827aa",
+      "accepted_files": [
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/export_item_reference.py",
+        "tools/tests/test_export_item_effect_phrases.py"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E3-translate-bonus3-baddmonsterdropitem",
