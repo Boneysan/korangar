@@ -145722,6 +145722,114 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_10090_npc_re_jobs_3_1_mechanic_txt_97",
+      "unit": "E5-chain-10090",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          10101
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 10101; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-1/mechanic.txt",
+          "lines": [
+            97
+          ],
+          "required_source_literals": [
+            "completequest 10101;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_10090_npc_re_jobs_3_1_mechanic_txt_180",
+      "unit": "E5-chain-10090",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          10091
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 10091; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-1/mechanic.txt",
+          "lines": [
+            180
+          ],
+          "required_source_literals": [
+            "changequest 10091,10092;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_10090_npc_re_jobs_3_1_mechanic_txt_233",
+      "unit": "E5-chain-10090",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          10090
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 10090; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-1/mechanic.txt",
+          "lines": [
+            233
+          ],
+          "required_source_literals": [
+            "changequest 10090,10091;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_10090_npc_re_jobs_3_1_mechanic_txt_265",
+      "unit": "E5-chain-10090",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          10090
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 10090; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-1/mechanic.txt",
+          "lines": [
+            265
+          ],
+          "required_source_literals": [
+            "setquest 10090;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
