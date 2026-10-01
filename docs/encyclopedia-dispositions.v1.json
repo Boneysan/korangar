@@ -12,7 +12,7 @@
     "E2_verified": 236,
     "E3_unknown": 973,
     "E4_unknown": 213,
-    "E5_unknown": 1377
+    "E5_unknown": 1380
   },
   "entries": [
     {
@@ -137063,6 +137063,87 @@
           ],
           "required_source_literals": [
             "changequest 8209,8210;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_8202_npc_quests_quests_13_1_txt_6209",
+      "unit": "E5-chain-8202",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8202
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 8202; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_1.txt",
+          "lines": [
+            6209
+          ],
+          "required_source_literals": [
+            "changequest 8202,8203;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_8202_npc_quests_quests_13_1_txt_6264",
+      "unit": "E5-chain-8202",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8203
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 8203; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_1.txt",
+          "lines": [
+            6264
+          ],
+          "required_source_literals": [
+            "changequest 8203,8204;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_8202_npc_quests_quests_13_1_txt_6334",
+      "unit": "E5-chain-8202",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8208
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 8208; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_13_1.txt",
+          "lines": [
+            6334
+          ],
+          "required_source_literals": [
+            "changequest 8208,8209;"
           ]
         }
       ],
