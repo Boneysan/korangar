@@ -12,7 +12,7 @@
     "E2_verified": 236,
     "E3_unknown": 973,
     "E4_unknown": 213,
-    "E5_unknown": 1843
+    "E5_unknown": 1848
   },
   "entries": [
     {
@@ -121133,6 +121133,141 @@
           ],
           "required_source_literals": [
             "changequest 18032,18033;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_18033_npc_quests_quests_prontera_txt_1944",
+      "unit": "E5-chain-18033",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          18033
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 18033; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_prontera.txt",
+          "lines": [
+            1944
+          ],
+          "required_source_literals": [
+            "changequest 18033,18034;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_18033_npc_quests_quests_prontera_txt_2043",
+      "unit": "E5-chain-18033",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          18035
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 18035; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_prontera.txt",
+          "lines": [
+            2043
+          ],
+          "required_source_literals": [
+            "changequest 18035,18036;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_18033_npc_quests_quests_prontera_txt_2120",
+      "unit": "E5-chain-18033",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          18050
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 18050; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_prontera.txt",
+          "lines": [
+            2120
+          ],
+          "required_source_literals": [
+            "completequest 18050;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_18033_npc_quests_quests_prontera_txt_2123",
+      "unit": "E5-chain-18033",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          18049
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 18049; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_prontera.txt",
+          "lines": [
+            2123
+          ],
+          "required_source_literals": [
+            "completequest 18049;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_18033_npc_quests_quests_prontera_txt_2130",
+      "unit": "E5-chain-18033",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          18049
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 18049; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_prontera.txt",
+          "lines": [
+            2130
+          ],
+          "required_source_literals": [
+            "changequest 18049,18051;"
           ]
         }
       ],
