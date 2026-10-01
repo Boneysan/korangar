@@ -12,7 +12,7 @@
     "E2_verified": 236,
     "E3_unknown": 973,
     "E4_unknown": 213,
-    "E5_unknown": 508
+    "E5_unknown": 510
   },
   "entries": [
     {
@@ -115787,6 +115787,60 @@
           ],
           "required_source_literals": [
             "changequest 8111,8112;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_8113_npc_quests_quests_rachel_txt_2634",
+      "unit": "E5-chain-8113",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8118
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 8118; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_rachel.txt",
+          "lines": [
+            2634
+          ],
+          "required_source_literals": [
+            "changequest 8118,8119;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_8113_npc_quests_quests_rachel_txt_2652",
+      "unit": "E5-chain-8113",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8113
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 8113; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_rachel.txt",
+          "lines": [
+            2652
+          ],
+          "required_source_literals": [
+            "changequest 8113,8114;"
           ]
         }
       ],
