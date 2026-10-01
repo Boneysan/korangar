@@ -151473,6 +151473,60 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_11159_npc_re_quests_quests_dicastes_txt_5414",
+      "unit": "E5-chain-11159",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          11159
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 11159; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_dicastes.txt",
+          "lines": [
+            5414
+          ],
+          "required_source_literals": [
+            "setquest 11159;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_11159_npc_re_quests_quests_dicastes_txt_5448",
+      "unit": "E5-chain-11159",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          11165
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 11165; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_dicastes.txt",
+          "lines": [
+            5448
+          ],
+          "required_source_literals": [
+            "setquest 11165;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
