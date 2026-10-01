@@ -126412,7 +126412,7 @@
       "package": "E6",
       "kind": "e6_boss",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "monster_id": 1038,
@@ -126432,7 +126432,25 @@
       ],
       "size_lines": 272,
       "reason": "MVP without a boss-behavior review",
-      "history": []
+      "history": [
+        "2026-10-01T04:34:13Z activated",
+        "2026-10-01T04:34:13Z validated",
+        "2026-10-01T04:34:13Z verified: 1 claims supported",
+        "2026-10-01T04:34:37Z accepted",
+        "2026-10-01T04:34:37Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "fb7476b1e7d7edc0c362b303b45bb36a36ce295196fcaac06cb3c9b5bca32d18",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E6-boss-1039",

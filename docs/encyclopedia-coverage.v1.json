@@ -213,7 +213,8 @@
       "E3_unknown": 973,
       "E4_unknown": 213,
       "E5_absent": 644,
-      "E5_unknown": 3383
+      "E5_unknown": 3383,
+      "E6_unknown": 1
     },
     "crafting_and_mechanics": {
       "production_and_conversion_recipes": 919,
