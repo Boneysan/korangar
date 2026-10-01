@@ -154281,6 +154281,87 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_11297_npc_re_quests_quests_malaya_txt_8108",
+      "unit": "E5-chain-11297",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          11297
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 11297; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malaya.txt",
+          "lines": [
+            8108
+          ],
+          "required_source_literals": [
+            "changequest 11297,11298;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_11297_npc_re_quests_quests_malaya_txt_8165",
+      "unit": "E5-chain-11297",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          11298
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 11298; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malaya.txt",
+          "lines": [
+            8165
+          ],
+          "required_source_literals": [
+            "changequest 11298,11299;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_11297_npc_re_quests_quests_malaya_txt_8179",
+      "unit": "E5-chain-11297",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          11304
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 11304; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malaya.txt",
+          "lines": [
+            8179
+          ],
+          "required_source_literals": [
+            "changequest 11304,11305;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
