@@ -135987,7 +135987,7 @@
       "package": "E3",
       "kind": "e3_translator",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "key": "sc_start4",
@@ -136151,7 +136151,24 @@
       ],
       "size_lines": 37,
       "reason": "14 item script(s) first stop at documented `sc_start4`",
-      "history": []
+      "history": [
+        "2026-10-01T05:59:08Z activated",
+        "2026-10-01T05:59:09Z validated",
+        "2026-10-01T05:59:09Z verified: 1 claims supported",
+        "2026-10-01T05:59:32Z accepted",
+        "2026-10-01T05:59:33Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "1b3031baf886e7fe8271c6b8ab87d1c5c8b39fa0af1508dd80549e362f6a9f5e",
+      "accepted_files": [
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/export_item_reference.py",
+        "tools/tests/test_export_item_effect_phrases.py"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E3-translate-bonus2-badditemhealrate",
