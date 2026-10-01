@@ -130501,7 +130501,7 @@
       "package": "E6",
       "kind": "e6_zone",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "zone": "GvG2"
@@ -130515,7 +130515,25 @@
       ],
       "size_lines": 9,
       "reason": "map-zone family: configured restrictions",
-      "history": []
+      "history": [
+        "2026-10-01T05:13:08Z activated",
+        "2026-10-01T05:13:08Z validated",
+        "2026-10-01T05:13:08Z verified: 4 claims supported",
+        "2026-10-01T05:13:32Z accepted",
+        "2026-10-01T05:13:32Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "b427b6fdddb23de5f2d9149eefd0d8dc51cba19a5f76e664bc91794c140ba693",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E6-zone-woe-te",
