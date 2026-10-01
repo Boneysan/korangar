@@ -12,7 +12,7 @@
     "E2_verified": 236,
     "E3_unknown": 973,
     "E4_unknown": 213,
-    "E5_unknown": 2446
+    "E5_unknown": 2453
   },
   "entries": [
     {
@@ -146108,6 +146108,195 @@
           ],
           "required_source_literals": [
             "completequest 5091;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_5092_npc_re_jobs_novice_supernovice_ex_txt_178",
+      "unit": "E5-chain-5092",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          5092
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 5092; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/supernovice_ex.txt",
+          "lines": [
+            178
+          ],
+          "required_source_literals": [
+            "changequest 5092,5093;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_5092_npc_re_jobs_novice_supernovice_ex_txt_274",
+      "unit": "E5-chain-5092",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          5093
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 5093; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/supernovice_ex.txt",
+          "lines": [
+            274
+          ],
+          "required_source_literals": [
+            "changequest 5093,5094+.@i;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_5092_npc_re_jobs_novice_supernovice_ex_txt_326",
+      "unit": "E5-chain-5092",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          5094
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 5094; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/supernovice_ex.txt",
+          "lines": [
+            326
+          ],
+          "required_source_literals": [
+            "changequest 5094+.@i,5098;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_5092_npc_re_jobs_novice_supernovice_ex_txt_391",
+      "unit": "E5-chain-5092",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          5098
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 5098; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/supernovice_ex.txt",
+          "lines": [
+            391
+          ],
+          "required_source_literals": [
+            "changequest 5098,5099;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_5092_npc_re_jobs_novice_supernovice_ex_txt_490",
+      "unit": "E5-chain-5092",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          5100
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 5100; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/supernovice_ex.txt",
+          "lines": [
+            490
+          ],
+          "required_source_literals": [
+            "erasequest 5100;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_5092_npc_re_jobs_novice_supernovice_ex_txt_674",
+      "unit": "E5-chain-5092",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          5099
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 5099; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/supernovice_ex.txt",
+          "lines": [
+            674
+          ],
+          "required_source_literals": [
+            "changequest 5099,5100;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_5092_npc_re_jobs_novice_supernovice_ex_txt_69",
+      "unit": "E5-chain-5092",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          5092
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 5092; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/supernovice_ex.txt",
+          "lines": [
+            69
+          ],
+          "required_source_literals": [
+            "setquest 5092;"
           ]
         }
       ],
