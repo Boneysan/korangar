@@ -185466,6 +185466,1545 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_5131_npc_re_jobs_2e_kagerou_oboro_txt_75",
+      "unit": "E5-chain-5131",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          5131
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 5131; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/2e/kagerou_oboro.txt",
+          "lines": [
+            75
+          ],
+          "required_source_literals": [
+            "setquest 5131;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_5131_npc_re_jobs_2e_kagerou_oboro_txt_193",
+      "unit": "E5-chain-5131",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          5131
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 5131; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/2e/kagerou_oboro.txt",
+          "lines": [
+            193
+          ],
+          "required_source_literals": [
+            "erasequest 5131;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_5131_npc_re_jobs_2e_kagerou_oboro_txt_194",
+      "unit": "E5-chain-5131",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          5132
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 5132; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/2e/kagerou_oboro.txt",
+          "lines": [
+            194
+          ],
+          "required_source_literals": [
+            "setquest 5132;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_5131_npc_re_jobs_2e_kagerou_oboro_txt_238",
+      "unit": "E5-chain-5131",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          5132
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 5132; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/2e/kagerou_oboro.txt",
+          "lines": [
+            238
+          ],
+          "required_source_literals": [
+            "erasequest 5132;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_5131_npc_re_jobs_2e_kagerou_oboro_txt_239",
+      "unit": "E5-chain-5131",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          5133
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 5133; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/2e/kagerou_oboro.txt",
+          "lines": [
+            239
+          ],
+          "required_source_literals": [
+            "setquest 5133;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_5131_npc_re_jobs_2e_kagerou_oboro_txt_286",
+      "unit": "E5-chain-5131",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          5133
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 5133; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/2e/kagerou_oboro.txt",
+          "lines": [
+            286
+          ],
+          "required_source_literals": [
+            "erasequest 5133;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_5131_npc_re_jobs_2e_kagerou_oboro_txt_287",
+      "unit": "E5-chain-5131",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          5134
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 5134; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/2e/kagerou_oboro.txt",
+          "lines": [
+            287
+          ],
+          "required_source_literals": [
+            "setquest 5134;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_5131_npc_re_jobs_2e_kagerou_oboro_txt_402",
+      "unit": "E5-chain-5131",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          5134
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 5134; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/2e/kagerou_oboro.txt",
+          "lines": [
+            402
+          ],
+          "required_source_literals": [
+            "erasequest 5134;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_5131_npc_re_jobs_2e_kagerou_oboro_txt_403",
+      "unit": "E5-chain-5131",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          5135
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 5135; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/2e/kagerou_oboro.txt",
+          "lines": [
+            403
+          ],
+          "required_source_literals": [
+            "setquest 5135;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_5131_npc_re_jobs_2e_kagerou_oboro_txt_689",
+      "unit": "E5-chain-5131",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          5146
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 5146; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/2e/kagerou_oboro.txt",
+          "lines": [
+            689
+          ],
+          "required_source_literals": [
+            "setquest 5146;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_5131_npc_re_jobs_2e_kagerou_oboro_txt_746",
+      "unit": "E5-chain-5131",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          5136
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 5136; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/2e/kagerou_oboro.txt",
+          "lines": [
+            746
+          ],
+          "required_source_literals": [
+            "setquest 5136;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_5131_npc_re_jobs_2e_kagerou_oboro_txt_755",
+      "unit": "E5-chain-5131",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          5137
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 5137; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/2e/kagerou_oboro.txt",
+          "lines": [
+            755
+          ],
+          "required_source_literals": [
+            "setquest 5137;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_5131_npc_re_jobs_2e_kagerou_oboro_txt_764",
+      "unit": "E5-chain-5131",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          5138
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 5138; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/2e/kagerou_oboro.txt",
+          "lines": [
+            764
+          ],
+          "required_source_literals": [
+            "setquest 5138;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_5131_npc_re_jobs_2e_kagerou_oboro_txt_820",
+      "unit": "E5-chain-5131",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          5139
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 5139; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/2e/kagerou_oboro.txt",
+          "lines": [
+            820
+          ],
+          "required_source_literals": [
+            "setquest 5139;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_5131_npc_re_jobs_2e_kagerou_oboro_txt_825",
+      "unit": "E5-chain-5131",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          5139
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 5139; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/2e/kagerou_oboro.txt",
+          "lines": [
+            825
+          ],
+          "required_source_literals": [
+            "setquest 5139;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_5131_npc_re_jobs_2e_kagerou_oboro_txt_960",
+      "unit": "E5-chain-5131",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          5136
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 5136; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/2e/kagerou_oboro.txt",
+          "lines": [
+            960
+          ],
+          "required_source_literals": [
+            "completequest 5136;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_5131_npc_re_jobs_2e_kagerou_oboro_txt_961",
+      "unit": "E5-chain-5131",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          5139
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 5139; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/2e/kagerou_oboro.txt",
+          "lines": [
+            961
+          ],
+          "required_source_literals": [
+            "erasequest 5139;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_5131_npc_re_jobs_2e_kagerou_oboro_txt_1247",
+      "unit": "E5-chain-5131",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          5141
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 5141; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/2e/kagerou_oboro.txt",
+          "lines": [
+            1247
+          ],
+          "required_source_literals": [
+            "setquest 5141;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_5131_npc_re_jobs_2e_kagerou_oboro_txt_1256",
+      "unit": "E5-chain-5131",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          5141
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 5141; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/2e/kagerou_oboro.txt",
+          "lines": [
+            1256
+          ],
+          "required_source_literals": [
+            "erasequest 5141;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_5131_npc_re_jobs_2e_kagerou_oboro_txt_1260",
+      "unit": "E5-chain-5131",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          5141
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 5141; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/2e/kagerou_oboro.txt",
+          "lines": [
+            1260
+          ],
+          "required_source_literals": [
+            "erasequest 5141;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_5131_npc_re_jobs_2e_kagerou_oboro_txt_1295",
+      "unit": "E5-chain-5131",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          5140
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 5140; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/2e/kagerou_oboro.txt",
+          "lines": [
+            1295
+          ],
+          "required_source_literals": [
+            "setquest 5140;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_5131_npc_re_jobs_2e_kagerou_oboro_txt_1301",
+      "unit": "E5-chain-5131",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          5141
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 5141; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/2e/kagerou_oboro.txt",
+          "lines": [
+            1301
+          ],
+          "required_source_literals": [
+            "erasequest 5141;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_5131_npc_re_jobs_2e_kagerou_oboro_txt_1498",
+      "unit": "E5-chain-5131",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          5141
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 5141; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/2e/kagerou_oboro.txt",
+          "lines": [
+            1498
+          ],
+          "required_source_literals": [
+            "setquest 5141;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_5131_npc_re_jobs_2e_kagerou_oboro_txt_1506",
+      "unit": "E5-chain-5131",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          5141
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 5141; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/2e/kagerou_oboro.txt",
+          "lines": [
+            1506
+          ],
+          "required_source_literals": [
+            "erasequest 5141;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_5131_npc_re_jobs_2e_kagerou_oboro_txt_1510",
+      "unit": "E5-chain-5131",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          5141
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 5141; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/2e/kagerou_oboro.txt",
+          "lines": [
+            1510
+          ],
+          "required_source_literals": [
+            "erasequest 5141;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_5131_npc_re_jobs_2e_kagerou_oboro_txt_1668",
+      "unit": "E5-chain-5131",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          5141
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 5141; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/2e/kagerou_oboro.txt",
+          "lines": [
+            1668
+          ],
+          "required_source_literals": [
+            "setquest 5141;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_5131_npc_re_jobs_2e_kagerou_oboro_txt_1687",
+      "unit": "E5-chain-5131",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          5141
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 5141; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/2e/kagerou_oboro.txt",
+          "lines": [
+            1687
+          ],
+          "required_source_literals": [
+            "erasequest 5141;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_5131_npc_re_jobs_2e_kagerou_oboro_txt_1689",
+      "unit": "E5-chain-5131",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          5141
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 5141; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/2e/kagerou_oboro.txt",
+          "lines": [
+            1689
+          ],
+          "required_source_literals": [
+            "erasequest 5141;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_5131_npc_re_jobs_2e_kagerou_oboro_txt_1914",
+      "unit": "E5-chain-5131",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          5137
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 5137; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/2e/kagerou_oboro.txt",
+          "lines": [
+            1914
+          ],
+          "required_source_literals": [
+            "completequest 5137;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_5131_npc_re_jobs_2e_kagerou_oboro_txt_1915",
+      "unit": "E5-chain-5131",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          5140
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 5140; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/2e/kagerou_oboro.txt",
+          "lines": [
+            1915
+          ],
+          "required_source_literals": [
+            "erasequest 5140;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_5131_npc_re_jobs_2e_kagerou_oboro_txt_1916",
+      "unit": "E5-chain-5131",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          5141
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 5141; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/2e/kagerou_oboro.txt",
+          "lines": [
+            1916
+          ],
+          "required_source_literals": [
+            "if (questprogress(5141)) erasequest 5141;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_5131_npc_re_jobs_2e_kagerou_oboro_txt_2002",
+      "unit": "E5-chain-5131",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          5142
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 5142; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/2e/kagerou_oboro.txt",
+          "lines": [
+            2002
+          ],
+          "required_source_literals": [
+            "setquest 5142;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_5131_npc_re_jobs_2e_kagerou_oboro_txt_2039",
+      "unit": "E5-chain-5131",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          5145
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 5145; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/2e/kagerou_oboro.txt",
+          "lines": [
+            2039
+          ],
+          "required_source_literals": [
+            "setquest 5145;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_5131_npc_re_jobs_2e_kagerou_oboro_txt_2074",
+      "unit": "E5-chain-5131",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          5142
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 5142; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/2e/kagerou_oboro.txt",
+          "lines": [
+            2074
+          ],
+          "required_source_literals": [
+            "setquest 5142;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_5131_npc_re_jobs_2e_kagerou_oboro_txt_2075",
+      "unit": "E5-chain-5131",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          5143
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 5143; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/2e/kagerou_oboro.txt",
+          "lines": [
+            2075
+          ],
+          "required_source_literals": [
+            "if (questprogress(5143)) erasequest 5143;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_5131_npc_re_jobs_2e_kagerou_oboro_txt_2076",
+      "unit": "E5-chain-5131",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          5144
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 5144; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/2e/kagerou_oboro.txt",
+          "lines": [
+            2076
+          ],
+          "required_source_literals": [
+            "if (questprogress(5144)) erasequest 5144;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_5131_npc_re_jobs_2e_kagerou_oboro_txt_2077",
+      "unit": "E5-chain-5131",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          5145
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 5145; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/2e/kagerou_oboro.txt",
+          "lines": [
+            2077
+          ],
+          "required_source_literals": [
+            "erasequest 5145;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_5131_npc_re_jobs_2e_kagerou_oboro_txt_2152",
+      "unit": "E5-chain-5131",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          5145
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 5145; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/2e/kagerou_oboro.txt",
+          "lines": [
+            2152
+          ],
+          "required_source_literals": [
+            "erasequest 5145;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_5131_npc_re_jobs_2e_kagerou_oboro_txt_2153",
+      "unit": "E5-chain-5131",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          5138
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 5138; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/2e/kagerou_oboro.txt",
+          "lines": [
+            2153
+          ],
+          "required_source_literals": [
+            "completequest 5138;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_5131_npc_re_jobs_2e_kagerou_oboro_txt_2154",
+      "unit": "E5-chain-5131",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          5143
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 5143; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/2e/kagerou_oboro.txt",
+          "lines": [
+            2154
+          ],
+          "required_source_literals": [
+            "if (questprogress(5143) == 1) completequest 5143;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_5131_npc_re_jobs_2e_kagerou_oboro_txt_2155",
+      "unit": "E5-chain-5131",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          5144
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 5144; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/2e/kagerou_oboro.txt",
+          "lines": [
+            2155
+          ],
+          "required_source_literals": [
+            "if (questprogress(5144) == 1) completequest 5144;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_5131_npc_re_jobs_2e_kagerou_oboro_txt_2351",
+      "unit": "E5-chain-5131",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          5142
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 5142; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/2e/kagerou_oboro.txt",
+          "lines": [
+            2351
+          ],
+          "required_source_literals": [
+            "erasequest 5142;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_5131_npc_re_jobs_2e_kagerou_oboro_txt_2353",
+      "unit": "E5-chain-5131",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          5143
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 5143; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/2e/kagerou_oboro.txt",
+          "lines": [
+            2353
+          ],
+          "required_source_literals": [
+            "setquest 5143;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_5131_npc_re_jobs_2e_kagerou_oboro_txt_2356",
+      "unit": "E5-chain-5131",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          5144
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 5144; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/2e/kagerou_oboro.txt",
+          "lines": [
+            2356
+          ],
+          "required_source_literals": [
+            "setquest 5144;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_5131_npc_re_jobs_2e_kagerou_oboro_txt_2823",
+      "unit": "E5-chain-5131",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          5136
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 5136; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/2e/kagerou_oboro.txt",
+          "lines": [
+            2823
+          ],
+          "required_source_literals": [
+            "setquest 5136;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_5131_npc_re_jobs_2e_kagerou_oboro_txt_2824",
+      "unit": "E5-chain-5131",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          5136
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 5136; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/2e/kagerou_oboro.txt",
+          "lines": [
+            2824
+          ],
+          "required_source_literals": [
+            "completequest 5136;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_5131_npc_re_jobs_2e_kagerou_oboro_txt_2830",
+      "unit": "E5-chain-5131",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          5137
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 5137; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/2e/kagerou_oboro.txt",
+          "lines": [
+            2830
+          ],
+          "required_source_literals": [
+            "setquest 5137;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_5131_npc_re_jobs_2e_kagerou_oboro_txt_2831",
+      "unit": "E5-chain-5131",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          5137
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 5137; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/2e/kagerou_oboro.txt",
+          "lines": [
+            2831
+          ],
+          "required_source_literals": [
+            "completequest 5137;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_5131_npc_re_jobs_2e_kagerou_oboro_txt_2836",
+      "unit": "E5-chain-5131",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          5138
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 5138; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/2e/kagerou_oboro.txt",
+          "lines": [
+            2836
+          ],
+          "required_source_literals": [
+            "setquest 5138;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_5131_npc_re_jobs_2e_kagerou_oboro_txt_2837",
+      "unit": "E5-chain-5131",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          5138
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 5138; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/2e/kagerou_oboro.txt",
+          "lines": [
+            2837
+          ],
+          "required_source_literals": [
+            "completequest 5138;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_5131_npc_re_jobs_2e_kagerou_oboro_txt_2851",
+      "unit": "E5-chain-5131",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          5136
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 5136; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/2e/kagerou_oboro.txt",
+          "lines": [
+            2851
+          ],
+          "required_source_literals": [
+            "setquest 5136;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_5131_npc_re_jobs_2e_kagerou_oboro_txt_2852",
+      "unit": "E5-chain-5131",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          5136
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 5136; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/2e/kagerou_oboro.txt",
+          "lines": [
+            2852
+          ],
+          "required_source_literals": [
+            "completequest 5136;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_5131_npc_re_jobs_2e_kagerou_oboro_txt_2853",
+      "unit": "E5-chain-5131",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          5137
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 5137; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/2e/kagerou_oboro.txt",
+          "lines": [
+            2853
+          ],
+          "required_source_literals": [
+            "setquest 5137;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_5131_npc_re_jobs_2e_kagerou_oboro_txt_2854",
+      "unit": "E5-chain-5131",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          5137
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 5137; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/2e/kagerou_oboro.txt",
+          "lines": [
+            2854
+          ],
+          "required_source_literals": [
+            "completequest 5137;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_5131_npc_re_jobs_2e_kagerou_oboro_txt_2855",
+      "unit": "E5-chain-5131",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          5138
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 5138; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/2e/kagerou_oboro.txt",
+          "lines": [
+            2855
+          ],
+          "required_source_literals": [
+            "setquest 5138;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_5131_npc_re_jobs_2e_kagerou_oboro_txt_2856",
+      "unit": "E5-chain-5131",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          5138
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 5138; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/2e/kagerou_oboro.txt",
+          "lines": [
+            2856
+          ],
+          "required_source_literals": [
+            "completequest 5138;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_5131_npc_re_jobs_2e_kagerou_oboro_txt_2859",
+      "unit": "E5-chain-5131",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          5146
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 5146; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/2e/kagerou_oboro.txt",
+          "lines": [
+            2859
+          ],
+          "required_source_literals": [
+            "setquest 5146;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
