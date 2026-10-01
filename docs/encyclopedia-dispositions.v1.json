@@ -14,7 +14,7 @@
     "E4_unknown": 213,
     "E5_absent": 644,
     "E5_unknown": 3383,
-    "E6_unknown": 64
+    "E6_unknown": 65
   },
   "entries": [
     {
@@ -196418,6 +196418,34 @@
           "path": "db/re/mob_db.conf",
           "lines": [
             50957
+          ],
+          "required_source_literals": [
+            "{"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e6_boss_2112_boss",
+      "unit": "E6-boss-2112",
+      "package": "E6",
+      "subject": {
+        "kind": "monster",
+        "name": "E_B_SEYREN",
+        "ids": [
+          2112
+        ]
+      },
+      "result": "unknown",
+      "statement": "Monster 2112 (E_B_SEYREN) has configured database rows in the packet; this record does not enumerate each skill.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/mob_db.conf",
+          "lines": [
+            51017
           ],
           "required_source_literals": [
             "{"
