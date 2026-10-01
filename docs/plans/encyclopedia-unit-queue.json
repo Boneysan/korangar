@@ -4827,7 +4827,8 @@
         "2026-09-30T14:40:33Z validated",
         "2026-09-30T14:40:33Z verified: 1 claims supported",
         "2026-09-30T14:40:56Z accepted",
-        "2026-09-30T14:40:56Z committed"
+        "2026-09-30T14:40:56Z committed",
+        "2026-10-01T07:23:19Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "939cce7c7d6f8ae850741f888ecc0f8cab38696561d35b237031a79dc8e3ccf7",
@@ -4840,7 +4841,7 @@
         "tools/encyclopedia_dispositions.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -5262,7 +5263,8 @@
         "2026-09-30T14:44:39Z validated",
         "2026-09-30T14:44:39Z verified: 15 claims supported",
         "2026-09-30T14:45:03Z accepted",
-        "2026-09-30T14:45:03Z committed"
+        "2026-09-30T14:45:03Z committed",
+        "2026-10-01T07:23:19Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "97d0b4a7ae64c3e43171119844f614b4d8ac47a2195d45d713257ed5f87c9b97",
@@ -5275,7 +5277,7 @@
         "tools/encyclopedia_dispositions.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -5700,7 +5702,8 @@
         "2026-09-30T14:48:38Z validated",
         "2026-09-30T14:48:38Z verified: 3 claims supported",
         "2026-09-30T14:49:01Z accepted",
-        "2026-09-30T14:49:01Z committed"
+        "2026-09-30T14:49:01Z committed",
+        "2026-10-01T07:23:19Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "be2ed96d118c7fe4f0f8a17659b00ca9a2605962a8843e50ea44c61607015403",
@@ -5713,7 +5716,7 @@
         "tools/encyclopedia_dispositions.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -6141,7 +6144,8 @@
         "2026-09-30T14:52:36Z validated",
         "2026-09-30T14:52:37Z verified: 9 claims supported",
         "2026-09-30T14:53:00Z accepted",
-        "2026-09-30T14:53:00Z committed"
+        "2026-09-30T14:53:00Z committed",
+        "2026-10-01T07:23:19Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "1771b2ce6deb05bf0fcbaa85a2b805cef73bf7d02f9aea0c3b20fe9e63a9915f",
@@ -6154,7 +6158,7 @@
         "tools/encyclopedia_dispositions.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -6582,7 +6586,8 @@
         "2026-09-30T14:56:35Z validated",
         "2026-09-30T14:56:35Z verified: 5 claims supported",
         "2026-09-30T14:56:59Z accepted",
-        "2026-09-30T14:56:59Z committed"
+        "2026-09-30T14:56:59Z committed",
+        "2026-10-01T07:23:19Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "c795f0aca227e4e66959662614a189ea91eec6bb91e97078c3f844b9e2af73f5",
@@ -6595,7 +6600,7 @@
         "tools/encyclopedia_dispositions.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -7023,7 +7028,8 @@
         "2026-09-30T15:00:40Z validated",
         "2026-09-30T15:00:40Z verified: 1 claims supported",
         "2026-09-30T15:01:03Z accepted",
-        "2026-09-30T15:01:03Z committed"
+        "2026-09-30T15:01:03Z committed",
+        "2026-10-01T07:23:19Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "b9ae74cda8d9f7bd1b078e83dacc3bd29b36479f0b913ba12089dc9a40889964",
@@ -7036,7 +7042,7 @@
         "tools/encyclopedia_dispositions.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -7464,7 +7470,8 @@
         "2026-09-30T15:04:38Z validated",
         "2026-09-30T15:04:38Z verified: 1 claims supported",
         "2026-09-30T15:05:01Z accepted",
-        "2026-09-30T15:05:01Z committed"
+        "2026-09-30T15:05:01Z committed",
+        "2026-10-01T07:23:19Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "21c1ec2750186a7e032f98d6bc2137b6689e4cbc2a112d3a94f84e8102bd7173",
@@ -7477,7 +7484,7 @@
         "tools/encyclopedia_dispositions.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -7905,7 +7912,8 @@
         "2026-09-30T15:08:36Z validated",
         "2026-09-30T15:08:36Z verified: 1 claims supported",
         "2026-09-30T15:08:59Z accepted",
-        "2026-09-30T15:09:00Z committed"
+        "2026-09-30T15:09:00Z committed",
+        "2026-10-01T07:23:19Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "2fad207dcb7ead61e1b84cfe58aa5488d852a0f604206fb52b281f5e279f84d2",
@@ -7918,7 +7926,7 @@
         "tools/encyclopedia_dispositions.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -8346,7 +8354,8 @@
         "2026-09-30T15:12:35Z validated",
         "2026-09-30T15:12:35Z verified: 0 claims supported",
         "2026-09-30T15:12:58Z accepted",
-        "2026-09-30T15:12:58Z committed"
+        "2026-09-30T15:12:58Z committed",
+        "2026-10-01T07:23:19Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "29e516c70d116d8360bb2713397ee034eff70cc3ca9ab3ef18bd411560ec919f",
@@ -8356,7 +8365,7 @@
         "docs/plans/encyclopedia-unit-queue.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -8781,7 +8790,8 @@
         "2026-09-30T15:16:41Z validated",
         "2026-09-30T15:16:41Z verified: 3 claims supported",
         "2026-09-30T15:17:04Z accepted",
-        "2026-09-30T15:17:04Z committed"
+        "2026-09-30T15:17:04Z committed",
+        "2026-10-01T07:23:20Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "541d27eaa823a4f880d2275ec691ab036eb6f183ec72f4a23324d8d4c148f6d4",
@@ -8794,7 +8804,7 @@
         "tools/encyclopedia_dispositions.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -9213,7 +9223,8 @@
         "2026-09-30T15:20:40Z validated",
         "2026-09-30T15:20:40Z verified: 1 claims supported",
         "2026-09-30T15:21:03Z accepted",
-        "2026-09-30T15:21:03Z committed"
+        "2026-09-30T15:21:03Z committed",
+        "2026-10-01T07:23:20Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "1088c94e9e42e39e5a83e757884071ac88e9173fada31f5ed6321d3faba79cdd",
@@ -9226,7 +9237,7 @@
         "tools/encyclopedia_dispositions.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -9642,7 +9653,8 @@
         "2026-09-30T15:24:38Z validated",
         "2026-09-30T15:24:38Z verified: 4 claims supported",
         "2026-09-30T15:25:01Z accepted",
-        "2026-09-30T15:25:01Z committed"
+        "2026-09-30T15:25:01Z committed",
+        "2026-10-01T07:23:20Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "b0ec098c22c195b32820b7c9231dfdf977a42f75e0715318273c13c5a26016ad",
@@ -9655,7 +9667,7 @@
         "tools/encyclopedia_dispositions.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -10080,7 +10092,8 @@
         "2026-09-30T15:28:37Z validated",
         "2026-09-30T15:28:37Z verified: 1 claims supported",
         "2026-09-30T15:29:00Z accepted",
-        "2026-09-30T15:29:00Z committed"
+        "2026-09-30T15:29:00Z committed",
+        "2026-10-01T07:23:20Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "c2cb84e390d83b2f04980b2771121f10ca570f950f1c83aff6a65da945515f01",
@@ -10093,7 +10106,7 @@
         "tools/encyclopedia_dispositions.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -10518,7 +10531,8 @@
         "2026-09-30T15:32:44Z validated",
         "2026-09-30T15:32:44Z verified: 1 claims supported",
         "2026-09-30T15:33:07Z accepted",
-        "2026-09-30T15:33:07Z committed"
+        "2026-09-30T15:33:07Z committed",
+        "2026-10-01T07:23:20Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "5396b050df2485cd586845de3dc7bdf1b687b95a0ca333c1e4a5d07a8f1e08aa",
@@ -10531,7 +10545,7 @@
         "tools/encyclopedia_dispositions.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -10959,7 +10973,8 @@
         "2026-09-30T15:36:43Z validated",
         "2026-09-30T15:36:43Z verified: 1 claims supported",
         "2026-09-30T15:37:06Z accepted",
-        "2026-09-30T15:37:06Z committed"
+        "2026-09-30T15:37:06Z committed",
+        "2026-10-01T07:23:20Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "c4702d1e5cbbf711684406c4bbc2803d83c84869654d3d82396ed81848321761",
@@ -10972,7 +10987,7 @@
         "tools/encyclopedia_dispositions.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -11400,7 +11415,8 @@
         "2026-09-30T15:40:43Z validated",
         "2026-09-30T15:40:43Z verified: 1 claims supported",
         "2026-09-30T15:41:06Z accepted",
-        "2026-09-30T15:41:06Z committed"
+        "2026-09-30T15:41:06Z committed",
+        "2026-10-01T07:23:20Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "fb0ab9d5e111fdad492cf18011dc3a4853e941162454ac8f2f480b8fd1e154b6",
@@ -11413,7 +11429,7 @@
         "tools/encyclopedia_dispositions.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -11838,7 +11854,8 @@
         "2026-09-30T15:44:46Z validated",
         "2026-09-30T15:44:47Z verified: 15 claims supported",
         "2026-09-30T15:45:12Z accepted",
-        "2026-09-30T15:45:13Z committed"
+        "2026-09-30T15:45:13Z committed",
+        "2026-10-01T07:23:20Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "be00de01ed761558d76f36cd7e9dc607d02e0b12f9064d460fded7e0818c570f",
@@ -11851,7 +11868,7 @@
         "tools/encyclopedia_dispositions.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -12279,7 +12296,8 @@
         "2026-09-30T15:49:16Z validated",
         "2026-09-30T15:49:16Z verified: 1 claims supported",
         "2026-09-30T15:49:39Z accepted",
-        "2026-09-30T15:49:39Z committed"
+        "2026-09-30T15:49:39Z committed",
+        "2026-10-01T07:23:20Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "b2669be6909e2f37b26e9fcdd6428179538bd77cf6902ff7f6da099897b27339",
@@ -12292,7 +12310,7 @@
         "tools/encyclopedia_dispositions.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -12717,7 +12735,8 @@
         "2026-09-30T15:53:17Z validated",
         "2026-09-30T15:53:17Z verified: 0 claims supported",
         "2026-09-30T15:53:41Z accepted",
-        "2026-09-30T15:53:41Z committed"
+        "2026-09-30T15:53:41Z committed",
+        "2026-10-01T07:23:20Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "d95a851a46f23ef3dd718ba515be4d0b7ba8186cf5e6cac063396f1883d1e640",
@@ -12727,7 +12746,7 @@
         "docs/plans/encyclopedia-unit-queue.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -13152,7 +13171,8 @@
         "2026-09-30T15:57:17Z validated",
         "2026-09-30T15:57:18Z verified: 1 claims supported",
         "2026-09-30T15:57:41Z accepted",
-        "2026-09-30T15:57:41Z committed"
+        "2026-09-30T15:57:41Z committed",
+        "2026-10-01T07:23:20Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "20e31fbc284ed9a2d26c720b6a7265d88749fc8f7f98f394eb7069ee7b9fed37",
@@ -13165,7 +13185,7 @@
         "tools/encyclopedia_dispositions.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -13587,7 +13607,8 @@
         "2026-09-30T16:01:18Z validated",
         "2026-09-30T16:01:18Z verified: 11 claims supported",
         "2026-09-30T16:01:41Z accepted",
-        "2026-09-30T16:01:41Z committed"
+        "2026-09-30T16:01:41Z committed",
+        "2026-10-01T07:23:20Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "f8f2637dda8f328977b0345787caaddd3c16232c61ad97509364e616b90919c8",
@@ -13600,7 +13621,7 @@
         "tools/encyclopedia_dispositions.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -14025,7 +14046,8 @@
         "2026-09-30T16:05:25Z validated",
         "2026-09-30T16:05:25Z verified: 1 claims supported",
         "2026-09-30T16:05:48Z accepted",
-        "2026-09-30T16:05:49Z committed"
+        "2026-09-30T16:05:49Z committed",
+        "2026-10-01T07:23:20Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "e8f64fa1d901b0a24b781e6e07797dc74b363893ca6e606a9d6f15f1fb255d88",
@@ -14038,7 +14060,7 @@
         "tools/encyclopedia_dispositions.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -14466,7 +14488,8 @@
         "2026-09-30T16:09:25Z validated",
         "2026-09-30T16:09:25Z verified: 4 claims supported",
         "2026-09-30T16:09:48Z accepted",
-        "2026-09-30T16:09:48Z committed"
+        "2026-09-30T16:09:48Z committed",
+        "2026-10-01T07:23:21Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "d7d0dadd5933be94394f84e8998b977d7373502a42ff0c75f566e79e127dea04",
@@ -14479,7 +14502,7 @@
         "tools/encyclopedia_dispositions.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -14907,7 +14930,8 @@
         "2026-09-30T16:13:24Z validated",
         "2026-09-30T16:13:24Z verified: 3 claims supported",
         "2026-09-30T16:13:47Z accepted",
-        "2026-09-30T16:13:47Z committed"
+        "2026-09-30T16:13:47Z committed",
+        "2026-10-01T07:23:21Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "b43d7bed95684e6701c07a1fade212683bf31bba17cb7516466ef67799ad9a88",
@@ -14920,7 +14944,7 @@
         "tools/encyclopedia_dispositions.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -15342,7 +15366,8 @@
         "2026-09-30T16:17:23Z validated",
         "2026-09-30T16:17:23Z verified: 1 claims supported",
         "2026-09-30T16:17:47Z accepted",
-        "2026-09-30T16:17:47Z committed"
+        "2026-09-30T16:17:47Z committed",
+        "2026-10-01T07:23:21Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "844023d8ac69a7817005de8846b29ac0c7b209f4a29521ac636f8e28f6b1d4c8",
@@ -15355,7 +15380,7 @@
         "tools/encyclopedia_dispositions.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -15780,7 +15805,8 @@
         "2026-09-30T16:21:31Z validated",
         "2026-09-30T16:21:32Z verified: 1 claims supported",
         "2026-09-30T16:21:55Z accepted",
-        "2026-09-30T16:21:55Z committed"
+        "2026-09-30T16:21:55Z committed",
+        "2026-10-01T07:23:21Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "c5dd33e1a579d5c20dddabc6f58aea2b52ee945132d7d9d30fb44845de4ca13c",
@@ -15793,7 +15819,7 @@
         "tools/encyclopedia_dispositions.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -16221,7 +16247,8 @@
         "2026-09-30T16:25:31Z validated",
         "2026-09-30T16:25:31Z verified: 1 claims supported",
         "2026-09-30T16:25:54Z accepted",
-        "2026-09-30T16:25:54Z committed"
+        "2026-09-30T16:25:54Z committed",
+        "2026-10-01T07:23:21Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "584c62c1c3bb78a851e2336a5344daecd08fc044b1bb3f2aeb7c195e699aaa10",
@@ -16234,7 +16261,7 @@
         "tools/encyclopedia_dispositions.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -16662,7 +16689,8 @@
         "2026-09-30T16:29:31Z validated",
         "2026-09-30T16:29:31Z verified: 1 claims supported",
         "2026-09-30T16:29:54Z accepted",
-        "2026-09-30T16:29:54Z committed"
+        "2026-09-30T16:29:54Z committed",
+        "2026-10-01T07:23:21Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "cad63c47d716ec8836ed6b8f17267295acb7844f6dabd4983a54a6394ae93dd7",
@@ -16675,7 +16703,7 @@
         "tools/encyclopedia_dispositions.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -17103,7 +17131,8 @@
         "2026-09-30T16:33:30Z validated",
         "2026-09-30T16:33:31Z verified: 2 claims supported",
         "2026-09-30T16:33:54Z accepted",
-        "2026-09-30T16:33:54Z committed"
+        "2026-09-30T16:33:54Z committed",
+        "2026-10-01T07:23:21Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "589f0c23a143b36558b6ce15150d7c88b94eb81760e79709f9b0467bdc5a99a1",
@@ -17116,7 +17145,7 @@
         "tools/encyclopedia_dispositions.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -17544,7 +17573,8 @@
         "2026-09-30T16:37:39Z validated",
         "2026-09-30T16:37:39Z verified: 1 claims supported",
         "2026-09-30T16:38:02Z accepted",
-        "2026-09-30T16:38:02Z committed"
+        "2026-09-30T16:38:02Z committed",
+        "2026-10-01T07:23:21Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "bd6f37378a12534226167793c9e7d179029d87cb9310fd1cb997e37395e18eae",
@@ -17557,7 +17587,7 @@
         "tools/encyclopedia_dispositions.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -17979,7 +18009,8 @@
         "2026-09-30T16:41:39Z validated",
         "2026-09-30T16:41:39Z verified: 0 claims supported",
         "2026-09-30T16:42:02Z accepted",
-        "2026-09-30T16:42:02Z committed"
+        "2026-09-30T16:42:02Z committed",
+        "2026-10-01T07:23:21Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "50146e4e24970bac4a9a06df0b53f2ed685d8152c5192e812d020a6cb6e9ac42",
@@ -17989,7 +18020,7 @@
         "docs/plans/encyclopedia-unit-queue.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -18417,7 +18448,8 @@
         "2026-09-30T16:45:38Z validated",
         "2026-09-30T16:45:38Z verified: 5 claims supported",
         "2026-09-30T16:46:02Z accepted",
-        "2026-09-30T16:46:02Z committed"
+        "2026-09-30T16:46:02Z committed",
+        "2026-10-01T07:23:21Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "46e9e792161f18c392ed34d9bca47f5acb0eb004064c9ae337ba34c67aaf2f95",
@@ -18430,7 +18462,7 @@
         "tools/encyclopedia_dispositions.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -18858,7 +18890,8 @@
         "2026-09-30T16:49:37Z validated",
         "2026-09-30T16:49:38Z verified: 2 claims supported",
         "2026-09-30T16:50:01Z accepted",
-        "2026-09-30T16:50:01Z committed"
+        "2026-09-30T16:50:01Z committed",
+        "2026-10-01T07:23:21Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "d464bd22efef72c1b66a06fdb6f246f5d5a91ab67c9e513ea605b9f0fee98fbc",
@@ -18871,7 +18904,7 @@
         "tools/encyclopedia_dispositions.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -19299,7 +19332,8 @@
         "2026-09-30T16:53:45Z validated",
         "2026-09-30T16:53:45Z verified: 1 claims supported",
         "2026-09-30T16:54:09Z accepted",
-        "2026-09-30T16:54:09Z committed"
+        "2026-09-30T16:54:09Z committed",
+        "2026-10-01T07:23:21Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "bc3771037196a9fcf58526a10012d2e3c1e26e5aea9e23dcd2e759aee0dee46b",
@@ -19312,7 +19346,7 @@
         "tools/encyclopedia_dispositions.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -19740,7 +19774,8 @@
         "2026-09-30T16:57:44Z validated",
         "2026-09-30T16:57:44Z verified: 3 claims supported",
         "2026-09-30T16:58:08Z accepted",
-        "2026-09-30T16:58:08Z committed"
+        "2026-09-30T16:58:08Z committed",
+        "2026-10-01T07:23:21Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "2a016e3b6a3e33ab53ee898bd56350e4aeab55bc4dd1bac4fd33dd5063617258",
@@ -19753,7 +19788,7 @@
         "tools/encyclopedia_dispositions.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -20178,7 +20213,8 @@
         "2026-09-30T17:01:44Z validated",
         "2026-09-30T17:01:44Z verified: 4 claims supported",
         "2026-09-30T17:02:07Z accepted",
-        "2026-09-30T17:02:07Z committed"
+        "2026-09-30T17:02:07Z committed",
+        "2026-10-01T07:23:21Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "0403f98962d5e0adf78138e0a8d84be18ed152a1ed27b475ec9457e0846960be",
@@ -20191,7 +20227,7 @@
         "tools/encyclopedia_dispositions.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -20619,7 +20655,8 @@
         "2026-09-30T17:05:43Z validated",
         "2026-09-30T17:05:43Z verified: 5 claims supported",
         "2026-09-30T17:06:07Z accepted",
-        "2026-09-30T17:06:07Z committed"
+        "2026-09-30T17:06:07Z committed",
+        "2026-10-01T07:23:22Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "84f2033be17471dc63ae38ab6c63841df97f73fa6834c922681adc95ddfb1281",
@@ -20632,7 +20669,7 @@
         "tools/encyclopedia_dispositions.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -21060,7 +21097,8 @@
         "2026-09-30T17:09:51Z validated",
         "2026-09-30T17:09:51Z verified: 0 claims supported",
         "2026-09-30T17:10:14Z accepted",
-        "2026-09-30T17:10:14Z committed"
+        "2026-09-30T17:10:14Z committed",
+        "2026-10-01T07:23:22Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "a7821fc1495859765cb7ed39f3b080ca9933cfbb163eef3682277a406ead8ef2",
@@ -21070,7 +21108,7 @@
         "docs/plans/encyclopedia-unit-queue.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -21489,7 +21527,8 @@
         "2026-09-30T17:13:50Z validated",
         "2026-09-30T17:13:50Z verified: 2 claims supported",
         "2026-09-30T17:14:13Z accepted",
-        "2026-09-30T17:14:13Z committed"
+        "2026-09-30T17:14:13Z committed",
+        "2026-10-01T07:23:22Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "d6dd94f48c3ce31ee37cd03986490fe2880471b7751da090ce53cd44ed95f354",
@@ -21502,7 +21541,7 @@
         "tools/encyclopedia_dispositions.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -21930,7 +21969,8 @@
         "2026-09-30T17:17:50Z validated",
         "2026-09-30T17:17:51Z verified: 2 claims supported",
         "2026-09-30T17:18:14Z accepted",
-        "2026-09-30T17:18:14Z committed"
+        "2026-09-30T17:18:14Z committed",
+        "2026-10-01T07:23:22Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "fb82139bc354b99c02297dfb62d37a2bc04c6c81a586563f68945a72f42682f9",
@@ -21943,7 +21983,7 @@
         "tools/encyclopedia_dispositions.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -22368,7 +22408,8 @@
         "2026-09-30T17:21:50Z validated",
         "2026-09-30T17:21:50Z verified: 1 claims supported",
         "2026-09-30T17:22:13Z accepted",
-        "2026-09-30T17:22:13Z committed"
+        "2026-09-30T17:22:13Z committed",
+        "2026-10-01T07:23:22Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "94a5b48f27f55eaf504af61bc81314405976835e43c9f0e89a1558188a476f0a",
@@ -22381,7 +22422,7 @@
         "tools/encyclopedia_dispositions.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -22809,7 +22850,8 @@
         "2026-09-30T17:25:59Z validated",
         "2026-09-30T17:25:59Z verified: 1 claims supported",
         "2026-09-30T17:26:23Z accepted",
-        "2026-09-30T17:26:23Z committed"
+        "2026-09-30T17:26:23Z committed",
+        "2026-10-01T07:23:22Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "0175558dfb5f22521c4c3ec869ce163c8161e813e0eb05c73392face5c78c7ae",
@@ -22822,7 +22864,7 @@
         "tools/encyclopedia_dispositions.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -23250,7 +23292,8 @@
         "2026-09-30T17:29:59Z validated",
         "2026-09-30T17:29:59Z verified: 37 claims supported",
         "2026-09-30T17:30:22Z accepted",
-        "2026-09-30T17:30:22Z committed"
+        "2026-09-30T17:30:22Z committed",
+        "2026-10-01T07:23:22Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "1bb160591e00b9644907ec5331347ceea16b5ee7d680a9904dccc9abdbf76b92",
@@ -23263,7 +23306,7 @@
         "tools/encyclopedia_dispositions.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -23688,7 +23731,8 @@
         "2026-09-30T17:33:58Z validated",
         "2026-09-30T17:33:58Z verified: 9 claims supported",
         "2026-09-30T17:34:21Z accepted",
-        "2026-09-30T17:34:21Z committed"
+        "2026-09-30T17:34:21Z committed",
+        "2026-10-01T07:23:22Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "629b2480b39d479c34d15d11aa2ae525d6318c6b748026a286ba0bdf789cc0f2",
@@ -23701,7 +23745,7 @@
         "tools/encyclopedia_dispositions.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -24129,7 +24173,8 @@
         "2026-09-30T17:37:57Z validated",
         "2026-09-30T17:37:57Z verified: 1 claims supported",
         "2026-09-30T17:38:20Z accepted",
-        "2026-09-30T17:38:21Z committed"
+        "2026-09-30T17:38:21Z committed",
+        "2026-10-01T07:23:23Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "123d5faf6919631dd84a25fc4422e5fbaf42ae9eea625d7ebd1ab6295bd86238",
@@ -24142,7 +24187,7 @@
         "tools/encyclopedia_dispositions.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -24570,7 +24615,8 @@
         "2026-09-30T17:42:06Z validated",
         "2026-09-30T17:42:06Z verified: 4 claims supported",
         "2026-09-30T17:42:29Z accepted",
-        "2026-09-30T17:42:29Z committed"
+        "2026-09-30T17:42:29Z committed",
+        "2026-10-01T07:23:23Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "fce50928624be94e54ffd1556fd4b59c1457bc7c3692f6429929fb093f950a14",
@@ -24583,7 +24629,7 @@
         "tools/encyclopedia_dispositions.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -25008,7 +25054,8 @@
         "2026-09-30T17:46:06Z validated",
         "2026-09-30T17:46:07Z verified: 1 claims supported",
         "2026-09-30T17:46:30Z accepted",
-        "2026-09-30T17:46:30Z committed"
+        "2026-09-30T17:46:30Z committed",
+        "2026-10-01T07:23:23Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "71320faf7072b9ed0387a7e1f805d78f11e61478c3465e1a503c243367ccf4d2",
@@ -25021,7 +25068,7 @@
         "tools/encyclopedia_dispositions.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -25449,7 +25496,8 @@
         "2026-09-30T17:50:06Z validated",
         "2026-09-30T17:50:07Z verified: 6 claims supported",
         "2026-09-30T17:50:30Z accepted",
-        "2026-09-30T17:50:30Z committed"
+        "2026-09-30T17:50:30Z committed",
+        "2026-10-01T07:23:23Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "fd43cac31c44b8e6ee6fd2d76128cb879e2bcad19bec44839a7b400624bddf59",
@@ -25462,7 +25510,7 @@
         "tools/encyclopedia_dispositions.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -25890,7 +25938,8 @@
         "2026-09-30T17:54:08Z validated",
         "2026-09-30T17:54:09Z verified: 13 claims supported",
         "2026-09-30T17:54:32Z accepted",
-        "2026-09-30T17:54:32Z committed"
+        "2026-09-30T17:54:32Z committed",
+        "2026-10-01T07:23:23Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "f6b47a1b794565a1f036ee24559d97c46a39b603e4eecbd8bf92725a78bc06dc",
@@ -25903,7 +25952,7 @@
         "tools/encyclopedia_dispositions.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -26331,7 +26380,8 @@
         "2026-09-30T17:58:19Z validated",
         "2026-09-30T17:58:19Z verified: 1 claims supported",
         "2026-09-30T17:58:43Z accepted",
-        "2026-09-30T17:58:43Z committed"
+        "2026-09-30T17:58:43Z committed",
+        "2026-10-01T07:23:23Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "27db30c00f2067fb6be4894d4f298bcf290e918a18731e8d219da5b698c433a8",
@@ -26344,7 +26394,7 @@
         "tools/encyclopedia_dispositions.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -26772,7 +26822,8 @@
         "2026-09-30T18:02:21Z validated",
         "2026-09-30T18:02:21Z verified: 0 claims supported",
         "2026-09-30T18:02:44Z accepted",
-        "2026-09-30T18:02:44Z committed"
+        "2026-09-30T18:02:44Z committed",
+        "2026-10-01T07:23:23Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "c096a93d003302c8731e666d085f3fe3dfdbbfee6e2d1b349229cfc3fb561049",
@@ -26782,7 +26833,7 @@
         "docs/plans/encyclopedia-unit-queue.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -27201,7 +27252,8 @@
         "2026-09-30T18:06:20Z validated",
         "2026-09-30T18:06:20Z verified: 0 claims supported",
         "2026-09-30T18:06:44Z accepted",
-        "2026-09-30T18:06:44Z committed"
+        "2026-09-30T18:06:44Z committed",
+        "2026-10-01T07:23:23Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "0402c804e5b0ffc90fcce8b9207976f07d3e6137639296eaf0c5ee215f43a124",
@@ -27211,7 +27263,7 @@
         "docs/plans/encyclopedia-unit-queue.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -27630,7 +27682,8 @@
         "2026-09-30T18:10:20Z validated",
         "2026-09-30T18:10:20Z verified: 1 claims supported",
         "2026-09-30T18:10:44Z accepted",
-        "2026-09-30T18:10:44Z committed"
+        "2026-09-30T18:10:44Z committed",
+        "2026-10-01T07:23:24Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "b9d8cab0581278d3065a8b66bb06f6b6dfe451507ef99d551ff1768ad8c3ad87",
@@ -27643,7 +27696,7 @@
         "tools/encyclopedia_dispositions.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -28071,7 +28124,8 @@
         "2026-09-30T18:14:30Z validated",
         "2026-09-30T18:14:30Z verified: 0 claims supported",
         "2026-09-30T18:14:53Z accepted",
-        "2026-09-30T18:14:53Z committed"
+        "2026-09-30T18:14:53Z committed",
+        "2026-10-01T07:23:24Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "b1b686e226713574feccdfc759b42da7c169f4f0fa07f867bc0c1887e3bc8f98",
@@ -28081,7 +28135,7 @@
         "docs/plans/encyclopedia-unit-queue.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -28509,7 +28563,8 @@
         "2026-09-30T18:18:29Z validated",
         "2026-09-30T18:18:30Z verified: 4 claims supported",
         "2026-09-30T18:18:53Z accepted",
-        "2026-09-30T18:18:53Z committed"
+        "2026-09-30T18:18:53Z committed",
+        "2026-10-01T07:23:24Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "a356ff7656648096e016505c6c5bd225a2575c05fc589a913e1eef615c366dff",
@@ -28522,7 +28577,7 @@
         "tools/encyclopedia_dispositions.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -28950,7 +29005,8 @@
         "2026-09-30T18:22:29Z validated",
         "2026-09-30T18:22:30Z verified: 5 claims supported",
         "2026-09-30T18:22:53Z accepted",
-        "2026-09-30T18:22:53Z committed"
+        "2026-09-30T18:22:53Z committed",
+        "2026-10-01T07:23:24Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "746c4392455c91bd08f200545573b4c788eb0f4e54171a5d9fd317c042d1443e",
@@ -28963,7 +29019,7 @@
         "tools/encyclopedia_dispositions.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -29391,7 +29447,8 @@
         "2026-09-30T18:26:29Z validated",
         "2026-09-30T18:26:29Z verified: 1 claims supported",
         "2026-09-30T18:26:52Z accepted",
-        "2026-09-30T18:26:52Z committed"
+        "2026-09-30T18:26:52Z committed",
+        "2026-10-01T07:23:24Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "9ecacd6b93b3752f4651645c1db7a4983af271a4b104c05cab265a6dcf3c2260",
@@ -29404,7 +29461,7 @@
         "tools/encyclopedia_dispositions.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -29829,7 +29886,8 @@
         "2026-09-30T18:30:37Z validated",
         "2026-09-30T18:30:37Z verified: 9 claims supported",
         "2026-09-30T18:31:01Z accepted",
-        "2026-09-30T18:31:01Z committed"
+        "2026-09-30T18:31:01Z committed",
+        "2026-10-01T07:23:24Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "469fb04b835e9cc33ac12a036306fac4ce6339dab56f8a44bc8a6c3f552ffcd6",
@@ -29842,7 +29900,7 @@
         "tools/encyclopedia_dispositions.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -30267,7 +30325,8 @@
         "2026-09-30T18:34:38Z validated",
         "2026-09-30T18:34:38Z verified: 5 claims supported",
         "2026-09-30T18:35:02Z accepted",
-        "2026-09-30T18:35:02Z committed"
+        "2026-09-30T18:35:02Z committed",
+        "2026-10-01T07:23:24Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "960b8835f0ab827b56e96b09a50f690ac4b9621867e3662951341b43e6cdfda6",
@@ -30280,7 +30339,7 @@
         "tools/encyclopedia_dispositions.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -30708,7 +30767,8 @@
         "2026-09-30T18:38:39Z validated",
         "2026-09-30T18:38:39Z verified: 1 claims supported",
         "2026-09-30T18:39:02Z accepted",
-        "2026-09-30T18:39:02Z committed"
+        "2026-09-30T18:39:02Z committed",
+        "2026-10-01T07:23:25Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "96963981a59c5f856910bfbe79c9bc203cf559a502989b08f86aff50a1021af0",
@@ -30721,7 +30781,7 @@
         "tools/encyclopedia_dispositions.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -31149,7 +31209,8 @@
         "2026-09-30T18:42:39Z validated",
         "2026-09-30T18:42:40Z verified: 0 claims supported",
         "2026-09-30T18:43:03Z accepted",
-        "2026-09-30T18:43:03Z committed"
+        "2026-09-30T18:43:03Z committed",
+        "2026-10-01T07:23:25Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "44fbe3ed40acaa5681fda182847dc978175cd7cef51bb559a4211354426791dd",
@@ -31159,7 +31220,7 @@
         "docs/plans/encyclopedia-unit-queue.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -31581,7 +31642,8 @@
         "2026-09-30T18:46:49Z validated",
         "2026-09-30T18:46:49Z verified: 0 claims supported",
         "2026-09-30T18:47:12Z accepted",
-        "2026-09-30T18:47:13Z committed"
+        "2026-09-30T18:47:13Z committed",
+        "2026-10-01T07:23:25Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "8d4a56d172166de1c351beab0eb321ef3f5cbdd82445a1814fef5a12893890a7",
@@ -31591,7 +31653,7 @@
         "docs/plans/encyclopedia-unit-queue.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -32001,7 +32063,8 @@
         "2026-09-30T18:50:49Z validated",
         "2026-09-30T18:50:49Z verified: 18 claims supported",
         "2026-09-30T18:51:13Z accepted",
-        "2026-09-30T18:51:13Z committed"
+        "2026-09-30T18:51:13Z committed",
+        "2026-10-01T07:23:25Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "62c776b20858a557b476d70d139e1c796dbddb41ba194dfafd9bb6cea7daacec",
@@ -32014,7 +32077,7 @@
         "tools/encyclopedia_dispositions.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -32442,7 +32505,8 @@
         "2026-09-30T18:54:50Z validated",
         "2026-09-30T18:54:50Z verified: 7 claims supported",
         "2026-09-30T18:55:13Z accepted",
-        "2026-09-30T18:55:14Z committed"
+        "2026-09-30T18:55:14Z committed",
+        "2026-10-01T07:23:25Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "d2dd19af3a044a655558fb6298f0a13076d6b95070637d546255c8a808c43fd8",
@@ -32455,7 +32519,7 @@
         "tools/encyclopedia_dispositions.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -32880,7 +32944,8 @@
         "2026-09-30T18:58:51Z validated",
         "2026-09-30T18:58:51Z verified: 1 claims supported",
         "2026-09-30T18:59:14Z accepted",
-        "2026-09-30T18:59:14Z committed"
+        "2026-09-30T18:59:14Z committed",
+        "2026-10-01T07:23:25Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "ca020a0f439b50f3c072fb3b24749d981f0a3d7b3abd4ba448a46d87b51aefec",
@@ -32893,7 +32958,7 @@
         "tools/encyclopedia_dispositions.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -33321,7 +33386,8 @@
         "2026-09-30T19:02:59Z validated",
         "2026-09-30T19:03:00Z verified: 5 claims supported",
         "2026-09-30T19:03:23Z accepted",
-        "2026-09-30T19:03:23Z committed"
+        "2026-09-30T19:03:23Z committed",
+        "2026-10-01T07:23:25Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "8d262579dcd3bb6c43298c0e8314fdc8ec8ad45a1af6a2d5bb638c48726cbb25",
@@ -33334,7 +33400,7 @@
         "tools/encyclopedia_dispositions.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -33762,7 +33828,8 @@
         "2026-09-30T19:07:00Z validated",
         "2026-09-30T19:07:00Z verified: 2 claims supported",
         "2026-09-30T19:07:23Z accepted",
-        "2026-09-30T19:07:23Z committed"
+        "2026-09-30T19:07:23Z committed",
+        "2026-10-01T07:23:25Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "acff3966154365c6c3c36d7ca3a97c1dd682511665db9d17fadeb0a9a50b20c9",
@@ -33775,7 +33842,7 @@
         "tools/encyclopedia_dispositions.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -34203,7 +34270,8 @@
         "2026-09-30T19:11:00Z validated",
         "2026-09-30T19:11:00Z verified: 1 claims supported",
         "2026-09-30T19:11:24Z accepted",
-        "2026-09-30T19:11:24Z committed"
+        "2026-09-30T19:11:24Z committed",
+        "2026-10-01T07:23:26Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "03787fc3a057dd0d3cf70b060a60291cfa07e198649b6947d6218c8762950731",
@@ -34216,7 +34284,7 @@
         "tools/encyclopedia_dispositions.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -34644,7 +34712,8 @@
         "2026-09-30T19:15:02Z validated",
         "2026-09-30T19:15:02Z verified: 2 claims supported",
         "2026-09-30T19:15:26Z accepted",
-        "2026-09-30T19:15:26Z committed"
+        "2026-09-30T19:15:26Z committed",
+        "2026-10-01T07:23:26Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "fc83a1bcbde3a987d5b5619ef367d5f6b97ab4998c8eb0db93cfd074a69c4220",
@@ -34657,7 +34726,7 @@
         "tools/encyclopedia_dispositions.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -35085,7 +35154,8 @@
         "2026-09-30T19:19:13Z validated",
         "2026-09-30T19:19:13Z verified: 1 claims supported",
         "2026-09-30T19:19:36Z accepted",
-        "2026-09-30T19:19:36Z committed"
+        "2026-09-30T19:19:36Z committed",
+        "2026-10-01T07:23:26Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "df38ae78e97f5ca607cd3b34b31ba392e969b748c593c342d15807c26efbff79",
@@ -35098,7 +35168,7 @@
         "tools/encyclopedia_dispositions.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -35526,7 +35596,8 @@
         "2026-09-30T19:23:14Z validated",
         "2026-09-30T19:23:14Z verified: 3 claims supported",
         "2026-09-30T19:23:38Z accepted",
-        "2026-09-30T19:23:38Z committed"
+        "2026-09-30T19:23:38Z committed",
+        "2026-10-01T07:23:26Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "2f81beb29dea8de8eed881bf383fc123b2810111b01afad22adb3dc66a638846",
@@ -35539,7 +35610,7 @@
         "tools/encyclopedia_dispositions.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -35967,7 +36038,8 @@
         "2026-09-30T19:27:16Z validated",
         "2026-09-30T19:27:16Z verified: 2 claims supported",
         "2026-09-30T19:27:39Z accepted",
-        "2026-09-30T19:27:39Z committed"
+        "2026-09-30T19:27:39Z committed",
+        "2026-10-01T07:23:26Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "643f5a2e52c72b7910dd057bb2033c2aaa4d09b80b3c01bd36ac8ff9e841be53",
@@ -35980,7 +36052,7 @@
         "tools/encyclopedia_dispositions.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -36399,7 +36471,8 @@
         "2026-09-30T19:31:16Z validated",
         "2026-09-30T19:31:16Z verified: 1 claims supported",
         "2026-09-30T19:31:40Z accepted",
-        "2026-09-30T19:31:40Z committed"
+        "2026-09-30T19:31:40Z committed",
+        "2026-10-01T07:23:26Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "6148ca82c633709857cd4d8d22428899ecd5d5924b3b098f2ebdf87be61e017e",
@@ -36412,7 +36485,7 @@
         "tools/encyclopedia_dispositions.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -36840,7 +36913,8 @@
         "2026-09-30T19:35:27Z validated",
         "2026-09-30T19:35:27Z verified: 1 claims supported",
         "2026-09-30T19:35:50Z accepted",
-        "2026-09-30T19:35:50Z committed"
+        "2026-09-30T19:35:50Z committed",
+        "2026-10-01T07:23:26Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "9e14d60900600db060ce031d0125493d6b22b2190f6904de720824a8b31b0a4e",
@@ -36853,7 +36927,7 @@
         "tools/encyclopedia_dispositions.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -37281,7 +37355,8 @@
         "2026-09-30T19:39:27Z validated",
         "2026-09-30T19:39:27Z verified: 3 claims supported",
         "2026-09-30T19:39:51Z accepted",
-        "2026-09-30T19:39:51Z committed"
+        "2026-09-30T19:39:51Z committed",
+        "2026-10-01T07:23:27Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "02598877a692cb00ed2bafd3c7d62eddc0cf64f12e9fbffd9b60d6df79c181ad",
@@ -37294,7 +37369,7 @@
         "tools/encyclopedia_dispositions.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -37722,7 +37797,8 @@
         "2026-09-30T19:43:28Z validated",
         "2026-09-30T19:43:29Z verified: 1 claims supported",
         "2026-09-30T19:43:52Z accepted",
-        "2026-09-30T19:43:52Z committed"
+        "2026-09-30T19:43:52Z committed",
+        "2026-10-01T07:23:27Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "03131a08ea3acdfca79bd1588607b266c6896ee3c2fced376ec3d92efa931e25",
@@ -37735,7 +37811,7 @@
         "tools/encyclopedia_dispositions.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -38163,7 +38239,8 @@
         "2026-09-30T19:47:30Z validated",
         "2026-09-30T19:47:30Z verified: 1 claims supported",
         "2026-09-30T19:47:53Z accepted",
-        "2026-09-30T19:47:53Z committed"
+        "2026-09-30T19:47:53Z committed",
+        "2026-10-01T07:23:27Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "1bd680a42795c7f0a4494e7cc583633e5c8988fbd39b00a23886111bcc2dcf7c",
@@ -38176,7 +38253,7 @@
         "tools/encyclopedia_dispositions.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -38598,7 +38675,8 @@
         "2026-09-30T19:51:40Z validated",
         "2026-09-30T19:51:41Z verified: 1 claims supported",
         "2026-09-30T19:52:04Z accepted",
-        "2026-09-30T19:52:04Z committed"
+        "2026-09-30T19:52:04Z committed",
+        "2026-10-01T07:23:27Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "ee4a1627f6ef7875156bb11fee1485f234a2fa9e8081ab24e7a3b067f5f473c1",
@@ -38611,7 +38689,7 @@
         "tools/encyclopedia_dispositions.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -39033,7 +39111,8 @@
         "2026-09-30T19:55:42Z validated",
         "2026-09-30T19:55:42Z verified: 1 claims supported",
         "2026-09-30T19:56:05Z accepted",
-        "2026-09-30T19:56:05Z committed"
+        "2026-09-30T19:56:05Z committed",
+        "2026-10-01T07:23:27Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "b6ee13adb3b7b8273f9504cc5d1acafadc04ccaa019befe69989bb11f1a7a9f1",
@@ -39046,7 +39125,7 @@
         "tools/encyclopedia_dispositions.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -39474,7 +39553,8 @@
         "2026-09-30T19:59:43Z validated",
         "2026-09-30T19:59:43Z verified: 16 claims supported",
         "2026-09-30T20:00:06Z accepted",
-        "2026-09-30T20:00:06Z committed"
+        "2026-09-30T20:00:06Z committed",
+        "2026-10-01T07:23:27Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "8bfe4b50a89d765a44739d0f8bf78d3b844ae90f5f089d03bafe0afa1654a450",
@@ -39487,7 +39567,7 @@
         "tools/encyclopedia_dispositions.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -57492,7 +57572,8 @@
         "2026-09-30T20:44:23Z validated",
         "2026-09-30T20:44:23Z verified: 8 claims supported",
         "2026-09-30T20:44:47Z accepted",
-        "2026-09-30T20:44:47Z committed"
+        "2026-09-30T20:44:47Z committed",
+        "2026-10-01T07:23:27Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "ca126713477ee7554b59523592a8b8ac01b28eec62e6dae8f156e6719ca0c6f9",
@@ -57505,7 +57586,7 @@
         "tools/encyclopedia_dispositions.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -58963,7 +59044,8 @@
         "2026-09-30T20:48:35Z validated",
         "2026-09-30T20:48:35Z verified: 8 claims supported",
         "2026-09-30T20:48:58Z accepted",
-        "2026-09-30T20:48:58Z committed"
+        "2026-09-30T20:48:58Z committed",
+        "2026-10-01T07:23:27Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "7cfebb5fe775a0cce05c6e8f117ca6b66192f0bff5ff485f8d3461732e006006",
@@ -58976,7 +59058,7 @@
         "tools/encyclopedia_dispositions.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -60126,7 +60208,8 @@
         "2026-09-30T20:52:36Z validated",
         "2026-09-30T20:52:37Z verified: 3 claims supported",
         "2026-09-30T20:53:00Z accepted",
-        "2026-09-30T20:53:00Z committed"
+        "2026-09-30T20:53:00Z committed",
+        "2026-10-01T07:23:28Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "d0ca2ec938b76e27c622f543c4e5bbec986a1d70ab731c3ad64bae805803b815",
@@ -60139,7 +60222,7 @@
         "tools/encyclopedia_dispositions.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -61499,7 +61582,8 @@
         "2026-09-30T20:56:38Z validated",
         "2026-09-30T20:56:38Z verified: 1 claims supported",
         "2026-09-30T20:57:01Z accepted",
-        "2026-09-30T20:57:01Z committed"
+        "2026-09-30T20:57:01Z committed",
+        "2026-10-01T07:23:28Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "aade0204db301adb1d0fc35d6992080e467e902c20311bf88dc513b173aed4ff",
@@ -61512,7 +61596,7 @@
         "tools/encyclopedia_dispositions.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -61976,7 +62060,8 @@
         "2026-09-30T21:00:39Z validated",
         "2026-09-30T21:00:39Z verified: 1 claims supported",
         "2026-09-30T21:01:02Z accepted",
-        "2026-09-30T21:01:02Z committed"
+        "2026-09-30T21:01:02Z committed",
+        "2026-10-01T07:23:28Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "d977a6835cb2eb9a918abac1525f2d14d7c9f28fa64100f766afdaee665a91ee",
@@ -61989,7 +62074,7 @@
         "tools/encyclopedia_dispositions.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -62427,7 +62512,8 @@
         "2026-09-30T21:04:49Z validated",
         "2026-09-30T21:04:49Z verified: 1 claims supported",
         "2026-09-30T21:05:12Z accepted",
-        "2026-09-30T21:05:12Z committed"
+        "2026-09-30T21:05:12Z committed",
+        "2026-10-01T07:23:28Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "905e388c3530aa4fc4c4981ba8e72dc1f04176ae4dcb767a29e1886c40a5f586",
@@ -62440,7 +62526,7 @@
         "tools/encyclopedia_dispositions.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -63015,7 +63101,8 @@
         "2026-09-30T21:08:49Z validated",
         "2026-09-30T21:08:49Z verified: 1 claims supported",
         "2026-09-30T21:09:13Z accepted",
-        "2026-09-30T21:09:13Z committed"
+        "2026-09-30T21:09:13Z committed",
+        "2026-10-01T07:23:28Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "36640765794be52114c7aa34e9eb9ea5fb37a7bf7e84cebe07b94cb867d0958a",
@@ -63028,7 +63115,7 @@
         "tools/encyclopedia_dispositions.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -63476,7 +63563,8 @@
         "2026-09-30T21:12:52Z validated",
         "2026-09-30T21:12:52Z verified: 1 claims supported",
         "2026-09-30T21:13:15Z accepted",
-        "2026-09-30T21:13:15Z committed"
+        "2026-09-30T21:13:15Z committed",
+        "2026-10-01T07:23:28Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "71e1fff4789eeaa3cb618ce2cdd316fda71288f8a89191f3d5c2b382c3ccbe41",
@@ -63489,7 +63577,7 @@
         "tools/encyclopedia_dispositions.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -63966,7 +64054,8 @@
         "2026-09-30T21:16:53Z validated",
         "2026-09-30T21:16:53Z verified: 1 claims supported",
         "2026-09-30T21:17:16Z accepted",
-        "2026-09-30T21:17:16Z committed"
+        "2026-09-30T21:17:16Z committed",
+        "2026-10-01T07:23:28Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "71eb2d718a8f92750e88a8bdbe1aebd7a812272fb0b4dfadbc32e8f523ef8295",
@@ -63979,7 +64068,7 @@
         "tools/encyclopedia_dispositions.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -64409,7 +64498,8 @@
         "2026-09-30T21:21:03Z validated",
         "2026-09-30T21:21:03Z verified: 1 claims supported",
         "2026-09-30T21:21:26Z accepted",
-        "2026-09-30T21:21:26Z committed"
+        "2026-09-30T21:21:26Z committed",
+        "2026-10-01T07:23:28Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "d91d78c2169faad3d7a9b9e16363f2d4393901a36b880bc62fcc6de8c41c980c",
@@ -64422,7 +64512,7 @@
         "tools/encyclopedia_dispositions.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -64874,7 +64964,8 @@
         "2026-09-30T21:25:03Z validated",
         "2026-09-30T21:25:03Z verified: 1 claims supported",
         "2026-09-30T21:25:27Z accepted",
-        "2026-09-30T21:25:27Z committed"
+        "2026-09-30T21:25:27Z committed",
+        "2026-10-01T07:23:29Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "767517180791bdec9c746e69b10e9fb49fe217f6fed324e4a07cc14d45a3d96f",
@@ -64887,7 +64978,7 @@
         "tools/encyclopedia_dispositions.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -65365,7 +65456,8 @@
         "2026-09-30T21:29:04Z validated",
         "2026-09-30T21:29:04Z verified: 1 claims supported",
         "2026-09-30T21:29:27Z accepted",
-        "2026-09-30T21:29:27Z committed"
+        "2026-09-30T21:29:27Z committed",
+        "2026-10-01T07:23:29Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "bc3bf4b10fe71c840ecd926d99fe9ed9bafb3b221d426e62c846f8700af35129",
@@ -65378,7 +65470,7 @@
         "tools/encyclopedia_dispositions.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -65808,7 +65900,8 @@
         "2026-09-30T21:33:04Z validated",
         "2026-09-30T21:33:04Z verified: 1 claims supported",
         "2026-09-30T21:33:28Z accepted",
-        "2026-09-30T21:33:28Z committed"
+        "2026-09-30T21:33:28Z committed",
+        "2026-10-01T07:23:29Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "0a1259a0c5dec5f0f8a73629d7537fa1e9abc8867321d20c2d3c18a3bf9a8b85",
@@ -65821,7 +65914,7 @@
         "tools/encyclopedia_dispositions.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -66264,7 +66357,8 @@
         "2026-09-30T21:37:14Z validated",
         "2026-09-30T21:37:14Z verified: 1 claims supported",
         "2026-09-30T21:37:37Z accepted",
-        "2026-09-30T21:37:37Z committed"
+        "2026-09-30T21:37:37Z committed",
+        "2026-10-01T07:23:29Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "21835a31cff5dd6c221cd795f0ddf5b7f28936bb6f036c66033def9208f93464",
@@ -66277,7 +66371,7 @@
         "tools/encyclopedia_dispositions.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -66751,7 +66845,8 @@
         "2026-09-30T21:41:15Z validated",
         "2026-09-30T21:41:15Z verified: 1 claims supported",
         "2026-09-30T21:41:39Z accepted",
-        "2026-09-30T21:41:39Z committed"
+        "2026-09-30T21:41:39Z committed",
+        "2026-10-01T07:23:29Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "ac2014aa44a63ba01b41247e5809d6347465cb79d5d754f243a88346334dfa6c",
@@ -66764,7 +66859,7 @@
         "tools/encyclopedia_dispositions.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -67219,7 +67314,8 @@
         "2026-09-30T21:45:16Z validated",
         "2026-09-30T21:45:16Z verified: 1 claims supported",
         "2026-09-30T21:45:40Z accepted",
-        "2026-09-30T21:45:40Z committed"
+        "2026-09-30T21:45:40Z committed",
+        "2026-10-01T07:23:29Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "6dc14708c95cc2122e1ad6cfd79ce301a385bc6e3d891becdf763ead7d102b67",
@@ -67232,7 +67328,7 @@
         "tools/encyclopedia_dispositions.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -67741,7 +67837,8 @@
         "2026-09-30T21:49:20Z validated",
         "2026-09-30T21:49:20Z verified: 1 claims supported",
         "2026-09-30T21:49:44Z accepted",
-        "2026-09-30T21:49:44Z committed"
+        "2026-09-30T21:49:44Z committed",
+        "2026-10-01T07:23:29Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "6cd2e9c372e36a09085c04abb1a967c60d26fbed80ab3dc3c6dc05baeb6cc834",
@@ -67754,7 +67851,7 @@
         "tools/encyclopedia_dispositions.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -68291,7 +68388,8 @@
         "2026-09-30T21:53:33Z validated",
         "2026-09-30T21:53:33Z verified: 1 claims supported",
         "2026-09-30T21:53:57Z accepted",
-        "2026-09-30T21:53:57Z committed"
+        "2026-09-30T21:53:57Z committed",
+        "2026-10-01T07:23:30Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "785cdc8b2258d3d4bdef011f54e5c9f7d5135bf18eb9b3ac48711d6e14a4e233",
@@ -68304,7 +68402,7 @@
         "tools/encyclopedia_dispositions.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -68747,7 +68845,8 @@
         "2026-09-30T21:57:36Z validated",
         "2026-09-30T21:57:36Z verified: 1 claims supported",
         "2026-09-30T21:58:00Z accepted",
-        "2026-09-30T21:58:00Z committed"
+        "2026-09-30T21:58:00Z committed",
+        "2026-10-01T07:23:30Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "59e57f1088b9a348b5dca22074a4cb4dcf28614ee6f1162f32969ab437fa30c5",
@@ -68760,7 +68859,7 @@
         "tools/encyclopedia_dispositions.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -69233,7 +69332,8 @@
         "2026-09-30T22:01:38Z validated",
         "2026-09-30T22:01:39Z verified: 1 claims supported",
         "2026-09-30T22:02:02Z accepted",
-        "2026-09-30T22:02:02Z committed"
+        "2026-09-30T22:02:02Z committed",
+        "2026-10-01T07:23:30Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "aa3edf24fed5fd2ffb49615f1a8994b3e323925e949e9958671f6b8a74829617",
@@ -69246,7 +69346,7 @@
         "tools/encyclopedia_dispositions.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -69706,7 +69806,8 @@
         "2026-09-30T22:05:40Z validated",
         "2026-09-30T22:05:41Z verified: 1 claims supported",
         "2026-09-30T22:06:04Z accepted",
-        "2026-09-30T22:06:04Z committed"
+        "2026-09-30T22:06:04Z committed",
+        "2026-10-01T07:23:30Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "c60a72aba28f081608999b87f0da1d4a97d704cd1107d15f80dc6e4220eb5abc",
@@ -69719,7 +69820,7 @@
         "tools/encyclopedia_dispositions.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -70177,7 +70278,8 @@
         "2026-09-30T22:09:51Z validated",
         "2026-09-30T22:09:51Z verified: 1 claims supported",
         "2026-09-30T22:10:14Z accepted",
-        "2026-09-30T22:10:14Z committed"
+        "2026-09-30T22:10:14Z committed",
+        "2026-10-01T07:23:30Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "9897eced11634bd1320e1ce646bed1cfaebf4f0873f6c0271ff6fb395c54a713",
@@ -70190,7 +70292,7 @@
         "tools/encyclopedia_dispositions.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -70663,7 +70765,8 @@
         "2026-09-30T22:13:53Z validated",
         "2026-09-30T22:13:53Z verified: 1 claims supported",
         "2026-09-30T22:14:16Z accepted",
-        "2026-09-30T22:14:16Z committed"
+        "2026-09-30T22:14:16Z committed",
+        "2026-10-01T07:23:30Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "3cf8c2528e33d1d745d467bf00648632ad18b759f2e40fd4b5b0b98f32b99636",
@@ -70676,7 +70779,7 @@
         "tools/encyclopedia_dispositions.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -71129,7 +71232,8 @@
         "2026-09-30T22:17:54Z validated",
         "2026-09-30T22:17:54Z verified: 1 claims supported",
         "2026-09-30T22:18:18Z accepted",
-        "2026-09-30T22:18:18Z committed"
+        "2026-09-30T22:18:18Z committed",
+        "2026-10-01T07:23:30Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "168b053553f3a0130d66cd7674812c7d55e769f4e1817b40968126c7ba611c41",
@@ -71142,7 +71246,7 @@
         "tools/encyclopedia_dispositions.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -71595,7 +71699,8 @@
         "2026-09-30T22:21:57Z validated",
         "2026-09-30T22:21:57Z verified: 1 claims supported",
         "2026-09-30T22:22:21Z accepted",
-        "2026-09-30T22:22:21Z committed"
+        "2026-09-30T22:22:21Z committed",
+        "2026-10-01T07:23:30Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "82bfbb3fc91ef442a3a10b958d5249e86c3bf6a4b47ac8bcc2d901dec357919f",
@@ -71608,7 +71713,7 @@
         "tools/encyclopedia_dispositions.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -72191,7 +72296,8 @@
         "2026-09-30T22:26:49Z validated",
         "2026-09-30T22:26:49Z verified: 0 claims supported",
         "2026-09-30T22:27:12Z accepted",
-        "2026-09-30T22:27:12Z committed"
+        "2026-09-30T22:27:12Z committed",
+        "2026-10-01T07:23:31Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "a398f2e02ef01c7c5f9540ba65ec709cc2a839ed74e68443a07e9e8072c29cf3",
@@ -72201,7 +72307,7 @@
         "docs/plans/encyclopedia-unit-queue.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -72848,7 +72954,8 @@
         "2026-09-30T22:30:52Z validated",
         "2026-09-30T22:30:52Z verified: 0 claims supported",
         "2026-09-30T22:31:15Z accepted",
-        "2026-09-30T22:31:15Z committed"
+        "2026-09-30T22:31:15Z committed",
+        "2026-10-01T07:23:31Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "3c0e3dcd991174fd883f2257296a2af92dddbf7ed8b399d30a162b71edae4801",
@@ -72858,7 +72965,7 @@
         "docs/plans/encyclopedia-unit-queue.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -73375,7 +73482,8 @@
         "2026-09-30T22:34:55Z validated",
         "2026-09-30T22:34:55Z verified: 1 claims supported",
         "2026-09-30T22:35:19Z accepted",
-        "2026-09-30T22:35:19Z committed"
+        "2026-09-30T22:35:19Z committed",
+        "2026-10-01T07:23:31Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "9bcfd8f103f8d8613e1fd98a170a1404b4b12d44e288f660fc6aace3534d40c7",
@@ -73388,7 +73496,7 @@
         "tools/encyclopedia_dispositions.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -73907,7 +74015,8 @@
         "2026-09-30T22:38:59Z validated",
         "2026-09-30T22:39:00Z verified: 3 claims supported",
         "2026-09-30T22:39:23Z accepted",
-        "2026-09-30T22:39:23Z committed"
+        "2026-09-30T22:39:23Z committed",
+        "2026-10-01T07:23:31Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "69666f60cab43da41fc6539d423b996f532167c22b04ef3d2d2a23640dca87be",
@@ -73920,7 +74029,7 @@
         "tools/encyclopedia_dispositions.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -74410,7 +74519,8 @@
         "2026-09-30T22:43:13Z validated",
         "2026-09-30T22:43:13Z verified: 1 claims supported",
         "2026-09-30T22:43:36Z accepted",
-        "2026-09-30T22:43:36Z committed"
+        "2026-09-30T22:43:36Z committed",
+        "2026-10-01T07:23:31Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "9c00c88b663e89826e192659c405a5d8d387f97a086646708cc66ac0a384cc14",
@@ -74423,7 +74533,7 @@
         "tools/encyclopedia_dispositions.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -74900,7 +75010,8 @@
         "2026-09-30T22:47:18Z validated",
         "2026-09-30T22:47:18Z verified: 1 claims supported",
         "2026-09-30T22:47:41Z accepted",
-        "2026-09-30T22:47:41Z committed"
+        "2026-09-30T22:47:41Z committed",
+        "2026-10-01T07:23:31Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "6b362dd9bfdb8ebd5536d9f6707c9ce35037805876d65e87fd866a8abcbf4546",
@@ -74913,7 +75024,7 @@
         "tools/encyclopedia_dispositions.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -75466,7 +75577,8 @@
         "2026-09-30T22:51:23Z validated",
         "2026-09-30T22:51:23Z verified: 1 claims supported",
         "2026-09-30T22:51:47Z accepted",
-        "2026-09-30T22:51:47Z committed"
+        "2026-09-30T22:51:47Z committed",
+        "2026-10-01T07:23:31Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "062ace0d0786284fe07275a489551a016dfedc291571ea9121ba18c8b10e42c1",
@@ -75479,7 +75591,7 @@
         "tools/encyclopedia_dispositions.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -76027,7 +76139,8 @@
         "2026-09-30T22:55:29Z validated",
         "2026-09-30T22:55:29Z verified: 1 claims supported",
         "2026-09-30T22:55:53Z accepted",
-        "2026-09-30T22:55:53Z committed"
+        "2026-09-30T22:55:53Z committed",
+        "2026-10-01T07:23:32Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "08cb14086c1057179aba4b31257d0f994902a485b91f98a10b32cb9c542bcf0c",
@@ -76040,7 +76153,7 @@
         "tools/encyclopedia_dispositions.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -76526,7 +76639,8 @@
         "2026-09-30T22:59:41Z validated",
         "2026-09-30T22:59:41Z verified: 2 claims supported",
         "2026-09-30T23:00:04Z accepted",
-        "2026-09-30T23:00:04Z committed"
+        "2026-09-30T23:00:04Z committed",
+        "2026-10-01T07:23:32Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "d98137f5ad8938d356b707a6ca07fac85147f8d9b44932bcf6db0e1e2a6fd5d0",
@@ -76539,7 +76653,7 @@
         "tools/encyclopedia_dispositions.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -77021,7 +77135,8 @@
         "2026-09-30T23:03:45Z validated",
         "2026-09-30T23:03:45Z verified: 5 claims supported",
         "2026-09-30T23:04:09Z accepted",
-        "2026-09-30T23:04:09Z committed"
+        "2026-09-30T23:04:09Z committed",
+        "2026-10-01T07:23:32Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "fdd202b6cdb95b0ad76b8e8ee4f3eb0de4b5b7dadd2dbfa911fde33a923f144b",
@@ -77034,7 +77149,7 @@
         "tools/encyclopedia_dispositions.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -77551,7 +77666,8 @@
         "2026-09-30T23:07:50Z validated",
         "2026-09-30T23:07:50Z verified: 3 claims supported",
         "2026-09-30T23:08:14Z accepted",
-        "2026-09-30T23:08:14Z committed"
+        "2026-09-30T23:08:14Z committed",
+        "2026-10-01T07:23:32Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "8fb8e7f159de8fa0b3f180fcc5c0cb194707f2b1f492ec8ceb3c1fe110a9ef89",
@@ -77564,7 +77680,7 @@
         "tools/encyclopedia_dispositions.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -78086,7 +78202,8 @@
         "2026-09-30T23:11:54Z validated",
         "2026-09-30T23:11:54Z verified: 1 claims supported",
         "2026-09-30T23:12:18Z accepted",
-        "2026-09-30T23:12:18Z committed"
+        "2026-09-30T23:12:18Z committed",
+        "2026-10-01T07:23:32Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "81c19589e60d6782b4d69f68eb8af55a68dc55f7cafdc9ff05deb6a810f6a7bf",
@@ -78099,7 +78216,7 @@
         "tools/encyclopedia_dispositions.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -78552,7 +78669,8 @@
         "2026-09-30T23:16:06Z validated",
         "2026-09-30T23:16:06Z verified: 1 claims supported",
         "2026-09-30T23:16:30Z accepted",
-        "2026-09-30T23:16:30Z committed"
+        "2026-09-30T23:16:30Z committed",
+        "2026-10-01T07:23:32Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "7b47a1770786cb3d23160ed0bcbcf7c128f762b8370c644ac8ee00e3f1f70de7",
@@ -78565,7 +78683,7 @@
         "tools/encyclopedia_dispositions.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -79071,7 +79189,8 @@
         "2026-09-30T23:20:10Z validated",
         "2026-09-30T23:20:10Z verified: 4 claims supported",
         "2026-09-30T23:20:34Z accepted",
-        "2026-09-30T23:20:34Z committed"
+        "2026-09-30T23:20:34Z committed",
+        "2026-10-01T07:23:32Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "6e90dccf32dcc1536299cd0709bed008d01e7bca08af7084832b1c421893df42",
@@ -79084,7 +79203,7 @@
         "tools/encyclopedia_dispositions.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -79562,7 +79681,8 @@
         "2026-09-30T23:24:13Z validated",
         "2026-09-30T23:24:13Z verified: 4 claims supported",
         "2026-09-30T23:24:36Z accepted",
-        "2026-09-30T23:24:36Z committed"
+        "2026-09-30T23:24:36Z committed",
+        "2026-10-01T07:23:32Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "3d5b72098fb2d6a0b6ab694a642ce53472af66510fb749bbe1746dafc6f945e5",
@@ -79575,7 +79695,7 @@
         "tools/encyclopedia_dispositions.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -80041,7 +80161,8 @@
         "2026-09-30T23:28:17Z validated",
         "2026-09-30T23:28:17Z verified: 1 claims supported",
         "2026-09-30T23:28:41Z accepted",
-        "2026-09-30T23:28:41Z committed"
+        "2026-09-30T23:28:41Z committed",
+        "2026-10-01T07:23:33Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "4c5a311919e5dd363ac54191e7daff4b4d119a7ca00a0d6814ba2d1916dd2076",
@@ -80054,7 +80175,7 @@
         "tools/encyclopedia_dispositions.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -80552,7 +80673,8 @@
         "2026-09-30T23:32:30Z validated",
         "2026-09-30T23:32:30Z verified: 1 claims supported",
         "2026-09-30T23:32:54Z accepted",
-        "2026-09-30T23:32:54Z committed"
+        "2026-09-30T23:32:54Z committed",
+        "2026-10-01T07:23:33Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "d4d18009edeefaa9d7b6e00259b213ca79b6c6d47f938bf8cf72301033e40642",
@@ -80565,7 +80687,7 @@
         "tools/encyclopedia_dispositions.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -81059,7 +81181,8 @@
         "2026-09-30T23:36:33Z validated",
         "2026-09-30T23:36:34Z verified: 4 claims supported",
         "2026-09-30T23:36:57Z accepted",
-        "2026-09-30T23:36:58Z committed"
+        "2026-09-30T23:36:58Z committed",
+        "2026-10-01T07:23:33Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "84887cca23eebe9853d48b310ff77986a2fd0bd11b5314bd8f68d66cdd2f1a1c",
@@ -81072,7 +81195,7 @@
         "tools/encyclopedia_dispositions.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -81560,7 +81683,8 @@
         "2026-09-30T23:40:38Z validated",
         "2026-09-30T23:40:39Z verified: 1 claims supported",
         "2026-09-30T23:41:02Z accepted",
-        "2026-09-30T23:41:02Z committed"
+        "2026-09-30T23:41:02Z committed",
+        "2026-10-01T07:23:33Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "69249bc09a84b274f492fb134201ea38a44f51f7b386f5115726584e9fcc42c4",
@@ -81573,7 +81697,7 @@
         "tools/encyclopedia_dispositions.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -82037,7 +82161,8 @@
         "2026-09-30T23:44:43Z validated",
         "2026-09-30T23:44:43Z verified: 1 claims supported",
         "2026-09-30T23:45:07Z accepted",
-        "2026-09-30T23:45:07Z committed"
+        "2026-09-30T23:45:07Z committed",
+        "2026-10-01T07:23:33Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "6d6d45eb28a880fe81b06633f5703833788bd1ee24b37be135f0c9a9dd34b246",
@@ -82050,7 +82175,7 @@
         "tools/encyclopedia_dispositions.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -82515,7 +82640,8 @@
         "2026-09-30T23:48:56Z validated",
         "2026-09-30T23:48:56Z verified: 1 claims supported",
         "2026-09-30T23:49:20Z accepted",
-        "2026-09-30T23:49:20Z committed"
+        "2026-09-30T23:49:20Z committed",
+        "2026-10-01T07:23:33Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "a3dd9a5e85a6f42384f38342cd19bfbeb4426e3d3758a23500e97fc815bbd1d8",
@@ -82528,7 +82654,7 @@
         "tools/encyclopedia_dispositions.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -83028,7 +83154,8 @@
         "2026-09-30T23:53:02Z validated",
         "2026-09-30T23:53:02Z verified: 2 claims supported",
         "2026-09-30T23:53:26Z accepted",
-        "2026-09-30T23:53:26Z committed"
+        "2026-09-30T23:53:26Z committed",
+        "2026-10-01T07:23:33Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "7eccc328ed594c2ec9278e0658f3634807c25042325cf6746e29297447e06507",
@@ -83041,7 +83168,7 @@
         "tools/encyclopedia_dispositions.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -83534,7 +83661,8 @@
         "2026-09-30T23:57:09Z validated",
         "2026-09-30T23:57:09Z verified: 1 claims supported",
         "2026-09-30T23:57:32Z accepted",
-        "2026-09-30T23:57:32Z committed"
+        "2026-09-30T23:57:32Z committed",
+        "2026-10-01T07:23:34Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "0afb6453ea56d057b880de25861124a674e935b733e3de42f56ff06209912562",
@@ -83547,7 +83675,7 @@
         "tools/encyclopedia_dispositions.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -84007,7 +84135,8 @@
         "2026-10-01T00:01:13Z validated",
         "2026-10-01T00:01:13Z verified: 2 claims supported",
         "2026-10-01T00:01:37Z accepted",
-        "2026-10-01T00:01:37Z committed"
+        "2026-10-01T00:01:37Z committed",
+        "2026-10-01T07:23:34Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "1941145c7c340fa28121d7b96778fa4d71b5d96cfecd544f2695de2281a488b1",
@@ -84020,7 +84149,7 @@
         "tools/encyclopedia_dispositions.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -84540,7 +84669,8 @@
         "2026-10-01T00:05:26Z validated",
         "2026-10-01T00:05:26Z verified: 1 claims supported",
         "2026-10-01T00:05:50Z accepted",
-        "2026-10-01T00:05:50Z committed"
+        "2026-10-01T00:05:50Z committed",
+        "2026-10-01T07:23:34Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "9bccb6fbb6b9f00820ce88e1c8eeec0182fb21b84bdf54c9527940671cdd183c",
@@ -84553,7 +84683,7 @@
         "tools/encyclopedia_dispositions.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -85024,7 +85154,8 @@
         "2026-10-01T00:09:31Z validated",
         "2026-10-01T00:09:31Z verified: 1 claims supported",
         "2026-10-01T00:09:55Z accepted",
-        "2026-10-01T00:09:55Z committed"
+        "2026-10-01T00:09:55Z committed",
+        "2026-10-01T07:23:34Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "fd00c7e52b16269efd3f04a8e286e96f9798cffd8a02654fd688acde78d639e3",
@@ -85037,7 +85168,7 @@
         "tools/encyclopedia_dispositions.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -85593,7 +85724,8 @@
         "2026-10-01T00:13:36Z validated",
         "2026-10-01T00:13:36Z verified: 2 claims supported",
         "2026-10-01T00:14:00Z accepted",
-        "2026-10-01T00:14:00Z committed"
+        "2026-10-01T00:14:00Z committed",
+        "2026-10-01T07:23:34Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "87982cd7c7902e35a83fa5859b05c596d21c5b87fe9b3f06111c7c30629336e8",
@@ -85606,7 +85738,7 @@
         "tools/encyclopedia_dispositions.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -86122,7 +86254,8 @@
         "2026-10-01T00:17:41Z validated",
         "2026-10-01T00:17:41Z verified: 1 claims supported",
         "2026-10-01T00:18:04Z accepted",
-        "2026-10-01T00:18:05Z committed"
+        "2026-10-01T00:18:05Z committed",
+        "2026-10-01T07:23:34Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "99e4e991e31374619fd26671e3f4b45e8ee9feb51706c5d3a71a93e789d3cdfe",
@@ -86135,7 +86268,7 @@
         "tools/encyclopedia_dispositions.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -86663,7 +86796,8 @@
         "2026-10-01T00:21:53Z validated",
         "2026-10-01T00:21:53Z verified: 12 claims supported",
         "2026-10-01T00:22:16Z accepted",
-        "2026-10-01T00:22:16Z committed"
+        "2026-10-01T00:22:16Z committed",
+        "2026-10-01T07:23:34Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "4a03b9776fd141054234d62bb7193cc693fe82c2e5a6721fefdafdd2bc3425e0",
@@ -86676,7 +86810,7 @@
         "tools/encyclopedia_dispositions.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -87195,7 +87329,8 @@
         "2026-10-01T00:25:57Z validated",
         "2026-10-01T00:25:57Z verified: 2 claims supported",
         "2026-10-01T00:26:21Z accepted",
-        "2026-10-01T00:26:21Z committed"
+        "2026-10-01T00:26:21Z committed",
+        "2026-10-01T07:23:34Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "2eadf606d83666f9288f1f4e98ce322fb1220cef7d601975f9ca1a88884bebd4",
@@ -87208,7 +87343,7 @@
         "tools/encyclopedia_dispositions.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -87656,7 +87791,8 @@
         "2026-10-01T00:30:01Z validated",
         "2026-10-01T00:30:01Z verified: 1 claims supported",
         "2026-10-01T00:30:25Z accepted",
-        "2026-10-01T00:30:25Z committed"
+        "2026-10-01T00:30:25Z committed",
+        "2026-10-01T07:23:34Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "94ef0a83d15d15ecdd4948a3708d6c7127da249f83ddca9d372006d3dd5f8e90",
@@ -87669,7 +87805,7 @@
         "tools/encyclopedia_dispositions.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -88175,7 +88311,8 @@
         "2026-10-01T00:34:06Z validated",
         "2026-10-01T00:34:06Z verified: 3 claims supported",
         "2026-10-01T00:34:30Z accepted",
-        "2026-10-01T00:34:30Z committed"
+        "2026-10-01T00:34:30Z committed",
+        "2026-10-01T07:23:34Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "bebcf70ada7af82fd2b0deeb1c8a9038c0af5a18e3eb2a1d0ffeed536e5ae9b2",
@@ -88188,7 +88325,7 @@
         "tools/encyclopedia_dispositions.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -88691,7 +88828,8 @@
         "2026-10-01T00:38:22Z validated",
         "2026-10-01T00:38:22Z verified: 4 claims supported",
         "2026-10-01T00:38:45Z accepted",
-        "2026-10-01T00:38:45Z committed"
+        "2026-10-01T00:38:45Z committed",
+        "2026-10-01T07:23:34Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "5771408b2df08e5103bd5f4f49009dc1c3b50387097acab4485b180e1dde0d5c",
@@ -88704,7 +88842,7 @@
         "tools/encyclopedia_dispositions.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -89388,7 +89526,8 @@
         "2026-10-01T00:42:29Z validated",
         "2026-10-01T00:42:29Z verified: 4 claims supported",
         "2026-10-01T00:42:53Z accepted",
-        "2026-10-01T00:42:53Z committed"
+        "2026-10-01T00:42:53Z committed",
+        "2026-10-01T07:23:34Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "106d1aa10906dd60733c765debec65bb43d0d91ce533e6077bc017f306a8b479",
@@ -89401,7 +89540,7 @@
         "tools/encyclopedia_dispositions.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -89939,7 +90078,8 @@
         "2026-10-01T00:46:36Z validated",
         "2026-10-01T00:46:36Z verified: 1 claims supported",
         "2026-10-01T00:47:00Z accepted",
-        "2026-10-01T00:47:00Z committed"
+        "2026-10-01T00:47:00Z committed",
+        "2026-10-01T07:23:34Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "413e2b025ef166b4fec9141557a82fc20d614dca6162abfa11af680139c02c9b",
@@ -89952,7 +90092,7 @@
         "tools/encyclopedia_dispositions.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -90439,7 +90579,8 @@
         "2026-10-01T00:50:43Z validated",
         "2026-10-01T00:50:43Z verified: 4 claims supported",
         "2026-10-01T00:51:06Z accepted",
-        "2026-10-01T00:51:07Z committed"
+        "2026-10-01T00:51:07Z committed",
+        "2026-10-01T07:23:35Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "53b6e92900bf8605614bb01d2927c96b66985946596a27469e24065d2e580ca1",
@@ -90452,7 +90593,7 @@
         "tools/encyclopedia_dispositions.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -90965,7 +91106,8 @@
         "2026-10-01T00:55:04Z validated",
         "2026-10-01T00:55:04Z verified: 3 claims supported",
         "2026-10-01T00:55:28Z accepted",
-        "2026-10-01T00:55:28Z committed"
+        "2026-10-01T00:55:28Z committed",
+        "2026-10-01T07:23:35Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "b18a571020e50ab87f7f7cd52fc2fe14989a0cf4a2a6a1451b953a493d107ba8",
@@ -90978,7 +91120,7 @@
         "tools/encyclopedia_dispositions.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -91450,7 +91592,8 @@
         "2026-10-01T00:59:10Z validated",
         "2026-10-01T00:59:10Z verified: 1 claims supported",
         "2026-10-01T00:59:34Z accepted",
-        "2026-10-01T00:59:34Z committed"
+        "2026-10-01T00:59:34Z committed",
+        "2026-10-01T07:23:35Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "083ff2e4af7c34b26e45f5bf3f387bc275ccd86ec3c43619166ab2f88c3f4650",
@@ -91463,7 +91606,7 @@
         "tools/encyclopedia_dispositions.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -91969,7 +92112,8 @@
         "2026-10-01T01:03:16Z validated",
         "2026-10-01T01:03:17Z verified: 1 claims supported",
         "2026-10-01T01:03:41Z accepted",
-        "2026-10-01T01:03:41Z committed"
+        "2026-10-01T01:03:41Z committed",
+        "2026-10-01T07:23:35Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "5215c947cd1d7a5823ff88ad4bb0e8ba49318004ea38d41ed1f409ea1c8178d8",
@@ -91982,7 +92126,7 @@
         "tools/encyclopedia_dispositions.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -92453,7 +92597,8 @@
         "2026-10-01T01:07:24Z validated",
         "2026-10-01T01:07:24Z verified: 4 claims supported",
         "2026-10-01T01:07:48Z accepted",
-        "2026-10-01T01:07:48Z committed"
+        "2026-10-01T01:07:48Z committed",
+        "2026-10-01T07:23:35Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "23f9a0b397fdb25f30181818a6f5240a3e010912a72763699a07ce3b2e1d951a",
@@ -92466,7 +92611,7 @@
         "tools/encyclopedia_dispositions.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -92978,7 +93123,8 @@
         "2026-10-01T01:11:40Z validated",
         "2026-10-01T01:11:41Z verified: 2 claims supported",
         "2026-10-01T01:12:05Z accepted",
-        "2026-10-01T01:12:05Z committed"
+        "2026-10-01T01:12:05Z committed",
+        "2026-10-01T07:23:35Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "fcd3d35aeef7f888c4d5a8fa5ab80233ec963ee308435add06b6f064d0f74f06",
@@ -92991,7 +93137,7 @@
         "tools/encyclopedia_dispositions.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -93474,7 +93620,8 @@
         "2026-10-01T01:15:47Z validated",
         "2026-10-01T01:15:47Z verified: 3 claims supported",
         "2026-10-01T01:16:11Z accepted",
-        "2026-10-01T01:16:11Z committed"
+        "2026-10-01T01:16:11Z committed",
+        "2026-10-01T07:23:35Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "364a2a04872d4d211e980c39e56c7b09eef382c0682fb6148b7d6918285853dc",
@@ -93487,7 +93634,7 @@
         "tools/encyclopedia_dispositions.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -94163,7 +94310,8 @@
         "2026-10-01T01:19:54Z validated",
         "2026-10-01T01:19:54Z verified: 2 claims supported",
         "2026-10-01T01:20:18Z accepted",
-        "2026-10-01T01:20:18Z committed"
+        "2026-10-01T01:20:18Z committed",
+        "2026-10-01T07:23:35Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "c5fcae048c35923ea7de8e587c41fcb724bea336e3b83160dbdea479ee4d95ec",
@@ -94176,7 +94324,7 @@
         "tools/encyclopedia_dispositions.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -95103,7 +95251,8 @@
         "2026-10-01T01:24:06Z validated",
         "2026-10-01T01:24:06Z verified: 1 claims supported",
         "2026-10-01T01:24:30Z accepted",
-        "2026-10-01T01:24:30Z committed"
+        "2026-10-01T01:24:30Z committed",
+        "2026-10-01T07:23:35Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "2086b6ff28beecc98165cba757dd0138197a4c6b2be6aa99f9ae1d523eef6e6f",
@@ -95116,7 +95265,7 @@
         "tools/encyclopedia_dispositions.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -95810,7 +95959,8 @@
         "2026-10-01T01:28:25Z validated",
         "2026-10-01T01:28:25Z verified: 7 claims supported",
         "2026-10-01T01:28:49Z accepted",
-        "2026-10-01T01:28:49Z committed"
+        "2026-10-01T01:28:49Z committed",
+        "2026-10-01T07:23:35Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "9ecfdf9a3689c652214678bfbb08a35c662d0ed6ceefa889ff875658542f2e01",
@@ -95823,7 +95973,7 @@
         "tools/encyclopedia_dispositions.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -96676,7 +96826,8 @@
         "2026-10-01T01:32:36Z validated",
         "2026-10-01T01:32:37Z verified: 31 claims supported",
         "2026-10-01T01:33:01Z accepted",
-        "2026-10-01T01:33:01Z committed"
+        "2026-10-01T01:33:01Z committed",
+        "2026-10-01T07:23:35Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "02fe982c9f9ece4a5ba10fc79c070df29bc868e635407d772545febc364086dd",
@@ -96689,7 +96840,7 @@
         "tools/encyclopedia_dispositions.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -97634,7 +97785,8 @@
         "2026-10-01T01:36:48Z validated",
         "2026-10-01T01:36:48Z verified: 22 claims supported",
         "2026-10-01T01:37:12Z accepted",
-        "2026-10-01T01:37:12Z committed"
+        "2026-10-01T01:37:12Z committed",
+        "2026-10-01T07:23:35Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "ee5d8ba7767c684cf317016836e46b459c63f8fca9f4cde7779c872482cb0169",
@@ -97647,7 +97799,7 @@
         "tools/encyclopedia_dispositions.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -98407,7 +98559,8 @@
         "2026-10-01T01:40:59Z validated",
         "2026-10-01T01:40:59Z verified: 5 claims supported",
         "2026-10-01T01:41:23Z accepted",
-        "2026-10-01T01:41:23Z committed"
+        "2026-10-01T01:41:23Z committed",
+        "2026-10-01T07:23:36Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "14cf37021cadcffaa17cd1e11cdf6114ff25ee9d8c091189c1674aba92fe7e25",
@@ -98420,7 +98573,7 @@
         "tools/encyclopedia_dispositions.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -99128,7 +99281,8 @@
         "2026-10-01T01:45:15Z validated",
         "2026-10-01T01:45:16Z verified: 3 claims supported",
         "2026-10-01T01:45:39Z accepted",
-        "2026-10-01T01:45:40Z committed"
+        "2026-10-01T01:45:40Z committed",
+        "2026-10-01T07:23:36Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "461dca12a58a790f3f9c5eba3b6834a88734257cd4d52c0213ae15dc53ba9512",
@@ -99141,7 +99295,7 @@
         "tools/encyclopedia_dispositions.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -99770,7 +99924,8 @@
         "2026-10-01T01:49:25Z validated",
         "2026-10-01T01:49:25Z verified: 7 claims supported",
         "2026-10-01T01:49:49Z accepted",
-        "2026-10-01T01:49:49Z committed"
+        "2026-10-01T01:49:49Z committed",
+        "2026-10-01T07:23:36Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "9506e8dee38c27a614cf47c24ebcfc98fdb9e2e55dc725e60854fc08fb79519b",
@@ -99783,7 +99938,7 @@
         "tools/encyclopedia_dispositions.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -100724,7 +100879,8 @@
         "2026-10-01T01:53:36Z validated",
         "2026-10-01T01:53:36Z verified: 5 claims supported",
         "2026-10-01T01:54:00Z accepted",
-        "2026-10-01T01:54:00Z committed"
+        "2026-10-01T01:54:00Z committed",
+        "2026-10-01T07:23:36Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "408595c9023fbe330e6eadd99d3cb78ff7b7c3e0eed1f0c0be7d22010a3a9bd3",
@@ -100737,7 +100893,7 @@
         "tools/encyclopedia_dispositions.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -101438,7 +101594,8 @@
         "2026-10-01T01:57:46Z validated",
         "2026-10-01T01:57:46Z verified: 6 claims supported",
         "2026-10-01T01:58:09Z accepted",
-        "2026-10-01T01:58:09Z committed"
+        "2026-10-01T01:58:09Z committed",
+        "2026-10-01T07:23:36Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "d42b8eea85805d5bd4fa7a814ff285d00f549f5f7140c0e578928738350cb6ae",
@@ -101451,7 +101608,7 @@
         "tools/encyclopedia_dispositions.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -102156,7 +102313,8 @@
         "2026-10-01T02:02:02Z validated",
         "2026-10-01T02:02:02Z verified: 2 claims supported",
         "2026-10-01T02:02:26Z accepted",
-        "2026-10-01T02:02:26Z committed"
+        "2026-10-01T02:02:26Z committed",
+        "2026-10-01T07:23:36Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "fb70be0c26ee21742d4321c2bcbdfd574fc3b71837ee2c87d10db480957995dc",
@@ -102169,7 +102327,7 @@
         "tools/encyclopedia_dispositions.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -103536,7 +103694,8 @@
         "2026-10-01T02:06:17Z validated",
         "2026-10-01T02:06:18Z verified: 5 claims supported",
         "2026-10-01T02:06:42Z accepted",
-        "2026-10-01T02:06:42Z committed"
+        "2026-10-01T02:06:42Z committed",
+        "2026-10-01T07:23:36Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "7802f4af05484c83abd9eb620aa88b6c7b70e984261513e02462c6a912fcda3e",
@@ -103549,7 +103708,7 @@
         "tools/encyclopedia_dispositions.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -104972,7 +105131,8 @@
         "2026-10-01T02:10:36Z validated",
         "2026-10-01T02:10:36Z verified: 1 claims supported",
         "2026-10-01T02:11:00Z accepted",
-        "2026-10-01T02:11:00Z committed"
+        "2026-10-01T02:11:00Z committed",
+        "2026-10-01T07:23:36Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "bd817725b1b3bd9bdb5e777c7ab7733aa55839a055b7620579ffe96999a6f2a9",
@@ -104985,7 +105145,7 @@
         "tools/encyclopedia_dispositions.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -106490,7 +106650,8 @@
         "2026-10-01T02:14:49Z validated",
         "2026-10-01T02:14:49Z verified: 6 claims supported",
         "2026-10-01T02:15:14Z accepted",
-        "2026-10-01T02:15:14Z committed"
+        "2026-10-01T02:15:14Z committed",
+        "2026-10-01T07:23:37Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "9eda4cc0a0a1280827e1320425148ba7a9df77c31e2c54c20eb3c7c52e9df2ae",
@@ -106503,7 +106664,7 @@
         "tools/encyclopedia_dispositions.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -107696,7 +107857,8 @@
         "2026-10-01T02:19:20Z validated",
         "2026-10-01T02:19:20Z verified: 81 claims supported",
         "2026-10-01T02:19:44Z accepted",
-        "2026-10-01T02:19:45Z committed"
+        "2026-10-01T02:19:45Z committed",
+        "2026-10-01T07:23:37Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "8102faac5028e261d86f7430d757493d0b867ffc986d4c6f407259c67d02510f",
@@ -107709,7 +107871,7 @@
         "tools/encyclopedia_dispositions.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -109690,7 +109852,8 @@
         "2026-10-01T02:23:39Z validated",
         "2026-10-01T02:23:39Z verified: 8 claims supported",
         "2026-10-01T02:24:03Z accepted",
-        "2026-10-01T02:24:03Z committed"
+        "2026-10-01T02:24:03Z committed",
+        "2026-10-01T07:23:37Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "0da37aea82fce2574442a6c59fbb192e7204011d5c763ccfb8b319f118e6499a",
@@ -109703,7 +109866,7 @@
         "tools/encyclopedia_dispositions.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -114283,7 +114446,8 @@
         "2026-10-01T02:28:11Z validated",
         "2026-10-01T02:28:11Z verified: 0 claims supported",
         "2026-10-01T02:28:35Z accepted",
-        "2026-10-01T02:28:35Z committed"
+        "2026-10-01T02:28:35Z committed",
+        "2026-10-01T07:23:37Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "b928e71eaf2dc6d747e580ab860b8cda366c9f805d79a43f4f1bc3b15146e4e2",
@@ -114293,7 +114457,7 @@
         "docs/plans/encyclopedia-unit-queue.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -114674,7 +114838,8 @@
         "2026-10-01T02:32:14Z validated",
         "2026-10-01T02:32:14Z verified: 0 claims supported",
         "2026-10-01T02:32:38Z accepted",
-        "2026-10-01T02:32:38Z committed"
+        "2026-10-01T02:32:38Z committed",
+        "2026-10-01T07:23:37Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "a05e41b3c0097ff810e8bb81f3600c71a9ac86c587e2f3e10cb1c9df1432bcf6",
@@ -114684,7 +114849,7 @@
         "docs/plans/encyclopedia-unit-queue.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -115065,7 +115230,8 @@
         "2026-10-01T02:36:17Z validated",
         "2026-10-01T02:36:17Z verified: 0 claims supported",
         "2026-10-01T02:36:41Z accepted",
-        "2026-10-01T02:36:41Z committed"
+        "2026-10-01T02:36:41Z committed",
+        "2026-10-01T07:23:37Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "2c33cdbdef3891bb0c2373bb42a36ce549e7eae7f17e0f9d874667c2b2bb24f6",
@@ -115075,7 +115241,7 @@
         "docs/plans/encyclopedia-unit-queue.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -115456,7 +115622,8 @@
         "2026-10-01T02:40:19Z validated",
         "2026-10-01T02:40:20Z verified: 0 claims supported",
         "2026-10-01T02:40:44Z accepted",
-        "2026-10-01T02:40:44Z committed"
+        "2026-10-01T02:40:44Z committed",
+        "2026-10-01T07:23:37Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "cf33bb4fdc8980e4a2173fed4d047ca5c11b3ef7d9f54e30940cbdfa64ed01aa",
@@ -115466,7 +115633,7 @@
         "docs/plans/encyclopedia-unit-queue.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -115847,7 +116014,8 @@
         "2026-10-01T02:44:23Z validated",
         "2026-10-01T02:44:23Z verified: 0 claims supported",
         "2026-10-01T02:44:47Z accepted",
-        "2026-10-01T02:44:47Z committed"
+        "2026-10-01T02:44:47Z committed",
+        "2026-10-01T07:23:38Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "1dc8d8f3ecdc52082a37763bec851b4ec49dd96e95350990093d6852b7ff085e",
@@ -115857,7 +116025,7 @@
         "docs/plans/encyclopedia-unit-queue.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -116238,7 +116406,8 @@
         "2026-10-01T02:48:26Z validated",
         "2026-10-01T02:48:26Z verified: 0 claims supported",
         "2026-10-01T02:48:49Z accepted",
-        "2026-10-01T02:48:49Z committed"
+        "2026-10-01T02:48:49Z committed",
+        "2026-10-01T07:23:38Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "b2852acb2503b913da2f404e1e028a1d1eb25eef7d51d0be88f767333bb9d6a9",
@@ -116248,7 +116417,7 @@
         "docs/plans/encyclopedia-unit-queue.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -116629,7 +116798,8 @@
         "2026-10-01T02:52:28Z validated",
         "2026-10-01T02:52:29Z verified: 0 claims supported",
         "2026-10-01T02:52:52Z accepted",
-        "2026-10-01T02:52:52Z committed"
+        "2026-10-01T02:52:52Z committed",
+        "2026-10-01T07:23:38Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "24900b33995e5487fb3e2d58870f68a4e338744143f1549abeb69bcc1d98ea7b",
@@ -116639,7 +116809,7 @@
         "docs/plans/encyclopedia-unit-queue.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -117020,7 +117190,8 @@
         "2026-10-01T02:56:33Z validated",
         "2026-10-01T02:56:33Z verified: 0 claims supported",
         "2026-10-01T02:56:57Z accepted",
-        "2026-10-01T02:56:57Z committed"
+        "2026-10-01T02:56:57Z committed",
+        "2026-10-01T07:23:38Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "8f8b48c1f3f69b80713aa43d693453f30b7a2bd6da9dd8bb5110323390f33de6",
@@ -117030,7 +117201,7 @@
         "docs/plans/encyclopedia-unit-queue.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -117411,7 +117582,8 @@
         "2026-10-01T03:00:35Z validated",
         "2026-10-01T03:00:35Z verified: 0 claims supported",
         "2026-10-01T03:00:59Z accepted",
-        "2026-10-01T03:00:59Z committed"
+        "2026-10-01T03:00:59Z committed",
+        "2026-10-01T07:23:38Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "5736f8a8dfdb9f6851df9d99f76764617146a6c2a0cd9049bb75d7071999b09a",
@@ -117421,7 +117593,7 @@
         "docs/plans/encyclopedia-unit-queue.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -117802,7 +117974,8 @@
         "2026-10-01T03:04:38Z validated",
         "2026-10-01T03:04:38Z verified: 0 claims supported",
         "2026-10-01T03:05:01Z accepted",
-        "2026-10-01T03:05:01Z committed"
+        "2026-10-01T03:05:01Z committed",
+        "2026-10-01T07:23:38Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "1cbbdc7da25e83390f7661bb6af7f95a6514caa1733186cc38e0e4d240923f4d",
@@ -117812,7 +117985,7 @@
         "docs/plans/encyclopedia-unit-queue.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -118193,7 +118366,8 @@
         "2026-10-01T03:08:42Z validated",
         "2026-10-01T03:08:42Z verified: 0 claims supported",
         "2026-10-01T03:09:06Z accepted",
-        "2026-10-01T03:09:06Z committed"
+        "2026-10-01T03:09:06Z committed",
+        "2026-10-01T07:23:38Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "9929ac6381fda6190d640a012081618189bcb859063b1a2329bcd856b580bd2a",
@@ -118203,7 +118377,7 @@
         "docs/plans/encyclopedia-unit-queue.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -118584,7 +118758,8 @@
         "2026-10-01T03:12:45Z validated",
         "2026-10-01T03:12:45Z verified: 0 claims supported",
         "2026-10-01T03:13:08Z accepted",
-        "2026-10-01T03:13:08Z committed"
+        "2026-10-01T03:13:08Z committed",
+        "2026-10-01T07:23:38Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "212f8644a1784d329f5c1849661c5fc027369a6a3eaf15108efa162b78b9e2cc",
@@ -118594,7 +118769,7 @@
         "docs/plans/encyclopedia-unit-queue.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -118975,7 +119150,8 @@
         "2026-10-01T03:16:47Z validated",
         "2026-10-01T03:16:47Z verified: 0 claims supported",
         "2026-10-01T03:17:10Z accepted",
-        "2026-10-01T03:17:10Z committed"
+        "2026-10-01T03:17:10Z committed",
+        "2026-10-01T07:23:39Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "9fb404cf6172ec3507cca99a5283e9cae887d9bcf4f4eb372e30c010609ec0ec",
@@ -118985,7 +119161,7 @@
         "docs/plans/encyclopedia-unit-queue.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -119366,7 +119542,8 @@
         "2026-10-01T03:20:50Z validated",
         "2026-10-01T03:20:50Z verified: 0 claims supported",
         "2026-10-01T03:21:14Z accepted",
-        "2026-10-01T03:21:14Z committed"
+        "2026-10-01T03:21:14Z committed",
+        "2026-10-01T07:23:39Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "b73c1d72af205523464a17cf26e88c9f6816ffcf2c60fcf75dc8f2806f972ff8",
@@ -119376,7 +119553,7 @@
         "docs/plans/encyclopedia-unit-queue.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -119757,7 +119934,8 @@
         "2026-10-01T03:24:53Z validated",
         "2026-10-01T03:24:54Z verified: 0 claims supported",
         "2026-10-01T03:25:17Z accepted",
-        "2026-10-01T03:25:17Z committed"
+        "2026-10-01T03:25:17Z committed",
+        "2026-10-01T07:23:39Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "a8f3c18f9868cb56d1d76bde8fefb4b74b8f8b360a718eb33ca859eb0277ee2f",
@@ -119767,7 +119945,7 @@
         "docs/plans/encyclopedia-unit-queue.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -120148,7 +120326,8 @@
         "2026-10-01T03:28:55Z validated",
         "2026-10-01T03:28:55Z verified: 0 claims supported",
         "2026-10-01T03:29:19Z accepted",
-        "2026-10-01T03:29:19Z committed"
+        "2026-10-01T03:29:19Z committed",
+        "2026-10-01T07:23:39Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "df9541dc9a7b1f5cd6b82e3c6fd4b4a6fd57c97259e43efe8d4e240708abee1f",
@@ -120158,7 +120337,7 @@
         "docs/plans/encyclopedia-unit-queue.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -120539,7 +120718,8 @@
         "2026-10-01T03:32:57Z validated",
         "2026-10-01T03:32:57Z verified: 0 claims supported",
         "2026-10-01T03:33:21Z accepted",
-        "2026-10-01T03:33:21Z committed"
+        "2026-10-01T03:33:21Z committed",
+        "2026-10-01T07:23:39Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "c259e2415f7cd4d559eafee4b92ecdfb3ba197bd8bf4798e4f77279b2fea8181",
@@ -120549,7 +120729,7 @@
         "docs/plans/encyclopedia-unit-queue.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -120930,7 +121110,8 @@
         "2026-10-01T03:37:00Z validated",
         "2026-10-01T03:37:00Z verified: 0 claims supported",
         "2026-10-01T03:37:24Z accepted",
-        "2026-10-01T03:37:24Z committed"
+        "2026-10-01T03:37:24Z committed",
+        "2026-10-01T07:23:39Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "797f4db5ddbdfb788c80d0d1bf46aef7a454d4ee4c6d4bb70b447a953eab514a",
@@ -120940,7 +121121,7 @@
         "docs/plans/encyclopedia-unit-queue.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -121321,7 +121502,8 @@
         "2026-10-01T03:41:02Z validated",
         "2026-10-01T03:41:03Z verified: 0 claims supported",
         "2026-10-01T03:41:26Z accepted",
-        "2026-10-01T03:41:26Z committed"
+        "2026-10-01T03:41:26Z committed",
+        "2026-10-01T07:23:39Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "c98568da001b1828ec2cc722d1cdc9b2dd3e07a018c47aaa070f2b130b666493",
@@ -121331,7 +121513,7 @@
         "docs/plans/encyclopedia-unit-queue.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -121712,7 +121894,8 @@
         "2026-10-01T03:45:05Z validated",
         "2026-10-01T03:45:05Z verified: 0 claims supported",
         "2026-10-01T03:45:29Z accepted",
-        "2026-10-01T03:45:29Z committed"
+        "2026-10-01T03:45:29Z committed",
+        "2026-10-01T07:23:40Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "fc1d4e7bb2d18826f003aee36fb3311f2a9584f20921edccc55693b72f28e6a0",
@@ -121722,7 +121905,7 @@
         "docs/plans/encyclopedia-unit-queue.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -122103,7 +122286,8 @@
         "2026-10-01T03:49:07Z validated",
         "2026-10-01T03:49:08Z verified: 0 claims supported",
         "2026-10-01T03:49:31Z accepted",
-        "2026-10-01T03:49:31Z committed"
+        "2026-10-01T03:49:31Z committed",
+        "2026-10-01T07:23:40Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "24e7985e63b1dbba5a00716f38c2f6fe5d741baec711c0aff8b0d9fbf993ff3d",
@@ -122113,7 +122297,7 @@
         "docs/plans/encyclopedia-unit-queue.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -122494,7 +122678,8 @@
         "2026-10-01T03:53:10Z validated",
         "2026-10-01T03:53:10Z verified: 0 claims supported",
         "2026-10-01T03:53:34Z accepted",
-        "2026-10-01T03:53:34Z committed"
+        "2026-10-01T03:53:34Z committed",
+        "2026-10-01T07:23:40Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "162dd1e6a8918befb07b67cf149bd94e74e09805aaa6f526f9c41d041d4875d5",
@@ -122504,7 +122689,7 @@
         "docs/plans/encyclopedia-unit-queue.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -122885,7 +123070,8 @@
         "2026-10-01T03:57:14Z validated",
         "2026-10-01T03:57:14Z verified: 0 claims supported",
         "2026-10-01T03:57:38Z accepted",
-        "2026-10-01T03:57:38Z committed"
+        "2026-10-01T03:57:38Z committed",
+        "2026-10-01T07:23:40Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "958a01953cb127a1a0dd689378a12770f588007ebd46983d361afa9ceb93a452",
@@ -122895,7 +123081,7 @@
         "docs/plans/encyclopedia-unit-queue.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -123276,7 +123462,8 @@
         "2026-10-01T04:01:17Z validated",
         "2026-10-01T04:01:17Z verified: 0 claims supported",
         "2026-10-01T04:01:41Z accepted",
-        "2026-10-01T04:01:41Z committed"
+        "2026-10-01T04:01:41Z committed",
+        "2026-10-01T07:23:40Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "6b1afdc06aa58274c28a0af86f5fd08564b28ceb701e276bacd77451e5d03c56",
@@ -123286,7 +123473,7 @@
         "docs/plans/encyclopedia-unit-queue.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -123667,7 +123854,8 @@
         "2026-10-01T04:05:20Z validated",
         "2026-10-01T04:05:20Z verified: 0 claims supported",
         "2026-10-01T04:05:44Z accepted",
-        "2026-10-01T04:05:44Z committed"
+        "2026-10-01T04:05:44Z committed",
+        "2026-10-01T07:23:40Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "2a61155450e4d853d5977cfc9293fb1aee45b8aabdc4ffa379cbb36b8e210cf7",
@@ -123677,7 +123865,7 @@
         "docs/plans/encyclopedia-unit-queue.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -124058,7 +124246,8 @@
         "2026-10-01T04:09:23Z validated",
         "2026-10-01T04:09:23Z verified: 0 claims supported",
         "2026-10-01T04:09:47Z accepted",
-        "2026-10-01T04:09:47Z committed"
+        "2026-10-01T04:09:47Z committed",
+        "2026-10-01T07:23:40Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "4c4efccf5fb7e5763376b1de584cf3bde620fc50b2f1846c1f8ea3061635bcd2",
@@ -124068,7 +124257,7 @@
         "docs/plans/encyclopedia-unit-queue.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -124449,7 +124638,8 @@
         "2026-10-01T04:13:26Z validated",
         "2026-10-01T04:13:26Z verified: 0 claims supported",
         "2026-10-01T04:13:49Z accepted",
-        "2026-10-01T04:13:50Z committed"
+        "2026-10-01T04:13:50Z committed",
+        "2026-10-01T07:23:40Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "edf4a08156698a8d81de8c56503e269adc1c928dddab0c7c02b5311cba6bc1d9",
@@ -124459,7 +124649,7 @@
         "docs/plans/encyclopedia-unit-queue.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -124840,7 +125030,8 @@
         "2026-10-01T04:17:31Z validated",
         "2026-10-01T04:17:31Z verified: 0 claims supported",
         "2026-10-01T04:17:55Z accepted",
-        "2026-10-01T04:17:55Z committed"
+        "2026-10-01T04:17:55Z committed",
+        "2026-10-01T07:23:41Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "c580916976c26a27c6c52c0f5a05666e81e789b5a469243adfc1bed50cb9410d",
@@ -124850,7 +125041,7 @@
         "docs/plans/encyclopedia-unit-queue.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -125231,7 +125422,8 @@
         "2026-10-01T04:21:36Z validated",
         "2026-10-01T04:21:36Z verified: 0 claims supported",
         "2026-10-01T04:22:00Z accepted",
-        "2026-10-01T04:22:00Z committed"
+        "2026-10-01T04:22:00Z committed",
+        "2026-10-01T07:23:41Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "8b00450d02bff3350c55e1bb1f43083dad79d02576aab085bfe6cb58acea36d6",
@@ -125241,7 +125433,7 @@
         "docs/plans/encyclopedia-unit-queue.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -125622,7 +125814,8 @@
         "2026-10-01T04:25:40Z validated",
         "2026-10-01T04:25:40Z verified: 0 claims supported",
         "2026-10-01T04:26:03Z accepted",
-        "2026-10-01T04:26:04Z committed"
+        "2026-10-01T04:26:04Z committed",
+        "2026-10-01T07:23:41Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "2510218a7996767bede2fe1991a6567cdf6093ee6ed685e154d09183e600cb77",
@@ -125632,7 +125825,7 @@
         "docs/plans/encyclopedia-unit-queue.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -126013,7 +126206,8 @@
         "2026-10-01T04:29:43Z validated",
         "2026-10-01T04:29:43Z verified: 0 claims supported",
         "2026-10-01T04:30:07Z accepted",
-        "2026-10-01T04:30:07Z committed"
+        "2026-10-01T04:30:07Z committed",
+        "2026-10-01T07:23:41Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "6af0466e3d7aac523ec78c6c3339ae7a09f0fc7c5efb78385e5b98c7bb5dc14c",
@@ -126023,7 +126217,7 @@
         "docs/plans/encyclopedia-unit-queue.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -126404,7 +126598,8 @@
         "2026-10-01T04:33:48Z validated",
         "2026-10-01T04:33:48Z verified: 0 claims supported",
         "2026-10-01T04:34:12Z accepted",
-        "2026-10-01T04:34:13Z committed"
+        "2026-10-01T04:34:13Z committed",
+        "2026-10-01T07:23:41Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "a3ed7ef7097b258b9df875f6b4cfe09c8b996e674cfc2b92e81c3660f65bc5cb",
@@ -126414,7 +126609,7 @@
         "docs/plans/encyclopedia-unit-queue.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -126852,7 +127047,8 @@
         "2026-10-01T04:37:55Z validated",
         "2026-10-01T04:37:55Z verified: 1 claims supported",
         "2026-10-01T04:38:19Z accepted",
-        "2026-10-01T04:38:19Z committed"
+        "2026-10-01T04:38:19Z committed",
+        "2026-10-01T07:23:41Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "0359e3419803606e1829b13c376b573f3c14110305447f49a3b88b200720a427",
@@ -126865,7 +127061,7 @@
         "tools/encyclopedia_dispositions.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -127303,7 +127499,8 @@
         "2026-10-01T04:42:02Z validated",
         "2026-10-01T04:42:02Z verified: 1 claims supported",
         "2026-10-01T04:42:27Z accepted",
-        "2026-10-01T04:42:27Z committed"
+        "2026-10-01T04:42:27Z committed",
+        "2026-10-01T07:23:41Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "2a8e0c8f4d626cb9a37d6e05a9d8a329e6f54dfa4e9ed0ee8fe97a9214806400",
@@ -127316,7 +127513,7 @@
         "tools/encyclopedia_dispositions.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -127754,7 +127951,8 @@
         "2026-10-01T04:46:28Z validated",
         "2026-10-01T04:46:28Z verified: 1 claims supported",
         "2026-10-01T04:46:52Z accepted",
-        "2026-10-01T04:46:53Z committed"
+        "2026-10-01T04:46:53Z committed",
+        "2026-10-01T07:23:42Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "64766017a5a5dac5afe20a991fff431b2be91ee2505b78f1b8db242a605f939d",
@@ -127767,7 +127965,7 @@
         "tools/encyclopedia_dispositions.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -128200,7 +128398,8 @@
         "2026-10-01T04:50:36Z validated",
         "2026-10-01T04:50:36Z verified: 1 claims supported",
         "2026-10-01T04:51:00Z accepted",
-        "2026-10-01T04:51:00Z committed"
+        "2026-10-01T04:51:00Z committed",
+        "2026-10-01T07:23:42Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "f620937fbc8ce22616ccb3414fb9de17acf4e6c94669fa1968d934d20193e388",
@@ -128213,7 +128412,7 @@
         "tools/encyclopedia_dispositions.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -128636,7 +128835,8 @@
         "2026-10-01T04:54:44Z validated",
         "2026-10-01T04:54:44Z verified: 1 claims supported",
         "2026-10-01T04:55:08Z accepted",
-        "2026-10-01T04:55:08Z committed"
+        "2026-10-01T04:55:08Z committed",
+        "2026-10-01T07:23:42Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "4f17356c09cf61f109aee2d380fa5c490ad45b84e2c8659cae05804f657158d8",
@@ -128649,7 +128849,7 @@
         "tools/encyclopedia_dispositions.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -129087,7 +129287,8 @@
         "2026-10-01T04:58:52Z validated",
         "2026-10-01T04:58:52Z verified: 1 claims supported",
         "2026-10-01T04:59:16Z accepted",
-        "2026-10-01T04:59:16Z committed"
+        "2026-10-01T04:59:16Z committed",
+        "2026-10-01T07:23:42Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "5f8837568ce6e103a543e04e17a173bbe5b00fb7de0289e8e3d85ed63f900c44",
@@ -129100,7 +129301,7 @@
         "tools/encyclopedia_dispositions.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -129538,7 +129739,8 @@
         "2026-10-01T05:03:16Z validated",
         "2026-10-01T05:03:16Z verified: 1 claims supported",
         "2026-10-01T05:03:40Z accepted",
-        "2026-10-01T05:03:40Z committed"
+        "2026-10-01T05:03:40Z committed",
+        "2026-10-01T07:23:42Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "2003c1897784250522dc66979897e7bb0eca96edc58fe42ddb3c839f68928557",
@@ -129551,7 +129753,7 @@
         "tools/encyclopedia_dispositions.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -129974,7 +130176,8 @@
         "2026-10-01T05:07:24Z validated",
         "2026-10-01T05:07:24Z verified: 1 claims supported",
         "2026-10-01T05:07:48Z accepted",
-        "2026-10-01T05:07:48Z committed"
+        "2026-10-01T05:07:48Z committed",
+        "2026-10-01T07:23:42Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "8a53071adb01188a5986d09441528e3c5c8498458185adfaf1476ad304f1bcf7",
@@ -129987,7 +130190,7 @@
         "tools/encyclopedia_dispositions.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -130373,7 +130576,8 @@
         "2026-10-01T05:11:30Z validated",
         "2026-10-01T05:11:30Z verified: 7 claims supported",
         "2026-10-01T05:11:54Z accepted",
-        "2026-10-01T05:11:54Z committed"
+        "2026-10-01T05:11:54Z committed",
+        "2026-10-01T07:23:42Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "85fefaf2b22ecaddcdd605d54be1fe6268de0809c79e3a00c65d1ac087c3e14f",
@@ -130386,7 +130590,7 @@
         "tools/encyclopedia_dispositions.json"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -132718,7 +132922,8 @@
         "2026-10-01T05:32:31Z validated",
         "2026-10-01T05:32:47Z verified: 1 claims supported",
         "2026-10-01T05:33:21Z accepted",
-        "2026-10-01T05:33:21Z committed"
+        "2026-10-01T05:33:21Z committed",
+        "2026-10-01T07:23:42Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "617575c02818f813bcc9a36ebfaa0a64383d6dc72e50a640dcc0cf017ffdb898",
@@ -132732,7 +132937,7 @@
         "tools/tests/test_export_item_effect_phrases.py"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -135967,7 +136172,8 @@
         "2026-10-01T05:58:44Z validated",
         "2026-10-01T05:58:44Z verified: 1 claims supported",
         "2026-10-01T05:59:08Z accepted",
-        "2026-10-01T05:59:08Z committed"
+        "2026-10-01T05:59:08Z committed",
+        "2026-10-01T07:23:43Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "3edc2876255f074a905bfb088d6341b36b329dbcb68ec40e144c11db9f0345e0",
@@ -135979,7 +136185,7 @@
         "tools/tests/test_export_item_effect_phrases.py"
       ],
       "accepted_on": "2026-09-30",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -137640,7 +137846,8 @@
         "2026-10-01T06:02:51Z validated",
         "2026-10-01T06:02:51Z verified: 1 claims supported",
         "2026-10-01T06:03:15Z accepted",
-        "2026-10-01T06:03:15Z committed"
+        "2026-10-01T06:03:15Z committed",
+        "2026-10-01T07:23:43Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "f9e3527123a99c7cbb43680a2399f5623398e34859feb51375bac1c63ee76305",
@@ -137652,7 +137859,7 @@
         "tools/tests/test_export_item_effect_phrases.py"
       ],
       "accepted_on": "2026-10-01",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -139156,7 +139363,8 @@
         "2026-10-01T06:06:58Z validated",
         "2026-10-01T06:06:58Z verified: 1 claims supported",
         "2026-10-01T06:07:22Z accepted",
-        "2026-10-01T06:07:22Z committed"
+        "2026-10-01T06:07:22Z committed",
+        "2026-10-01T07:23:43Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "03e8f684e3cad5baeb0eb3b27ccc337b6a2c9ea2b1289472aead36c127449e50",
@@ -139168,7 +139376,7 @@
         "tools/tests/test_export_item_effect_phrases.py"
       ],
       "accepted_on": "2026-10-01",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -140319,7 +140527,8 @@
         "2026-10-01T06:11:06Z validated",
         "2026-10-01T06:11:06Z verified: 1 claims supported",
         "2026-10-01T06:11:31Z accepted",
-        "2026-10-01T06:11:31Z committed"
+        "2026-10-01T06:11:31Z committed",
+        "2026-10-01T07:23:43Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "b38165611d66eaab5d07405184bdcc871462c1ee333c6c12a70281c97996ad41",
@@ -140331,7 +140540,7 @@
         "tools/tests/test_export_item_effect_phrases.py"
       ],
       "accepted_on": "2026-10-01",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -141313,7 +141522,8 @@
         "2026-10-01T06:15:15Z validated",
         "2026-10-01T06:15:15Z verified: 1 claims supported",
         "2026-10-01T06:15:39Z accepted",
-        "2026-10-01T06:15:39Z committed"
+        "2026-10-01T06:15:39Z committed",
+        "2026-10-01T07:23:19Z audit failed: The queued excerpt documents skillpointcount, not skill(name, level). The four granting scripts are translated by the skill-name rule, but this unit's documentation window does not define them."
       ],
       "baseline_dirty": [],
       "draft_sha256": "6ddffd71b54588147c7e7c5b8caff25b0d15ebf0d07083189d84cbe0bbc68c0a",
@@ -141325,8 +141535,9 @@
         "tools/tests/test_export_item_effect_phrases.py"
       ],
       "accepted_on": "2026-10-01",
-      "audit": "due",
-      "commit": "committed"
+      "audit": "failed: The queued excerpt documents skillpointcount, not skill(name, level). The four granting scripts are translated by the skill-name rule, but this unit's documentation window does not define them.",
+      "commit": "committed",
+      "blocker": "Audit failed: The queued excerpt documents skillpointcount, not skill(name, level). The four granting scripts are translated by the skill-name rule, but this unit's documentation window does not define them.. The accepted records need correction in a separate unit."
     },
     {
       "id": "E3-translate-bonus-bdefratioatkrace",
@@ -142138,7 +142349,8 @@
         "2026-10-01T06:19:22Z validated",
         "2026-10-01T06:19:22Z verified: 1 claims supported",
         "2026-10-01T06:19:46Z accepted",
-        "2026-10-01T06:19:46Z committed"
+        "2026-10-01T06:19:46Z committed",
+        "2026-10-01T07:23:43Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "9f22024081c526c43bb449fa921792b7041b742ab213be69606c18ab76e910fc",
@@ -142150,7 +142362,7 @@
         "tools/tests/test_export_item_effect_phrases.py"
       ],
       "accepted_on": "2026-10-01",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -142893,7 +143105,8 @@
         "2026-10-01T06:23:31Z validated",
         "2026-10-01T06:23:31Z verified: 1 claims supported",
         "2026-10-01T06:23:56Z accepted",
-        "2026-10-01T06:23:56Z committed"
+        "2026-10-01T06:23:56Z committed",
+        "2026-10-01T07:23:43Z audit passed"
       ],
       "baseline_dirty": [
         "docs/plans/encyclopedia-qwen3-progress.json",
@@ -142908,7 +143121,7 @@
         "tools/tests/test_export_item_effect_phrases.py"
       ],
       "accepted_on": "2026-10-01",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {
@@ -143587,7 +143800,8 @@
         "2026-10-01T06:27:40Z validated",
         "2026-10-01T06:27:40Z verified: 1 claims supported",
         "2026-10-01T06:28:04Z accepted",
-        "2026-10-01T06:28:04Z committed"
+        "2026-10-01T06:28:04Z committed",
+        "2026-10-01T07:23:43Z audit passed"
       ],
       "baseline_dirty": [],
       "draft_sha256": "0c2000555dc919bac3e11db6c5352c0dee331c3a4433734372d9a7a42ec307ff",
@@ -143599,7 +143813,7 @@
         "tools/tests/test_export_item_effect_phrases.py"
       ],
       "accepted_on": "2026-10-01",
-      "audit": "due",
+      "audit": "passed",
       "commit": "committed"
     },
     {

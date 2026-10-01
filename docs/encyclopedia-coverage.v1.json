@@ -205,18 +205,20 @@
       }
     },
     "unit_dispositions": {
-      "E1_conditional": 15,
+      "E1_conditional": 283,
       "E1_not_applicable": 1,
-      "E1_unknown": 3448,
-      "E1_verified": 2,
+      "E1_unknown": 3172,
+      "E1_verified": 23,
       "E2_conditional": 1,
       "E2_verified": 236,
       "E3_unknown": 973,
       "E4_unknown": 213,
       "E5_absent": 644,
-      "E5_unknown": 3383,
-      "E6_configured_estimate": 15,
-      "E6_unknown": 83
+      "E5_conditional": 273,
+      "E5_unknown": 3099,
+      "E5_verified": 11,
+      "E6_configured_estimate": 22,
+      "E6_unknown": 76
     },
     "crafting_and_mechanics": {
       "production_and_conversion_recipes": 919,
