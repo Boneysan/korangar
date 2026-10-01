@@ -12,7 +12,7 @@
     "E2_verified": 236,
     "E3_unknown": 973,
     "E4_unknown": 213,
-    "E5_unknown": 1121
+    "E5_unknown": 1133
   },
   "entries": [
     {
@@ -133175,6 +133175,330 @@
           ],
           "required_source_literals": [
             "changequest 9011,9012;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_9013_npc_jobs_2_1_wizard_txt_160",
+      "unit": "E5-chain-9013",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          9015
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 9015; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-1/wizard.txt",
+          "lines": [
+            160
+          ],
+          "required_source_literals": [
+            "setquest 9015;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_9013_npc_jobs_2_1_wizard_txt_176",
+      "unit": "E5-chain-9013",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          9013
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 9013; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-1/wizard.txt",
+          "lines": [
+            176
+          ],
+          "required_source_literals": [
+            "setquest 9013;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_9013_npc_jobs_2_1_wizard_txt_183",
+      "unit": "E5-chain-9013",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          9014
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 9014; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-1/wizard.txt",
+          "lines": [
+            183
+          ],
+          "required_source_literals": [
+            "setquest 9014;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_9013_npc_jobs_2_1_wizard_txt_220",
+      "unit": "E5-chain-9013",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          9013
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 9013; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-1/wizard.txt",
+          "lines": [
+            220
+          ],
+          "required_source_literals": [
+            "changequest 9013,9015;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_9013_npc_jobs_2_1_wizard_txt_259",
+      "unit": "E5-chain-9013",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          9014
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 9014; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-1/wizard.txt",
+          "lines": [
+            259
+          ],
+          "required_source_literals": [
+            "changequest 9014,9015;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_9013_npc_jobs_2_1_wizard_txt_435",
+      "unit": "E5-chain-9013",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          9018
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 9018; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-1/wizard.txt",
+          "lines": [
+            435
+          ],
+          "required_source_literals": [
+            "completequest 9018;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_9013_npc_jobs_2_1_wizard_txt_567",
+      "unit": "E5-chain-9013",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          9015
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 9015; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-1/wizard.txt",
+          "lines": [
+            567
+          ],
+          "required_source_literals": [
+            "changequest 9015,9016;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_9013_npc_jobs_2_1_wizard_txt_766",
+      "unit": "E5-chain-9013",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          9016
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 9016; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-1/wizard.txt",
+          "lines": [
+            766
+          ],
+          "required_source_literals": [
+            "changequest 9016,9017;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_9013_npc_jobs_2_1_wizard_txt_777",
+      "unit": "E5-chain-9013",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          9016
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 9016; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-1/wizard.txt",
+          "lines": [
+            777
+          ],
+          "required_source_literals": [
+            "changequest 9016,9017;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_9013_npc_jobs_2_1_wizard_txt_788",
+      "unit": "E5-chain-9013",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          9016
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 9016; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-1/wizard.txt",
+          "lines": [
+            788
+          ],
+          "required_source_literals": [
+            "changequest 9016,9017;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_9013_npc_jobs_2_1_wizard_txt_812",
+      "unit": "E5-chain-9013",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          9016
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 9016; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-1/wizard.txt",
+          "lines": [
+            812
+          ],
+          "required_source_literals": [
+            "changequest 9016,9017;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_9013_npc_jobs_2_1_wizard_txt_822",
+      "unit": "E5-chain-9013",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          9016
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 9016; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-1/wizard.txt",
+          "lines": [
+            822
+          ],
+          "required_source_literals": [
+            "changequest 9016,9017;"
           ]
         }
       ],
