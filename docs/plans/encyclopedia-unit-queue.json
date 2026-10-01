@@ -130227,7 +130227,7 @@
       "package": "E6",
       "kind": "e6_zone",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "zone": "CvC"
@@ -130241,7 +130241,25 @@
       ],
       "size_lines": 19,
       "reason": "map-zone family: configured restrictions",
-      "history": []
+      "history": [
+        "2026-10-01T05:10:16Z activated",
+        "2026-10-01T05:10:16Z validated",
+        "2026-10-01T05:10:17Z verified: 7 claims supported",
+        "2026-10-01T05:10:41Z accepted",
+        "2026-10-01T05:10:41Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "af23ac2898008d66c2f05eab6c21fe25b972e895439e4260e4712a8eda2c14cd",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/encyclopedia-dispositions.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/encyclopedia_dispositions.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E6-zone-pk-mode",
