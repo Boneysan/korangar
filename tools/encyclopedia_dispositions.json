@@ -154524,6 +154524,33 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_11184_npc_re_quests_quests_mora_txt_440",
+      "unit": "E5-chain-11184",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          11184
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 11184; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_mora.txt",
+          "lines": [
+            440
+          ],
+          "required_source_literals": [
+            "changequest 11184,11185;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
