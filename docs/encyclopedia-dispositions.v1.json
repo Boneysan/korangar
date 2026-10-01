@@ -14,7 +14,7 @@
     "E4_unknown": 213,
     "E5_absent": 644,
     "E5_unknown": 3383,
-    "E6_unknown": 44
+    "E6_unknown": 45
   },
   "entries": [
     {
@@ -195858,6 +195858,34 @@
           "path": "db/re/mob_db.conf",
           "lines": [
             44892
+          ],
+          "required_source_literals": [
+            "{"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e6_boss_2052_boss",
+      "unit": "E6-boss-2052",
+      "package": "E6",
+      "subject": {
+        "kind": "monster",
+        "name": "E_DARKLORD",
+        "ids": [
+          2052
+        ]
+      },
+      "result": "unknown",
+      "statement": "Monster 2052 (E_DARKLORD) has configured database rows in the packet; this record does not enumerate each skill.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/mob_db.conf",
+          "lines": [
+            48088
           ],
           "required_source_literals": [
             "{"
