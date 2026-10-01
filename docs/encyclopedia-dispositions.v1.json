@@ -14,7 +14,7 @@
     "E4_unknown": 213,
     "E5_absent": 644,
     "E5_unknown": 3383,
-    "E6_unknown": 37
+    "E6_unknown": 38
   },
   "entries": [
     {
@@ -195662,6 +195662,34 @@
           "path": "db/re/mob_db.conf",
           "lines": [
             36231
+          ],
+          "required_source_literals": [
+            "{"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e6_boss_1802_boss",
+      "unit": "E6-boss-1802",
+      "package": "E6",
+      "subject": {
+        "kind": "monster",
+        "name": "B_MAGALETA_",
+        "ids": [
+          1802
+        ]
+      },
+      "result": "unknown",
+      "statement": "Monster 1802 (B_MAGALETA_) has configured database rows in the packet; this record does not enumerate each skill.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/mob_db.conf",
+          "lines": [
+            37002
           ],
           "required_source_literals": [
             "{"
