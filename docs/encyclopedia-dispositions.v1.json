@@ -12,7 +12,7 @@
     "E2_verified": 236,
     "E3_unknown": 973,
     "E4_unknown": 213,
-    "E5_unknown": 708
+    "E5_unknown": 709
   },
   "entries": [
     {
@@ -112736,6 +112736,33 @@
           ],
           "required_source_literals": [
             "changequest 2221,2220;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2222_npc_re_jobs_3_2_wanderer_txt_1008",
+      "unit": "E5-chain-2222",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2222
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 2222; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-2/wanderer.txt",
+          "lines": [
+            1008
+          ],
+          "required_source_literals": [
+            "completequest 2222;"
           ]
         }
       ],
