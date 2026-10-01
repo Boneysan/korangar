@@ -143130,6 +143130,33 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_8109_npc_quests_quests_rachel_txt_2498",
+      "unit": "E5-chain-8109",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8109
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 8109; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_rachel.txt",
+          "lines": [
+            2498
+          ],
+          "required_source_literals": [
+            "changequest 8109,8110;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
