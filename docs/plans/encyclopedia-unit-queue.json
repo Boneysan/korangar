@@ -138787,7 +138787,7 @@
       "package": "E3",
       "kind": "e3_translator",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "key": "end",
@@ -138895,7 +138895,24 @@
       ],
       "size_lines": 37,
       "reason": "7 item script(s) first stop at documented `end`",
-      "history": []
+      "history": [
+        "2026-10-01T06:06:09Z activated",
+        "2026-10-01T06:06:09Z validated",
+        "2026-10-01T06:06:09Z verified: 1 claims supported",
+        "2026-10-01T06:06:33Z accepted",
+        "2026-10-01T06:06:33Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "113a0f4468297a94d8d93b10267a0c99bb02e5bc76db703ee4746b1cb0b7cc1d",
+      "accepted_files": [
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/export_item_reference.py",
+        "tools/tests/test_export_item_effect_phrases.py"
+      ],
+      "accepted_on": "2026-10-01",
+      "commit": "committed"
     },
     {
       "id": "E3-translate-warp",
