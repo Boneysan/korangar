@@ -147720,6 +147720,141 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_12090_npc_re_jobs_3_2_royal_guard_txt_137",
+      "unit": "E5-chain-12090",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          12090
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 12090; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-2/royal_guard.txt",
+          "lines": [
+            137
+          ],
+          "required_source_literals": [
+            "setquest 12090;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_12090_npc_re_jobs_3_2_royal_guard_txt_211",
+      "unit": "E5-chain-12090",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          12090
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 12090; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-2/royal_guard.txt",
+          "lines": [
+            211
+          ],
+          "required_source_literals": [
+            "changequest 12090,12091;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_12090_npc_re_jobs_3_2_royal_guard_txt_225",
+      "unit": "E5-chain-12090",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          12091
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 12091; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-2/royal_guard.txt",
+          "lines": [
+            225
+          ],
+          "required_source_literals": [
+            "changequest 12091,12092;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_12090_npc_re_jobs_3_2_royal_guard_txt_299",
+      "unit": "E5-chain-12090",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          12092
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 12092; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-2/royal_guard.txt",
+          "lines": [
+            299
+          ],
+          "required_source_literals": [
+            "changequest 12092,12093;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_12090_npc_re_jobs_3_2_royal_guard_txt_343",
+      "unit": "E5-chain-12090",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          12093
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 12093; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-2/royal_guard.txt",
+          "lines": [
+            343
+          ],
+          "required_source_literals": [
+            "changequest 12093,12094;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
