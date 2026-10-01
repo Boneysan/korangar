@@ -240212,6 +240212,34 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e6_boss_2319_boss",
+      "unit": "E6-boss-2319",
+      "package": "E6",
+      "subject": {
+        "kind": "monster",
+        "name": "BUWAYA",
+        "ids": [
+          2319
+        ]
+      },
+      "result": "unknown",
+      "statement": "Monster 2319 (BUWAYA) has configured database rows in the packet; this record does not enumerate each skill.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/mob_db.conf",
+          "lines": [
+            60021
+          ],
+          "required_source_literals": [
+            "{"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
