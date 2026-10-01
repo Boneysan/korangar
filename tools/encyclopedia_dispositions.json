@@ -154011,6 +154011,60 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_11301_npc_re_quests_quests_malaya_txt_7502",
+      "unit": "E5-chain-11301",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          11301
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 11301; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malaya.txt",
+          "lines": [
+            7502
+          ],
+          "required_source_literals": [
+            "changequest 11301,11302;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_11301_npc_re_quests_quests_malaya_txt_7550",
+      "unit": "E5-chain-11301",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          11307
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 11307; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malaya.txt",
+          "lines": [
+            7550
+          ],
+          "required_source_literals": [
+            "changequest 11307,11308;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
