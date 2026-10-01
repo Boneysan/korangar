@@ -149610,6 +149610,33 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_11123_npc_re_quests_eden_11_25_txt_118",
+      "unit": "E5-chain-11123",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          11133
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 11133; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/11-25.txt",
+          "lines": [
+            118
+          ],
+          "required_source_literals": [
+            "erasequest 11133;\t// Special case for \"Collect Poison Spores\""
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
