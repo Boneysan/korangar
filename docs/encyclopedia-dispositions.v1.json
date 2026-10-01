@@ -12,7 +12,7 @@
     "E2_verified": 236,
     "E3_unknown": 973,
     "E4_unknown": 213,
-    "E5_unknown": 921
+    "E5_unknown": 922
   },
   "entries": [
     {
@@ -108308,6 +108308,33 @@
           ],
           "required_source_literals": [
             "changequest 11307,11308;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_11305_npc_re_quests_quests_malaya_txt_8245",
+      "unit": "E5-chain-11305",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          11305
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 11305; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malaya.txt",
+          "lines": [
+            8245
+          ],
+          "required_source_literals": [
+            "changequest 11305,11306;"
           ]
         }
       ],
