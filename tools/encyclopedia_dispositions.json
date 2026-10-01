@@ -143886,6 +143886,60 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2121_npc_quests_quests_veins_txt_6370",
+      "unit": "E5-chain-2121",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2121
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 2121; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_veins.txt",
+          "lines": [
+            6370
+          ],
+          "required_source_literals": [
+            "changequest 2121,2122;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2121_npc_quests_quests_veins_txt_6485",
+      "unit": "E5-chain-2121",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2128
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 2128; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_veins.txt",
+          "lines": [
+            6485
+          ],
+          "required_source_literals": [
+            "changequest 2128,60211;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
