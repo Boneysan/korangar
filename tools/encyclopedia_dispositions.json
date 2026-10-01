@@ -238336,6 +238336,34 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e6_boss_1086_boss",
+      "unit": "E6-boss-1086",
+      "package": "E6",
+      "subject": {
+        "kind": "monster",
+        "name": "GOLDEN_BUG",
+        "ids": [
+          1086
+        ]
+      },
+      "result": "unknown",
+      "statement": "Monster 1086 (GOLDEN_BUG) has configured database rows in the packet; this record does not enumerate each skill.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/mob_db.conf",
+          "lines": [
+            4072
+          ],
+          "required_source_literals": [
+            "{"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
