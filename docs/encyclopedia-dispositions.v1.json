@@ -14,6 +14,7 @@
     "E4_unknown": 213,
     "E5_absent": 644,
     "E5_unknown": 3383,
+    "E6_configured_estimate": 1,
     "E6_unknown": 83
   },
   "entries": [
@@ -196953,6 +196954,48 @@
           ],
           "required_source_literals": [
             "{"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e6_zone_all_zone",
+      "unit": "E6-zone-all",
+      "package": "E6",
+      "subject": {
+        "kind": "zone",
+        "name": "All"
+      },
+      "result": "configured_estimate",
+      "statement": "Zone All sets the quoted configured restrictions; maps that use the zone are not claimed.",
+      "conditions": [
+        "Configured line: /* All zone is a dynamic (very special) zone that is forcibly inherited by ALL maps automatically */",
+        "Configured line: name: \"All\" /* changing this name requires MAP_ZONE_ALL_NAME to also be changed in src/map/map.h file */",
+        "Configured line: disabled_skills: {",
+        "Configured line: disabled_items: {",
+        "Configured line: mapflags: (",
+        "Configured line: disabled_commands: {"
+      ],
+      "sources": [
+        {
+          "path": "db/re/map_zone_db.conf",
+          "lines": [
+            45,
+            46,
+            48,
+            54,
+            93,
+            97
+          ],
+          "required_source_literals": [
+            "/* All zone is a dynamic (very special) zone that is forcibly inherited by ALL maps automatically */",
+            "name: \"All\" /* changing this name requires MAP_ZONE_ALL_NAME to also be changed in src/map/map.h file */",
+            "disabled_skills: {",
+            "disabled_items: {",
+            "mapflags: (",
+            "disabled_commands: {"
           ]
         }
       ],
