@@ -142916,7 +142916,7 @@
       "package": "E3",
       "kind": "e3_translator",
       "tier": "local",
-      "state": "todo",
+      "state": "blocked",
       "attempts": 0,
       "subject": {
         "key": "bonus bIgnoreMdefRate",
@@ -142951,14 +142951,19 @@
       ],
       "size_lines": 32,
       "reason": "1 item script(s) first stop at documented `bonus bIgnoreMdefRate`",
-      "history": []
+      "history": [
+        "2026-10-01T06:23:56Z activated",
+        "2026-10-01T06:23:56Z blocked: No item in this cluster is fully translated. The remaining scripts use a conditional, an expression, or a command whose meaning is outside this excerpt."
+      ],
+      "baseline_dirty": [],
+      "blocker": "No item in this cluster is fully translated. The remaining scripts use a conditional, an expression, or a command whose meaning is outside this excerpt."
     },
     {
       "id": "E3-translate-bonus-bmagichpgainvalue",
       "package": "E3",
       "kind": "e3_translator",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "key": "bonus bMagicHPGainValue",
@@ -142993,7 +142998,27 @@
       ],
       "size_lines": 32,
       "reason": "1 item script(s) first stop at documented `bonus bMagicHPGainValue`",
-      "history": []
+      "history": [
+        "2026-10-01T06:23:57Z activated",
+        "2026-10-01T06:23:57Z validated",
+        "2026-10-01T06:23:57Z verified: 1 claims supported",
+        "2026-10-01T06:24:21Z accepted",
+        "2026-10-01T06:24:21Z committed"
+      ],
+      "baseline_dirty": [
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json"
+      ],
+      "draft_sha256": "c35df4fb6d405e72fb8b2dbeb6f585f9a1697817d21d3642ff0b2e7764fb0f70",
+      "accepted_files": [
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/export_item_reference.py",
+        "tools/tests/test_export_item_effect_phrases.py"
+      ],
+      "accepted_on": "2026-10-01",
+      "commit": "committed"
     },
     {
       "id": "E3-translate-bonus-bnomagicdamage",
