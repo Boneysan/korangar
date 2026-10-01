@@ -138523,7 +138523,7 @@
       "package": "E3",
       "kind": "e3_translator",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "key": "bonus2 bHPRegenRate",
@@ -138631,7 +138631,24 @@
       ],
       "size_lines": 37,
       "reason": "7 item script(s) first stop at documented `bonus2 bHPRegenRate`",
-      "history": []
+      "history": [
+        "2026-10-01T06:05:20Z activated",
+        "2026-10-01T06:05:20Z validated",
+        "2026-10-01T06:05:20Z verified: 1 claims supported",
+        "2026-10-01T06:05:44Z accepted",
+        "2026-10-01T06:05:44Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "3be4126118c07118a4dd087783bb732de3c4f44ab3122f74096811818c0ba4c0",
+      "accepted_files": [
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/export_item_reference.py",
+        "tools/tests/test_export_item_effect_phrases.py"
+      ],
+      "accepted_on": "2026-10-01",
+      "commit": "committed"
     },
     {
       "id": "E3-translate-bonus2-bweaponcomarace",
