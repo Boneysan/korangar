@@ -169428,6 +169428,249 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_10079_npc_quests_quests_alberta_txt_2384",
+      "unit": "E5-chain-10079",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          10089
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 10089; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_alberta.txt",
+          "lines": [
+            2384
+          ],
+          "required_source_literals": [
+            "completequest 10089;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_10079_npc_quests_quests_alberta_txt_2481",
+      "unit": "E5-chain-10079",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          10088
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 10088; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_alberta.txt",
+          "lines": [
+            2481
+          ],
+          "required_source_literals": [
+            "changequest 10088,10089;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_10079_npc_quests_quests_alberta_txt_2512",
+      "unit": "E5-chain-10079",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          10087
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 10087; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_alberta.txt",
+          "lines": [
+            2512
+          ],
+          "required_source_literals": [
+            "changequest 10087,10088;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_10079_npc_quests_quests_alberta_txt_2580",
+      "unit": "E5-chain-10079",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          10086
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 10086; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_alberta.txt",
+          "lines": [
+            2580
+          ],
+          "required_source_literals": [
+            "changequest 10086,10087;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_10079_npc_quests_quests_alberta_txt_2612",
+      "unit": "E5-chain-10079",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          10085
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 10085; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_alberta.txt",
+          "lines": [
+            2612
+          ],
+          "required_source_literals": [
+            "changequest 10085,10086;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_10079_npc_quests_quests_alberta_txt_2637",
+      "unit": "E5-chain-10079",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          10084
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 10084; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_alberta.txt",
+          "lines": [
+            2637
+          ],
+          "required_source_literals": [
+            "changequest 10084,10085;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_10079_npc_quests_quests_alberta_txt_2693",
+      "unit": "E5-chain-10079",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          10083
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 10083; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_alberta.txt",
+          "lines": [
+            2693
+          ],
+          "required_source_literals": [
+            "changequest 10083,10084;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_10079_npc_quests_quests_alberta_txt_2721",
+      "unit": "E5-chain-10079",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          10079
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 10079; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_alberta.txt",
+          "lines": [
+            2721
+          ],
+          "required_source_literals": [
+            "changequest 10079,10080;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_10079_npc_quests_quests_alberta_txt_2837",
+      "unit": "E5-chain-10079",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          10079
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 10079; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_alberta.txt",
+          "lines": [
+            2837
+          ],
+          "required_source_literals": [
+            "setquest 10079;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
