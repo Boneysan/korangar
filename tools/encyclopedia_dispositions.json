@@ -158115,6 +158115,141 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_6000_npc_jobs_1_1e_taekwon_txt_127",
+      "unit": "E5-chain-6000",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          6001
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 6001; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/1-1e/taekwon.txt",
+          "lines": [
+            127
+          ],
+          "required_source_literals": [
+            "setquest 6001;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_6000_npc_jobs_1_1e_taekwon_txt_138",
+      "unit": "E5-chain-6000",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          6000
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 6000; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/1-1e/taekwon.txt",
+          "lines": [
+            138
+          ],
+          "required_source_literals": [
+            "setquest 6000;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_6000_npc_jobs_1_1e_taekwon_txt_161",
+      "unit": "E5-chain-6000",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          6000
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 6000; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/1-1e/taekwon.txt",
+          "lines": [
+            161
+          ],
+          "required_source_literals": [
+            "changequest 6000,6001;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_6000_npc_jobs_1_1e_taekwon_txt_356",
+      "unit": "E5-chain-6000",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          6001
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 6001; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/1-1e/taekwon.txt",
+          "lines": [
+            356
+          ],
+          "required_source_literals": [
+            "changequest 6001,6002;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_6000_npc_jobs_1_1e_taekwon_txt_395",
+      "unit": "E5-chain-6000",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          6002
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 6002; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/1-1e/taekwon.txt",
+          "lines": [
+            395
+          ],
+          "required_source_literals": [
+            "completequest 6002;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
