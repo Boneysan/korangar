@@ -12,7 +12,7 @@
     "E2_verified": 236,
     "E3_unknown": 973,
     "E4_unknown": 213,
-    "E5_unknown": 1657
+    "E5_unknown": 1668
   },
   "entries": [
     {
@@ -129422,6 +129422,303 @@
           ],
           "required_source_literals": [
             "setquest(3043);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_3050_npc_quests_quests_morocc_txt_1247",
+      "unit": "E5-chain-3050",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          3050
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 3050; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_morocc.txt",
+          "lines": [
+            1247
+          ],
+          "required_source_literals": [
+            "setquest 3050;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_3050_npc_quests_quests_morocc_txt_1397",
+      "unit": "E5-chain-3050",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          3050
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 3050; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_morocc.txt",
+          "lines": [
+            1397
+          ],
+          "required_source_literals": [
+            "changequest 3050,3051;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_3050_npc_quests_quests_morocc_txt_1479",
+      "unit": "E5-chain-3050",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          3051
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 3051; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_morocc.txt",
+          "lines": [
+            1479
+          ],
+          "required_source_literals": [
+            "changequest 3051,3052;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_3050_npc_quests_quests_morocc_txt_1505",
+      "unit": "E5-chain-3050",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          3052
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 3052; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_morocc.txt",
+          "lines": [
+            1505
+          ],
+          "required_source_literals": [
+            "changequest 3052,3053;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_3050_npc_quests_quests_morocc_txt_1617",
+      "unit": "E5-chain-3050",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          3055
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 3055; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_morocc.txt",
+          "lines": [
+            1617
+          ],
+          "required_source_literals": [
+            "changequest 3055,3056;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_3050_npc_quests_quests_morocc_txt_1639",
+      "unit": "E5-chain-3050",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          3056
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 3056; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_morocc.txt",
+          "lines": [
+            1639
+          ],
+          "required_source_literals": [
+            "completequest 3056;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_3050_npc_quests_quests_morocc_txt_1671",
+      "unit": "E5-chain-3050",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          3056
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 3056; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_morocc.txt",
+          "lines": [
+            1671
+          ],
+          "required_source_literals": [
+            "completequest 3056;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_3050_npc_quests_quests_morocc_txt_1703",
+      "unit": "E5-chain-3050",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          3056
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 3056; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_morocc.txt",
+          "lines": [
+            1703
+          ],
+          "required_source_literals": [
+            "completequest 3056;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_3050_npc_quests_quests_morocc_txt_1751",
+      "unit": "E5-chain-3050",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          3056
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 3056; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_morocc.txt",
+          "lines": [
+            1751
+          ],
+          "required_source_literals": [
+            "completequest 3056;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_3050_npc_quests_quests_morocc_txt_1783",
+      "unit": "E5-chain-3050",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          3056
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 3056; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_morocc.txt",
+          "lines": [
+            1783
+          ],
+          "required_source_literals": [
+            "completequest 3056;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_3050_npc_quests_quests_morocc_txt_1815",
+      "unit": "E5-chain-3050",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          3056
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 3056; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_morocc.txt",
+          "lines": [
+            1815
+          ],
+          "required_source_literals": [
+            "completequest 3056;"
           ]
         }
       ],
