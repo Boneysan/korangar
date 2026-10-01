@@ -162246,6 +162246,762 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2047_npc_jobs_2_2_sage_txt_1361",
+      "unit": "E5-chain-2047",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2047
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 2047; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/sage.txt",
+          "lines": [
+            1361
+          ],
+          "required_source_literals": [
+            "changequest 2047,2050;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2047_npc_jobs_2_2_sage_txt_1487",
+      "unit": "E5-chain-2047",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2050
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 2050; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/sage.txt",
+          "lines": [
+            1487
+          ],
+          "required_source_literals": [
+            "changequest 2050,2051;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2047_npc_jobs_2_2_sage_txt_1666",
+      "unit": "E5-chain-2047",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2051
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 2051; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/sage.txt",
+          "lines": [
+            1666
+          ],
+          "required_source_literals": [
+            "changequest 2051,2052;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2047_npc_jobs_2_2_sage_txt_1779",
+      "unit": "E5-chain-2047",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2048
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 2048; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/sage.txt",
+          "lines": [
+            1779
+          ],
+          "required_source_literals": [
+            "changequest 2048,2053;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2047_npc_jobs_2_2_sage_txt_1788",
+      "unit": "E5-chain-2047",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2048
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 2048; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/sage.txt",
+          "lines": [
+            1788
+          ],
+          "required_source_literals": [
+            "changequest 2048,2054;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2047_npc_jobs_2_2_sage_txt_1797",
+      "unit": "E5-chain-2047",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2048
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 2048; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/sage.txt",
+          "lines": [
+            1797
+          ],
+          "required_source_literals": [
+            "changequest 2048,2054;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2047_npc_jobs_2_2_sage_txt_1896",
+      "unit": "E5-chain-2047",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2053
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 2053; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/sage.txt",
+          "lines": [
+            1896
+          ],
+          "required_source_literals": [
+            "changequest 2053,2056;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2047_npc_jobs_2_2_sage_txt_1899",
+      "unit": "E5-chain-2047",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2054
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 2054; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/sage.txt",
+          "lines": [
+            1899
+          ],
+          "required_source_literals": [
+            "changequest 2054,2056;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2047_npc_jobs_2_2_sage_txt_1902",
+      "unit": "E5-chain-2047",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2055
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 2055; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/sage.txt",
+          "lines": [
+            1902
+          ],
+          "required_source_literals": [
+            "changequest 2055,2056;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2047_npc_jobs_2_2_sage_txt_1911",
+      "unit": "E5-chain-2047",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2053
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 2053; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/sage.txt",
+          "lines": [
+            1911
+          ],
+          "required_source_literals": [
+            "changequest 2053,2057;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2047_npc_jobs_2_2_sage_txt_1914",
+      "unit": "E5-chain-2047",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2054
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 2054; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/sage.txt",
+          "lines": [
+            1914
+          ],
+          "required_source_literals": [
+            "changequest 2054,2057;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2047_npc_jobs_2_2_sage_txt_1917",
+      "unit": "E5-chain-2047",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2055
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 2055; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/sage.txt",
+          "lines": [
+            1917
+          ],
+          "required_source_literals": [
+            "changequest 2055,2057;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2047_npc_jobs_2_2_sage_txt_1926",
+      "unit": "E5-chain-2047",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2053
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 2053; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/sage.txt",
+          "lines": [
+            1926
+          ],
+          "required_source_literals": [
+            "changequest 2053,2058;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2047_npc_jobs_2_2_sage_txt_1929",
+      "unit": "E5-chain-2047",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2054
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 2054; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/sage.txt",
+          "lines": [
+            1929
+          ],
+          "required_source_literals": [
+            "changequest 2054,2058;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2047_npc_jobs_2_2_sage_txt_1932",
+      "unit": "E5-chain-2047",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2055
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 2055; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/sage.txt",
+          "lines": [
+            1932
+          ],
+          "required_source_literals": [
+            "changequest 2055,2058;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2047_npc_jobs_2_2_sage_txt_1941",
+      "unit": "E5-chain-2047",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2053
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 2053; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/sage.txt",
+          "lines": [
+            1941
+          ],
+          "required_source_literals": [
+            "changequest 2053,2059;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2047_npc_jobs_2_2_sage_txt_1944",
+      "unit": "E5-chain-2047",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2054
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 2054; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/sage.txt",
+          "lines": [
+            1944
+          ],
+          "required_source_literals": [
+            "changequest 2054,2059;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2047_npc_jobs_2_2_sage_txt_1947",
+      "unit": "E5-chain-2047",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2055
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 2055; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/sage.txt",
+          "lines": [
+            1947
+          ],
+          "required_source_literals": [
+            "changequest 2055,2059;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2047_npc_jobs_2_2_sage_txt_2017",
+      "unit": "E5-chain-2047",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2056
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 2056; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/sage.txt",
+          "lines": [
+            2017
+          ],
+          "required_source_literals": [
+            "changequest 2056,2051;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2047_npc_jobs_2_2_sage_txt_2020",
+      "unit": "E5-chain-2047",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2057
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 2057; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/sage.txt",
+          "lines": [
+            2020
+          ],
+          "required_source_literals": [
+            "changequest 2057,2051;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2047_npc_jobs_2_2_sage_txt_2023",
+      "unit": "E5-chain-2047",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2058
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 2058; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/sage.txt",
+          "lines": [
+            2023
+          ],
+          "required_source_literals": [
+            "changequest 2058,2051;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2047_npc_jobs_2_2_sage_txt_2026",
+      "unit": "E5-chain-2047",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2059
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 2059; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/sage.txt",
+          "lines": [
+            2026
+          ],
+          "required_source_literals": [
+            "changequest 2059,2051;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2047_npc_jobs_2_2_sage_txt_2089",
+      "unit": "E5-chain-2047",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2051
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 2051; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/sage.txt",
+          "lines": [
+            2089
+          ],
+          "required_source_literals": [
+            "changequest 2051,2052;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2047_npc_jobs_2_2_sage_txt_2194",
+      "unit": "E5-chain-2047",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2049
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 2049; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/sage.txt",
+          "lines": [
+            2194
+          ],
+          "required_source_literals": [
+            "changequest 2049,2060;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2047_npc_jobs_2_2_sage_txt_2230",
+      "unit": "E5-chain-2047",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2060
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 2060; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/sage.txt",
+          "lines": [
+            2230
+          ],
+          "required_source_literals": [
+            "changequest 2060,2061;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2047_npc_jobs_2_2_sage_txt_2289",
+      "unit": "E5-chain-2047",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2061
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 2061; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/sage.txt",
+          "lines": [
+            2289
+          ],
+          "required_source_literals": [
+            "changequest 2061,2062;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2047_npc_jobs_2_2_sage_txt_2339",
+      "unit": "E5-chain-2047",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2062
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 2062; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/sage.txt",
+          "lines": [
+            2339
+          ],
+          "required_source_literals": [
+            "changequest 2062,2051;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2047_npc_jobs_2_2_sage_txt_2506",
+      "unit": "E5-chain-2047",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2051
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 2051; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/sage.txt",
+          "lines": [
+            2506
+          ],
+          "required_source_literals": [
+            "changequest 2051,2052;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
