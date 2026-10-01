@@ -190083,6 +190083,60 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2218_npc_re_jobs_3_2_wanderer_txt_295",
+      "unit": "E5-chain-2218",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2218
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 2218; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-2/wanderer.txt",
+          "lines": [
+            295
+          ],
+          "required_source_literals": [
+            "setquest 2218;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2218_npc_re_jobs_3_2_wanderer_txt_547",
+      "unit": "E5-chain-2218",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2218
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 2218; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-2/wanderer.txt",
+          "lines": [
+            547
+          ],
+          "required_source_literals": [
+            "changequest 2218,2219;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
