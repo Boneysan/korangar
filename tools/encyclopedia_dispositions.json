@@ -148503,6 +148503,33 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2219_npc_re_jobs_3_2_wanderer_txt_753",
+      "unit": "E5-chain-2219",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2219
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 2219; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-2/wanderer.txt",
+          "lines": [
+            753
+          ],
+          "required_source_literals": [
+            "changequest 2219,2220;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
