@@ -12,7 +12,7 @@
     "E2_verified": 236,
     "E3_unknown": 973,
     "E4_unknown": 213,
-    "E5_unknown": 763
+    "E5_unknown": 768
   },
   "entries": [
     {
@@ -121025,6 +121025,141 @@
           ],
           "required_source_literals": [
             "erasequest 7236;\t// Pinguicula Hunt"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_7238_npc_re_quests_eden_eden_quests_txt_3800",
+      "unit": "E5-chain-7238",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7238
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 7238; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/eden_quests.txt",
+          "lines": [
+            3800
+          ],
+          "required_source_literals": [
+            "setquest (7238 + .@add);\t// Errands for Thorn (easy/hard)"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_7238_npc_re_quests_eden_eden_quests_txt_3837",
+      "unit": "E5-chain-7238",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7238
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 7238; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/eden_quests.txt",
+          "lines": [
+            3837
+          ],
+          "required_source_literals": [
+            "erasequest (7238 + .@add);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_7238_npc_re_quests_eden_eden_quests_txt_3838",
+      "unit": "E5-chain-7238",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7240
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 7240; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/eden_quests.txt",
+          "lines": [
+            3838
+          ],
+          "required_source_literals": [
+            "setquest 7240;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_7238_npc_re_quests_eden_eden_quests_txt_3863",
+      "unit": "E5-chain-7238",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7241
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 7241; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/eden_quests.txt",
+          "lines": [
+            3863
+          ],
+          "required_source_literals": [
+            "erasequest 7241;\t// Errands for Thorn timer"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_7238_npc_re_quests_eden_eden_quests_txt_4033",
+      "unit": "E5-chain-7238",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7240
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 7240; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/eden_quests.txt",
+          "lines": [
+            4033
+          ],
+          "required_source_literals": [
+            "changequest 7240,7241;"
           ]
         }
       ],
