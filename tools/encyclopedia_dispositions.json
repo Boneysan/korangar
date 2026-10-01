@@ -161436,6 +161436,465 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2017_npc_jobs_2_2_rogue_txt_167",
+      "unit": "E5-chain-2017",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2026
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 2026; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/rogue.txt",
+          "lines": [
+            167
+          ],
+          "required_source_literals": [
+            "changequest 2026,2027;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2017_npc_jobs_2_2_rogue_txt_193",
+      "unit": "E5-chain-2017",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2027
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 2027; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/rogue.txt",
+          "lines": [
+            193
+          ],
+          "required_source_literals": [
+            "completequest 2027;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2017_npc_jobs_2_2_rogue_txt_442",
+      "unit": "E5-chain-2017",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2017
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 2017; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/rogue.txt",
+          "lines": [
+            442
+          ],
+          "required_source_literals": [
+            "setquest 2017;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2017_npc_jobs_2_2_rogue_txt_536",
+      "unit": "E5-chain-2017",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2017
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 2017; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/rogue.txt",
+          "lines": [
+            536
+          ],
+          "required_source_literals": [
+            "changequest 2017,2021;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2017_npc_jobs_2_2_rogue_txt_709",
+      "unit": "E5-chain-2017",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2021
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 2021; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/rogue.txt",
+          "lines": [
+            709
+          ],
+          "required_source_literals": [
+            "changequest 2021,2025;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2017_npc_jobs_2_2_rogue_txt_780",
+      "unit": "E5-chain-2017",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2018
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 2018; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/rogue.txt",
+          "lines": [
+            780
+          ],
+          "required_source_literals": [
+            "changequest 2018,2022;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2017_npc_jobs_2_2_rogue_txt_783",
+      "unit": "E5-chain-2017",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2019
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 2019; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/rogue.txt",
+          "lines": [
+            783
+          ],
+          "required_source_literals": [
+            "changequest 2019,2022;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2017_npc_jobs_2_2_rogue_txt_786",
+      "unit": "E5-chain-2017",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2020
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 2020; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/rogue.txt",
+          "lines": [
+            786
+          ],
+          "required_source_literals": [
+            "changequest 2020,2022;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2017_npc_jobs_2_2_rogue_txt_817",
+      "unit": "E5-chain-2017",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2018
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 2018; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/rogue.txt",
+          "lines": [
+            817
+          ],
+          "required_source_literals": [
+            "changequest 2018,2023;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2017_npc_jobs_2_2_rogue_txt_820",
+      "unit": "E5-chain-2017",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2019
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 2019; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/rogue.txt",
+          "lines": [
+            820
+          ],
+          "required_source_literals": [
+            "changequest 2019,2023;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2017_npc_jobs_2_2_rogue_txt_823",
+      "unit": "E5-chain-2017",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2020
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 2020; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/rogue.txt",
+          "lines": [
+            823
+          ],
+          "required_source_literals": [
+            "changequest 2020,2023;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2017_npc_jobs_2_2_rogue_txt_853",
+      "unit": "E5-chain-2017",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2018
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 2018; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/rogue.txt",
+          "lines": [
+            853
+          ],
+          "required_source_literals": [
+            "changequest 2018,2024;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2017_npc_jobs_2_2_rogue_txt_856",
+      "unit": "E5-chain-2017",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2019
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 2019; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/rogue.txt",
+          "lines": [
+            856
+          ],
+          "required_source_literals": [
+            "changequest 2019,2024;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2017_npc_jobs_2_2_rogue_txt_859",
+      "unit": "E5-chain-2017",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2020
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 2020; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/rogue.txt",
+          "lines": [
+            859
+          ],
+          "required_source_literals": [
+            "changequest 2020,2024;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2017_npc_jobs_2_2_rogue_txt_968",
+      "unit": "E5-chain-2017",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2017
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 2017; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/rogue.txt",
+          "lines": [
+            968
+          ],
+          "required_source_literals": [
+            "changequest 2017,2018;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2017_npc_jobs_2_2_rogue_txt_971",
+      "unit": "E5-chain-2017",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2017
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 2017; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/rogue.txt",
+          "lines": [
+            971
+          ],
+          "required_source_literals": [
+            "changequest 2017,2019;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2017_npc_jobs_2_2_rogue_txt_974",
+      "unit": "E5-chain-2017",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2017
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 2017; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/rogue.txt",
+          "lines": [
+            974
+          ],
+          "required_source_literals": [
+            "changequest 2017,2020;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
