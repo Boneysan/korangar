@@ -199263,6 +199263,168 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_5052_npc_re_quests_quests_dewata_txt_1810",
+      "unit": "E5-chain-5052",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          5052
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 5052; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_dewata.txt",
+          "lines": [
+            1810
+          ],
+          "required_source_literals": [
+            "setquest 5052;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_5052_npc_re_quests_quests_dewata_txt_1831",
+      "unit": "E5-chain-5052",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          5053
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 5053; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_dewata.txt",
+          "lines": [
+            1831
+          ],
+          "required_source_literals": [
+            "setquest 5053;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_5052_npc_re_quests_quests_dewata_txt_1881",
+      "unit": "E5-chain-5052",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          5052
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 5052; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_dewata.txt",
+          "lines": [
+            1881
+          ],
+          "required_source_literals": [
+            "changequest 5052,5053;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_5052_npc_re_quests_quests_dewata_txt_1895",
+      "unit": "E5-chain-5052",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          5053
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 5053; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_dewata.txt",
+          "lines": [
+            1895
+          ],
+          "required_source_literals": [
+            "erasequest 5053;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_5052_npc_re_quests_quests_dewata_txt_1970",
+      "unit": "E5-chain-5052",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          5054
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 5054; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_dewata.txt",
+          "lines": [
+            1970
+          ],
+          "required_source_literals": [
+            "setquest 5054;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_5052_npc_re_quests_quests_dewata_txt_2017",
+      "unit": "E5-chain-5052",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          5054
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 5054; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_dewata.txt",
+          "lines": [
+            2017
+          ],
+          "required_source_literals": [
+            "erasequest 5054;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
