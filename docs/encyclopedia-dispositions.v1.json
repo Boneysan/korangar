@@ -12,7 +12,7 @@
     "E2_verified": 236,
     "E3_unknown": 973,
     "E4_unknown": 213,
-    "E5_unknown": 1241
+    "E5_unknown": 1248
   },
   "entries": [
     {
@@ -103286,6 +103286,195 @@
           ],
           "required_source_literals": [
             "case WZ_FROSTNOVA:"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1000_npc_jobs_valkyrie_txt_155",
+      "unit": "E5-chain-1000",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          1000
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 1000; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/valkyrie.txt",
+          "lines": [
+            155
+          ],
+          "required_source_literals": [
+            "completequest 1000;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1000_npc_jobs_valkyrie_txt_238",
+      "unit": "E5-chain-1000",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          5160
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 5160; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/valkyrie.txt",
+          "lines": [
+            238
+          ],
+          "required_source_literals": [
+            "completequest 5160;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1000_npc_jobs_valkyrie_txt_275",
+      "unit": "E5-chain-1000",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          1000
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 1000; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/valkyrie.txt",
+          "lines": [
+            275
+          ],
+          "required_source_literals": [
+            "setquest(1000);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1000_npc_jobs_valkyrie_txt_277",
+      "unit": "E5-chain-1000",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          5160
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 5160; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/valkyrie.txt",
+          "lines": [
+            277
+          ],
+          "required_source_literals": [
+            "completequest(5160);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1000_npc_jobs_valkyrie_txt_302",
+      "unit": "E5-chain-1000",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          1000
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 1000; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/valkyrie.txt",
+          "lines": [
+            302
+          ],
+          "required_source_literals": [
+            "setquest(1000);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1000_npc_jobs_valkyrie_txt_389",
+      "unit": "E5-chain-1000",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          5160
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 5160; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/valkyrie.txt",
+          "lines": [
+            389
+          ],
+          "required_source_literals": [
+            "setquest(5160); // Quest #5160 - Library Mistake"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1000_npc_jobs_valkyrie_txt_492",
+      "unit": "E5-chain-1000",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          1000
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 1000; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/valkyrie.txt",
+          "lines": [
+            492
+          ],
+          "required_source_literals": [
+            "setquest 1000;"
           ]
         }
       ],
