@@ -143036,7 +143036,7 @@
       "package": "E3",
       "kind": "e3_translator",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "key": "bonus bAtk2",
@@ -143073,9 +143073,25 @@
       "reason": "1 item script(s) first stop at documented `bonus bAtk2`",
       "history": [
         "2026-10-01T06:23:31Z activated",
-        "2026-10-01T06:23:31Z blocked: No item in this cluster is fully translated. The remaining scripts use a conditional, an expression, or a command whose meaning is outside this excerpt."
+        "2026-10-01T06:23:31Z blocked: No item in this cluster is fully translated. The remaining scripts use a conditional, an expression, or a command whose meaning is outside this excerpt.",
+        "2026-10-01T07:33:03Z activated",
+        "2026-10-01T07:33:03Z validated",
+        "2026-10-01T07:33:03Z verified: 1 claims supported",
+        "2026-10-01T07:33:27Z accepted",
+        "2026-10-01T07:33:27Z committed"
       ],
-      "baseline_dirty": []
+      "baseline_dirty": [],
+      "draft_sha256": "b5d23c5bbdf91754f7aad18e39fd8efa9411a155d17dd7d3114d4580a094a1cf",
+      "accepted_files": [
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/export_item_reference.py",
+        "tools/tests/test_export_item_effect_phrases.py"
+      ],
+      "accepted_on": "2026-10-01",
+      "audit": "due",
+      "commit": "committed"
     },
     {
       "id": "E3-translate-bonus-bhitrate",
