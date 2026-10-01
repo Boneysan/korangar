@@ -20,6 +20,13 @@ class ItemEffectPhraseTests(unittest.TestCase):
         self.assertIn("on yourself, without a target cursor", text)
         self.assertNotIn("checking the skill's conditions", text)
 
+    def test_specialeffect_area_on_attached_player(self):
+        self.assertEqual(
+            translate_simple_effect("specialeffect(EF_CLOAKING, AREA, playerattached());"),
+            "displays special effect EF_CLOAKING to everyone on the unit from playerattached()",
+        )
+        self.assertIsNone(translate_simple_effect('specialeffect(EF_HIT1, SELF, "John Doe#1");'))
+
     def test_getitem_by_item_constant(self):
         self.assertEqual(translate_simple_effect("getitem Arrow, 500;"), "grants 500 Arrow")
         self.assertEqual(translate_simple_effect("getitem(Apple, 10);"), "grants 10 Apple")

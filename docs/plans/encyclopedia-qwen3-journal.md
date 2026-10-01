@@ -17919,3 +17919,11 @@ Read the [loop plan](encyclopedia-local-model-plan.md) and [resume ledger](encyc
 - Checks: validate; verifier: all claims supported; export_supported_data.py: passed; export_supported_data.py --check: passed; item effect phrase tests: passed; cargo test versioned_reference_data_loads_and_reconciles_all_links: passed.
 - Files: docs/encyclopedia-coverage.v1.json, docs/items.v1.json, docs/plans/encyclopedia-qwen3-journal.md, docs/plans/encyclopedia-qwen3-progress.json, docs/plans/encyclopedia-unit-queue.json, tools/export_item_reference.py, tools/tests/test_export_item_effect_phrases.py.
 - Not verified: the Guide screen for these records (E7 live pass).
+
+## 2026-09-30 E3-translate-specialeffect — accepted
+
+- Kind e3_translator, package E3, model grok-4.7, attempts 0.
+- Reviews: none. Dispositions: 0.
+- Checks: validate; verifier: all claims supported; export_supported_data.py: passed; export_supported_data.py --check: passed; item effect phrase tests: passed; cargo test versioned_reference_data_loads_and_reconciles_all_links: passed.
+- Files: docs/encyclopedia-coverage.v1.json, docs/items.v1.json, docs/plans/encyclopedia-qwen3-journal.md, docs/plans/encyclopedia-qwen3-progress.json, docs/plans/encyclopedia-unit-queue.json, tools/export_item_reference.py, tools/tests/test_export_item_effect_phrases.py.
+- Not verified: the Guide screen for these records (E7 live pass).

@@ -131987,7 +131987,7 @@
       "package": "E3",
       "kind": "e3_translator",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "key": "specialeffect",
@@ -132703,7 +132703,27 @@
       ],
       "size_lines": 37,
       "reason": "83 item script(s) first stop at documented `specialeffect`",
-      "history": []
+      "history": [
+        "2026-10-01T05:31:57Z activated",
+        "2026-10-01T05:32:31Z validated",
+        "2026-10-01T05:32:47Z verified: 1 claims supported",
+        "2026-10-01T05:33:21Z accepted",
+        "2026-10-01T05:33:21Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "617575c02818f813bcc9a36ebfaa0a64383d6dc72e50a640dcc0cf017ffdb898",
+      "accepted_files": [
+        "docs/encyclopedia-coverage.v1.json",
+        "docs/items.v1.json",
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/export_item_reference.py",
+        "tools/tests/test_export_item_effect_phrases.py"
+      ],
+      "accepted_on": "2026-09-30",
+      "audit": "due",
+      "commit": "committed"
     },
     {
       "id": "E3-translate-pet",

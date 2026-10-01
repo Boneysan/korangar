@@ -677,6 +677,18 @@ def translate_simple_effect(script: str) -> str | None:
             skill, level = match.groups()
             effects.append(f"grants {_skill_display_name(skill)} at level {level}")
             continue
+        match = re.fullmatch(
+            r"specialeffect\(\s*(EF_[A-Z0-9_]+)\s*,\s*AREA\s*,\s*playerattached\(\)\s*\)",
+            statement,
+            re.I,
+        )
+        if match:
+            # script_commands.txt: the number is the effect, AREA shows it to everyone,
+            # and a unit id displays it on that unit. The effect list is not in this file.
+            effects.append(
+                f"displays special effect {match.group(1).upper()} to everyone on the unit from playerattached()"
+            )
+            continue
         return None
     return "; ".join(effects) if effects else None
 

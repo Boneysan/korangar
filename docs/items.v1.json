@@ -294453,7 +294453,8 @@
         "record": "Id=11715"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "displays special effect EF_SPELLBREAKER to everyone on the unit from playerattached(); Applies status SC_TARGET_ASPD for 180 seconds, value 10 (no explicit chance limit)",
       "type": "IT_HEALING",
       "weight": 10
     },
@@ -294466,7 +294467,8 @@
         "record": "Id=11716"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "displays special effect EF_LIGHTSPHERE to everyone on the unit from playerattached(); Applies status SC_HEALPLUS for 180 seconds, value 20 (no explicit chance limit)",
       "type": "IT_HEALING",
       "weight": 10
     },
@@ -309489,7 +309491,8 @@
         "record": "Id=12280"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "displays special effect EF_BENEDICTIO to everyone on the unit from playerattached(); Applies status SC_BENEDICTIO for 300 seconds, value 1 (no explicit chance limit)",
       "type": "IT_USABLE",
       "weight": 10
     },
@@ -310079,7 +310082,8 @@
         "record": "Id=12298"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "displays special effect EF_SPELLBREAKER to everyone on the unit from playerattached(); Applies status SC_ATKER_BLOOD for 3600 seconds, value 15 (no explicit chance limit)",
       "type": "IT_USABLE",
       "weight": 10
     },
@@ -310092,7 +310096,8 @@
         "record": "Id=12299"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "displays special effect EF_GUARD to everyone on the unit from playerattached(); Applies status SC_TARGET_BLOOD for 3600 seconds, value 10 (no explicit chance limit)",
       "type": "IT_USABLE",
       "weight": 10
     },
@@ -310829,7 +310834,8 @@
         "record": "Id=12342"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "displays special effect EF_POTION_BERSERK to everyone on the unit from playerattached(); Applies status SC_MANU_ATK for 600 seconds, value 10 (no explicit chance limit)",
       "type": "IT_USABLE",
       "weight": 50
     },
@@ -310842,7 +310848,8 @@
         "record": "Id=12343"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "displays special effect EF_GUARD to everyone on the unit from playerattached(); Applies status SC_MANU_DEF for 600 seconds, value 10 (no explicit chance limit)",
       "type": "IT_USABLE",
       "weight": 50
     },
@@ -310855,7 +310862,8 @@
         "record": "Id=12344"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "displays special effect EF_POTION_BERSERK to everyone on the unit from playerattached(); Applies status SC_SPL_ATK for 600 seconds, value 10 (no explicit chance limit)",
       "type": "IT_USABLE",
       "weight": 50
     },
@@ -310868,7 +310876,8 @@
         "record": "Id=12345"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "displays special effect EF_GUARD to everyone on the unit from playerattached(); Applies status SC_SPL_DEF for 600 seconds, value 10 (no explicit chance limit)",
       "type": "IT_USABLE",
       "weight": 50
     },
@@ -310922,7 +310931,8 @@
         "record": "Id=12348"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "displays special effect EF_POTION_BERSERK to everyone on the unit from playerattached(); Applies status SC_MANU_MATK for 600 seconds, value 10 (no explicit chance limit)",
       "type": "IT_USABLE",
       "weight": 50
     },
@@ -310935,7 +310945,8 @@
         "record": "Id=12349"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "displays special effect EF_POTION_BERSERK to everyone on the unit from playerattached(); Applies status SC_SPL_MATK for 600 seconds, value 10 (no explicit chance limit)",
       "type": "IT_USABLE",
       "weight": 50
     },
@@ -313152,7 +313163,8 @@
         "record": "Id=12461"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "displays special effect EF_LIGHTSPHERE to everyone on the unit from playerattached(); Applies status SC_HEALPLUS for 1800 seconds, value 20 (no explicit chance limit)",
       "type": "IT_USABLE",
       "weight": 10
     },
@@ -313165,7 +313177,8 @@
         "record": "Id=12462"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "displays special effect EF_SPELLBREAKER to everyone on the unit from playerattached(); Applies status SC_PROTECT_MDEF for 180 seconds, value 3 (no explicit chance limit)",
       "type": "IT_USABLE",
       "weight": 10
     },
@@ -313178,7 +313191,8 @@
         "record": "Id=12463"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "displays special effect EF_SPELLBREAKER to everyone on the unit from playerattached(); Applies status SC_PROTECT_MDEF for 60 seconds, value 3 (no explicit chance limit)",
       "type": "IT_USABLE",
       "weight": 10
     },
@@ -313191,7 +313205,8 @@
         "record": "Id=12464"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "displays special effect EF_GUARD to everyone on the unit from playerattached(); Applies status SC_PROTECT_DEF for 180 seconds, value 3 (no explicit chance limit)",
       "type": "IT_USABLE",
       "weight": 10
     },
@@ -313204,7 +313219,8 @@
         "record": "Id=12465"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "displays special effect EF_GUARD to everyone on the unit from playerattached(); Applies status SC_PROTECT_DEF for 60 seconds, value 3 (no explicit chance limit)",
       "type": "IT_USABLE",
       "weight": 10
     },
@@ -315264,7 +315280,8 @@
         "record": "Id=12574"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "restores 50–65 SP; displays special effect EF_GUARD to everyone on the unit from playerattached(); Applies status SC_MORA_BUFF for 120 seconds, value 50 (no explicit chance limit)",
       "type": "IT_USABLE",
       "weight": 20,
       "equiplv": 120
@@ -319993,7 +320010,8 @@
         "record": "Id=12666"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "displays special effect EF_MAGICALATTHIT to everyone on the unit from playerattached(); Applies status SC_SKF_MATK for 600 seconds, value 24 (no explicit chance limit)",
       "type": "IT_USABLE",
       "buy": 20,
       "weight": 10
@@ -320007,7 +320025,8 @@
         "record": "Id=12667"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "displays special effect EF_MAGICALATTHIT to everyone on the unit from playerattached(); Applies status SC_SKF_ATK for 600 seconds, value 24 (no explicit chance limit)",
       "type": "IT_USABLE",
       "buy": 20,
       "weight": 10
@@ -320021,7 +320040,8 @@
         "record": "Id=12668"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "displays special effect EF_MAGICALATTHIT to everyone on the unit from playerattached(); Applies status SC_SKF_ASPD for 600 seconds, value 3 (no explicit chance limit)",
       "type": "IT_USABLE",
       "buy": 20,
       "weight": 10
@@ -320035,7 +320055,8 @@
         "record": "Id=12669"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "displays special effect EF_MAGICALATTHIT to everyone on the unit from playerattached(); Applies status SC_SKF_CAST for 600 seconds, value 5 (no explicit chance limit)",
       "type": "IT_USABLE",
       "buy": 20,
       "weight": 10
@@ -328506,7 +328527,8 @@
         "record": "Id=12717"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "displays special effect EF_ENCHANTPOISON to everyone on the unit from playerattached(); Applies status SC_PARALYSE for 300 seconds at 0.1% chance, flag SCFLAG_FIXEDTICK",
       "type": "IT_HEALING",
       "buy": 2,
       "weight": 20,
@@ -328523,7 +328545,8 @@
         "record": "Id=12718"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "displays special effect EF_ENCHANTPOISON to everyone on the unit from playerattached(); Applies status SC_LEECHESEND for 300 seconds at 0.1% chance, flag SCFLAG_FIXEDTICK",
       "type": "IT_HEALING",
       "buy": 2,
       "weight": 20,
@@ -328540,7 +328563,8 @@
         "record": "Id=12719"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "displays special effect EF_ENCHANTPOISON to everyone on the unit from playerattached(); Applies status SC_OBLIVIONCURSE for 300 seconds at 0.1% chance, flag SCFLAG_FIXEDTICK",
       "type": "IT_HEALING",
       "buy": 2,
       "weight": 20,
@@ -328557,7 +328581,8 @@
         "record": "Id=12720"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "displays special effect EF_ENCHANTPOISON to everyone on the unit from playerattached(); Applies status SC_DEATHHURT for 300 seconds at 0.1% chance, flag SCFLAG_FIXEDTICK",
       "type": "IT_HEALING",
       "buy": 2,
       "weight": 20,
@@ -328574,7 +328599,8 @@
         "record": "Id=12721"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "displays special effect EF_ENCHANTPOISON to everyone on the unit from playerattached(); Applies status SC_TOXIN for 300 seconds at 0.1% chance, flag SCFLAG_FIXEDTICK",
       "type": "IT_HEALING",
       "buy": 2,
       "weight": 20,
@@ -328591,7 +328617,8 @@
         "record": "Id=12722"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "displays special effect EF_ENCHANTPOISON to everyone on the unit from playerattached(); Applies status SC_PYREXIA for 300 seconds at 0.1% chance, flag SCFLAG_FIXEDTICK",
       "type": "IT_HEALING",
       "buy": 2,
       "weight": 20,
@@ -328608,7 +328635,8 @@
         "record": "Id=12723"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "displays special effect EF_ENCHANTPOISON to everyone on the unit from playerattached(); Applies status SC_MAGICMUSHROOM for 300 seconds at 0.1% chance, flag SCFLAG_FIXEDTICK",
       "type": "IT_HEALING",
       "buy": 2,
       "weight": 20,
@@ -328625,7 +328653,8 @@
         "record": "Id=12724"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "displays special effect EF_ENCHANTPOISON to everyone on the unit from playerattached(); Applies status SC_VENOMBLEED for 15 seconds at 0.1% chance, flag SCFLAG_FIXEDTICK",
       "type": "IT_HEALING",
       "buy": 2,
       "weight": 20,
@@ -329088,7 +329117,8 @@
         "record": "Id=12740"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "displays special effect EF_POTION_BERSERK to everyone on the unit from playerattached(); Applies status SC_STR_SCROLL for 60 seconds, value 20 (no explicit chance limit)",
       "type": "IT_USABLE",
       "buy": 1
     },
@@ -329101,7 +329131,8 @@
         "record": "Id=12741"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "displays special effect EF_SPELLBREAKER to everyone on the unit from playerattached(); Applies status SC_INT_SCROLL for 60 seconds, value 20 (no explicit chance limit)",
       "type": "IT_USABLE",
       "buy": 1
     },
@@ -329300,7 +329331,8 @@
         "record": "Id=12755"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "displays special effect EF_POK_JAP to everyone on the unit from playerattached(); grants access to Summon Spirit Sphere at level 3; grants access to Throw Spirit Sphere at level 5",
       "type": "IT_USABLE",
       "buy": 2,
       "weight": 10
@@ -329567,7 +329599,8 @@
         "record": "Id=12775"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "displays special effect EF_PROVIDENCE to everyone on the unit from playerattached(); Applies status SC_PHI_DEMON for 1200 seconds, value 10 (no explicit chance limit)",
       "type": "IT_USABLE",
       "buy": 20,
       "weight": 600
@@ -333311,7 +333344,8 @@
         "record": "Id=12884"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Applies status SC_ATTHASTE_POTION1 for 1800 seconds, value 4 (no explicit chance limit); displays special effect EF_POTION_CON to everyone on the unit from playerattached()",
       "type": "IT_DELAYCONSUME"
     },
     {
@@ -333323,7 +333357,8 @@
         "record": "Id=12885"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Applies status SC_ATTHASTE_POTION2 for 1800 seconds, value 6 (no explicit chance limit); displays special effect EF_POTION_ to everyone on the unit from playerattached()",
       "type": "IT_DELAYCONSUME",
       "job": {
         "Novice": true,
@@ -333365,7 +333400,8 @@
         "record": "Id=12886"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Applies status SC_ATTHASTE_POTION3 for 1800 seconds, value 9 (no explicit chance limit); displays special effect EF_POTION_BERSERK to everyone on the unit from playerattached()",
       "type": "IT_DELAYCONSUME",
       "job": {
         "Swordsman": true,
@@ -359105,7 +359141,8 @@
         "record": "Id=14536"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "displays special effect EF_MAGICALATTHIT to everyone on the unit from playerattached(); Applies status SC_CRITICALPERCENT for 300 seconds, value 30 (no explicit chance limit)",
       "type": "IT_USABLE",
       "weight": 10
     },
@@ -359118,7 +359155,8 @@
         "record": "Id=14537"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "displays special effect EF_LIGHTSPHERE to everyone on the unit from playerattached(); Applies status SC_HEALPLUS for 1800 seconds, value 20 (no explicit chance limit)",
       "type": "IT_USABLE",
       "weight": 10
     },
@@ -359131,7 +359169,8 @@
         "record": "Id=14538"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "displays special effect EF_STEAL to everyone on the unit from playerattached(); Applies status SC_PLUSAVOIDVALUE for 60 seconds, value 20 (no explicit chance limit)",
       "type": "IT_USABLE",
       "weight": 10
     },
@@ -359170,7 +359209,8 @@
         "record": "Id=14541"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "displays special effect EF_GUARD to everyone on the unit from playerattached(); Applies status SC_PROTECT_DEF for 60 seconds, value 3 (no explicit chance limit)",
       "type": "IT_USABLE",
       "weight": 10
     },
@@ -359183,7 +359223,8 @@
         "record": "Id=14542"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "displays special effect EF_GUARD to everyone on the unit from playerattached(); Applies status SC_PROTECT_DEF for 180 seconds, value 3 (no explicit chance limit)",
       "type": "IT_USABLE",
       "weight": 10
     },
@@ -359196,7 +359237,8 @@
         "record": "Id=14543"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "displays special effect EF_SPELLBREAKER to everyone on the unit from playerattached(); Applies status SC_PROTECT_MDEF for 60 seconds, value 3 (no explicit chance limit)",
       "type": "IT_USABLE",
       "weight": 10
     },
@@ -359209,7 +359251,8 @@
         "record": "Id=14544"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "displays special effect EF_SPELLBREAKER to everyone on the unit from playerattached(); Applies status SC_PROTECT_MDEF for 180 seconds, value 3 (no explicit chance limit)",
       "type": "IT_USABLE",
       "weight": 10
     },
@@ -360437,7 +360480,8 @@
         "record": "Id=14600"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "displays special effect EF_SPELLBREAKER to everyone on the unit from playerattached(); Applies status SC_TARGET_ASPD for 1800 seconds, value 10 (no explicit chance limit)",
       "type": "IT_USABLE",
       "weight": 10
     },
@@ -360477,7 +360521,8 @@
         "record": "Id=14603"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "displays special effect EF_SPELLBREAKER to everyone on the unit from playerattached(); Applies status SC_MVPCARD_MISTRESS for 180 seconds, value 25 (no explicit chance limit)",
       "type": "IT_USABLE",
       "weight": 10
     },
@@ -360504,7 +360549,8 @@
         "record": "Id=14605"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "displays special effect EF_LIGHTSPHERE to everyone on the unit from playerattached(); Applies status SC_MVPCARD_ORCLORD for 180 seconds, value 30 (no explicit chance limit)",
       "type": "IT_USABLE",
       "weight": 10
     },
@@ -360576,7 +360622,8 @@
         "record": "Id=14611"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "displays special effect EF_GUARD to everyone on the unit from playerattached(); Applies status SC_PROTECT_DEF for 120 seconds, value 3 (no explicit chance limit)",
       "type": "IT_USABLE",
       "weight": 10
     },
@@ -360589,7 +360636,8 @@
         "record": "Id=14612"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "displays special effect EF_SPELLBREAKER to everyone on the unit from playerattached(); Applies status SC_PROTECT_MDEF for 120 seconds, value 3 (no explicit chance limit)",
       "type": "IT_USABLE",
       "weight": 10
     },
@@ -360616,7 +360664,8 @@
         "record": "Id=14614"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "displays special effect EF_GUARD to everyone on the unit from playerattached(); Applies status SC_PROTECT_DEF for 1800 seconds, value 3 (no explicit chance limit); Applies status SC_PROTECT_MDEF for 1800 seconds, value 3 (no explicit chance limit)",
       "type": "IT_USABLE",
       "weight": 10
     },
@@ -360721,7 +360770,8 @@
         "record": "Id=14680"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "Applies VIT food for 180 seconds, value 15 (no explicit chance limit); displays special effect EF_GUARD to everyone on the unit from playerattached(); Applies status SC_PROTECT_DEF for 60 seconds, value 3 (no explicit chance limit); Applies status SC_PROTECT_MDEF for 60 seconds, value 3 (no explicit chance limit)",
       "type": "IT_USABLE",
       "weight": 10
     },
