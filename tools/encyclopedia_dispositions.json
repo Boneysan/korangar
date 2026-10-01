@@ -197994,6 +197994,573 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_4154_npc_re_quests_homun_s_txt_51",
+      "unit": "E5-chain-4154",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          4154
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 4154; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/homun_s.txt",
+          "lines": [
+            51
+          ],
+          "required_source_literals": [
+            "setquest 4154;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_4154_npc_re_quests_homun_s_txt_52",
+      "unit": "E5-chain-4154",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          4159
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 4159; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/homun_s.txt",
+          "lines": [
+            52
+          ],
+          "required_source_literals": [
+            "setquest 4159;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_4154_npc_re_quests_homun_s_txt_166",
+      "unit": "E5-chain-4154",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          4154
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 4154; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/homun_s.txt",
+          "lines": [
+            166
+          ],
+          "required_source_literals": [
+            "setquest 4154;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_4154_npc_re_quests_homun_s_txt_167",
+      "unit": "E5-chain-4154",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          4155
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 4155; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/homun_s.txt",
+          "lines": [
+            167
+          ],
+          "required_source_literals": [
+            "setquest 4155;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_4154_npc_re_quests_homun_s_txt_393",
+      "unit": "E5-chain-4154",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          4156
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 4156; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/homun_s.txt",
+          "lines": [
+            393
+          ],
+          "required_source_literals": [
+            "setquest 4156;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_4154_npc_re_quests_homun_s_txt_394",
+      "unit": "E5-chain-4154",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          4155
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 4155; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/homun_s.txt",
+          "lines": [
+            394
+          ],
+          "required_source_literals": [
+            "erasequest 4155;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_4154_npc_re_quests_homun_s_txt_416",
+      "unit": "E5-chain-4154",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          4154
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 4154; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/homun_s.txt",
+          "lines": [
+            416
+          ],
+          "required_source_literals": [
+            "erasequest 4154;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_4154_npc_re_quests_homun_s_txt_417",
+      "unit": "E5-chain-4154",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          4155
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 4155; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/homun_s.txt",
+          "lines": [
+            417
+          ],
+          "required_source_literals": [
+            "erasequest 4155;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_4154_npc_re_quests_homun_s_txt_582",
+      "unit": "E5-chain-4154",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          4160
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 4160; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/homun_s.txt",
+          "lines": [
+            582
+          ],
+          "required_source_literals": [
+            "erasequest 4160;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_4154_npc_re_quests_homun_s_txt_583",
+      "unit": "E5-chain-4154",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          4154
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 4154; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/homun_s.txt",
+          "lines": [
+            583
+          ],
+          "required_source_literals": [
+            "erasequest 4154;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_4154_npc_re_quests_homun_s_txt_680",
+      "unit": "E5-chain-4154",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          4157
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 4157; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/homun_s.txt",
+          "lines": [
+            680
+          ],
+          "required_source_literals": [
+            "setquest 4157;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_4154_npc_re_quests_homun_s_txt_681",
+      "unit": "E5-chain-4154",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          4156
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 4156; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/homun_s.txt",
+          "lines": [
+            681
+          ],
+          "required_source_literals": [
+            "erasequest 4156;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_4154_npc_re_quests_homun_s_txt_766",
+      "unit": "E5-chain-4154",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          4159
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 4159; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/homun_s.txt",
+          "lines": [
+            766
+          ],
+          "required_source_literals": [
+            "setquest 4159;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_4154_npc_re_quests_homun_s_txt_767",
+      "unit": "E5-chain-4154",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          4158
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 4158; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/homun_s.txt",
+          "lines": [
+            767
+          ],
+          "required_source_literals": [
+            "erasequest 4158;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_4154_npc_re_quests_homun_s_txt_807",
+      "unit": "E5-chain-4154",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          4160
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 4160; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/homun_s.txt",
+          "lines": [
+            807
+          ],
+          "required_source_literals": [
+            "setquest 4160;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_4154_npc_re_quests_homun_s_txt_808",
+      "unit": "E5-chain-4154",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          4159
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 4159; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/homun_s.txt",
+          "lines": [
+            808
+          ],
+          "required_source_literals": [
+            "erasequest 4159;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_4154_npc_re_quests_homun_s_txt_813",
+      "unit": "E5-chain-4154",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          4154
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 4154; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/homun_s.txt",
+          "lines": [
+            813
+          ],
+          "required_source_literals": [
+            "erasequest 4154;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_4154_npc_re_quests_homun_s_txt_839",
+      "unit": "E5-chain-4154",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          4154
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 4154; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/homun_s.txt",
+          "lines": [
+            839
+          ],
+          "required_source_literals": [
+            "erasequest 4154;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_4154_npc_re_quests_homun_s_txt_840",
+      "unit": "E5-chain-4154",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          4158
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 4158; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/homun_s.txt",
+          "lines": [
+            840
+          ],
+          "required_source_literals": [
+            "erasequest 4158;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_4154_npc_re_quests_homun_s_txt_869",
+      "unit": "E5-chain-4154",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          4158
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 4158; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/homun_s.txt",
+          "lines": [
+            869
+          ],
+          "required_source_literals": [
+            "setquest 4158;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_4154_npc_re_quests_homun_s_txt_870",
+      "unit": "E5-chain-4154",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          4157
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 4157; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/homun_s.txt",
+          "lines": [
+            870
+          ],
+          "required_source_literals": [
+            "erasequest 4157;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
