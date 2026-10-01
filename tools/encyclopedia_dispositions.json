@@ -240296,6 +240296,34 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e6_boss_2475_boss",
+      "unit": "E6-boss-2475",
+      "package": "E6",
+      "subject": {
+        "kind": "monster",
+        "name": "MG_CORRUPTION_ROOT",
+        "ids": [
+          2475
+        ]
+      },
+      "result": "unknown",
+      "statement": "Monster 2475 (MG_CORRUPTION_ROOT) has configured database rows in the packet; this record does not enumerate each skill.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/mob_db.conf",
+          "lines": [
+            63907
+          ],
+          "required_source_literals": [
+            "{"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
