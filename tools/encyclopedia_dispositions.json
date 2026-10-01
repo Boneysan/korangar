@@ -180741,6 +180741,1113 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_4229_npc_re_instances_bakonawalake_txt_63",
+      "unit": "E5-chain-4229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          12279
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 12279; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/instances/BakonawaLake.txt",
+          "lines": [
+            63
+          ],
+          "required_source_literals": [
+            "setquest(12279);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_4229_npc_re_instances_bakonawalake_txt_105",
+      "unit": "E5-chain-4229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          12278
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 12278; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/instances/BakonawaLake.txt",
+          "lines": [
+            105
+          ],
+          "required_source_literals": [
+            "setquest(12278);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_4229_npc_re_instances_bakonawalake_txt_119",
+      "unit": "E5-chain-4229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          12278
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 12278; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/instances/BakonawaLake.txt",
+          "lines": [
+            119
+          ],
+          "required_source_literals": [
+            "erasequest(12278);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_4229_npc_re_instances_bakonawalake_txt_130",
+      "unit": "E5-chain-4229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          12278
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 12278; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/instances/BakonawaLake.txt",
+          "lines": [
+            130
+          ],
+          "required_source_literals": [
+            "erasequest(12278);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_4229_npc_re_instances_bakonawalake_txt_131",
+      "unit": "E5-chain-4229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          12279
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 12279; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/instances/BakonawaLake.txt",
+          "lines": [
+            131
+          ],
+          "required_source_literals": [
+            "erasequest(12279);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_4229_npc_re_instances_bakonawalake_txt_541",
+      "unit": "E5-chain-4229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          12279
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 12279; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/instances/BakonawaLake.txt",
+          "lines": [
+            541
+          ],
+          "required_source_literals": [
+            "erasequest(12279);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_4229_npc_re_instances_bangungothospital_txt_97",
+      "unit": "E5-chain-4229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          9224
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 9224; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/instances/BangungotHospital.txt",
+          "lines": [
+            97
+          ],
+          "required_source_literals": [
+            "completequest 9224;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_4229_npc_re_instances_bangungothospital_txt_98",
+      "unit": "E5-chain-4229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          9224
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 9224; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/instances/BangungotHospital.txt",
+          "lines": [
+            98
+          ],
+          "required_source_literals": [
+            "erasequest 9224;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_4229_npc_re_instances_bangungothospital_txt_173",
+      "unit": "E5-chain-4229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          9222
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 9222; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/instances/BangungotHospital.txt",
+          "lines": [
+            173
+          ],
+          "required_source_literals": [
+            "completequest 9222;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_4229_npc_re_instances_bangungothospital_txt_174",
+      "unit": "E5-chain-4229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          9222
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 9222; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/instances/BangungotHospital.txt",
+          "lines": [
+            174
+          ],
+          "required_source_literals": [
+            "erasequest 9222;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_4229_npc_re_instances_bangungothospital_txt_175",
+      "unit": "E5-chain-4229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          9224
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 9224; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/instances/BangungotHospital.txt",
+          "lines": [
+            175
+          ],
+          "required_source_literals": [
+            "completequest 9224;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_4229_npc_re_instances_bangungothospital_txt_176",
+      "unit": "E5-chain-4229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          9224
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 9224; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/instances/BangungotHospital.txt",
+          "lines": [
+            176
+          ],
+          "required_source_literals": [
+            "erasequest 9224;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_4229_npc_re_instances_bangungothospital_txt_177",
+      "unit": "E5-chain-4229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          9223
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 9223; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/instances/BangungotHospital.txt",
+          "lines": [
+            177
+          ],
+          "required_source_literals": [
+            "setquest 9223;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_4229_npc_re_instances_bangungothospital_txt_198",
+      "unit": "E5-chain-4229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          9222
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 9222; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/instances/BangungotHospital.txt",
+          "lines": [
+            198
+          ],
+          "required_source_literals": [
+            "completequest 9222;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_4229_npc_re_instances_bangungothospital_txt_199",
+      "unit": "E5-chain-4229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          9222
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 9222; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/instances/BangungotHospital.txt",
+          "lines": [
+            199
+          ],
+          "required_source_literals": [
+            "erasequest 9222;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_4229_npc_re_instances_bangungothospital_txt_200",
+      "unit": "E5-chain-4229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          9224
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 9224; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/instances/BangungotHospital.txt",
+          "lines": [
+            200
+          ],
+          "required_source_literals": [
+            "completequest 9224;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_4229_npc_re_instances_bangungothospital_txt_201",
+      "unit": "E5-chain-4229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          9224
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 9224; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/instances/BangungotHospital.txt",
+          "lines": [
+            201
+          ],
+          "required_source_literals": [
+            "erasequest 9224;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_4229_npc_re_instances_bangungothospital_txt_202",
+      "unit": "E5-chain-4229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          9223
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 9223; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/instances/BangungotHospital.txt",
+          "lines": [
+            202
+          ],
+          "required_source_literals": [
+            "setquest 9223;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_4229_npc_re_instances_bangungothospital_txt_235",
+      "unit": "E5-chain-4229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          11302
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 11302; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/instances/BangungotHospital.txt",
+          "lines": [
+            235
+          ],
+          "required_source_literals": [
+            "changequest 11302,11303;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_4229_npc_re_instances_bangungothospital_txt_314",
+      "unit": "E5-chain-4229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          9223
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 9223; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/instances/BangungotHospital.txt",
+          "lines": [
+            314
+          ],
+          "required_source_literals": [
+            "completequest 9223;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_4229_npc_re_instances_bangungothospital_txt_315",
+      "unit": "E5-chain-4229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          9223
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 9223; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/instances/BangungotHospital.txt",
+          "lines": [
+            315
+          ],
+          "required_source_literals": [
+            "erasequest 9223;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_4229_npc_re_instances_bangungothospital_txt_318",
+      "unit": "E5-chain-4229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          9222
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 9222; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/instances/BangungotHospital.txt",
+          "lines": [
+            318
+          ],
+          "required_source_literals": [
+            "erasequest 9222;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_4229_npc_re_instances_bangungothospital_txt_320",
+      "unit": "E5-chain-4229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          9224
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 9224; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/instances/BangungotHospital.txt",
+          "lines": [
+            320
+          ],
+          "required_source_literals": [
+            "erasequest 9224;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_4229_npc_re_instances_bangungothospital_txt_321",
+      "unit": "E5-chain-4229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          9222
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 9222; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/instances/BangungotHospital.txt",
+          "lines": [
+            321
+          ],
+          "required_source_literals": [
+            "setquest 9222;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_4229_npc_re_instances_bangungothospital_txt_323",
+      "unit": "E5-chain-4229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          9224
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 9224; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/instances/BangungotHospital.txt",
+          "lines": [
+            323
+          ],
+          "required_source_literals": [
+            "setquest 9224;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_4229_npc_re_instances_bangungothospital_txt_363",
+      "unit": "E5-chain-4229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          9222
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 9222; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/instances/BangungotHospital.txt",
+          "lines": [
+            363
+          ],
+          "required_source_literals": [
+            "case 1: setquest 9222; close;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_4229_npc_re_instances_bangungothospital_txt_364",
+      "unit": "E5-chain-4229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          9223
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 9223; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/instances/BangungotHospital.txt",
+          "lines": [
+            364
+          ],
+          "required_source_literals": [
+            "case 2: setquest 9223; close;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_4229_npc_re_instances_bangungothospital_txt_365",
+      "unit": "E5-chain-4229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          9222
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 9222; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/instances/BangungotHospital.txt",
+          "lines": [
+            365
+          ],
+          "required_source_literals": [
+            "case 3: erasequest 9222; close;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_4229_npc_re_instances_bangungothospital_txt_366",
+      "unit": "E5-chain-4229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          9223
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 9223; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/instances/BangungotHospital.txt",
+          "lines": [
+            366
+          ],
+          "required_source_literals": [
+            "case 4: erasequest 9223; close;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_4229_npc_re_instances_bangungothospital_txt_367",
+      "unit": "E5-chain-4229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          9224
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 9224; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/instances/BangungotHospital.txt",
+          "lines": [
+            367
+          ],
+          "required_source_literals": [
+            "case 5: setquest 9224; close;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_4229_npc_re_instances_bangungothospital_txt_368",
+      "unit": "E5-chain-4229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          9224
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 9224; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/instances/BangungotHospital.txt",
+          "lines": [
+            368
+          ],
+          "required_source_literals": [
+            "case 6: erasequest 9224; close;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_4229_npc_re_instances_bangungothospital_txt_371",
+      "unit": "E5-chain-4229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          11309
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 11309; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/instances/BangungotHospital.txt",
+          "lines": [
+            371
+          ],
+          "required_source_literals": [
+            "case 9: setquest 11309; close;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_4229_npc_re_instances_bangungothospital_txt_372",
+      "unit": "E5-chain-4229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          11309
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 11309; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/instances/BangungotHospital.txt",
+          "lines": [
+            372
+          ],
+          "required_source_literals": [
+            "case 10: completequest 11309; close;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_4229_npc_re_instances_buwayacave_txt_92",
+      "unit": "E5-chain-4229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          4229
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 4229; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/instances/BuwayaCave.txt",
+          "lines": [
+            92
+          ],
+          "required_source_literals": [
+            "erasequest(4229);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_4229_npc_re_instances_buwayacave_txt_149",
+      "unit": "E5-chain-4229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          4229
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 4229; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/instances/BuwayaCave.txt",
+          "lines": [
+            149
+          ],
+          "required_source_literals": [
+            "erasequest(4229);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_4229_npc_re_instances_buwayacave_txt_160",
+      "unit": "E5-chain-4229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          4229
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 4229; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/instances/BuwayaCave.txt",
+          "lines": [
+            160
+          ],
+          "required_source_literals": [
+            "setquest(4229);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_4229_npc_re_quests_quests_malaya_txt_6635",
+      "unit": "E5-chain-4229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          11303
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 11303; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malaya.txt",
+          "lines": [
+            6635
+          ],
+          "required_source_literals": [
+            "changequest 11303,11304;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_4229_npc_re_quests_quests_malaya_txt_6666",
+      "unit": "E5-chain-4229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          11306
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 11306; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malaya.txt",
+          "lines": [
+            6666
+          ],
+          "required_source_literals": [
+            "changequest 11306,11307;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_4229_npc_re_quests_quests_malaya_txt_6707",
+      "unit": "E5-chain-4229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          11308
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 11308; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malaya.txt",
+          "lines": [
+            6707
+          ],
+          "required_source_literals": [
+            "changequest 11308,11309;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_4229_npc_re_quests_quests_malaya_txt_6715",
+      "unit": "E5-chain-4229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          11309
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 11309; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malaya.txt",
+          "lines": [
+            6715
+          ],
+          "required_source_literals": [
+            "completequest 11309;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_4229_npc_re_quests_quests_malaya_txt_6729",
+      "unit": "E5-chain-4229",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          11309
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 11309; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malaya.txt",
+          "lines": [
+            6729
+          ],
+          "required_source_literals": [
+            "completequest 11309;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
