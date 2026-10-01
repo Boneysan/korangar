@@ -1044,7 +1044,7 @@ mod resolve_pending_cast_tests {
 
     use super::{
         PendingCastResolution, PendingSkill, is_within_skill_range, pending_held_skill_canceled_by_interface_focus,
-        pending_skill_commits_on_release, resolve_pending_cast,
+        pending_skill_commits_on_release, resolve_pending_cast, skill_range_ring,
     };
     use crate::graphics::PickerTarget;
 
@@ -1146,6 +1146,17 @@ mod resolve_pending_cast_tests {
         assert!(is_within_skill_range(player, TilePosition { x: 11, y: 11 }, AttackRange(1)));
         assert!(!is_within_skill_range(player, TilePosition { x: 12, y: 11 }, AttackRange(1)));
         assert!(is_within_skill_range(player, TilePosition { x: 17, y: 3 }, AttackRange(7)));
+    }
+
+    #[test]
+    fn skill_range_ring_is_the_chebyshev_outline() {
+        assert!(skill_range_ring(AttackRange(0)).is_empty());
+        let ring = skill_range_ring(AttackRange(1));
+        assert_eq!(ring.len(), 8);
+        assert!(ring.iter().all(|(dx, dy)| dx.unsigned_abs().max(dy.unsigned_abs()) == 1));
+        let far = skill_range_ring(AttackRange(7));
+        assert_eq!(far.len(), 56);
+        assert!(far.iter().all(|(dx, dy)| dx.unsigned_abs().max(dy.unsigned_abs()) == 7));
     }
 
     #[test]
@@ -1255,6 +1266,24 @@ fn resolve_pending_cast(skill_type: SkillType, target: PickerTarget) -> PendingC
 
 fn is_within_skill_range(player: TilePosition, target: TilePosition, attack_range: AttackRange) -> bool {
     player.x.abs_diff(target.x).max(player.y.abs_diff(target.y)) <= attack_range.0
+}
+
+/// Outline of the Chebyshev square the server uses for skill range.
+/// Cells are `(dx, dy)` from the player. Range 0 has no ring.
+fn skill_range_ring(attack_range: AttackRange) -> Vec<(i8, i8)> {
+    let range = i16::try_from(attack_range.0).unwrap_or(i16::MAX).clamp(0, 20);
+    if range == 0 {
+        return Vec::new();
+    }
+    let mut cells = Vec::with_capacity((range as usize) * 8);
+    for dx in -range..=range {
+        for dy in -range..=range {
+            if dx.abs().max(dy.abs()) == range {
+                cells.push((dx as i8, dy as i8));
+            }
+        }
+    }
+    cells
 }
 
 const TIMED_ACTION_BUFFER_MS: u32 = 200;
@@ -5045,6 +5074,10 @@ impl Client {
                     damage_delay,
                     is_critical,
                 } => {
+                    let player_id = self.client_state.try_follow(this_entity()).map(|player| player.get_entity_id());
+                    if player_id.is_some_and(|player_id| player_id == source_entity_id || player_id == destination_entity_id) {
+                        self.interface.note_player_combat();
+                    }
                     let camera_direction = self.player_camera.camera_direction();
                     if std::env::var_os("KORANGAR_PACKET_LOG").is_some() {
                         client_log!(
@@ -8404,6 +8437,17 @@ impl Client {
                     self.client_state
                         .follow_mut(client_state().chat_messages())
                         .push(ChatMessage::new(text, MessageColor::Information));
+                }
+                InputEvent::ToggleCombatHudFade => {
+                    let enabled = self.interface.toggle_combat_fade();
+                    let text = if enabled {
+                        "Combat HUD fades five seconds after the last hit."
+                    } else {
+                        "Combat HUD stays visible out of combat."
+                    };
+                    self.client_state
+                        .follow_mut(client_state().chat_messages())
+                        .push(ChatMessage::new(text.to_owned(), MessageColor::Information));
                 }
                 InputEvent::ToggleHudEditLock => {
                     let locked = self.interface.toggle_window_movement_lock();
@@ -12753,6 +12797,34 @@ impl<'a, 'm: 'a> MapRenderContext<'a, 'm> {
         }
     }
 
+    /// Draws the reach of an armed skill as a ring around the player.
+    ///
+    /// The cursor footprint shows the impact shape. This ring shows how far
+    /// that skill can be used, using the same Chebyshev distance as the server.
+    #[inline(always)]
+    #[cfg_attr(feature = "debug", korangar_debug::profile)]
+    fn render_skill_range_ring(&mut self) {
+        if !self.currently_playing {
+            return;
+        }
+        let (Some(pending), Some(texture)) = (self.pending_skill, self.skill_footprint_texture) else {
+            return;
+        };
+        let Some(player_position) = self.client_state.try_follow(this_entity()).map(Entity::get_tile_position) else {
+            return;
+        };
+        let cells = skill_range_ring(pending.attack_range);
+        if cells.is_empty() {
+            return;
+        }
+        let color = self
+            .client_state
+            .follow(client_state().world_theme().skill_aim_in_range())
+            .multiply_alpha(0.55);
+        self.map
+            .render_skill_footprint(self.effect_renderer, texture, player_position, &cells, color);
+    }
+
     /// Draws the ground area an armed skill will cover, under the cursor.
     ///
     /// The shape is the server's own layout (see [`skill_footprint`]),
@@ -12859,6 +12931,7 @@ impl<'a, 'm: 'a> MapRenderContext<'a, 'm> {
         self.effect_holder.render(self.effect_renderer, self.current_camera);
 
         self.render_skill_cast_telegraphs();
+        self.render_skill_range_ring();
         self.render_skill_aiming_footprint();
 
         if let Some(player) = self.client_state.try_follow(this_entity()) {

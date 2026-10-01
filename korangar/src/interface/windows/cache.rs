@@ -1,4 +1,6 @@
+use std::cell::Cell;
 use std::collections::HashMap;
+use std::time::{Duration, Instant};
 
 #[cfg(feature = "debug")]
 use korangar_debug::logging::{Colorize, print_debug};
@@ -16,11 +18,19 @@ const MARGIN: f32 = 12.0;
 pub struct WindowState {
     pub anchor: Anchor<ClientState>,
     pub size: ScreenSize,
+    /// `None` uses the class default. Saved caches from before combat fade
+    /// omit the field and keep that default.
+    #[serde(default)]
+    pub combat_only: Option<bool>,
 }
 
 impl WindowState {
     pub fn new(anchor: Anchor<ClientState>, size: ScreenSize) -> Self {
-        Self { anchor, size }
+        Self {
+            anchor,
+            size,
+            combat_only: None,
+        }
     }
 
     /// Is this a real, usable window size, as opposed to the placeholder
@@ -76,6 +86,26 @@ pub struct WindowCache {
     character_profiles: HashMap<u32, HashMap<String, HashMap<WindowClass, WindowState>>>,
     #[serde(default)]
     character_active_profiles: HashMap<u32, String>,
+    /// When false, combat windows stay fully visible out of combat.
+    #[serde(default = "combat_fade_defaults_on")]
+    combat_fade_enabled: bool,
+    #[serde(skip, default = "no_recent_combat")]
+    last_combat: Cell<Option<Instant>>,
+}
+
+const COMBAT_HOLD: Duration = Duration::from_secs(5);
+const NONCOMBAT_OPACITY: f32 = 0.35;
+
+fn combat_fade_defaults_on() -> bool {
+    true
+}
+
+fn no_recent_combat() -> Cell<Option<Instant>> {
+    Cell::new(None)
+}
+
+fn combat_only_by_default(class: WindowClass) -> bool {
+    matches!(class, WindowClass::Hotbar | WindowClass::StatusBar | WindowClass::MonsterTarget)
 }
 
 const fn current_version() -> u16 {
@@ -94,6 +124,8 @@ impl Default for WindowCache {
             active_character_id: None,
             character_profiles: HashMap::new(),
             character_active_profiles: HashMap::new(),
+            combat_fade_enabled: true,
+            last_combat: Cell::new(None),
         }
     }
 }
@@ -616,6 +648,30 @@ impl korangar_interface::application::WindowCache<ClientState> for WindowCache {
     fn activate_character_layout(&mut self, character_id: u32) {
         self.activate_character(character_id);
     }
+
+    fn note_combat(&self) {
+        self.last_combat.set(Some(Instant::now()));
+    }
+
+    fn toggle_combat_fade(&mut self) -> bool {
+        self.combat_fade_enabled = !self.combat_fade_enabled;
+        self.save();
+        self.combat_fade_enabled
+    }
+
+    fn window_alpha(&self, class: WindowClass) -> f32 {
+        let combat_only = self
+            .entries
+            .get(&class)
+            .and_then(|state| state.combat_only)
+            .unwrap_or_else(|| combat_only_by_default(class));
+        let in_combat = self.last_combat.get().is_some_and(|at| at.elapsed() < COMBAT_HOLD);
+        if !combat_only || !self.combat_fade_enabled || in_combat {
+            1.0
+        } else {
+            NONCOMBAT_OPACITY
+        }
+    }
 }
 
 impl Drop for WindowCache {
@@ -774,5 +830,18 @@ mod tests {
         anchor.snap_to_grid(screen, size(100.0, 50.0), f32::NAN);
         assert_eq!(anchor.to_position(screen).left, original.left);
         assert_eq!(anchor.to_position(screen).top, original.top);
+    }
+
+    #[test]
+    fn combat_windows_fade_until_the_player_is_hit() {
+        let cache = WindowCache::default();
+        assert!((cache.window_alpha(WindowClass::Hotbar) - 0.35).abs() < f32::EPSILON);
+        assert!((cache.window_alpha(WindowClass::StatusBar) - 0.35).abs() < f32::EPSILON);
+        assert!((cache.window_alpha(WindowClass::MonsterTarget) - 0.35).abs() < f32::EPSILON);
+        assert_eq!(cache.window_alpha(WindowClass::Chat), 1.0);
+        assert_eq!(cache.window_alpha(WindowClass::Minimap), 1.0);
+
+        cache.note_combat();
+        assert_eq!(cache.window_alpha(WindowClass::Hotbar), 1.0);
     }
 }

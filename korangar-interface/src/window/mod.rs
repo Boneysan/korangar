@@ -132,6 +132,8 @@ where
     pub anchor: Anchor<App>,
     pub size: App::Size,
     pub movement_locked: bool,
+    /// Multiplied into this window's colors while it is drawn. `1.0` is solid.
+    pub draw_alpha: f32,
 }
 
 pub(crate) struct DisplayInformation {

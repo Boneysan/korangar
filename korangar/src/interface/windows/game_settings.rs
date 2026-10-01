@@ -364,6 +364,7 @@ where
                 button! { text: "Save current as My Layout", tooltip: "Overwrites the per-character My Layout slot.", event: InputEvent::SaveHudLayout("My Layout") },
                 button! { text: "Reset HUD layout", event: InputEvent::ResetHudLayout },
                 button! { text: "Cycle HUD snap grid (off / 8 / 16 / 32 px)", tooltip: "When enabled, dragged windows snap their positions to the selected screen-pixel grid.", event: InputEvent::CycleHudSnapGrid },
+                button! { text: "Toggle combat HUD fade", tooltip: "Outside combat, the hotbar, status bar, and monster target fade. They return for five seconds after you deal or take damage, and while the pointer is over them.", event: InputEvent::ToggleCombatHudFade },
             ),
         }
     }

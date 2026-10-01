@@ -406,6 +406,7 @@ where
                 anchor,
                 size,
                 movement_locked: self.window_cache.movement_locked(),
+                draw_alpha: 1.0,
             },
             display_information: DisplayInformation {
                 real_area: Area {
@@ -431,6 +432,14 @@ where
 
     pub fn window_movement_locked(&self) -> bool {
         self.window_cache.movement_locked()
+    }
+
+    pub fn note_player_combat(&mut self) {
+        self.window_cache.note_combat();
+    }
+
+    pub fn toggle_combat_fade(&mut self) -> bool {
+        self.window_cache.toggle_combat_fade()
     }
 
     /// Cycle window-position snapping and return its new grid size.
@@ -462,13 +471,15 @@ where
 
     fn apply_cached_layouts(&mut self) {
         for wrapper in &mut self.windows {
-            if let Some(window_class) = wrapper.window.get_class()
+            let window_class = wrapper.window.get_class();
+            if let Some(window_class) = window_class
                 && let Some((anchor, size)) = self.window_cache.get_window_state(window_class)
             {
                 wrapper.data.anchor = anchor;
                 wrapper.data.size = size;
             }
             wrapper.data.movement_locked = self.window_cache.movement_locked();
+            wrapper.data.draw_alpha = window_class.map(|class| self.window_cache.window_alpha(class)).unwrap_or(1.0);
         }
     }
 
@@ -652,6 +663,11 @@ where
             korangar_debug::profile_block!("create window layout info");
 
             wrapper.data.movement_locked = this.window_cache.movement_locked();
+            wrapper.data.draw_alpha = wrapper
+                .window
+                .get_class()
+                .map(|class| this.window_cache.window_alpha(class))
+                .unwrap_or(1.0);
             wrapper.display_information = wrapper.window.create_layout_info(
                 state,
                 &mut this.window_store,
@@ -797,9 +813,13 @@ impl<App: Application> InterfaceFrame<'_, App> {
         let mut tooltips = Vec::new();
 
         self.windows.iter().for_each(|wrapper| {
+            let hovered = self.hovered_window == Some(wrapper.data.id);
+            let alpha = if hovered { 1.0 } else { wrapper.data.draw_alpha };
+            renderer.set_content_alpha(alpha);
             let layout = self.window_layouts.get_mut(&wrapper.data.id).unwrap();
             layout.render(renderer, self.text_layouter);
             layout.update_tooltips(&mut tooltips);
+            renderer.set_content_alpha(1.0);
         });
 
         if let Some(layout) = &mut self.overlay_layout {
