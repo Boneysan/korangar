@@ -149205,6 +149205,87 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2299_npc_re_jobs_novice_academy_txt_3804",
+      "unit": "E5-chain-2299",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2299
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 2299; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            3804
+          ],
+          "required_source_literals": [
+            "setquest(2299);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2299_npc_re_jobs_novice_academy_txt_3843",
+      "unit": "E5-chain-2299",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2299
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 2299; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            3843
+          ],
+          "required_source_literals": [
+            "completequest(2299);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2299_npc_re_jobs_novice_academy_txt_3856",
+      "unit": "E5-chain-2299",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2299
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 2299; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            3856
+          ],
+          "required_source_literals": [
+            "erasequest(2299);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
