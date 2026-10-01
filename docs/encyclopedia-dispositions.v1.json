@@ -14,7 +14,7 @@
     "E4_unknown": 213,
     "E5_absent": 644,
     "E5_unknown": 3383,
-    "E6_unknown": 61
+    "E6_unknown": 62
   },
   "entries": [
     {
@@ -196334,6 +196334,34 @@
           "path": "db/re/mob_db.conf",
           "lines": [
             50780
+          ],
+          "required_source_literals": [
+            "{"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e6_boss_2109_boss",
+      "unit": "E6-boss-2109",
+      "package": "E6",
+      "subject": {
+        "kind": "monster",
+        "name": "E_RANDGRIS",
+        "ids": [
+          2109
+        ]
+      },
+      "result": "unknown",
+      "statement": "Monster 2109 (E_RANDGRIS) has configured database rows in the packet; this record does not enumerate each skill.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/mob_db.conf",
+          "lines": [
+            50839
           ],
           "required_source_literals": [
             "{"
