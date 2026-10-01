@@ -172371,6 +172371,87 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_11017_npc_quests_quests_juperos_txt_160",
+      "unit": "E5-chain-11017",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          11017
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 11017; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_juperos.txt",
+          "lines": [
+            160
+          ],
+          "required_source_literals": [
+            "setquest(11017);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_11017_npc_quests_quests_juperos_txt_264",
+      "unit": "E5-chain-11017",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          11018
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 11018; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_juperos.txt",
+          "lines": [
+            264
+          ],
+          "required_source_literals": [
+            "changequest(11018, 11019);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_11017_npc_quests_quests_juperos_txt_1318",
+      "unit": "E5-chain-11017",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          11017
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 11017; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_juperos.txt",
+          "lines": [
+            1318
+          ],
+          "required_source_literals": [
+            "changequest(11017, 11018);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
