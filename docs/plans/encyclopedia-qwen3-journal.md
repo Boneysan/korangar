@@ -14423,3 +14423,11 @@ Read the [loop plan](encyclopedia-local-model-plan.md) and [resume ledger](encyc
 - Checks: validate; verifier: all claims supported; export_supported_data.py: passed; export_supported_data.py --check: passed.
 - Files: docs/encyclopedia-coverage.v1.json, docs/encyclopedia-dispositions.v1.json, docs/plans/encyclopedia-qwen3-journal.md, docs/plans/encyclopedia-qwen3-progress.json, docs/plans/encyclopedia-unit-queue.json, tools/encyclopedia_dispositions.json.
 - Not verified: the Guide screen for these records (E7 live pass).
+
+## 2026-09-30 E5-chain-14118 — accepted
+
+- Kind e5_quest, package E5, model grok-4.7, attempts 0.
+- Reviews: none. Dispositions: 29 (e5_chain_14118_npc_re_quests_quests_eclage_txt_3370, e5_chain_14118_npc_re_quests_quests_eclage_txt_3406, e5_chain_14118_npc_re_quests_quests_eclage_txt_3507, e5_chain_14118_npc_re_quests_quests_eclage_txt_3528, e5_chain_14118_npc_re_quests_quests_eclage_txt_3560 ...).
+- Checks: validate; verifier: all claims supported; export_supported_data.py: passed; export_supported_data.py --check: passed.
+- Files: docs/encyclopedia-coverage.v1.json, docs/encyclopedia-dispositions.v1.json, docs/plans/encyclopedia-qwen3-journal.md, docs/plans/encyclopedia-qwen3-progress.json, docs/plans/encyclopedia-unit-queue.json, tools/encyclopedia_dispositions.json.
+- Not verified: the Guide screen for these records (E7 live pass).
