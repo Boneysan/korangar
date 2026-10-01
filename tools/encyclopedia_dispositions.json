@@ -486,8 +486,13 @@
         "name": "Vintenar#bat_b01_aover"
       },
       "result": "unknown",
-      "statement": "The quoted line is getitem BF_Badge2,9; this record does not decide which branch reaches that call.",
-      "conditions": [],
+      "statement": "A Guillaume member receives 9 BF_Badge2 when Guillaume's score is ahead and the player has room for more than 8 badges under the 500 cap.",
+      "conditions": [
+        "The player must be in $@FlaviusBG1_id1.",
+        "$@Guill_ScoreBG1 - $@Croix_ScoreBG1 is greater than 0.",
+        ".@medal_gap is 500 minus countitem(BF_Badge2), and it is greater than 8.",
+        "The player then leaves the battleground and warps to bat_room 154,150."
+      ],
       "sources": [
         {
           "path": "npc/battleground/flavius/flavius01.txt",
@@ -511,8 +516,11 @@
         "name": "Vintenar#bat_b01_aover"
       },
       "result": "unknown",
-      "statement": "The quoted line is getitem BF_Badge2,.@medal_gap; this record does not decide which branch reaches that call.",
-      "conditions": [],
+      "statement": "A Guillaume member who is ahead receives BF_Badge2 equal to .@medal_gap when that gap is 8 or less.",
+      "conditions": [
+        "The player must be in $@FlaviusBG1_id1 and the score gap must be greater than 0.",
+        ".@medal_gap is 500 minus the player's current BF_Badge2 count."
+      ],
       "sources": [
         {
           "path": "npc/battleground/flavius/flavius01.txt",
@@ -536,8 +544,11 @@
         "name": "Vintenar#bat_b01_aover"
       },
       "result": "unknown",
-      "statement": "The quoted line is getitem BF_Badge2,3; this record does not decide which branch reaches that call.",
-      "conditions": [],
+      "statement": "A Guillaume member receives 3 BF_Badge2 when the scores are tied and the player has room for more than 2 badges under the 500 cap.",
+      "conditions": [
+        "The player must be in $@FlaviusBG1_id1.",
+        "The score gap is 0 and .@medal_gap is greater than 2."
+      ],
       "sources": [
         {
           "path": "npc/battleground/flavius/flavius01.txt",
@@ -561,8 +572,11 @@
         "name": "Vintenar#bat_b01_aover"
       },
       "result": "unknown",
-      "statement": "The quoted line is getitem BF_Badge2,.@medal_gap; this record does not decide which branch reaches that call.",
-      "conditions": [],
+      "statement": "A Guillaume member whose match is tied receives BF_Badge2 equal to .@medal_gap when that gap is 2 or less.",
+      "conditions": [
+        "The player must be in $@FlaviusBG1_id1 and the score gap is 0.",
+        ".@medal_gap is 500 minus the player's current BF_Badge2 count."
+      ],
       "sources": [
         {
           "path": "npc/battleground/flavius/flavius01.txt",
@@ -586,8 +600,11 @@
         "name": "Vintenar#bat_b01_aover"
       },
       "result": "unknown",
-      "statement": "The quoted line is getitem BF_Badge2,3; this record does not decide which branch reaches that call.",
-      "conditions": [],
+      "statement": "A Guillaume member receives 3 BF_Badge2 when Guillaume is behind and the player has room for more than 2 badges under the 500 cap.",
+      "conditions": [
+        "The player must be in $@FlaviusBG1_id1.",
+        "The score gap is below 0 and .@medal_gap is greater than 2."
+      ],
       "sources": [
         {
           "path": "npc/battleground/flavius/flavius01.txt",
@@ -611,8 +628,11 @@
         "name": "Vintenar#bat_b01_aover"
       },
       "result": "unknown",
-      "statement": "The quoted line is getitem BF_Badge2,.@medal_gap; this record does not decide which branch reaches that call.",
-      "conditions": [],
+      "statement": "A Guillaume member who is behind receives BF_Badge2 equal to .@medal_gap when that gap is 2 or less.",
+      "conditions": [
+        "The player must be in $@FlaviusBG1_id1 and the score gap is below 0.",
+        ".@medal_gap is 500 minus the player's current BF_Badge2 count."
+      ],
       "sources": [
         {
           "path": "npc/battleground/flavius/flavius01.txt",
@@ -1735,9 +1755,12 @@
         "kind": "npc",
         "name": "Guillaume Blacksmith#a02"
       },
-      "result": "unknown",
-      "statement": "The quoted line is delitem Stone,50; this record does not decide which branch reaches that call.",
-      "conditions": [],
+      "result": "verified",
+      "statement": "Choosing Repair while in the Guillaume Tierra team and holding at least 50 Stone removes 50 Stone and enables barricade#bat_a02_a.",
+      "conditions": [
+        "The player must be in $@TierraBG2_id1 and choose Repair.",
+        "countitem(Stone) must be greater than 49. A short count or Leave it closes with no removal."
+      ],
       "sources": [
         {
           "path": "npc/battleground/tierra/tierra02.txt",
@@ -2335,9 +2358,12 @@
         "kind": "npc",
         "name": "Uncle Hairy"
       },
-      "result": "unknown",
-      "statement": "The quoted line is delitem Chinese_Ink,1; this record does not decide which branch reaches that call.",
-      "conditions": [],
+      "result": "conditional",
+      "statement": "When xmas_npc is 4 and the player holds both items, Uncle Hairy removes 1 Chinese Ink and then 1 Sticky Mucus, and grants no item.",
+      "conditions": [
+        "xmas_npc must be 4.",
+        "countitem(Chinese_Ink) and countitem(Sticky_Mucus) must both be greater than 0."
+      ],
       "sources": [
         {
           "path": "npc/cities/lutie.txt",
@@ -2360,9 +2386,11 @@
         "kind": "npc",
         "name": "Uncle Hairy"
       },
-      "result": "unknown",
-      "statement": "The quoted line is delitem Sticky_Mucus,1; this record does not decide which branch reaches that call.",
-      "conditions": [],
+      "result": "conditional",
+      "statement": "The line removes 1 Sticky Mucus immediately after the Chinese Ink removal in the same hand-over.",
+      "conditions": [
+        "This runs only in the xmas_npc == 4 branch that already holds both items."
+      ],
       "sources": [
         {
           "path": "npc/cities/lutie.txt",
@@ -3010,9 +3038,12 @@
         "kind": "npc",
         "name": "Pierrot Pier#sch_gd"
       },
-      "result": "unknown",
-      "statement": "The quoted line is delitem Glitering_PaperB,1; this record does not decide which branch reaches that call.",
-      "conditions": [],
+      "result": "conditional",
+      "statement": "The guild master, while $@gdeventv_s2 is 1 and holding Glitering_PaperB, loses 1 of that item and the event variable becomes 3.",
+      "conditions": [
+        "strcharinfo(PC_NAME) must be the guild master.",
+        "$@gdeventv_s2 must be 1 and countitem(Glitering_PaperB) must be greater than 0."
+      ],
       "sources": [
         {
           "path": "npc/events/gdevent_sch.txt",
@@ -3035,9 +3066,12 @@
         "kind": "npc",
         "name": "Pierrot Pier#sch_gd"
       },
-      "result": "unknown",
-      "statement": "The quoted line is getitem Pierre_Treasurebox,10; this record does not decide which branch reaches that call.",
-      "conditions": [],
+      "result": "conditional",
+      "statement": "The guild master receives 10 Pierre_Treasurebox when $@gdeventv_s2 is 3, and the variable then becomes 5.",
+      "conditions": [
+        "strcharinfo(PC_NAME) must be the guild master.",
+        "$@gdeventv_s2 must be 3. If quest 2143 is complete, it is erased before the grant."
+      ],
       "sources": [
         {
           "path": "npc/events/gdevent_sch.txt",
@@ -3060,9 +3094,11 @@
         "kind": "npc",
         "name": "Pierrot Pier#sch_gd"
       },
-      "result": "unknown",
-      "statement": "The quoted line is delitem Glitering_PaperB,1; this record does not decide which branch reaches that call.",
-      "conditions": [],
+      "result": "conditional",
+      "statement": "For the guild master, when $@gdeventv_s2 is not 0, 1, 3, 4, or 5 and the player holds Glitering_PaperB, the script removes 1 and sets the variable to 3.",
+      "conditions": [
+        "countitem(Glitering_PaperB) must be greater than 0. A short count closes with no removal."
+      ],
       "sources": [
         {
           "path": "npc/events/gdevent_sch.txt",
@@ -3085,9 +3121,11 @@
         "kind": "npc",
         "name": "Pierrot Pier#sch_gd"
       },
-      "result": "unknown",
-      "statement": "The quoted line is delitem Glitering_PaperB,1; this record does not decide which branch reaches that call.",
-      "conditions": [],
+      "result": "conditional",
+      "statement": "A player who is not the guild master, while $@gdeventv_s2 is 1 and holding Glitering_PaperB, loses 1 and the variable becomes 3.",
+      "conditions": [
+        "$@gdeventv_s2 must be 1 and countitem(Glitering_PaperB) must be greater than 0."
+      ],
       "sources": [
         {
           "path": "npc/events/gdevent_sch.txt",
@@ -3110,9 +3148,12 @@
         "kind": "npc",
         "name": "Pierrot Pier#sch_gd"
       },
-      "result": "unknown",
-      "statement": "The quoted line is delitem Glitering_PaperB,1; this record does not decide which branch reaches that call.",
-      "conditions": [],
+      "result": "conditional",
+      "statement": "In the remaining non-master event branch, holding Glitering_PaperB removes 1 and sets $@gdeventv_s2 to 3.",
+      "conditions": [
+        "This is the final else after the non-master checks for event values 0 through 5.",
+        "countitem(Glitering_PaperB) must be greater than 0."
+      ],
       "sources": [
         {
           "path": "npc/events/gdevent_sch.txt",
@@ -3660,9 +3701,12 @@
         "kind": "npc",
         "name": "Suspicious Man#nq"
       },
-      "result": "unknown",
-      "statement": "The quoted line is delitem Phracon,1; this record does not decide which branch reaches that call.",
-      "conditions": [],
+      "result": "conditional",
+      "statement": "When NINJ_Q is 2 and the player holds the minerals, the script removes 1 Phracon and 5 Cyfar, sets NINJ_Q to 3, changes quest 6016 to 6017, and warps to amatsu 113,127.",
+      "conditions": [
+        "NINJ_Q must be 2.",
+        "countitem(Cyfar) must be at least 5 and countitem(Phracon) at least 1. A short count closes before the removal."
+      ],
       "sources": [
         {
           "path": "npc/jobs/1-1e/ninja.txt",
@@ -3685,9 +3729,11 @@
         "kind": "npc",
         "name": "Suspicious Man#nq"
       },
-      "result": "unknown",
-      "statement": "The quoted line is delitem Cyfar,5; this record does not decide which branch reaches that call.",
-      "conditions": [],
+      "result": "conditional",
+      "statement": "The line removes 5 Cyfar immediately after the Phracon removal in the same NINJ_Q == 2 hand-over.",
+      "conditions": [
+        "The Phracon check on the previous line has already passed."
+      ],
       "sources": [
         {
           "path": "npc/jobs/1-1e/ninja.txt",
@@ -4210,9 +4256,12 @@
         "kind": "npc",
         "name": "Blacksmith Guildsman#moc"
       },
-      "result": "unknown",
-      "statement": "The quoted line is getitem Hammer_Of_Blacksmith,1; this record does not decide which branch reaches that call.",
-      "conditions": [],
+      "result": "conditional",
+      "statement": "Passing Mitehmaeeuh's quiz grants 1 Hammer of Blacksmith, sets BSMITH_Q to 17, and changes quest 2014 to 2015.",
+      "conditions": [
+        "BSMITH_Q must be 16 and the player must answer Yes.",
+        "The quiz score .@blackss_te must be greater than 70. The question set is rand(1,3), so the score is not a fixed grant."
+      ],
       "sources": [
         {
           "path": "npc/jobs/2-1/blacksmith.txt",
@@ -4835,9 +4884,12 @@
         "kind": "npc",
         "name": "Cheehee#job_star"
       },
-      "result": "unknown",
-      "statement": "The quoted line is delitem Star_Crumb,1; this record does not decide which branch reaches that call.",
-      "conditions": [],
+      "result": "conditional",
+      "statement": "When STGL_Q is 10 and the player holds both materials, Cheehee removes 1 Star Crumb and 1 Sparkling Dust and sets STGL_Q to 11.",
+      "conditions": [
+        "STGL_Q must be 10.",
+        "countitem(Star_Crumb) and countitem(Sparkling_Dust) must both be greater than 0. Missing either warps the player to payon 164,58 with no removal."
+      ],
       "sources": [
         {
           "path": "npc/jobs/2-1e/StarGladiator.txt",
@@ -4860,9 +4912,11 @@
         "kind": "npc",
         "name": "Cheehee#job_star"
       },
-      "result": "unknown",
-      "statement": "The quoted line is delitem Sparkling_Dust,1; this record does not decide which branch reaches that call.",
-      "conditions": [],
+      "result": "conditional",
+      "statement": "The line removes 1 Sparkling Dust immediately after the Star Crumb removal in the same STGL_Q == 10 hand-over.",
+      "conditions": [
+        "Both item counts were already confirmed greater than 0."
+      ],
       "sources": [
         {
           "path": "npc/jobs/2-1e/StarGladiator.txt",
@@ -6460,9 +6514,11 @@
         "kind": "npc",
         "name": "Tomoon#mk"
       },
-      "result": "unknown",
-      "statement": "The quoted line is getitem Green_Potion,1; this record does not decide which branch reaches that call.",
-      "conditions": [],
+      "result": "conditional",
+      "statement": "When MONK_Q is 27, Tomoon grants 1 Green Potion, sets MONK_Q to 28, and changes quest 3031 to 3032.",
+      "conditions": [
+        "MONK_Q must be 27. Other values of MONK_Q warp or close with no item."
+      ],
       "sources": [
         {
           "path": "npc/jobs/2-2/monk.txt",
@@ -7936,8 +7992,13 @@
         "name": "Metheus Sylphe#Library"
       },
       "result": "unknown",
-      "statement": "The quoted line is delitem Captured_Book,countitem(Captured_Book; this record does not decide which branch reaches that call.",
-      "conditions": [],
+      "statement": "On a Renewal character who meets the Valkyrie entry check and holds Captured_Book, turning the book in removes every Captured_Book the player is carrying and sets valkyrie_Q to 1.",
+      "conditions": [
+        "BaseLevel must be above 98, JobLevel above 49, and Class from Knight through Crusader2.",
+        "valkyrie_Q must be 0, RENEWAL must be set, and quest 5160 must be in progress.",
+        "The player must choose the book option. The removed amount is countitem(Captured_Book), not a fixed number.",
+        "Quest 5160 is completed when it is in progress."
+      ],
       "sources": [
         {
           "path": "npc/jobs/valkyrie.txt",
@@ -7960,9 +8021,11 @@
         "kind": "npc",
         "name": "Metheus Sylphe#Library"
       },
-      "result": "unknown",
-      "statement": "The quoted line is getitem Captured_Book,1; this record does not decide which branch reaches that call.",
-      "conditions": [],
+      "result": "conditional",
+      "statement": "OnKill grants 1 Captured_Book while quest 5160 is active.",
+      "conditions": [
+        "questprogress(5160) must be 1."
+      ],
       "sources": [
         {
           "path": "npc/jobs/valkyrie.txt",
@@ -9085,9 +9148,13 @@
         "kind": "npc",
         "name": "Ripped Cabus#GymPass"
       },
-      "result": "unknown",
-      "statement": "The quoted line is delitem Max_Weight_Up_Scroll,1; this record does not decide which branch reaches that call.",
-      "conditions": [],
+      "result": "conditional",
+      "statement": "Choosing Yes with fewer than 10 Gym Pass trainings and holding a Max Weight Up Scroll removes 1 scroll, stores the new training count, and sets ALL_INCCARRY to that count.",
+      "conditions": [
+        "The player must choose Yes.",
+        "gympassmemory must be below 10.",
+        "countitem(Max_Weight_Up_Scroll) must be greater than 0."
+      ],
       "sources": [
         {
           "path": "npc/other/gympass.txt",
