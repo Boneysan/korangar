@@ -145587,6 +145587,33 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_7107_npc_re_jobs_3_1_guillotine_cross_txt_2542",
+      "unit": "E5-chain-7107",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7107
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 7107; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-1/guillotine_cross.txt",
+          "lines": [
+            2542
+          ],
+          "required_source_literals": [
+            "changequest 7107,7108;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
