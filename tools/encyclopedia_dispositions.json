@@ -195726,6 +195726,33 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_13003_npc_re_quests_eden_100_110_txt_124",
+      "unit": "E5-chain-13003",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          13002
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 13002; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/100-110.txt",
+          "lines": [
+            124
+          ],
+          "required_source_literals": [
+            "setquest 13002;// Brigan collecting"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
