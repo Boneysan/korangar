@@ -170778,6 +170778,87 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2071_npc_quests_quests_ein_txt_2916",
+      "unit": "E5-chain-2071",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2071
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 2071; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_ein.txt",
+          "lines": [
+            2916
+          ],
+          "required_source_literals": [
+            "setquest 2071;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2071_npc_quests_quests_ein_txt_3028",
+      "unit": "E5-chain-2071",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2071
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 2071; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_ein.txt",
+          "lines": [
+            3028
+          ],
+          "required_source_literals": [
+            "changequest 2071,2072;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2071_npc_quests_quests_ein_txt_3187",
+      "unit": "E5-chain-2071",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2078
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 2078; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_ein.txt",
+          "lines": [
+            3187
+          ],
+          "required_source_literals": [
+            "completequest 2078;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
