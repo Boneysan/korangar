@@ -12,7 +12,7 @@
     "E2_verified": 236,
     "E3_unknown": 973,
     "E4_unknown": 213,
-    "E5_unknown": 1488
+    "E5_unknown": 1502
   },
   "entries": [
     {
@@ -103502,6 +103502,384 @@
           ],
           "required_source_literals": [
             "changequest 10016,10017;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_10036_npc_quests_quests_amatsu_txt_1015",
+      "unit": "E5-chain-10036",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          10041
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 10041; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_amatsu.txt",
+          "lines": [
+            1015
+          ],
+          "required_source_literals": [
+            "completequest 10041;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_10036_npc_quests_quests_amatsu_txt_1079",
+      "unit": "E5-chain-10036",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          10041
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 10041; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_amatsu.txt",
+          "lines": [
+            1079
+          ],
+          "required_source_literals": [
+            "erasequest 10041;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_10036_npc_quests_quests_amatsu_txt_1217",
+      "unit": "E5-chain-10036",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          10036
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 10036; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_amatsu.txt",
+          "lines": [
+            1217
+          ],
+          "required_source_literals": [
+            "setquest 10036;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_10036_npc_quests_quests_amatsu_txt_1227",
+      "unit": "E5-chain-10036",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          10037
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 10037; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_amatsu.txt",
+          "lines": [
+            1227
+          ],
+          "required_source_literals": [
+            "setquest 10037;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_10036_npc_quests_quests_amatsu_txt_1237",
+      "unit": "E5-chain-10036",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          10038
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 10038; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_amatsu.txt",
+          "lines": [
+            1237
+          ],
+          "required_source_literals": [
+            "setquest 10038;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_10036_npc_quests_quests_amatsu_txt_1247",
+      "unit": "E5-chain-10036",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          10039
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 10039; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_amatsu.txt",
+          "lines": [
+            1247
+          ],
+          "required_source_literals": [
+            "setquest 10039;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_10036_npc_quests_quests_amatsu_txt_1257",
+      "unit": "E5-chain-10036",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          10040
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 10040; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_amatsu.txt",
+          "lines": [
+            1257
+          ],
+          "required_source_literals": [
+            "setquest 10040;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_10036_npc_quests_quests_amatsu_txt_1268",
+      "unit": "E5-chain-10036",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          10041
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 10041; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_amatsu.txt",
+          "lines": [
+            1268
+          ],
+          "required_source_literals": [
+            "setquest 10041;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_10036_npc_quests_quests_amatsu_txt_1282",
+      "unit": "E5-chain-10036",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          10040
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 10040; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_amatsu.txt",
+          "lines": [
+            1282
+          ],
+          "required_source_literals": [
+            "setquest 10040;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_10036_npc_quests_quests_amatsu_txt_826",
+      "unit": "E5-chain-10036",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          10036
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 10036; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_amatsu.txt",
+          "lines": [
+            826
+          ],
+          "required_source_literals": [
+            "erasequest 10036;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_10036_npc_quests_quests_amatsu_txt_858",
+      "unit": "E5-chain-10036",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          10037
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 10037; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_amatsu.txt",
+          "lines": [
+            858
+          ],
+          "required_source_literals": [
+            "erasequest 10037;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_10036_npc_quests_quests_amatsu_txt_890",
+      "unit": "E5-chain-10036",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          10038
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 10038; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_amatsu.txt",
+          "lines": [
+            890
+          ],
+          "required_source_literals": [
+            "erasequest 10038;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_10036_npc_quests_quests_amatsu_txt_922",
+      "unit": "E5-chain-10036",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          10039
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 10039; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_amatsu.txt",
+          "lines": [
+            922
+          ],
+          "required_source_literals": [
+            "erasequest 10039;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_10036_npc_quests_quests_amatsu_txt_956",
+      "unit": "E5-chain-10036",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          10040
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 10040; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_amatsu.txt",
+          "lines": [
+            956
+          ],
+          "required_source_literals": [
+            "erasequest 10040;"
           ]
         }
       ],
