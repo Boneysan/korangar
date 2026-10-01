@@ -177852,6 +177852,330 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_17000_npc_quests_quests_nameless_txt_80",
+      "unit": "E5-chain-17000",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          17000
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 17000; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_nameless.txt",
+          "lines": [
+            80
+          ],
+          "required_source_literals": [
+            "setquest 17000;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_17000_npc_quests_quests_prontera_txt_2457",
+      "unit": "E5-chain-17000",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          18034
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 18034; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_prontera.txt",
+          "lines": [
+            2457
+          ],
+          "required_source_literals": [
+            "changequest 18034,18035;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_17000_npc_quests_quests_prontera_txt_2498",
+      "unit": "E5-chain-17000",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          18036
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 18036; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_prontera.txt",
+          "lines": [
+            2498
+          ],
+          "required_source_literals": [
+            "changequest 18036,18037;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_17000_npc_quests_quests_prontera_txt_2535",
+      "unit": "E5-chain-17000",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          18039
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 18039; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_prontera.txt",
+          "lines": [
+            2535
+          ],
+          "required_source_literals": [
+            "changequest 18039,18040;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_17000_npc_quests_quests_prontera_txt_2569",
+      "unit": "E5-chain-17000",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          18044
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 18044; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_prontera.txt",
+          "lines": [
+            2569
+          ],
+          "required_source_literals": [
+            "changequest 18044,18046;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_17000_npc_quests_quests_prontera_txt_2610",
+      "unit": "E5-chain-17000",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          18047
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 18047; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_prontera.txt",
+          "lines": [
+            2610
+          ],
+          "required_source_literals": [
+            "changequest 18047,18050;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_17000_npc_quests_quests_prontera_txt_2643",
+      "unit": "E5-chain-17000",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          18045
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 18045; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_prontera.txt",
+          "lines": [
+            2643
+          ],
+          "required_source_literals": [
+            "changequest 18045,18046;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_17000_npc_quests_quests_prontera_txt_2685",
+      "unit": "E5-chain-17000",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          18047
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 18047; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_prontera.txt",
+          "lines": [
+            2685
+          ],
+          "required_source_literals": [
+            "changequest 18047,18049;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_17000_npc_quests_quests_prontera_txt_2721",
+      "unit": "E5-chain-17000",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          18043
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 18043; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_prontera.txt",
+          "lines": [
+            2721
+          ],
+          "required_source_literals": [
+            "changequest 18043,18046;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_17000_npc_quests_quests_prontera_txt_2776",
+      "unit": "E5-chain-17000",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          18052
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 18052; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_prontera.txt",
+          "lines": [
+            2776
+          ],
+          "required_source_literals": [
+            "completequest 18052;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_17000_npc_quests_quests_prontera_txt_2820",
+      "unit": "E5-chain-17000",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          17000
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 17000; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_prontera.txt",
+          "lines": [
+            2820
+          ],
+          "required_source_literals": [
+            "changequest 17000,17001;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_17000_npc_quests_quests_prontera_txt_2895",
+      "unit": "E5-chain-17000",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          17002
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 17002; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_prontera.txt",
+          "lines": [
+            2895
+          ],
+          "required_source_literals": [
+            "changequest 17002,17003;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
