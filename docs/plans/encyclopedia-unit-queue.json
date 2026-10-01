@@ -135390,7 +135390,7 @@
       "package": "E3",
       "kind": "e3_translator",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "key": "bonus2 bSPDrainRate",
@@ -135570,7 +135570,24 @@
       ],
       "size_lines": 37,
       "reason": "16 item script(s) first stop at documented `bonus2 bSPDrainRate`",
-      "history": []
+      "history": [
+        "2026-10-01T05:57:54Z activated",
+        "2026-10-01T05:57:54Z validated",
+        "2026-10-01T05:57:54Z verified: 1 claims supported",
+        "2026-10-01T05:58:18Z accepted",
+        "2026-10-01T05:58:18Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "2ad8d6f2c9f46f05aefafe3c53612ebc25d624d49cbb8264242c8213e7d6d5bd",
+      "accepted_files": [
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/export_item_reference.py",
+        "tools/tests/test_export_item_effect_phrases.py"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E3-translate-sc-end",
