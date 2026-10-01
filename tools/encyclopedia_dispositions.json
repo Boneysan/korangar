@@ -148638,6 +148638,168 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_21001_npc_re_jobs_novice_academy_txt_76",
+      "unit": "E5-chain-21001",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          21001
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 21001; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            76
+          ],
+          "required_source_literals": [
+            "setquest(21001);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_21001_npc_re_jobs_novice_academy_txt_129",
+      "unit": "E5-chain-21001",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          21002
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 21002; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            129
+          ],
+          "required_source_literals": [
+            "completequest(21002);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_21001_npc_re_jobs_novice_academy_txt_217",
+      "unit": "E5-chain-21001",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          21001
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 21001; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            217
+          ],
+          "required_source_literals": [
+            "completequest(21001);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_21001_npc_re_jobs_novice_academy_txt_225",
+      "unit": "E5-chain-21001",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          21002
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 21002; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/novice/academy.txt",
+          "lines": [
+            225
+          ],
+          "required_source_literals": [
+            "setquest(21002);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_21001_npc_re_warps_cities_izlude_txt_136",
+      "unit": "E5-chain-21001",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          21001
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 21001; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/warps/cities/izlude.txt",
+          "lines": [
+            136
+          ],
+          "required_source_literals": [
+            "erasequest(21001);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_21001_npc_re_warps_cities_izlude_txt_138",
+      "unit": "E5-chain-21001",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          21002
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 21002; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/warps/cities/izlude.txt",
+          "lines": [
+            138
+          ],
+          "required_source_literals": [
+            "erasequest(21002);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
