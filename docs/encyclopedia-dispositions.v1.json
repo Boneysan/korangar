@@ -12,7 +12,7 @@
     "E2_verified": 236,
     "E3_unknown": 973,
     "E4_unknown": 213,
-    "E5_unknown": 2063
+    "E5_unknown": 2073
   },
   "entries": [
     {
@@ -139682,6 +139682,276 @@
           ],
           "required_source_literals": [
             "completequest 5091;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_5109_npc_re_instances_wolfchevlaboratory_txt_115",
+      "unit": "E5-chain-5109",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          5109
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 5109; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/instances/WolfchevLaboratory.txt",
+          "lines": [
+            115
+          ],
+          "required_source_literals": [
+            "setquest 5109;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_5109_npc_re_instances_wolfchevlaboratory_txt_1440",
+      "unit": "E5-chain-5109",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          5109
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 5109; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/instances/WolfchevLaboratory.txt",
+          "lines": [
+            1440
+          ],
+          "required_source_literals": [
+            "erasequest 5109;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_5109_npc_re_instances_wolfchevlaboratory_txt_1441",
+      "unit": "E5-chain-5109",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          5110
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 5110; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/instances/WolfchevLaboratory.txt",
+          "lines": [
+            1441
+          ],
+          "required_source_literals": [
+            "setquest 5110;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_5109_npc_re_instances_wolfchevlaboratory_txt_1560",
+      "unit": "E5-chain-5109",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          5110
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 5110; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/instances/WolfchevLaboratory.txt",
+          "lines": [
+            1560
+          ],
+          "required_source_literals": [
+            "erasequest 5110;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_5109_npc_re_instances_wolfchevlaboratory_txt_1561",
+      "unit": "E5-chain-5109",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          5111
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 5111; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/instances/WolfchevLaboratory.txt",
+          "lines": [
+            1561
+          ],
+          "required_source_literals": [
+            "setquest 5111;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_5109_npc_re_instances_wolfchevlaboratory_txt_1762",
+      "unit": "E5-chain-5109",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          5111
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 5111; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/instances/WolfchevLaboratory.txt",
+          "lines": [
+            1762
+          ],
+          "required_source_literals": [
+            "erasequest 5111;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_5109_npc_re_instances_wolfchevlaboratory_txt_1797",
+      "unit": "E5-chain-5109",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          5112
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 5112; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/instances/WolfchevLaboratory.txt",
+          "lines": [
+            1797
+          ],
+          "required_source_literals": [
+            "erasequest 5112;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_5109_npc_re_instances_wolfchevlaboratory_txt_181",
+      "unit": "E5-chain-5109",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          5109
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 5109; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/instances/WolfchevLaboratory.txt",
+          "lines": [
+            181
+          ],
+          "required_source_literals": [
+            "setquest 5109;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_5109_npc_re_instances_wolfchevlaboratory_txt_1941",
+      "unit": "E5-chain-5109",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          5112
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 5112; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/instances/WolfchevLaboratory.txt",
+          "lines": [
+            1941
+          ],
+          "required_source_literals": [
+            "setquest 5112;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_5109_npc_re_instances_wolfchevlaboratory_txt_1956",
+      "unit": "E5-chain-5109",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          5112
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 5112; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/instances/WolfchevLaboratory.txt",
+          "lines": [
+            1956
+          ],
+          "required_source_literals": [
+            "erasequest 5112;"
           ]
         }
       ],
