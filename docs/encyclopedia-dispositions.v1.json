@@ -12,7 +12,7 @@
     "E2_verified": 236,
     "E3_unknown": 973,
     "E4_unknown": 213,
-    "E5_unknown": 2454
+    "E5_unknown": 2493
   },
   "entries": [
     {
@@ -154370,6 +154370,1059 @@
           ],
           "required_source_literals": [
             "changequest 7107,7108;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_7128_npc_re_quests_eden_eden_quests_txt_1016",
+      "unit": "E5-chain-7128",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7136
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 7136; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/eden_quests.txt",
+          "lines": [
+            1016
+          ],
+          "required_source_literals": [
+            "changequest 7136,7137;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_7128_npc_re_quests_eden_eden_quests_txt_1101",
+      "unit": "E5-chain-7128",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7138
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 7138; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/eden_quests.txt",
+          "lines": [
+            1101
+          ],
+          "required_source_literals": [
+            "changequest 7138,7139;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_7128_npc_re_quests_eden_eden_quests_txt_1128",
+      "unit": "E5-chain-7128",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7139
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 7139; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/eden_quests.txt",
+          "lines": [
+            1128
+          ],
+          "required_source_literals": [
+            "changequest 7139,7140;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_7128_npc_re_quests_eden_eden_quests_txt_1160",
+      "unit": "E5-chain-7128",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7140
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 7140; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/eden_quests.txt",
+          "lines": [
+            1160
+          ],
+          "required_source_literals": [
+            "changequest 7140,7141;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_7128_npc_re_quests_eden_eden_quests_txt_1246",
+      "unit": "E5-chain-7128",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7142
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 7142; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/eden_quests.txt",
+          "lines": [
+            1246
+          ],
+          "required_source_literals": [
+            "changequest 7142,7143;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_7128_npc_re_quests_eden_eden_quests_txt_1285",
+      "unit": "E5-chain-7128",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7143
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 7143; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/eden_quests.txt",
+          "lines": [
+            1285
+          ],
+          "required_source_literals": [
+            "changequest 7143,7144;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_7128_npc_re_quests_eden_eden_quests_txt_1325",
+      "unit": "E5-chain-7128",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7144
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 7144; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/eden_quests.txt",
+          "lines": [
+            1325
+          ],
+          "required_source_literals": [
+            "changequest 7144,7145;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_7128_npc_re_quests_eden_eden_quests_txt_1349",
+      "unit": "E5-chain-7128",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7145
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 7145; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/eden_quests.txt",
+          "lines": [
+            1349
+          ],
+          "required_source_literals": [
+            "changequest 7145,7146;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_7128_npc_re_quests_eden_eden_quests_txt_1442",
+      "unit": "E5-chain-7128",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7147
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 7147; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/eden_quests.txt",
+          "lines": [
+            1442
+          ],
+          "required_source_literals": [
+            "changequest 7147,7148;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_7128_npc_re_quests_eden_eden_quests_txt_1464",
+      "unit": "E5-chain-7128",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7148
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 7148; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/eden_quests.txt",
+          "lines": [
+            1464
+          ],
+          "required_source_literals": [
+            "changequest 7148,7149;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_7128_npc_re_quests_eden_eden_quests_txt_1495",
+      "unit": "E5-chain-7128",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7149
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 7149; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/eden_quests.txt",
+          "lines": [
+            1495
+          ],
+          "required_source_literals": [
+            "changequest 7149,7150;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_7128_npc_re_quests_eden_eden_quests_txt_1521",
+      "unit": "E5-chain-7128",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7150
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 7150; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/eden_quests.txt",
+          "lines": [
+            1521
+          ],
+          "required_source_literals": [
+            "changequest 7150,7151;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_7128_npc_re_quests_eden_eden_quests_txt_1573",
+      "unit": "E5-chain-7128",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7152
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 7152; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/eden_quests.txt",
+          "lines": [
+            1573
+          ],
+          "required_source_literals": [
+            "changequest 7152,7153;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_7128_npc_re_quests_eden_eden_quests_txt_158",
+      "unit": "E5-chain-7128",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7132
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 7132; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/eden_quests.txt",
+          "lines": [
+            158
+          ],
+          "required_source_literals": [
+            "completequest 7132;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_7128_npc_re_quests_eden_eden_quests_txt_1597",
+      "unit": "E5-chain-7128",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7153
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 7153; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/eden_quests.txt",
+          "lines": [
+            1597
+          ],
+          "required_source_literals": [
+            "changequest 7153,7154;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_7128_npc_re_quests_eden_eden_quests_txt_1621",
+      "unit": "E5-chain-7128",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7154
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 7154; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/eden_quests.txt",
+          "lines": [
+            1621
+          ],
+          "required_source_literals": [
+            "changequest 7154,7155;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_7128_npc_re_quests_eden_eden_quests_txt_1701",
+      "unit": "E5-chain-7128",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7156
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 7156; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/eden_quests.txt",
+          "lines": [
+            1701
+          ],
+          "required_source_literals": [
+            "changequest 7156,7157;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_7128_npc_re_quests_eden_eden_quests_txt_1724",
+      "unit": "E5-chain-7128",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7157
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 7157; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/eden_quests.txt",
+          "lines": [
+            1724
+          ],
+          "required_source_literals": [
+            "changequest 7157,7158;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_7128_npc_re_quests_eden_eden_quests_txt_1758",
+      "unit": "E5-chain-7128",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7158
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 7158; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/eden_quests.txt",
+          "lines": [
+            1758
+          ],
+          "required_source_literals": [
+            "changequest 7158,7159;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_7128_npc_re_quests_eden_eden_quests_txt_185",
+      "unit": "E5-chain-7128",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7137
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 7137; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/eden_quests.txt",
+          "lines": [
+            185
+          ],
+          "required_source_literals": [
+            "completequest 7137;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_7128_npc_re_quests_eden_eden_quests_txt_243",
+      "unit": "E5-chain-7128",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7141
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 7141; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/eden_quests.txt",
+          "lines": [
+            243
+          ],
+          "required_source_literals": [
+            "completequest 7141;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_7128_npc_re_quests_eden_eden_quests_txt_263",
+      "unit": "E5-chain-7128",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7146
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 7146; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/eden_quests.txt",
+          "lines": [
+            263
+          ],
+          "required_source_literals": [
+            "completequest 7146;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_7128_npc_re_quests_eden_eden_quests_txt_318",
+      "unit": "E5-chain-7128",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7151
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 7151; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/eden_quests.txt",
+          "lines": [
+            318
+          ],
+          "required_source_literals": [
+            "completequest 7151;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_7128_npc_re_quests_eden_eden_quests_txt_338",
+      "unit": "E5-chain-7128",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7155
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 7155; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/eden_quests.txt",
+          "lines": [
+            338
+          ],
+          "required_source_literals": [
+            "completequest 7155;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_7128_npc_re_quests_eden_eden_quests_txt_359",
+      "unit": "E5-chain-7128",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7159
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 7159; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/eden_quests.txt",
+          "lines": [
+            359
+          ],
+          "required_source_literals": [
+            "completequest 7159;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_7128_npc_re_quests_eden_eden_quests_txt_443",
+      "unit": "E5-chain-7128",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7128
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 7128; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/eden_quests.txt",
+          "lines": [
+            443
+          ],
+          "required_source_literals": [
+            "setquest 7128;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_7128_npc_re_quests_eden_eden_quests_txt_473",
+      "unit": "E5-chain-7128",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7133
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 7133; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/eden_quests.txt",
+          "lines": [
+            473
+          ],
+          "required_source_literals": [
+            "setquest 7133;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_7128_npc_re_quests_eden_eden_quests_txt_510",
+      "unit": "E5-chain-7128",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7138
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 7138; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/eden_quests.txt",
+          "lines": [
+            510
+          ],
+          "required_source_literals": [
+            "setquest 7138;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_7128_npc_re_quests_eden_eden_quests_txt_545",
+      "unit": "E5-chain-7128",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7142
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 7142; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/eden_quests.txt",
+          "lines": [
+            545
+          ],
+          "required_source_literals": [
+            "setquest 7142;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_7128_npc_re_quests_eden_eden_quests_txt_573",
+      "unit": "E5-chain-7128",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7147
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 7147; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/eden_quests.txt",
+          "lines": [
+            573
+          ],
+          "required_source_literals": [
+            "setquest 7147;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_7128_npc_re_quests_eden_eden_quests_txt_598",
+      "unit": "E5-chain-7128",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7152
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 7152; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/eden_quests.txt",
+          "lines": [
+            598
+          ],
+          "required_source_literals": [
+            "setquest 7152;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_7128_npc_re_quests_eden_eden_quests_txt_617",
+      "unit": "E5-chain-7128",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7156
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 7156; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/eden_quests.txt",
+          "lines": [
+            617
+          ],
+          "required_source_literals": [
+            "setquest 7156;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_7128_npc_re_quests_eden_eden_quests_txt_661",
+      "unit": "E5-chain-7128",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7128
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 7128; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/eden_quests.txt",
+          "lines": [
+            661
+          ],
+          "required_source_literals": [
+            "changequest 7128,7129;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_7128_npc_re_quests_eden_eden_quests_txt_704",
+      "unit": "E5-chain-7128",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7129
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 7129; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/eden_quests.txt",
+          "lines": [
+            704
+          ],
+          "required_source_literals": [
+            "changequest 7129,7130;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_7128_npc_re_quests_eden_eden_quests_txt_740",
+      "unit": "E5-chain-7128",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7130
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 7130; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/eden_quests.txt",
+          "lines": [
+            740
+          ],
+          "required_source_literals": [
+            "changequest 7130,7131;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_7128_npc_re_quests_eden_eden_quests_txt_787",
+      "unit": "E5-chain-7128",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7131
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 7131; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/eden_quests.txt",
+          "lines": [
+            787
+          ],
+          "required_source_literals": [
+            "changequest 7131,7132;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_7128_npc_re_quests_eden_eden_quests_txt_916",
+      "unit": "E5-chain-7128",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7133
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 7133; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/eden_quests.txt",
+          "lines": [
+            916
+          ],
+          "required_source_literals": [
+            "changequest 7133,7134;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_7128_npc_re_quests_eden_eden_quests_txt_944",
+      "unit": "E5-chain-7128",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7134
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 7134; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/eden_quests.txt",
+          "lines": [
+            944
+          ],
+          "required_source_literals": [
+            "changequest 7134,7135;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_7128_npc_re_quests_eden_eden_quests_txt_982",
+      "unit": "E5-chain-7128",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7135
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 7135; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/eden_quests.txt",
+          "lines": [
+            982
+          ],
+          "required_source_literals": [
+            "changequest 7135,7136;"
           ]
         }
       ],
