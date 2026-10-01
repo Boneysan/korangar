@@ -238868,6 +238868,34 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e6_boss_1623_boss",
+      "unit": "E6-boss-1623",
+      "package": "E6",
+      "subject": {
+        "kind": "monster",
+        "name": "RSX_0806",
+        "ids": [
+          1623
+        ]
+      },
+      "result": "unknown",
+      "statement": "Monster 1623 (RSX_0806) has configured database rows in the packet; this record does not enumerate each skill.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/mob_db.conf",
+          "lines": [
+            28557
+          ],
+          "required_source_literals": [
+            "{"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
