@@ -33,7 +33,7 @@ pub use self::job_identity::JobIdentity;
 pub use self::job_name::JobName;
 pub use self::map_sky_data::MapSkyData;
 pub use self::msgstringtable::MsgStringTable;
-pub use self::skill_info::{skill_layout_value, skill_tooltip_text};
+pub use self::skill_info::{skill_element_name, skill_layout_value, skill_tooltip_text};
 pub(crate) use self::skill_information::skill_asset_file_names;
 pub use self::skill_tree::SkillTreeLayout;
 pub use self::towninfo::{TownInfoTable, TownPoi, TownPoiKind};

@@ -1043,8 +1043,8 @@ mod resolve_pending_cast_tests {
     use ragnarok_packets::{AttackRange, EntityId, HotbarSlot, ItemId, SkillId, SkillLevel, SkillType, TilePosition};
 
     use super::{
-        PendingCastResolution, PendingSkill, is_within_skill_range, pending_held_skill_canceled_by_interface_focus,
-        pending_skill_commits_on_release, resolve_pending_cast, skill_range_ring,
+        PendingCastResolution, PendingSkill, PredictedMotion, is_within_skill_range, pending_held_skill_canceled_by_interface_focus,
+        pending_skill_commits_on_release, resolve_pending_cast, server_echo_repeats_prediction, skill_range_ring,
     };
     use crate::graphics::PickerTarget;
 
@@ -1146,6 +1146,24 @@ mod resolve_pending_cast_tests {
         assert!(is_within_skill_range(player, TilePosition { x: 11, y: 11 }, AttackRange(1)));
         assert!(!is_within_skill_range(player, TilePosition { x: 12, y: 11 }, AttackRange(1)));
         assert!(is_within_skill_range(player, TilePosition { x: 17, y: 3 }, AttackRange(7)));
+    }
+
+    #[test]
+    fn server_echo_keeps_the_same_predicted_motion() {
+        assert!(server_echo_repeats_prediction(Some(PredictedMotion::BasicAttack), None));
+        assert!(!server_echo_repeats_prediction(
+            Some(PredictedMotion::BasicAttack),
+            Some(SkillId(5))
+        ));
+        assert!(server_echo_repeats_prediction(
+            Some(PredictedMotion::Skill(SkillId(5))),
+            Some(SkillId(5))
+        ));
+        assert!(!server_echo_repeats_prediction(
+            Some(PredictedMotion::Skill(SkillId(5))),
+            Some(SkillId(7))
+        ));
+        assert!(!server_echo_repeats_prediction(None, None));
     }
 
     #[test]
@@ -1261,6 +1279,23 @@ fn resolve_pending_cast(skill_type: SkillType, target: PickerTarget) -> PendingC
             _ => PendingCastResolution::Fizzle,
         },
         SkillType::Passive | SkillType::SelfCast => PendingCastResolution::Fizzle,
+    }
+}
+
+/// A local swing started before the server confirms the action.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+enum PredictedMotion {
+    BasicAttack,
+    Skill(SkillId),
+}
+
+/// The server echo repeats a prediction when it names the same motion.
+/// A different skill, or a basic attack after a skill, must replace it.
+fn server_echo_repeats_prediction(predicted: Option<PredictedMotion>, incoming_skill: Option<SkillId>) -> bool {
+    match predicted {
+        Some(PredictedMotion::BasicAttack) => incoming_skill.is_none(),
+        Some(PredictedMotion::Skill(skill_id)) => incoming_skill == Some(skill_id),
+        None => false,
     }
 }
 
@@ -1431,7 +1466,7 @@ fn cast_or_path_entity_skill<Callback: PacketCallback + Send>(
     skill_level: SkillLevel,
     attack_range: AttackRange,
     entity_id: EntityId,
-) {
+) -> bool {
     let player_position = state.try_follow(this_entity()).map(Entity::get_tile_position);
     let target_position = state
         .follow(client_state().entities())
@@ -1466,9 +1501,9 @@ fn cast_or_path_entity_skill<Callback: PacketCallback + Send>(
                 MessageColor::Error,
             )),
         }
-    } else {
-        let _ = networking_system.cast_skill(skill_id, skill_level, entity_id);
+        return false;
     }
+    networking_system.cast_skill(skill_id, skill_level, entity_id).is_ok()
 }
 
 /// Cell a ground-targeted resolution lands on, or `None` when the click fizzled
@@ -1507,7 +1542,7 @@ fn cast_or_path_ground_skill<Callback: PacketCallback + Send>(
     skill_level: SkillLevel,
     attack_range: AttackRange,
     tile: TilePosition,
-) {
+) -> bool {
     let player_position = state.try_follow(this_entity()).map(Entity::get_tile_position);
 
     if let (Some(map), Some(player_position)) = (map, player_position)
@@ -1537,10 +1572,10 @@ fn cast_or_path_ground_skill<Callback: PacketCallback + Send>(
                 MessageColor::Error,
             )),
         }
-        return;
+        return false;
     }
 
-    let _ = networking_system.cast_ground_skill(skill_id, skill_level, tile);
+    networking_system.cast_ground_skill(skill_id, skill_level, tile).is_ok()
 }
 
 /// Tell the player which skill is now armed and waiting for a target. The
@@ -1750,6 +1785,9 @@ pub struct Client {
     /// Last monster this character attacked. A failed skill such as Steal
     /// stops the server-side attack; this is what gets sent again.
     last_attack_target: Option<EntityId>,
+    /// Swing or skill motion started when the packet was sent. Cleared when
+    /// the server echo arrives or the action is refused.
+    predicted_motion: Option<PredictedMotion>,
     /// Monster selected by click or keyboard cycling for the target surface.
     targeted_monster: Option<EntityId>,
     /// Why the map server is dropping us, held from `SC_NOTIFY_BAN` until the
@@ -3421,6 +3459,7 @@ impl Client {
             pending_skill: None,
             support_target: None,
             last_attack_target: None,
+            predicted_motion: None,
             targeted_monster: None,
             pending_disconnect_reason: None,
             disconnect_needs_notice: false,
@@ -3892,6 +3931,43 @@ impl Client {
         self.particle_holder.set_party_ping_marker(marker);
     }
 
+    /// Element cue for a hit the local player lands on a known monster.
+    /// Basic attacks and `Ele_Weapon` skills use Neutral, the unendowed weapon
+    /// element.
+    fn element_cue_for_player_hit(
+        &self,
+        source_entity_id: EntityId,
+        destination_entity_id: EntityId,
+        skill_id: Option<SkillId>,
+    ) -> Option<crate::world::ElementCue> {
+        let player_is_source = source_entity_id.0 == 0
+            || self
+                .client_state
+                .try_follow(this_entity())
+                .is_some_and(|player| player.get_entity_id() == source_entity_id);
+        if !player_is_source {
+            return None;
+        }
+        let name = self
+            .client_state
+            .follow(client_state().entities())
+            .iter()
+            .find(|entity| entity.get_entity_id() == destination_entity_id)
+            .and_then(Entity::get_details)?;
+        let name = name.split('#').next().unwrap_or(name);
+        let facts = crate::world::monster_facts(name)?;
+        let skill_level = skill_id
+            .and_then(|skill_id| {
+                self.client_state
+                    .follow(client_state().skill_tree().skills())
+                    .iter()
+                    .find(|skill| skill.skill_id == skill_id)
+                    .map(|skill| skill.skill_level.0)
+            })
+            .unwrap_or(1);
+        crate::world::identify_player_hit(skill_id.map(|skill_id| skill_id.0), skill_level, facts.element)
+    }
+
     /// Apply the target phase of one server-authoritative damage event. The
     /// source action and launch/caster tracks have already started; this phase
     /// owns numbers, hit effects/sounds, and target Hurt.
@@ -3929,6 +4005,7 @@ impl Client {
                             amount_per_hit,
                             hit_count,
                             is_critical,
+                            element_cue: self.element_cue_for_player_hit(source_entity_id, destination_entity_id, skill_id),
                         },
                         font_scale,
                     );
@@ -4973,6 +5050,7 @@ impl Client {
                         .push(ChatMessage::new(text, color));
                 }
                 NetworkEvent::SkillFailed { .. } => {
+                    self.rollback_predicted_motion(client_tick);
                     if cancel_timed_action_on_skill_refusal(self.client_state.follow_mut(client_state().timed_buffered_action())) {
                         self.client_state.follow_mut(client_state().toasts()).push(
                             "action-buffer-refused",
@@ -4982,7 +5060,9 @@ impl Client {
                     }
                     let auto_attack = *self.client_state.follow(client_state().game_settings().auto_attack());
                     if auto_attack && let Some(entity_id) = self.last_attack_target {
-                        let _ = self.networking_system.player_attack(entity_id);
+                        if self.networking_system.player_attack(entity_id).is_ok() {
+                            self.predict_local_motion(PredictedMotion::BasicAttack, client_tick);
+                        }
                         *self.client_state.follow_mut(client_state().buffered_action()) = Some(BufferedAction::AttackEntity { entity_id });
                     }
                 }
@@ -4991,6 +5071,7 @@ impl Client {
                     amount,
                     equipment,
                 } => {
+                    self.rollback_predicted_motion(client_tick);
                     if cancel_timed_action_on_skill_refusal(self.client_state.follow_mut(client_state().timed_buffered_action())) {
                         self.client_state.follow_mut(client_state().toasts()).push(
                             "action-buffer-refused",
@@ -5101,14 +5182,21 @@ impl Client {
                         .is_some_and(|player| player.get_entity_id() == source_entity_id)
                     {
                         let auto_attack = *self.client_state.follow(client_state().game_settings().auto_attack());
-                        let buffered_action = self.client_state.follow_mut(client_state().buffered_action());
-
-                        if let Some(BufferedAction::AttackEntity { entity_id }) = *buffered_action {
-                            self.last_attack_target = Some(entity_id);
-                            let _ = self.networking_system.player_attack(entity_id);
-
-                            if !auto_attack {
+                        let attack_target = {
+                            let buffered_action = self.client_state.follow_mut(client_state().buffered_action());
+                            let attack_target = match *buffered_action {
+                                Some(BufferedAction::AttackEntity { entity_id }) => Some(entity_id),
+                                _ => None,
+                            };
+                            if !auto_attack && attack_target.is_some() {
                                 *buffered_action = None;
+                            }
+                            attack_target
+                        };
+                        if let Some(entity_id) = attack_target {
+                            self.last_attack_target = Some(entity_id);
+                            if self.networking_system.player_attack(entity_id).is_ok() {
+                                self.predict_local_motion(PredictedMotion::BasicAttack, client_tick);
                             }
                         }
                     }
@@ -5141,7 +5229,10 @@ impl Client {
                         if let Some(target_position) = target_position {
                             entity.rotate_towards(target_position);
                         }
-                        entity.set_skill_attack(skill_id, attack_duration, is_critical, client_tick);
+                        let already_playing = server_echo_repeats_prediction(self.predicted_motion.take(), skill_id);
+                        if !already_playing {
+                            entity.set_skill_attack(skill_id, attack_duration, is_critical, client_tick);
+                        }
                         source_impact_delay_ms = entity.impact_delay_ms(skill_id, camera_direction);
                     }
 
@@ -8108,7 +8199,7 @@ impl Client {
 
     /// T / Shift+1–4. With no skill armed, these keys select the support
     /// target.
-    fn cast_armed_at(&mut self, party_index: Option<usize>) {
+    fn cast_armed_at(&mut self, party_index: Option<usize>, client_tick: ClientTick) {
         let entity_id = match party_index {
             None => self.client_state.try_follow(this_entity()).map(|entity| entity.get_entity_id()),
             Some(index) => self.available_party_targets().get(index).map(|(entity_id, _)| *entity_id),
@@ -8143,7 +8234,7 @@ impl Client {
             ));
             return;
         }
-        cast_or_path_entity_skill(
+        if cast_or_path_entity_skill(
             &mut self.networking_system,
             &mut self.client_state,
             self.map.as_deref(),
@@ -8152,7 +8243,9 @@ impl Client {
             pending.skill_level,
             pending.attack_range,
             entity_id,
-        );
+        ) {
+            self.predict_local_motion(PredictedMotion::Skill(pending.skill_id), client_tick);
+        }
         self.pending_skill = None;
     }
 
@@ -8661,8 +8754,8 @@ impl Client {
                 InputEvent::CloseTopWindow => {
                     let _ = self.interface.close_top_window(&self.client_state);
                 }
-                InputEvent::TargetSelf => self.cast_armed_at(None),
-                InputEvent::TargetPartyMember { index } => self.cast_armed_at(Some(index)),
+                InputEvent::TargetSelf => self.cast_armed_at(None, client_tick),
+                InputEvent::TargetPartyMember { index } => self.cast_armed_at(Some(index), client_tick),
                 InputEvent::CycleMonsterTarget { reverse } => self.cycle_monster_target(reverse),
                 InputEvent::CyclePartyTarget => self.cycle_party_target(),
                 InputEvent::Escape => {
@@ -8855,7 +8948,11 @@ impl Client {
                                         *buffered_action = Some(BufferedAction::AttackEntity { entity_id });
                                     }
                                     self.last_attack_target = Some(entity_id);
-                                    self.networking_system.player_attack(entity_id)
+                                    let sent = self.networking_system.player_attack(entity_id);
+                                    if sent.is_ok() {
+                                        self.predict_local_motion(PredictedMotion::BasicAttack, client_tick);
+                                    }
+                                    sent
                                 }
                             }
                             // Clicking another player used to do nothing at all
@@ -9691,7 +9788,7 @@ impl Client {
                         },
                         client_tick,
                     ) {
-                        cast_or_path_entity_skill(
+                        if cast_or_path_entity_skill(
                             &mut self.networking_system,
                             &mut self.client_state,
                             self.map.as_deref(),
@@ -9700,7 +9797,9 @@ impl Client {
                             skill_level,
                             attack_range,
                             entity_id,
-                        );
+                        ) {
+                            self.predict_local_motion(PredictedMotion::Skill(skill_id), client_tick);
+                        }
                     }
                 }
                 InputEvent::CastSkillAtTile {
@@ -9719,7 +9818,7 @@ impl Client {
                         },
                         client_tick,
                     ) {
-                        cast_or_path_ground_skill(
+                        if cast_or_path_ground_skill(
                             &mut self.networking_system,
                             &mut self.client_state,
                             self.map.as_deref(),
@@ -9728,7 +9827,9 @@ impl Client {
                             skill_level,
                             attack_range,
                             tile,
-                        );
+                        ) {
+                            self.predict_local_motion(PredictedMotion::Skill(skill_id), client_tick);
+                        }
                     }
                 }
                 InputEvent::CastSkill { slot } => {
@@ -9792,16 +9893,22 @@ impl Client {
                                 if !queued {
                                     match learnable_skill.skill_id == ROLLING_CUTTER_ID {
                                         true => {
-                                            let _ = self.networking_system.cast_channeling_skill(
-                                                learnable_skill.skill_id,
-                                                skill_level,
-                                                this_entity_id,
-                                            );
+                                            if self
+                                                .networking_system
+                                                .cast_channeling_skill(learnable_skill.skill_id, skill_level, this_entity_id)
+                                                .is_ok()
+                                            {
+                                                self.predict_local_motion(PredictedMotion::Skill(learnable_skill.skill_id), client_tick);
+                                            }
                                         }
                                         false => {
-                                            let _ =
-                                                self.networking_system
-                                                    .cast_skill(learnable_skill.skill_id, skill_level, this_entity_id);
+                                            if self
+                                                .networking_system
+                                                .cast_skill(learnable_skill.skill_id, skill_level, this_entity_id)
+                                                .is_ok()
+                                            {
+                                                self.predict_local_motion(PredictedMotion::Skill(learnable_skill.skill_id), client_tick);
+                                            }
                                         }
                                     }
                                 }
@@ -9847,7 +9954,7 @@ impl Client {
                                     },
                                     client_tick,
                                 ) {
-                                    cast_or_path_entity_skill(
+                                    if cast_or_path_entity_skill(
                                         &mut self.networking_system,
                                         &mut self.client_state,
                                         self.map.as_deref(),
@@ -9856,7 +9963,9 @@ impl Client {
                                         skill_level,
                                         attack_range,
                                         target_id,
-                                    );
+                                    ) {
+                                        self.predict_local_motion(PredictedMotion::Skill(learnable_skill.skill_id), client_tick);
+                                    }
                                 }
                             }
                             SkillType::Attack => {
@@ -9882,7 +9991,7 @@ impl Client {
                                             },
                                             client_tick,
                                         ) {
-                                            cast_or_path_entity_skill(
+                                            if cast_or_path_entity_skill(
                                                 &mut self.networking_system,
                                                 &mut self.client_state,
                                                 self.map.as_deref(),
@@ -9891,7 +10000,9 @@ impl Client {
                                                 pending.skill_level,
                                                 pending.attack_range,
                                                 entity_id,
-                                            );
+                                            ) {
+                                                self.predict_local_motion(PredictedMotion::Skill(pending.skill_id), client_tick);
+                                            }
                                         }
                                     }
                                     _ => {
@@ -11321,13 +11432,40 @@ impl Client {
             .retain(|item| !item.should_be_removed(client_tick));
     }
 
+    /// Start the local swing or skill motion as soon as the packet is sent.
+    /// The matching server echo does not restart it. A refusal returns to idle.
+    fn predict_local_motion(&mut self, motion: PredictedMotion, client_tick: ClientTick) {
+        let skill_id = match motion {
+            PredictedMotion::BasicAttack => None,
+            PredictedMotion::Skill(skill_id) => Some(skill_id),
+        };
+        let started = self.client_state.try_follow_mut(this_entity()).is_some_and(|player| {
+            if player.is_dead() || player.is_action_animation_active() {
+                return false;
+            }
+            player.set_skill_attack(skill_id, 0, false, client_tick);
+            true
+        });
+        if started {
+            self.predicted_motion = Some(motion);
+        }
+    }
+
+    fn rollback_predicted_motion(&mut self, client_tick: ClientTick) {
+        if self.predicted_motion.take().is_some()
+            && let Some(player) = self.client_state.try_follow_mut(this_entity())
+        {
+            player.set_idle(client_tick);
+        }
+    }
+
     /// Fire any action that the player buffered while out of range or while
     /// still moving (attack, skill, pick up item). Must be called after
     /// [`Self::update_entities`] so that the player's `stopped_moving` state
     /// reflects this frame.
     #[inline(always)]
     #[cfg_attr(feature = "debug", korangar_debug::profile)]
-    fn process_buffered_action(&mut self) {
+    fn process_buffered_action(&mut self, client_tick: ClientTick) {
         let Some(true) = self.client_state.try_follow(this_entity()).map(|player| player.stopped_moving()) else {
             return;
         };
@@ -11339,7 +11477,9 @@ impl Client {
         match buffered_action {
             BufferedAction::AttackEntity { entity_id } => {
                 self.last_attack_target = Some(entity_id);
-                let _ = self.networking_system.player_attack(entity_id);
+                if self.networking_system.player_attack(entity_id).is_ok() {
+                    self.predict_local_motion(PredictedMotion::BasicAttack, client_tick);
+                }
 
                 let auto_attack = *self.client_state.follow(client_state().game_settings().auto_attack());
                 if auto_attack {
@@ -11372,7 +11512,9 @@ impl Client {
 
                 if let (Some(map), Some(player_position), Some(target_position)) = (self.map.as_deref(), player_position, target_position) {
                     if is_within_skill_range(player_position, target_position, attack_range) {
-                        let _ = self.networking_system.cast_skill(skill_id, skill_level, entity_id);
+                        if self.networking_system.cast_skill(skill_id, skill_level, entity_id).is_ok() {
+                            self.predict_local_motion(PredictedMotion::Skill(skill_id), client_tick);
+                        }
                     } else if let Some(path) =
                         self.path_finder
                             .find_walkable_path_in_range(map, player_position, target_position, attack_range)
@@ -11397,16 +11539,20 @@ impl Client {
                 skill_level,
                 tile,
                 attack_range,
-            } => cast_or_path_ground_skill(
-                &mut self.networking_system,
-                &mut self.client_state,
-                self.map.as_deref(),
-                &mut self.path_finder,
-                skill_id,
-                skill_level,
-                attack_range,
-                tile,
-            ),
+            } => {
+                if cast_or_path_ground_skill(
+                    &mut self.networking_system,
+                    &mut self.client_state,
+                    self.map.as_deref(),
+                    &mut self.path_finder,
+                    skill_id,
+                    skill_level,
+                    attack_range,
+                    tile,
+                ) {
+                    self.predict_local_motion(PredictedMotion::Skill(skill_id), client_tick);
+                }
+            }
         }
     }
 
@@ -11449,7 +11595,9 @@ impl Client {
                     .any(|entity| entity.get_entity_id() == entity_id && !entity.is_dead());
                 if target_is_live {
                     self.last_attack_target = Some(entity_id);
-                    let _ = self.networking_system.player_attack(entity_id);
+                    if self.networking_system.player_attack(entity_id).is_ok() {
+                        self.predict_local_motion(PredictedMotion::BasicAttack, client_tick);
+                    }
                     if *self.client_state.follow(client_state().game_settings().auto_attack()) {
                         *self.client_state.follow_mut(client_state().buffered_action()) = Some(BufferedAction::AttackEntity { entity_id });
                     }
@@ -11516,18 +11664,24 @@ impl Client {
                         crate::state::toasts::ToastPriority::Normal,
                     );
                 } else if skill_id == ROLLING_CUTTER_ID {
-                    let _ = self.networking_system.cast_channeling_skill(skill_id, skill_level, entity_id);
-                } else {
-                    cast_or_path_entity_skill(
-                        &mut self.networking_system,
-                        &mut self.client_state,
-                        self.map.as_deref(),
-                        &mut self.path_finder,
-                        skill_id,
-                        skill_level,
-                        attack_range,
-                        entity_id,
-                    );
+                    if self
+                        .networking_system
+                        .cast_channeling_skill(skill_id, skill_level, entity_id)
+                        .is_ok()
+                    {
+                        self.predict_local_motion(PredictedMotion::Skill(skill_id), client_tick);
+                    }
+                } else if cast_or_path_entity_skill(
+                    &mut self.networking_system,
+                    &mut self.client_state,
+                    self.map.as_deref(),
+                    &mut self.path_finder,
+                    skill_id,
+                    skill_level,
+                    attack_range,
+                    entity_id,
+                ) {
+                    self.predict_local_motion(PredictedMotion::Skill(skill_id), client_tick);
                 }
             }
             BufferedAction::CastGroundSkill {
@@ -11536,7 +11690,7 @@ impl Client {
                 tile,
                 attack_range,
             } => {
-                cast_or_path_ground_skill(
+                if cast_or_path_ground_skill(
                     &mut self.networking_system,
                     &mut self.client_state,
                     self.map.as_deref(),
@@ -11545,7 +11699,9 @@ impl Client {
                     skill_level,
                     attack_range,
                     tile,
-                );
+                ) {
+                    self.predict_local_motion(PredictedMotion::Skill(skill_id), client_tick);
+                }
             }
         }
     }
@@ -11746,7 +11902,7 @@ impl Client {
 
         self.refresh_monster_target_summary();
 
-        self.process_buffered_action();
+        self.process_buffered_action(client_tick);
         self.process_timed_buffered_action(client_tick);
 
         self.update_main_camera(

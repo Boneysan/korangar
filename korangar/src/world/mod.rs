@@ -1,5 +1,6 @@
 mod action;
 pub(crate) mod animation;
+mod attack_element;
 mod cameras;
 mod effect;
 mod emote;
@@ -29,6 +30,7 @@ use std::sync::Arc;
 
 pub use self::action::*;
 pub use self::animation::*;
+pub use self::attack_element::{ElementCue, identify_player_hit};
 pub use self::cameras::*;
 pub use self::effect::*;
 pub use self::emote::*;

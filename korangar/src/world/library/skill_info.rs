@@ -128,6 +128,18 @@ fn layout_cells(layout: i64) -> Option<u32> {
 /// no ground unit. `-1` is passed through unchanged so callers can tell "custom
 /// shape" apart from "no ground unit" — the aiming cursor needs that
 /// distinction, the tooltip does not.
+/// `skill_db.conf` element at `level`, such as `Ele_Fire` or `Ele_Weapon`.
+/// Levelled elements (Seven Wind) need the cast level; an unknown level returns
+/// nothing rather than guessing the first row.
+pub fn skill_element_name(skill_id: u16, level: u16) -> Option<&'static str> {
+    let element = table().get(&skill_id)?.element.as_ref()?;
+    match element {
+        LevelledText::Flat { flat } => Some(flat.as_str()),
+        LevelledText::Levels { .. } if level == 0 => None,
+        LevelledText::Levels { .. } => element.at(level),
+    }
+}
+
 pub fn skill_layout_value(skill_id: u16, level: u16) -> Option<i64> {
     table().get(&skill_id)?.layout.as_ref()?.at(level)
 }

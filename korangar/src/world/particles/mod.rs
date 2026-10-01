@@ -38,6 +38,7 @@ pub struct DamageNumberEvent {
     pub amount_per_hit: usize,
     pub hit_count: usize,
     pub is_critical: bool,
+    pub element_cue: Option<crate::world::ElementCue>,
 }
 
 pub struct DamageNumber {
@@ -54,6 +55,7 @@ pub struct DamageNumber {
     timer: f32,
     merge_window_remaining: f32,
     is_critical: bool,
+    element_cue: Option<crate::world::ElementCue>,
     font_scale: f32,
 }
 
@@ -74,6 +76,7 @@ impl DamageNumber {
             timer: 0.6,
             merge_window_remaining: DAMAGE_NUMBER_MERGE_WINDOW,
             is_critical: event.is_critical,
+            element_cue: event.element_cue,
             font_scale,
         }
     }
@@ -85,6 +88,7 @@ impl DamageNumber {
             || self.skill_id != event.skill_id
             || self.amount_per_hit != event.amount_per_hit
             || self.is_critical != event.is_critical
+            || self.element_cue != event.element_cue
         {
             return false;
         }
@@ -116,9 +120,15 @@ impl Particle for DamageNumber {
             top: screen_position.y * window_size.height,
         };
 
-        let color = match self.is_critical {
-            true => Color::rgb_u8(255, 180, 0),
-            false => Color::WHITE,
+        let color = if self.is_critical {
+            Color::rgb_u8(255, 180, 0)
+        } else {
+            match self.element_cue {
+                Some(crate::world::ElementCue::Advantage) => Color::rgb_u8(255, 140, 40),
+                Some(crate::world::ElementCue::Resist) => Color::rgb_u8(150, 170, 210),
+                Some(crate::world::ElementCue::Immune) => Color::rgb_u8(130, 130, 130),
+                Some(crate::world::ElementCue::Neutral) | None => Color::WHITE,
+            }
         };
 
         renderer.render_damage_text(&self.damage_amount, final_position, color, FontSize(16.0 * self.font_scale));
@@ -470,6 +480,7 @@ mod damage_number_merge_tests {
             amount_per_hit,
             hit_count,
             is_critical: false,
+            element_cue: None,
         }
     }
 
