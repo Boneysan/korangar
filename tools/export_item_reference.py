@@ -689,6 +689,13 @@ def translate_simple_effect(script: str) -> str | None:
                 f"displays special effect {match.group(1).upper()} to everyone on the unit from playerattached()"
             )
             continue
+        match = re.fullmatch(r"pet\s+([A-Za-z_][A-Za-z0-9_]*)", statement, re.I) or re.fullmatch(
+            r"pet\(\s*([A-Za-z_][A-Za-z0-9_]*)\s*\)", statement, re.I
+        )
+        if match:
+            # script_commands.txt: pet id numbers live in pet_db.conf, which is not this excerpt.
+            effects.append(f"makes the pet catching cursor appear for pet ID {match.group(1).upper()}")
+            continue
         return None
     return "; ".join(effects) if effects else None
 

@@ -20,6 +20,17 @@ class ItemEffectPhraseTests(unittest.TestCase):
         self.assertIn("on yourself, without a target cursor", text)
         self.assertNotIn("checking the skill's conditions", text)
 
+    def test_pet_taming_cursor_uses_the_constant(self):
+        self.assertEqual(
+            translate_simple_effect("pet PORING;"),
+            "makes the pet catching cursor appear for pet ID PORING",
+        )
+        self.assertEqual(
+            translate_simple_effect("pet(DROPS);"),
+            "makes the pet catching cursor appear for pet ID DROPS",
+        )
+        self.assertIsNone(translate_simple_effect("pet PORING, 1;"))
+
     def test_specialeffect_area_on_attached_player(self):
         self.assertEqual(
             translate_simple_effect("specialeffect(EF_CLOAKING, AREA, playerattached());"),

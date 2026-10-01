@@ -51710,7 +51710,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "makes the pet catching cursor appear for pet ID PORING",
       "type": "IT_USABLE",
       "buy": 1000,
       "weight": 50
@@ -51783,7 +51784,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "makes the pet catching cursor appear for pet ID DROPS",
       "type": "IT_USABLE",
       "buy": 1500,
       "weight": 50
@@ -51870,7 +51872,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "makes the pet catching cursor appear for pet ID POPORING",
       "type": "IT_USABLE",
       "buy": 20,
       "weight": 50
@@ -51957,7 +51960,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "makes the pet catching cursor appear for pet ID LUNATIC",
       "type": "IT_USABLE",
       "buy": 2500,
       "weight": 50
@@ -52030,7 +52034,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "makes the pet catching cursor appear for pet ID PICKY",
       "type": "IT_USABLE",
       "buy": 4000,
       "weight": 50
@@ -52110,7 +52115,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "makes the pet catching cursor appear for pet ID CHONCHON",
       "type": "IT_USABLE",
       "buy": 2500,
       "weight": 50
@@ -52197,7 +52203,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "makes the pet catching cursor appear for pet ID STEEL_CHONCHON",
       "type": "IT_USABLE",
       "buy": 100,
       "weight": 50
@@ -52263,7 +52270,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "makes the pet catching cursor appear for pet ID HUNTER_FLY",
       "type": "IT_USABLE",
       "buy": 1500,
       "weight": 50
@@ -52336,7 +52344,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "makes the pet catching cursor appear for pet ID SAVAGE",
       "type": "IT_USABLE",
       "buy": 7000,
       "weight": 50
@@ -52423,7 +52432,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "makes the pet catching cursor appear for pet ID DESERT_WOLF_B",
       "type": "IT_USABLE",
       "buy": 10000,
       "weight": 50
@@ -52510,7 +52520,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "makes the pet catching cursor appear for pet ID ROCKER",
       "type": "IT_USABLE",
       "buy": 300,
       "weight": 50
@@ -52625,7 +52636,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "makes the pet catching cursor appear for pet ID SPORE",
       "type": "IT_USABLE",
       "buy": 10,
       "weight": 50
@@ -52719,7 +52731,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "makes the pet catching cursor appear for pet ID POISON_SPORE",
       "type": "IT_USABLE",
       "buy": 20,
       "weight": 50
@@ -52799,7 +52812,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "makes the pet catching cursor appear for pet ID PECOPECO",
       "type": "IT_USABLE",
       "buy": 5000,
       "weight": 50
@@ -52865,7 +52879,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "makes the pet catching cursor appear for pet ID SMOKIE",
       "type": "IT_USABLE",
       "buy": 20,
       "weight": 50
@@ -52945,7 +52960,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "makes the pet catching cursor appear for pet ID YOYO",
       "type": "IT_USABLE",
       "buy": 20,
       "weight": 50
@@ -53003,7 +53019,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "makes the pet catching cursor appear for pet ID ORK_WARRIOR",
       "type": "IT_USABLE",
       "buy": 300,
       "weight": 50
@@ -53075,7 +53092,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "makes the pet catching cursor appear for pet ID MUNAK",
       "type": "IT_USABLE",
       "buy": 100,
       "weight": 50
@@ -53169,7 +53187,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "makes the pet catching cursor appear for pet ID DOKEBI",
       "type": "IT_USABLE",
       "buy": 350,
       "weight": 50
@@ -53263,7 +53282,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "makes the pet catching cursor appear for pet ID SOHEE",
       "type": "IT_USABLE",
       "buy": 12000,
       "weight": 50
@@ -53357,7 +53377,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "makes the pet catching cursor appear for pet ID ISIS",
       "type": "IT_USABLE",
       "buy": 18000,
       "weight": 50
@@ -53437,7 +53458,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "makes the pet catching cursor appear for pet ID PETIT",
       "type": "IT_USABLE",
       "buy": 3000,
       "weight": 50
@@ -53531,7 +53553,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "makes the pet catching cursor appear for pet ID DEVIRUCHI",
       "type": "IT_USABLE",
       "buy": 100,
       "weight": 50
@@ -53618,7 +53641,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "makes the pet catching cursor appear for pet ID BAPHOMET_",
       "type": "IT_USABLE",
       "buy": 1800,
       "weight": 50
@@ -56692,7 +56716,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "makes the pet catching cursor appear for pet ID BONGUN",
       "type": "IT_USABLE",
       "buy": 500,
       "weight": 50
@@ -56751,7 +56776,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "makes the pet catching cursor appear for pet ID ZHERLTHSH",
       "type": "IT_USABLE",
       "buy": 20000,
       "weight": 50
@@ -56824,7 +56850,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "makes the pet catching cursor appear for pet ID ALICE",
       "type": "IT_USABLE",
       "buy": 20000,
       "weight": 50
@@ -307987,7 +308014,8 @@
           "source_record": "db/re/mob_db.conf:Id=1247"
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "makes the pet catching cursor appear for pet ID GOBLIN_XMAS",
       "type": "IT_USABLE",
       "buy": 20,
       "weight": 50
@@ -310744,7 +310772,8 @@
         "record": "Id=12340"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "makes the pet catching cursor appear for pet ID EVENT_RICECAKE",
       "type": "IT_USABLE",
       "weight": 10
     },
@@ -311405,7 +311434,8 @@
         "record": "Id=12357"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "makes the pet catching cursor appear for pet ID BACSOJIN_",
       "type": "IT_USABLE",
       "buy": 20,
       "weight": 50
@@ -311419,7 +311449,8 @@
         "record": "Id=12358"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "makes the pet catching cursor appear for pet ID CIVIL_SERVANT",
       "type": "IT_USABLE",
       "buy": 20,
       "weight": 50
@@ -311433,7 +311464,8 @@
         "record": "Id=12359"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "makes the pet catching cursor appear for pet ID LEAF_CAT",
       "type": "IT_USABLE",
       "buy": 20,
       "weight": 50
@@ -311447,7 +311479,8 @@
         "record": "Id=12360"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "makes the pet catching cursor appear for pet ID LOLI_RURI",
       "type": "IT_USABLE",
       "buy": 20,
       "weight": 50
@@ -311461,7 +311494,8 @@
         "record": "Id=12361"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "makes the pet catching cursor appear for pet ID MARIONETTE",
       "type": "IT_USABLE"
     },
     {
@@ -311473,7 +311507,8 @@
         "record": "Id=12362"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "makes the pet catching cursor appear for pet ID SHINOBI",
       "type": "IT_USABLE",
       "buy": 20,
       "weight": 50
@@ -311487,7 +311522,8 @@
         "record": "Id=12363"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "makes the pet catching cursor appear for pet ID WHISPER",
       "type": "IT_USABLE"
     },
     {
@@ -311499,7 +311535,8 @@
         "record": "Id=12364"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "makes the pet catching cursor appear for pet ID GOBLIN_LEADER",
       "type": "IT_USABLE",
       "buy": 20,
       "weight": 50
@@ -311513,7 +311550,8 @@
         "record": "Id=12365"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "makes the pet catching cursor appear for pet ID WICKED_NYMPH",
       "type": "IT_USABLE",
       "buy": 20,
       "weight": 50
@@ -311527,7 +311565,8 @@
         "record": "Id=12366"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "makes the pet catching cursor appear for pet ID MIYABI_NINGYO",
       "type": "IT_USABLE",
       "buy": 20,
       "weight": 50
@@ -311541,7 +311580,8 @@
         "record": "Id=12367"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "makes the pet catching cursor appear for pet ID DULLAHAN",
       "type": "IT_USABLE",
       "buy": 20,
       "weight": 50
@@ -311555,7 +311595,8 @@
         "record": "Id=12368"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "makes the pet catching cursor appear for pet ID MEDUSA",
       "type": "IT_USABLE",
       "buy": 20,
       "weight": 50
@@ -311569,7 +311610,8 @@
         "record": "Id=12369"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "makes the pet catching cursor appear for pet ID STONE_SHOOTER",
       "type": "IT_USABLE",
       "buy": 20,
       "weight": 50
@@ -311583,7 +311625,8 @@
         "record": "Id=12370"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "makes the pet catching cursor appear for pet ID INCUBUS",
       "type": "IT_USABLE"
     },
     {
@@ -311595,7 +311638,8 @@
         "record": "Id=12371"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "makes the pet catching cursor appear for pet ID GOLEM",
       "type": "IT_USABLE",
       "buy": 20,
       "weight": 50
@@ -311609,7 +311653,8 @@
         "record": "Id=12372"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "makes the pet catching cursor appear for pet ID NIGHTMARE_TERROR",
       "type": "IT_USABLE",
       "buy": 20,
       "weight": 50
@@ -311631,7 +311676,8 @@
           "source_record": "db/re/mob_db.conf:Id=1370"
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "makes the pet catching cursor appear for pet ID SUCCUBUS",
       "type": "IT_USABLE",
       "buy": 20,
       "weight": 10
@@ -311669,7 +311715,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "makes the pet catching cursor appear for pet ID IMP",
       "type": "IT_USABLE",
       "buy": 20,
       "weight": 50
@@ -312200,7 +312247,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "makes the pet catching cursor appear for pet ID CHUNG_E",
       "type": "IT_USABLE",
       "buy": 20,
       "weight": 50
@@ -312424,7 +312472,8 @@
         "record": "Id=12408"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "makes the pet catching cursor appear for pet ID E_HYDRA",
       "type": "IT_USABLE"
     },
     {
@@ -327684,7 +327733,8 @@
         "record": "Id=12699"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "makes the pet catching cursor appear for pet ID TIKBALANG",
       "type": "IT_USABLE",
       "buy": 20,
       "weight": 50
@@ -332882,7 +332932,8 @@
         "record": "Id=12846"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "makes the pet catching cursor appear for pet ID LITTLE_PORING",
       "type": "IT_USABLE",
       "buy": 10,
       "weight": 50
@@ -359659,7 +359710,8 @@
         "record": "Id=14569"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "makes the pet catching cursor appear for pet ID GOBLIN_1",
       "type": "IT_USABLE",
       "weight": 10
     },
@@ -359672,7 +359724,8 @@
         "record": "Id=14570"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "makes the pet catching cursor appear for pet ID GOBLIN_2",
       "type": "IT_USABLE",
       "weight": 10
     },
@@ -359685,7 +359738,8 @@
         "record": "Id=14571"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "makes the pet catching cursor appear for pet ID GOBLIN_4",
       "type": "IT_USABLE",
       "weight": 10
     },
@@ -359698,7 +359752,8 @@
         "record": "Id=14572"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "makes the pet catching cursor appear for pet ID DELETER_",
       "type": "IT_USABLE",
       "weight": 10
     },
@@ -359711,7 +359766,8 @@
         "record": "Id=14573"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "makes the pet catching cursor appear for pet ID DIABOLIC",
       "type": "IT_USABLE",
       "weight": 10
     },
@@ -359724,7 +359780,8 @@
         "record": "Id=14574"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "makes the pet catching cursor appear for pet ID WANDER_MAN",
       "type": "IT_USABLE",
       "weight": 10
     },
@@ -399190,7 +399247,8 @@
         "record": "Id=23187"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "makes the pet catching cursor appear for pet ID NINE_TAIL",
       "type": "IT_USABLE"
     },
     {
@@ -399202,7 +399260,8 @@
         "record": "Id=23188"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "makes the pet catching cursor appear for pet ID GREMLIN",
       "type": "IT_USABLE"
     },
     {
@@ -399214,7 +399273,8 @@
         "record": "Id=23189"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "makes the pet catching cursor appear for pet ID TEDDY_BEAR",
       "type": "IT_USABLE"
     },
     {
