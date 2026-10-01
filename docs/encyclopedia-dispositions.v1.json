@@ -12,7 +12,7 @@
     "E2_verified": 236,
     "E3_unknown": 973,
     "E4_unknown": 213,
-    "E5_unknown": 613
+    "E5_unknown": 616
   },
   "entries": [
     {
@@ -119729,6 +119729,87 @@
           ],
           "required_source_literals": [
             "changequest 8225,8226;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_8254_npc_re_jobs_3_1_ranger_txt_128",
+      "unit": "E5-chain-8254",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8254
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 8254; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-1/ranger.txt",
+          "lines": [
+            128
+          ],
+          "required_source_literals": [
+            "setquest 8254;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_8254_npc_re_jobs_3_1_ranger_txt_162",
+      "unit": "E5-chain-8254",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8254
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 8254; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-1/ranger.txt",
+          "lines": [
+            162
+          ],
+          "required_source_literals": [
+            "changequest 8254,8255;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_8254_npc_re_jobs_3_1_ranger_txt_211",
+      "unit": "E5-chain-8254",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8255
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 8255; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-1/ranger.txt",
+          "lines": [
+            211
+          ],
+          "required_source_literals": [
+            "changequest 8255,8256;"
           ]
         }
       ],
