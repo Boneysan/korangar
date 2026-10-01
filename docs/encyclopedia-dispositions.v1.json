@@ -12,7 +12,7 @@
     "E2_verified": 236,
     "E3_unknown": 973,
     "E4_unknown": 213,
-    "E5_unknown": 2186
+    "E5_unknown": 2195
   },
   "entries": [
     {
@@ -147674,6 +147674,249 @@
           ],
           "required_source_literals": [
             "erasequest 7099;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_7103_npc_re_jobs_3_1_guillotine_cross_txt_2058",
+      "unit": "E5-chain-7103",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7103
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 7103; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-1/guillotine_cross.txt",
+          "lines": [
+            2058
+          ],
+          "required_source_literals": [
+            "erasequest 7103;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_7103_npc_re_jobs_3_1_guillotine_cross_txt_2059",
+      "unit": "E5-chain-7103",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7104
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 7104; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-1/guillotine_cross.txt",
+          "lines": [
+            2059
+          ],
+          "required_source_literals": [
+            "setquest 7104;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_7103_npc_re_jobs_3_1_guillotine_cross_txt_2204",
+      "unit": "E5-chain-7103",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7104
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 7104; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-1/guillotine_cross.txt",
+          "lines": [
+            2204
+          ],
+          "required_source_literals": [
+            "if (questprogress(7104)) erasequest 7104;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_7103_npc_re_jobs_3_1_guillotine_cross_txt_2205",
+      "unit": "E5-chain-7103",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7105
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 7105; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-1/guillotine_cross.txt",
+          "lines": [
+            2205
+          ],
+          "required_source_literals": [
+            "if (questprogress(7105)) erasequest 7105;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_7103_npc_re_jobs_3_1_guillotine_cross_txt_2207",
+      "unit": "E5-chain-7103",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7106
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 7106; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-1/guillotine_cross.txt",
+          "lines": [
+            2207
+          ],
+          "required_source_literals": [
+            "setquest 7106;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_7103_npc_re_jobs_3_1_guillotine_cross_txt_2214",
+      "unit": "E5-chain-7103",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7104
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 7104; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-1/guillotine_cross.txt",
+          "lines": [
+            2214
+          ],
+          "required_source_literals": [
+            "if (questprogress(7104)) erasequest 7104;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_7103_npc_re_jobs_3_1_guillotine_cross_txt_2215",
+      "unit": "E5-chain-7103",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7105
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 7105; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-1/guillotine_cross.txt",
+          "lines": [
+            2215
+          ],
+          "required_source_literals": [
+            "if (questprogress(7105)) erasequest 7105;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_7103_npc_re_jobs_3_1_guillotine_cross_txt_2216",
+      "unit": "E5-chain-7103",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7105
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 7105; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-1/guillotine_cross.txt",
+          "lines": [
+            2216
+          ],
+          "required_source_literals": [
+            "setquest 7105;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_7103_npc_re_jobs_3_1_guillotine_cross_txt_2338",
+      "unit": "E5-chain-7103",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7106
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 7106; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-1/guillotine_cross.txt",
+          "lines": [
+            2338
+          ],
+          "required_source_literals": [
+            "changequest 7106,7107;"
           ]
         }
       ],
