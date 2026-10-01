@@ -240324,6 +240324,34 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e6_boss_2476_boss",
+      "unit": "E6-boss-2476",
+      "package": "E6",
+      "subject": {
+        "kind": "monster",
+        "name": "MG_AMDARAIS",
+        "ids": [
+          2476
+        ]
+      },
+      "result": "unknown",
+      "statement": "Monster 2476 (MG_AMDARAIS) has configured database rows in the packet; this record does not enumerate each skill.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/mob_db.conf",
+          "lines": [
+            63960
+          ],
+          "required_source_literals": [
+            "{"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
