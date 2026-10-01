@@ -94238,7 +94238,7 @@
       "package": "E5",
       "kind": "e5_quest",
       "tier": "strong",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "quest_ids": [
@@ -94566,7 +94566,22 @@
       ],
       "size_lines": 2897,
       "reason": "28 quest ID(s) set or checked by 30 NPC block(s)",
-      "history": []
+      "history": [
+        "2026-10-01T01:20:43Z activated",
+        "2026-10-01T01:20:45Z validated",
+        "2026-10-01T01:20:45Z verified: 0 claims supported",
+        "2026-10-01T01:21:09Z accepted",
+        "2026-10-01T01:21:10Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "7f0e78469e24f19b97455ba33001e39607ab9096db1abd53553ce5c792f1c51f",
+      "accepted_files": [
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E5-chain-2143",
