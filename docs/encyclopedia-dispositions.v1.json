@@ -14,7 +14,7 @@
     "E4_unknown": 213,
     "E5_absent": 644,
     "E5_unknown": 3383,
-    "E6_configured_estimate": 12,
+    "E6_configured_estimate": 13,
     "E6_unknown": 83
   },
   "entries": [
@@ -197370,6 +197370,39 @@
             "disabled_skills: {",
             "disabled_items: {",
             "/* cashshop disabled in pvp maps */",
+            "mapflags: ("
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e6_zone_sealed_shrine_zone",
+      "unit": "E6-zone-sealed-shrine",
+      "package": "E6",
+      "subject": {
+        "kind": "zone",
+        "name": "Sealed Shrine"
+      },
+      "result": "configured_estimate",
+      "statement": "Zone Sealed Shrine sets the quoted configured restrictions; maps that use the zone are not claimed.",
+      "conditions": [
+        "Configured line: name: \"Sealed Shrine\"",
+        "Configured line: disabled_skills: {",
+        "Configured line: mapflags: ("
+      ],
+      "sources": [
+        {
+          "path": "db/re/map_zone_db.conf",
+          "lines": [
+            463,
+            465,
+            475
+          ],
+          "required_source_literals": [
+            "name: \"Sealed Shrine\"",
+            "disabled_skills: {",
             "mapflags: ("
           ]
         }
