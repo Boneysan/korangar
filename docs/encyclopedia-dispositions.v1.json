@@ -12,7 +12,7 @@
     "E2_verified": 236,
     "E3_unknown": 973,
     "E4_unknown": 213,
-    "E5_unknown": 609
+    "E5_unknown": 610
   },
   "entries": [
     {
@@ -104312,6 +104312,33 @@
           ],
           "required_source_literals": [
             "changequest 10095,10096;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_10096_npc_re_jobs_3_1_mechanic_txt_622",
+      "unit": "E5-chain-10096",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          10096
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 10096; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-1/mechanic.txt",
+          "lines": [
+            622
+          ],
+          "required_source_literals": [
+            "changequest 10096,10097;"
           ]
         }
       ],
