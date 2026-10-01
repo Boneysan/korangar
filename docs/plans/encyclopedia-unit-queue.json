@@ -141333,7 +141333,7 @@
       "package": "E3",
       "kind": "e3_translator",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "key": "bonus bDefRatioAtkRace",
@@ -141394,7 +141394,24 @@
       ],
       "size_lines": 34,
       "reason": "3 item script(s) first stop at documented `bonus bDefRatioAtkRace`",
-      "history": []
+      "history": [
+        "2026-10-01T06:15:39Z activated",
+        "2026-10-01T06:15:40Z validated",
+        "2026-10-01T06:15:40Z verified: 1 claims supported",
+        "2026-10-01T06:16:04Z accepted",
+        "2026-10-01T06:16:04Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "fed7670fce2a5848df1dbac369decdba4e07501a7c4a25f690bf2b466e91c526",
+      "accepted_files": [
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/export_item_reference.py",
+        "tools/tests/test_export_item_effect_phrases.py"
+      ],
+      "accepted_on": "2026-10-01",
+      "commit": "committed"
     },
     {
       "id": "E3-translate-bonus2-bspregenrate",
