@@ -12,7 +12,7 @@
     "E2_verified": 236,
     "E3_unknown": 973,
     "E4_unknown": 213,
-    "E5_unknown": 618
+    "E5_unknown": 620
   },
   "entries": [
     {
@@ -113573,6 +113573,60 @@
           ],
           "required_source_literals": [
             "erasequest(3136);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_3200_npc_re_jobs_3_1_rune_knight_txt_102",
+      "unit": "E5-chain-3200",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          3200
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 3200; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-1/rune_knight.txt",
+          "lines": [
+            102
+          ],
+          "required_source_literals": [
+            "setquest 3200;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_3200_npc_re_jobs_3_1_rune_knight_txt_237",
+      "unit": "E5-chain-3200",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          3200
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 3200; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-1/rune_knight.txt",
+          "lines": [
+            237
+          ],
+          "required_source_literals": [
+            "changequest 3200,3201;"
           ]
         }
       ],
