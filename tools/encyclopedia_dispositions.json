@@ -172641,6 +172641,168 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2086_npc_quests_quests_lighthalzen_txt_3384",
+      "unit": "E5-chain-2086",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2086
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 2086; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_lighthalzen.txt",
+          "lines": [
+            3384
+          ],
+          "required_source_literals": [
+            "setquest 2086;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2086_npc_quests_quests_lighthalzen_txt_3424",
+      "unit": "E5-chain-2086",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2086
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 2086; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_lighthalzen.txt",
+          "lines": [
+            3424
+          ],
+          "required_source_literals": [
+            "setquest 2086;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2086_npc_quests_quests_lighthalzen_txt_3464",
+      "unit": "E5-chain-2086",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2086
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 2086; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_lighthalzen.txt",
+          "lines": [
+            3464
+          ],
+          "required_source_literals": [
+            "setquest 2086;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2086_npc_quests_quests_lighthalzen_txt_4463",
+      "unit": "E5-chain-2086",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2086
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 2086; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_lighthalzen.txt",
+          "lines": [
+            4463
+          ],
+          "required_source_literals": [
+            "changequest 2086,2087;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2086_npc_quests_quests_lighthalzen_txt_4520",
+      "unit": "E5-chain-2086",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2091
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 2091; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_lighthalzen.txt",
+          "lines": [
+            4520
+          ],
+          "required_source_literals": [
+            "changequest 2091,2092;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_2086_npc_quests_quests_lighthalzen_txt_4583",
+      "unit": "E5-chain-2086",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          2092
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 2092; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_lighthalzen.txt",
+          "lines": [
+            4583
+          ],
+          "required_source_literals": [
+            "changequest 2092,2093;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
