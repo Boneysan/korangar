@@ -150744,6 +150744,87 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_60354_npc_re_quests_quests_brasilis_txt_2597",
+      "unit": "E5-chain-60354",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          60354
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 60354; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_brasilis.txt",
+          "lines": [
+            2597
+          ],
+          "required_source_literals": [
+            "changequest 60354,2208;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_60354_npc_re_quests_quests_brasilis_txt_2610",
+      "unit": "E5-chain-60354",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          60354
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 60354; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_brasilis.txt",
+          "lines": [
+            2610
+          ],
+          "required_source_literals": [
+            "changequest 60354,60355;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_60354_npc_re_quests_quests_brasilis_txt_2620",
+      "unit": "E5-chain-60354",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          60354
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 60354; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_brasilis.txt",
+          "lines": [
+            2620
+          ],
+          "required_source_literals": [
+            "changequest 60354,2208;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
