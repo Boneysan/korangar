@@ -149286,6 +149286,330 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_13046_npc_re_quests_eden_100_110_txt_1065",
+      "unit": "E5-chain-13046",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          13047
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 13047; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/100-110.txt",
+          "lines": [
+            1065
+          ],
+          "required_source_literals": [
+            "erasequest 13047;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_13046_npc_re_quests_eden_100_110_txt_1067",
+      "unit": "E5-chain-13046",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          13049
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 13049; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/100-110.txt",
+          "lines": [
+            1067
+          ],
+          "required_source_literals": [
+            "erasequest 13049;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_13046_npc_re_quests_eden_100_110_txt_1069",
+      "unit": "E5-chain-13046",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          13048
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 13048; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/100-110.txt",
+          "lines": [
+            1069
+          ],
+          "required_source_literals": [
+            "erasequest 13048;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_13046_npc_re_quests_eden_100_110_txt_1071",
+      "unit": "E5-chain-13046",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          13046
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 13046; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/100-110.txt",
+          "lines": [
+            1071
+          ],
+          "required_source_literals": [
+            "erasequest 13046;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_13046_npc_re_quests_eden_100_110_txt_1140",
+      "unit": "E5-chain-13046",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          13047
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 13047; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/100-110.txt",
+          "lines": [
+            1140
+          ],
+          "required_source_literals": [
+            "erasequest 13047;// Tendrilion Request Timer"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_13046_npc_re_quests_eden_100_110_txt_1149",
+      "unit": "E5-chain-13046",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          13048
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 13048; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/100-110.txt",
+          "lines": [
+            1149
+          ],
+          "required_source_literals": [
+            "erasequest 13048;// Tendrilion Request"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_13046_npc_re_quests_eden_100_110_txt_1150",
+      "unit": "E5-chain-13046",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          13049
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 13049; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/100-110.txt",
+          "lines": [
+            1150
+          ],
+          "required_source_literals": [
+            "setquest 13049;// Tendrilion Request Timer"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_13046_npc_re_quests_eden_100_110_txt_1169",
+      "unit": "E5-chain-13046",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          13049
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 13049; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/100-110.txt",
+          "lines": [
+            1169
+          ],
+          "required_source_literals": [
+            "erasequest 13049;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_13046_npc_re_quests_eden_100_110_txt_1170",
+      "unit": "E5-chain-13046",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          13048
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 13048; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/100-110.txt",
+          "lines": [
+            1170
+          ],
+          "required_source_literals": [
+            "setquest 13048;// Tendrilion Request"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_13046_npc_re_quests_eden_100_110_txt_1179",
+      "unit": "E5-chain-13046",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          13046
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 13046; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/100-110.txt",
+          "lines": [
+            1179
+          ],
+          "required_source_literals": [
+            "completequest 13046;// Tendrilion Request"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_13046_npc_re_quests_eden_100_110_txt_1180",
+      "unit": "E5-chain-13046",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          13047
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 13047; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/100-110.txt",
+          "lines": [
+            1180
+          ],
+          "required_source_literals": [
+            "setquest 13047;// Tendrilion Request Timer"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_13046_npc_re_quests_eden_100_110_txt_1267",
+      "unit": "E5-chain-13046",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          13046
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 13046; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/100-110.txt",
+          "lines": [
+            1267
+          ],
+          "required_source_literals": [
+            "setquest 13046;// Tendrilion Request"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
