@@ -12,7 +12,7 @@
     "E2_verified": 236,
     "E3_unknown": 973,
     "E4_unknown": 213,
-    "E5_unknown": 2568
+    "E5_unknown": 2584
   },
   "entries": [
     {
@@ -146891,6 +146891,438 @@
           ],
           "required_source_literals": [
             "erasequest 5004;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_5035_npc_re_quests_quests_dewata_txt_1009",
+      "unit": "E5-chain-5035",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          5045
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 5045; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_dewata.txt",
+          "lines": [
+            1009
+          ],
+          "required_source_literals": [
+            "setquest 5045;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_5035_npc_re_quests_quests_dewata_txt_1043",
+      "unit": "E5-chain-5035",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          5044
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 5044; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_dewata.txt",
+          "lines": [
+            1043
+          ],
+          "required_source_literals": [
+            "setquest 5044;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_5035_npc_re_quests_quests_dewata_txt_1139",
+      "unit": "E5-chain-5035",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          5035
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 5035; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_dewata.txt",
+          "lines": [
+            1139
+          ],
+          "required_source_literals": [
+            "changequest 5035,5036;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_5035_npc_re_quests_quests_dewata_txt_1183",
+      "unit": "E5-chain-5035",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          5037
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 5037; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_dewata.txt",
+          "lines": [
+            1183
+          ],
+          "required_source_literals": [
+            "changequest 5037,5038;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_5035_npc_re_quests_quests_dewata_txt_1222",
+      "unit": "E5-chain-5035",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          5039
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 5039; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_dewata.txt",
+          "lines": [
+            1222
+          ],
+          "required_source_literals": [
+            "changequest 5039,5040;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_5035_npc_re_quests_quests_dewata_txt_1244",
+      "unit": "E5-chain-5035",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          5041
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 5041; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_dewata.txt",
+          "lines": [
+            1244
+          ],
+          "required_source_literals": [
+            "changequest 5041,5042;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_5035_npc_re_quests_quests_dewata_txt_1302",
+      "unit": "E5-chain-5035",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          5045
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 5045; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_dewata.txt",
+          "lines": [
+            1302
+          ],
+          "required_source_literals": [
+            "changequest 5045,5046+(.@quest*2);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_5035_npc_re_quests_quests_dewata_txt_1398",
+      "unit": "E5-chain-5035",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          5036
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 5036; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_dewata.txt",
+          "lines": [
+            1398
+          ],
+          "required_source_literals": [
+            "changequest 5036,5037;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_5035_npc_re_quests_quests_dewata_txt_1452",
+      "unit": "E5-chain-5035",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          5038
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 5038; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_dewata.txt",
+          "lines": [
+            1452
+          ],
+          "required_source_literals": [
+            "changequest 5038,5039;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_5035_npc_re_quests_quests_dewata_txt_785",
+      "unit": "E5-chain-5035",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          5044
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 5044; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_dewata.txt",
+          "lines": [
+            785
+          ],
+          "required_source_literals": [
+            "erasequest 5044;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_5035_npc_re_quests_quests_dewata_txt_787",
+      "unit": "E5-chain-5035",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          5044
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 5044; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_dewata.txt",
+          "lines": [
+            787
+          ],
+          "required_source_literals": [
+            "completequest 5044;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_5035_npc_re_quests_quests_dewata_txt_788",
+      "unit": "E5-chain-5035",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          5044
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 5044; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_dewata.txt",
+          "lines": [
+            788
+          ],
+          "required_source_literals": [
+            "erasequest 5044;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_5035_npc_re_quests_quests_dewata_txt_868",
+      "unit": "E5-chain-5035",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          5035
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 5035; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_dewata.txt",
+          "lines": [
+            868
+          ],
+          "required_source_literals": [
+            "setquest 5035;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_5035_npc_re_quests_quests_dewata_txt_908",
+      "unit": "E5-chain-5035",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          5040
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 5040; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_dewata.txt",
+          "lines": [
+            908
+          ],
+          "required_source_literals": [
+            "changequest 5040,5041;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_5035_npc_re_quests_quests_dewata_txt_932",
+      "unit": "E5-chain-5035",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          5042
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 5042; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_dewata.txt",
+          "lines": [
+            932
+          ],
+          "required_source_literals": [
+            "changequest 5042,5043;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_5035_npc_re_quests_quests_dewata_txt_980",
+      "unit": "E5-chain-5035",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          5043
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 5043; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_dewata.txt",
+          "lines": [
+            980
+          ],
+          "required_source_literals": [
+            "changequest 5043,5044;"
           ]
         }
       ],
