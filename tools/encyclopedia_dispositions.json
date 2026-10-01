@@ -147639,6 +147639,33 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_11152_npc_re_jobs_3_2_minstrel_txt_1671",
+      "unit": "E5-chain-11152",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          11152
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 11152; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-2/minstrel.txt",
+          "lines": [
+            1671
+          ],
+          "required_source_literals": [
+            "changequest 11152,11153;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
