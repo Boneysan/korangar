@@ -12,7 +12,7 @@
     "E2_verified": 236,
     "E3_unknown": 973,
     "E4_unknown": 213,
-    "E5_unknown": 1895
+    "E5_unknown": 1898
   },
   "entries": [
     {
@@ -141599,6 +141599,87 @@
           ],
           "required_source_literals": [
             "erasequest 7047;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_7048_npc_quests_thana_quest_txt_1038",
+      "unit": "E5-chain-7048",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7048
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 7048; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/thana_quest.txt",
+          "lines": [
+            1038
+          ],
+          "required_source_literals": [
+            "changequest 7048,7049;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_7048_npc_quests_thana_quest_txt_843",
+      "unit": "E5-chain-7048",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7053
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 7053; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/thana_quest.txt",
+          "lines": [
+            843
+          ],
+          "required_source_literals": [
+            "completequest 7053;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_7048_npc_quests_thana_quest_txt_908",
+      "unit": "E5-chain-7048",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7048
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 7048; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/thana_quest.txt",
+          "lines": [
+            908
+          ],
+          "required_source_literals": [
+            "setquest 7048;"
           ]
         }
       ],
