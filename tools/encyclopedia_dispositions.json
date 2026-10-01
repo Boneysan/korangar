@@ -148233,6 +148233,33 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_7178_npc_re_jobs_3_2_shadow_chaser_txt_2261",
+      "unit": "E5-chain-7178",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7178
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 7178; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-2/shadow_chaser.txt",
+          "lines": [
+            2261
+          ],
+          "required_source_literals": [
+            "changequest 7178,7179;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
