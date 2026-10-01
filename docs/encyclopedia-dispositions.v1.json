@@ -12,7 +12,7 @@
     "E2_verified": 236,
     "E3_unknown": 973,
     "E4_unknown": 213,
-    "E5_unknown": 680
+    "E5_unknown": 681
   },
   "entries": [
     {
@@ -107714,6 +107714,33 @@
           ],
           "required_source_literals": [
             "changequest 12093,12094;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_12094_npc_re_jobs_3_2_royal_guard_txt_448",
+      "unit": "E5-chain-12094",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          12094
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 12094; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-2/royal_guard.txt",
+          "lines": [
+            448
+          ],
+          "required_source_literals": [
+            "erasequest 12094;"
           ]
         }
       ],
