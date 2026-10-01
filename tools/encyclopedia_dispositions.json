@@ -160842,6 +160842,60 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_7004_npc_jobs_2_2_dancer_txt_854",
+      "unit": "E5-chain-7004",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7004
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 7004; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/dancer.txt",
+          "lines": [
+            854
+          ],
+          "required_source_literals": [
+            "changequest 7004,7005;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_7004_npc_jobs_2_2_dancer_txt_894",
+      "unit": "E5-chain-7004",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7006
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 7006; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/jobs/2-2/dancer.txt",
+          "lines": [
+            894
+          ],
+          "required_source_literals": [
+            "completequest 7006;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
