@@ -12,7 +12,7 @@
     "E2_verified": 236,
     "E3_unknown": 973,
     "E4_unknown": 213,
-    "E5_unknown": 1605
+    "E5_unknown": 1618
   },
   "entries": [
     {
@@ -111818,6 +111818,357 @@
           ],
           "required_source_literals": [
             "completequest 12014;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_12015_npc_quests_quests_lighthalzen_txt_6875",
+      "unit": "E5-chain-12015",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          12015
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 12015; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_lighthalzen.txt",
+          "lines": [
+            6875
+          ],
+          "required_source_literals": [
+            "changequest 12015,12016;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_12015_npc_quests_quests_lighthalzen_txt_6926",
+      "unit": "E5-chain-12015",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          12016
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 12016; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_lighthalzen.txt",
+          "lines": [
+            6926
+          ],
+          "required_source_literals": [
+            "changequest 12016,12017;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_12015_npc_quests_quests_lighthalzen_txt_7027",
+      "unit": "E5-chain-12015",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          12028
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 12028; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_lighthalzen.txt",
+          "lines": [
+            7027
+          ],
+          "required_source_literals": [
+            "completequest 12028;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_12015_npc_quests_quests_lighthalzen_txt_7129",
+      "unit": "E5-chain-12015",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          12015
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 12015; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_lighthalzen.txt",
+          "lines": [
+            7129
+          ],
+          "required_source_literals": [
+            "setquest 12015;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_12015_npc_quests_quests_lighthalzen_txt_7911",
+      "unit": "E5-chain-12015",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          12018
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 12018; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_lighthalzen.txt",
+          "lines": [
+            7911
+          ],
+          "required_source_literals": [
+            "changequest 12018,12019;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_12015_npc_quests_quests_lighthalzen_txt_8012",
+      "unit": "E5-chain-12015",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          12022
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 12022; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_lighthalzen.txt",
+          "lines": [
+            8012
+          ],
+          "required_source_literals": [
+            "changequest 12022,12023;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_12015_npc_quests_quests_lighthalzen_txt_8076",
+      "unit": "E5-chain-12015",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          12023
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 12023; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_lighthalzen.txt",
+          "lines": [
+            8076
+          ],
+          "required_source_literals": [
+            "completequest 12023;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_12015_npc_quests_quests_lighthalzen_txt_8077",
+      "unit": "E5-chain-12015",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          12024
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 12024; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_lighthalzen.txt",
+          "lines": [
+            8077
+          ],
+          "required_source_literals": [
+            "setquest 12024;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_12015_npc_quests_quests_lighthalzen_txt_8234",
+      "unit": "E5-chain-12015",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          12023
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 12023; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_lighthalzen.txt",
+          "lines": [
+            8234
+          ],
+          "required_source_literals": [
+            "completequest 12023;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_12015_npc_quests_quests_lighthalzen_txt_8235",
+      "unit": "E5-chain-12015",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          12024
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 12024; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_lighthalzen.txt",
+          "lines": [
+            8235
+          ],
+          "required_source_literals": [
+            "setquest 12024;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_12015_npc_quests_quests_lighthalzen_txt_8509",
+      "unit": "E5-chain-12015",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          12028
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 12028; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_lighthalzen.txt",
+          "lines": [
+            8509
+          ],
+          "required_source_literals": [
+            "completequest 12028;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_12015_npc_quests_quests_lighthalzen_txt_9216",
+      "unit": "E5-chain-12015",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          12024
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 12024; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_lighthalzen.txt",
+          "lines": [
+            9216
+          ],
+          "required_source_literals": [
+            "changequest 12024,12025;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_12015_npc_quests_quests_lighthalzen_txt_9361",
+      "unit": "E5-chain-12015",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          12027
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 12027; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_lighthalzen.txt",
+          "lines": [
+            9361
+          ],
+          "required_source_literals": [
+            "changequest 12027,12028;"
           ]
         }
       ],
