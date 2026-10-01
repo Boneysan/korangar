@@ -147315,6 +147315,60 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_11140_npc_re_jobs_3_2_minstrel_txt_411",
+      "unit": "E5-chain-11140",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          11140
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 11140; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-2/minstrel.txt",
+          "lines": [
+            411
+          ],
+          "required_source_literals": [
+            "changequest 11140,11141;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_11140_npc_re_jobs_3_2_minstrel_txt_496",
+      "unit": "E5-chain-11140",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          11142
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 11142; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-2/minstrel.txt",
+          "lines": [
+            496
+          ],
+          "required_source_literals": [
+            "changequest 11142,11143;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
