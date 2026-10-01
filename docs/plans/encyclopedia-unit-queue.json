@@ -142230,7 +142230,7 @@
       "package": "E3",
       "kind": "e3_translator",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "key": "bonus bNoGemStone",
@@ -142278,7 +142278,24 @@
       ],
       "size_lines": 33,
       "reason": "2 item script(s) first stop at documented `bonus bNoGemStone`",
-      "history": []
+      "history": [
+        "2026-10-01T06:20:12Z activated",
+        "2026-10-01T06:20:12Z validated",
+        "2026-10-01T06:20:12Z verified: 1 claims supported",
+        "2026-10-01T06:20:36Z accepted",
+        "2026-10-01T06:20:36Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "f93e8573a3f39fb456e35c88d5263df99b2db5356048a61bd24a4bf0ce19e7b0",
+      "accepted_files": [
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/export_item_reference.py",
+        "tools/tests/test_export_item_effect_phrases.py"
+      ],
+      "accepted_on": "2026-10-01",
+      "commit": "committed"
     },
     {
       "id": "E3-translate-bonus-bperfecthitrate",
