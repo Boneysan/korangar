@@ -140450,7 +140450,7 @@
       "package": "E3",
       "kind": "e3_translator",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "key": "bonus bMagicDamageReturn",
@@ -140524,7 +140524,24 @@
       ],
       "size_lines": 35,
       "reason": "4 item script(s) first stop at documented `bonus bMagicDamageReturn`",
-      "history": []
+      "history": [
+        "2026-10-01T06:11:56Z activated",
+        "2026-10-01T06:11:56Z validated",
+        "2026-10-01T06:11:56Z verified: 1 claims supported",
+        "2026-10-01T06:12:20Z accepted",
+        "2026-10-01T06:12:20Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "826162bb9b5f42a839e527aa0adbea78dcd1afad2cdc1e193a1835ba193a6945",
+      "accepted_files": [
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/export_item_reference.py",
+        "tools/tests/test_export_item_effect_phrases.py"
+      ],
+      "accepted_on": "2026-10-01",
+      "commit": "committed"
     },
     {
       "id": "E3-translate-bonus-bnoknockback",
