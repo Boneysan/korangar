@@ -145182,6 +145182,60 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_4197_npc_re_instances_octopus_cave_txt_85",
+      "unit": "E5-chain-4197",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          4197
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 4197; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/instances/octopus_cave.txt",
+          "lines": [
+            85
+          ],
+          "required_source_literals": [
+            "erasequest(4197);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_4197_npc_re_instances_octopus_cave_txt_137",
+      "unit": "E5-chain-4197",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          4197
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 4197; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/instances/octopus_cave.txt",
+          "lines": [
+            137
+          ],
+          "required_source_literals": [
+            "setquest(4197);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
