@@ -12,7 +12,7 @@
     "E2_verified": 236,
     "E3_unknown": 973,
     "E4_unknown": 213,
-    "E5_unknown": 543
+    "E5_unknown": 544
   },
   "entries": [
     {
@@ -114248,6 +114248,33 @@
           ],
           "required_source_literals": [
             "changequest 7049,7050;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_7050_npc_quests_thana_quest_txt_1271",
+      "unit": "E5-chain-7050",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7050
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 7050; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/thana_quest.txt",
+          "lines": [
+            1271
+          ],
+          "required_source_literals": [
+            "changequest 7050,7051;"
           ]
         }
       ],
