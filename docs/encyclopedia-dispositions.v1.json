@@ -12,7 +12,7 @@
     "E2_verified": 236,
     "E3_unknown": 973,
     "E4_unknown": 213,
-    "E5_unknown": 903
+    "E5_unknown": 907
   },
   "entries": [
     {
@@ -124427,6 +124427,114 @@
           ],
           "required_source_literals": [
             "erasequest 7388;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_7409_npc_re_quests_quests_malaya_txt_3276",
+      "unit": "E5-chain-7409",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7410
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 7410; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malaya.txt",
+          "lines": [
+            3276
+          ],
+          "required_source_literals": [
+            "setquest 7410;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_7409_npc_re_quests_quests_malaya_txt_3277",
+      "unit": "E5-chain-7409",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7409
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 7409; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malaya.txt",
+          "lines": [
+            3277
+          ],
+          "required_source_literals": [
+            "erasequest 7409;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_7409_npc_re_quests_quests_malaya_txt_3303",
+      "unit": "E5-chain-7409",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7410
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 7410; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malaya.txt",
+          "lines": [
+            3303
+          ],
+          "required_source_literals": [
+            "erasequest 7410;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_7409_npc_re_quests_quests_malaya_txt_3330",
+      "unit": "E5-chain-7409",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7409
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 7409; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malaya.txt",
+          "lines": [
+            3330
+          ],
+          "required_source_literals": [
+            "setquest 7409;"
           ]
         }
       ],
