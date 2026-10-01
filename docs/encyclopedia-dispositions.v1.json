@@ -12,7 +12,7 @@
     "E2_verified": 236,
     "E3_unknown": 973,
     "E4_unknown": 213,
-    "E5_unknown": 791
+    "E5_unknown": 794
   },
   "entries": [
     {
@@ -117623,6 +117623,87 @@
           ],
           "required_source_literals": [
             "changequest 4011,4012;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_4133_npc_re_quests_quests_brasilis_txt_2823",
+      "unit": "E5-chain-4133",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          4135
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 4135; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_brasilis.txt",
+          "lines": [
+            2823
+          ],
+          "required_source_literals": [
+            "if (questprogress(4135) == 2) erasequest 4135;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_4133_npc_re_quests_quests_brasilis_txt_2918",
+      "unit": "E5-chain-4133",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          4133
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 4133; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_brasilis.txt",
+          "lines": [
+            2918
+          ],
+          "required_source_literals": [
+            "setquest 4133;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_4133_npc_re_quests_quests_brasilis_txt_2998",
+      "unit": "E5-chain-4133",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          4133
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 4133; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_brasilis.txt",
+          "lines": [
+            2998
+          ],
+          "required_source_literals": [
+            "setquest 4133;"
           ]
         }
       ],
