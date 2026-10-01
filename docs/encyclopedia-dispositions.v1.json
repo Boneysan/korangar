@@ -12,7 +12,7 @@
     "E2_verified": 236,
     "E3_unknown": 973,
     "E4_unknown": 213,
-    "E5_unknown": 879
+    "E5_unknown": 880
   },
   "entries": [
     {
@@ -107444,6 +107444,33 @@
           ],
           "required_source_literals": [
             "changequest 11209,11210;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_11210_npc_re_quests_quests_malangdo_txt_741",
+      "unit": "E5-chain-11210",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          11210
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 11210; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_malangdo.txt",
+          "lines": [
+            741
+          ],
+          "required_source_literals": [
+            "changequest 11210,11211;"
           ]
         }
       ],
