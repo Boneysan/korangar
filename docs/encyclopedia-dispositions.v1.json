@@ -14,7 +14,7 @@
     "E4_unknown": 213,
     "E5_absent": 644,
     "E5_unknown": 3383,
-    "E6_unknown": 22
+    "E6_unknown": 23
   },
   "entries": [
     {
@@ -195242,6 +195242,34 @@
           "path": "db/re/mob_db.conf",
           "lines": [
             23420
+          ],
+          "required_source_literals": [
+            "{"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e6_boss_1583_boss",
+      "unit": "E6-boss-1583",
+      "package": "E6",
+      "subject": {
+        "kind": "monster",
+        "name": "TAO_GUNKA",
+        "ids": [
+          1583
+        ]
+      },
+      "result": "unknown",
+      "statement": "Monster 1583 (TAO_GUNKA) has configured database rows in the packet; this record does not enumerate each skill.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/mob_db.conf",
+          "lines": [
+            26792
           ],
           "required_source_literals": [
             "{"
