@@ -122384,7 +122384,7 @@
       "package": "E5",
       "kind": "e5_quest",
       "tier": "strong",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "quest_ids": [
@@ -122401,7 +122401,22 @@
       ],
       "size_lines": 10,
       "reason": "quest number appears in loaded scripts but never as a literal quest-command argument",
-      "history": []
+      "history": [
+        "2026-10-01T03:52:21Z activated",
+        "2026-10-01T03:52:21Z validated",
+        "2026-10-01T03:52:21Z verified: 0 claims supported",
+        "2026-10-01T03:52:45Z accepted",
+        "2026-10-01T03:52:45Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "40f2ed5ad3df7777b09f37ed68fbb25f50439786d6576156c2af43c2863d381e",
+      "accepted_files": [
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json"
+      ],
+      "accepted_on": "2026-09-30",
+      "commit": "committed"
     },
     {
       "id": "E5-indirect-11120",
