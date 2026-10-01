@@ -14,7 +14,7 @@
     "E4_unknown": 213,
     "E5_absent": 644,
     "E5_unknown": 3383,
-    "E6_unknown": 81
+    "E6_unknown": 82
   },
   "entries": [
     {
@@ -196894,6 +196894,34 @@
           "path": "db/re/mob_db.conf",
           "lines": [
             64629
+          ],
+          "required_source_literals": [
+            "{"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e6_boss_2996_boss",
+      "unit": "E6-boss-2996",
+      "package": "E6",
+      "subject": {
+        "kind": "monster",
+        "name": "XM_CELINE_KIMI",
+        "ids": [
+          2996
+        ]
+      },
+      "result": "unknown",
+      "statement": "Monster 2996 (XM_CELINE_KIMI) has configured database rows in the packet; this record does not enumerate each skill.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/mob_db.conf",
+          "lines": [
+            82268
           ],
           "required_source_literals": [
             "{"
