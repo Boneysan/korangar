@@ -199425,6 +199425,222 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_7182_npc_re_quests_quests_dicastes_txt_3598",
+      "unit": "E5-chain-7182",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7185
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 7185; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_dicastes.txt",
+          "lines": [
+            3598
+          ],
+          "required_source_literals": [
+            "changequest 7185,7186;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_7182_npc_re_quests_quests_dicastes_txt_4858",
+      "unit": "E5-chain-7182",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7193
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 7193; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_dicastes.txt",
+          "lines": [
+            4858
+          ],
+          "required_source_literals": [
+            "erasequest 7193;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_7182_npc_re_quests_quests_dicastes_txt_4859",
+      "unit": "E5-chain-7182",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7194
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 7194; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_dicastes.txt",
+          "lines": [
+            4859
+          ],
+          "required_source_literals": [
+            "setquest 7194;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_7182_npc_re_quests_quests_dicastes_txt_4901",
+      "unit": "E5-chain-7182",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7202
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 7202; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_dicastes.txt",
+          "lines": [
+            4901
+          ],
+          "required_source_literals": [
+            "if (!questprogress(7202)) setquest 7202;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_7182_npc_re_quests_quests_dicastes_txt_4916",
+      "unit": "E5-chain-7182",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7202
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 7202; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_dicastes.txt",
+          "lines": [
+            4916
+          ],
+          "required_source_literals": [
+            "setquest 7202;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_7182_npc_re_quests_quests_dicastes_txt_6231",
+      "unit": "E5-chain-7182",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7182
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 7182; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_dicastes.txt",
+          "lines": [
+            6231
+          ],
+          "required_source_literals": [
+            "setquest 7182;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_7182_npc_re_quests_quests_dicastes_txt_6394",
+      "unit": "E5-chain-7182",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7182
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 7182; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_dicastes.txt",
+          "lines": [
+            6394
+          ],
+          "required_source_literals": [
+            "changequest 7182,7183;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_7182_npc_re_quests_quests_dicastes_txt_6504",
+      "unit": "E5-chain-7182",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7185
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 7185; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_dicastes.txt",
+          "lines": [
+            6504
+          ],
+          "required_source_literals": [
+            "setquest 7185;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
