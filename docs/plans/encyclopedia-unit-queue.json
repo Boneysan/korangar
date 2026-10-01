@@ -143993,7 +143993,7 @@
       "package": "E3",
       "kind": "e3_translator",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "key": "homevolution",
@@ -144028,7 +144028,24 @@
       ],
       "size_lines": 32,
       "reason": "1 item script(s) first stop at documented `homevolution`",
-      "history": []
+      "history": [
+        "2026-10-01T06:29:44Z activated",
+        "2026-10-01T06:29:44Z validated",
+        "2026-10-01T06:29:45Z verified: 1 claims supported",
+        "2026-10-01T06:30:09Z accepted",
+        "2026-10-01T06:30:09Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "9471ea721fd2f26e3d99416a729d113ad855e8e70554bc99efdab69257cdf9d5",
+      "accepted_files": [
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/export_item_reference.py",
+        "tools/tests/test_export_item_effect_phrases.py"
+      ],
+      "accepted_on": "2026-10-01",
+      "commit": "committed"
     },
     {
       "id": "E3-translate-input",
