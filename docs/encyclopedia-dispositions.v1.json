@@ -12,7 +12,7 @@
     "E2_verified": 236,
     "E3_unknown": 973,
     "E4_unknown": 213,
-    "E5_unknown": 1756
+    "E5_unknown": 1761
   },
   "entries": [
     {
@@ -121322,6 +121322,141 @@
           ],
           "required_source_literals": [
             "changequest(18075, 18076);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_18076_npc_quests_quests_moscovia_txt_1919",
+      "unit": "E5-chain-18076",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          18076
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 18076; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_moscovia.txt",
+          "lines": [
+            1919
+          ],
+          "required_source_literals": [
+            "changequest(18076, 18077);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_18076_npc_quests_quests_moscovia_txt_1963",
+      "unit": "E5-chain-18076",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          18076
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 18076; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_moscovia.txt",
+          "lines": [
+            1963
+          ],
+          "required_source_literals": [
+            "changequest(18076, 18077);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_18076_npc_quests_quests_moscovia_txt_2034",
+      "unit": "E5-chain-18076",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          18079
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 18079; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_moscovia.txt",
+          "lines": [
+            2034
+          ],
+          "required_source_literals": [
+            "completequest(18079);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_18076_npc_quests_quests_moscovia_txt_2142",
+      "unit": "E5-chain-18076",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          18112
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 18112; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_moscovia.txt",
+          "lines": [
+            2142
+          ],
+          "required_source_literals": [
+            "changequest(18112, 18113);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_18076_npc_quests_quests_moscovia_txt_2339",
+      "unit": "E5-chain-18076",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          18120
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 18120; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_moscovia.txt",
+          "lines": [
+            2339
+          ],
+          "required_source_literals": [
+            "completequest(18120);"
           ]
         }
       ],
