@@ -164001,6 +164001,843 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_8211_npc_quests_first_class_tu_sword_txt_129",
+      "unit": "E5-chain-8211",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8228
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 8228; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/first_class/tu_sword.txt",
+          "lines": [
+            129
+          ],
+          "required_source_literals": [
+            "completequest 8228;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_8211_npc_quests_first_class_tu_sword_txt_188",
+      "unit": "E5-chain-8211",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8228
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 8228; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/first_class/tu_sword.txt",
+          "lines": [
+            188
+          ],
+          "required_source_literals": [
+            "completequest 8228;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_8211_npc_quests_first_class_tu_sword_txt_220",
+      "unit": "E5-chain-8211",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8227
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 8227; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/first_class/tu_sword.txt",
+          "lines": [
+            220
+          ],
+          "required_source_literals": [
+            "changequest 8227,8228;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_8211_npc_quests_first_class_tu_sword_txt_235",
+      "unit": "E5-chain-8211",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8227
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 8227; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/first_class/tu_sword.txt",
+          "lines": [
+            235
+          ],
+          "required_source_literals": [
+            "changequest 8227,8228;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_8211_npc_quests_first_class_tu_sword_txt_250",
+      "unit": "E5-chain-8211",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8221
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 8221; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/first_class/tu_sword.txt",
+          "lines": [
+            250
+          ],
+          "required_source_literals": [
+            "changequest 8221, 8222;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_8211_npc_quests_first_class_tu_sword_txt_297",
+      "unit": "E5-chain-8211",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8221
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 8221; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/first_class/tu_sword.txt",
+          "lines": [
+            297
+          ],
+          "required_source_literals": [
+            "changequest 8221, 8222;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_8211_npc_quests_first_class_tu_sword_txt_313",
+      "unit": "E5-chain-8211",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8221
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 8221; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/first_class/tu_sword.txt",
+          "lines": [
+            313
+          ],
+          "required_source_literals": [
+            "changequest 8221, 8222;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_8211_npc_quests_first_class_tu_sword_txt_356",
+      "unit": "E5-chain-8211",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8220
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 8220; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/first_class/tu_sword.txt",
+          "lines": [
+            356
+          ],
+          "required_source_literals": [
+            "changequest 8220,8221;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_8211_npc_quests_first_class_tu_sword_txt_377",
+      "unit": "E5-chain-8211",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8220
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 8220; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/first_class/tu_sword.txt",
+          "lines": [
+            377
+          ],
+          "required_source_literals": [
+            "changequest 8220, 8222;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_8211_npc_quests_first_class_tu_sword_txt_391",
+      "unit": "E5-chain-8211",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8220
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 8220; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/first_class/tu_sword.txt",
+          "lines": [
+            391
+          ],
+          "required_source_literals": [
+            "changequest 8220, 8222;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_8211_npc_quests_first_class_tu_sword_txt_416",
+      "unit": "E5-chain-8211",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8219
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 8219; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/first_class/tu_sword.txt",
+          "lines": [
+            416
+          ],
+          "required_source_literals": [
+            "changequest 8219, 8220;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_8211_npc_quests_first_class_tu_sword_txt_434",
+      "unit": "E5-chain-8211",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8219
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 8219; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/first_class/tu_sword.txt",
+          "lines": [
+            434
+          ],
+          "required_source_literals": [
+            "changequest 8219, 8220;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_8211_npc_quests_first_class_tu_sword_txt_482",
+      "unit": "E5-chain-8211",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8218
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 8218; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/first_class/tu_sword.txt",
+          "lines": [
+            482
+          ],
+          "required_source_literals": [
+            "changequest 8218,8219;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_8211_npc_quests_first_class_tu_sword_txt_488",
+      "unit": "E5-chain-8211",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8218
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 8218; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/first_class/tu_sword.txt",
+          "lines": [
+            488
+          ],
+          "required_source_literals": [
+            "changequest 8218,8220;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_8211_npc_quests_first_class_tu_sword_txt_506",
+      "unit": "E5-chain-8211",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8218
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 8218; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/first_class/tu_sword.txt",
+          "lines": [
+            506
+          ],
+          "required_source_literals": [
+            "changequest 8218,8220;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_8211_npc_quests_first_class_tu_sword_txt_558",
+      "unit": "E5-chain-8211",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8217
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 8217; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/first_class/tu_sword.txt",
+          "lines": [
+            558
+          ],
+          "required_source_literals": [
+            "changequest 8217,8218;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_8211_npc_quests_first_class_tu_sword_txt_585",
+      "unit": "E5-chain-8211",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8217
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 8217; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/first_class/tu_sword.txt",
+          "lines": [
+            585
+          ],
+          "required_source_literals": [
+            "changequest 8217,8219;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_8211_npc_quests_first_class_tu_sword_txt_591",
+      "unit": "E5-chain-8211",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8217
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 8217; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/first_class/tu_sword.txt",
+          "lines": [
+            591
+          ],
+          "required_source_literals": [
+            "changequest 8217,8220;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_8211_npc_quests_first_class_tu_sword_txt_609",
+      "unit": "E5-chain-8211",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8217
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 8217; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/first_class/tu_sword.txt",
+          "lines": [
+            609
+          ],
+          "required_source_literals": [
+            "changequest 8217,8220;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_8211_npc_quests_first_class_tu_sword_txt_666",
+      "unit": "E5-chain-8211",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8215
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 8215; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/first_class/tu_sword.txt",
+          "lines": [
+            666
+          ],
+          "required_source_literals": [
+            "changequest 8215,8216;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_8211_npc_quests_first_class_tu_sword_txt_726",
+      "unit": "E5-chain-8211",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8214
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 8214; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/first_class/tu_sword.txt",
+          "lines": [
+            726
+          ],
+          "required_source_literals": [
+            "changequest 8214, 8215;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_8211_npc_quests_first_class_tu_sword_txt_746",
+      "unit": "E5-chain-8211",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8213
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 8213; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/first_class/tu_sword.txt",
+          "lines": [
+            746
+          ],
+          "required_source_literals": [
+            "changequest 8213, 8214;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_8211_npc_quests_first_class_tu_sword_txt_785",
+      "unit": "E5-chain-8211",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8212
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 8212; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/first_class/tu_sword.txt",
+          "lines": [
+            785
+          ],
+          "required_source_literals": [
+            "changequest 8212, 8213;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_8211_npc_quests_first_class_tu_sword_txt_800",
+      "unit": "E5-chain-8211",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8212
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 8212; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/first_class/tu_sword.txt",
+          "lines": [
+            800
+          ],
+          "required_source_literals": [
+            "changequest 8212, 8214;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_8211_npc_quests_first_class_tu_sword_txt_839",
+      "unit": "E5-chain-8211",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8211
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 8211; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/first_class/tu_sword.txt",
+          "lines": [
+            839
+          ],
+          "required_source_literals": [
+            "changequest 8211, 8212;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_8211_npc_quests_first_class_tu_sword_txt_872",
+      "unit": "E5-chain-8211",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8211
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 8211; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/first_class/tu_sword.txt",
+          "lines": [
+            872
+          ],
+          "required_source_literals": [
+            "changequest 8211, 8213;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_8211_npc_quests_first_class_tu_sword_txt_890",
+      "unit": "E5-chain-8211",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8211
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 8211; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/first_class/tu_sword.txt",
+          "lines": [
+            890
+          ],
+          "required_source_literals": [
+            "changequest 8211, 8214;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_8211_npc_quests_first_class_tu_sword_txt_931",
+      "unit": "E5-chain-8211",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8211
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 8211; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/first_class/tu_sword.txt",
+          "lines": [
+            931
+          ],
+          "required_source_literals": [
+            "setquest 8211;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_8211_npc_quests_first_class_tu_sword_txt_954",
+      "unit": "E5-chain-8211",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8212
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 8212; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/first_class/tu_sword.txt",
+          "lines": [
+            954
+          ],
+          "required_source_literals": [
+            "setquest 8212;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_8211_npc_quests_first_class_tu_sword_txt_980",
+      "unit": "E5-chain-8211",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8213
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 8213; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/first_class/tu_sword.txt",
+          "lines": [
+            980
+          ],
+          "required_source_literals": [
+            "setquest 8213;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_8211_npc_quests_first_class_tu_sword_txt_998",
+      "unit": "E5-chain-8211",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8214
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 8214; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/first_class/tu_sword.txt",
+          "lines": [
+            998
+          ],
+          "required_source_literals": [
+            "setquest 8214;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
