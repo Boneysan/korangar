@@ -294735,7 +294735,8 @@
         "record": "Id=12004"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "grants 500 Arrow",
       "type": "IT_USABLE",
       "buy": 2,
       "weight": 250
@@ -294765,7 +294766,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "grants 500 Iron Arrow",
       "type": "IT_USABLE",
       "buy": 2,
       "weight": 250
@@ -294803,7 +294805,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "grants 500 Steel Arrow",
       "type": "IT_USABLE",
       "buy": 2,
       "weight": 250
@@ -294833,7 +294836,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "grants 500 Oridecon Arrow",
       "type": "IT_USABLE",
       "buy": 2,
       "weight": 250
@@ -294871,7 +294875,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "grants 500 Fire Arrow",
       "type": "IT_USABLE",
       "buy": 2,
       "weight": 250
@@ -294901,7 +294906,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "grants 500 Silver Arrow",
       "type": "IT_USABLE",
       "buy": 2,
       "weight": 250
@@ -294945,7 +294951,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "grants 500 Arrow of Wind",
       "type": "IT_USABLE",
       "buy": 2,
       "weight": 250
@@ -294989,7 +294996,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "grants 500 Stone Arrow",
       "type": "IT_USABLE",
       "buy": 2,
       "weight": 250
@@ -295041,7 +295049,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "grants 500 Crystal Arrow",
       "type": "IT_USABLE",
       "buy": 2,
       "weight": 250
@@ -295071,7 +295080,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "grants 500 Arrow of Shadow",
       "type": "IT_USABLE",
       "buy": 2,
       "weight": 250
@@ -295116,7 +295126,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "grants 500 Immaterial Arrow",
       "type": "IT_USABLE",
       "buy": 2,
       "weight": 250
@@ -295146,7 +295157,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "grants 500 Rusty Arrow",
       "type": "IT_USABLE",
       "buy": 2,
       "weight": 250
@@ -306187,7 +306199,8 @@
         "record": "Id=12144"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "grants 500 Lightning Sphere",
       "type": "IT_USABLE",
       "buy": 2,
       "weight": 350
@@ -306201,7 +306214,8 @@
         "record": "Id=12145"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "grants 500 Blind Sphere",
       "type": "IT_USABLE",
       "buy": 2,
       "weight": 350
@@ -306215,7 +306229,8 @@
         "record": "Id=12146"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "grants 500 Poison Sphere",
       "type": "IT_USABLE",
       "buy": 2,
       "weight": 350
@@ -306229,7 +306244,8 @@
         "record": "Id=12147"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "grants 500 Freezing Sphere",
       "type": "IT_USABLE",
       "buy": 2,
       "weight": 350
@@ -306243,7 +306259,8 @@
         "record": "Id=12148"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "grants 500 Flare Sphere",
       "type": "IT_USABLE",
       "buy": 2,
       "weight": 350
@@ -306273,7 +306290,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "grants 500 Bullet",
       "type": "IT_USABLE",
       "buy": 2,
       "weight": 250
@@ -306303,7 +306321,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "grants 500 Bloody Shell",
       "type": "IT_USABLE",
       "buy": 2,
       "weight": 250
@@ -306333,7 +306352,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "grants 500 Silver Bullet",
       "type": "IT_USABLE",
       "buy": 2,
       "weight": 250
@@ -306854,7 +306874,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "grants 500 Holy Arrow",
       "type": "IT_USABLE",
       "buy": 2,
       "weight": 250
@@ -311780,7 +311801,8 @@
         "record": "Id=12383"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "grants 1000 Vulcan Bullet",
       "type": "IT_USABLE",
       "buy": 13750,
       "weight": 500
@@ -314042,7 +314064,8 @@
         "record": "Id=12529"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "grants 200 Condensed White Potion",
       "type": "IT_USABLE"
     },
     {
@@ -314054,7 +314077,8 @@
         "record": "Id=12530"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "grants 200 Mastela Fruit",
       "type": "IT_USABLE"
     },
     {
@@ -314066,7 +314090,8 @@
         "record": "Id=12531"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "grants 100 White Potion",
       "type": "IT_USABLE"
     },
     {
@@ -314078,7 +314103,8 @@
         "record": "Id=12532"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "grants 100 Royal Jelly",
       "type": "IT_USABLE"
     },
     {
@@ -314090,7 +314116,8 @@
         "record": "Id=12533"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "grants 100 Blue Herb",
       "type": "IT_USABLE"
     },
     {
@@ -314102,7 +314129,8 @@
         "record": "Id=12534"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "grants 30 Yggdrasil Seed",
       "type": "IT_USABLE"
     },
     {
@@ -314114,7 +314142,8 @@
         "record": "Id=12535"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "grants 15 Yggdrasil Berry",
       "type": "IT_USABLE"
     },
     {
@@ -314845,7 +314874,8 @@
           "source_record": "db/re/mob_db.conf:Id=2341"
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "grants 100 Condensed White Potion",
       "type": "IT_USABLE"
     },
     {
@@ -314857,7 +314887,8 @@
         "record": "Id=12550"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "grants 30 Poison Bottle",
       "type": "IT_USABLE"
     },
     {
@@ -315247,7 +315278,8 @@
         "record": "Id=12575"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "grants 500 Elven Arrow",
       "type": "IT_USABLE",
       "buy": 500,
       "weight": 250,
@@ -315262,7 +315294,8 @@
         "record": "Id=12576"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "grants 500 Hunting Arrow",
       "type": "IT_USABLE",
       "buy": 500,
       "weight": 250
@@ -319366,7 +319399,8 @@
         "record": "Id=12638"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "grants 200 Dried Squid",
       "type": "IT_DELAYCONSUME",
       "buy": 20,
       "weight": 2000
@@ -319380,7 +319414,8 @@
         "record": "Id=12639"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "grants 200 Flying Fish",
       "type": "IT_DELAYCONSUME",
       "buy": 20,
       "weight": 2000
@@ -319394,7 +319429,8 @@
         "record": "Id=12640"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "grants 200 Starfish",
       "type": "IT_DELAYCONSUME",
       "buy": 20,
       "weight": 500
@@ -319422,7 +319458,8 @@
         "record": "Id=12642"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "grants 100 Mastela Fruit",
       "type": "IT_HEALING"
     },
     {
@@ -319434,7 +319471,8 @@
         "record": "Id=12643"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "grants 50 EClass Coin",
       "type": "IT_USABLE"
     },
     {
@@ -319701,7 +319739,8 @@
         "record": "Id=12648"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "grants 10 Red Potion; grants 10 Orange Potion; grants 10 Yellow Potion; grants 10 Blue Potion",
       "type": "IT_DELAYCONSUME",
       "buy": 20,
       "weight": 100
@@ -319715,7 +319754,8 @@
         "record": "Id=12649"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "grants 5 Bearfoot Special; grants 5 Incredibly Spicy Curry; grants 5 Royal Family Tea; grants 5 Giant Burito; grants 5 Special Toast; grants 5 Strawberry Flavored Rice Ball",
       "type": "IT_DELAYCONSUME",
       "buy": 20,
       "weight": 10
@@ -319729,7 +319769,8 @@
         "record": "Id=12650"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "grants 5 Field Manual",
       "type": "IT_DELAYCONSUME",
       "buy": 20,
       "weight": 10
@@ -319757,7 +319798,8 @@
         "record": "Id=12652"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "grants 10 Premium Coin Bag",
       "type": "IT_DELAYCONSUME",
       "buy": 20,
       "weight": 10
@@ -320035,7 +320077,8 @@
         "record": "Id=12672"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "grants 2 Old Purple Box; grants 2 Field Manual; grants 3 Support Game Master; grants 2 Support Game Master",
       "type": "IT_USABLE",
       "buy": 20,
       "weight": 10
@@ -320910,7 +320953,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "grants 50 WoE Violet Potion",
       "type": "IT_USABLE",
       "buy": 20,
       "weight": 200
@@ -320940,7 +320984,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "grants 200 WoE Arrow S",
       "type": "IT_USABLE",
       "buy": 2,
       "weight": 100,
@@ -320971,7 +321016,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "grants 200 WoE Arrow A",
       "type": "IT_USABLE",
       "buy": 2,
       "weight": 100,
@@ -321248,7 +321294,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "grants 30 WoE White Potion",
       "type": "IT_USABLE",
       "buy": 20,
       "weight": 200
@@ -321489,7 +321536,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "grants 10 WoE Blue Potion",
       "type": "IT_USABLE",
       "buy": 20,
       "weight": 200
@@ -321529,7 +321577,8 @@
         "record": "Id=12683"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "grants 200 WoE Violet Potion",
       "type": "IT_USABLE",
       "buy": 20,
       "weight": 200
@@ -329065,7 +329114,8 @@
         "record": "Id=12742"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "grants 1 Gold Ring Of Valentine",
       "type": "IT_USABLE"
     },
     {
@@ -329077,7 +329127,8 @@
         "record": "Id=12743"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "grants 1 Silver Ring Of Valentine",
       "type": "IT_USABLE"
     },
     {
@@ -329089,7 +329140,8 @@
         "record": "Id=12744"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "grants 1 Chocolate",
       "type": "IT_USABLE"
     },
     {
@@ -329751,7 +329803,8 @@
         "record": "Id=12793"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "grants 10 Magic Battle Serum",
       "type": "IT_DELAYCONSUME",
       "buy": 20
     },
@@ -329764,7 +329817,8 @@
         "record": "Id=12794"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "grants 10 Advanced Magic Battle Serum",
       "type": "IT_DELAYCONSUME",
       "buy": 20
     },
@@ -329914,7 +329968,8 @@
         "record": "Id=12809"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "grants 5 Field Manual; grants 5 Bubble Gum; grants 5 Life Insurrance; grants 5 JOB Battle Manual; grants 1 Zherlthsh Ticket Box",
       "type": "IT_USABLE",
       "equiplv": 120
     },
@@ -332670,7 +332725,8 @@
           }
         }
       ],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "grants 1 Level Up Box",
       "type": "IT_USABLE",
       "equiplv": 100
     },
@@ -332683,7 +332739,8 @@
         "record": "Id=12819"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "grants 1 Zherlthsh Exchange Ticket",
       "type": "IT_USABLE",
       "equiplv": 150
     },
@@ -332724,7 +332781,8 @@
         "record": "Id=12822"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "grants 50 Korean Rice Cake",
       "type": "IT_CASH",
       "buy": 20,
       "weight": 10
@@ -332766,7 +332824,8 @@
         "record": "Id=12831"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "grants 100 Condensed Red Potion; grants 100 Condensed Yellow Potion; grants 100 Condensed White Potion; grants 100 Blue Potion",
       "type": "IT_USABLE",
       "weight": 50
     },
@@ -332960,7 +333019,8 @@
         "record": "Id=12873"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "grants 10 TE White Slim Potion",
       "type": "IT_USABLE",
       "buy": 20,
       "weight": 100
@@ -346427,7 +346487,8 @@
         "record": "Id=13535"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "grants 20 Light Concentration Potion",
       "type": "IT_CASH",
       "buy": 20,
       "weight": 10
@@ -346441,7 +346502,8 @@
         "record": "Id=13536"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "grants 20 Light Concentration Potion",
       "type": "IT_CASH",
       "buy": 20,
       "weight": 10
@@ -346455,7 +346517,8 @@
         "record": "Id=13537"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "grants 20 Light Concentration Potion",
       "type": "IT_CASH",
       "buy": 20,
       "weight": 10
@@ -347748,7 +347811,8 @@
         "record": "Id=13624"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "grants 1 Evasion Scroll",
       "type": "IT_CASH",
       "buy": 20,
       "weight": 10
@@ -347762,7 +347826,8 @@
         "record": "Id=13625"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "grants 1 Concentration Scroll",
       "type": "IT_CASH",
       "buy": 20,
       "weight": 10
@@ -349436,7 +349501,8 @@
         "record": "Id=13740"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "grants 5 Shadow Armor Scroll",
       "type": "IT_CASH",
       "buy": 20,
       "weight": 10
@@ -349450,7 +349516,8 @@
         "record": "Id=13741"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "grants 10 Shadow Armor Scroll",
       "type": "IT_CASH",
       "buy": 20,
       "weight": 10
@@ -349464,7 +349531,8 @@
         "record": "Id=13742"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "grants 30 Shadow Armor Scroll",
       "type": "IT_CASH",
       "buy": 20,
       "weight": 10
@@ -349478,7 +349546,8 @@
         "record": "Id=13743"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "grants 5 Holy Armor Scroll",
       "type": "IT_CASH",
       "buy": 20,
       "weight": 10
@@ -349492,7 +349561,8 @@
         "record": "Id=13744"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "grants 10 Holy Armor Scroll",
       "type": "IT_CASH",
       "buy": 20,
       "weight": 10
@@ -349506,7 +349576,8 @@
         "record": "Id=13745"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "grants 30 Holy Armor Scroll",
       "type": "IT_CASH",
       "buy": 20,
       "weight": 10
@@ -350554,7 +350625,8 @@
         "record": "Id=13815"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "grants 10 Knife Goblin Ring",
       "type": "IT_CASH",
       "buy": 20,
       "weight": 10
@@ -350568,7 +350640,8 @@
         "record": "Id=13816"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "grants 10 Flail Goblin Ring",
       "type": "IT_CASH",
       "buy": 20,
       "weight": 10
@@ -350582,7 +350655,8 @@
         "record": "Id=13817"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "grants 10 Hammer Goblin Ring",
       "type": "IT_CASH",
       "buy": 20,
       "weight": 10
@@ -350596,7 +350670,8 @@
         "record": "Id=13818"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "grants 10 Holy Marble",
       "type": "IT_CASH",
       "buy": 20,
       "weight": 10
@@ -350610,7 +350685,8 @@
         "record": "Id=13819"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "grants 10 Red Burning Stone",
       "type": "IT_CASH",
       "buy": 20,
       "weight": 10
@@ -350624,7 +350700,8 @@
         "record": "Id=13820"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "grants 10 Vagabond's Skull",
       "type": "IT_CASH",
       "buy": 20,
       "weight": 10
@@ -351177,7 +351254,8 @@
         "record": "Id=13857"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "grants 5 Jumping Candy",
       "type": "IT_CASH",
       "buy": 20,
       "weight": 10
@@ -351191,7 +351269,8 @@
         "record": "Id=13858"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "grants 10 Jumping Candy",
       "type": "IT_CASH",
       "buy": 20,
       "weight": 10
@@ -351760,7 +351839,8 @@
         "record": "Id=13896"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "grants 5 Mimic Scroll",
       "type": "IT_CASH",
       "buy": 20,
       "weight": 10
@@ -351774,7 +351854,8 @@
         "record": "Id=13897"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "grants 5 Disguise Scroll",
       "type": "IT_CASH",
       "buy": 20,
       "weight": 10
@@ -351788,7 +351869,8 @@
         "record": "Id=13898"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "grants 5 Alice Contract",
       "type": "IT_CASH",
       "buy": 20,
       "weight": 10
@@ -351802,7 +351884,8 @@
         "record": "Id=13899"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "grants 10 Mimic Scroll",
       "type": "IT_CASH",
       "buy": 20,
       "weight": 10
@@ -351816,7 +351899,8 @@
         "record": "Id=13900"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "grants 10 Disguise Scroll",
       "type": "IT_CASH",
       "buy": 20,
       "weight": 10
@@ -351830,7 +351914,8 @@
         "record": "Id=13901"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "grants 10 Alice Contract",
       "type": "IT_CASH",
       "buy": 20,
       "weight": 10
@@ -353222,7 +353307,8 @@
         "record": "Id=13994"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "grants 5 Speed Potion",
       "type": "IT_CASH",
       "buy": 20,
       "weight": 10
@@ -353236,7 +353322,8 @@
         "record": "Id=13995"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "grants 10 Speed Potion",
       "type": "IT_CASH",
       "buy": 20,
       "weight": 10
@@ -353760,7 +353847,8 @@
         "record": "Id=14030"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "grants 5 Mimic Scroll",
       "type": "IT_CASH",
       "buy": 20,
       "weight": 10
@@ -353774,7 +353862,8 @@
         "record": "Id=14031"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "grants 5 Disguise Scroll",
       "type": "IT_CASH",
       "buy": 20,
       "weight": 10
@@ -353788,7 +353877,8 @@
         "record": "Id=14032"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "grants 5 Alice Contract",
       "type": "IT_CASH",
       "buy": 20,
       "weight": 10
@@ -353802,7 +353892,8 @@
         "record": "Id=14033"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "grants 10 Mimic Scroll",
       "type": "IT_CASH",
       "buy": 20,
       "weight": 10
@@ -353816,7 +353907,8 @@
         "record": "Id=14034"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "grants 10 Disguise Scroll",
       "type": "IT_CASH",
       "buy": 20,
       "weight": 10
@@ -353830,7 +353922,8 @@
         "record": "Id=14035"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "grants 10 Alice Contract",
       "type": "IT_CASH",
       "buy": 20,
       "weight": 10
@@ -354039,7 +354132,8 @@
         "record": "Id=14049"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "grants 5 Jumping Candy",
       "type": "IT_CASH",
       "buy": 20,
       "weight": 10
@@ -354053,7 +354147,8 @@
         "record": "Id=14050"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "grants 10 Jumping Candy",
       "type": "IT_CASH",
       "buy": 20,
       "weight": 10
@@ -357852,7 +357947,8 @@
         "record": "Id=14314"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "grants 10 Phreeoni Scroll",
       "type": "IT_USABLE",
       "buy": 20
     },
@@ -357865,7 +357961,8 @@
         "record": "Id=14315"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "grants 10 Ghostring Scroll",
       "type": "IT_USABLE",
       "buy": 20
     },
@@ -357953,7 +358050,8 @@
         "record": "Id=14349"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "grants 20 Mental Potion",
       "type": "IT_CASH",
       "buy": 20,
       "weight": 10
@@ -357967,7 +358065,8 @@
         "record": "Id=14350"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "grants 50 Mental Potion",
       "type": "IT_CASH",
       "buy": 20,
       "weight": 10
@@ -357981,7 +358080,8 @@
         "record": "Id=14351"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "grants 20 Tyr's Blessing",
       "type": "IT_CASH",
       "buy": 20,
       "weight": 10
@@ -357995,7 +358095,8 @@
         "record": "Id=14352"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "grants 50 Tyr's Blessing",
       "type": "IT_CASH",
       "buy": 20,
       "weight": 10
@@ -358009,7 +358110,8 @@
         "record": "Id=14359"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "grants 10 Tao Gunka Scroll",
       "type": "IT_CASH",
       "buy": 20
     },
@@ -358022,7 +358124,8 @@
         "record": "Id=14360"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "grants 10 Mistress Scroll",
       "type": "IT_CASH",
       "buy": 20
     },
@@ -358035,7 +358138,8 @@
         "record": "Id=14361"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "grants 10 Orc Hero Scard",
       "type": "IT_CASH",
       "buy": 20
     },
@@ -366100,7 +366204,8 @@
         "record": "Id=16254"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "grants 5 Activation Potion",
       "type": "IT_CASH",
       "buy": 20,
       "weight": 10
@@ -367161,7 +367266,8 @@
         "record": "Id=16483"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "grants 10 E Abrasive",
       "type": "IT_USABLE",
       "buy": 20,
       "weight": 10
@@ -367189,7 +367295,8 @@
         "record": "Id=16504"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "grants 10 Bubble Gum",
       "type": "IT_CASH",
       "buy": 10,
       "weight": 10
@@ -367717,7 +367824,8 @@
         "record": "Id=16666"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "grants 10 Magic Candy",
       "type": "IT_CASH",
       "buy": 20,
       "weight": 10
@@ -368371,7 +368479,8 @@
         "record": "Id=16843"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "grants 1 Hairstyle Coupon",
       "type": "IT_USABLE",
       "weight": 10
     },
@@ -368384,7 +368493,8 @@
         "record": "Id=16854"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "grants 1 New Clothing Dye Coupon",
       "type": "IT_USABLE",
       "weight": 10
     },
@@ -368397,7 +368507,8 @@
         "record": "Id=16855"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "grants 1 Original Clothing Dye Coupon",
       "type": "IT_USABLE",
       "weight": 10
     },
@@ -368641,7 +368752,8 @@
         "record": "Id=17000"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "grants 5 Wanderman Scroll",
       "type": "IT_CASH",
       "buy": 20
     },
@@ -368654,7 +368766,8 @@
         "record": "Id=17001"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "grants 10 Wanderman Scroll",
       "type": "IT_CASH",
       "buy": 20
     },
@@ -368693,7 +368806,8 @@
         "record": "Id=17004"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "grants 5 Kasa Scroll",
       "type": "IT_CASH",
       "buy": 20
     },
@@ -368706,7 +368820,8 @@
         "record": "Id=17005"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "grants 10 Kasa Scroll",
       "type": "IT_CASH",
       "buy": 20
     },
@@ -368719,7 +368834,8 @@
         "record": "Id=17006"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "grants 5 Salamander Scroll",
       "type": "IT_CASH",
       "buy": 20
     },
@@ -368732,7 +368848,8 @@
         "record": "Id=17007"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "grants 10 Salamander Scroll",
       "type": "IT_CASH",
       "buy": 20
     },
@@ -368745,7 +368862,8 @@
         "record": "Id=17008"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "grants 5 Teddy Bear Scroll",
       "type": "IT_CASH",
       "buy": 20
     },
@@ -368758,7 +368876,8 @@
         "record": "Id=17009"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "grants 10 Teddy Bear Scroll",
       "type": "IT_CASH",
       "buy": 20
     },
@@ -370231,7 +370350,8 @@
         "record": "Id=17163"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "grants 30 Mystic Powder",
       "type": "IT_CASH",
       "buy": 20,
       "weight": 10
@@ -370381,7 +370501,8 @@
         "record": "Id=17224"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "grants 10 Almighty",
       "type": "IT_CASH",
       "weight": 10
     },
@@ -370696,7 +370817,8 @@
         "record": "Id=17270"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "grants 20 Bar of Strength",
       "type": "IT_CASH",
       "weight": 10
     },
@@ -370709,7 +370831,8 @@
         "record": "Id=17271"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "grants 20 Bar of Fitness",
       "type": "IT_CASH",
       "weight": 10
     },
@@ -370722,7 +370845,8 @@
         "record": "Id=17272"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "grants 20 Bar of Agility",
       "type": "IT_CASH",
       "weight": 10
     },
@@ -370735,7 +370859,8 @@
         "record": "Id=17273"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "grants 20 Bar of Knowledge",
       "type": "IT_CASH",
       "weight": 10
     },
@@ -370748,7 +370873,8 @@
         "record": "Id=17274"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "grants 20 Bar of Tricks",
       "type": "IT_CASH",
       "weight": 10
     },
@@ -370761,7 +370887,8 @@
         "record": "Id=17275"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "grants 20 Bar of Luck",
       "type": "IT_CASH",
       "weight": 10
     },
@@ -370774,7 +370901,8 @@
         "record": "Id=17336"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "grants 1 Cash Hair Coupon",
       "type": "IT_USABLE",
       "weight": 10
     },
@@ -398466,7 +398594,8 @@
         "record": "Id=22737"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "grants 500 Bloody Shell",
       "type": "IT_USABLE",
       "buy": 2,
       "weight": 250
@@ -398480,7 +398609,8 @@
         "record": "Id=22738"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "grants 500 Silver Bullet",
       "type": "IT_USABLE",
       "buy": 2,
       "weight": 250
@@ -398494,7 +398624,8 @@
         "record": "Id=22739"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "grants 500 Lightning Grenade",
       "type": "IT_USABLE",
       "buy": 2,
       "weight": 350
@@ -398508,7 +398639,8 @@
         "record": "Id=22740"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "grants 500 Flash Grenade",
       "type": "IT_USABLE",
       "buy": 2,
       "weight": 350
@@ -398522,7 +398654,8 @@
         "record": "Id=22741"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "grants 500 Poison Grenade",
       "type": "IT_USABLE",
       "buy": 2,
       "weight": 350
@@ -398536,7 +398669,8 @@
         "record": "Id=22742"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "grants 500 Cyro Grenade",
       "type": "IT_USABLE",
       "buy": 2,
       "weight": 350
@@ -398550,7 +398684,8 @@
         "record": "Id=22743"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "grants 500 Incendiary Grenade",
       "type": "IT_USABLE",
       "buy": 2,
       "weight": 350
@@ -398564,7 +398699,8 @@
         "record": "Id=22744"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "grants 500 Armor-Piercing Bullet",
       "type": "IT_USABLE",
       "buy": 2,
       "weight": 250
@@ -398578,7 +398714,8 @@
         "record": "Id=22745"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "grants 500 Blazing Bullet",
       "type": "IT_USABLE",
       "buy": 2,
       "weight": 250
@@ -398592,7 +398729,8 @@
         "record": "Id=22746"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "grants 500 Freezing Bullet",
       "type": "IT_USABLE",
       "buy": 2,
       "weight": 250
@@ -398606,7 +398744,8 @@
         "record": "Id=22747"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "grants 500 Lightning Bullet",
       "type": "IT_USABLE",
       "buy": 2,
       "weight": 250
@@ -398620,7 +398759,8 @@
         "record": "Id=22748"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "grants 500 Magic Stone Bullet",
       "type": "IT_USABLE",
       "buy": 2,
       "weight": 250
@@ -398634,7 +398774,8 @@
         "record": "Id=22749"
       },
       "drops_from": [],
-      "effect_status": "scripted_not_translated",
+      "effect_status": "translated",
+      "effect_summary": "grants 500 Purifying Bullet",
       "type": "IT_USABLE",
       "buy": 2,
       "weight": 250

@@ -44,13 +44,13 @@
     "items": {
       "records": 13183,
       "translated_effects": {
-        "observed": 4429,
+        "observed": 4570,
         "total": 13183,
         "basis": "records with a supported natural-language effect summary"
       },
       "noncard_records": 12171,
       "noncard_translated_effects": {
-        "observed": 3794,
+        "observed": 3935,
         "total": 12171,
         "basis": "non-card item records with a supported natural-language effect summary"
       },

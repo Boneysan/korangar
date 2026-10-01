@@ -20,6 +20,11 @@ class ItemEffectPhraseTests(unittest.TestCase):
         self.assertIn("on yourself, without a target cursor", text)
         self.assertNotIn("checking the skill's conditions", text)
 
+    def test_getitem_by_item_constant(self):
+        self.assertEqual(translate_simple_effect("getitem Arrow, 500;"), "grants 500 Arrow")
+        self.assertEqual(translate_simple_effect("getitem(Apple, 10);"), "grants 10 Apple")
+        self.assertIsNone(translate_simple_effect("getitem Arrow, 500, 2000001;"))
+
     def test_sc_start_flag_uses_the_documented_rate(self):
         self.assertEqual(
             translate_simple_effect("sc_start SC_FREEZE,10000,0,2500,SCFLAG_NONE;"),

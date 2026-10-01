@@ -646,6 +646,18 @@ def translate_simple_effect(script: str) -> str | None:
             item_id, amount = int(match.group(1)), int(match.group(2))
             effects.append(f"grants {amount} {_item_display_name(item_id)}")
             continue
+        match = re.fullmatch(
+            r"getitem(?:\(\s*|\s+)([A-Za-z_][A-Za-z0-9_]*)\s*,\s*(\d+)\s*\)?",
+            statement,
+            re.I,
+        )
+        if match:
+            token, amount = match.group(1), int(match.group(2))
+            label = _item_names_by_aegis().get(token)
+            if label is None:
+                return None
+            effects.append(f"grants {amount} {label}")
+            continue
         match = re.fullmatch(r"rentitem\s+(-?\d+)\s*,\s*(\d+)", statement, re.I)
         if match:
             item_id, seconds = int(match.group(1)), int(match.group(2))
@@ -693,6 +705,21 @@ def _item_names_by_id() -> dict[int, str]:
 
 def _item_display_name(item_id: int) -> str:
     return _item_names_by_id().get(item_id, f"item {item_id}")
+
+
+@lru_cache(maxsize=1)
+def _item_names_by_aegis() -> dict[str, str]:
+    """Map an item constant to its database Name. script_commands.txt calls that constant the item name."""
+    names: dict[str, str] = {}
+    pattern = re.compile(
+        r'AegisName:\s*"([^"]+)"(?:(?!\n\s*Id:)[\s\S]){0,400}?\n\s*Name:\s*"([^"]*)"'
+    )
+    for path in ITEM_SOURCES:
+        if not path.is_file():
+            continue
+        for match in pattern.finditer(path.read_text(encoding="utf-8", errors="replace")):
+            names[match.group(1)] = match.group(2) or match.group(1)
+    return names
 
 
 def _skill_display_name(constant: str) -> str:
