@@ -14,7 +14,7 @@
     "E4_unknown": 213,
     "E5_absent": 644,
     "E5_unknown": 3383,
-    "E6_configured_estimate": 2,
+    "E6_configured_estimate": 3,
     "E6_unknown": 83
   },
   "entries": [
@@ -197034,6 +197034,48 @@
             "name: \"Normal\" /* changing this name requires MAP_ZONE_NORMAL_NAME to also be changed in src/map/map.h file */",
             "disabled_skills: {",
             "disabled_items: {",
+            "mapflags: ("
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e6_zone_pvp_zone",
+      "unit": "E6-zone-pvp",
+      "package": "E6",
+      "subject": {
+        "kind": "zone",
+        "name": "PvP"
+      },
+      "result": "configured_estimate",
+      "statement": "Zone PvP sets the quoted configured restrictions; maps that use the zone are not claimed.",
+      "conditions": [
+        "Configured line: /* PvP zone is applied to all maps with a pvp mapflag */",
+        "Configured line: name: \"PvP\" /* changing this name requires MAP_ZONE_PVP_NAME to also be changed in src/map/map.h file */",
+        "Configured line: disabled_skills: {",
+        "Configured line: disabled_items: {",
+        "Configured line: /* cashshop disabled in pvp maps */",
+        "Configured line: mapflags: ("
+      ],
+      "sources": [
+        {
+          "path": "db/re/map_zone_db.conf",
+          "lines": [
+            137,
+            138,
+            140,
+            145,
+            182,
+            183
+          ],
+          "required_source_literals": [
+            "/* PvP zone is applied to all maps with a pvp mapflag */",
+            "name: \"PvP\" /* changing this name requires MAP_ZONE_PVP_NAME to also be changed in src/map/map.h file */",
+            "disabled_skills: {",
+            "disabled_items: {",
+            "/* cashshop disabled in pvp maps */",
             "mapflags: ("
           ]
         }
