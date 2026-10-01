@@ -12,7 +12,7 @@
     "E2_verified": 236,
     "E3_unknown": 973,
     "E4_unknown": 213,
-    "E5_unknown": 1580
+    "E5_unknown": 1583
   },
   "entries": [
     {
@@ -105230,6 +105230,87 @@
           ],
           "required_source_literals": [
             "changequest 10099,10100;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_11000_npc_quests_quests_hugel_txt_7768",
+      "unit": "E5-chain-11000",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          11000
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 11000; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_hugel.txt",
+          "lines": [
+            7768
+          ],
+          "required_source_literals": [
+            "setquest 11000;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_11000_npc_quests_quests_hugel_txt_7840",
+      "unit": "E5-chain-11000",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          11000
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 11000; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_hugel.txt",
+          "lines": [
+            7840
+          ],
+          "required_source_literals": [
+            "changequest 11000,11001;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_11000_npc_quests_quests_hugel_txt_7950",
+      "unit": "E5-chain-11000",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          11000
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 11000; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_hugel.txt",
+          "lines": [
+            7950
+          ],
+          "required_source_literals": [
+            "changequest 11000,11002;"
           ]
         }
       ],
