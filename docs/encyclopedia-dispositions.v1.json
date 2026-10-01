@@ -12,7 +12,7 @@
     "E2_verified": 236,
     "E3_unknown": 973,
     "E4_unknown": 213,
-    "E5_unknown": 1848
+    "E5_unknown": 1853
   },
   "entries": [
     {
@@ -147161,6 +147161,141 @@
           ],
           "required_source_literals": [
             "changequest 8082,8083;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_8089_npc_quests_quests_rachel_txt_121",
+      "unit": "E5-chain-8089",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8089
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 8089; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_rachel.txt",
+          "lines": [
+            121
+          ],
+          "required_source_literals": [
+            "setquest 8089;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_8089_npc_quests_quests_rachel_txt_276",
+      "unit": "E5-chain-8089",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8094
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 8094; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_rachel.txt",
+          "lines": [
+            276
+          ],
+          "required_source_literals": [
+            "changequest 8094,8095;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_8089_npc_quests_quests_rachel_txt_362",
+      "unit": "E5-chain-8089",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8096
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 8096; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_rachel.txt",
+          "lines": [
+            362
+          ],
+          "required_source_literals": [
+            "changequest 8096,8097;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_8089_npc_quests_quests_rachel_txt_423",
+      "unit": "E5-chain-8089",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8098
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 8098; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_rachel.txt",
+          "lines": [
+            423
+          ],
+          "required_source_literals": [
+            "changequest 8098,8099;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_8089_npc_quests_quests_rachel_txt_506",
+      "unit": "E5-chain-8089",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8089
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 8089; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_rachel.txt",
+          "lines": [
+            506
+          ],
+          "required_source_literals": [
+            "changequest 8089,8090;"
           ]
         }
       ],
