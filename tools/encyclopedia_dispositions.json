@@ -146127,6 +146127,60 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_8259_npc_re_jobs_3_1_ranger_txt_1667",
+      "unit": "E5-chain-8259",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8259
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 8259; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-1/ranger.txt",
+          "lines": [
+            1667
+          ],
+          "required_source_literals": [
+            "changequest 8259,8262;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_8259_npc_re_jobs_3_1_ranger_txt_1747",
+      "unit": "E5-chain-8259",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8262
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 8262; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-1/ranger.txt",
+          "lines": [
+            1747
+          ],
+          "required_source_literals": [
+            "completequest 8262;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
