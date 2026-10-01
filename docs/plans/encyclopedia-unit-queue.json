@@ -143716,7 +143716,7 @@
       "package": "E3",
       "kind": "e3_translator",
       "tier": "local",
-      "state": "todo",
+      "state": "blocked",
       "attempts": 0,
       "subject": {
         "key": "bonus3 bStateNoRecoverRace",
@@ -143751,14 +143751,19 @@
       ],
       "size_lines": 32,
       "reason": "1 item script(s) first stop at documented `bonus3 bStateNoRecoverRace`",
-      "history": []
+      "history": [
+        "2026-10-01T06:28:29Z activated",
+        "2026-10-01T06:28:29Z blocked: No item in this cluster is fully translated. The remaining scripts use a conditional, an expression, or a command whose meaning is outside this excerpt."
+      ],
+      "baseline_dirty": [],
+      "blocker": "No item in this cluster is fully translated. The remaining scripts use a conditional, an expression, or a command whose meaning is outside this excerpt."
     },
     {
       "id": "E3-translate-bpet",
       "package": "E3",
       "kind": "e3_translator",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "key": "bpet",
@@ -143793,7 +143798,27 @@
       ],
       "size_lines": 32,
       "reason": "1 item script(s) first stop at documented `bpet`",
-      "history": []
+      "history": [
+        "2026-10-01T06:28:29Z activated",
+        "2026-10-01T06:28:30Z validated",
+        "2026-10-01T06:28:30Z verified: 1 claims supported",
+        "2026-10-01T06:28:54Z accepted",
+        "2026-10-01T06:28:54Z committed"
+      ],
+      "baseline_dirty": [
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json"
+      ],
+      "draft_sha256": "d0cbddfda102a4584718eb40dc75e29cda464c5761ad98eadd72874d655af12a",
+      "accepted_files": [
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/export_item_reference.py",
+        "tools/tests/test_export_item_effect_phrases.py"
+      ],
+      "accepted_on": "2026-10-01",
+      "commit": "committed"
     },
     {
       "id": "E3-translate-buyingstore",
