@@ -12,7 +12,7 @@
     "E2_verified": 236,
     "E3_unknown": 973,
     "E4_unknown": 213,
-    "E5_unknown": 826
+    "E5_unknown": 829
   },
   "entries": [
     {
@@ -107309,6 +107309,87 @@
           ],
           "required_source_literals": [
             "changequest 11172,11173;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_11173_npc_re_quests_quests_dicastes_txt_6040",
+      "unit": "E5-chain-11173",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          11173
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 11173; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_dicastes.txt",
+          "lines": [
+            6040
+          ],
+          "required_source_literals": [
+            "changequest 11173,11174;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_11173_npc_re_quests_quests_dicastes_txt_6055",
+      "unit": "E5-chain-11173",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          11174
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 11174; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_dicastes.txt",
+          "lines": [
+            6055
+          ],
+          "required_source_literals": [
+            "changequest 11174,11175;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_11173_npc_re_quests_quests_dicastes_txt_6076",
+      "unit": "E5-chain-11173",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          11175
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 11175; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_dicastes.txt",
+          "lines": [
+            6076
+          ],
+          "required_source_literals": [
+            "changequest 11175,11176;"
           ]
         }
       ],
