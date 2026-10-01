@@ -12,7 +12,7 @@
     "E2_verified": 236,
     "E3_unknown": 973,
     "E4_unknown": 213,
-    "E5_unknown": 749
+    "E5_unknown": 755
   },
   "entries": [
     {
@@ -123401,6 +123401,168 @@
           ],
           "required_source_literals": [
             "erasequest 8273;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_8274_npc_re_quests_eden_26_40_txt_515",
+      "unit": "E5-chain-8274",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8274
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 8274; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/26-40.txt",
+          "lines": [
+            515
+          ],
+          "required_source_literals": [
+            "erasequest 8274;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_8274_npc_re_quests_eden_26_40_txt_539",
+      "unit": "E5-chain-8274",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8275
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 8275; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/26-40.txt",
+          "lines": [
+            539
+          ],
+          "required_source_literals": [
+            "erasequest 8275;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_8274_npc_re_quests_eden_26_40_txt_564",
+      "unit": "E5-chain-8274",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8276
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 8276; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/26-40.txt",
+          "lines": [
+            564
+          ],
+          "required_source_literals": [
+            "erasequest 8276;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_8274_npc_re_quests_eden_26_40_txt_592",
+      "unit": "E5-chain-8274",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8277
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 8277; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/26-40.txt",
+          "lines": [
+            592
+          ],
+          "required_source_literals": [
+            "erasequest 8277;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_8274_npc_re_quests_eden_26_40_txt_620",
+      "unit": "E5-chain-8274",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8278
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 8278; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/26-40.txt",
+          "lines": [
+            620
+          ],
+          "required_source_literals": [
+            "erasequest 8278;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_8274_npc_re_quests_eden_26_40_txt_646",
+      "unit": "E5-chain-8274",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8279
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 8279; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/eden/26-40.txt",
+          "lines": [
+            646
+          ],
+          "required_source_literals": [
+            "erasequest 8279;"
           ]
         }
       ],
