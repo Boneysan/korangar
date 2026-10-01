@@ -136871,7 +136871,7 @@
       "package": "E3",
       "kind": "e3_translator",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "key": "bonus2 bVariableCastrate",
@@ -137011,7 +137011,24 @@
       ],
       "size_lines": 37,
       "reason": "11 item script(s) first stop at documented `bonus2 bVariableCastrate`",
-      "history": []
+      "history": [
+        "2026-10-01T06:01:12Z activated",
+        "2026-10-01T06:01:12Z validated",
+        "2026-10-01T06:01:12Z verified: 1 claims supported",
+        "2026-10-01T06:01:37Z accepted",
+        "2026-10-01T06:01:37Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "1de07190509ace52d730f8e7e15936ef00f98880411cca652200a5f354c3b49e",
+      "accepted_files": [
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/export_item_reference.py",
+        "tools/tests/test_export_item_effect_phrases.py"
+      ],
+      "accepted_on": "2026-10-01",
+      "commit": "committed"
     },
     {
       "id": "E3-translate-bonus-bshortweapondamagereturn",
