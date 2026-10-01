@@ -12,7 +12,7 @@
     "E2_verified": 236,
     "E3_unknown": 973,
     "E4_unknown": 213,
-    "E5_unknown": 2558
+    "E5_unknown": 2567
   },
   "entries": [
     {
@@ -117083,6 +117083,249 @@
           ],
           "required_source_literals": [
             "setquest 12160;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_12165_npc_re_quests_magic_books_txt_705",
+      "unit": "E5-chain-12165",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          12165
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 12165; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/magic_books.txt",
+          "lines": [
+            705
+          ],
+          "required_source_literals": [
+            "erasequest 12165;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_12165_npc_re_quests_magic_books_txt_736",
+      "unit": "E5-chain-12165",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          12218
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 12218; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/magic_books.txt",
+          "lines": [
+            736
+          ],
+          "required_source_literals": [
+            "setquest 12218;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_12165_npc_re_quests_magic_books_txt_754",
+      "unit": "E5-chain-12165",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          12219
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 12219; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/magic_books.txt",
+          "lines": [
+            754
+          ],
+          "required_source_literals": [
+            "setquest 12219;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_12165_npc_re_quests_magic_books_txt_771",
+      "unit": "E5-chain-12165",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          12220
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 12220; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/magic_books.txt",
+          "lines": [
+            771
+          ],
+          "required_source_literals": [
+            "setquest 12220;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_12165_npc_re_quests_magic_books_txt_789",
+      "unit": "E5-chain-12165",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          12221
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 12221; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/magic_books.txt",
+          "lines": [
+            789
+          ],
+          "required_source_literals": [
+            "setquest 12221;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_12165_npc_re_quests_magic_books_txt_807",
+      "unit": "E5-chain-12165",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          12222
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 12222; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/magic_books.txt",
+          "lines": [
+            807
+          ],
+          "required_source_literals": [
+            "setquest 12222;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_12165_npc_re_quests_magic_books_txt_815",
+      "unit": "E5-chain-12165",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          12165
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 12165; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/magic_books.txt",
+          "lines": [
+            815
+          ],
+          "required_source_literals": [
+            "setquest 12165;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_12165_npc_re_quests_quests_dicastes_txt_1047",
+      "unit": "E5-chain-12165",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          12165
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 12165; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_dicastes.txt",
+          "lines": [
+            1047
+          ],
+          "required_source_literals": [
+            "erasequest 12165;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_12165_npc_re_quests_quests_dicastes_txt_1062",
+      "unit": "E5-chain-12165",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          12165
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 12165; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_dicastes.txt",
+          "lines": [
+            1062
+          ],
+          "required_source_literals": [
+            "setquest 12165;"
           ]
         }
       ],
