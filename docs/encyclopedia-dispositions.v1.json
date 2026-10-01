@@ -12,7 +12,7 @@
     "E2_verified": 236,
     "E3_unknown": 973,
     "E4_unknown": 213,
-    "E5_unknown": 952
+    "E5_unknown": 953
   },
   "entries": [
     {
@@ -107147,6 +107147,33 @@
           ],
           "required_source_literals": [
             "setquest 11165;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1115_npc_re_quests_quests_mora_txt_2477",
+      "unit": "E5-chain-1115",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          1115
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 1115; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_mora.txt",
+          "lines": [
+            2477
+          ],
+          "required_source_literals": [
+            "changequest 1115,1116;"
           ]
         }
       ],
