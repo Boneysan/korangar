@@ -169050,6 +169050,384 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_8036_npc_quests_quests_airship_txt_2888",
+      "unit": "E5-chain-8036",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8036
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 8036; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_airship.txt",
+          "lines": [
+            2888
+          ],
+          "required_source_literals": [
+            "setquest(8036);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_8036_npc_quests_quests_airship_txt_2945",
+      "unit": "E5-chain-8036",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8038
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 8038; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_airship.txt",
+          "lines": [
+            2945
+          ],
+          "required_source_literals": [
+            "changequest(8038, 8039);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_8036_npc_quests_quests_airship_txt_3038",
+      "unit": "E5-chain-8036",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8038
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 8038; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_airship.txt",
+          "lines": [
+            3038
+          ],
+          "required_source_literals": [
+            "changequest(8038, 8039);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_8036_npc_quests_quests_airship_txt_3090",
+      "unit": "E5-chain-8036",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8039
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 8039; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_airship.txt",
+          "lines": [
+            3090
+          ],
+          "required_source_literals": [
+            "changequest(8039, 8040);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_8036_npc_quests_quests_airship_txt_3156",
+      "unit": "E5-chain-8036",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8040
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 8040; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_airship.txt",
+          "lines": [
+            3156
+          ],
+          "required_source_literals": [
+            "changequest(8040, 8042);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_8036_npc_quests_quests_airship_txt_3159",
+      "unit": "E5-chain-8036",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8040
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 8040; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_airship.txt",
+          "lines": [
+            3159
+          ],
+          "required_source_literals": [
+            "changequest(8040, 8041);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_8036_npc_quests_quests_airship_txt_3255",
+      "unit": "E5-chain-8036",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8044
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 8044; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_airship.txt",
+          "lines": [
+            3255
+          ],
+          "required_source_literals": [
+            "changequest(8044, 8045);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_8036_npc_quests_quests_airship_txt_3278",
+      "unit": "E5-chain-8036",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8036
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 8036; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_airship.txt",
+          "lines": [
+            3278
+          ],
+          "required_source_literals": [
+            "changequest(8036, 8037);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_8036_npc_quests_quests_airship_txt_3391",
+      "unit": "E5-chain-8036",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8037
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 8037; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_airship.txt",
+          "lines": [
+            3391
+          ],
+          "required_source_literals": [
+            "changequest(8037, 8038);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_8036_npc_quests_quests_airship_txt_3438",
+      "unit": "E5-chain-8036",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8041
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 8041; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_airship.txt",
+          "lines": [
+            3438
+          ],
+          "required_source_literals": [
+            "changequest(8041, 8042);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_8036_npc_quests_quests_hugel_txt_6283",
+      "unit": "E5-chain-8036",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8044
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 8044; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_hugel.txt",
+          "lines": [
+            6283
+          ],
+          "required_source_literals": [
+            "setquest 8044;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_8036_npc_quests_quests_hugel_txt_6352",
+      "unit": "E5-chain-8036",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8044
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 8044; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_hugel.txt",
+          "lines": [
+            6352
+          ],
+          "required_source_literals": [
+            "setquest 8044;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_8036_npc_quests_quests_hugel_txt_6411",
+      "unit": "E5-chain-8036",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8046
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 8046; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_hugel.txt",
+          "lines": [
+            6411
+          ],
+          "required_source_literals": [
+            "changequest 8046,8047;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_8036_npc_quests_quests_hugel_txt_6465",
+      "unit": "E5-chain-8036",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8052
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 8052; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_hugel.txt",
+          "lines": [
+            6465
+          ],
+          "required_source_literals": [
+            "completequest 8052;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
