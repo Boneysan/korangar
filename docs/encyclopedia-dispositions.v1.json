@@ -12,7 +12,7 @@
     "E2_verified": 236,
     "E3_unknown": 973,
     "E4_unknown": 213,
-    "E5_unknown": 503
+    "E5_unknown": 504
   },
   "entries": [
     {
@@ -115679,6 +115679,33 @@
           ],
           "required_source_literals": [
             "changequest 8093,8094;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_8095_npc_quests_quests_rachel_txt_1197",
+      "unit": "E5-chain-8095",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8095
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 8095; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_rachel.txt",
+          "lines": [
+            1197
+          ],
+          "required_source_literals": [
+            "changequest 8095,8096;"
           ]
         }
       ],
