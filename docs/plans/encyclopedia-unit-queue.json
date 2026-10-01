@@ -139176,7 +139176,7 @@
       "package": "E3",
       "kind": "e3_translator",
       "tier": "local",
-      "state": "todo",
+      "state": "done",
       "attempts": 0,
       "subject": {
         "key": "bonus bSPGainValue",
@@ -139276,7 +139276,24 @@
       ],
       "size_lines": 37,
       "reason": "6 item script(s) first stop at documented `bonus bSPGainValue`",
-      "history": []
+      "history": [
+        "2026-10-01T06:07:23Z activated",
+        "2026-10-01T06:07:23Z validated",
+        "2026-10-01T06:07:23Z verified: 1 claims supported",
+        "2026-10-01T06:07:48Z accepted",
+        "2026-10-01T06:07:48Z committed"
+      ],
+      "baseline_dirty": [],
+      "draft_sha256": "a3e9057fb7390b75ca10ae4befbbd0710a3b17871b4ff7a8908fffd0113fd036",
+      "accepted_files": [
+        "docs/plans/encyclopedia-qwen3-journal.md",
+        "docs/plans/encyclopedia-qwen3-progress.json",
+        "docs/plans/encyclopedia-unit-queue.json",
+        "tools/export_item_reference.py",
+        "tools/tests/test_export_item_effect_phrases.py"
+      ],
+      "accepted_on": "2026-10-01",
+      "commit": "committed"
     },
     {
       "id": "E3-translate-bonus2-baddskillblow",
