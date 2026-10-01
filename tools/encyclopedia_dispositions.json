@@ -148476,6 +148476,33 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_11158_npc_re_jobs_3_2_sura_txt_829",
+      "unit": "E5-chain-11158",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          11158
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is completequest 11158; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-2/sura.txt",
+          "lines": [
+            829
+          ],
+          "required_source_literals": [
+            "completequest 11158;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
