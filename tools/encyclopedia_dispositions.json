@@ -178770,6 +178770,114 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_3122_npc_quests_quests_nameless_txt_6929",
+      "unit": "E5-chain-3122",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          3122
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 3122; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_nameless.txt",
+          "lines": [
+            6929
+          ],
+          "required_source_literals": [
+            "changequest 3122,3123;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_3122_npc_quests_quests_nameless_txt_7097",
+      "unit": "E5-chain-3122",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          3125
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 3125; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_nameless.txt",
+          "lines": [
+            7097
+          ],
+          "required_source_literals": [
+            "changequest 3125,3126;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_3122_npc_quests_quests_nameless_txt_7179",
+      "unit": "E5-chain-3122",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          3128
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 3128; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_nameless.txt",
+          "lines": [
+            7179
+          ],
+          "required_source_literals": [
+            "changequest 3128,3129;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_3122_npc_quests_quests_nameless_txt_7223",
+      "unit": "E5-chain-3122",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          3131
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 3131; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/quests_nameless.txt",
+          "lines": [
+            7223
+          ],
+          "required_source_literals": [
+            "changequest 3131,3132;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
