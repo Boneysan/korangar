@@ -239,10 +239,10 @@ def translate_simple_effect(script: str) -> str | None:
 
     body = level_scale.sub(capture_level_scale, body)
 
-    # Preserve simple one-command branches. Nested/multi-command branches remain
-    # untranslated because their full control flow has not been interpreted.
+    # A refine or font check may hold several bonus or setfont commands.
+    # Nested branches stay untranslated.
     simple_if = re.compile(
-        r"if\s*\(\s*(?P<condition>[^{};]+?)\s*\)\s*(?:\{\s*(?P<effect>bonus(?:2|3|4)?\s+[^;]+;)\s*\}|(?P<inline>bonus(?:2|3|4)?\s+[^;]+))",
+        r"if\s*\(\s*(?P<condition>[^{};]+?)\s*\)\s*(?:\{\s*(?P<effect>(?:(?:bonus(?:2|3|4|5)?\s+[^;{]+|setfont\s*\([^)]+\))\s*;\s*)+)\s*\}|(?P<inline>(?:bonus(?:2|3|4|5)?\s+[^;{]+|setfont\s*\([^)]+\))\s*;?))",
         re.I | re.S,
     )
 
@@ -442,15 +442,14 @@ def translate_simple_effect(script: str) -> str | None:
             bonus_name, raw_expr = match.groups()
             parsed = _parse_refine_scaled_value(raw_expr)
             phrase = _refine_scaled_phrase(*parsed) if parsed else None
-            if phrase is None:
-                return None
-            labels = {
-                "batk": "ATK", "bmatk": "MATK", "baspdrate": "attack speed", "batkrate": "physical damage",
-                "bmatkrate": "magic damage", "bcritatkrate": "critical damage",
-                "blongatkrate": "ranged (long-range) physical damage",
-            }
-            effects.append(f"{labels[bonus_name.lower()]} {phrase}")
-            continue
+            if phrase is not None:
+                labels = {
+                    "batk": "ATK", "bmatk": "MATK", "baspdrate": "attack speed", "batkrate": "physical damage",
+                    "bmatkrate": "magic damage", "bcritatkrate": "critical damage",
+                    "blongatkrate": "ranged (long-range) physical damage",
+                }
+                effects.append(f"{labels[bonus_name.lower()]} {phrase}")
+                continue
         match = re.fullmatch(r"bonus2\s+(bAddSize|bMagicAddSize|bSubSize)\s*,\s*(Size_[A-Za-z0-9_]+)\s*,\s*(-?\d+)", statement, re.I)
         if match:
             bonus, size_constant, raw_value = match.groups()
@@ -757,7 +756,75 @@ def translate_simple_effect(script: str) -> str | None:
             continue
         match = re.fullmatch(r"setfont\(\s*(\d+)\s*\)", statement, re.I)
         if match:
-            effects.append(f"sets the client interface font to id {int(match.group(1))}")
+            font_id = int(match.group(1))
+            font_name = {
+                0: "the default font", 1: "RixLoveangel", 2: "RixSquirrel", 3: "NHCgogo",
+                4: "RixDiary", 5: "RixMiniHeart", 6: "RixFreshman", 7: "RixKid",
+                8: "RixMagic", 9: "RixJJangu",
+            }.get(font_id)
+            label = f"{font_name} (id {font_id})" if font_name else f"id {font_id}"
+            effects.append(f"sets the client interface font to {label}")
+            continue
+        match = re.fullmatch(
+            r"bonus\s+(bAtkRate|bHit|bCritical)\s*,\s*\(?\s*getrefine\(\)\s*(?:/\s*(\d+))?\s*\)?",
+            statement,
+            re.I,
+        )
+        if match:
+            bonus_name, divisor = match.group(1).lower(), match.group(2)
+            label = {
+                "batkrate": "Attack Power + (refine / {div})%",
+                "bhit": "Hit + (refine / {div})",
+                "bcritical": "Critical + (refine / {div})",
+            }[bonus_name]
+            if divisor:
+                effects.append(label.format(div=int(divisor)))
+            else:
+                effects.append(label.format(div="1").replace(" / 1", ""))
+            continue
+        match = re.fullmatch(r"itemheal\(\s*rand\(\s*(-?\d+)\s*,\s*(-?\d+)\s*\)\s*,\s*(-?\d+)\s*\)", statement, re.I)
+        if match:
+            low, high, sp = (int(part) for part in match.groups())
+            effects.append(f"heals a random {low} to {high} HP and {sp} SP, then applies potion bonuses")
+            continue
+        match = re.fullmatch(r"percentheal(?:\(\s*|\s+)rand\(\s*(-?\d+)\s*,\s*(-?\d+)\s*\)\s*,\s*(-?\d+)\s*\)?", statement, re.I)
+        if match:
+            low, high, sp = (int(part) for part in match.groups())
+            effects.append(f"heals a random {low}% to {high}% of max HP and {sp}% of max SP")
+            continue
+        match = re.fullmatch(r"guildgetexp\s+rand\(\s*(-?\d+)\s*,\s*(-?\d+)\s*\)", statement, re.I)
+        if match:
+            low, high = int(match.group(1)), int(match.group(2))
+            effects.append(
+                f"grants the character's guild a random {low} to {high} guild experience, and does nothing when the character has no guild"
+            )
+            continue
+        match = re.fullmatch(r"input\s+(@[A-Za-z0-9_]+\$?)", statement, re.I)
+        if match:
+            effects.append(f"opens an input box and stores the text in {match.group(1)}")
+            continue
+        match = re.fullmatch(r"loudhailer\(\s*(@[A-Za-z0-9_]+\$?)\s*\)", statement, re.I)
+        if match:
+            effects.append(f"announces the text in {match.group(1)} as a shout")
+            continue
+        match = re.fullmatch(
+            r"itemskill\s+([A-Za-z0-9_]+)\s*,\s*\(getskilllv\(\1\)\s*<\s*(\d+)\s*\?\s*\2\s*:\s*getskilllv\(\1\)\)",
+            statement,
+            re.I,
+        )
+        if match:
+            skill, floor = match.group(1), int(match.group(2))
+            effects.append(
+                f"uses {_skill_display_name(skill)} at level {floor}, or at the character's own level of that skill when it is already {floor} or higher"
+            )
+            continue
+        match = re.fullmatch(r"bonus3\s+bHPDrainRate\s*,\s*(-?\d+)\s*,\s*(-?\d+)\s*,\s*(-?\d+)", statement, re.I)
+        if match:
+            effects.append(
+                "does not apply bonus3 bHPDrainRate"
+                f",{match.group(1)},{match.group(2)},{match.group(3)}"
+                " because item_bonus.md documents bonus2 bHPDrainRate with two arguments, and the server reports this three-argument form as an unknown bonus"
+            )
             continue
         match = re.fullmatch(r"heal(?:\(\s*|\s+)(-?\d+)\s*,\s*(-?\d+)\s*\)?", statement, re.I)
         if match:
@@ -968,6 +1035,22 @@ def _documented_bonus_phrase(statement: str) -> str | None:
     if not match:
         return None
     kind, name, raw_args = match.groups()
+    if kind.lower() == "bonus2" and name.lower() == "bmagicaddrace" and raw_args:
+        race_token, _sep, percent = raw_args.partition(",")
+        race_token, percent = race_token.strip(), percent.strip()
+        if percent.lstrip("-").isdigit():
+            if race_token.upper().startswith("RC_"):
+                race = _race_display_name(race_token)
+            elif race_token.isdigit():
+                race = {
+                    0: "formless", 1: "undead", 2: "brute", 3: "plant", 4: "insect", 5: "fish",
+                    6: "demon", 7: "demi-human", 8: "angel", 9: "dragon", 10: "player",
+                    11: "boss", 12: "non-boss",
+                }.get(int(race_token))
+            else:
+                race = None
+            if race is not None:
+                return f"Magical damage against {race} +{int(percent)}%"
     row = _bonus_doc_rows().get((kind.lower(), name.lower()))
     if row is None:
         return None
@@ -1042,6 +1125,9 @@ def describe_item_condition(condition: str) -> str | None:
     if match:
         job_class = match.group(1).replace("_", " ")
         return f"For the {job_class} class"
+    match = re.fullmatch(r"getfont\(\)==(\d+)", compact, re.I)
+    if match:
+        return f"When the current interface font id is {match.group(1)}"
     match = re.fullmatch(rf"readparam\(b(Str|Agi|Vit|Int|Dex|Luk)\){comparison}(\d+)", compact, re.I)
     if match:
         stat, operator, value = match.groups()

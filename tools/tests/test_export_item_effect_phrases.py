@@ -20,6 +20,39 @@ class ItemEffectPhraseTests(unittest.TestCase):
         self.assertIn("on yourself, without a target cursor", text)
         self.assertNotIn("checking the skill's conditions", text)
 
+    def test_blocked_clusters_use_documented_shapes(self):
+        self.assertIn(
+            "sets the client interface font to RixLoveangel (id 1)",
+            translate_simple_effect("setfont(1);"),
+        )
+        self.assertEqual(
+            translate_simple_effect("if (getfont() == 1) setfont(0);"),
+            "When the current interface font id is 1: sets the client interface font to the default font (id 0)",
+        )
+        self.assertIn("Attack Power + (refine / 2)%", translate_simple_effect("bonus bAtk2,10; bonus bAtkRate,(getrefine()/2);"))
+        self.assertIn("Magical damage against brute +2%", translate_simple_effect("bonus2 bMagicAddRace,2,2;"))
+        self.assertIn(
+            "does not apply bonus3 bHPDrainRate,10,1,0",
+            translate_simple_effect("bonus3 bHPDrainRate,10,1,0; bonus3 bSPDrainRate,10,1,0;"),
+        )
+        self.assertEqual(
+            translate_simple_effect("guildgetexp rand(600000,1200000);"),
+            "grants the character's guild a random 600000 to 1200000 guild experience, and does nothing when the character has no guild",
+        )
+        self.assertIn("opens an input box", translate_simple_effect("input @megaphone$; loudhailer(@megaphone$); end;"))
+        self.assertEqual(
+            translate_simple_effect("itemheal(rand(50, 100), 0);"),
+            "heals a random 50 to 100 HP and 0 SP, then applies potion bonuses",
+        )
+        self.assertIn(
+            "uses Improve Concentration at level 3",
+            translate_simple_effect("itemskill AC_CONCENTRATION,(getskilllv(AC_CONCENTRATION)<3?3:getskilllv(AC_CONCENTRATION));"),
+        )
+        self.assertEqual(
+            translate_simple_effect("percentheal rand(11,33), 0;"),
+            "heals a random 11% to 33% of max HP and 0% of max SP",
+        )
+
     def test_callfunc_stays_untranslated(self):
         self.assertIsNone(translate_simple_effect('callfunc("F_Nope");'))
 
