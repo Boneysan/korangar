@@ -144561,6 +144561,60 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_12254_npc_re_instances_malangdoculvert_txt_468",
+      "unit": "E5-chain-12254",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          12254
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 12254; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/instances/MalangdoCulvert.txt",
+          "lines": [
+            468
+          ],
+          "required_source_literals": [
+            "erasequest(12254);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_12254_npc_re_instances_malangdoculvert_txt_485",
+      "unit": "E5-chain-12254",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          12254
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 12254; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/instances/MalangdoCulvert.txt",
+          "lines": [
+            485
+          ],
+          "required_source_literals": [
+            "setquest(12254);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
