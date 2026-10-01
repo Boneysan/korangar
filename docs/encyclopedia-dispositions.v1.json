@@ -12,7 +12,7 @@
     "E2_verified": 236,
     "E3_unknown": 973,
     "E4_unknown": 213,
-    "E5_unknown": 575
+    "E5_unknown": 581
   },
   "entries": [
     {
@@ -107039,6 +107039,168 @@
           ],
           "required_source_literals": [
             "setquest(12316);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1260_npc_re_instances_ghost_palace_txt_105",
+      "unit": "E5-chain-1260",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          1260
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 1260; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/instances/ghost_palace.txt",
+          "lines": [
+            105
+          ],
+          "required_source_literals": [
+            "setquest(1260);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1260_npc_re_instances_ghost_palace_txt_125",
+      "unit": "E5-chain-1260",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          1261
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 1261; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/instances/ghost_palace.txt",
+          "lines": [
+            125
+          ],
+          "required_source_literals": [
+            "erasequest(1261);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1260_npc_re_instances_ghost_palace_txt_127",
+      "unit": "E5-chain-1260",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          1260
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 1260; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/instances/ghost_palace.txt",
+          "lines": [
+            127
+          ],
+          "required_source_literals": [
+            "erasequest(1260);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1260_npc_re_instances_ghost_palace_txt_157",
+      "unit": "E5-chain-1260",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          1260
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 1260; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/instances/ghost_palace.txt",
+          "lines": [
+            157
+          ],
+          "required_source_literals": [
+            "setquest(1260);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1260_npc_re_instances_ghost_palace_txt_158",
+      "unit": "E5-chain-1260",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          1261
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 1261; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/instances/ghost_palace.txt",
+          "lines": [
+            158
+          ],
+          "required_source_literals": [
+            "setquest(1261);"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_1260_npc_re_instances_ghost_palace_txt_53",
+      "unit": "E5-chain-1260",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          1260
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is erasequest 1260; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/instances/ghost_palace.txt",
+          "lines": [
+            53
+          ],
+          "required_source_literals": [
+            "erasequest(1260);"
           ]
         }
       ],
