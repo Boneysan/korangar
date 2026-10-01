@@ -150717,6 +150717,33 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_60353_npc_re_quests_quests_brasilis_txt_2514",
+      "unit": "E5-chain-60353",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          60353
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 60353; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/quests/quests_brasilis.txt",
+          "lines": [
+            2514
+          ],
+          "required_source_literals": [
+            "changequest 60353,60354;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
