@@ -14,7 +14,7 @@
     "E4_unknown": 213,
     "E5_absent": 644,
     "E5_unknown": 3383,
-    "E6_unknown": 32
+    "E6_unknown": 33
   },
   "entries": [
     {
@@ -195522,6 +195522,34 @@
           "path": "db/re/mob_db.conf",
           "lines": [
             30336
+          ],
+          "required_source_literals": [
+            "{"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e6_boss_1685_boss",
+      "unit": "E6-boss-1685",
+      "package": "E6",
+      "subject": {
+        "kind": "monster",
+        "name": "APOCALIPS_H",
+        "ids": [
+          1685
+        ]
+      },
+      "result": "unknown",
+      "statement": "Monster 1685 (APOCALIPS_H) has configured database rows in the packet; this record does not enumerate each skill.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/mob_db.conf",
+          "lines": [
+            31565
           ],
           "required_source_literals": [
             "{"
