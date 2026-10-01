@@ -144183,6 +144183,33 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_7051_npc_quests_thana_quest_txt_1538",
+      "unit": "E5-chain-7051",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          7051
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 7051; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/thana_quest.txt",
+          "lines": [
+            1538
+          ],
+          "required_source_literals": [
+            "changequest 7051,7052;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
