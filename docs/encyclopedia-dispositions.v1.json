@@ -12,7 +12,7 @@
     "E2_verified": 236,
     "E3_unknown": 973,
     "E4_unknown": 213,
-    "E5_unknown": 699
+    "E5_unknown": 702
   },
   "entries": [
     {
@@ -106715,6 +106715,87 @@
           ],
           "required_source_literals": [
             "completequest 11154;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_11155_npc_re_jobs_3_2_sura_txt_166",
+      "unit": "E5-chain-11155",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          11155
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is setquest 11155; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-2/sura.txt",
+          "lines": [
+            166
+          ],
+          "required_source_literals": [
+            "setquest 11155;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_11155_npc_re_jobs_3_2_sura_txt_393",
+      "unit": "E5-chain-11155",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          11155
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 11155; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-2/sura.txt",
+          "lines": [
+            393
+          ],
+          "required_source_literals": [
+            "changequest 11155,11156;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_11155_npc_re_jobs_3_2_sura_txt_419",
+      "unit": "E5-chain-11155",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          11156
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 11156; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/re/jobs/3-2/sura.txt",
+          "lines": [
+            419
+          ],
+          "required_source_literals": [
+            "changequest 11156,11157;"
           ]
         }
       ],
