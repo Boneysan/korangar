@@ -239764,6 +239764,34 @@
       ],
       "reviewed_by": "Model-assisted source review (grok-4.7)",
       "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e6_boss_2103_boss",
+      "unit": "E6-boss-2103",
+      "package": "E6",
+      "subject": {
+        "kind": "monster",
+        "name": "E_KTULLANUX",
+        "ids": [
+          2103
+        ]
+      },
+      "result": "unknown",
+      "statement": "Monster 2103 (E_KTULLANUX) has configured database rows in the packet; this record does not enumerate each skill.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/mob_db.conf",
+          "lines": [
+            50483
+          ],
+          "required_source_literals": [
+            "{"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
     }
   ]
 }
