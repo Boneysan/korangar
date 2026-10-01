@@ -12,7 +12,7 @@
     "E2_verified": 236,
     "E3_unknown": 973,
     "E4_unknown": 213,
-    "E5_unknown": 1309
+    "E5_unknown": 1314
   },
   "entries": [
     {
@@ -136199,6 +136199,141 @@
           ],
           "required_source_literals": [
             "setquest 8214;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_8216_npc_quests_first_class_tu_sword_txt_1092",
+      "unit": "E5-chain-8216",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8226
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 8226; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/first_class/tu_sword.txt",
+          "lines": [
+            1092
+          ],
+          "required_source_literals": [
+            "changequest 8226,8227;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_8216_npc_quests_first_class_tu_sword_txt_1153",
+      "unit": "E5-chain-8216",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8224
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 8224; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/first_class/tu_sword.txt",
+          "lines": [
+            1153
+          ],
+          "required_source_literals": [
+            "changequest 8224,8225;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_8216_npc_quests_first_class_tu_sword_txt_1955",
+      "unit": "E5-chain-8216",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8223
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 8223; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/first_class/tu_sword.txt",
+          "lines": [
+            1955
+          ],
+          "required_source_literals": [
+            "changequest 8223,8224;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_8216_npc_quests_first_class_tu_sword_txt_2001",
+      "unit": "E5-chain-8216",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8222
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 8222; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/first_class/tu_sword.txt",
+          "lines": [
+            2001
+          ],
+          "required_source_literals": [
+            "changequest 8222,8223;"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e5_chain_8216_npc_quests_first_class_tu_sword_txt_2194",
+      "unit": "E5-chain-8216",
+      "package": "E5",
+      "subject": {
+        "kind": "quest",
+        "ids": [
+          8216
+        ]
+      },
+      "result": "unknown",
+      "statement": "The quoted line is changequest 8216; this record does not trace the journey around that call.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "npc/quests/first_class/tu_sword.txt",
+          "lines": [
+            2194
+          ],
+          "required_source_literals": [
+            "changequest 8216,8217;"
           ]
         }
       ],
