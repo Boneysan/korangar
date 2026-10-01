@@ -14,7 +14,7 @@
     "E4_unknown": 213,
     "E5_absent": 644,
     "E5_unknown": 3383,
-    "E6_unknown": 63
+    "E6_unknown": 64
   },
   "entries": [
     {
@@ -196390,6 +196390,34 @@
           "path": "db/re/mob_db.conf",
           "lines": [
             50898
+          ],
+          "required_source_literals": [
+            "{"
+          ]
+        }
+      ],
+      "reviewed_by": "Model-assisted source review (grok-4.7)",
+      "reviewed_on": "2026-09-30"
+    },
+    {
+      "id": "e6_boss_2111_boss",
+      "unit": "E6-boss-2111",
+      "package": "E6",
+      "subject": {
+        "kind": "monster",
+        "name": "E_B_HARWORD",
+        "ids": [
+          2111
+        ]
+      },
+      "result": "unknown",
+      "statement": "Monster 2111 (E_B_HARWORD) has configured database rows in the packet; this record does not enumerate each skill.",
+      "conditions": [],
+      "sources": [
+        {
+          "path": "db/re/mob_db.conf",
+          "lines": [
+            50957
           ],
           "required_source_literals": [
             "{"
