@@ -341,7 +341,7 @@ impl PartyMemberState {
     }
 
     /// One-line roster summary for the party window.
-    fn summary_line(&self, local_map: &str, local_position: Option<TilePosition>) -> String {
+    fn summary_line(&self, local_map: &str, local_position: Option<TilePosition>, healer_layout: bool) -> String {
         // Match the friend-list blue/neutral/orange status palette while
         // retaining explicit words for color-independent status reading.
         let reset = crate::state::COLOR_RESET;
@@ -363,13 +363,34 @@ impl PartyMemberState {
             true => String::new(),
             false => format!(" {}", self.class_name),
         };
-        let hp = match self.health() {
-            Some((hp, max)) => format!("  {hp}/{max} HP"),
-            None => String::new(),
-        };
-        let sp = match self.spell() {
-            Some((sp, max)) => format!("  {sp}/{max} SP"),
-            None => String::new(),
+        let (hp, sp) = if healer_layout {
+            let hp_str = match self.health() {
+                Some((hp, max)) => {
+                    let pct = ((hp as f32 / max as f32) * 100.0).round() as usize;
+                    let bar_len = (pct / 10).min(10);
+                    let bar = "█".repeat(bar_len) + &"░".repeat(10 - bar_len);
+                    format!("  [^00FF66HP: {bar} {hp}/{max} ({pct}%)]^000000")
+                }
+                None => "  [^777777HP: ?/??^000000]".to_owned(),
+            };
+            let sp_str = match self.spell() {
+                Some((sp, max)) => {
+                    let pct = ((sp as f32 / max as f32) * 100.0).round() as usize;
+                    format!("  [^66CCFFSP: {sp}/{max} ({pct}%)]^000000")
+                }
+                None => String::new(),
+            };
+            (hp_str, sp_str)
+        } else {
+            let hp_str = match self.health() {
+                Some((hp, max)) => format!("  {hp}/{max} HP"),
+                None => String::new(),
+            };
+            let sp_str = match self.spell() {
+                Some((sp, max)) => format!("  {sp}/{max} SP"),
+                None => String::new(),
+            };
+            (hp_str, sp_str)
         };
         let location = self.location_summary(local_map, local_position);
         format!("{}{leader}{level}{class}  ({online}){hp}{sp}{location}", self.name)
@@ -456,6 +477,7 @@ pub struct PartyState {
     status_text: String,
     shared_destination: Option<SharedDestination>,
     shared_destination_text: String,
+    healer_layout: bool,
     #[hidden_element]
     ready_check: Option<ReadyCheck>,
     ready_check_text: String,
@@ -476,6 +498,7 @@ impl Default for PartyState {
             members: Vec::new(),
             share_pickup: false,
             share_loot: false,
+            healer_layout: false,
             display_text: String::new(),
             status_text: "Not in a party.".to_owned(),
             shared_destination: None,
@@ -552,6 +575,15 @@ impl PartyState {
     pub fn clear_shared_destination_all(&mut self) {
         self.shared_destination = None;
         self.shared_destination_text = "No shared destination.".to_owned();
+    }
+
+    pub fn healer_layout(&self) -> bool {
+        self.healer_layout
+    }
+
+    pub fn set_healer_layout(&mut self, enabled: bool) {
+        self.healer_layout = enabled;
+        self.rebuild_display_text();
     }
 
     pub fn ready_check_text(&self) -> &str {
@@ -910,9 +942,10 @@ impl PartyState {
             .map(|member| (member.map_name.clone(), member.position));
         let (local_map, local_position) = local.unwrap_or_default();
 
+        let healer_layout = self.healer_layout;
         // Members render as their own elements, so each caches its own line.
         for member in &mut self.members {
-            member.display_label = member.summary_line(&local_map, local_position);
+            member.display_label = member.summary_line(&local_map, local_position, healer_layout);
         }
 
         if self.members.is_empty() {
@@ -1269,5 +1302,35 @@ mod tests {
         // Standing on the same tile reads as "here", not "0 tiles away".
         state.update_position(AccountId(2), TilePosition::new(150, 150));
         assert!(find(&state, 2).display_label().contains("(here)"));
+    }
+
+    #[test]
+    fn healer_layout_enlarges_health_and_sp_readability() {
+        let mut state = PartyState::default();
+        let member = PartyMember {
+            account_id: AccountId(2),
+            character_id: CharacterId(2),
+            player_name: "Tank".to_owned(),
+            map_name: "prontera.gat".to_owned(),
+            offline: 0,
+            leader: 0,
+            job_id: JobId(1),
+            base_level: 50,
+        };
+        state.set_roster("P".to_owned(), vec![member], |_| "Knight".to_owned());
+        state.update_health(AccountId(2), 800, 1000, Some((150, 200)));
+
+        let find_label = |state: &PartyState| state.members()[0].display_label().to_owned();
+
+        // Standard layout shows plain numbers
+        assert!(!state.healer_layout());
+        assert!(find_label(&state).contains("800/1000 HP"));
+        assert!(find_label(&state).contains("150/200 SP"));
+
+        // Healer layout enabled: shows high-visibility bar and percentage
+        state.set_healer_layout(true);
+        assert!(state.healer_layout());
+        assert!(find_label(&state).contains("HP: ████████░░ 800/1000 (80%)"));
+        assert!(find_label(&state).contains("SP: 150/200 (75%)"));
     }
 }

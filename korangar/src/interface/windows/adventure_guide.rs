@@ -146,7 +146,22 @@ fn monster_details(monster: &ReferenceMonster) -> Vec<String> {
     if !monster.drops.is_empty() {
         lines.push("Configured database drop rates (server modifiers may change realized chances):".to_owned());
     }
-    for drop in monster.drops.iter().take(8) {
+    let mut sorted_drops = monster.drops.iter().collect::<Vec<_>>();
+    sorted_drops.sort_by_key(|drop| {
+        let is_card = data.card_by_id(drop.item_id).is_some()
+            || crate::world::item_stats(drop.item_id)
+                .as_ref()
+                .is_some_and(|s| s.item_type.eq_ignore_ascii_case("Card"));
+        let is_mvp = drop.kind == "mvp";
+        if is_card {
+            0u8
+        } else if is_mvp {
+            1u8
+        } else {
+            2u8
+        }
+    });
+    for drop in sorted_drops.iter().take(8) {
         lines.push(format!(
             "@guide:item:{}|{} — {} drop {:.2}%",
             drop.item_id,
@@ -651,6 +666,29 @@ fn item_details(item: &ReferenceItem, card: bool) -> Vec<String> {
                         continue;
                     }
                     lines.push(format!("@route:{}", region.map));
+                }
+            }
+        }
+    } else {
+        let dropping_monsters = reference_data().monsters_dropping_item(item.id);
+        if !dropping_monsters.is_empty() {
+            lines.push("Monster database drop sources (server modifiers may change realized chances):".to_owned());
+            for monster in dropping_monsters.iter().take(8) {
+                if let Some(drop) = monster.drops.iter().find(|d| d.item_id == item.id) {
+                    lines.push(format!(
+                        "@guide:monster:{}|{} (ID {}) — {} drop {:.2}%",
+                        monster.id,
+                        monster.sprite_name,
+                        monster.id,
+                        if drop.kind == "mvp" { "MVP" } else { "normal" },
+                        drop.rate_per_10000 as f32 / 100.0
+                    ));
+                    for region in monster.spawn_regions.iter().take(3) {
+                        if !is_graph_map(&region.map) {
+                            continue;
+                        }
+                        lines.push(format!("@route:{}", region.map));
+                    }
                 }
             }
         }
@@ -3045,7 +3083,7 @@ mod tests {
     use super::{
         GuideResult, ReferenceItem, display_name, item_details, job_matches, job_names, map_details, monster_details, parse_guide_link,
         parse_route_cell_link, quest_details, quest_reference_details, reference_data, refinement_details, resolve_details, rumor_details,
-        search_all_categories, service_details, skill_details, status_details, status_tag,
+        search_all_categories, skill_details, status_details, status_tag,
     };
     use crate::dm::reference_data::{ReferenceQuest, ReferenceQuestTarget};
     use crate::state::discovery::DiscoveryState;

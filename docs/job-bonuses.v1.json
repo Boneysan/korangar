@@ -1,6 +1,6 @@
 {
  "schema_version": 1,
- "source_revision": "cc83ca152ff09132a047acad028a9e978bd90b89",
+ "source_revision": "593d20ef94f1882bd4788fb04941e03aa6917a77",
  "source_worktree_dirty": false,
  "mode": "renewal",
  "source": "db/job_db2.txt",

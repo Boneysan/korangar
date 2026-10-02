@@ -356,66 +356,324 @@ impl WindowCache {
     }
 
     fn built_in_layout(name: &str) -> Option<HashMap<WindowClass, WindowState>> {
-        if !matches!(name, "Classic" | "Modern") {
+        if !matches!(
+            name,
+            "Classic" | "Modern" | "Exploration" | "Dungeon" | "Healer" | "Farming" | "Minimal"
+        ) {
             return None;
         }
         let mut layout = Self::default();
         layout.seed_default_entries();
-        if name == "Modern" {
-            let set = |entries: &mut HashMap<WindowClass, WindowState>, class, point, left, top, width, height| {
-                entries.insert(
-                    class,
-                    WindowState::new(Anchor::with_point(point, ScreenPosition { left, top }), ScreenSize {
-                        width,
-                        height,
-                    }),
+        let set = |entries: &mut HashMap<WindowClass, WindowState>, class, point, left, top, width, height| {
+            entries.insert(
+                class,
+                WindowState::new(Anchor::with_point(point, ScreenPosition { left, top }), ScreenSize {
+                    width,
+                    height,
+                }),
+            );
+        };
+        match name {
+            "Classic" => {
+                // Default layout already seeded.
+            }
+            "Modern" => {
+                set(
+                    &mut layout.entries,
+                    WindowClass::Hotbar,
+                    AnchorPoint::BottomCenter,
+                    -270.0,
+                    -100.0,
+                    540.0,
+                    88.0,
                 );
-            };
-            set(
-                &mut layout.entries,
-                WindowClass::Hotbar,
-                AnchorPoint::BottomCenter,
-                -270.0,
-                -100.0,
-                540.0,
-                88.0,
-            );
-            set(
-                &mut layout.entries,
-                WindowClass::StatusBar,
-                AnchorPoint::TopLeft,
-                MARGIN,
-                MARGIN,
-                300.0,
-                160.0,
-            );
-            set(
-                &mut layout.entries,
-                WindowClass::Minimap,
-                AnchorPoint::TopRight,
-                -210.0,
-                MARGIN,
-                198.0,
-                220.0,
-            );
-            set(
-                &mut layout.entries,
-                WindowClass::Party,
-                AnchorPoint::BottomRight,
-                -332.0,
-                -212.0,
-                320.0,
-                240.0,
-            );
-            set(
-                &mut layout.entries,
-                WindowClass::QuestLog,
-                AnchorPoint::CenterRight,
-                -360.0,
-                -190.0,
-                340.0,
-                380.0,
-            );
+                set(
+                    &mut layout.entries,
+                    WindowClass::StatusBar,
+                    AnchorPoint::TopLeft,
+                    MARGIN,
+                    MARGIN,
+                    300.0,
+                    160.0,
+                );
+                set(
+                    &mut layout.entries,
+                    WindowClass::Minimap,
+                    AnchorPoint::TopRight,
+                    -210.0,
+                    MARGIN,
+                    198.0,
+                    220.0,
+                );
+                set(
+                    &mut layout.entries,
+                    WindowClass::Party,
+                    AnchorPoint::BottomRight,
+                    -332.0,
+                    -212.0,
+                    320.0,
+                    240.0,
+                );
+                set(
+                    &mut layout.entries,
+                    WindowClass::QuestLog,
+                    AnchorPoint::CenterRight,
+                    -360.0,
+                    -190.0,
+                    340.0,
+                    380.0,
+                );
+            }
+            "Exploration" => {
+                // Maximizes navigation awareness and quest progression.
+                set(
+                    &mut layout.entries,
+                    WindowClass::Minimap,
+                    AnchorPoint::TopRight,
+                    -280.0,
+                    MARGIN,
+                    268.0,
+                    300.0,
+                );
+                set(
+                    &mut layout.entries,
+                    WindowClass::QuestLog,
+                    AnchorPoint::TopRight,
+                    -360.0,
+                    320.0,
+                    340.0,
+                    420.0,
+                );
+                set(
+                    &mut layout.entries,
+                    WindowClass::StatusBar,
+                    AnchorPoint::TopLeft,
+                    MARGIN,
+                    MARGIN,
+                    280.0,
+                    140.0,
+                );
+                set(
+                    &mut layout.entries,
+                    WindowClass::Hotbar,
+                    AnchorPoint::BottomCenter,
+                    -220.0,
+                    -(80.0 + MARGIN),
+                    440.0,
+                    80.0,
+                );
+                set(
+                    &mut layout.entries,
+                    WindowClass::Party,
+                    AnchorPoint::CenterLeft,
+                    MARGIN,
+                    -40.0,
+                    280.0,
+                    220.0,
+                );
+            }
+            "Dungeon" => {
+                // Group survival and boss focus.
+                set(
+                    &mut layout.entries,
+                    WindowClass::Party,
+                    AnchorPoint::CenterLeft,
+                    MARGIN,
+                    -100.0,
+                    340.0,
+                    300.0,
+                );
+                set(
+                    &mut layout.entries,
+                    WindowClass::BossTarget,
+                    AnchorPoint::TopCenter,
+                    -180.0,
+                    MARGIN + 40.0,
+                    360.0,
+                    200.0,
+                );
+                set(
+                    &mut layout.entries,
+                    WindowClass::MonsterTarget,
+                    AnchorPoint::TopCenter,
+                    -140.0,
+                    MARGIN + 40.0,
+                    280.0,
+                    150.0,
+                );
+                set(
+                    &mut layout.entries,
+                    WindowClass::StatusBar,
+                    AnchorPoint::TopLeft,
+                    MARGIN,
+                    MARGIN,
+                    320.0,
+                    160.0,
+                );
+                set(
+                    &mut layout.entries,
+                    WindowClass::Hotbar,
+                    AnchorPoint::BottomCenter,
+                    -270.0,
+                    -100.0,
+                    540.0,
+                    88.0,
+                );
+                set(
+                    &mut layout.entries,
+                    WindowClass::Minimap,
+                    AnchorPoint::TopRight,
+                    -176.0,
+                    MARGIN,
+                    176.0,
+                    200.0,
+                );
+                set(
+                    &mut layout.entries,
+                    WindowClass::QuestLog,
+                    AnchorPoint::BottomRight,
+                    -320.0,
+                    -260.0,
+                    300.0,
+                    240.0,
+                );
+            }
+            "Healer" => {
+                // Prominent party frame for rapid click-targeting and triage.
+                set(
+                    &mut layout.entries,
+                    WindowClass::Party,
+                    AnchorPoint::CenterLeft,
+                    MARGIN + 40.0,
+                    -120.0,
+                    380.0,
+                    340.0,
+                );
+                set(
+                    &mut layout.entries,
+                    WindowClass::PlayerTarget,
+                    AnchorPoint::TopLeft,
+                    MARGIN,
+                    MARGIN + 120.0,
+                    280.0,
+                    200.0,
+                );
+                set(
+                    &mut layout.entries,
+                    WindowClass::StatusBar,
+                    AnchorPoint::TopLeft,
+                    MARGIN,
+                    MARGIN,
+                    320.0,
+                    160.0,
+                );
+                set(
+                    &mut layout.entries,
+                    WindowClass::Hotbar,
+                    AnchorPoint::BottomCenter,
+                    -270.0,
+                    -100.0,
+                    540.0,
+                    88.0,
+                );
+                set(
+                    &mut layout.entries,
+                    WindowClass::Minimap,
+                    AnchorPoint::TopRight,
+                    -160.0,
+                    MARGIN,
+                    150.0,
+                    180.0,
+                );
+            }
+            "Farming" => {
+                // Inventory, loot, and monster target clarity.
+                set(
+                    &mut layout.entries,
+                    WindowClass::Inventory,
+                    AnchorPoint::TopRight,
+                    -(380.0 + MARGIN),
+                    MARGIN,
+                    380.0,
+                    340.0,
+                );
+                set(
+                    &mut layout.entries,
+                    WindowClass::Minimap,
+                    AnchorPoint::TopRight,
+                    -(160.0 + MARGIN),
+                    360.0,
+                    160.0,
+                    180.0,
+                );
+                set(
+                    &mut layout.entries,
+                    WindowClass::MonsterTarget,
+                    AnchorPoint::TopLeft,
+                    MARGIN,
+                    MARGIN + 140.0,
+                    280.0,
+                    150.0,
+                );
+                set(
+                    &mut layout.entries,
+                    WindowClass::StatusBar,
+                    AnchorPoint::TopLeft,
+                    MARGIN,
+                    MARGIN,
+                    280.0,
+                    140.0,
+                );
+                set(
+                    &mut layout.entries,
+                    WindowClass::Hotbar,
+                    AnchorPoint::BottomCenter,
+                    -220.0,
+                    -(80.0 + MARGIN),
+                    440.0,
+                    80.0,
+                );
+            }
+            "Minimal" => {
+                // Cleanest view of the world.
+                set(
+                    &mut layout.entries,
+                    WindowClass::Hotbar,
+                    AnchorPoint::BottomCenter,
+                    -180.0,
+                    -(50.0 + MARGIN),
+                    360.0,
+                    50.0,
+                );
+                set(
+                    &mut layout.entries,
+                    WindowClass::StatusBar,
+                    AnchorPoint::TopLeft,
+                    MARGIN,
+                    MARGIN,
+                    240.0,
+                    90.0,
+                );
+                set(
+                    &mut layout.entries,
+                    WindowClass::Minimap,
+                    AnchorPoint::TopRight,
+                    -(140.0 + MARGIN),
+                    MARGIN,
+                    140.0,
+                    160.0,
+                );
+                set(
+                    &mut layout.entries,
+                    WindowClass::Chat,
+                    AnchorPoint::BottomLeft,
+                    MARGIN,
+                    -(120.0 + MARGIN),
+                    380.0,
+                    120.0,
+                );
+            }
+            _ => return None,
         }
         Some(layout.entries.clone())
     }
@@ -850,5 +1108,20 @@ mod tests {
 
         cache.note_combat();
         assert_eq!(cache.window_alpha(WindowClass::Hotbar), 1.0);
+    }
+
+    #[test]
+    fn built_in_hud_profiles_all_produce_valid_layouts() {
+        let profiles = ["Classic", "Modern", "Exploration", "Dungeon", "Healer", "Farming", "Minimal"];
+        for profile in profiles {
+            let layout = WindowCache::built_in_layout(profile).unwrap_or_else(|| panic!("profile '{profile}' must exist"));
+            assert!(layout.contains_key(&WindowClass::Hotbar), "{profile} must contain Hotbar");
+            assert!(layout.contains_key(&WindowClass::StatusBar), "{profile} must contain StatusBar");
+            assert!(layout.contains_key(&WindowClass::Minimap), "{profile} must contain Minimap");
+            for (class, state) in &layout {
+                assert!(state.has_valid_size(), "{profile} {class:?} must have a valid size");
+            }
+        }
+        assert!(WindowCache::built_in_layout("UnknownProfile").is_none());
     }
 }

@@ -90,6 +90,40 @@ impl AutolootItemType {
     }
 }
 
+/// GDD §11.3: Visual ground-loot filter mode.
+/// Note: Cards and wishlisted items are ALWAYS visible regardless of filter
+/// settings.
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq, Serialize, Deserialize, RustState, StateElement)]
+pub enum GroundLootFilter {
+    /// Show all dropped items on the ground.
+    #[default]
+    All,
+    /// Show equipment, weapons, armor, cards, and wishlisted items.
+    EquipmentAndCards,
+    /// Show only cards and wishlisted items.
+    CardsOnly,
+}
+
+impl GroundLootFilter {
+    pub const ALL: [Self; 3] = [Self::All, Self::EquipmentAndCards, Self::CardsOnly];
+
+    pub const fn label(self) -> &'static str {
+        match self {
+            Self::All => "All items visible",
+            Self::EquipmentAndCards => "Equipment & Cards only",
+            Self::CardsOnly => "Cards only",
+        }
+    }
+
+    pub fn next(self) -> Self {
+        match self {
+            Self::All => Self::EquipmentAndCards,
+            Self::EquipmentAndCards => Self::CardsOnly,
+            Self::CardsOnly => Self::All,
+        }
+    }
+}
+
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq, Serialize, Deserialize, RustState, StateElement)]
 pub enum CombatTextFrequency {
     /// Show every damage, miss, and healing number.
@@ -164,6 +198,13 @@ impl CombatTextSize {
     }
 }
 
+/// Named equipment set stored client-side as item IDs (GDD §10.7).
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+pub struct NamedEquipmentSet {
+    pub name: String,
+    pub item_ids: Vec<u32>,
+}
+
 #[derive(Clone, Serialize, Deserialize, RustState, StateElement)]
 pub struct GameSettings {
     pub auto_attack: bool,
@@ -233,6 +274,14 @@ pub struct GameSettings {
     #[serde(default)]
     #[hidden_element]
     pub autoloot_types: HashSet<AutolootItemType>,
+    /// GDD 11.3: Visual ground-loot filter mode.
+    #[serde(default)]
+    pub ground_loot_filter: GroundLootFilter,
+    /// GDD 11.3: Starred/wishlisted items that are never hidden by visual
+    /// filters.
+    #[serde(default)]
+    #[hidden_element]
+    pub wishlist_items: HashSet<u32>,
     /// Show floating damage, miss, and healing numbers.
     #[serde(default = "default_true")]
     pub show_combat_text: bool,
@@ -283,6 +332,10 @@ pub struct GameSettings {
     #[serde(default)]
     #[hidden_element]
     pub hunting_goals_by_character: Vec<(u32, Vec<u32>)>,
+    /// Named equipment sets keyed by character ID (GDD §10.7).
+    #[serde(default)]
+    #[hidden_element]
+    pub equipment_sets_by_character: Vec<(u32, Vec<NamedEquipmentSet>)>,
 }
 
 impl Default for GameSettings {
@@ -305,6 +358,8 @@ impl Default for GameSettings {
             show_minimap_population_regions: true,
             autoloot_rate: 0,
             autoloot_types: HashSet::new(),
+            ground_loot_filter: GroundLootFilter::default(),
+            wishlist_items: HashSet::new(),
             show_combat_text: true,
             combat_text_frequency: CombatTextFrequency::default(),
             combat_text_size: CombatTextSize::default(),
@@ -317,6 +372,7 @@ impl Default for GameSettings {
             protected_items_by_character: Vec::new(),
             tracked_quests_by_character: Vec::new(),
             hunting_goals_by_character: Vec::new(),
+            equipment_sets_by_character: Vec::new(),
         }
     }
 }
@@ -436,6 +492,96 @@ impl GameSettings {
             self.hunting_goals_by_character.push((character_id, monster_ids));
         }
     }
+
+    pub fn equipment_sets(&self, character_id: u32) -> &[NamedEquipmentSet] {
+        self.equipment_sets_by_character
+            .iter()
+            .find(|(id, _)| *id == character_id)
+            .map(|(_, sets)| sets.as_slice())
+            .unwrap_or(&[])
+    }
+
+    pub fn save_equipment_set(&mut self, character_id: u32, name: String, item_ids: Vec<u32>) {
+        if let Some((_, sets)) = self.equipment_sets_by_character.iter_mut().find(|(id, _)| *id == character_id) {
+            if let Some(existing) = sets.iter_mut().find(|s| s.name.eq_ignore_ascii_case(&name)) {
+                existing.item_ids = item_ids;
+            } else {
+                sets.push(NamedEquipmentSet { name, item_ids });
+            }
+        } else {
+            self.equipment_sets_by_character
+                .push((character_id, vec![NamedEquipmentSet { name, item_ids }]));
+        }
+    }
+
+    pub fn delete_equipment_set(&mut self, character_id: u32, name: &str) -> bool {
+        if let Some((_, sets)) = self.equipment_sets_by_character.iter_mut().find(|(id, _)| *id == character_id) {
+            let before = sets.len();
+            sets.retain(|s| !s.name.eq_ignore_ascii_case(name));
+            sets.len() < before
+        } else {
+            false
+        }
+    }
+
+    pub fn is_wishlisted(&self, item_id: u32) -> bool {
+        self.wishlist_items.contains(&item_id)
+    }
+
+    pub fn toggle_wishlist(&mut self, item_id: u32) -> bool {
+        if self.wishlist_items.contains(&item_id) {
+            self.wishlist_items.remove(&item_id);
+            false
+        } else {
+            self.wishlist_items.insert(item_id);
+            true
+        }
+    }
+
+    pub fn add_wishlist(&mut self, item_id: u32) {
+        self.wishlist_items.insert(item_id);
+    }
+
+    pub fn remove_wishlist(&mut self, item_id: u32) {
+        self.wishlist_items.remove(&item_id);
+    }
+}
+
+/// GDD §11.3: Visual ground-loot filter check.
+///
+/// Guaranteed contracts:
+/// 1. Cards-always-visible rule: Card drops are NEVER hidden by any filter.
+/// 2. Starred/wishlisted items are NEVER hidden by any filter.
+/// 3. Equipment & Cards filter keeps gear, armor, weapons, ammo, cards, and
+///    wishlist.
+/// 4. Cards Only filter keeps only cards and wishlisted items.
+pub fn should_render_ground_item(filter: GroundLootFilter, wishlist: &HashSet<u32>, item_id: u32) -> bool {
+    // Contract 1: Cards are ALWAYS visible.
+    let stats = crate::world::item_stats(item_id);
+    let is_card = stats
+        .as_ref()
+        .is_some_and(|s| s.item_type.eq_ignore_ascii_case("Card") || s.item_type.eq_ignore_ascii_case("IT_CARD"))
+        || (4000..=5000).contains(&item_id);
+    if is_card {
+        return true;
+    }
+
+    // Contract 2: Wishlisted items are ALWAYS visible.
+    if wishlist.contains(&item_id) {
+        return true;
+    }
+
+    // Contract 3: Apply filter.
+    match filter {
+        GroundLootFilter::All => true,
+        GroundLootFilter::EquipmentAndCards => stats.as_ref().is_some_and(|s| {
+            matches!(
+                s.item_type.as_str(),
+                "Weapon" | "Armor" | "IT_WEAPON" | "IT_ARMOR" | "IT_AMMO" | "Ammo" | "IT_CARD" | "Card"
+            )
+        }),
+        GroundLootFilter::CardsOnly => false,
+    }
 }
 
 impl Drop for GameSettings {
@@ -478,10 +624,14 @@ impl GameSettings {
 
 #[cfg(test)]
 mod tests {
+    use std::collections::HashSet;
     use std::mem::ManuallyDrop;
 
     use super::super::key_bindings::BindableAction;
-    use super::{AutolootItemType, CombatTextFrequency, CombatTextSize, GameSettings, GroundSkillTargetMode, format_damage_number};
+    use super::{
+        AutolootItemType, CombatTextFrequency, CombatTextSize, GameSettings, GroundLootFilter, GroundSkillTargetMode, format_damage_number,
+        should_render_ground_item,
+    };
 
     #[test]
     fn autoloot_item_type_command_names_match_hercules_exactly() {
@@ -681,5 +831,108 @@ mod tests {
         assert_eq!(format_damage_number(123, 1), "123");
         assert_eq!(format_damage_number(123, 0), "123");
         assert_eq!(format_damage_number(123, 5), "123 x 5");
+    }
+
+    #[test]
+    fn equipment_sets_persist_per_character_and_round_trip() {
+        let mut settings = ManuallyDrop::new(GameSettings::default());
+        settings.save_equipment_set(100, "Farming".to_owned(), vec![1101, 2101]);
+        settings.save_equipment_set(100, "Boss".to_owned(), vec![1161]);
+        settings.save_equipment_set(200, "Undead".to_owned(), vec![1201]);
+
+        let sets_100 = settings.equipment_sets(100);
+        assert_eq!(sets_100.len(), 2);
+        assert_eq!(sets_100[0].name, "Farming");
+        assert_eq!(sets_100[0].item_ids, vec![1101, 2101]);
+
+        let encoded = ron::ser::to_string(&*settings).unwrap();
+        let mut loaded: ManuallyDrop<GameSettings> = ManuallyDrop::new(ron::from_str(&encoded).unwrap());
+        assert_eq!(loaded.equipment_sets(100).len(), 2);
+        assert_eq!(loaded.equipment_sets(200).len(), 1);
+
+        assert!(loaded.delete_equipment_set(100, "Farming"));
+        assert_eq!(loaded.equipment_sets(100).len(), 1);
+        assert_eq!(loaded.equipment_sets(100)[0].name, "Boss");
+    }
+
+    #[test]
+    fn ground_loot_filter_and_wishlist_preserve_cards_and_wishlisted_items() {
+        let poring_card_id = 4001; // Poring Card
+        let sword_id = 1101; // Sword (Weapon)
+        let fluff_id = 914; // Fluff (Etc)
+
+        let mut wishlist = HashSet::new();
+
+        // Under All filter: everything visible
+        assert!(should_render_ground_item(GroundLootFilter::All, &wishlist, poring_card_id));
+        assert!(should_render_ground_item(GroundLootFilter::All, &wishlist, sword_id));
+        assert!(should_render_ground_item(GroundLootFilter::All, &wishlist, fluff_id));
+
+        // Under EquipmentAndCards filter: card and sword visible, fluff hidden
+        assert!(should_render_ground_item(
+            GroundLootFilter::EquipmentAndCards,
+            &wishlist,
+            poring_card_id
+        ));
+        assert!(should_render_ground_item(
+            GroundLootFilter::EquipmentAndCards,
+            &wishlist,
+            sword_id
+        ));
+        assert!(!should_render_ground_item(
+            GroundLootFilter::EquipmentAndCards,
+            &wishlist,
+            fluff_id
+        ));
+
+        // Wishlisting fluff makes it visible even under EquipmentAndCards filter
+        wishlist.insert(fluff_id);
+        assert!(should_render_ground_item(
+            GroundLootFilter::EquipmentAndCards,
+            &wishlist,
+            fluff_id
+        ));
+
+        // Under CardsOnly filter: card and wishlisted fluff visible, non-wishlisted
+        // sword hidden
+        assert!(should_render_ground_item(
+            GroundLootFilter::CardsOnly,
+            &wishlist,
+            poring_card_id
+        ));
+        assert!(should_render_ground_item(GroundLootFilter::CardsOnly, &wishlist, fluff_id));
+        assert!(!should_render_ground_item(GroundLootFilter::CardsOnly, &wishlist, sword_id));
+
+        // Cards-always-visible rule: card is visible even with empty wishlist on
+        // CardsOnly
+        wishlist.clear();
+        assert!(should_render_ground_item(
+            GroundLootFilter::CardsOnly,
+            &wishlist,
+            poring_card_id
+        ));
+    }
+
+    #[test]
+    fn ground_loot_settings_round_trip() {
+        let mut settings = ManuallyDrop::new(GameSettings::default());
+        settings.ground_loot_filter = GroundLootFilter::EquipmentAndCards;
+        settings.add_wishlist(914);
+        settings.add_wishlist(501);
+
+        assert!(settings.is_wishlisted(914));
+        assert!(settings.is_wishlisted(501));
+        assert!(!settings.is_wishlisted(1001));
+
+        let encoded = ron::ser::to_string(&*settings).unwrap();
+        let loaded: ManuallyDrop<GameSettings> = ManuallyDrop::new(ron::from_str(&encoded).unwrap());
+        assert_eq!(loaded.ground_loot_filter, GroundLootFilter::EquipmentAndCards);
+        assert!(loaded.is_wishlisted(914));
+        assert!(loaded.is_wishlisted(501));
+
+        let mut loaded = loaded;
+        loaded.remove_wishlist(914);
+        assert!(!loaded.is_wishlisted(914));
+        assert!(loaded.is_wishlisted(501));
     }
 }

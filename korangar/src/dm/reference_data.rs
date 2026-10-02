@@ -223,7 +223,7 @@ pub struct ReferenceMobSkill {
     pub trigger_translation_status: String,
 }
 
-#[derive(Debug, Deserialize)]
+#[derive(Clone, Debug, Deserialize)]
 pub struct ReferenceMonsterDrop {
     pub item_id: u32,
     pub aegis_name: String,
@@ -1844,6 +1844,15 @@ impl ReferenceData {
         self.monsters_by_id.get(&id).map(|&index| &self.monsters[index])
     }
 
+    /// Return all monsters that drop a specified item or card (GDD §11.2 /
+    /// F26).
+    pub fn monsters_dropping_item(&self, item_id: u32) -> Vec<&ReferenceMonster> {
+        self.monsters
+            .iter()
+            .filter(|monster| monster.drops.iter().any(|drop| drop.item_id == item_id))
+            .collect()
+    }
+
     /// Summarize exported static spawn directives for a map, including total
     /// records, record-weighted mean level, minimum and maximum monster levels,
     /// and distinct species count.
@@ -2230,6 +2239,7 @@ mod tests {
         );
         assert!(data.search_cards("4001", 10).iter().any(|card| card.id == 4001));
         assert!(data.search_cards("poring", 10).iter().any(|card| card.id == 4001));
+        assert!(data.monsters_dropping_item(4001).iter().any(|monster| monster.id == 1002));
         assert!(
             data.search_cards("scripted_not_translated", data.cards.len())
                 .iter()

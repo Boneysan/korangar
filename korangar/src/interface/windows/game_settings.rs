@@ -6,7 +6,7 @@ use rust_state::{Path, State};
 
 use crate::input::InputEvent;
 use crate::interface::windows::WindowClass;
-use crate::settings::{AutolootItemType, BindableAction, GameSettings, GameSettingsPathExt};
+use crate::settings::{AutolootItemType, BindableAction, GameSettings, GameSettingsPathExt, GroundLootFilter};
 use crate::state::localization::LocalizationPathExt;
 use crate::state::skills::SkillTreePathExt;
 use crate::state::theme::InterfaceThemeType;
@@ -158,6 +158,32 @@ where
                     event: InputEvent::ToggleAutolootType { item_type },
                 }));
             }
+            self.elements.push(ErasedElement::new(text! {
+                text: format!(
+                    "Ground Loot Filter (Wishlisted items: {}):",
+                    settings.wishlist_items.len()
+                ),
+            }));
+            self.elements.push(ErasedElement::new(split! {
+                gaps: theme().window().gaps(),
+                children: (
+                    button! {
+                        text: if settings.ground_loot_filter == GroundLootFilter::All { "[x] All Items" } else { "All Items" },
+                        tooltip: "Display all dropped items on the ground.",
+                        event: InputEvent::SetGroundLootFilter { filter: GroundLootFilter::All },
+                    },
+                    button! {
+                        text: if settings.ground_loot_filter == GroundLootFilter::EquipmentAndCards { "[x] Gear & Cards" } else { "Gear & Cards" },
+                        tooltip: "Display only equipment, weapons, armor, ammo, cards, and wishlisted items.",
+                        event: InputEvent::SetGroundLootFilter { filter: GroundLootFilter::EquipmentAndCards },
+                    },
+                    button! {
+                        text: if settings.ground_loot_filter == GroundLootFilter::CardsOnly { "[x] Cards Only" } else { "Cards Only" },
+                        tooltip: "Display only monster cards and wishlisted items.",
+                        event: InputEvent::SetGroundLootFilter { filter: GroundLootFilter::CardsOnly },
+                    },
+                ),
+            }));
             for (index, element) in self.elements.iter_mut().enumerate() {
                 element.create_layout_info(state, store.child_store(index as u64), resolver);
             }
@@ -359,8 +385,28 @@ where
                 button! { text: "Export shortcuts", tooltip: "Write client/keybindings.ron", event: InputEvent::ExportKeyBindings },
                 text! { text: "HUD layout" },
                 button! { text: "Lock / unlock HUD editing", tooltip: "Locks window movement and resizing.", event: InputEvent::ToggleHudEditLock },
-                button! { text: "Classic layout", event: InputEvent::SelectHudLayout("Classic") },
-                button! { text: "Modern layout", event: InputEvent::SelectHudLayout("Modern") },
+                split! {
+                    gaps: theme().window().gaps(),
+                    children: (
+                        button! { text: "Classic layout", tooltip: "Classic Ragnarok Online layout with top-left status and top-right minimap.", event: InputEvent::SelectHudLayout("Classic") },
+                        button! { text: "Modern layout", tooltip: "Modern layout with centered hotbar and side frames.", event: InputEvent::SelectHudLayout("Modern") },
+                    ),
+                },
+                split! {
+                    gaps: theme().window().gaps(),
+                    children: (
+                        button! { text: "Exploration layout", tooltip: "Enlarged minimap and prominent quest tracker for world navigation.", event: InputEvent::SelectHudLayout("Exploration") },
+                        button! { text: "Dungeon layout", tooltip: "Enlarged party frame and clear target frame for group dungeon runs.", event: InputEvent::SelectHudLayout("Dungeon") },
+                    ),
+                },
+                split! {
+                    gaps: theme().window().gaps(),
+                    children: (
+                        button! { text: "Healer layout", tooltip: "Enlarged, accessible party frames for rapid party member targeting and healing.", event: InputEvent::SelectHudLayout("Healer") },
+                        button! { text: "Farming layout", tooltip: "Quick access to inventory drops, loot, and combat targets.", event: InputEvent::SelectHudLayout("Farming") },
+                    ),
+                },
+                button! { text: "Minimal layout", tooltip: "Compact status and hotbar for maximum world visibility.", event: InputEvent::SelectHudLayout("Minimal") },
                 button! { text: "Save current as My Layout", tooltip: "Overwrites the per-character My Layout slot.", event: InputEvent::SaveHudLayout("My Layout") },
                 button! { text: "Reset HUD layout", event: InputEvent::ResetHudLayout },
                 button! { text: "Cycle HUD snap grid (off / 8 / 16 / 32 px)", tooltip: "When enabled, dragged windows snap their positions to the selected screen-pixel grid.", event: InputEvent::CycleHudSnapGrid },

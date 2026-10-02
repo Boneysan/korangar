@@ -12,7 +12,7 @@ use rust_state::State;
 
 use crate::interface::resource::{ItemSource, SkillSource};
 use crate::loaders::ServiceId;
-use crate::settings::{AutolootItemType, BindableAction, KeyChord};
+use crate::settings::{AutolootItemType, BindableAction, GroundLootFilter, KeyChord};
 use crate::state::ClientState;
 use crate::state::character_creation::{CharacterSex, CreationStat, HairStyle};
 use crate::state::inventory::InventoryTab;
@@ -280,6 +280,18 @@ pub enum InputEvent {
     RemoveClientHuntingGoal {
         monster_id: u32,
     },
+    /// Save currently equipped items as a named set (GDD §10.7).
+    SaveEquipmentSet {
+        name: String,
+    },
+    /// Equip items in a named set one by one from inventory (GDD §10.7).
+    EquipNamedSet {
+        name: String,
+    },
+    /// Delete a named equipment set (GDD §10.7).
+    DeleteEquipmentSet {
+        name: String,
+    },
     DropItem {
         inventory_index: ragnarok_packets::InventoryIndex,
         amount: u16,
@@ -409,6 +421,13 @@ pub enum InputEvent {
     JumpToPartyMember {
         character_name: String,
     },
+    /// Plot a route to an online party member's map and coordinates (GDD
+    /// 10.14).
+    NavigateToPartyMember {
+        character_name: String,
+        map_name: String,
+        position: Option<(u16, u16)>,
+    },
     /// GDD 11.2's Loot tab: set the `@autoloot` drop-rate threshold. Clamped
     /// to 0-100 by the handler; Hercules itself clamps too, so an
     /// out-of-range value is not a wire hazard, just wasted intent.
@@ -420,6 +439,14 @@ pub enum InputEvent {
     /// read-then-flip shape as `ToggleMinimapWindow`.
     ToggleAutolootType {
         item_type: AutolootItemType,
+    },
+    /// Set the ground loot filter level (GDD §11.2 / F26).
+    SetGroundLootFilter {
+        filter: GroundLootFilter,
+    },
+    /// Toggle an item in the client ground loot wishlist (GDD §11.2 / F26).
+    ToggleWishlistItem {
+        item_id: u32,
     },
     /// Cast a skill.
     CastSkill {

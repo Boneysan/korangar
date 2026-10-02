@@ -132,8 +132,8 @@ use crate::loaders::*;
 use crate::renderer::{AlignHorizontal, DebugMarkerRenderer};
 use crate::renderer::{EffectRenderer, GameInterfaceRenderer};
 use crate::settings::{
-    CombatTextSize, DisplayMode, GameSettings, GameSettingsPathExt, GraphicsSettings, GroundSkillTargetMode, IN_GAME_THEMES_PATH,
-    LightingMode, MENU_THEMES_PATH, ServiceSettingsPathExt, WORLD_THEMES_PATH,
+    CombatTextSize, DisplayMode, GameSettings, GameSettingsPathExt, GraphicsSettings, GroundLootFilter, GroundSkillTargetMode,
+    IN_GAME_THEMES_PATH, LightingMode, MENU_THEMES_PATH, ServiceSettingsPathExt, WORLD_THEMES_PATH, should_render_ground_item,
 };
 use crate::state::character_creation::{CharacterCreationPathExt, CharacterSex, HairStyle, StatSpread};
 use crate::state::quests::{ClientHuntingGoalEntry, QuestEntry, QuestHuntObjectiveEntry, QuestRequirementEntry};
@@ -1999,6 +1999,11 @@ fn slash_command_usage(command: &str) -> Option<&'static str> {
         "/store" => "Usage: /store <inventory_index> [amount]",
         "/retrieve" => "Usage: /retrieve <storage_index> [amount]",
         "/ignore" | "/unignore" => "Usage: /ignore <name>  or  /unignore <name>",
+        "/saveset" => "Usage: /saveset <name>",
+        "/equip" | "/equipset" => "Usage: /equip <name>  (or /equipset <name>)",
+        "/deleteset" => "Usage: /deleteset <name>",
+        "/loot" => "Usage: /loot <all|gear|cards>",
+        "/wishlist" => "Usage: /wishlist <item_id> (or /wishlist clear)",
         _ => return None,
     })
 }
@@ -5181,6 +5186,28 @@ impl Client {
                         }
 
                         ground_items.push(ground_item);
+
+                        let raw_id = item_id.0;
+                        let stats = crate::world::item_stats(raw_id);
+                        let is_card = stats.as_ref().is_some_and(|s| s.item_type.eq_ignore_ascii_case("Card"));
+                        let is_wishlisted = self.client_state.follow(client_state().game_settings()).is_wishlisted(raw_id);
+                        if is_card || is_wishlisted {
+                            let item_name = stats.as_ref().map(|s| s.name.as_str()).unwrap_or("Unknown Item");
+                            let alert_msg = if is_card {
+                                format!("★ Rare Card Drop: {item_name}!")
+                            } else {
+                                format!("★ Wishlist Item Drop: {item_name}!")
+                            };
+                            self.audio_engine.play_sound_effect(self.main_menu_click_sound_effect);
+                            self.client_state.follow_mut(client_state().toasts()).push(
+                                format!("ground_drop_{raw_id}"),
+                                alert_msg.clone(),
+                                crate::state::toasts::ToastPriority::High,
+                            );
+                            self.client_state
+                                .follow_mut(client_state().chat_messages())
+                                .push(ChatMessage::new(alert_msg, MessageColor::Information));
+                        }
                     } else {
                         #[cfg(feature = "debug")]
                         print_debug!("[{}] failed to spawn item", "error".red());
@@ -5815,7 +5842,33 @@ impl Client {
                 }
                 NetworkEvent::UpdateStat { stat_type } => {
                     if let Some(player) = self.client_state.try_follow_mut(this_player()) {
+                        let was_overweight = player.is_overweight();
+                        let was_hard_overweight = player.is_hard_overweight();
                         player.update_stat(stat_type);
+                        let is_overweight = player.is_overweight();
+                        let is_hard_overweight = player.is_hard_overweight();
+
+                        if !was_hard_overweight && is_hard_overweight {
+                            let msg = "Warning: 90% Overweight! Cannot attack or cast skills.";
+                            self.client_state.follow_mut(client_state().toasts()).push(
+                                "weight_hard_overweight",
+                                msg,
+                                crate::state::toasts::ToastPriority::High,
+                            );
+                            self.client_state
+                                .follow_mut(client_state().chat_messages())
+                                .push(ChatMessage::new(msg.to_owned(), MessageColor::Error));
+                        } else if !was_overweight && is_overweight {
+                            let msg = "Notice: 50% Overweight. Natural HP/SP recovery stopped.";
+                            self.client_state.follow_mut(client_state().toasts()).push(
+                                "weight_soft_overweight",
+                                msg,
+                                crate::state::toasts::ToastPriority::Normal,
+                            );
+                            self.client_state
+                                .follow_mut(client_state().chat_messages())
+                                .push(ChatMessage::new(msg.to_owned(), MessageColor::Information));
+                        }
                     }
                 }
                 NetworkEvent::CriticalWeightPercent { percent } => {
@@ -6917,6 +6970,12 @@ impl Client {
                     result,
                 } => {
                     self.client_state.follow_mut(client_state().party_state()).remove_member(account_id);
+                    if self.support_target == Some(EntityId(account_id.0)) {
+                        self.support_target = None;
+                        if self.interface.is_window_with_class_open(WindowClass::PlayerTarget) {
+                            self.interface.close_window_with_class(WindowClass::PlayerTarget);
+                        }
+                    }
                     self.client_state.follow_mut(client_state().toasts()).push(
                         format!("party:{}", account_id.0),
                         format!("{character_name} left the party"),
@@ -7968,6 +8027,163 @@ impl Client {
         settings.save();
     }
 
+    pub fn save_current_equipment_set(&mut self, name: String) {
+        let Some(character_id) = self.current_character_id else {
+            self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
+                "Cannot save equipment set: character not selected.".to_owned(),
+                MessageColor::Error,
+            ));
+            return;
+        };
+
+        let equipped_ids: Vec<u32> = self
+            .client_state
+            .follow(client_state().inventory())
+            .items()
+            .iter()
+            .filter(|item| {
+                matches!(
+                    item.details,
+                    korangar_networking::InventoryItemDetails::Equippable { equipped_position, .. }
+                        if equipped_position != ragnarok_packets::EquipPosition::NONE
+                )
+            })
+            .map(|item| item.item_id.0)
+            .collect();
+
+        if equipped_ids.is_empty() {
+            self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
+                format!("Equipment set '{name}' not saved: no items currently equipped."),
+                MessageColor::Error,
+            ));
+            return;
+        }
+
+        let count = equipped_ids.len();
+        let settings = self.client_state.follow_mut(client_state().game_settings());
+        settings.save_equipment_set(character_id.0, name.clone(), equipped_ids);
+        settings.save();
+
+        self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
+            format!("Saved equipment set '{name}' with {count} item(s)."),
+            MessageColor::Information,
+        ));
+        self.client_state.follow_mut(client_state().toasts()).push(
+            format!("equip-set:{name}"),
+            format!("Saved set '{name}' ({count} items)"),
+            crate::state::toasts::ToastPriority::Normal,
+        );
+    }
+
+    pub fn equip_named_set(&mut self, name: &str) {
+        let Some(character_id) = self.current_character_id else {
+            self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
+                "Cannot equip set: character not selected.".to_owned(),
+                MessageColor::Error,
+            ));
+            return;
+        };
+
+        let sets = self
+            .client_state
+            .follow(client_state().game_settings())
+            .equipment_sets(character_id.0);
+        let Some(set) = sets.iter().find(|s| s.name.eq_ignore_ascii_case(name)) else {
+            self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
+                format!("Equipment set '{name}' not found. Use '/saveset {name}' to create it."),
+                MessageColor::Error,
+            ));
+            return;
+        };
+
+        let item_ids = set.item_ids.clone();
+        let set_name = set.name.clone();
+
+        let mut queued_count = 0;
+        let mut already_equipped_count = 0;
+        let mut missing_items: Vec<String> = Vec::new();
+
+        for item_id in item_ids {
+            let inventory_items = self.client_state.follow(client_state().inventory()).items();
+            let already_equipped = inventory_items.iter().any(|item| {
+                item.item_id.0 == item_id
+                    && matches!(
+                        item.details,
+                        korangar_networking::InventoryItemDetails::Equippable { equipped_position, .. }
+                            if equipped_position != ragnarok_packets::EquipPosition::NONE
+                    )
+            });
+
+            if already_equipped {
+                already_equipped_count += 1;
+                continue;
+            }
+
+            let candidate = inventory_items.iter().find(|item| {
+                item.item_id.0 == item_id
+                    && matches!(
+                        item.details,
+                        korangar_networking::InventoryItemDetails::Equippable { equipped_position, .. }
+                            if equipped_position == ragnarok_packets::EquipPosition::NONE
+                    )
+            });
+
+            if let Some(item) = candidate {
+                let index = item.index;
+                let equip_pos = match item.details {
+                    korangar_networking::InventoryItemDetails::Equippable { equip_position, .. } => equip_position,
+                    _ => ragnarok_packets::EquipPosition::NONE,
+                };
+                if self.networking_system.request_item_equip(index, equip_pos).is_ok() {
+                    queued_count += 1;
+                }
+            } else {
+                let name_str = crate::world::item_stats(item_id)
+                    .map(|s| s.name.clone())
+                    .unwrap_or_else(|| format!("ID {item_id}"));
+                missing_items.push(name_str);
+            }
+        }
+
+        if queued_count > 0 {
+            self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
+                format!("Equipping set '{set_name}': {queued_count} equip request(s) queued ({already_equipped_count} already equipped)."),
+                MessageColor::Information,
+            ));
+            self.client_state.follow_mut(client_state().toasts()).push(
+                format!("equip-set:{set_name}"),
+                format!("Equipping '{set_name}' ({queued_count} items)"),
+                crate::state::toasts::ToastPriority::Normal,
+            );
+        } else if already_equipped_count > 0 && missing_items.is_empty() {
+            self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
+                format!("Equipment set '{set_name}' is already fully equipped."),
+                MessageColor::Information,
+            ));
+        }
+
+        if !missing_items.is_empty() {
+            self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
+                format!("Set '{set_name}': missing item(s): {}.", missing_items.join(", ")),
+                MessageColor::Error,
+            ));
+        }
+    }
+
+    pub fn delete_named_equipment_set(&mut self, name: &str) {
+        let Some(character_id) = self.current_character_id else {
+            return;
+        };
+        let settings = self.client_state.follow_mut(client_state().game_settings());
+        if settings.delete_equipment_set(character_id.0, name) {
+            settings.save();
+            self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
+                format!("Deleted equipment set '{name}'."),
+                MessageColor::Information,
+            ));
+        }
+    }
+
     /// Resolve minimap BMP only when the archive actually contains it.
     ///
     /// `TextureLoader::get_or_load` falls back to a placeholder on miss, so we
@@ -8219,6 +8435,9 @@ impl Client {
                 InputEvent::IdentifyItem { inventory_index } => {
                     let _ = self.networking_system.one_click_item_identify(inventory_index);
                 }
+                InputEvent::SaveEquipmentSet { name } => self.save_current_equipment_set(name),
+                InputEvent::EquipNamedSet { name } => self.equip_named_set(&name),
+                InputEvent::DeleteEquipmentSet { name } => self.delete_named_equipment_set(&name),
                 other => remaining.push(other),
             }
         }
@@ -9288,6 +9507,46 @@ impl Client {
                         .networking_system
                         .send_chat_message(self.client_state.follow(client_state().player_name()), &command);
                 }
+                InputEvent::NavigateToPartyMember {
+                    character_name,
+                    map_name,
+                    position,
+                } => {
+                    let destination_map = map_name.trim_end_matches(".gat").to_owned();
+                    let current_map = self.client_state.follow(client_state().minimap()).map_name().to_string();
+                    let route_exists = if current_map.eq_ignore_ascii_case(&destination_map) {
+                        true
+                    } else {
+                        crate::world::route_edges(&current_map, &destination_map).is_some()
+                    };
+                    if !route_exists {
+                        self.client_state.follow_mut(client_state().toasts()).push(
+                            "party-nav-unreachable",
+                            format!("No verified route to {character_name} on {destination_map} is known."),
+                            crate::state::toasts::ToastPriority::Normal,
+                        );
+                    } else {
+                        self.client_state.follow_mut(client_state().minimap()).set_navigation_target(Some(
+                            crate::state::minimap::NavigationTarget {
+                                map_name: destination_map.clone(),
+                                position,
+                            },
+                        ));
+                        self.refresh_navigation_marker();
+                        if !self.interface.is_window_with_class_open(WindowClass::Minimap) {
+                            self.interface.open_window(MinimapWindow);
+                        }
+                        self.client_state.follow_mut(client_state().toasts()).push(
+                            "party-nav",
+                            format!("Navigating to {character_name} ({destination_map})."),
+                            crate::state::toasts::ToastPriority::Normal,
+                        );
+                        self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
+                            format!("Navigating to party member {character_name} ({destination_map})."),
+                            MessageColor::Information,
+                        ));
+                    }
+                }
                 InputEvent::OpenPartyMemberTarget {
                     account_id,
                     character_name,
@@ -9328,6 +9587,34 @@ impl Client {
                     let _ = self
                         .networking_system
                         .send_chat_message(self.client_state.follow(client_state().player_name()), &command);
+                }
+                InputEvent::SetGroundLootFilter { filter } => {
+                    self.client_state.follow_mut(client_state().game_settings()).ground_loot_filter = filter;
+                    let msg = match filter {
+                        GroundLootFilter::All => "Ground loot filter set to: All items.",
+                        GroundLootFilter::EquipmentAndCards => "Ground loot filter set to: Equipment & Cards.",
+                        GroundLootFilter::CardsOnly => "Ground loot filter set to: Cards only.",
+                    };
+                    self.client_state
+                        .follow_mut(client_state().chat_messages())
+                        .push(ChatMessage::new(msg.to_owned(), MessageColor::Information));
+                }
+                InputEvent::ToggleWishlistItem { item_id } => {
+                    let added = self
+                        .client_state
+                        .follow_mut(client_state().game_settings())
+                        .toggle_wishlist(item_id);
+                    let item_name = crate::world::item_stats(item_id)
+                        .map(|s| s.name.clone())
+                        .unwrap_or_else(|| format!("Item {item_id}"));
+                    let msg = if added {
+                        format!("Added {item_name} (ID {item_id}) to loot wishlist.")
+                    } else {
+                        format!("Removed {item_name} (ID {item_id}) from loot wishlist.")
+                    };
+                    self.client_state
+                        .follow_mut(client_state().chat_messages())
+                        .push(ChatMessage::new(msg, MessageColor::Information));
                 }
                 InputEvent::PlayerInteract { entity_id } => {
                     let is_local_player = self
@@ -9547,6 +9834,81 @@ impl Client {
                         } else {
                             self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
                                 "Usage: /retrieve <storage_index> [amount]".to_owned(),
+                                MessageColor::Information,
+                            ));
+                        }
+                        continue;
+                    }
+
+                    if let Some(rest) = text.strip_prefix("/saveset ") {
+                        let name = rest.trim();
+                        if !name.is_empty() {
+                            self.save_current_equipment_set(name.to_owned());
+                        } else {
+                            self.client_state
+                                .follow_mut(client_state().chat_messages())
+                                .push(ChatMessage::new("Usage: /saveset <name>".to_owned(), MessageColor::Information));
+                        }
+                        continue;
+                    }
+
+                    if let Some(rest) = text.strip_prefix("/equip ").or_else(|| text.strip_prefix("/equipset ")) {
+                        let name = rest.trim();
+                        if !name.is_empty() {
+                            self.equip_named_set(name);
+                        } else {
+                            self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
+                                "Usage: /equip <name>  (or /equipset <name>)".to_owned(),
+                                MessageColor::Information,
+                            ));
+                        }
+                        continue;
+                    }
+
+                    if let Some(rest) = text.strip_prefix("/deleteset ") {
+                        let name = rest.trim();
+                        if !name.is_empty() {
+                            self.delete_named_equipment_set(name);
+                        } else {
+                            self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
+                                "Usage: /deleteset <name>".to_owned(),
+                                MessageColor::Information,
+                            ));
+                        }
+                        continue;
+                    }
+
+                    if let Some(rest) = text.strip_prefix("/loot ") {
+                        let mode = rest.trim().to_lowercase();
+                        let filter = match mode.as_str() {
+                            "all" => Some(GroundLootFilter::All),
+                            "gear" | "equipment" | "equip" => Some(GroundLootFilter::EquipmentAndCards),
+                            "cards" | "card" => Some(GroundLootFilter::CardsOnly),
+                            _ => None,
+                        };
+                        if let Some(filter) = filter {
+                            self.input_event_buffer.push(InputEvent::SetGroundLootFilter { filter });
+                        } else {
+                            self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
+                                "Usage: /loot <all|gear|cards>".to_owned(),
+                                MessageColor::Information,
+                            ));
+                        }
+                        continue;
+                    }
+
+                    if let Some(rest) = text.strip_prefix("/wishlist ") {
+                        let arg = rest.trim();
+                        if arg.eq_ignore_ascii_case("clear") {
+                            self.client_state.follow_mut(client_state().game_settings()).wishlist_items.clear();
+                            self.client_state
+                                .follow_mut(client_state().chat_messages())
+                                .push(ChatMessage::new("Loot wishlist cleared.".to_owned(), MessageColor::Information));
+                        } else if let Ok(item_id) = arg.parse::<u32>() {
+                            self.input_event_buffer.push(InputEvent::ToggleWishlistItem { item_id });
+                        } else {
+                            self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
+                                "Usage: /wishlist <item_id> (or /wishlist clear)".to_owned(),
                                 MessageColor::Information,
                             ));
                         }
@@ -10053,6 +10415,9 @@ impl Client {
                 InputEvent::CloseItemActions => {
                     self.interface.close_window_with_class(WindowClass::ItemActions);
                 }
+                InputEvent::SaveEquipmentSet { name } => self.save_current_equipment_set(name),
+                InputEvent::EquipNamedSet { name } => self.equip_named_set(&name),
+                InputEvent::DeleteEquipmentSet { name } => self.delete_named_equipment_set(&name),
                 InputEvent::IdentifyItem { inventory_index } => {
                     let _ = self.networking_system.one_click_item_identify(inventory_index);
                 }
@@ -12491,12 +12856,11 @@ impl Client {
                     pending_skill_cursor_state(in_range)
                 }
                 PickerTarget::Entity(entity_id) if !is_interface_hovered => {
-                    if self
-                        .client_state
-                        .follow(client_state().ground_items())
-                        .iter()
-                        .any(|item| item.get_entity_id() == entity_id)
-                    {
+                    let game_settings = self.client_state.follow(client_state().game_settings());
+                    if self.client_state.follow(client_state().ground_items()).iter().any(|item| {
+                        item.get_entity_id() == entity_id
+                            && should_render_ground_item(game_settings.ground_loot_filter, &game_settings.wishlist_items, item.item_id.0)
+                    }) {
                         MouseCursorState::HoverItem
                     } else {
                         self.client_state
@@ -12585,11 +12949,15 @@ impl Client {
                             match input_report.mouse_target {
                                 PickerTarget::Nothing => {}
                                 PickerTarget::Entity(entity_id) => {
-                                    let is_ground_item = self
-                                        .client_state
-                                        .follow(client_state().ground_items())
-                                        .iter()
-                                        .any(|item| item.get_entity_id() == entity_id);
+                                    let game_settings = self.client_state.follow(client_state().game_settings());
+                                    let is_ground_item = self.client_state.follow(client_state().ground_items()).iter().any(|item| {
+                                        item.get_entity_id() == entity_id
+                                            && should_render_ground_item(
+                                                game_settings.ground_loot_filter,
+                                                &game_settings.wishlist_items,
+                                                item.item_id.0,
+                                            )
+                                    });
 
                                     if is_ground_item {
                                         self.input_event_buffer.push(InputEvent::PickUpItem { entity_id })
@@ -13204,7 +13572,20 @@ impl<'a, 'm: 'a> MapRenderContext<'a, 'm> {
     fn render_directional_shadows(&mut self) {
         let entities = self.client_state.follow(client_state().entities());
         let dead_entities = self.client_state.follow(client_state().dead_entities());
-        let ground_items = self.client_state.follow(client_state().ground_items());
+        let game_settings = self.client_state.follow(client_state().game_settings());
+        let filtered_ground_items: Vec<GroundItem>;
+        let ground_items: &[GroundItem] = if game_settings.ground_loot_filter == GroundLootFilter::All {
+            self.client_state.follow(client_state().ground_items())
+        } else {
+            filtered_ground_items = self
+                .client_state
+                .follow(client_state().ground_items())
+                .iter()
+                .filter(|item| should_render_ground_item(game_settings.ground_loot_filter, &game_settings.wishlist_items, item.item_id.0))
+                .cloned()
+                .collect();
+            &filtered_ground_items
+        };
 
         for partition_index in 0..PARTITION_COUNT {
             let partition_camera = self.directional_shadow_camera.get_partition_camera(partition_index);
@@ -13303,7 +13684,20 @@ impl<'a, 'm: 'a> MapRenderContext<'a, 'm> {
     fn render_geometry(&mut self) {
         let entities = self.client_state.follow(client_state().entities());
         let dead_entities = self.client_state.follow(client_state().dead_entities());
-        let ground_items = self.client_state.follow(client_state().ground_items());
+        let game_settings = self.client_state.follow(client_state().game_settings());
+        let filtered_ground_items: Vec<GroundItem>;
+        let ground_items: &[GroundItem] = if game_settings.ground_loot_filter == GroundLootFilter::All {
+            self.client_state.follow(client_state().ground_items())
+        } else {
+            filtered_ground_items = self
+                .client_state
+                .follow(client_state().ground_items())
+                .iter()
+                .filter(|item| should_render_ground_item(game_settings.ground_loot_filter, &game_settings.wishlist_items, item.item_id.0))
+                .cloned()
+                .collect();
+            &filtered_ground_items
+        };
         let player = self.client_state.try_follow(this_entity());
 
         let offset = self.model_instructions.len();
@@ -13722,12 +14116,11 @@ impl<'a, 'm: 'a> MapRenderContext<'a, 'm> {
                             self.middle_interface_renderer
                                 .render_hover_text(&text, self.scaling, self.mouse_position);
                         }
-                    } else if let Some(item) = self
-                        .client_state
-                        .follow(client_state().ground_items())
-                        .iter()
-                        .find(|item| item.get_entity_id() == entity_id)
-                    {
+                    } else if let Some(item) = self.client_state.follow(client_state().ground_items()).iter().find(|item| {
+                        let game_settings = self.client_state.follow(client_state().game_settings());
+                        item.get_entity_id() == entity_id
+                            && should_render_ground_item(game_settings.ground_loot_filter, &game_settings.wishlist_items, item.item_id.0)
+                    }) {
                         let name = self.library.get::<ItemName>(ItemNameKey {
                             item_id: item.item_id,
                             is_identified: item.is_identified,
@@ -13766,6 +14159,8 @@ mod slash_command_tests {
             "/retrieve",
             "/ignore",
             "/unignore",
+            "/loot",
+            "/wishlist",
         ] {
             assert!(slash_command_usage(command).is_some(), "{command} has no usage line");
         }
