@@ -822,6 +822,20 @@ pub struct ReferenceNpcSource {
     pub line: u32,
 }
 
+impl ReferenceNpc {
+    /// A campaign story NPC: kept out of the open player Guide.
+    pub fn is_story(&self) -> bool {
+        is_campaign_source_path(&self.source.path)
+    }
+}
+
+impl ReferenceQuest {
+    /// A campaign story quest: kept out of the open player Guide.
+    pub fn is_story(&self) -> bool {
+        CAMPAIGN_QUEST_IDS.contains(&self.id)
+    }
+}
+
 #[derive(Debug, Deserialize)]
 pub struct ReferenceServerRule {
     pub id: String,
@@ -847,6 +861,19 @@ pub struct ReferenceAlias {
 struct VersionedAliasesFile {
     schema_version: u32,
     entries: Vec<ReferenceAlias>,
+}
+
+/// Seal Cascade campaign quest ids (GDD 9.5 quest row; `CAMPAIGN.md`).
+pub const CAMPAIGN_QUEST_IDS: std::ops::RangeInclusive<u32> = 20000..=20234;
+
+/// Campaign scripts live under this tree. Everything the Seal Cascade story
+/// declares there - hub NPCs, hidden set-piece NPCs, quest givers - is plot.
+pub const CAMPAIGN_SCRIPT_PREFIX: &str = "npc/custom/dm_campaign/";
+
+/// Whether a source path belongs to the campaign story rather than the
+/// server's general content.
+pub fn is_campaign_source_path(path: &str) -> bool {
+    path.starts_with(CAMPAIGN_SCRIPT_PREFIX)
 }
 
 /// Whether a typed query reaches `alias`: exactly, or - for queries of four
@@ -1672,6 +1699,8 @@ impl ReferenceData {
         let mut matches: Vec<_> = self
             .quests
             .iter()
+            // Campaign story quests are not part of the open player Guide.
+            .filter(|quest| !quest.is_story())
             .filter(|quest| {
                 query.is_empty()
                     || quest.name.to_lowercase().contains(&query)
@@ -1696,6 +1725,9 @@ impl ReferenceData {
         let mut matches: Vec<_> = self
             .npcs
             .iter()
+            // Campaign story NPCs (hubs, hidden set pieces) are not part of the
+            // open player Guide.
+            .filter(|npc| !npc.is_story())
             .filter(|npc| {
                 query.is_empty()
                     || npc.id.to_string() == query

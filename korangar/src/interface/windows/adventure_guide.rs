@@ -779,6 +779,16 @@ fn coverage_details() -> Vec<String> {
     lines
 }
 
+/// A source reference the open player Guide may show. A campaign script's path
+/// names its arc and act, which is plot, so it is withheld; the fact it
+/// established (a map flag, say) is still shown.
+fn player_source(path: &str, line: u32) -> String {
+    match crate::dm::reference_data::is_campaign_source_path(path) {
+        true => "campaign script (source withheld)".to_owned(),
+        false => format!("{path}:{line}"),
+    }
+}
+
 fn is_graph_map(map_name: &str) -> bool {
     crate::world::navigation_graph()
         .maps
@@ -1032,8 +1042,11 @@ fn map_details(map_name: &str, town_pois: &[TownPoi]) -> Vec<String> {
                 format!(" ({})", entry.value)
             };
             lines.push(format!(
-                "{}{}: {} — {}:{}",
-                entry.flag, value, entry.description, entry.source.path, entry.source.line
+                "{}{}: {} — {}",
+                entry.flag,
+                value,
+                entry.description,
+                player_source(&entry.source.path, entry.source.line)
             ));
             if let Some(overridden) = entry.overridden_directive_count {
                 lines.push(format!(
@@ -3437,6 +3450,128 @@ mod tests {
         }
         let lines = rumor_details(&data.rumors[0]);
         assert!(lines.iter().any(|line| line == "Evidence state: not reviewed"), "{lines:?}");
+    }
+
+    /// GDD 9.5/9.6: the Guide is open to a fresh account, and "campaign plot
+    /// spoilers ... remain separate". No page, link or search of the player
+    /// Guide may surface Seal Cascade story content: its quests, its NPCs
+    /// (including hidden set-piece NPCs), or its script paths.
+    #[test]
+    fn the_open_guide_never_surfaces_campaign_story_content() {
+        use std::collections::{BTreeMap, BTreeSet};
+        let data = reference_data();
+        let story_quests: BTreeSet<u32> = data.quests.iter().filter(|quest| quest.is_story()).map(|quest| quest.id).collect();
+        let story_npcs: BTreeSet<u32> = data.npcs.iter().filter(|npc| npc.is_story()).map(|npc| npc.id).collect();
+        assert!(!story_quests.is_empty() && !story_npcs.is_empty());
+
+        // Names that only campaign NPCs use; a name shared with a general NPC
+        // (e.g. a Kafra) proves nothing about a leak.
+        let general_names: BTreeSet<String> = data
+            .npcs
+            .iter()
+            .filter(|npc| !npc.is_story())
+            .flat_map(|npc| [npc.name.to_lowercase(), npc.display_name.to_lowercase()])
+            .collect();
+        // A campaign NPC may share a name with part of a real card, item or
+        // monster ("Memory of Thanatos" / "Memory of Thanatos Card"); that
+        // page is not a leak.
+        let game_names: BTreeSet<String> = data
+            .items
+            .iter()
+            .map(|entry| entry.name.to_lowercase())
+            .chain(data.cards.iter().map(|entry| entry.name.to_lowercase()))
+            .chain(data.monsters.iter().map(|entry| entry.name.to_lowercase()))
+            .collect();
+        let story_names: BTreeSet<String> = data
+            .npcs
+            .iter()
+            .filter(|npc| npc.is_story())
+            .flat_map(|npc| [npc.display_name.clone(), npc.name.split('#').next().unwrap_or("").to_owned()])
+            .map(|name| name.trim().to_lowercase())
+            .filter(|name| name.len() >= 6 && !general_names.contains(name) && !game_names.iter().any(|game| game.contains(name.as_str())))
+            .collect();
+
+        // Guard the guard: enough distinctive names must survive the filters,
+        // or the name check below would pass by testing almost nothing.
+        assert!(story_names.len() >= 20, "only {} distinctive campaign names", story_names.len());
+
+        let mk = |kind: &str, id: u32| GuideResult {
+            label: String::new(),
+            kind: kind.to_owned(),
+            id,
+        };
+        let mut entries: Vec<GuideResult> = Vec::new();
+        entries.extend(data.monsters.iter().map(|entry| mk("monster", entry.id)));
+        entries.extend(data.items.iter().map(|entry| mk("item", entry.id)));
+        entries.extend(data.cards.iter().map(|entry| mk("card", entry.id)));
+        entries.extend(data.skills.iter().map(|entry| mk("skill", entry.id as u32)));
+        entries.extend(data.statuses.iter().map(|entry| mk("status", entry.id)));
+        entries.extend(
+            data.quests
+                .iter()
+                .filter(|quest| !quest.is_story())
+                .map(|quest| mk("quest", quest.id)),
+        );
+        entries.extend(data.npcs.iter().filter(|npc| !npc.is_story()).map(|npc| mk("npc", npc.id)));
+        entries.extend((0..data.npc_services.len()).map(|index| mk("service", index as u32)));
+        entries.extend(data.rumors.iter().map(|entry| mk("rumor", entry.id)));
+        entries.extend(job_names().map(|(id, _)| mk("job", id as u32)));
+        entries.extend((0..crate::world::navigation_graph().maps.len()).map(|index| mk("map", index as u32)));
+
+        // (page kind, what leaked) -> (count, first example)
+        let mut leaks: BTreeMap<(String, &'static str), (usize, String)> = BTreeMap::new();
+        for entry in &entries {
+            for line in resolve_details(entry) {
+                let lower = line.to_lowercase();
+                let mut note = |what: &'static str| {
+                    let slot = leaks.entry((entry.kind.clone(), what)).or_insert((
+                        0,
+                        format!("{}:{} | {}", entry.kind, entry.id, line.chars().take(110).collect::<String>()),
+                    ));
+                    slot.0 += 1;
+                };
+                if lower.contains("dm_campaign") {
+                    note("campaign script path");
+                }
+                if let Some(link) = parse_guide_link(&line) {
+                    if (link.kind == "quest" && story_quests.contains(&link.id)) || (link.kind == "npc" && story_npcs.contains(&link.id)) {
+                        note("link to a story entry");
+                    }
+                }
+                if story_names.iter().any(|name| lower.contains(name.as_str())) {
+                    note("campaign NPC name");
+                }
+            }
+        }
+
+        // Searching must not find them either.
+        let mut found = BTreeSet::new();
+        for quest in data.quests.iter().filter(|quest| quest.is_story()) {
+            for row in search_all_categories(&quest.name.to_lowercase(), &DiscoveryState::default(), &[]) {
+                if row.kind == "quest" && story_quests.contains(&row.id) {
+                    found.insert(format!("quest {}", row.id));
+                }
+            }
+        }
+        for name in story_names.iter().take(40) {
+            for row in search_all_categories(name, &DiscoveryState::default(), &[]) {
+                if row.kind == "npc" && story_npcs.contains(&row.id) {
+                    found.insert(format!("npc {}", row.id));
+                }
+            }
+        }
+
+        let report: Vec<String> = leaks
+            .iter()
+            .map(|((kind, what), (count, example))| format!("{kind} pages: {what} x{count}, e.g. {example}"))
+            .collect();
+        assert!(
+            report.is_empty() && found.is_empty(),
+            "story content leaks into the open Guide:\n{}\nsearchable story entries: {} e.g. {:?}",
+            report.join("\n"),
+            found.len(),
+            found.iter().take(3).collect::<Vec<_>>()
+        );
     }
 
     #[test]
