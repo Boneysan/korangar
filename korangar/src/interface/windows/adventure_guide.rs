@@ -1628,6 +1628,7 @@ fn job_details(job_id: u16, name: &str) -> Vec<String> {
         lines.push("No job-level stat bonus schedule is present for this job ID in Hercules job_db2.txt.".to_owned());
     }
     append_exp_details(&mut lines, job_id);
+    append_stat_rule_details(&mut lines, job_id);
     let Some(tree) = data.job_skill_tree_by_id(job_id) else {
         lines.push("No matching skill tree is present in the bundled Hercules job-skill export.".to_owned());
         lines.push("Job bonus source: bundled Hercules job_db2.txt export; conditional-script effects are not inferred.".to_owned());
@@ -1699,6 +1700,26 @@ fn append_exp_table(lines: &mut Vec<String>, label: &str, group_name: &str, grou
             group_digits(total)
         ));
     }
+}
+
+fn append_stat_rule_details(lines: &mut Vec<String>, job_id: u16) {
+    let data = reference_data();
+    let Some(job) = data.stat_job(job_id) else {
+        lines.push("No stat rules are defined for this job in Hercules job_db.conf.".to_owned());
+        return;
+    };
+    lines.push(format!(
+        "Stat cap: {} (parameter group {}). {}",
+        job.max_stats,
+        job.parameters_group,
+        match job.upper {
+            true => format!(
+                "Upper class: a stat reset grants {} extra points.",
+                data.stat_rules.upper_class_extra_points
+            ),
+            false => "Not an upper class: no extra points on a stat reset.".to_owned(),
+        }
+    ));
 }
 
 fn append_exp_details(lines: &mut Vec<String>, job_id: u16) {
@@ -3716,6 +3737,43 @@ mod tests {
         assert!(detail.contains("not observed on a live server"), "{detail}");
         // The 530 comes from the configured scale, so the entry cites it.
         assert!(detail.contains("skill.conf"), "{detail}");
+    }
+
+    #[test]
+    fn job_pages_state_the_stat_cap_and_upper_class_bonus_from_the_server_tables() {
+        let page = |name: &str| {
+            let (id, name) = job_names()
+                .find(|(_, listed)| *listed == name)
+                .unwrap_or_else(|| panic!("{name} job"));
+            super::job_details(id, name).join("\n")
+        };
+        let knight = page("Knight");
+        assert!(knight.contains("Stat cap: 99 (parameter group SecondClasses)"), "{knight}");
+        assert!(knight.contains("Not an upper class"), "{knight}");
+        let baby = page("Baby");
+        assert!(baby.contains("Stat cap: 80"), "{baby}");
+        // Rune Knight Trans: a third class (cap 130) that is also an upper class (+52).
+        let trans = page("Rune Knight T");
+        assert!(trans.contains("Stat cap: 130"), "{trans}");
+        assert!(trans.contains("Upper class: a stat reset grants 52 extra points"), "{trans}");
+    }
+
+    #[test]
+    fn stat_points_rule_is_searchable_with_the_servers_totals_and_costs() {
+        let data = reference_data();
+        let rows = search_all_categories("stat points", &DiscoveryState::default(), &[]);
+        let row = rows
+            .iter()
+            .find(|row| row.kind == "server-rule" && data.server_rules[row.id as usize].title.contains("Stat points"))
+            .expect("the stat points rule is searchable");
+        let detail = resolve_details(row).join("\n");
+        assert!(detail.contains("level 99: 1,273"), "{detail}");
+        assert!(detail.contains("level 175: 3,278"), "{detail}");
+        assert!(detail.contains("99 to 100 costs 11, 100 to 101 costs 16"), "{detail}");
+        assert!(detail.contains("1 to 99 costs 628"), "{detail}");
+        assert!(detail.contains("plus 52 extra points for upper classes"), "{detail}");
+        assert!(detail.contains("130: ThirdClasses"), "{detail}");
+        assert!(detail.contains("max_parameter is not the player cap"), "{detail}");
     }
 
     #[test]

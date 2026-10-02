@@ -31,6 +31,7 @@ const ITEM_EXCHANGES_JSON: &str = include_str!("../../../docs/item-exchanges.v1.
 const SKILL_FORMULA_REVIEWS_JSON: &str = include_str!("../../../docs/skill-formula-reviews.v1.json");
 const NPC_SERVICE_REVIEWS_JSON: &str = include_str!("../../../docs/npc-service-reviews.v1.json");
 const RUMORS_JSON: &str = include_str!("../../../docs/rumors.v1.json");
+const STAT_RULES_JSON: &str = include_str!("../../../docs/stat-rules.v1.json");
 const EXP_TABLES_JSON: &str = include_str!("../../../docs/exp-tables.v1.json");
 const SEARCH_ALIASES_JSON: &str = include_str!("../../../docs/search-aliases.v1.json");
 
@@ -847,6 +848,36 @@ pub struct ReferenceServerRule {
     pub sources: Vec<ReferenceSource>,
 }
 
+/// One job's stat rules: its stat cap and whether a stat reset grants the
+/// upper-class extra points.
+#[derive(Debug, Deserialize)]
+pub struct ReferenceStatJob {
+    pub job_id: u16,
+    pub name: String,
+    pub parameters_group: String,
+    pub max_stats: u16,
+    pub upper: bool,
+}
+
+/// Stat-point rules read from `statpoint.txt`, `unit_parameters_db.conf`,
+/// `job_db.conf` and `pc.c`. `points_at_level[n - 1]` is the cumulative total
+/// at level `n`.
+#[derive(Debug, Deserialize)]
+pub struct ReferenceStatRules {
+    pub schema_version: u32,
+    pub mode: String,
+    pub points_at_level: Vec<u32>,
+    pub upper_class_extra_points: u32,
+    pub jobs: Vec<ReferenceStatJob>,
+}
+
+impl ReferenceStatRules {
+    /// Cumulative stat points at `level` for a non-upper class.
+    pub fn points_at_level(&self, level: usize) -> Option<u32> {
+        self.points_at_level.get(level.checked_sub(1)?).copied()
+    }
+}
+
 /// One server EXP group: `exp[n - 1]` is the EXP needed to advance from level
 /// `n` to `n + 1`, and the group holds at most `max_level - 1` values.
 #[derive(Debug, Deserialize)]
@@ -1089,6 +1120,7 @@ pub struct ReferenceData {
     pub rumors: Vec<ReferenceRumor>,
     pub aliases: Vec<ReferenceAlias>,
     pub exp_tables: ReferenceExpTables,
+    pub stat_rules: ReferenceStatRules,
     pub map_flags: Vec<ReferenceMapFlag>,
     pub runtime_map_flag_clues: Vec<ReferenceRuntimeMapFlagClue>,
     pub runtime_map_flag_reviews: Vec<ReferenceRuntimeMapFlagReview>,
@@ -1141,6 +1173,11 @@ impl ReferenceData {
             .map_err(|error| format!("embedded skill-formula-reviews.v1.json is invalid: {error}"))?;
         let npc_services: VersionedNpcServiceReviewsFile = serde_json::from_str(NPC_SERVICE_REVIEWS_JSON)
             .map_err(|error| format!("embedded npc-service-reviews.v1.json is invalid: {error}"))?;
+        let stat_rules: ReferenceStatRules =
+            serde_json::from_str(STAT_RULES_JSON).map_err(|error| format!("embedded stat-rules.v1.json is invalid: {error}"))?;
+        if stat_rules.schema_version != 1 || stat_rules.mode != "renewal" || stat_rules.points_at_level.len() != 175 {
+            return Err("unsupported stat-rules.v1.json schema, mode or level count".to_owned());
+        }
         let exp_tables: ReferenceExpTables =
             serde_json::from_str(EXP_TABLES_JSON).map_err(|error| format!("embedded exp-tables.v1.json is invalid: {error}"))?;
         if exp_tables.schema_version != 1 || exp_tables.mode != "renewal" {
@@ -1538,6 +1575,7 @@ impl ReferenceData {
             rumors: rumors.entries,
             aliases: aliases.entries,
             exp_tables,
+            stat_rules,
             map_flags: map_flags.entries,
             runtime_map_flag_clues: map_flags.runtime_clues,
             runtime_map_flag_reviews: map_flags.runtime_reviews,
@@ -1810,6 +1848,11 @@ impl ReferenceData {
         matches.sort_by_key(|skill| (skill.description.to_lowercase(), skill.id));
         matches.truncate(limit);
         matches
+    }
+
+    /// The stat cap and upper-class flag for a job, if the server defines it.
+    pub fn stat_job(&self, job_id: u16) -> Option<&ReferenceStatJob> {
+        self.stat_rules.jobs.iter().find(|job| job.job_id == job_id)
     }
 
     /// The base and job EXP groups a job advances on, if the server defines

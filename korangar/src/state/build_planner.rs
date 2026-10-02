@@ -7,8 +7,10 @@ use rust_state::RustState;
 use crate::dm::reference_data::reference_data;
 use crate::world::{BuildPlan, PlannedStats, ProjectedCombatStats, StatKind};
 
-/// Hercules `conf/map/battle/player.conf` `max_parameter`.
-pub const PLANNER_MAX_STAT: u16 = 99;
+/// The stat cap used when the server's stat rules do not name the job (a
+/// mounted or cosmetic form with no `job_db.conf` block). Hercules' own default
+/// for a group that sets no `MaxStats` (`status.c`).
+pub const FALLBACK_MAX_STAT: u16 = 99;
 /// Highest Base Level the planner offers (Renewal `statpoint.txt` rows exist
 /// beyond this, but this server's classes stop here).
 pub const PLANNER_MAX_BASE_LEVEL: usize = 99;
@@ -87,6 +89,8 @@ pub struct BuildPlannerState {
     #[hidden_element]
     baseline: PlannerBaseline,
     #[hidden_element]
+    max_stat: u16,
+    #[hidden_element]
     skill_rows: Vec<PlannerSkillRow>,
     header_text: String,
     base_level_text: String,
@@ -138,10 +142,13 @@ fn skill_rows(plan: &BuildPlan, baseline: &PlannerBaseline) -> Vec<PlannerSkillR
 impl BuildPlannerState {
     /// Start (or restart) a plan at the live character's current point.
     pub fn start(&mut self, baseline: PlannerBaseline) {
-        // Novice High (4001) through the transcendent second classes (4021)
-        // receive the rebirth bonus points.
-        let transcendent = (4001..=4021).contains(&baseline.job_id);
-        let mut plan = BuildPlan::new("Planner", baseline.job_id, transcendent);
+        // Both facts come from the server's own tables: the job's `MaxStats`
+        // (unit_parameters_db.conf, not `battle.conf`'s max_parameter) and
+        // whether the class is JOBL_UPPER, which grants 52 extra points. A job
+        // the tables do not name falls back to a plain 99-cap, non-upper class.
+        let rules = reference_data().stat_job(baseline.job_id);
+        self.max_stat = rules.map_or(FALLBACK_MAX_STAT, |job| job.max_stats);
+        let mut plan = BuildPlan::new("Planner", baseline.job_id, rules.is_some_and(|job| job.upper));
         plan.target_base_level = baseline.base_level;
         plan.target_job_level = baseline.job_level;
         plan.stats = baseline.stats.clone();
@@ -204,9 +211,9 @@ impl BuildPlannerState {
         }
         if ALL_STATS
             .iter()
-            .any(|&stat| plan.stats.get_stat(stat) > PLANNER_MAX_STAT || plan.stats.get_stat(stat) == 0)
+            .any(|&stat| plan.stats.get_stat(stat) > self.max_stat || plan.stats.get_stat(stat) == 0)
         {
-            return Err("plan has a stat outside 1..=99".to_owned());
+            return Err(format!("plan has a stat outside 1..={}", self.max_stat));
         }
         if plan.spent_stat_points() > plan.total_stat_points() {
             return Err("plan no longer fits: it spends more stat points than that level grants".to_owned());
@@ -234,7 +241,7 @@ impl BuildPlannerState {
     pub fn adjust_stat(&mut self, stat: StatKind, change: i8) {
         let Some(plan) = self.plan.as_mut() else { return };
         let result = match change >= 0 {
-            true => plan.increase_stat(stat, PLANNER_MAX_STAT),
+            true => plan.increase_stat(stat, self.max_stat),
             false => plan.decrease_stat(stat, 1),
         };
         self.status_text = match result {
@@ -325,7 +332,7 @@ impl BuildPlannerState {
         let rows = ALL_STATS.map(|stat| {
             let value = plan.stats.get_stat(stat);
             let cost = crate::world::stat_upgrade_cost(value);
-            let cost = match value >= PLANNER_MAX_STAT {
+            let cost = match value >= self.max_stat {
                 true => "max".to_owned(),
                 false => format!("next {cost}"),
             };
@@ -678,5 +685,88 @@ mod tests {
         later.load_slot(&directory, 1).unwrap();
         assert_eq!(later.plan().skills.get(&55), Some(&2));
         let _ = std::fs::remove_dir_all(&directory);
+    }
+
+    fn at_level_99(job_id: u16, stats: PlannedStats) -> PlannerBaseline {
+        PlannerBaseline {
+            job_id,
+            base_level: 99,
+            stats,
+            ..baseline()
+        }
+    }
+
+    #[test]
+    fn the_stat_cap_comes_from_the_jobs_parameter_group() {
+        // unit_parameters_db.conf: BabyFirstClasses -> 80, ThirdClasses -> 130,
+        // FirstClasses -> 99.
+        let mut baby = BuildPlannerState::default();
+        baby.start(at_level_99(4023, PlannedStats::new(80, 1, 1, 1, 1, 1)));
+        baby.adjust_stat(StatKind::Strength, 1);
+        assert_eq!(baby.plan().stats.get_stat(StatKind::Strength), 80, "a baby class stops at 80");
+        assert!(baby.status_text.contains("maximum"), "{}", baby.status_text);
+
+        let mut third = BuildPlannerState::default();
+        third.start(at_level_99(4054, PlannedStats::new(99, 1, 1, 1, 1, 1)));
+        third.adjust_stat(StatKind::Strength, 1);
+        assert_eq!(
+            third.plan().stats.get_stat(StatKind::Strength),
+            100,
+            "a third class goes past 99"
+        );
+
+        let mut novice = BuildPlannerState::default();
+        novice.start(at_level_99(0, PlannedStats::new(99, 1, 1, 1, 1, 1)));
+        novice.adjust_stat(StatKind::Strength, 1);
+        assert_eq!(novice.plan().stats.get_stat(StatKind::Strength), 99);
+    }
+
+    #[test]
+    fn upper_classes_get_the_extra_points_including_transcendent_third_classes() {
+        let total = |job_id| {
+            let mut state = BuildPlannerState::default();
+            state.start(at_level_99(job_id, PlannedStats::new(1, 1, 1, 1, 1, 1)));
+            state.plan().total_stat_points()
+        };
+        // statpoint.txt: 1273 at level 99; pc_resetstate adds 52 for JOBL_UPPER.
+        assert_eq!(total(7), 1273, "Knight is not an upper class");
+        assert_eq!(total(4008), 1273 + 52, "Lord Knight is");
+        assert_eq!(total(4054), 1273, "Rune Knight is not");
+        assert_eq!(
+            total(4060),
+            1273 + 52,
+            "Rune Knight Trans is (the old 4001..=4021 guess missed it)"
+        );
+        assert_eq!(total(4014), 1273, "4014 has no job_db block and is no longer guessed upper");
+    }
+
+    #[test]
+    fn a_job_the_tables_do_not_name_falls_back_to_a_plain_99_cap() {
+        let mut state = BuildPlannerState::default();
+        // 13 is Knight on a Peco Peco: no job_db.conf block.
+        assert!(reference_data().stat_job(13).is_none());
+        state.start(at_level_99(13, PlannedStats::new(99, 1, 1, 1, 1, 1)));
+        state.adjust_stat(StatKind::Strength, 1);
+        assert_eq!(state.plan().stats.get_stat(StatKind::Strength), 99);
+        assert_eq!(state.plan().total_stat_points(), 1273);
+    }
+
+    #[test]
+    fn the_planners_point_table_is_the_servers() {
+        let rules = &reference_data().stat_rules;
+        assert_eq!(rules.points_at_level.len(), crate::world::STAT_POINTS_TABLE.len());
+        assert!(
+            rules
+                .points_at_level
+                .iter()
+                .zip(crate::world::STAT_POINTS_TABLE)
+                .all(|(server, client)| server == client),
+            "the client table has drifted from db/re/statpoint.txt"
+        );
+        assert_eq!(rules.upper_class_extra_points, 52);
+        assert_eq!(rules.points_at_level(99), Some(1273));
+        assert_eq!(rules.points_at_level(175), Some(3278));
+        assert_eq!(rules.points_at_level(0), None);
+        assert_eq!(rules.points_at_level(176), None);
     }
 }

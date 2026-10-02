@@ -104,7 +104,7 @@ def parse_exp_groups() -> tuple[dict[str, dict[str, Any]], dict[str, dict[str, A
 
 
 def job_name_ids() -> dict[str, int]:
-    class_text = "\n".join(path.read_text(encoding="utf-8", errors="replace") for path in CLASS_HEADERS)
+    class_text = strip_comments("\n".join(path.read_text(encoding="utf-8", errors="replace") for path in CLASS_HEADERS))
     enum_ids = {name: int(value) for name, value in re.findall(r"JOB_ENUM_VALUE\(\s*([A-Z0-9_]+)\s*,\s*(\d+)\s*,", class_text)}
     pc_text = PC_SOURCE.read_text(encoding="utf-8", errors="replace")
     start = pc_text.index("static int pc_check_job_name")

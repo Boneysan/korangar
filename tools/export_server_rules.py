@@ -206,6 +206,52 @@ def derived_stat_formula_rule(battle: dict[str, dict[str, object]]) -> dict[str,
     }
 
 
+def stat_point_rule() -> dict[str, object]:
+    """Built from export_stat_rules (imported lazily: that module imports this one)."""
+    from export_stat_rules import build as build_stat_rules
+
+    rules = build_stat_rules()
+    table: list[int] = rules["points_at_level"]  # type: ignore[assignment]
+    jobs: list[dict[str, object]] = rules["jobs"]  # type: ignore[assignment]
+    extra = rules["upper_class_extra_points"]
+
+    def cost(value: int) -> int:
+        return 2 + (value - 1) // 10 if value < 100 else 16 + 4 * ((value - 100) // 5)
+
+    milestones = [level for level in (1, 10, 25, 50, 75, 99, 130, 150, 175) if level <= len(table)]
+    totals = "; ".join(f"level {level}: {table[level - 1]:,}" for level in milestones)
+    gains = "; ".join(f"level {level} to {level + 1}: +{table[level] - table[level - 1]}" for level in (1, 50, 98, 150) if level < len(table))
+    by_cap: dict[int, list[str]] = {}
+    for job in jobs:
+        by_cap.setdefault(job["max_stats"], []).append(job["parameters_group"])  # type: ignore[arg-type]
+    caps = "; ".join(
+        f"{cap}: {', '.join(sorted(set(groups)))}" for cap, groups in sorted(by_cap.items())
+    )
+    upper_names = ", ".join(str(job["name"]).replace("_", " ") for job in jobs if job["upper"])
+    return {
+        "id": "stat-points",
+        "category": "Mechanics",
+        "title": "Stat points: totals, costs and caps",
+        "summary": "How many stat points a character has at each level, what each point costs, the extra points upper classes get, and each class's stat cap.",
+        "details": [
+            f"Total stat points at a level (cumulative, before any are spent): {totals}.",
+            f"A level-up grants the difference between two levels' totals, for example {gains}.",
+            f"Raising a stat from v to v + 1 costs 2 + (v - 1) / 10 points below 100 and 16 + 4 x ((v - 100) / 5) from 100 (integer division): 9 to 10 costs {cost(9)}, 98 to 99 costs {cost(98)}, 99 to 100 costs {cost(99)}, 100 to 101 costs {cost(100)}. Taking one stat from 1 to 99 costs {sum(cost(v) for v in range(1, 99)):,} points in all.",
+            f"Resetting stats gives back the level's total, plus {extra} extra points for upper classes: {upper_names}.",
+            f"Stat cap by parameter group (from unit_parameters_db.conf, each job's ParametersGroup in job_db.conf): {caps}. The battle.conf setting max_parameter is not the player cap.",
+            "A job with no job_db.conf block (mounted and cosmetic forms) has no entry here.",
+            "These were confirmed from the source and are unit-tested in the client, not observed on a live server.",
+        ],
+        "sources": [
+            {"path": "db/re/statpoint.txt", "record": "cumulative points by level"},
+            {"path": "db/re/unit_parameters_db.conf", "record": "MaxStats per parameter group"},
+            {"path": "db/re/job_db.conf", "record": "ParametersGroup per job"},
+            {"path": "src/map/pc.c", "record": "pc_readdb, pc_gets_status_point, pc_resetstate, pc_need_status_point, pc_jobid2mapid"},
+            {"path": "conf/map/battle/exp.conf", "record": "use_statpoint_table: true"},
+        ],
+    }
+
+
 def level_penalty_rule(path: Path) -> dict[str, object]:
     table = parse_level_penalty(path)
 
@@ -431,6 +477,7 @@ def build() -> dict[str, object]:
             *element_rules,
             level_penalty_rule(level_penalty_path),
             derived_stat_formula_rule(battle),
+            stat_point_rule(),
             {
                 "id": "weapon-size-adjustments",
                 "category": "Mechanics",

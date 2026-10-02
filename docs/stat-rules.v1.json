@@ -1,0 +1,1110 @@
+{
+ "schema_version": 1,
+ "source_revision": "cc83ca152ff09132a047acad028a9e978bd90b89",
+ "source_worktree_dirty": false,
+ "mode": "renewal",
+ "source": [
+  "db/re/statpoint.txt",
+  "db/re/unit_parameters_db.conf",
+  "db/re/job_db.conf",
+  "src/map/pc.c (pc_readdb, pc_gets_status_point, pc_resetstate, pc_need_status_point, pc_jobid2mapid)",
+  "src/map/map.h (MAPID_*)",
+  "conf/map/battle/exp.conf (use_statpoint_table)"
+ ],
+ "rule": "points_at_level[n - 1] is the cumulative stat points a character has at level n; a level-up from n to n + 1 grants points_at_level[n] - points_at_level[n - 1].",
+ "points_at_level": [
+  48,
+  51,
+  54,
+  57,
+  60,
+  64,
+  68,
+  72,
+  76,
+  80,
+  85,
+  90,
+  95,
+  100,
+  105,
+  111,
+  117,
+  123,
+  129,
+  135,
+  142,
+  149,
+  156,
+  163,
+  170,
+  178,
+  186,
+  194,
+  202,
+  210,
+  219,
+  228,
+  237,
+  246,
+  255,
+  265,
+  275,
+  285,
+  295,
+  305,
+  316,
+  327,
+  338,
+  349,
+  360,
+  372,
+  384,
+  396,
+  408,
+  420,
+  433,
+  446,
+  459,
+  472,
+  485,
+  499,
+  513,
+  527,
+  541,
+  555,
+  570,
+  585,
+  600,
+  615,
+  630,
+  646,
+  662,
+  678,
+  694,
+  710,
+  727,
+  744,
+  761,
+  778,
+  795,
+  813,
+  831,
+  849,
+  867,
+  885,
+  904,
+  923,
+  942,
+  961,
+  980,
+  1000,
+  1020,
+  1040,
+  1060,
+  1080,
+  1101,
+  1122,
+  1143,
+  1164,
+  1185,
+  1207,
+  1229,
+  1251,
+  1273,
+  1295,
+  1318,
+  1341,
+  1364,
+  1387,
+  1410,
+  1433,
+  1456,
+  1479,
+  1502,
+  1525,
+  1549,
+  1573,
+  1597,
+  1621,
+  1645,
+  1669,
+  1693,
+  1717,
+  1741,
+  1765,
+  1790,
+  1815,
+  1840,
+  1865,
+  1890,
+  1915,
+  1940,
+  1965,
+  1990,
+  2015,
+  2041,
+  2067,
+  2093,
+  2119,
+  2145,
+  2171,
+  2197,
+  2223,
+  2249,
+  2275,
+  2302,
+  2329,
+  2356,
+  2383,
+  2410,
+  2437,
+  2464,
+  2491,
+  2518,
+  2545,
+  2573,
+  2601,
+  2629,
+  2657,
+  2685,
+  2713,
+  2741,
+  2770,
+  2799,
+  2828,
+  2857,
+  2886,
+  2915,
+  2944,
+  2974,
+  3004,
+  3034,
+  3064,
+  3094,
+  3124,
+  3154,
+  3185,
+  3216,
+  3247,
+  3278
+ ],
+ "upper_class_extra_points": 52,
+ "cost_to_raise_from": {
+  "below_100": "2 + (value - 1) / 10",
+  "from_100": "16 + 4 * ((value - 100) / 5)",
+  "note": "integer division; the cost of the point that takes a stat from `value` to `value + 1`"
+ },
+ "parameter_groups": {
+  "Base": 99,
+  "BabyBase": 80,
+  "FirstClasses": 99,
+  "BabyFirstClasses": 80,
+  "SecondClasses": 99,
+  "BabySecondClasses": 80,
+  "ThirdClasses": 130,
+  "BabyThirdClasses": 117,
+  "ExtendedClasses": 125,
+  "BabyExtendedClasses": 125,
+  "SuperNovice": 125,
+  "Summoner": 120
+ },
+ "jobs": [
+  {
+   "job_id": 0,
+   "name": "Novice",
+   "parameters_group": "FirstClasses",
+   "max_stats": 99,
+   "upper": false
+  },
+  {
+   "job_id": 1,
+   "name": "Swordsman",
+   "parameters_group": "FirstClasses",
+   "max_stats": 99,
+   "upper": false
+  },
+  {
+   "job_id": 2,
+   "name": "Magician",
+   "parameters_group": "FirstClasses",
+   "max_stats": 99,
+   "upper": false
+  },
+  {
+   "job_id": 3,
+   "name": "Archer",
+   "parameters_group": "FirstClasses",
+   "max_stats": 99,
+   "upper": false
+  },
+  {
+   "job_id": 4,
+   "name": "Acolyte",
+   "parameters_group": "FirstClasses",
+   "max_stats": 99,
+   "upper": false
+  },
+  {
+   "job_id": 5,
+   "name": "Merchant",
+   "parameters_group": "FirstClasses",
+   "max_stats": 99,
+   "upper": false
+  },
+  {
+   "job_id": 6,
+   "name": "Thief",
+   "parameters_group": "FirstClasses",
+   "max_stats": 99,
+   "upper": false
+  },
+  {
+   "job_id": 7,
+   "name": "Knight",
+   "parameters_group": "SecondClasses",
+   "max_stats": 99,
+   "upper": false
+  },
+  {
+   "job_id": 8,
+   "name": "Priest",
+   "parameters_group": "SecondClasses",
+   "max_stats": 99,
+   "upper": false
+  },
+  {
+   "job_id": 9,
+   "name": "Wizard",
+   "parameters_group": "SecondClasses",
+   "max_stats": 99,
+   "upper": false
+  },
+  {
+   "job_id": 10,
+   "name": "Blacksmith",
+   "parameters_group": "SecondClasses",
+   "max_stats": 99,
+   "upper": false
+  },
+  {
+   "job_id": 11,
+   "name": "Hunter",
+   "parameters_group": "SecondClasses",
+   "max_stats": 99,
+   "upper": false
+  },
+  {
+   "job_id": 12,
+   "name": "Assassin",
+   "parameters_group": "SecondClasses",
+   "max_stats": 99,
+   "upper": false
+  },
+  {
+   "job_id": 14,
+   "name": "Crusader",
+   "parameters_group": "SecondClasses",
+   "max_stats": 99,
+   "upper": false
+  },
+  {
+   "job_id": 15,
+   "name": "Monk",
+   "parameters_group": "SecondClasses",
+   "max_stats": 99,
+   "upper": false
+  },
+  {
+   "job_id": 16,
+   "name": "Sage",
+   "parameters_group": "SecondClasses",
+   "max_stats": 99,
+   "upper": false
+  },
+  {
+   "job_id": 17,
+   "name": "Rogue",
+   "parameters_group": "SecondClasses",
+   "max_stats": 99,
+   "upper": false
+  },
+  {
+   "job_id": 18,
+   "name": "Alchemist",
+   "parameters_group": "SecondClasses",
+   "max_stats": 99,
+   "upper": false
+  },
+  {
+   "job_id": 19,
+   "name": "Bard",
+   "parameters_group": "SecondClasses",
+   "max_stats": 99,
+   "upper": false
+  },
+  {
+   "job_id": 20,
+   "name": "Dancer",
+   "parameters_group": "SecondClasses",
+   "max_stats": 99,
+   "upper": false
+  },
+  {
+   "job_id": 23,
+   "name": "Super_Novice",
+   "parameters_group": "SecondClasses",
+   "max_stats": 99,
+   "upper": false
+  },
+  {
+   "job_id": 24,
+   "name": "Gunslinger",
+   "parameters_group": "FirstClasses",
+   "max_stats": 99,
+   "upper": false
+  },
+  {
+   "job_id": 25,
+   "name": "Ninja",
+   "parameters_group": "FirstClasses",
+   "max_stats": 99,
+   "upper": false
+  },
+  {
+   "job_id": 4001,
+   "name": "Novice_High",
+   "parameters_group": "FirstClasses",
+   "max_stats": 99,
+   "upper": true
+  },
+  {
+   "job_id": 4002,
+   "name": "Swordsman_High",
+   "parameters_group": "FirstClasses",
+   "max_stats": 99,
+   "upper": true
+  },
+  {
+   "job_id": 4003,
+   "name": "Magician_High",
+   "parameters_group": "FirstClasses",
+   "max_stats": 99,
+   "upper": true
+  },
+  {
+   "job_id": 4004,
+   "name": "Archer_High",
+   "parameters_group": "FirstClasses",
+   "max_stats": 99,
+   "upper": true
+  },
+  {
+   "job_id": 4005,
+   "name": "Acolyte_High",
+   "parameters_group": "FirstClasses",
+   "max_stats": 99,
+   "upper": true
+  },
+  {
+   "job_id": 4006,
+   "name": "Merchant_High",
+   "parameters_group": "FirstClasses",
+   "max_stats": 99,
+   "upper": true
+  },
+  {
+   "job_id": 4007,
+   "name": "Thief_High",
+   "parameters_group": "FirstClasses",
+   "max_stats": 99,
+   "upper": true
+  },
+  {
+   "job_id": 4008,
+   "name": "Lord_Knight",
+   "parameters_group": "SecondClasses",
+   "max_stats": 99,
+   "upper": true
+  },
+  {
+   "job_id": 4009,
+   "name": "High_Priest",
+   "parameters_group": "SecondClasses",
+   "max_stats": 99,
+   "upper": true
+  },
+  {
+   "job_id": 4010,
+   "name": "High_Wizard",
+   "parameters_group": "SecondClasses",
+   "max_stats": 99,
+   "upper": true
+  },
+  {
+   "job_id": 4011,
+   "name": "Whitesmith",
+   "parameters_group": "SecondClasses",
+   "max_stats": 99,
+   "upper": true
+  },
+  {
+   "job_id": 4012,
+   "name": "Sniper",
+   "parameters_group": "SecondClasses",
+   "max_stats": 99,
+   "upper": true
+  },
+  {
+   "job_id": 4013,
+   "name": "Assassin_Cross",
+   "parameters_group": "SecondClasses",
+   "max_stats": 99,
+   "upper": true
+  },
+  {
+   "job_id": 4015,
+   "name": "Paladin",
+   "parameters_group": "SecondClasses",
+   "max_stats": 99,
+   "upper": true
+  },
+  {
+   "job_id": 4016,
+   "name": "Champion",
+   "parameters_group": "SecondClasses",
+   "max_stats": 99,
+   "upper": true
+  },
+  {
+   "job_id": 4017,
+   "name": "Professor",
+   "parameters_group": "SecondClasses",
+   "max_stats": 99,
+   "upper": true
+  },
+  {
+   "job_id": 4018,
+   "name": "Stalker",
+   "parameters_group": "SecondClasses",
+   "max_stats": 99,
+   "upper": true
+  },
+  {
+   "job_id": 4019,
+   "name": "Creator",
+   "parameters_group": "SecondClasses",
+   "max_stats": 99,
+   "upper": true
+  },
+  {
+   "job_id": 4020,
+   "name": "Clown",
+   "parameters_group": "SecondClasses",
+   "max_stats": 99,
+   "upper": true
+  },
+  {
+   "job_id": 4021,
+   "name": "Gypsy",
+   "parameters_group": "SecondClasses",
+   "max_stats": 99,
+   "upper": true
+  },
+  {
+   "job_id": 4023,
+   "name": "Baby_Novice",
+   "parameters_group": "BabyFirstClasses",
+   "max_stats": 80,
+   "upper": false
+  },
+  {
+   "job_id": 4024,
+   "name": "Baby_Swordsman",
+   "parameters_group": "BabyFirstClasses",
+   "max_stats": 80,
+   "upper": false
+  },
+  {
+   "job_id": 4025,
+   "name": "Baby_Magician",
+   "parameters_group": "BabyFirstClasses",
+   "max_stats": 80,
+   "upper": false
+  },
+  {
+   "job_id": 4026,
+   "name": "Baby_Archer",
+   "parameters_group": "BabyFirstClasses",
+   "max_stats": 80,
+   "upper": false
+  },
+  {
+   "job_id": 4027,
+   "name": "Baby_Acolyte",
+   "parameters_group": "BabyFirstClasses",
+   "max_stats": 80,
+   "upper": false
+  },
+  {
+   "job_id": 4028,
+   "name": "Baby_Merchant",
+   "parameters_group": "BabyFirstClasses",
+   "max_stats": 80,
+   "upper": false
+  },
+  {
+   "job_id": 4029,
+   "name": "Baby_Thief",
+   "parameters_group": "BabyFirstClasses",
+   "max_stats": 80,
+   "upper": false
+  },
+  {
+   "job_id": 4030,
+   "name": "Baby_Knight",
+   "parameters_group": "BabySecondClasses",
+   "max_stats": 80,
+   "upper": false
+  },
+  {
+   "job_id": 4031,
+   "name": "Baby_Priest",
+   "parameters_group": "BabySecondClasses",
+   "max_stats": 80,
+   "upper": false
+  },
+  {
+   "job_id": 4032,
+   "name": "Baby_Wizard",
+   "parameters_group": "BabySecondClasses",
+   "max_stats": 80,
+   "upper": false
+  },
+  {
+   "job_id": 4033,
+   "name": "Baby_Blacksmith",
+   "parameters_group": "BabySecondClasses",
+   "max_stats": 80,
+   "upper": false
+  },
+  {
+   "job_id": 4034,
+   "name": "Baby_Hunter",
+   "parameters_group": "BabySecondClasses",
+   "max_stats": 80,
+   "upper": false
+  },
+  {
+   "job_id": 4035,
+   "name": "Baby_Assassin",
+   "parameters_group": "BabySecondClasses",
+   "max_stats": 80,
+   "upper": false
+  },
+  {
+   "job_id": 4037,
+   "name": "Baby_Crusader",
+   "parameters_group": "BabySecondClasses",
+   "max_stats": 80,
+   "upper": false
+  },
+  {
+   "job_id": 4038,
+   "name": "Baby_Monk",
+   "parameters_group": "BabySecondClasses",
+   "max_stats": 80,
+   "upper": false
+  },
+  {
+   "job_id": 4039,
+   "name": "Baby_Sage",
+   "parameters_group": "BabySecondClasses",
+   "max_stats": 80,
+   "upper": false
+  },
+  {
+   "job_id": 4040,
+   "name": "Baby_Rogue",
+   "parameters_group": "BabySecondClasses",
+   "max_stats": 80,
+   "upper": false
+  },
+  {
+   "job_id": 4041,
+   "name": "Baby_Alchemist",
+   "parameters_group": "BabySecondClasses",
+   "max_stats": 80,
+   "upper": false
+  },
+  {
+   "job_id": 4042,
+   "name": "Baby_Bard",
+   "parameters_group": "BabySecondClasses",
+   "max_stats": 80,
+   "upper": false
+  },
+  {
+   "job_id": 4043,
+   "name": "Baby_Dancer",
+   "parameters_group": "BabySecondClasses",
+   "max_stats": 80,
+   "upper": false
+  },
+  {
+   "job_id": 4045,
+   "name": "Super_Baby",
+   "parameters_group": "BabySecondClasses",
+   "max_stats": 80,
+   "upper": false
+  },
+  {
+   "job_id": 4046,
+   "name": "Taekwon",
+   "parameters_group": "FirstClasses",
+   "max_stats": 99,
+   "upper": false
+  },
+  {
+   "job_id": 4047,
+   "name": "Star_Gladiator",
+   "parameters_group": "SecondClasses",
+   "max_stats": 99,
+   "upper": false
+  },
+  {
+   "job_id": 4049,
+   "name": "Soul_Linker",
+   "parameters_group": "SecondClasses",
+   "max_stats": 99,
+   "upper": false
+  },
+  {
+   "job_id": 4050,
+   "name": "Gangsi",
+   "parameters_group": "FirstClasses",
+   "max_stats": 99,
+   "upper": false
+  },
+  {
+   "job_id": 4051,
+   "name": "Death_Knight",
+   "parameters_group": "SecondClasses",
+   "max_stats": 99,
+   "upper": false
+  },
+  {
+   "job_id": 4052,
+   "name": "Dark_Collector",
+   "parameters_group": "SecondClasses",
+   "max_stats": 99,
+   "upper": false
+  },
+  {
+   "job_id": 4054,
+   "name": "Rune_Knight",
+   "parameters_group": "ThirdClasses",
+   "max_stats": 130,
+   "upper": false
+  },
+  {
+   "job_id": 4055,
+   "name": "Warlock",
+   "parameters_group": "ThirdClasses",
+   "max_stats": 130,
+   "upper": false
+  },
+  {
+   "job_id": 4056,
+   "name": "Ranger",
+   "parameters_group": "ThirdClasses",
+   "max_stats": 130,
+   "upper": false
+  },
+  {
+   "job_id": 4057,
+   "name": "Arch_Bishop",
+   "parameters_group": "ThirdClasses",
+   "max_stats": 130,
+   "upper": false
+  },
+  {
+   "job_id": 4058,
+   "name": "Mechanic",
+   "parameters_group": "ThirdClasses",
+   "max_stats": 130,
+   "upper": false
+  },
+  {
+   "job_id": 4059,
+   "name": "Guillotine_Cross",
+   "parameters_group": "ThirdClasses",
+   "max_stats": 130,
+   "upper": false
+  },
+  {
+   "job_id": 4060,
+   "name": "Rune_Knight_Trans",
+   "parameters_group": "ThirdClasses",
+   "max_stats": 130,
+   "upper": true
+  },
+  {
+   "job_id": 4061,
+   "name": "Warlock_Trans",
+   "parameters_group": "ThirdClasses",
+   "max_stats": 130,
+   "upper": true
+  },
+  {
+   "job_id": 4062,
+   "name": "Ranger_Trans",
+   "parameters_group": "ThirdClasses",
+   "max_stats": 130,
+   "upper": true
+  },
+  {
+   "job_id": 4063,
+   "name": "Arch_Bishop_Trans",
+   "parameters_group": "ThirdClasses",
+   "max_stats": 130,
+   "upper": true
+  },
+  {
+   "job_id": 4064,
+   "name": "Mechanic_Trans",
+   "parameters_group": "ThirdClasses",
+   "max_stats": 130,
+   "upper": true
+  },
+  {
+   "job_id": 4065,
+   "name": "Guillotine_Cross_Trans",
+   "parameters_group": "ThirdClasses",
+   "max_stats": 130,
+   "upper": true
+  },
+  {
+   "job_id": 4066,
+   "name": "Royal_Guard",
+   "parameters_group": "ThirdClasses",
+   "max_stats": 130,
+   "upper": false
+  },
+  {
+   "job_id": 4067,
+   "name": "Sorcerer",
+   "parameters_group": "ThirdClasses",
+   "max_stats": 130,
+   "upper": false
+  },
+  {
+   "job_id": 4068,
+   "name": "Minstrel",
+   "parameters_group": "ThirdClasses",
+   "max_stats": 130,
+   "upper": false
+  },
+  {
+   "job_id": 4069,
+   "name": "Wanderer",
+   "parameters_group": "ThirdClasses",
+   "max_stats": 130,
+   "upper": false
+  },
+  {
+   "job_id": 4070,
+   "name": "Sura",
+   "parameters_group": "ThirdClasses",
+   "max_stats": 130,
+   "upper": false
+  },
+  {
+   "job_id": 4071,
+   "name": "Genetic",
+   "parameters_group": "ThirdClasses",
+   "max_stats": 130,
+   "upper": false
+  },
+  {
+   "job_id": 4072,
+   "name": "Shadow_Chaser",
+   "parameters_group": "ThirdClasses",
+   "max_stats": 130,
+   "upper": false
+  },
+  {
+   "job_id": 4073,
+   "name": "Royal_Guard_Trans",
+   "parameters_group": "ThirdClasses",
+   "max_stats": 130,
+   "upper": true
+  },
+  {
+   "job_id": 4074,
+   "name": "Sorcerer_Trans",
+   "parameters_group": "ThirdClasses",
+   "max_stats": 130,
+   "upper": true
+  },
+  {
+   "job_id": 4075,
+   "name": "Minstrel_Trans",
+   "parameters_group": "ThirdClasses",
+   "max_stats": 130,
+   "upper": true
+  },
+  {
+   "job_id": 4076,
+   "name": "Wanderer_Trans",
+   "parameters_group": "ThirdClasses",
+   "max_stats": 130,
+   "upper": true
+  },
+  {
+   "job_id": 4077,
+   "name": "Sura_Trans",
+   "parameters_group": "ThirdClasses",
+   "max_stats": 130,
+   "upper": true
+  },
+  {
+   "job_id": 4078,
+   "name": "Genetic_Trans",
+   "parameters_group": "ThirdClasses",
+   "max_stats": 130,
+   "upper": true
+  },
+  {
+   "job_id": 4079,
+   "name": "Shadow_Chaser_Trans",
+   "parameters_group": "ThirdClasses",
+   "max_stats": 130,
+   "upper": true
+  },
+  {
+   "job_id": 4096,
+   "name": "Baby_Rune_Knight",
+   "parameters_group": "BabyThirdClasses",
+   "max_stats": 117,
+   "upper": false
+  },
+  {
+   "job_id": 4097,
+   "name": "Baby_Warlock",
+   "parameters_group": "BabyThirdClasses",
+   "max_stats": 117,
+   "upper": false
+  },
+  {
+   "job_id": 4098,
+   "name": "Baby_Ranger",
+   "parameters_group": "BabyThirdClasses",
+   "max_stats": 117,
+   "upper": false
+  },
+  {
+   "job_id": 4099,
+   "name": "Baby_Arch_Bishop",
+   "parameters_group": "BabyThirdClasses",
+   "max_stats": 117,
+   "upper": false
+  },
+  {
+   "job_id": 4100,
+   "name": "Baby_Mechanic",
+   "parameters_group": "BabyThirdClasses",
+   "max_stats": 117,
+   "upper": false
+  },
+  {
+   "job_id": 4101,
+   "name": "Baby_Guillotine_Cross",
+   "parameters_group": "BabyThirdClasses",
+   "max_stats": 117,
+   "upper": false
+  },
+  {
+   "job_id": 4102,
+   "name": "Baby_Royal_Guard",
+   "parameters_group": "BabyThirdClasses",
+   "max_stats": 117,
+   "upper": false
+  },
+  {
+   "job_id": 4103,
+   "name": "Baby_Sorcerer",
+   "parameters_group": "BabyThirdClasses",
+   "max_stats": 117,
+   "upper": false
+  },
+  {
+   "job_id": 4104,
+   "name": "Baby_Minstrel",
+   "parameters_group": "BabyThirdClasses",
+   "max_stats": 117,
+   "upper": false
+  },
+  {
+   "job_id": 4105,
+   "name": "Baby_Wanderer",
+   "parameters_group": "BabyThirdClasses",
+   "max_stats": 117,
+   "upper": false
+  },
+  {
+   "job_id": 4106,
+   "name": "Baby_Sura",
+   "parameters_group": "BabyThirdClasses",
+   "max_stats": 117,
+   "upper": false
+  },
+  {
+   "job_id": 4107,
+   "name": "Baby_Genetic",
+   "parameters_group": "BabyThirdClasses",
+   "max_stats": 117,
+   "upper": false
+  },
+  {
+   "job_id": 4108,
+   "name": "Baby_Shadow_Chaser",
+   "parameters_group": "BabyThirdClasses",
+   "max_stats": 117,
+   "upper": false
+  },
+  {
+   "job_id": 4190,
+   "name": "Expanded_Super_Novice",
+   "parameters_group": "SuperNovice",
+   "max_stats": 125,
+   "upper": false
+  },
+  {
+   "job_id": 4191,
+   "name": "Expanded_Super_Baby",
+   "parameters_group": "SuperNovice",
+   "max_stats": 125,
+   "upper": false
+  },
+  {
+   "job_id": 4211,
+   "name": "Kagerou",
+   "parameters_group": "ExtendedClasses",
+   "max_stats": 125,
+   "upper": false
+  },
+  {
+   "job_id": 4212,
+   "name": "Oboro",
+   "parameters_group": "ExtendedClasses",
+   "max_stats": 125,
+   "upper": false
+  },
+  {
+   "job_id": 4215,
+   "name": "Rebellion",
+   "parameters_group": "ExtendedClasses",
+   "max_stats": 125,
+   "upper": false
+  },
+  {
+   "job_id": 4218,
+   "name": "Summoner",
+   "parameters_group": "Summoner",
+   "max_stats": 120,
+   "upper": false
+  },
+  {
+   "job_id": 4220,
+   "name": "Baby_Summoner",
+   "parameters_group": "Summoner",
+   "max_stats": 120,
+   "upper": false
+  },
+  {
+   "job_id": 4222,
+   "name": "Baby_Ninja",
+   "parameters_group": "BabyFirstClasses",
+   "max_stats": 80,
+   "upper": false
+  },
+  {
+   "job_id": 4223,
+   "name": "Baby_Kagerou",
+   "parameters_group": "BabyExtendedClasses",
+   "max_stats": 125,
+   "upper": false
+  },
+  {
+   "job_id": 4224,
+   "name": "Baby_Oboro",
+   "parameters_group": "BabyExtendedClasses",
+   "max_stats": 125,
+   "upper": false
+  },
+  {
+   "job_id": 4225,
+   "name": "Baby_Taekwon",
+   "parameters_group": "BabyFirstClasses",
+   "max_stats": 80,
+   "upper": false
+  },
+  {
+   "job_id": 4226,
+   "name": "Baby_Star_Gladiator",
+   "parameters_group": "BabySecondClasses",
+   "max_stats": 80,
+   "upper": false
+  },
+  {
+   "job_id": 4227,
+   "name": "Baby_Soul_Linker",
+   "parameters_group": "BabySecondClasses",
+   "max_stats": 80,
+   "upper": false
+  },
+  {
+   "job_id": 4228,
+   "name": "Baby_Gunslinger",
+   "parameters_group": "BabyFirstClasses",
+   "max_stats": 80,
+   "upper": false
+  },
+  {
+   "job_id": 4229,
+   "name": "Baby_Rebellion",
+   "parameters_group": "BabyExtendedClasses",
+   "max_stats": 125,
+   "upper": false
+  },
+  {
+   "job_id": 4239,
+   "name": "Star_Emperor",
+   "parameters_group": "ThirdClasses",
+   "max_stats": 130,
+   "upper": false
+  },
+  {
+   "job_id": 4240,
+   "name": "Soul_Reaper",
+   "parameters_group": "ThirdClasses",
+   "max_stats": 130,
+   "upper": false
+  },
+  {
+   "job_id": 4241,
+   "name": "Baby_Star_Emperor",
+   "parameters_group": "BabyThirdClasses",
+   "max_stats": 117,
+   "upper": false
+  },
+  {
+   "job_id": 4242,
+   "name": "Baby_Soul_Reaper",
+   "parameters_group": "BabyThirdClasses",
+   "max_stats": 117,
+   "upper": false
+  }
+ ]
+}

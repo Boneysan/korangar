@@ -477,6 +477,43 @@
    ]
   },
   {
+   "id": "stat-points",
+   "category": "Mechanics",
+   "title": "Stat points: totals, costs and caps",
+   "summary": "How many stat points a character has at each level, what each point costs, the extra points upper classes get, and each class's stat cap.",
+   "details": [
+    "Total stat points at a level (cumulative, before any are spent): level 1: 48; level 10: 80; level 25: 170; level 50: 420; level 75: 795; level 99: 1,273; level 130: 2,015; level 150: 2,545; level 175: 3,278.",
+    "A level-up grants the difference between two levels' totals, for example level 1 to 2: +3; level 50 to 51: +13; level 98 to 99: +22; level 150 to 151: +28.",
+    "Raising a stat from v to v + 1 costs 2 + (v - 1) / 10 points below 100 and 16 + 4 x ((v - 100) / 5) from 100 (integer division): 9 to 10 costs 2, 98 to 99 costs 11, 99 to 100 costs 11, 100 to 101 costs 16. Taking one stat from 1 to 99 costs 628 points in all.",
+    "Resetting stats gives back the level's total, plus 52 extra points for upper classes: Novice High, Swordsman High, Magician High, Archer High, Acolyte High, Merchant High, Thief High, Lord Knight, High Priest, High Wizard, Whitesmith, Sniper, Assassin Cross, Paladin, Champion, Professor, Stalker, Creator, Clown, Gypsy, Rune Knight Trans, Warlock Trans, Ranger Trans, Arch Bishop Trans, Mechanic Trans, Guillotine Cross Trans, Royal Guard Trans, Sorcerer Trans, Minstrel Trans, Wanderer Trans, Sura Trans, Genetic Trans, Shadow Chaser Trans.",
+    "Stat cap by parameter group (from unit_parameters_db.conf, each job's ParametersGroup in job_db.conf): 80: BabyFirstClasses, BabySecondClasses; 99: FirstClasses, SecondClasses; 117: BabyThirdClasses; 120: Summoner; 125: BabyExtendedClasses, ExtendedClasses, SuperNovice; 130: ThirdClasses. The battle.conf setting max_parameter is not the player cap.",
+    "A job with no job_db.conf block (mounted and cosmetic forms) has no entry here.",
+    "These were confirmed from the source and are unit-tested in the client, not observed on a live server."
+   ],
+   "sources": [
+    {
+     "path": "db/re/statpoint.txt",
+     "record": "cumulative points by level"
+    },
+    {
+     "path": "db/re/unit_parameters_db.conf",
+     "record": "MaxStats per parameter group"
+    },
+    {
+     "path": "db/re/job_db.conf",
+     "record": "ParametersGroup per job"
+    },
+    {
+     "path": "src/map/pc.c",
+     "record": "pc_readdb, pc_gets_status_point, pc_resetstate, pc_need_status_point, pc_jobid2mapid"
+    },
+    {
+     "path": "conf/map/battle/exp.conf",
+     "record": "use_statpoint_table: true"
+    }
+   ]
+  },
+  {
    "id": "weapon-size-adjustments",
    "category": "Mechanics",
    "title": "Weapon damage by target size",
