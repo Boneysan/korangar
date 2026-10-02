@@ -135,6 +135,15 @@ pub fn identify_player_hit(skill_id: Option<u16>, skill_level: u16, monster_elem
     Some(cue_for(rate))
 }
 
+/// Query the exact elemental effectiveness rate (in %) for an attack element
+/// against a monster element. Sourced from Hercules `db/re/attr_fix.conf` (100
+/// = neutral, 150 = 150% damage, 0 = immune).
+pub fn elemental_effectiveness(attack_element_name: &str, monster_element: &str) -> Option<u16> {
+    let (defense, defense_level) = parse_monster_element(monster_element)?;
+    let attack = parse_element_token(attack_element_name)?;
+    Some(rate_for(defense, defense_level, attack))
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -169,5 +178,14 @@ mod tests {
         // An unendowed basic attack is Neutral. Ghost level 1 takes 70% from Neutral.
         assert_eq!(identify_player_hit(None, 0, "Ghost 1"), Some(ElementCue::Resist));
         assert_eq!(identify_player_hit(None, 0, "not an element"), None);
+    }
+
+    #[test]
+    fn elemental_effectiveness_queries_exact_rates() {
+        assert_eq!(elemental_effectiveness("Fire", "Earth 1"), Some(150));
+        assert_eq!(elemental_effectiveness("Water", "Fire 2"), Some(175)); // In Renewal, Water vs Fire 2 is 175%
+        assert_eq!(elemental_effectiveness("Holy", "Undead 1"), Some(150));
+        assert_eq!(elemental_effectiveness("Ghost", "Neutral 1"), Some(70));
+        assert_eq!(elemental_effectiveness("Water", "Water 2"), Some(0));
     }
 }
