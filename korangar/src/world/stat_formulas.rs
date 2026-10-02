@@ -105,7 +105,10 @@ impl From<&crate::dm::reference_data::ReferenceJobTables> for ClassFlags {
 /// x70% for babies, then +1% per VIT. All integer arithmetic. Equipment and
 /// status bonuses are added afterwards by the server and are not included.
 /// (The server also triples HP for a ranked Taekwon over level 90; that needs
-/// a live ranking and is not modelled.)
+/// a live ranking and is not modelled.) This is the raw base value, which is
+/// what the server saves; the value it *shows* is clamped to at least 1
+/// (`status_calc_maxhp`), so a table that collapses to 1 saves 0 and displays
+/// 1.
 pub fn base_max_hp(table_value: u64, base_level: usize, vit: i32, class: ClassFlags) -> u64 {
     let mut value = table_value;
     if class.super_novice && base_level >= 99 {

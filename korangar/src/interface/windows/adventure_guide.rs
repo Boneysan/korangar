@@ -1763,6 +1763,28 @@ fn append_class_table_details(lines: &mut Vec<String>, job_id: u16) {
             .base_max_sp(job_id, level, cap))
     ));
 
+    // A few generated tables collapse to a tiny value. Say so rather than show
+    // a plausible-looking table with a hole in it.
+    for (label, table) in [
+        ("HP", data.job_tables.hp_tables.get(&job.hp_table)),
+        ("SP", data.job_tables.sp_tables.get(&job.sp_table)),
+    ] {
+        let Some(table) = table else { continue };
+        if let Some(first) = table
+            .iter()
+            .enumerate()
+            .find(|(index, value)| *index >= 10 && **value <= 5)
+            .map(|(index, _)| index + 1)
+        {
+            lines.push(format!(
+                "Warning: this class's {label} table drops to {} at level {first} and stays there to level {}. The server's loader \
+                 generated that tail, and a level-161 Baby Kagerou was observed with max HP 1 on this server.",
+                table[first - 1],
+                table.len()
+            ));
+        }
+    }
+
     let mut weapons: Vec<(&String, &u16)> = job.base_aspd.iter().filter(|(_, value)| **value > 0).collect();
     weapons.sort_by_key(|(name, _)| name.as_str());
     if weapons.is_empty() {
@@ -3892,6 +3914,25 @@ mod tests {
     }
 
     #[test]
+    fn a_class_table_that_collapses_says_so_on_the_job_page() {
+        let page = |name: &str| {
+            let (id, name) = job_names()
+                .find(|(_, listed)| *listed == name)
+                .unwrap_or_else(|| panic!("{name} job"));
+            super::job_details(id, name).join("\n")
+        };
+        // Baby Kagerou's HP and SP tables are 1 from level 161 (observed live at 161).
+        let kagerou = page("Baby Kagerou");
+        assert!(kagerou.contains("HP table drops to 1 at level 161"), "{kagerou}");
+        assert!(kagerou.contains("SP table drops to 1 at level 161"), "{kagerou}");
+        // An ordinary class has no warning.
+        assert!(
+            !page("Knight").contains("Warning: this class's"),
+            "Knight has no collapsed table"
+        );
+    }
+
+    #[test]
     fn a_job_with_no_class_table_says_so_instead_of_inventing_hp() {
         let data = reference_data();
         let (id, name) = job_names()
@@ -3918,9 +3959,10 @@ mod tests {
         assert!(hp.contains("plus 1% per VIT"), "{hp}");
         // Worked example from the exported tables: Lord Knight, level 99, VIT 99.
         assert!(hp.contains("Lord Knight (upper) 19,844"), "{hp}");
-        assert!(hp.contains("every value matched"), "{hp}");
+        assert!(hp.contains("Every value matched"), "{hp}");
+        assert!(hp.contains("Expanded Super Novice at level 150"), "{hp}");
         assert!(
-            hp.contains("Baby classes, Super Novices and levels above 99 have not been compared"),
+            hp.contains("Baby Kagerou and Baby Oboro tables fall to 1 from level 161 to 175"),
             "{hp}"
         );
         let aspd = find("attack speed", "Attack speed (ASPD)");

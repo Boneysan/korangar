@@ -94,6 +94,15 @@ pub struct TestContext {
     pub job_id: JobId,
     pub zeny: u32,
     pub health_points: u32,
+    /// What the server last reported for the character's own derived stats.
+    /// `Vitality`/`Intelligence` are (base, bonus): their sum is the server's
+    /// total, the value its HP/SP formulas use. Recorded for the
+    /// status-ground-truth provisioning scenario.
+    pub job_level: u32,
+    pub max_health_points: u32,
+    pub max_spell_points: u32,
+    pub vitality: (i32, i32),
+    pub intelligence: (i32, i32),
     pub map_name: String,
     pub position: TilePosition,
     pub entities: HashMap<EntityId, EntityData>,
@@ -288,6 +297,11 @@ impl TestContext {
             job_id: JobId(0),
             zeny: 0,
             health_points: 0,
+            job_level: 0,
+            max_health_points: 0,
+            max_spell_points: 0,
+            vitality: (0, 0),
+            intelligence: (0, 0),
             map_name: String::new(),
             position: TilePosition { x: 0, y: 0 },
             entities: HashMap::new(),
@@ -650,6 +664,11 @@ impl TestContext {
                 StatType::BaseLevel(value) => self.base_level = *value,
                 StatType::Zeny(value) => self.zeny = *value,
                 StatType::HealthPoints(value) => self.health_points = *value,
+                StatType::JobLevel(value) => self.job_level = *value,
+                StatType::MaximumHealthPoints(value) => self.max_health_points = *value,
+                StatType::MaximumSpellPoints(value) => self.max_spell_points = *value,
+                StatType::Vitality(base, bonus) => self.vitality = (*base, *bonus),
+                StatType::Intelligence(base, bonus) => self.intelligence = (*base, *bonus),
                 _ => {}
             },
             NetworkEvent::ChangeJob { account_id, job_id } if account_id.0 == self.account_id.0 => {

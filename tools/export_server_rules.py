@@ -292,7 +292,8 @@ def max_hp_sp_rule() -> dict[str, object]:
             f"Example, level 99 with VIT 99: Knight {hp(7, 99, 99):,} base HP; Lord Knight (upper) {hp(4008, 99, 99):,}; Baby Swordsman (baby) {hp(4024, 99, 99):,}. Level 99 Wizard with INT 99: {sp(9, 99, 99):,} base SP.",
             "The tables are the ones in job_db.conf, read through the server's own loader: a class with no table of its own inherits from another, and levels a table does not list are filled in from an average increment. Open a job's page for its HP and SP at several levels.",
             "Equipment bonuses, skills and status effects (for example Increase HP, Berserk) change the final value afterwards and are not included here. A top-ranked Taekwon over level 90 gets triple HP and SP from a live ranking this client cannot see.",
-            "Confirmed from the source and compared with the max HP and SP this server saved for 18 characters across 12 classes (first and second classes, upper classes and a third class, all level 99 or below): every value matched. Baby classes, Super Novices and levels above 99 have not been compared.",
+            "Confirmed from the source and compared with what this server computed for 26 characters: 18 across first, second, upper and third classes at level 99 or below, and 8 made for the purpose (baby, Super Novice, Super Baby, Expanded Super Novice at level 150, two third classes at level 175, and baby jobs at levels 151 and 161). Every value matched. Not compared: gear and status modifiers, and the ranked-Taekwon bonus.",
+            "Known data defect on this server: the Baby Kagerou and Baby Oboro tables fall to 1 from level 161 to 175, so a level-161 Baby Kagerou has 1 max HP and 1 max SP (observed).",
         ],
         "sources": [
             {"path": "db/re/job_db.conf", "record": "HPTable, SPTable, Inherit, InheritHP, InheritSP per job"},

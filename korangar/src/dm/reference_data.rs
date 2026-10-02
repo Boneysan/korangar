@@ -2271,6 +2271,40 @@ mod tests {
         (4054, 99, 60, 1, 1, 8667, 333),
     ];
 
+    /// Second ground truth, for what the first set could not cover: characters
+    /// made on 2026-10-01 by the `status-ground-truth` provisioning scenario
+    /// and read back from the database after the server saved them, as
+    /// (class, base level, total VIT, total INT, saved max HP, saved max
+    /// SP). The totals are the server's own (base + bonus, from its status
+    /// packets), so no job bonus is added. Covers baby (x70%), Super
+    /// Novice, Super Baby, Expanded Super Novice at level 150, third
+    /// classes at level 175 (including the level-175 SP value the loader
+    /// regenerates), an upper third class, and Baby Kagerou at 161 where
+    /// the table collapses to 1 (the database holds the raw 0; the server's
+    /// own packet shows its clamp to 1).
+    const OBSERVED_HIGH_LEVEL_CHARACTERS: &[(u16, usize, i32, i32, u64, u64)] = &[
+        (4023, 99, 31, 21, 486, 91),
+        (23, 99, 31, 21, 3314, 131),
+        (4045, 99, 31, 21, 2320, 91),
+        (4190, 150, 31, 21, 6268, 181),
+        // INT is [21, 1] in the server's packet: a total of 22.
+        (4054, 175, 31, 22, 24235, 1177),
+        (4060, 175, 31, 22, 30376, 1335),
+        (4223, 161, 31, 21, 0, 0),
+        (4229, 151, 31, 21, 36, 9),
+    ];
+
+    #[test]
+    fn class_tables_reproduce_baby_super_novice_and_high_level_characters() {
+        let data = reference_data();
+        for &(class, level, vit, int, saved_hp, saved_sp) in OBSERVED_HIGH_LEVEL_CHARACTERS {
+            let hp = data.job_tables.base_max_hp(class, level, vit).expect("class table");
+            let sp = data.job_tables.base_max_sp(class, level, int).expect("class table");
+            assert_eq!(hp, saved_hp, "max HP for class {class} level {level}");
+            assert_eq!(sp, saved_sp, "max SP for class {class} level {level}");
+        }
+    }
+
     #[test]
     fn class_tables_reproduce_the_hp_and_sp_a_live_server_saved() {
         let data = reference_data();

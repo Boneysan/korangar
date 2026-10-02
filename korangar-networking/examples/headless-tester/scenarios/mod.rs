@@ -5,6 +5,7 @@ mod gm;
 mod items;
 mod movement;
 mod observer;
+mod provisioning;
 mod session;
 /// Generated from Hercules' own `skill_db.conf` — see
 /// `tools/generate_skill_expectations.py`. Regenerate after any skill_db
@@ -76,6 +77,16 @@ impl Scenario {
             known_issue: None,
         }
     }
+}
+
+/// Phase of scenarios that *provision* state (create characters) rather than
+/// test behaviour. `--scenario all` skips them; name one explicitly to run it.
+pub const PROVISIONING_PHASE: u8 = 250;
+
+/// Scenarios that leave persistent state behind on purpose. They are
+/// selectable by name but never part of `all` or a numbered phase.
+pub fn provisioning_scenarios() -> Vec<Scenario> {
+    provisioning::scenarios()
 }
 
 pub fn all_scenarios() -> Vec<Scenario> {
