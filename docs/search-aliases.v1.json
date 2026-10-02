@@ -1,0 +1,181 @@
+{
+ "schema_version": 1,
+ "authored": true,
+ "rules": "Authored, not generated. Each alias maps a player term to an existing target: a status constant (kind=status) or an exact job name (kind=job). Matching is case-insensitive; an alias shorter than 4 letters matches exactly, longer ones also match a typed prefix of at least 4 letters. A target that does not resolve fails the load.",
+ "entries": [
+  {
+   "alias": "petrification",
+   "kind": "status",
+   "target": "SC_STONE",
+   "basis": "Common player term for the ailment the server calls SC_STONE (Stone Curse)"
+  },
+  {
+   "alias": "petrified",
+   "kind": "status",
+   "target": "SC_STONE",
+   "basis": "Common player term for the ailment the server calls SC_STONE (Stone Curse)"
+  },
+  {
+   "alias": "petrify",
+   "kind": "status",
+   "target": "SC_STONE",
+   "basis": "Common player term for the ailment the server calls SC_STONE (Stone Curse)"
+  },
+  {
+   "alias": "stoned",
+   "kind": "status",
+   "target": "SC_STONE",
+   "basis": "Common player term for the ailment the server calls SC_STONE (Stone Curse)"
+  },
+  {
+   "alias": "petrifying",
+   "kind": "status",
+   "target": "SC_STONE",
+   "basis": "Common player term for the ailment the server calls SC_STONE (Stone Curse)"
+  },
+  {
+   "alias": "frozen",
+   "kind": "status",
+   "target": "SC_FREEZE",
+   "basis": "Common player term for the ailment the server calls SC_FREEZE"
+  },
+  {
+   "alias": "freezing",
+   "kind": "status",
+   "target": "SC_FREEZE",
+   "basis": "Common player term for the ailment the server calls SC_FREEZE"
+  },
+  {
+   "alias": "stunned",
+   "kind": "status",
+   "target": "SC_STUN",
+   "basis": "Common player term for the ailment the server calls SC_STUN"
+  },
+  {
+   "alias": "asleep",
+   "kind": "status",
+   "target": "SC_SLEEP",
+   "basis": "Common player term for the ailment the server calls SC_SLEEP"
+  },
+  {
+   "alias": "sleeping",
+   "kind": "status",
+   "target": "SC_SLEEP",
+   "basis": "Common player term for the ailment the server calls SC_SLEEP"
+  },
+  {
+   "alias": "cursed",
+   "kind": "status",
+   "target": "SC_CURSE",
+   "basis": "Common player term for the ailment the server calls SC_CURSE"
+  },
+  {
+   "alias": "confused",
+   "kind": "status",
+   "target": "SC_CONFUSION",
+   "basis": "Common player term for the ailment the server calls SC_CONFUSION"
+  },
+  {
+   "alias": "blinded",
+   "kind": "status",
+   "target": "SC_BLIND",
+   "basis": "Common player term for the ailment the server calls SC_BLIND"
+  },
+  {
+   "alias": "blindness",
+   "kind": "status",
+   "target": "SC_BLIND",
+   "basis": "Common player term for the ailment the server calls SC_BLIND"
+  },
+  {
+   "alias": "silenced",
+   "kind": "status",
+   "target": "SC_SILENCE",
+   "basis": "Common player term for the ailment the server calls SC_SILENCE"
+  },
+  {
+   "alias": "poisoned",
+   "kind": "status",
+   "target": "SC_POISON",
+   "basis": "Common player term for the ailment the server calls SC_POISON"
+  },
+  {
+   "alias": "bleeding",
+   "kind": "status",
+   "target": "SC_BLOODING",
+   "basis": "Common player term for the ailment the server calls SC_BLOODING"
+  },
+  {
+   "alias": "bleed",
+   "kind": "status",
+   "target": "SC_BLOODING",
+   "basis": "Common player term for the ailment the server calls SC_BLOODING"
+  },
+  {
+   "alias": "lk",
+   "kind": "job",
+   "target": "Lord Knight",
+   "basis": "Common player abbreviation or nickname for the job"
+  },
+  {
+   "alias": "hw",
+   "kind": "job",
+   "target": "High Wizard",
+   "basis": "Common player abbreviation or nickname for the job"
+  },
+  {
+   "alias": "ws",
+   "kind": "job",
+   "target": "Whitesmith",
+   "basis": "Common player abbreviation or nickname for the job"
+  },
+  {
+   "alias": "ac",
+   "kind": "job",
+   "target": "Assassin Cross",
+   "basis": "Common player abbreviation or nickname for the job"
+  },
+  {
+   "alias": "pally",
+   "kind": "job",
+   "target": "Paladin",
+   "basis": "Common player abbreviation or nickname for the job"
+  },
+  {
+   "alias": "champ",
+   "kind": "job",
+   "target": "Champion",
+   "basis": "Common player abbreviation or nickname for the job"
+  },
+  {
+   "alias": "prof",
+   "kind": "job",
+   "target": "Professor",
+   "basis": "Common player abbreviation or nickname for the job"
+  },
+  {
+   "alias": "bs",
+   "kind": "job",
+   "target": "Blacksmith",
+   "basis": "Common player abbreviation or nickname for the job"
+  },
+  {
+   "alias": "sg",
+   "kind": "job",
+   "target": "Star Gladiator",
+   "basis": "Common player abbreviation or nickname for the job"
+  },
+  {
+   "alias": "sl",
+   "kind": "job",
+   "target": "Soul Linker",
+   "basis": "Common player abbreviation or nickname for the job"
+  },
+  {
+   "alias": "rg",
+   "kind": "job",
+   "target": "Rogue",
+   "basis": "Common player abbreviation or nickname for the job"
+  }
+ ]
+}

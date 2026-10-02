@@ -2216,7 +2216,7 @@ where
     } else if category == "Jobs" {
         rows.extend(
             job_names()
-                .filter(|(_, name)| query.is_empty() || name.to_lowercase().contains(&query))
+                .filter(|(_, name)| job_matches(&query, name))
                 .take(MAX_RESULTS)
                 .map(|(id, name)| GuideResult {
                     label: format!("{name}  (job)"),
@@ -2498,7 +2498,7 @@ fn search_all_categories(
     );
     rows.extend(
         job_names()
-            .filter(|(_, name)| query.is_empty() || name.to_lowercase().contains(query))
+            .filter(|(_, name)| job_matches(query, name))
             .take(all_category_result_slots(&rows))
             .map(|(id, name)| GuideResult {
                 label: format!("{name}  (Job)"),
@@ -2650,7 +2650,7 @@ where
 #[cfg(test)]
 mod tests {
     use super::{
-        GuideResult, ReferenceItem, display_name, item_details, job_names, map_details, monster_details, parse_guide_link,
+        GuideResult, ReferenceItem, display_name, item_details, job_matches, job_names, map_details, monster_details, parse_guide_link,
         parse_route_cell_link, quest_details, quest_reference_details, reference_data, refinement_details, resolve_details, rumor_details,
         search_all_categories, service_details, skill_details, status_details, status_tag,
     };
@@ -3309,12 +3309,81 @@ mod tests {
     }
 
     #[test]
+    fn alias_rule_is_exact_for_short_terms_and_prefix_from_four_letters() {
+        use crate::dm::reference_data::alias_matches;
+        assert!(alias_matches("lk", "LK"));
+        assert!(!alias_matches("pally", "pal"), "three letters never match by prefix");
+        assert!(alias_matches("petrification", "petrif"));
+        assert!(!alias_matches("petrification", "tion"));
+        assert!(!alias_matches("sg", "s"));
+    }
+
+    #[test]
+    fn player_words_for_ailments_reach_the_status_entry() {
+        let data = reference_data();
+        for (word, constant) in [
+            ("petrification", "SC_STONE"),
+            ("petrified", "SC_STONE"),
+            ("frozen", "SC_FREEZE"),
+            ("stunned", "SC_STUN"),
+            ("asleep", "SC_SLEEP"),
+            ("cursed", "SC_CURSE"),
+            ("confused", "SC_CONFUSION"),
+            ("blindness", "SC_BLIND"),
+            ("silenced", "SC_SILENCE"),
+            ("poisoned", "SC_POISON"),
+            ("bleeding", "SC_BLOODING"),
+        ] {
+            let rows = search_all_categories(word, &DiscoveryState::default(), &[]);
+            let reached = rows.iter().any(|row| {
+                row.kind == "status"
+                    && data
+                        .statuses
+                        .iter()
+                        .find(|status| status.id == row.id)
+                        .is_some_and(|status| status.statuses.iter().any(|mechanic| mechanic.constant == constant))
+            });
+            assert!(
+                reached,
+                "{word:?} should reach {constant}; got {:?}",
+                rows.iter().map(|row| row.label.as_str()).collect::<Vec<_>>()
+            );
+        }
+    }
+
+    #[test]
+    fn job_abbreviations_reach_their_job_and_every_alias_names_a_real_job() {
+        let names: Vec<&str> = job_names().map(|(_, name)| name).collect();
+        for alias in reference_data().aliases.iter().filter(|alias| alias.kind == "job") {
+            assert!(names.contains(&alias.target.as_str()), "{} -> {}", alias.alias, alias.target);
+        }
+        let rows = search_all_categories("lk", &DiscoveryState::default(), &[]);
+        assert!(rows.iter().any(|row| row.kind == "job" && row.label.starts_with("Lord Knight")));
+        assert!(job_matches("pally", "Paladin"));
+        assert!(!job_matches("pally", "Priest"));
+    }
+
+    #[test]
+    fn aliases_do_not_displace_the_established_status_results() {
+        let plain = reference_data().search_statuses("stun", 10);
+        assert!(plain.iter().any(|status| status.name == "Stun"));
+        // "stunned" reaches the same Stun entry through the alias.
+        let aliased = reference_data().search_statuses("stunned", 10);
+        assert!(aliased.iter().any(|status| status.name == "Stun"));
+    }
+
+    #[test]
     fn all_search_finds_matching_monster_card_and_quest_together() {
         let rows = search_all_categories("poring", &DiscoveryState::default(), &[]);
         assert!(rows.iter().any(|row| row.kind == "monster" && row.id == 1002));
         assert!(rows.iter().any(|row| row.kind == "card" && row.id == 4001));
         assert!(rows.iter().any(|row| row.kind == "quest"));
     }
+}
+
+/// A job matches by name, or by an authored alias such as "lk" or "pally".
+fn job_matches(query: &str, name: &str) -> bool {
+    query.is_empty() || name.to_lowercase().contains(query) || reference_data().alias_targets("job", query).contains(&name)
 }
 
 fn job_names() -> impl Iterator<Item = (u16, &'static str)> {

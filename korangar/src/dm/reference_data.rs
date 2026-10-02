@@ -31,6 +31,7 @@ const ITEM_EXCHANGES_JSON: &str = include_str!("../../../docs/item-exchanges.v1.
 const SKILL_FORMULA_REVIEWS_JSON: &str = include_str!("../../../docs/skill-formula-reviews.v1.json");
 const NPC_SERVICE_REVIEWS_JSON: &str = include_str!("../../../docs/npc-service-reviews.v1.json");
 const RUMORS_JSON: &str = include_str!("../../../docs/rumors.v1.json");
+const SEARCH_ALIASES_JSON: &str = include_str!("../../../docs/search-aliases.v1.json");
 
 #[derive(Deserialize)]
 struct VersionedFile<T> {
@@ -831,6 +832,32 @@ pub struct ReferenceServerRule {
     pub sources: Vec<ReferenceSource>,
 }
 
+/// An authored player term that leads to an existing Guide target.
+#[derive(Debug, Deserialize)]
+pub struct ReferenceAlias {
+    pub alias: String,
+    /// `status` (target is an `SC_` constant) or `job` (target is an exact job
+    /// name).
+    pub kind: String,
+    pub target: String,
+    pub basis: String,
+}
+
+#[derive(Debug, Deserialize)]
+struct VersionedAliasesFile {
+    schema_version: u32,
+    entries: Vec<ReferenceAlias>,
+}
+
+/// Whether a typed query reaches `alias`: exactly, or - for queries of four
+/// letters or more - as a prefix, so "petrif" finds "petrification" while a
+/// two-letter abbreviation never matches by accident.
+pub fn alias_matches(alias: &str, query: &str) -> bool {
+    let query = query.trim().to_lowercase();
+    let alias = alias.to_lowercase();
+    alias == query || (query.chars().count() >= 4 && alias.starts_with(&query))
+}
+
 #[derive(Debug, Deserialize)]
 pub struct ReferenceStatus {
     pub id: u32,
@@ -994,6 +1021,7 @@ pub struct ReferenceData {
     pub item_exchanges: Vec<ReferenceItemExchange>,
     pub npc_services: Vec<ReferenceNpcServiceReview>,
     pub rumors: Vec<ReferenceRumor>,
+    pub aliases: Vec<ReferenceAlias>,
     pub map_flags: Vec<ReferenceMapFlag>,
     pub runtime_map_flag_clues: Vec<ReferenceRuntimeMapFlagClue>,
     pub runtime_map_flag_reviews: Vec<ReferenceRuntimeMapFlagReview>,
@@ -1046,6 +1074,8 @@ impl ReferenceData {
             .map_err(|error| format!("embedded skill-formula-reviews.v1.json is invalid: {error}"))?;
         let npc_services: VersionedNpcServiceReviewsFile = serde_json::from_str(NPC_SERVICE_REVIEWS_JSON)
             .map_err(|error| format!("embedded npc-service-reviews.v1.json is invalid: {error}"))?;
+        let aliases: VersionedAliasesFile =
+            serde_json::from_str(SEARCH_ALIASES_JSON).map_err(|error| format!("embedded search-aliases.v1.json is invalid: {error}"))?;
         let rumors: VersionedRumorsFile =
             serde_json::from_str(RUMORS_JSON).map_err(|error| format!("embedded rumors.v1.json is invalid: {error}"))?;
 
@@ -1177,6 +1207,26 @@ impl ReferenceData {
             .any(|status| status.iconless && (status.id < 100_000 || status.statuses.len() != 1))
         {
             return Err("an iconless status row must have an id of 100000 or more and exactly one server status".to_owned());
+        }
+        if aliases.schema_version != 1 {
+            return Err("unsupported search-aliases.v1.json schema".to_owned());
+        }
+        for alias in &aliases.entries {
+            let resolves = match alias.kind.as_str() {
+                "status" => statuses
+                    .iter()
+                    .any(|status| status.statuses.iter().any(|mechanic| mechanic.constant == alias.target)),
+                // Job names live in the client's job table, not in reference
+                // data; the guide tests resolve these.
+                "job" => !alias.target.trim().is_empty(),
+                other => return Err(format!("search alias {:?} has unknown kind {other:?}", alias.alias)),
+            };
+            if alias.alias.trim().is_empty() || alias.basis.trim().is_empty() || !resolves {
+                return Err(format!(
+                    "search alias {:?} -> {:?} ({}) is empty, has no basis, or names a target that does not exist",
+                    alias.alias, alias.target, alias.kind
+                ));
+            }
         }
         let monster_ids: HashSet<u32> = monsters_by_id.keys().copied().collect();
         let item_ids: HashSet<u32> = items_by_id.keys().copied().collect();
@@ -1399,6 +1449,7 @@ impl ReferenceData {
             item_exchanges: item_exchanges.entries,
             npc_services: npc_services.entries,
             rumors: rumors.entries,
+            aliases: aliases.entries,
             map_flags: map_flags.entries,
             runtime_map_flag_clues: map_flags.runtime_clues,
             runtime_map_flag_reviews: map_flags.runtime_reviews,
@@ -1668,8 +1719,18 @@ impl ReferenceData {
         matches
     }
 
+    /// Targets of every alias of `kind` that `query` reaches.
+    pub fn alias_targets(&self, kind: &str, query: &str) -> Vec<&str> {
+        self.aliases
+            .iter()
+            .filter(|alias| alias.kind == kind && alias_matches(&alias.alias, query))
+            .map(|alias| alias.target.as_str())
+            .collect()
+    }
+
     pub fn search_statuses(&self, query: &str, limit: usize) -> Vec<&ReferenceStatus> {
         let query = query.to_lowercase();
+        let alias_targets = self.alias_targets("status", &query);
         let mut matches: Vec<_> = self
             .statuses
             .iter()
@@ -1678,7 +1739,8 @@ impl ReferenceData {
                     || status.name.to_lowercase().contains(&query)
                     || status.id.to_string() == query
                     || status.statuses.iter().any(|mechanic| {
-                        mechanic.constant.to_lowercase().contains(&query)
+                        alias_targets.contains(&mechanic.constant.as_str())
+                            || mechanic.constant.to_lowercase().contains(&query)
                             || mechanic.associated_skill.as_ref().is_some_and(|skill| {
                                 skill.name.to_lowercase().contains(&query) || skill.description.to_lowercase().contains(&query)
                             })
