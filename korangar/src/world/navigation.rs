@@ -79,6 +79,71 @@ pub fn portal_label<'a>(
     })
 }
 
+/// A verified walk-warp portal exit on a map.
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub struct MapPortalExit {
+    pub from_map: String,
+    pub to_map: String,
+    pub x: u16,
+    pub y: u16,
+    pub width: u16,
+    pub height: u16,
+    pub is_route_exit: bool,
+}
+
+impl MapPortalExit {
+    pub fn label(&self) -> String {
+        if self.is_route_exit {
+            format!("→ Route portal: {}", self.to_map)
+        } else {
+            format!("Portal to {}", self.to_map)
+        }
+    }
+
+    #[allow(dead_code)]
+    pub fn center_tile(&self) -> (u16, u16) {
+        (self.x.saturating_add(self.width / 2), self.y.saturating_add(self.height / 2))
+    }
+}
+
+/// Enumerate all verified outgoing walk-warp portal exits on `current_map`.
+///
+/// If `route_target` is provided, the next exit leading along the tracked route
+/// is flagged with `is_route_exit: true`.
+///
+/// Safety guarantees:
+/// - Only verified, active walk-warp edges in `navigation_graph` are returned.
+/// - NPC services (e.g. ferries, cat fleet expeditions) are distinct travel
+///   legs and are never returned as walk portals.
+/// - Inactive, disabled, or unindexed exits are never hallucinated or exposed.
+pub fn map_portal_exits(current_map: &str, route_target: Option<&str>) -> Vec<MapPortalExit> {
+    let graph = navigation_graph();
+    let next_edge = route_target.and_then(|target| next_route_edge(current_map, target));
+
+    let mut exits = Vec::new();
+    for edge in &graph.edges {
+        if edge.kind != "walk_warp" {
+            continue;
+        }
+        if !edge.from.map.eq_ignore_ascii_case(current_map) {
+            continue;
+        }
+        let is_route_exit = next_edge.is_some_and(|next| next.id == edge.id);
+        exits.push(MapPortalExit {
+            from_map: edge.from.map.clone(),
+            to_map: edge.to.map.clone(),
+            x: edge.from.x,
+            y: edge.from.y,
+            width: edge.from.width,
+            height: edge.from.height,
+            is_route_exit,
+        });
+    }
+
+    exits.sort_by(|a, b| a.to_map.cmp(&b.to_map).then_with(|| a.x.cmp(&b.x)));
+    exits
+}
+
 static NAVIGATION_GRAPH: OnceLock<NavigationGraph> = OnceLock::new();
 
 pub fn navigation_graph() -> &'static NavigationGraph {
@@ -140,7 +205,7 @@ pub fn next_route_edge(current_map: &str, target_map: &str) -> Option<&'static N
 
 #[cfg(test)]
 mod tests {
-    use super::{is_dangerous_map_level, navigation_graph, portal_label, route_edges};
+    use super::{is_dangerous_map_level, map_portal_exits, navigation_graph, portal_label, route_edges};
 
     #[test]
     fn map_danger_level_uses_the_inclusive_fifteen_level_boundary() {
@@ -244,5 +309,56 @@ mod tests {
         assert_eq!(portal_label(&graph.edges, "alberta", 200, 151, Some("malangdo")), None);
         assert_eq!(portal_label(&graph.edges, "malangdo", 219, 86, Some("izlude")), None);
         assert_eq!(portal_label(&graph.edges, "malangdo", 219, 86, Some("alberta")), None);
+    }
+
+    #[test]
+    fn map_portal_exits_pilot_map_prt_fild08_and_tracked_route_accent() {
+        let exits = map_portal_exits("prt_fild08", Some("prontera"));
+        assert!(!exits.is_empty(), "prt_fild08 must have verified walk-warp portal exits");
+
+        // prt_fild08 connects to prontera, prt_fild07, izlude, moc_fild01
+        let to_maps: Vec<&str> = exits.iter().map(|e| e.to_map.as_str()).collect();
+        assert!(to_maps.contains(&"prontera"));
+        assert!(to_maps.contains(&"prt_fild07"));
+        assert!(to_maps.contains(&"izlude"));
+        assert!(to_maps.contains(&"moc_fild01"));
+
+        // On route to Prontera, prontera is the next step and receives tracked route
+        // accent
+        let route_exit = exits.iter().find(|e| e.to_map == "prontera").expect("exit to prontera");
+        assert!(route_exit.is_route_exit, "prontera must be accented as route exit");
+        assert_eq!(route_exit.label(), "→ Route portal: prontera");
+
+        // Non-route exits are not accented
+        let other_exit = exits.iter().find(|e| e.to_map == "izlude").expect("exit to izlude");
+        assert!(!other_exit.is_route_exit);
+        assert_eq!(other_exit.label(), "Portal to izlude");
+    }
+
+    #[test]
+    fn map_portal_exits_pilot_map_izlude_excludes_services() {
+        let exits = map_portal_exits("izlude", Some("iz_dun00"));
+
+        // izlude has verified walk warps (e.g. to prt_fild08)
+        assert!(exits.iter().any(|e| e.to_map == "prt_fild08"));
+
+        // NPC services (ferry to Byalan Island, cat fleet to Malangdo) are distinct
+        // travel legs and must never be exposed as walk-warp portal exits
+        assert!(!exits.iter().any(|e| e.to_map == "izlu2dun" || e.to_map == "iz_dun00"));
+        assert!(!exits.iter().any(|e| e.to_map == "malangdo"));
+
+        // Since the route to iz_dun00 starts with an NPC service, no walk portal is
+        // marked as route exit
+        assert!(!exits.iter().any(|e| e.is_route_exit));
+    }
+
+    #[test]
+    fn map_portal_exits_pilot_map_prt_maze01() {
+        let exits = map_portal_exits("prt_maze01", None);
+        assert!(!exits.is_empty(), "prt_maze01 must have verified portal exits");
+        assert!(
+            exits.iter().all(|e| !e.is_route_exit),
+            "without route target, no portal is route exit"
+        );
     }
 }

@@ -28,6 +28,9 @@ const ITEM_GRANTS_JSON: &str = include_str!("../../../docs/item-script-grants.v1
 const MAP_FLAGS_JSON: &str = include_str!("../../../docs/map-flags.v1.json");
 const COVERAGE_JSON: &str = include_str!("../../../docs/encyclopedia-coverage.v1.json");
 const ITEM_EXCHANGES_JSON: &str = include_str!("../../../docs/item-exchanges.v1.json");
+const SKILL_FORMULA_REVIEWS_JSON: &str = include_str!("../../../docs/skill-formula-reviews.v1.json");
+const NPC_SERVICE_REVIEWS_JSON: &str = include_str!("../../../docs/npc-service-reviews.v1.json");
+const RUMORS_JSON: &str = include_str!("../../../docs/rumors.v1.json");
 
 #[derive(Deserialize)]
 struct VersionedFile<T> {
@@ -144,6 +147,17 @@ pub struct ReferenceScriptedSpawn {
     pub amount: Option<u32>,
     pub source: String,
     pub availability: String,
+}
+
+/// Aggregated spawn records and level range for a map derived from static spawn
+/// directives.
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub struct MapSpawnDetails {
+    pub records: u64,
+    pub mean_level: u16,
+    pub min_level: u16,
+    pub max_level: u16,
+    pub species: usize,
 }
 
 #[derive(Debug, Deserialize)]
@@ -526,6 +540,16 @@ pub struct ReferenceItemShop {
     pub source: String,
 }
 
+#[derive(Debug, Clone, Deserialize)]
+pub struct ReferenceSkillPrerequisite {
+    #[serde(default, rename = "SkillId")]
+    pub skill_id: Option<u16>,
+    #[serde(rename = "Name")]
+    pub name: String,
+    #[serde(rename = "Level")]
+    pub level: u16,
+}
+
 #[derive(Debug, Deserialize)]
 pub struct ReferenceSkill {
     #[serde(rename = "Id")]
@@ -536,6 +560,14 @@ pub struct ReferenceSkill {
     pub description: String,
     #[serde(default, rename = "MaxLevel")]
     pub maximum_level: u16,
+    #[serde(default, rename = "AttackType")]
+    pub attack_type: Option<String>,
+    #[serde(default, rename = "StatusChange")]
+    pub status_change: Option<String>,
+    #[serde(default, rename = "Prerequisites")]
+    pub prerequisites: Vec<ReferenceSkillPrerequisite>,
+    #[serde(default, rename = "Source")]
+    pub source: Option<ReferenceSource>,
 }
 
 #[derive(Debug, Deserialize)]
@@ -631,6 +663,123 @@ impl ReferenceItem {
 pub struct ReferenceSource {
     pub path: String,
     pub record: String,
+}
+
+#[derive(Debug, Clone, Deserialize)]
+pub struct ReferenceSkillFormulaTarget {
+    pub skill_id: u16,
+    pub skill_name: String,
+}
+
+#[derive(Debug, Clone, Deserialize)]
+pub struct ReferenceSourceCitation {
+    pub path: String,
+    pub lines: Vec<usize>,
+}
+
+#[derive(Debug, Clone, Deserialize)]
+pub struct ReferenceSkillFormulaReview {
+    pub id: String,
+    pub title: String,
+    pub skill_ids: Vec<ReferenceSkillFormulaTarget>,
+    pub evidence_state: EvidenceState,
+    pub reviewed_by: String,
+    pub reviewed_on: String,
+    pub review_method: String,
+    pub formula: String,
+    pub worked_example: String,
+    pub conditions: Vec<String>,
+    pub sources: Vec<ReferenceSourceCitation>,
+}
+
+#[derive(Deserialize)]
+struct VersionedSkillFormulaReviewsFile {
+    schema_version: u32,
+    source_revision: String,
+    source_worktree_dirty: bool,
+    mode: String,
+    entries: Vec<ReferenceSkillFormulaReview>,
+}
+
+#[derive(Debug, Clone, Deserialize)]
+pub struct ReferenceRumor {
+    pub id: u32,
+    pub title: String,
+    pub category: String,
+    pub text: String,
+    #[serde(default)]
+    pub map_name: Option<String>,
+    #[serde(default)]
+    pub coordinates: Option<[u16; 2]>,
+    pub source_location: String,
+    #[serde(default)]
+    pub related_monster_id: Option<u32>,
+    #[serde(default)]
+    pub related_item_id: Option<u32>,
+    pub is_story_spoiler: bool,
+    pub evidence_state: EvidenceState,
+}
+
+#[derive(Deserialize)]
+struct VersionedRumorsFile {
+    schema_version: u32,
+    source_revision: String,
+    source_worktree_dirty: bool,
+    mode: String,
+    entries: Vec<ReferenceRumor>,
+}
+
+#[derive(Debug, Clone, Deserialize)]
+pub struct ReferenceNpcServiceLocation {
+    pub internal_name: String,
+    pub map: String,
+    pub x: u16,
+    pub y: u16,
+    pub npc_id: u32,
+}
+
+#[derive(Debug, Clone, Deserialize)]
+pub struct ReferenceKafraDestination {
+    pub name: String,
+    pub fee: u32,
+}
+
+#[derive(Debug, Clone, Deserialize)]
+pub struct ReferenceKafraRouteEntry {
+    pub origin_map: String,
+    pub destinations: Vec<ReferenceKafraDestination>,
+}
+
+#[derive(Debug, Clone, Deserialize)]
+pub struct ReferenceNpcServiceReview {
+    pub id: String,
+    pub title: String,
+    pub service_kind: String,
+    pub evidence_state: EvidenceState,
+    pub reviewed_by: String,
+    pub reviewed_on: String,
+    pub review_method: String,
+    pub conditions: Vec<String>,
+    pub sources: Vec<ReferenceSourceCitation>,
+    #[serde(default)]
+    pub npc: Option<ReferenceNpcServiceLocation>,
+    #[serde(default)]
+    pub route_table: Option<Vec<ReferenceKafraRouteEntry>>,
+    #[serde(default)]
+    pub route_table_note: Option<String>,
+    #[serde(default)]
+    pub locations: Option<Vec<serde_json::Value>>,
+    #[serde(default)]
+    pub location_count: Option<usize>,
+}
+
+#[derive(Deserialize)]
+struct VersionedNpcServiceReviewsFile {
+    schema_version: u32,
+    source_revision: String,
+    source_worktree_dirty: bool,
+    mode: String,
+    entries: Vec<ReferenceNpcServiceReview>,
 }
 
 #[derive(Debug, Deserialize)]
@@ -826,6 +975,7 @@ pub struct ReferenceData {
     pub items: Vec<ReferenceItem>,
     pub cards: Vec<ReferenceItem>,
     pub skills: Vec<ReferenceSkill>,
+    pub skill_formula_reviews: Vec<ReferenceSkillFormulaReview>,
     pub job_skill_trees: Vec<ReferenceJobSkillTree>,
     pub job_bonuses: Vec<ReferenceJobBonuses>,
     pub refinement: ReferenceRefinement,
@@ -837,6 +987,8 @@ pub struct ReferenceData {
     pub item_grants: Vec<ReferenceItemGrant>,
     pub item_consumptions: Vec<ReferenceItemConsumption>,
     pub item_exchanges: Vec<ReferenceItemExchange>,
+    pub npc_services: Vec<ReferenceNpcServiceReview>,
+    pub rumors: Vec<ReferenceRumor>,
     pub map_flags: Vec<ReferenceMapFlag>,
     pub runtime_map_flag_clues: Vec<ReferenceRuntimeMapFlagClue>,
     pub runtime_map_flag_reviews: Vec<ReferenceRuntimeMapFlagReview>,
@@ -847,6 +999,8 @@ pub struct ReferenceData {
     job_skill_trees_by_id: HashMap<u16, usize>,
     job_bonuses_by_id: HashMap<u16, usize>,
     quests_by_id: HashMap<u32, usize>,
+    npc_services_by_id: HashMap<String, usize>,
+    rumors_by_id: HashMap<u32, usize>,
 }
 
 impl ReferenceData {
@@ -883,6 +1037,12 @@ impl ReferenceData {
             serde_json::from_str(COVERAGE_JSON).map_err(|error| format!("embedded encyclopedia-coverage.v1.json is invalid: {error}"))?;
         let item_exchanges: VersionedItemExchangeFile =
             serde_json::from_str(ITEM_EXCHANGES_JSON).map_err(|error| format!("embedded item-exchanges.v1.json is invalid: {error}"))?;
+        let formula_reviews: VersionedSkillFormulaReviewsFile = serde_json::from_str(SKILL_FORMULA_REVIEWS_JSON)
+            .map_err(|error| format!("embedded skill-formula-reviews.v1.json is invalid: {error}"))?;
+        let npc_services: VersionedNpcServiceReviewsFile = serde_json::from_str(NPC_SERVICE_REVIEWS_JSON)
+            .map_err(|error| format!("embedded npc-service-reviews.v1.json is invalid: {error}"))?;
+        let rumors: VersionedRumorsFile =
+            serde_json::from_str(RUMORS_JSON).map_err(|error| format!("embedded rumors.v1.json is invalid: {error}"))?;
 
         if bestiary.schema_version != 1
             || items.schema_version != 1
@@ -899,6 +1059,9 @@ impl ReferenceData {
             || map_flags.schema_version != 1
             || coverage_report.schema_version != 1
             || item_exchanges.schema_version != 1
+            || formula_reviews.schema_version != 1
+            || npc_services.schema_version != 1
+            || rumors.schema_version != 1
         {
             return Err("unsupported embedded reference-data schema version".to_owned());
         }
@@ -916,6 +1079,9 @@ impl ReferenceData {
             || map_flags.source_revision != quests.source_revision
             || coverage_report.source_revision != quests.source_revision
             || item_exchanges.source_revision != quests.source_revision
+            || formula_reviews.source_revision != quests.source_revision
+            || npc_services.source_revision != quests.source_revision
+            || rumors.source_revision != quests.source_revision
         {
             return Err("embedded reference files come from different Hercules revisions".to_owned());
         }
@@ -932,6 +1098,9 @@ impl ReferenceData {
             || item_grants.source_worktree_dirty != quests.source_worktree_dirty
             || map_flags.source_worktree_dirty != quests.source_worktree_dirty
             || item_exchanges.source_worktree_dirty != quests.source_worktree_dirty
+            || formula_reviews.source_worktree_dirty != quests.source_worktree_dirty
+            || npc_services.source_worktree_dirty != quests.source_worktree_dirty
+            || rumors.source_worktree_dirty != quests.source_worktree_dirty
         {
             return Err("embedded reference files disagree about source worktree status".to_owned());
         }
@@ -949,6 +1118,9 @@ impl ReferenceData {
             || map_flags.mode != quests.mode
             || coverage_report.mode != quests.mode
             || item_exchanges.mode != quests.mode
+            || formula_reviews.mode != quests.mode
+            || npc_services.mode != quests.mode
+            || rumors.mode != quests.mode
         {
             return Err("embedded reference files use different renewal modes".to_owned());
         }
@@ -1166,6 +1338,33 @@ impl ReferenceData {
             }
         }
 
+        for review in &formula_reviews.entries {
+            for target in &review.skill_ids {
+                let Some(&skill_index) = skills_by_id.get(&(target.skill_id as u32)) else {
+                    return Err(format!(
+                        "skill formula review {} links missing skill {}",
+                        review.id, target.skill_id
+                    ));
+                };
+                if skills[skill_index].name != target.skill_name {
+                    return Err(format!("skill formula review {} skill name/ID mismatch", review.id));
+                }
+            }
+        }
+
+        let npc_services_by_id = npc_services
+            .entries
+            .iter()
+            .enumerate()
+            .map(|(index, service)| (service.id.clone(), index))
+            .collect::<HashMap<_, _>>();
+        let rumors_by_id = rumors
+            .entries
+            .iter()
+            .enumerate()
+            .map(|(index, rumor)| (rumor.id, index))
+            .collect::<HashMap<_, _>>();
+
         Ok(Self {
             source_revision: bestiary.source_revision,
             mode: bestiary.mode,
@@ -1174,6 +1373,7 @@ impl ReferenceData {
             items: items.entries,
             cards: cards.entries,
             skills,
+            skill_formula_reviews: formula_reviews.entries,
             job_skill_trees: job_skills.entries,
             job_bonuses: job_bonuses.entries,
             refinement,
@@ -1185,6 +1385,8 @@ impl ReferenceData {
             item_grants: item_grants.entries,
             item_consumptions: item_grants.consumptions,
             item_exchanges: item_exchanges.entries,
+            npc_services: npc_services.entries,
+            rumors: rumors.entries,
             map_flags: map_flags.entries,
             runtime_map_flag_clues: map_flags.runtime_clues,
             runtime_map_flag_reviews: map_flags.runtime_reviews,
@@ -1195,20 +1397,132 @@ impl ReferenceData {
             job_skill_trees_by_id,
             job_bonuses_by_id,
             quests_by_id,
+            npc_services_by_id,
+            rumors_by_id,
         })
+    }
+
+    #[allow(dead_code)]
+    pub fn npc_service_by_id(&self, id: &str) -> Option<&ReferenceNpcServiceReview> {
+        self.npc_services_by_id.get(id).and_then(|&index| self.npc_services.get(index))
+    }
+
+    #[allow(dead_code)]
+    pub fn rumor_by_id(&self, id: u32) -> Option<&ReferenceRumor> {
+        self.rumors_by_id.get(&id).and_then(|&index| self.rumors.get(index))
+    }
+
+    #[allow(dead_code)]
+    pub fn npc_service_by_index(&self, index: usize) -> Option<&ReferenceNpcServiceReview> {
+        self.npc_services.get(index)
+    }
+
+    #[allow(dead_code)]
+    pub fn npc_service_index_by_id(&self, id: &str) -> Option<usize> {
+        self.npc_services_by_id.get(id).copied()
+    }
+
+    #[allow(dead_code)]
+    pub fn services_for_map(&self, map_name: &str) -> Vec<&ReferenceNpcServiceReview> {
+        self.npc_services
+            .iter()
+            .filter(|service| {
+                service.npc.as_ref().is_some_and(|n| n.map.eq_ignore_ascii_case(map_name))
+                    || service
+                        .route_table
+                        .as_ref()
+                        .is_some_and(|routes| routes.iter().any(|r| r.origin_map.eq_ignore_ascii_case(map_name)))
+            })
+            .collect()
+    }
+
+    #[allow(dead_code)]
+    pub fn rumors_for_map(&self, map_name: &str) -> Vec<&ReferenceRumor> {
+        self.rumors
+            .iter()
+            .filter(|rumor| rumor.map_name.as_deref().is_some_and(|m| m.eq_ignore_ascii_case(map_name)))
+            .collect()
+    }
+
+    #[allow(dead_code)]
+    pub fn rumors_for_monster(&self, monster_id: u32) -> Vec<&ReferenceRumor> {
+        self.rumors
+            .iter()
+            .filter(|rumor| rumor.related_monster_id == Some(monster_id))
+            .collect()
+    }
+
+    #[allow(dead_code)]
+    pub fn rumors_for_item(&self, item_id: u32) -> Vec<&ReferenceRumor> {
+        self.rumors.iter().filter(|rumor| rumor.related_item_id == Some(item_id)).collect()
+    }
+
+    pub fn search_services(&self, query: &str, limit: usize) -> Vec<&ReferenceNpcServiceReview> {
+        let query = query.to_lowercase();
+        self.npc_services
+            .iter()
+            .filter(|service| {
+                query.is_empty()
+                    || service.id.to_lowercase().contains(&query)
+                    || service.title.to_lowercase().contains(&query)
+                    || service.service_kind.to_lowercase().contains(&query)
+                    || service.conditions.iter().any(|c| c.to_lowercase().contains(&query))
+                    || service.npc.as_ref().is_some_and(|n| {
+                        n.map.to_lowercase().contains(&query)
+                            || n.internal_name.to_lowercase().contains(&query)
+                            || n.npc_id.to_string() == query
+                    })
+                    || service.route_table.as_ref().is_some_and(|routes| {
+                        routes.iter().any(|r| {
+                            r.origin_map.to_lowercase().contains(&query)
+                                || r.destinations.iter().any(|d| d.name.to_lowercase().contains(&query))
+                        })
+                    })
+            })
+            .take(limit)
+            .collect()
+    }
+
+    pub fn search_rumors(&self, query: &str, limit: usize) -> Vec<&ReferenceRumor> {
+        let query = query.to_lowercase();
+        self.rumors
+            .iter()
+            .filter(|rumor| {
+                query.is_empty()
+                    || rumor.id.to_string() == query
+                    || rumor.title.to_lowercase().contains(&query)
+                    || rumor.category.to_lowercase().contains(&query)
+                    || rumor.text.to_lowercase().contains(&query)
+                    || rumor.source_location.to_lowercase().contains(&query)
+                    || rumor.map_name.as_ref().is_some_and(|m| m.to_lowercase().contains(&query))
+                    || rumor.related_monster_id.is_some_and(|id| {
+                        id.to_string() == query
+                            || self
+                                .monster_by_id(id)
+                                .is_some_and(|m| m.name.to_lowercase().contains(&query) || m.sprite_name.to_lowercase().contains(&query))
+                    })
+                    || rumor.related_item_id.is_some_and(|id| {
+                        id.to_string() == query
+                            || self
+                                .item_by_id(id)
+                                .is_some_and(|i| i.name.to_lowercase().contains(&query) || i.aegis_name.to_lowercase().contains(&query))
+                    })
+            })
+            .take(limit)
+            .collect()
     }
 
     pub fn monster_by_id(&self, id: u32) -> Option<&ReferenceMonster> {
         self.monsters_by_id.get(&id).map(|&index| &self.monsters[index])
     }
 
-    /// Summarize only exported, static spawn directives for a map. The level is
-    /// weighted by directive count and is a guide, not a recommended-level
-    /// rule.
-    pub fn map_spawn_summary(&self, map_name: &str) -> Option<(u64, u16, usize)> {
-        type Aggregate = (u64, u64, usize);
-        static SUMMARIES: OnceLock<HashMap<String, (u64, u16, usize)>> = OnceLock::new();
-        let summaries = SUMMARIES.get_or_init(|| {
+    /// Summarize exported static spawn directives for a map, including total
+    /// records, record-weighted mean level, minimum and maximum monster levels,
+    /// and distinct species count.
+    pub fn map_spawn_details(&self, map_name: &str) -> Option<MapSpawnDetails> {
+        type Aggregate = (u64, u64, u16, u16, usize);
+        static DETAILS: OnceLock<HashMap<String, MapSpawnDetails>> = OnceLock::new();
+        let summaries = DETAILS.get_or_init(|| {
             let mut aggregates: HashMap<String, Aggregate> = HashMap::new();
             for monster in &self.monsters {
                 for region in &monster.spawn_regions {
@@ -1217,21 +1531,37 @@ impl ReferenceData {
                     }
                     let map = region.map.strip_suffix(".gat").unwrap_or(&region.map).to_ascii_lowercase();
                     let records = u64::from(region.spawn_records);
-                    let aggregate = aggregates.entry(map).or_default();
+                    let aggregate = aggregates.entry(map).or_insert((0, 0, u16::MAX, 0, 0));
                     aggregate.0 += records;
                     aggregate.1 += u64::from(monster.level) * records;
-                    aggregate.2 += 1;
+                    aggregate.2 = aggregate.2.min(monster.level);
+                    aggregate.3 = aggregate.3.max(monster.level);
+                    aggregate.4 += 1;
                 }
             }
             aggregates
                 .into_iter()
-                .map(|(map, (records, weighted_levels, species))| {
-                    (map, (records, ((weighted_levels + records / 2) / records) as u16, species))
+                .map(|(map, (records, weighted_levels, min_level, max_level, species))| {
+                    (map, MapSpawnDetails {
+                        records,
+                        mean_level: ((weighted_levels + records / 2) / records) as u16,
+                        min_level,
+                        max_level,
+                        species,
+                    })
                 })
                 .collect()
         });
         let map_name = map_name.strip_suffix(".gat").unwrap_or(map_name).to_ascii_lowercase();
         summaries.get(&map_name).copied()
+    }
+
+    /// Summarize only exported, static spawn directives for a map. The level is
+    /// weighted by directive count and is a guide, not a recommended-level
+    /// rule.
+    pub fn map_spawn_summary(&self, map_name: &str) -> Option<(u64, u16, usize)> {
+        self.map_spawn_details(map_name)
+            .map(|details| (details.records, details.mean_level, details.species))
     }
 
     pub fn item_by_id(&self, id: u32) -> Option<&ReferenceItem> {
@@ -1244,6 +1574,12 @@ impl ReferenceData {
 
     pub fn skill_by_id(&self, id: u32) -> Option<&ReferenceSkill> {
         self.skills_by_id.get(&id).map(|&index| &self.skills[index])
+    }
+
+    pub fn skill_formula_review_for_skill(&self, skill_id: u16) -> Option<&ReferenceSkillFormulaReview> {
+        self.skill_formula_reviews
+            .iter()
+            .find(|review| review.skill_ids.iter().any(|target| target.skill_id == skill_id))
     }
 
     pub fn job_skill_tree_by_id(&self, id: u16) -> Option<&ReferenceJobSkillTree> {
@@ -1556,5 +1892,35 @@ mod tests {
                 .iter()
                 .any(|bonus| bonus.job_level == 4 && bonus.stat == "STR")
         );
+
+        assert_eq!(data.skill_formula_reviews.len(), 12);
+        let heal_review = data.skill_formula_review_for_skill(28).expect("Heal formula review");
+        assert_eq!(heal_review.id, "al_heal_renewal_formula");
+        assert!(heal_review.formula.contains("BaseLevel + INT"));
+        assert_eq!(heal_review.evidence_state, EvidenceState::Conditional);
+        assert!(data.skill_formula_review_for_skill(9999).is_none());
+
+        let firewall = data.skill_by_id(18).expect("Fire Wall skill");
+        assert_eq!(firewall.name, "MG_FIREWALL");
+        assert!(firewall.source.as_ref().is_some_and(|s| s.path == "db/re/skill_db.conf"));
+        assert!(
+            firewall
+                .prerequisites
+                .iter()
+                .any(|p| p.name == "MG_FIREBALL" && p.level == 5 && p.skill_id == Some(17))
+        );
+
+        assert_eq!(data.npc_services.len(), 14);
+        let kafra = data.npc_service_by_id("kafra_employee_core_services").expect("Kafra service");
+        assert_eq!(kafra.service_kind, "kafra_suite");
+        assert!(kafra.locations.as_ref().is_some_and(|l| !l.is_empty()));
+        assert!(data.search_services("repair", 10).iter().any(|s| s.service_kind.contains("repair")));
+
+        assert_eq!(data.rumors.len(), 8);
+        let byalan_rumor = data.rumor_by_id(1).expect("Byalan rumor");
+        assert_eq!(byalan_rumor.title, "Unusual Sea Creatures of Byalan");
+        assert_eq!(byalan_rumor.is_story_spoiler, false);
+        assert_eq!(byalan_rumor.evidence_state, EvidenceState::Verified);
+        assert!(data.search_rumors("ant jaws", 5).iter().any(|r| r.id == 2));
     }
 }

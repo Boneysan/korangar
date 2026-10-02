@@ -940,7 +940,7 @@ fn normalize_map_base_name(map_file_name: &str) -> String {
         .to_lowercase()
 }
 
-fn map_difficulty_warning(map_name: &str, mean_level: Option<u16>, player_level: Option<u16>, enabled: bool) -> Option<String> {
+pub(crate) fn map_difficulty_warning(map_name: &str, mean_level: Option<u16>, player_level: Option<u16>, enabled: bool) -> Option<String> {
     if !enabled {
         return None;
     }

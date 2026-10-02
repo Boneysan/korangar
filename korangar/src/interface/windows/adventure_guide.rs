@@ -13,8 +13,8 @@ use korangar_interface::window::{CustomWindow, Window};
 use rust_state::{ManuallyAssertExt, Path, RustState, State, VecIndexExt};
 
 use crate::dm::reference_data::{
-    ReferenceCraftingEntry, ReferenceItem, ReferenceJobBonuses, ReferenceMonster, ReferenceNpc, ReferenceRefinement, ReferenceSkill,
-    reference_data,
+    ReferenceCraftingEntry, ReferenceItem, ReferenceJobBonuses, ReferenceMonster, ReferenceNpc, ReferenceNpcServiceReview,
+    ReferenceRefinement, ReferenceRumor, ReferenceSkill, reference_data,
 };
 use crate::input::InputEvent;
 use crate::interface::windows::WindowClass;
@@ -242,6 +242,15 @@ fn monster_details(monster: &ReferenceMonster) -> Vec<String> {
             ));
         }
         lines.push("A call site does not prove it runs for every player or when the monster is currently present.".to_owned());
+    }
+    let related_rumors = reference_data().rumors_for_monster(monster.id);
+    if !related_rumors.is_empty() {
+        lines.push("Related local rumors:".to_owned());
+        for rumor in related_rumors {
+            if !rumor.is_story_spoiler {
+                lines.push(format!("@guide:rumor:{}|{} ({})", rumor.id, rumor.title, rumor.category));
+            }
+        }
     }
     lines
 }
@@ -648,6 +657,15 @@ fn item_details(item: &ReferenceItem, card: bool) -> Vec<String> {
     }
     if let Some(source) = &item.source {
         lines.push(format!("Source: {} ({})", source.path, source.record));
+    }
+    let related_rumors = reference_data().rumors_for_item(item.id);
+    if !related_rumors.is_empty() {
+        lines.push("Related local rumors:".to_owned());
+        for rumor in related_rumors {
+            if !rumor.is_story_spoiler {
+                lines.push(format!("@guide:rumor:{}|{} ({})", rumor.id, rumor.title, rumor.category));
+            }
+        }
     }
     lines
 }
@@ -1083,21 +1101,30 @@ fn map_details(map_name: &str, town_pois: &[TownPoi]) -> Vec<String> {
         }
         lines.push("A call site does not prove that its event runs or establish the map's current rules.".to_owned());
     }
-    match reference.map_spawn_summary(map_name) {
-        Some((records, mean_level, species)) => {
+    match reference.map_spawn_details(map_name) {
+        Some(details) => {
+            let range_str = if details.min_level != details.max_level {
+                format!(" (range: {}–{})", details.min_level, details.max_level)
+            } else {
+                String::new()
+            };
             lines.push(format!(
-                "Suggested level: ~{mean_level} (static-spawn-record-weighted mean; reference only)"
+                "Suggested level: ~{}{range_str} (static-spawn-record-weighted mean; reference only)",
+                details.mean_level
             ));
-            lines.push(format!("Static population: {records} spawn records across {species} species"));
+            lines.push(format!(
+                "Static population: {} spawn records across {} species",
+                details.records, details.species
+            ));
         }
         None => {
             lines.push(if is_template {
                 "No base-map static population is attached to this instance template.".to_owned()
             } else {
-                "Suggested level: unavailable (no verified static spawn records)".to_owned()
+                "Suggested level: unavailable (no verified static spawn records; low coverage)".to_owned()
             });
             if !is_template {
-                lines.push("Static population: no verified spawn records".to_owned());
+                lines.push("Static population: no verified spawn records (low coverage or non-combat map)".to_owned());
             }
         }
     }
@@ -1228,6 +1255,24 @@ fn map_details(map_name: &str, town_pois: &[TownPoi]) -> Vec<String> {
     if town_pois.is_empty() {
         lines.push("Towninfo facilities: none listed for this map".to_owned());
     }
+    let map_services = reference.services_for_map(map_name);
+    if !map_services.is_empty() {
+        lines.push(format!("Reviewed NPC services ({}):", map_services.len()));
+        for service in map_services {
+            if let Some(index) = reference.npc_service_index_by_id(&service.id) {
+                lines.push(format!("@guide:service:{index}|{} ({})", service.title, service.service_kind));
+            }
+        }
+    }
+    let map_rumors = reference.rumors_for_map(map_name);
+    if !map_rumors.is_empty() {
+        lines.push(format!("Local rumors ({}):", map_rumors.len()));
+        for rumor in map_rumors {
+            if !rumor.is_story_spoiler {
+                lines.push(format!("@guide:rumor:{}|{} ({})", rumor.id, rumor.title, rumor.category));
+            }
+        }
+    }
     lines.push("Spawn rosters are configured data and script clues; they do not represent live monster counts.".to_owned());
     if is_graph_map(map_name) {
         lines.push(format!("@route:{map_name}"));
@@ -1354,6 +1399,131 @@ fn npc_details(npc: &ReferenceNpc) -> Vec<String> {
         lines
             .push("Only literal offers from loaded scripts are indexed; conditional, barter, and runtime stock may be missing.".to_owned());
     }
+    for service in reference_data()
+        .npc_services
+        .iter()
+        .filter(|s| s.npc.as_ref().is_some_and(|n| n.npc_id == npc.id))
+    {
+        if let Some(index) = reference_data().npc_service_index_by_id(&service.id) {
+            lines.push(format!(
+                "@guide:service:{index}|Reviewed service: {} ({})",
+                service.title, service.service_kind
+            ));
+        }
+    }
+    lines
+}
+
+fn service_details(service: &ReferenceNpcServiceReview) -> Vec<String> {
+    let mut lines = vec![
+        format!("{}  (Service: {})", service.title, service.service_kind),
+        format!("Reviewed NPC service ({}):", service.evidence_state.label()),
+        format!("  Review method: {}", service.review_method),
+        format!("  Reviewed on: {} by {}", service.reviewed_on, service.reviewed_by),
+    ];
+    if let Some(npc) = &service.npc {
+        lines.push(format!(
+            "Primary NPC: {} on {} at ({}, {}) [ID {}]",
+            npc.internal_name, npc.map, npc.x, npc.y, npc.npc_id
+        ));
+        lines.push(format!(
+            "@route-cell:{}:{}:{}|Route to {} ({}, {})",
+            npc.map, npc.x, npc.y, npc.internal_name, npc.x, npc.y
+        ));
+        lines.push(format!(
+            "@guide:npc:{}|NPC Record: {} ({})",
+            npc.npc_id, npc.internal_name, npc.map
+        ));
+        if is_graph_map(&npc.map) {
+            lines.push(format!("@route:{}", npc.map));
+        }
+    }
+    if !service.conditions.is_empty() {
+        lines.push("Conditions & service rules:".to_owned());
+        for condition in &service.conditions {
+            lines.push(format!("  - {condition}"));
+        }
+    }
+    if let Some(route_table) = &service.route_table {
+        lines.push("Kafra transportation routes:".to_owned());
+        for route in route_table {
+            lines.push(format!("  Origin map {}:", route.origin_map));
+            for dest in &route.destinations {
+                lines.push(format!("    -> {} (Fee: {} Zeny)", dest.name, dest.fee));
+            }
+            if is_graph_map(&route.origin_map) {
+                lines.push(format!("@route:{}|Route to origin {}", route.origin_map, route.origin_map));
+            }
+        }
+    }
+    if let Some(note) = &service.route_table_note {
+        lines.push(format!("Route note: {note}"));
+    }
+    if let Some(count) = service.location_count {
+        lines.push(format!(
+            "Staff deployment: verified across {} locations in the game world.",
+            count
+        ));
+    }
+    if !service.sources.is_empty() {
+        let citations = service
+            .sources
+            .iter()
+            .map(|s| {
+                format!(
+                    "{}:{}",
+                    s.path,
+                    s.lines.iter().map(ToString::to_string).collect::<Vec<_>>().join(",")
+                )
+            })
+            .collect::<Vec<_>>()
+            .join("; ");
+        lines.push(format!("Citations: {citations}"));
+    }
+    lines
+}
+
+fn rumor_details(rumor: &ReferenceRumor) -> Vec<String> {
+    let mut lines = vec![
+        format!("{}  (Rumor: {})", rumor.title, rumor.category),
+        format!("Evidence state: {}", rumor.evidence_state.label()),
+        format!("\"{}\"", rumor.text),
+        format!("Source: {}", rumor.source_location),
+    ];
+    if let (Some(map), Some([x, y])) = (&rumor.map_name, rumor.coordinates) {
+        lines.push(format!("Map location: {map} at ({x}, {y})"));
+        lines.push(format!("@route-cell:{map}:{x}:{y}|Route to {map} ({x}, {y})"));
+        if is_graph_map(map) {
+            lines.push(format!("@route:{map}"));
+        }
+    } else if let Some(map) = &rumor.map_name {
+        lines.push(format!("Map: {map}"));
+        if is_graph_map(map) {
+            lines.push(format!("@route:{map}"));
+        }
+    }
+    let data = reference_data();
+    if let Some(monster_id) = rumor.related_monster_id {
+        let monster_name = data
+            .monster_by_id(monster_id)
+            .map(|m| display_name(&m.name, &m.sprite_name))
+            .unwrap_or_else(|| "Unknown monster".to_owned());
+        lines.push(format!(
+            "@guide:monster:{monster_id}|Related monster: {monster_name} (ID {monster_id})"
+        ));
+    }
+    if let Some(item_id) = rumor.related_item_id {
+        let item_name = data
+            .item_by_id(item_id)
+            .map(|i| display_name(&i.name, &i.aegis_name))
+            .unwrap_or_else(|| "Unknown item".to_owned());
+        lines.push(format!("@guide:item:{item_id}|Related item: {item_name} (ID {item_id})"));
+    }
+    if rumor.is_story_spoiler {
+        lines.push("Classification: Story spoiler (contains main narrative elements).".to_owned());
+    } else {
+        lines.push("Classification: Non-story world lore / local rumor.".to_owned());
+    }
     lines
 }
 
@@ -1413,6 +1583,14 @@ fn resolve_details(result: &GuideResult) -> Vec<String> {
             .get(result.id as usize)
             .map(server_rule_details)
             .unwrap_or_else(|| vec!["Server-rule reference unavailable.".to_owned()]),
+        "service" => data
+            .npc_service_by_index(result.id as usize)
+            .map(service_details)
+            .unwrap_or_else(|| vec!["NPC service reference entry unavailable.".to_owned()]),
+        "rumor" => data
+            .rumor_by_id(result.id)
+            .map(rumor_details)
+            .unwrap_or_else(|| vec!["Rumor reference entry unavailable.".to_owned()]),
         _ => vec!["Unsupported category.".to_owned()],
     }
 }
@@ -1495,6 +1673,18 @@ fn skill_details(skill: &ReferenceSkill) -> Vec<String> {
         .collect::<Vec<_>>();
     lines.push(format!("Skill identifier: {} (ID {})", skill.name, skill.id));
     let data = reference_data();
+
+    if !skill.prerequisites.is_empty() {
+        lines.push("Skill tree prerequisites:".to_owned());
+        for req in &skill.prerequisites {
+            if let Some(req_id) = req.skill_id {
+                lines.push(format!("@guide:skill:{req_id}|Requires: {} Lv {}", req.name, req.level));
+            } else {
+                lines.push(format!("Requires: {} Lv {}", req.name, req.level));
+            }
+        }
+    }
+
     let job_sources: Vec<_> = data
         .job_skill_trees
         .iter()
@@ -1529,6 +1719,7 @@ fn skill_details(skill: &ReferenceSkill) -> Vec<String> {
     } else {
         lines.push("No exported job-tree requirement record is available for this skill.".to_owned());
     }
+
     let linked_statuses: Vec<_> = data
         .statuses
         .iter()
@@ -1541,11 +1732,55 @@ fn skill_details(skill: &ReferenceSkill) -> Vec<String> {
         .collect();
     if !linked_statuses.is_empty() {
         lines.push("Associated status references:".to_owned());
-        for status in linked_statuses {
+        for status in &linked_statuses {
             lines.push(format!("@guide:status:{}|{} (icon {})", status.id, status.name, status.id));
         }
     }
+    if let Some(status_change) = &skill.status_change {
+        let has_linked_icon = linked_statuses
+            .iter()
+            .any(|status| status.statuses.iter().any(|mechanic| mechanic.constant == *status_change));
+        if !has_linked_icon {
+            lines.push(format!(
+                "Skill database StatusChange: {status_change} (no matching client status icon)"
+            ));
+        }
+    }
+
+    if let Some(review) = data.skill_formula_review_for_skill(skill.id) {
+        lines.push(format!("Reviewed combat formula ({}):", review.evidence_state.label()));
+        lines.push(format!("  Title: {}", review.title));
+        lines.push(format!("  Formula: {}", review.formula));
+        lines.push(format!("  Worked example: {}", review.worked_example));
+        if !review.conditions.is_empty() {
+            lines.push("  Conditions & caveats:".to_owned());
+            for cond in &review.conditions {
+                lines.push(format!("  - {cond}"));
+            }
+        }
+        if !review.sources.is_empty() {
+            let citations = review
+                .sources
+                .iter()
+                .map(|s| {
+                    format!(
+                        "{}:{}",
+                        s.path,
+                        s.lines.iter().map(ToString::to_string).collect::<Vec<_>>().join(",")
+                    )
+                })
+                .collect::<Vec<_>>()
+                .join("; ");
+            lines.push(format!("  Citations: {citations}"));
+        }
+    } else {
+        lines.push("Formula: Unreviewed in Hercules renewal engine source.".to_owned());
+    }
+
     lines.push("Source: bundled Hercules skill database export.".to_owned());
+    if let Some(source) = &skill.source {
+        lines.push(format!("Source record: {} ({})", source.path, source.record));
+    }
     lines
 }
 
@@ -1670,14 +1905,56 @@ fn parse_guide_link(line: &str) -> Option<GuideResult> {
     let link = line.strip_prefix("@guide:")?;
     let (target, label) = link.split_once('|')?;
     let (kind, id) = target.split_once(':')?;
-    if !matches!(kind, "item" | "monster" | "skill" | "status" | "quest" | "npc") {
-        return None;
+    match kind {
+        "item" | "monster" | "skill" | "status" | "quest" | "npc" | "job" | "rumor" => Some(GuideResult {
+            label: label.to_owned(),
+            kind: kind.to_owned(),
+            id: id.parse().ok()?,
+        }),
+        "service" => {
+            let service_index = if let Ok(idx) = id.parse::<u32>() {
+                idx
+            } else {
+                reference_data().npc_service_index_by_id(id)? as u32
+            };
+            Some(GuideResult {
+                label: label.to_owned(),
+                kind: "service".to_owned(),
+                id: service_index,
+            })
+        }
+        "map" => {
+            let map_index = if let Ok(idx) = id.parse::<u32>() {
+                idx
+            } else {
+                crate::world::navigation_graph()
+                    .maps
+                    .iter()
+                    .position(|m| m.eq_ignore_ascii_case(id))? as u32
+            };
+            Some(GuideResult {
+                label: label.to_owned(),
+                kind: "map".to_owned(),
+                id: map_index,
+            })
+        }
+        "refinement" | "mechanic" => Some(GuideResult {
+            label: label.to_owned(),
+            kind: "mechanic".to_owned(),
+            id: id.parse().unwrap_or(1),
+        }),
+        "coverage" => Some(GuideResult {
+            label: label.to_owned(),
+            kind: "coverage".to_owned(),
+            id: id.parse().unwrap_or(1),
+        }),
+        "server-rule" => Some(GuideResult {
+            label: label.to_owned(),
+            kind: "server-rule".to_owned(),
+            id: id.parse().ok()?,
+        }),
+        _ => None,
     }
-    Some(GuideResult {
-        label: label.to_owned(),
-        kind: kind.to_owned(),
-        id: id.parse().ok()?,
-    })
 }
 
 struct GuideResultList<A> {
@@ -1717,6 +1994,7 @@ where
                                 .iter()
                                 .find(|quest| quest.quest_id == result.id)
                                 .map(quest_details)
+                                .or_else(|| reference_data().quest_by_id(result.id).map(quest_reference_details))
                                 .unwrap_or_else(|| vec!["This quest is no longer active. Refresh the search to update the list.".to_owned()])
                         } else {
                             resolve_details_with_library(&result, &library)
@@ -1929,6 +2207,75 @@ where
                     label: format!("{name}  (job)"),
                     kind: "job".to_owned(),
                     id: id as u32,
+                }),
+        );
+    } else if category == "Services" {
+        rows.extend(data.search_services(&query, MAX_RESULTS).into_iter().filter_map(|service| {
+            let index = data.npc_service_index_by_id(&service.id)?;
+            Some(GuideResult {
+                label: format!(
+                    "{}{}  (Service: {})",
+                    match (discovery.service_snapshot_complete(), discovery.visited_service(&service.id)) {
+                        (_, true) => "[Visited] ",
+                        (true, false) => "[Not visited] ",
+                        (false, false) => "[Sync pending] ",
+                    },
+                    service.title,
+                    service.service_kind,
+                ),
+                kind: "service".to_owned(),
+                id: index as u32,
+            })
+        }));
+    } else if category == "Rumors" {
+        rows.extend(
+            data.search_rumors(&query, MAX_RESULTS)
+                .into_iter()
+                .filter(|rumor| !rumor.is_story_spoiler)
+                .map(|rumor| GuideResult {
+                    label: format!(
+                        "{}{}  (Rumor: {})",
+                        match (discovery.rumor_snapshot_complete(), discovery.unlocked_rumor(rumor.id)) {
+                            (_, true) => "[Discovered] ",
+                            (true, false) => "[Undiscovered] ",
+                            (false, false) => "[Sync pending] ",
+                        },
+                        rumor.title,
+                        rumor.category,
+                    ),
+                    kind: "rumor".to_owned(),
+                    id: rumor.id,
+                }),
+        );
+    } else if category == "Refinement" {
+        if refinement_query_matches(&query) {
+            rows.push(GuideResult {
+                label: "Weapon refinement odds and rules".to_owned(),
+                kind: "mechanic".to_owned(),
+                id: 1,
+            });
+        }
+        for weapon in &data.refinement.weapon_levels {
+            let label = format!("Weapon Level {} refinement ({})", weapon.weapon_level, weapon.material);
+            if query.is_empty() || label.to_lowercase().contains(&query) || weapon.material.to_lowercase().contains(&query) {
+                rows.push(GuideResult {
+                    label,
+                    kind: "mechanic".to_owned(),
+                    id: 1,
+                });
+            }
+        }
+    } else if category == "Effective Rules" {
+        rows.extend(
+            data.server_rules
+                .iter()
+                .enumerate()
+                .filter(|(_, rule)| server_rule_matches(rule, &query))
+                .take(MAX_RESULTS)
+                .map(|(index, rule)| GuideResult {
+                    label: format!("{} ({})", rule.title, rule.category),
+                    kind: "server-rule".to_owned(),
+                    id: index as u32,
                 }),
         );
     } else if category == "Mechanics" {
@@ -2154,6 +2501,39 @@ fn search_all_categories(
             }),
     );
 
+    rows.extend(
+        data.search_services(query, all_category_result_slots(&rows))
+            .into_iter()
+            .filter_map(|service| {
+                let index = data.npc_service_index_by_id(&service.id)?;
+                Some(GuideResult {
+                    label: format!(
+                        "{}{}  (Service: {})",
+                        if discovery.visited_service(&service.id) { "[Visited] " } else { "" },
+                        service.title,
+                        service.service_kind
+                    ),
+                    kind: "service".to_owned(),
+                    id: index as u32,
+                })
+            }),
+    );
+    rows.extend(
+        data.search_rumors(query, all_category_result_slots(&rows))
+            .into_iter()
+            .filter(|rumor| !rumor.is_story_spoiler)
+            .map(|rumor| GuideResult {
+                label: format!(
+                    "{}{}  (Rumor: {})",
+                    if discovery.unlocked_rumor(rumor.id) { "[Discovered] " } else { "" },
+                    rumor.title,
+                    rumor.category
+                ),
+                kind: "rumor".to_owned(),
+                id: rumor.id,
+            }),
+    );
+
     let listed_ids = rows
         .iter()
         .filter(|row| row.kind == "quest")
@@ -2224,7 +2604,7 @@ where
             closable: true,
             elements: (
                 text! { text: format!("Open reference • data revision {} • discovery badges sync per account; mechanics remain open • untranslated scripts and missing spawn data are labeled", revision), overflow_behavior: OverflowBehavior::Shrink },
-                text_box! { ghost_text: "Search monsters, items, cards, skills, statuses, NPCs, maps, quests, jobs, or mechanics…", state: path.query(), input_handler: DefaultHandler::<_, _, MAX_QUERY>::new(path.query(), search), focus_id: GuideSearchBox, overflow_behavior: OverflowBehavior::Shrink },
+                text_box! { ghost_text: "Search monsters, items, cards, skills, statuses, jobs, maps, NPCs, services, quests, rumors, refinement, rules…", state: path.query(), input_handler: DefaultHandler::<_, _, MAX_QUERY>::new(path.query(), search), focus_id: GuideSearchBox, overflow_behavior: OverflowBehavior::Shrink },
                 split! { gaps: theme().window().gaps(), children: (
                     button! { text: "All", event: set_category("All") },
                     button! { text: "Monsters", event: set_category("Monsters") },
@@ -2232,11 +2612,17 @@ where
                     button! { text: "Cards", event: set_category("Cards") },
                     button! { text: "Skills", event: set_category("Skills") },
                     button! { text: "Status Effects", event: set_category("Status Effects") },
-                    button! { text: "NPCs", event: set_category("NPCs") },
-                    button! { text: "Mechanics", event: set_category("Mechanics") },
-                    button! { text: "Maps", event: set_category("Maps") },
                     button! { text: "Jobs", event: set_category("Jobs") },
+                    button! { text: "Maps", event: set_category("Maps") },
+                ) },
+                split! { gaps: theme().window().gaps(), children: (
+                    button! { text: "NPCs", event: set_category("NPCs") },
+                    button! { text: "Services", event: set_category("Services") },
                     button! { text: "Quests", event: set_category("Quests") },
+                    button! { text: "Rumors", event: set_category("Rumors") },
+                    button! { text: "Refinement", event: set_category("Refinement") },
+                    button! { text: "Effective Rules", event: set_category("Effective Rules") },
+                    button! { text: "Mechanics", event: set_category("Mechanics") },
                     button! { text: "Search", event: search },
                 ) },
                 scroll_view! { children: GuideResultList { state_path: path, library: library.clone(), elements: Vec::new() } },
@@ -2250,8 +2636,8 @@ where
 mod tests {
     use super::{
         GuideResult, ReferenceItem, display_name, item_details, job_names, map_details, monster_details, parse_guide_link,
-        parse_route_cell_link, quest_details, quest_reference_details, reference_data, resolve_details, search_all_categories,
-        skill_details, status_details,
+        parse_route_cell_link, quest_details, quest_reference_details, reference_data, refinement_details, resolve_details, rumor_details,
+        search_all_categories, service_details, skill_details, status_details,
     };
     use crate::dm::reference_data::{ReferenceQuest, ReferenceQuestTarget};
     use crate::state::discovery::DiscoveryState;
@@ -2420,6 +2806,67 @@ mod tests {
         assert!(detail.contains("Fire Bolt"));
         assert!(detail.contains("SP "));
         assert!(detail.contains("Source: bundled Hercules skill database export."));
+        assert!(detail.contains("Source record: db/re/skill_db.conf (Id=19)"));
+    }
+
+    #[test]
+    fn guide_skill_details_display_reviewed_formulas_and_unreviewed_flags() {
+        let data = reference_data();
+
+        // Heal (28) has a reviewed formula
+        let heal = data.search_skills("AL_HEAL", 1).into_iter().next().expect("Heal skill");
+        let heal_details = skill_details(heal).join("\n");
+        assert!(
+            heal_details.contains("Reviewed combat formula (conditional):"),
+            "{heal_details}"
+        );
+        assert!(heal_details.contains("Heal's Renewal healing formula"), "{heal_details}");
+        assert!(
+            heal_details.contains("Formula: AL_HEAL (id 28) computes its healed HP"),
+            "{heal_details}"
+        );
+        assert!(heal_details.contains("Worked example:"), "{heal_details}");
+        assert!(heal_details.contains("Citations: src/map/skill.c:"), "{heal_details}");
+
+        // Fire Bolt (19) has a reviewed formula
+        let fire_bolt = data.search_skills("MG_FIREBOLT", 1).into_iter().next().expect("Fire Bolt skill");
+        let bolt_details = skill_details(fire_bolt).join("\n");
+        assert!(bolt_details.contains("Reviewed combat formula"), "{bolt_details}");
+        assert!(bolt_details.contains("Fire/Cold/Lightning Bolt"), "{bolt_details}");
+
+        // Basic Skill (1) is unreviewed and should be explicitly flagged
+        let basic = data.search_skills("NV_BASIC", 1).into_iter().next().expect("Basic Skill");
+        let basic_details = skill_details(basic).join("\n");
+        assert!(
+            basic_details.contains("Formula: Unreviewed in Hercules renewal engine source."),
+            "{basic_details}"
+        );
+    }
+
+    #[test]
+    fn guide_skill_details_display_direct_prerequisites_and_source_records() {
+        let data = reference_data();
+
+        // Fire Wall (18) requires Fire Ball (17) Lv 5 and Sight (10) Lv 1
+        let firewall = data.skill_by_id(18).expect("Fire Wall skill");
+        let fw_details = skill_details(firewall).join("\n");
+        assert!(fw_details.contains("Skill tree prerequisites:"), "{fw_details}");
+        assert!(
+            fw_details.contains("@guide:skill:17|Requires: MG_FIREBALL Lv 5"),
+            "{fw_details}"
+        );
+        assert!(fw_details.contains("@guide:skill:10|Requires: MG_SIGHT Lv 1"), "{fw_details}");
+        assert!(
+            fw_details.contains("Source record: db/re/skill_db.conf (Id=18)"),
+            "{fw_details}"
+        );
+
+        // Test clickable link navigation to prerequisite
+        let prereq_link = parse_guide_link("@guide:skill:17|Requires: MG_FIREBALL Lv 5").expect("skill link");
+        assert_eq!(prereq_link.kind, "skill");
+        assert_eq!(prereq_link.id, 17);
+        let resolved = resolve_details(&prereq_link).join("\n");
+        assert!(resolved.contains("Fire Ball"), "{resolved}");
     }
 
     #[test]

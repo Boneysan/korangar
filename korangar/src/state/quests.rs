@@ -135,6 +135,7 @@ impl QuestLogState {
         removed
     }
 
+    #[allow(dead_code)]
     pub fn display_text(&self) -> &str {
         &self.display_text
     }

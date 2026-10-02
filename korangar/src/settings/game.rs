@@ -214,6 +214,13 @@ pub struct GameSettings {
     /// the separate overhead world markers, not the minimap.
     #[serde(default = "default_true")]
     pub show_minimap_quest_markers: bool,
+    /// Minimap layer toggle (GDD 9.9, 10.12): verified portal destination
+    /// labels.
+    #[serde(default = "default_true")]
+    pub show_minimap_portals: bool,
+    /// Minimap layer toggle (GDD 9.4, 10.12): broad monster population regions.
+    #[serde(default = "default_true")]
+    pub show_minimap_population_regions: bool,
     /// GDD 11.2's Loot tab: last rate sent to `@autoloot` (0-100, the
     /// percent-and-below drop-rate threshold Hercules autoloots regardless of
     /// type). The client cannot read the server's actual current value back
@@ -294,6 +301,8 @@ impl Default for GameSettings {
             show_minimap_facilities: true,
             show_minimap_party: true,
             show_minimap_quest_markers: true,
+            show_minimap_portals: true,
+            show_minimap_population_regions: true,
             autoloot_rate: 0,
             autoloot_types: HashSet::new(),
             show_combat_text: true,
@@ -517,6 +526,8 @@ mod tests {
         assert!(default_settings.show_minimap_facilities);
         assert!(default_settings.show_minimap_party);
         assert!(default_settings.show_minimap_quest_markers);
+        assert!(default_settings.show_minimap_portals);
+        assert!(default_settings.show_minimap_population_regions);
         // Off by default: nothing was ever sent to the server on a fresh
         // install, so the UI must not claim otherwise.
         assert_eq!(default_settings.autoloot_rate, 0);
@@ -535,6 +546,8 @@ mod tests {
         assert!(old_settings.show_minimap_facilities);
         assert!(old_settings.show_minimap_party);
         assert!(old_settings.show_minimap_quest_markers);
+        assert!(old_settings.show_minimap_portals);
+        assert!(old_settings.show_minimap_population_regions);
         assert_eq!(old_settings.autoloot_rate, 0);
         assert!(old_settings.autoloot_types.is_empty());
         assert!(old_settings.warn_dangerous_maps);
@@ -559,6 +572,8 @@ mod tests {
         // Untouched fields still default on, same as a brand-new install.
         assert!(migrated_user_choices.show_minimap_party);
         assert!(migrated_user_choices.show_minimap_quest_markers);
+        assert!(migrated_user_choices.show_minimap_portals);
+        assert!(migrated_user_choices.show_minimap_population_regions);
         assert_eq!(migrated_user_choices.combat_text_frequency, CombatTextFrequency::Important);
         assert_eq!(migrated_user_choices.combat_text_size, CombatTextSize::Large);
         let status_only: ManuallyDrop<GameSettings> =

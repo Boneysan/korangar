@@ -129,6 +129,7 @@ impl ToastQueue {
         self.rebuild_display();
     }
 
+    #[allow(dead_code)]
     pub fn visible(&self) -> &[Toast] {
         &self.visible
     }

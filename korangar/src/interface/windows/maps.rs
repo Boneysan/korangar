@@ -18,22 +18,38 @@ use crate::interface::windows::WindowClass;
 use crate::loaders::{FontSize, OverflowBehavior};
 use crate::state::theme::InterfaceThemeType;
 use crate::state::{ClientState, ClientStatePathExt, client_state, this_player};
-use crate::world::{Library, NavigationEdge, TownPoi, is_dangerous_map_level, navigation_graph, route_edges};
+use crate::world::{Library, NavigationEdge, TownPoi, WorldRegion, is_dangerous_map_level, map_region, navigation_graph, route_edges};
+
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub enum RoadKind {
+    Walk,
+    Transport,
+}
+
+#[derive(Clone, Copy, Debug)]
+pub struct AtlasRoad {
+    pub from: usize,
+    pub to: usize,
+    pub kind: RoadKind,
+}
 
 #[derive(Clone, Copy)]
-struct AtlasLocation {
-    map: &'static str,
-    label: &'static str,
-    x: f32,
-    y: f32,
-    tile: TilePosition,
+pub struct AtlasLocation {
+    pub map: &'static str,
+    pub label: &'static str,
+    #[allow(dead_code)]
+    pub region: WorldRegion,
+    pub x: f32,
+    pub y: f32,
+    pub tile: TilePosition,
 }
 
 // Positions are a readable regional overview rather than in-game coordinates.
-const LOCATIONS: &[AtlasLocation] = &[
+pub const LOCATIONS: &[AtlasLocation] = &[
     AtlasLocation {
         map: "yuno",
         label: "Juno",
+        region: WorldRegion::Schwarzwald,
         x: 0.48,
         y: 0.12,
         tile: TilePosition { x: 157, y: 123 },
@@ -41,6 +57,7 @@ const LOCATIONS: &[AtlasLocation] = &[
     AtlasLocation {
         map: "rachel",
         label: "Rachel",
+        region: WorldRegion::Arunafeltz,
         x: 0.69,
         y: 0.12,
         tile: TilePosition { x: 120, y: 120 },
@@ -48,6 +65,7 @@ const LOCATIONS: &[AtlasLocation] = &[
     AtlasLocation {
         map: "hugel",
         label: "Hugel",
+        region: WorldRegion::Schwarzwald,
         x: 0.84,
         y: 0.27,
         tile: TilePosition { x: 96, y: 145 },
@@ -55,6 +73,7 @@ const LOCATIONS: &[AtlasLocation] = &[
     AtlasLocation {
         map: "aldebaran",
         label: "Al De Baran",
+        region: WorldRegion::RuneMidgarts,
         x: 0.39,
         y: 0.27,
         tile: TilePosition { x: 140, y: 131 },
@@ -62,6 +81,7 @@ const LOCATIONS: &[AtlasLocation] = &[
     AtlasLocation {
         map: "geffen",
         label: "Geffen",
+        region: WorldRegion::RuneMidgarts,
         x: 0.20,
         y: 0.34,
         tile: TilePosition { x: 119, y: 59 },
@@ -69,6 +89,7 @@ const LOCATIONS: &[AtlasLocation] = &[
     AtlasLocation {
         map: "prontera",
         label: "Prontera",
+        region: WorldRegion::RuneMidgarts,
         x: 0.48,
         y: 0.43,
         tile: TilePosition { x: 155, y: 183 },
@@ -76,6 +97,7 @@ const LOCATIONS: &[AtlasLocation] = &[
     AtlasLocation {
         map: "payon",
         label: "Payon",
+        region: WorldRegion::RuneMidgarts,
         x: 0.76,
         y: 0.39,
         tile: TilePosition { x: 160, y: 120 },
@@ -83,6 +105,7 @@ const LOCATIONS: &[AtlasLocation] = &[
     AtlasLocation {
         map: "morocc",
         label: "Morroc",
+        region: WorldRegion::RuneMidgarts,
         x: 0.31,
         y: 0.57,
         tile: TilePosition { x: 156, y: 97 },
@@ -90,6 +113,7 @@ const LOCATIONS: &[AtlasLocation] = &[
     AtlasLocation {
         map: "izlude",
         label: "Izlude",
+        region: WorldRegion::RuneMidgarts,
         x: 0.55,
         y: 0.60,
         tile: TilePosition { x: 128, y: 146 },
@@ -97,6 +121,7 @@ const LOCATIONS: &[AtlasLocation] = &[
     AtlasLocation {
         map: "alberta",
         label: "Alberta",
+        region: WorldRegion::RuneMidgarts,
         x: 0.68,
         y: 0.58,
         tile: TilePosition { x: 28, y: 234 },
@@ -104,6 +129,7 @@ const LOCATIONS: &[AtlasLocation] = &[
     AtlasLocation {
         map: "amatsu",
         label: "Amatsu",
+        region: WorldRegion::GlobalProject,
         x: 0.88,
         y: 0.52,
         tile: TilePosition { x: 198, y: 84 },
@@ -111,6 +137,7 @@ const LOCATIONS: &[AtlasLocation] = &[
     AtlasLocation {
         map: "comodo",
         label: "Comodo",
+        region: WorldRegion::RuneMidgarts,
         x: 0.17,
         y: 0.72,
         tile: TilePosition { x: 184, y: 151 },
@@ -118,6 +145,7 @@ const LOCATIONS: &[AtlasLocation] = &[
     AtlasLocation {
         map: "umbala",
         label: "Umbala",
+        region: WorldRegion::RuneMidgarts,
         x: 0.31,
         y: 0.78,
         tile: TilePosition { x: 97, y: 153 },
@@ -125,6 +153,7 @@ const LOCATIONS: &[AtlasLocation] = &[
     AtlasLocation {
         map: "jawaii",
         label: "Jawaii",
+        region: WorldRegion::GlobalProject,
         x: 0.49,
         y: 0.82,
         tile: TilePosition { x: 251, y: 132 },
@@ -132,6 +161,7 @@ const LOCATIONS: &[AtlasLocation] = &[
     AtlasLocation {
         map: "louyang",
         label: "Louyang",
+        region: WorldRegion::GlobalProject,
         x: 0.71,
         y: 0.76,
         tile: TilePosition { x: 217, y: 100 },
@@ -139,6 +169,7 @@ const LOCATIONS: &[AtlasLocation] = &[
     AtlasLocation {
         map: "gonryun",
         label: "Gonryun",
+        region: WorldRegion::GlobalProject,
         x: 0.84,
         y: 0.68,
         tile: TilePosition { x: 160, y: 120 },
@@ -146,6 +177,7 @@ const LOCATIONS: &[AtlasLocation] = &[
     AtlasLocation {
         map: "ayothaya",
         label: "Ayothaya",
+        region: WorldRegion::GlobalProject,
         x: 0.88,
         y: 0.84,
         tile: TilePosition { x: 208, y: 166 },
@@ -153,6 +185,7 @@ const LOCATIONS: &[AtlasLocation] = &[
     AtlasLocation {
         map: "brasilis",
         label: "Brasilis",
+        region: WorldRegion::GlobalProject,
         x: 0.10,
         y: 0.88,
         tile: TilePosition { x: 196, y: 217 },
@@ -160,6 +193,7 @@ const LOCATIONS: &[AtlasLocation] = &[
     AtlasLocation {
         map: "einbroch",
         label: "Einbroch",
+        region: WorldRegion::Schwarzwald,
         x: 0.57,
         y: 0.22,
         tile: TilePosition { x: 64, y: 200 },
@@ -167,6 +201,7 @@ const LOCATIONS: &[AtlasLocation] = &[
     AtlasLocation {
         map: "einbech",
         label: "Einbech",
+        region: WorldRegion::Schwarzwald,
         x: 0.66,
         y: 0.29,
         tile: TilePosition { x: 63, y: 35 },
@@ -174,6 +209,7 @@ const LOCATIONS: &[AtlasLocation] = &[
     AtlasLocation {
         map: "lighthalzen",
         label: "Lighthalzen",
+        region: WorldRegion::Schwarzwald,
         x: 0.55,
         y: 0.34,
         tile: TilePosition { x: 158, y: 92 },
@@ -181,6 +217,7 @@ const LOCATIONS: &[AtlasLocation] = &[
     AtlasLocation {
         map: "lasagna",
         label: "Lasagna",
+        region: WorldRegion::GlobalProject,
         x: 0.96,
         y: 0.36,
         tile: TilePosition { x: 193, y: 182 },
@@ -188,6 +225,7 @@ const LOCATIONS: &[AtlasLocation] = &[
     AtlasLocation {
         map: "dicastes01",
         label: "El Dicastes",
+        region: WorldRegion::DimensionalGorge,
         x: 0.80,
         y: 0.16,
         tile: TilePosition { x: 198, y: 187 },
@@ -195,6 +233,7 @@ const LOCATIONS: &[AtlasLocation] = &[
     AtlasLocation {
         map: "xmas",
         label: "Lutie",
+        region: WorldRegion::RuneMidgarts,
         x: 0.31,
         y: 0.19,
         tile: TilePosition { x: 147, y: 134 },
@@ -202,6 +241,7 @@ const LOCATIONS: &[AtlasLocation] = &[
     AtlasLocation {
         map: "mid_camp",
         label: "Midgard Camp",
+        region: WorldRegion::DimensionalGorge,
         x: 0.39,
         y: 0.69,
         tile: TilePosition { x: 180, y: 240 },
@@ -209,6 +249,7 @@ const LOCATIONS: &[AtlasLocation] = &[
     AtlasLocation {
         map: "c_tower1",
         label: "Clock Tower",
+        region: WorldRegion::DungeonLandmark,
         x: 0.28,
         y: 0.27,
         tile: TilePosition { x: 235, y: 218 },
@@ -216,68 +257,223 @@ const LOCATIONS: &[AtlasLocation] = &[
     AtlasLocation {
         map: "ama_dun01",
         label: "Amatsu Cave",
+        region: WorldRegion::DungeonLandmark,
         x: 0.93,
         y: 0.59,
         tile: TilePosition { x: 54, y: 107 },
     },
 ];
 
-// Authored regional roads keep the overview legible. Actual route highlighting
-// and the minimap guidance use the generated, verified warp graph.
-const ROADS: &[(usize, usize)] = &[
-    (0, 18),
-    (0, 22),
-    (1, 22),
-    (2, 22),
-    (18, 19),
-    (18, 9),
-    (19, 20),
-    (20, 9),
-    (3, 4),
-    (3, 5),
-    (3, 23),
-    (4, 5),
-    (4, 7),
-    (4, 23),
-    (5, 6),
-    (5, 7),
-    (5, 8),
-    (5, 24),
-    (6, 8),
-    (6, 9),
-    (6, 15),
-    (7, 12),
-    (7, 24),
-    (8, 9),
-    (8, 13),
-    (9, 10),
-    (9, 13),
-    (10, 15),
-    (10, 26),
-    (11, 12),
-    (12, 17),
-    (13, 14),
-    (14, 15),
-    (14, 16),
+// Authored regional roads keep the overview legible, explicitly classifying
+// overland walk roads and in-world transport connections (ferries, airships,
+// sleighs, dimensional rifts). Actual route highlighting and the minimap
+// guidance use the generated, verified warp graph.
+pub const ROADS: &[AtlasRoad] = &[
+    AtlasRoad {
+        from: 0,
+        to: 18,
+        kind: RoadKind::Transport,
+    }, // Juno <-> Einbroch (airship)
+    AtlasRoad {
+        from: 0,
+        to: 22,
+        kind: RoadKind::Transport,
+    }, // Juno <-> El Dicastes
+    AtlasRoad {
+        from: 1,
+        to: 22,
+        kind: RoadKind::Transport,
+    }, // Rachel <-> El Dicastes
+    AtlasRoad {
+        from: 2,
+        to: 22,
+        kind: RoadKind::Transport,
+    }, // Hugel <-> El Dicastes
+    AtlasRoad {
+        from: 18,
+        to: 19,
+        kind: RoadKind::Walk,
+    }, // Einbroch <-> Einbech
+    AtlasRoad {
+        from: 18,
+        to: 9,
+        kind: RoadKind::Transport,
+    }, // Einbroch <-> Alberta (airship)
+    AtlasRoad {
+        from: 19,
+        to: 20,
+        kind: RoadKind::Walk,
+    }, // Einbech <-> Lighthalzen
+    AtlasRoad {
+        from: 20,
+        to: 9,
+        kind: RoadKind::Transport,
+    }, // Lighthalzen <-> Alberta (airship)
+    AtlasRoad {
+        from: 3,
+        to: 4,
+        kind: RoadKind::Walk,
+    }, // Al De Baran <-> Geffen
+    AtlasRoad {
+        from: 3,
+        to: 5,
+        kind: RoadKind::Walk,
+    }, // Al De Baran <-> Prontera
+    AtlasRoad {
+        from: 3,
+        to: 23,
+        kind: RoadKind::Transport,
+    }, // Al De Baran <-> Lutie (Santa sleigh)
+    AtlasRoad {
+        from: 4,
+        to: 5,
+        kind: RoadKind::Walk,
+    }, // Geffen <-> Prontera
+    AtlasRoad {
+        from: 4,
+        to: 7,
+        kind: RoadKind::Walk,
+    }, // Geffen <-> Morroc
+    AtlasRoad {
+        from: 4,
+        to: 23,
+        kind: RoadKind::Transport,
+    }, // Geffen <-> Lutie
+    AtlasRoad {
+        from: 5,
+        to: 6,
+        kind: RoadKind::Walk,
+    }, // Prontera <-> Payon
+    AtlasRoad {
+        from: 5,
+        to: 7,
+        kind: RoadKind::Walk,
+    }, // Prontera <-> Morroc
+    AtlasRoad {
+        from: 5,
+        to: 8,
+        kind: RoadKind::Walk,
+    }, // Prontera <-> Izlude
+    AtlasRoad {
+        from: 5,
+        to: 24,
+        kind: RoadKind::Transport,
+    }, // Prontera <-> Midgard Camp (gorge)
+    AtlasRoad {
+        from: 6,
+        to: 8,
+        kind: RoadKind::Walk,
+    }, // Payon <-> Izlude
+    AtlasRoad {
+        from: 6,
+        to: 9,
+        kind: RoadKind::Walk,
+    }, // Payon <-> Alberta
+    AtlasRoad {
+        from: 6,
+        to: 15,
+        kind: RoadKind::Transport,
+    }, // Payon <-> Gonryun
+    AtlasRoad {
+        from: 7,
+        to: 12,
+        kind: RoadKind::Walk,
+    }, // Morroc <-> Umbala
+    AtlasRoad {
+        from: 7,
+        to: 24,
+        kind: RoadKind::Transport,
+    }, // Morroc <-> Midgard Camp
+    AtlasRoad {
+        from: 8,
+        to: 9,
+        kind: RoadKind::Walk,
+    }, // Izlude <-> Alberta
+    AtlasRoad {
+        from: 8,
+        to: 13,
+        kind: RoadKind::Transport,
+    }, // Izlude <-> Jawaii (ferry)
+    AtlasRoad {
+        from: 9,
+        to: 10,
+        kind: RoadKind::Transport,
+    }, // Alberta <-> Amatsu (voyage)
+    AtlasRoad {
+        from: 9,
+        to: 13,
+        kind: RoadKind::Transport,
+    }, // Alberta <-> Jawaii (ferry)
+    AtlasRoad {
+        from: 10,
+        to: 15,
+        kind: RoadKind::Transport,
+    }, // Amatsu <-> Gonryun
+    AtlasRoad {
+        from: 10,
+        to: 26,
+        kind: RoadKind::Walk,
+    }, // Amatsu <-> Amatsu Cave
+    AtlasRoad {
+        from: 11,
+        to: 12,
+        kind: RoadKind::Walk,
+    }, // Comodo <-> Umbala
+    AtlasRoad {
+        from: 12,
+        to: 17,
+        kind: RoadKind::Transport,
+    }, // Umbala <-> Brasilis
+    AtlasRoad {
+        from: 13,
+        to: 14,
+        kind: RoadKind::Transport,
+    }, // Jawaii <-> Louyang
+    AtlasRoad {
+        from: 14,
+        to: 15,
+        kind: RoadKind::Transport,
+    }, // Louyang <-> Gonryun
+    AtlasRoad {
+        from: 14,
+        to: 16,
+        kind: RoadKind::Transport,
+    }, // Louyang <-> Ayothaya
 ];
 
-struct RouteClick {
-    map: &'static str,
-    position: TilePosition,
+pub(crate) struct RouteClick {
+    pub(crate) map: &'static str,
+    pub(crate) position: TilePosition,
 }
 
-struct FacilityRouteClick {
-    map_name: String,
-    position: TilePosition,
+impl RouteClick {
+    pub(crate) fn event(&self) -> InputEvent {
+        InputEvent::SetNavigationDestination {
+            map_name: self.map.to_owned(),
+            x: self.position.x,
+            y: self.position.y,
+        }
+    }
+}
+
+pub(crate) struct FacilityRouteClick {
+    pub(crate) map_name: String,
+    pub(crate) position: TilePosition,
+}
+
+impl FacilityRouteClick {
+    pub(crate) fn event(&self) -> InputEvent {
+        InputEvent::SetNavigationDestination {
+            map_name: self.map_name.clone(),
+            x: self.position.x,
+            y: self.position.y,
+        }
+    }
 }
 
 impl ClickHandler<ClientState> for FacilityRouteClick {
     fn handle_click(&self, _: &State<ClientState>, queue: &mut EventQueue<ClientState>) {
-        queue.queue(InputEvent::SetNavigationDestination {
-            map_name: self.map_name.clone(),
-            x: self.position.x,
-            y: self.position.y,
-        });
+        queue.queue(self.event());
     }
 }
 
@@ -295,11 +491,7 @@ fn town_poi_tile(poi: &TownPoi) -> Option<TilePosition> {
 
 impl ClickHandler<ClientState> for RouteClick {
     fn handle_click(&self, _: &State<ClientState>, queue: &mut EventQueue<ClientState>) {
-        queue.queue(InputEvent::SetNavigationDestination {
-            map_name: self.map.to_owned(),
-            x: self.position.x,
-            y: self.position.y,
-        });
+        queue.queue(self.event());
     }
 }
 
@@ -399,7 +591,7 @@ impl Element<ClientState> for AtlasView {
             outgoing_exits,
             Some(visit_state),
             &party_members_here,
-            reference.map_spawn_summary(selected_map),
+            reference.map_spawn_details(selected_map),
             &town_pois,
         );
         let player_level = state
@@ -458,19 +650,23 @@ impl Element<ClientState> for AtlasView {
                 area.top + location.y * (area.height - node_height - 160.0),
             )
         };
-        for &(from, to) in available_roads() {
-            let (Some(left), Some(right)) = (self.nodes.get(from), self.nodes.get(to)) else {
+        for road in available_roads() {
+            let (Some(left), Some(right)) = (self.nodes.get(road.from), self.nodes.get(road.to)) else {
                 continue;
             };
             let (x1, y1) = point(left.location);
             let (x2, y2) = point(right.location);
+            let color = match road.kind {
+                RoadKind::Walk => Color::rgb_u8(67, 100, 121),
+                RoadKind::Transport => Color::rgb_u8(82, 134, 184),
+            };
             draw_dotted_connection(
                 layout,
                 x1 + node_width / 2.0,
                 y1 + node_height / 2.0,
                 x2 + node_width / 2.0,
                 y2 + node_height / 2.0,
-                Color::rgb_u8(67, 100, 121),
+                color,
             );
         }
 
@@ -654,7 +850,7 @@ impl Element<ClientState> for AtlasView {
             // target only borrows minimap state, so display a static prompt here;
             // the exact destination is also shown beneath the map window.
             let _ = target;
-            "Gold path: selected route  •  Cyan dots: walkable trail on current map"
+            "Gold: route  •  Cyan: overland  •  Blue: in-world transport  •  Cyan dots: walkable trail"
         } else {
             "Select a town or destination to plot a route. Click Clear Route to cancel."
         };
@@ -676,13 +872,13 @@ impl Element<ClientState> for AtlasView {
     }
 }
 
-fn available_roads() -> &'static [(usize, usize)] {
-    static AVAILABLE: OnceLock<Vec<(usize, usize)>> = OnceLock::new();
+fn available_roads() -> &'static [AtlasRoad] {
+    static AVAILABLE: OnceLock<Vec<AtlasRoad>> = OnceLock::new();
     AVAILABLE.get_or_init(|| {
         ROADS
             .iter()
             .copied()
-            .filter(|&(from, to)| route_edges(LOCATIONS[from].map, LOCATIONS[to].map).is_some())
+            .filter(|road| route_edges(LOCATIONS[road.from].map, LOCATIONS[road.to].map).is_some())
             .collect()
     })
 }
@@ -694,26 +890,37 @@ fn destination_detail_lines(
     outgoing_exits: usize,
     visit_state: Option<&str>,
     party_members_here: &[String],
-    population: Option<(u64, u16, usize)>,
+    population: Option<crate::dm::reference_data::MapSpawnDetails>,
     town_pois: &[String],
 ) -> [String; 6] {
     let selected_map = target_map.unwrap_or(current_map);
     let visited = visit_state.unwrap_or("discovery sync pending");
+    let region_info = map_region(selected_map)
+        .map(|region| format!(" • {}", region.name()))
+        .unwrap_or_default();
     let map_heading = match target_map {
-        Some(target) => format!("Destination: {target} • {visited}"),
-        None => format!("Current map: {selected_map} • {visited}"),
+        Some(target) => format!("Destination: {target} • {visited}{region_info}"),
+        None => format!("Current map: {selected_map} • {visited}{region_info}"),
     };
     let (level_line, population_line) = population.map_or_else(
         || {
             (
-                "Suggested level: unavailable".to_owned(),
-                "Static population: no verified spawn records".to_owned(),
+                "Suggested level: unavailable (low-coverage or non-combat map)".to_owned(),
+                "Static population: no verified spawn records (low coverage)".to_owned(),
             )
         },
-        |(records, mean_level, species)| {
+        |details| {
+            let range_str = if details.min_level != details.max_level {
+                format!(" (range: {}–{})", details.min_level, details.max_level)
+            } else {
+                String::new()
+            };
             (
-                format!("Suggested level: ~{mean_level} (static-spawn mean)"),
-                format!("Static population: {records} spawn records • {species} species"),
+                format!("Suggested level: ~{}{range_str} (static-spawn mean)", details.mean_level),
+                format!(
+                    "Static population: {} spawn records • {} species",
+                    details.records, details.species
+                ),
             )
         },
     );
@@ -744,6 +951,18 @@ fn destination_detail_lines(
         (Some(target), Some(edges)) if edges.is_empty() => ("Already at destination".to_owned(), format!("you are on {target}")),
         (Some(_), Some(edges)) => {
             let edge = edges[0];
+            let transport_count = edges.iter().filter(|e| e.kind == "npc_service").count();
+            let walk_count = edges.len() - transport_count;
+            let leg_composition = if transport_count > 0 {
+                format!(
+                    "{} travel legs ({} walk, {} transport)",
+                    edges.len(),
+                    walk_count,
+                    transport_count
+                )
+            } else {
+                format!("{} travel legs", edges.len())
+            };
             let edge_action = if edge.kind == "npc_service" {
                 let action = edge.action.as_deref().unwrap_or("use the listed travel service");
                 let requirements = edge
@@ -762,10 +981,7 @@ fn destination_detail_lines(
                     edge.from.map, edge.from.x, edge.from.y, edge.to.map
                 )
             };
-            (
-                format!("{} travel legs • {outgoing_exits} connections", edges.len()),
-                edge_action,
-            )
+            (format!("{leg_composition} • {outgoing_exits} connections"), edge_action)
         }
     };
     [
@@ -806,6 +1022,13 @@ fn draw_dotted_connection(layout: &mut WindowLayout<'_, ClientState>, x1: f32, y
     }
 }
 
+#[allow(dead_code)]
+impl AtlasLocation {
+    pub const fn region(&self) -> WorldRegion {
+        self.region
+    }
+}
+
 pub struct MapsWindow {
     library: Arc<Library>,
 }
@@ -843,8 +1066,16 @@ impl CustomWindow<ClientState> for MapsWindow {
 
 #[cfg(test)]
 mod tests {
-    use super::{destination_detail_lines, normalized_map_name, town_poi_tile};
-    use crate::world::{TownPoi, TownPoiKind, navigation_graph, route_edges};
+    use korangar_interface::event::{Event, EventQueue};
+    use ragnarok_packets::TilePosition;
+
+    use super::{
+        FacilityRouteClick, LOCATIONS, ROADS, RoadKind, RouteClick, available_roads, destination_detail_lines, normalized_map_name,
+        town_poi_tile,
+    };
+    use crate::input::InputEvent;
+    use crate::state::discovery::DiscoveryState;
+    use crate::world::{TownPoi, TownPoiKind, is_dangerous_map_level, map_region, navigation_graph, route_edges};
 
     #[test]
     fn atlas_poi_routes_accept_only_nonnegative_client_coordinates() {
@@ -854,7 +1085,7 @@ mod tests {
             y: 191,
             kind: TownPoiKind::Kafra,
         };
-        assert_eq!(town_poi_tile(&poi), Some(ragnarok_packets::TilePosition { x: 156, y: 191 }));
+        assert_eq!(town_poi_tile(&poi), Some(TilePosition { x: 156, y: 191 }));
 
         let invalid = TownPoi { x: -1, ..poi };
         assert_eq!(town_poi_tile(&invalid), None);
@@ -871,7 +1102,7 @@ mod tests {
             .count();
         let party = vec!["Alice".to_owned()];
         let pois = vec!["Kafra Employee".to_owned(), "Tool Dealer".to_owned()];
-        let population = crate::dm::reference_data::reference_data().map_spawn_summary("izlude");
+        let population = crate::dm::reference_data::reference_data().map_spawn_details("izlude");
         let lines = destination_detail_lines(
             "prontera",
             Some("izlude"),
@@ -884,6 +1115,7 @@ mod tests {
         );
 
         assert!(lines[0].contains("Destination: izlude • visited"));
+        assert!(lines[0].contains("Rune-Midgarts Kingdom"));
         assert!(lines[1].contains("Suggested level:"));
         assert!(lines[2].contains("Static population:"));
         assert!(lines[3].contains("Alice"));
@@ -898,6 +1130,7 @@ mod tests {
         let route = route_edges("izlude", "iz_dun00").expect("authored conditional ferry route");
         let lines = destination_detail_lines("izlude", Some("iz_dun00"), Some(&route), 2, Some("visited"), &[], None, &[]);
 
+        assert!(lines[5].contains("2 travel legs (1 walk, 1 transport)"));
         assert!(lines[5].contains("service at izlude (197, 205)"));
         assert!(lines[5].contains("choose Byalan Island"));
         assert!(lines[5].contains("conditional"));
@@ -915,9 +1148,278 @@ mod tests {
         assert!(lines[5].contains("No verified route"));
 
         let empty = destination_detail_lines("prontera", None, None, 3, Some("visited"), &[], None, &[]);
-        assert_eq!(empty[0], "Current map: prontera • visited");
+        assert!(empty[0].contains("Current map: prontera • visited"));
+        assert!(empty[0].contains("Rune-Midgarts Kingdom"));
         assert!(empty[4].contains("none listed"));
         assert!(empty[5].contains("3"));
         assert_eq!(normalized_map_name("izlude.gat"), "izlude");
+    }
+
+    #[test]
+    fn visited_account_vs_unvisited_account() {
+        let mut discovery = DiscoveryState::default();
+        discovery.set_account_id(1001);
+
+        // Before server delta or snapshot sync, status is unvisited and sync pending.
+        assert!(!discovery.visited_map("prontera"));
+        assert!(!discovery.map_snapshot_complete());
+        let sync_pending = destination_detail_lines("geffen", Some("prontera"), None, 4, None, &[], None, &[]);
+        assert!(sync_pending[0].contains("discovery sync pending"));
+
+        // Receive private server discovery line marking prontera visited.
+        let recognized = discovery.receive_server_line("[KORANGAR-MAP-DISCOVERY:v1:visited:1001:prontera]", Some(1001));
+        assert!(recognized, "server map discovery protocol line must be recognized");
+        assert!(discovery.visited_map("prontera"));
+        assert!(!discovery.visited_map("geffen"));
+
+        let visited_details = destination_detail_lines(
+            "geffen",
+            Some("prontera"),
+            None,
+            4,
+            Some(if discovery.visited_map("prontera") {
+                "visited"
+            } else {
+                "not yet visited"
+            }),
+            &[],
+            None,
+            &[],
+        );
+        assert!(visited_details[0].contains("Destination: prontera • visited • Rune-Midgarts Kingdom"));
+
+        let unvisited_details = destination_detail_lines(
+            "prontera",
+            Some("geffen"),
+            None,
+            4,
+            Some(if discovery.visited_map("geffen") {
+                "visited"
+            } else {
+                "not yet visited"
+            }),
+            &[],
+            None,
+            &[],
+        );
+        assert!(unvisited_details[0].contains("Destination: geffen • not yet visited • Rune-Midgarts Kingdom"));
+    }
+
+    #[test]
+    fn two_characters_on_same_account_share_visit_history() {
+        let mut discovery = DiscoveryState::default();
+        discovery.set_account_id(1001);
+
+        // Character 1 (e.g. Swordsman) visits Prontera, Izlude, and Geffen.
+        assert!(discovery.receive_server_line("[KORANGAR-MAP-DISCOVERY:v1:visited:1001:prontera]", Some(1001)));
+        assert!(discovery.receive_server_line("[KORANGAR-MAP-DISCOVERY:v1:visited:1001:izlude]", Some(1001)));
+        assert!(discovery.receive_server_line("[KORANGAR-MAP-DISCOVERY:v1:visited:1001:geffen]", Some(1001)));
+        assert_eq!(discovery.visited_map_count(), 3);
+
+        // Player switches to Character 2 (e.g. Mage) on the same account (account_id
+        // remains 1001).
+        discovery.set_account_id(1001);
+        assert_eq!(discovery.visited_map_count(), 3, "same account must retain all visited maps");
+        assert!(discovery.visited_map("prontera"));
+        assert!(discovery.visited_map("izlude"));
+        assert!(discovery.visited_map("geffen"));
+
+        // Player switches to an alternate account (account_id: 1002).
+        discovery.set_account_id(1002);
+        assert_eq!(discovery.visited_map_count(), 0, "different account must reset visited maps");
+        assert!(!discovery.visited_map("prontera"));
+    }
+
+    #[test]
+    fn conditional_in_world_transport_routes() {
+        let graph = navigation_graph();
+
+        // 1. Izlude -> Byalan Island: conditional ferry service
+        let byalan_route = route_edges("izlude", "iz_dun00").expect("ferry route to Byalan");
+        assert_eq!(byalan_route.len(), 2);
+        assert_eq!(byalan_route[0].id, "service-izlude-byalan-ferry");
+        assert_eq!(byalan_route[0].kind, "npc_service");
+        assert_eq!(byalan_route[0].availability, "conditional");
+        assert_eq!(byalan_route[0].requirements.as_deref(), Some("Costs 150 zeny."));
+        assert_eq!(byalan_route[1].kind, "walk_warp");
+
+        // 2. Return from Byalan Island: free sailor
+        let return_route = route_edges("izlu2dun", "izlude").expect("return sailor route");
+        assert_eq!(return_route.len(), 1);
+        assert_eq!(return_route[0].id, "service-byalan-return-sailor");
+        assert_eq!(return_route[0].kind, "npc_service");
+        assert_eq!(return_route[0].availability, "always");
+        assert_eq!(return_route[0].requirements.as_deref(), Some("No fare."));
+
+        // 3. Cat Fleet to Malangdo
+        let cat_route = route_edges("izlude", "malangdo").expect("cat fleet route");
+        assert_eq!(cat_route.len(), 1);
+        assert_eq!(cat_route[0].kind, "npc_service");
+        assert_eq!(cat_route[0].availability, "conditional");
+        assert!(cat_route[0].requirements.as_deref().unwrap().contains("1000 zeny"));
+
+        // Verify graph maps exist
+        assert!(graph.maps.iter().any(|m| m == "izlude"));
+        assert!(graph.maps.iter().any(|m| m == "izlu2dun"));
+        assert!(graph.maps.iter().any(|m| m == "malangdo"));
+    }
+
+    #[test]
+    fn unreachable_routes_return_none_and_never_hallucinate() {
+        assert!(route_edges("prontera", "nonexistent_map").is_none());
+        assert!(route_edges("nonexistent_map", "prontera").is_none());
+
+        let lines = destination_detail_lines(
+            "prontera",
+            Some("nonexistent_map"),
+            None,
+            4,
+            Some("not yet visited"),
+            &[],
+            None,
+            &[],
+        );
+        assert!(lines[5].contains("No verified route"));
+        assert!(lines[5].contains("No portal route from prontera to nonexistent_map"));
+    }
+
+    #[test]
+    fn route_selection_safety_guarantee_no_teleportation() {
+        let node_click = RouteClick {
+            map: "prontera",
+            position: TilePosition { x: 155, y: 183 },
+        };
+        let event = node_click.event();
+
+        let facility_click = FacilityRouteClick {
+            map_name: "prontera".to_owned(),
+            position: TilePosition { x: 156, y: 191 },
+        };
+        let facility_event = facility_click.event();
+
+        let mut queue = EventQueue::default();
+        queue.queue(event);
+        queue.queue(facility_event);
+
+        let events: Vec<_> = queue.drain().collect();
+        assert_eq!(events.len(), 2);
+
+        // Destination click dispatches ONLY client-side SetNavigationDestination event
+        // (never teleports)
+        match &events[0] {
+            Event::Application {
+                custom_event: InputEvent::SetNavigationDestination { map_name, x, y },
+            } => {
+                assert_eq!(map_name, "prontera");
+                assert_eq!(*x, 155);
+                assert_eq!(*y, 183);
+            }
+            _ => panic!("expected SetNavigationDestination"),
+        }
+
+        // Facility click dispatches ONLY client-side SetNavigationDestination event
+        match &events[1] {
+            Event::Application {
+                custom_event: InputEvent::SetNavigationDestination { map_name, x, y },
+            } => {
+                assert_eq!(map_name, "prontera");
+                assert_eq!(*x, 156);
+                assert_eq!(*y, 191);
+            }
+            _ => panic!("expected SetNavigationDestination"),
+        }
+    }
+
+    #[test]
+    fn atlas_roads_classification_and_region_coverage() {
+        // Every atlas location must have a valid regional assignment matching
+        // map_region
+        for location in LOCATIONS {
+            assert_eq!(
+                location.region(),
+                map_region(location.map).expect("atlas location must have a known region"),
+                "location {} mismatch",
+                location.map
+            );
+        }
+
+        // Roads must contain both overland walk roads and in-world transport
+        // connections
+        let walk_roads = ROADS.iter().filter(|r| r.kind == RoadKind::Walk).count();
+        let transport_roads = ROADS.iter().filter(|r| r.kind == RoadKind::Transport).count();
+        assert!(walk_roads >= 10, "expected at least 10 overland walk roads, got {walk_roads}");
+        assert!(
+            transport_roads >= 10,
+            "expected at least 10 in-world transport routes, got {transport_roads}"
+        );
+
+        // Every road that is marked available must have a verified route in the
+        // navigation graph
+        let available = available_roads();
+        assert!(!available.is_empty(), "available roads must not be empty");
+        for road in available {
+            let from_map = LOCATIONS[road.from].map;
+            let to_map = LOCATIONS[road.to].map;
+            assert!(
+                route_edges(from_map, to_map).is_some(),
+                "road between {from_map} and {to_map} must have a verified route"
+            );
+        }
+    }
+
+    #[test]
+    fn map_information_spawn_range_and_population_summary() {
+        let reference = crate::dm::reference_data::reference_data();
+        let details = reference
+            .map_spawn_details("prt_fild08")
+            .expect("prt_fild08 must have static spawn records");
+        assert!(details.records > 0);
+        assert!(details.species > 0);
+        assert!(details.min_level <= details.max_level);
+
+        let lines = destination_detail_lines("prontera", Some("prt_fild08"), None, 4, Some("visited"), &[], Some(details), &[
+        ]);
+        let expected_range = if details.min_level != details.max_level {
+            format!("(range: {}–{})", details.min_level, details.max_level)
+        } else {
+            String::new()
+        };
+        assert!(lines[1].contains(&format!("Suggested level: ~{}", details.mean_level)));
+        if !expected_range.is_empty() {
+            assert!(lines[1].contains(&expected_range));
+        }
+        assert!(lines[1].contains("(static-spawn mean)"));
+        assert!(lines[2].contains(&format!(
+            "Static population: {} spawn records • {} species",
+            details.records, details.species
+        )));
+    }
+
+    #[test]
+    fn map_information_low_coverage_labeling() {
+        let lines = destination_detail_lines("prontera", Some("unknown_map"), None, 0, None, &[], None, &[]);
+        assert_eq!(lines[1], "Suggested level: unavailable (low-coverage or non-combat map)");
+        assert_eq!(lines[2], "Static population: no verified spawn records (low coverage)");
+    }
+
+    #[test]
+    fn map_information_danger_guidance_and_entry_warning() {
+        assert!(is_dangerous_map_level(35, 20));
+        assert!(!is_dangerous_map_level(34, 20));
+        assert!(!is_dangerous_map_level(20, 20));
+
+        let warning = crate::map_difficulty_warning("orcsdun02", Some(35), Some(20), true).expect("expected danger warning");
+        assert!(warning.contains("orcsdun02 averages level 35"));
+        assert!(warning.contains("15+ above your level (20)"));
+        assert!(warning.contains("Warning only; travel is unrestricted."));
+
+        assert!(
+            crate::map_difficulty_warning("orcsdun02", Some(35), Some(20), false).is_none(),
+            "opt-out toggle false must suppress danger warning"
+        );
+        assert!(
+            crate::map_difficulty_warning("unknown_map", None, Some(20), true).is_none(),
+            "missing spawn records must not guess or trigger warning"
+        );
     }
 }
