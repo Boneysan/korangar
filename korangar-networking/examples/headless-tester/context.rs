@@ -55,6 +55,12 @@ const POLL_INTERVAL: Duration = Duration::from_millis(30);
 /// How many recent events are kept for timeout diagnostics.
 const EVENT_LOG_CAPACITY: usize = 40;
 
+/// When set, a character the harness has to create is created female (needed
+/// for jobs and weapons that only exist for women, such as Dancer and the
+/// whip). A module-level switch so `connect_as` keeps its signature for its
+/// many callers.
+pub static CREATE_AS_FEMALE: std::sync::atomic::AtomicBool = std::sync::atomic::AtomicBool::new(false);
+
 #[derive(Clone)]
 pub struct Config {
     pub server: SocketAddr,
@@ -371,7 +377,16 @@ impl TestContext {
                     .ok_or("no free character slot for auto-create")?;
                 context
                     .net
-                    .create_character(free_slot, new_name.to_owned(), Sex::Male, DEFAULT_HAIR_STYLE)
+                    .create_character(
+                        free_slot,
+                        new_name.to_owned(),
+                        if CREATE_AS_FEMALE.load(std::sync::atomic::Ordering::SeqCst) {
+                            Sex::Female
+                        } else {
+                            Sex::Male
+                        },
+                        DEFAULT_HAIR_STYLE,
+                    )
                     .map_err(|_| "disconnected")?;
                 let info = context.wait_for("CharacterCreated", |event| match event {
                     NetworkEvent::CharacterCreated { character_information } => Some(Ok(character_information.clone())),

@@ -2381,9 +2381,160 @@ mod tests {
         (4024, "Sword", None, false, 80, 80, 350),
     ];
 
+    /// Ground truth for the rest of the ASPD pipeline, measured on 2026-10-01
+    /// and 2026-10-02 by the `aspd-modifiers-ground-truth*` and
+    /// `aspd-mount-ground-truth` provisioning scenarios, as (job, right
+    /// weapon type, left weapon type, shield worn, total AGI, total DEX,
+    /// [Advanced Book, Single Action, Plagiarism, Musical Lesson] levels,
+    /// status flat bonus, rate, percent, flat ms, server attack motion,
+    /// clamped by the class cap).
+    ///
+    /// Covers the four passive ASPD skills (and that they need their weapon),
+    /// equipment `bAspdRate` and flat `bAspd`, the potions (only the strongest
+    /// counts), Two-Hand Quicken, Increase AGI, Adrenaline Rush, a mounted
+    /// Knight at every Cavalier Mastery level (the rate multiplier), both class
+    /// caps (190 and 193, reached with the +10 Spoon), and a female Dancer's
+    /// whip. A Berserk Potion (+9, saved with the character for 30 minutes) was
+    /// still active during the later steps, so those rows carry it as status
+    /// flat bonus 9. Jewel Ring (a proc), and the shoes and hat (refine 12 or
+    /// more), correctly add nothing at +0.
+    const OBSERVED_ASPD_MODIFIERS: &[(u16, &str, Option<&str>, bool, i32, i32, [i32; 4], i32, i32, i32, i32, u32, bool)] = &[
+        (16, "Book", None, false, 80, 80, [0, 0, 0, 0], 0, 1000, 0, 0, 310, false),
+        (16, "Book", None, false, 80, 80, [10, 0, 0, 0], 0, 1000, 0, 0, 290, false),
+        (24, "Revolver", None, false, 80, 81, [0, 0, 0, 0], 0, 1000, 0, 0, 330, false),
+        (24, "Revolver", None, false, 80, 81, [0, 10, 0, 0], 0, 1000, 0, 0, 310, false),
+        (17, "Dagger", None, false, 81, 80, [0, 0, 0, 0], 0, 1000, 0, 0, 330, false),
+        (17, "Dagger", None, false, 81, 80, [0, 0, 10, 0], 0, 1000, 0, 0, 290, false),
+        (19, "Instrument", None, false, 80, 81, [0, 0, 0, 0], 0, 1000, 0, 0, 330, false),
+        (19, "Instrument", None, false, 80, 91, [0, 0, 0, 10], 0, 1000, 0, 0, 290, false),
+        (19, "Fist", None, false, 80, 91, [0, 0, 0, 10], 0, 1000, 0, 0, 270, false),
+        (19, "Fist", None, false, 80, 91, [0, 0, 0, 10], 0, 1000, 0, 0, 270, false),
+        (7, "Axe", None, false, 80, 80, [0, 0, 0, 0], 0, 1000, 5, 0, 370, false),
+        (12, "Katar", None, false, 81, 80, [0, 0, 0, 0], 0, 1000, 3, 0, 300, false),
+        (7, "TwoHandSword", None, false, 80, 80, [0, 0, 0, 0], 0, 1000, 8, 0, 380, false),
+        (
+            7,
+            "TwoHandSword",
+            None,
+            false,
+            80,
+            80,
+            [0, 0, 0, 0],
+            0,
+            1000,
+            0,
+            -20,
+            380,
+            false,
+        ),
+        (7, "TwoHandAxe", None, false, 80, 80, [0, 0, 0, 0], 0, 1000, -40, 0, 580, false),
+        (7, "Sword", None, true, 80, 80, [0, 0, 0, 0], 0, 1000, 0, -30, 350, false),
+        (7, "Sword", None, false, 80, 80, [0, 0, 0, 0], 0, 1000, 0, 0, 330, false),
+        (7, "Sword", None, false, 81, 81, [0, 0, 0, 0], 0, 1000, 0, 0, 330, false),
+        (7, "Sword", None, false, 80, 80, [0, 0, 0, 0], 4, 1000, 0, 0, 310, false),
+        (7, "Sword", None, false, 80, 80, [0, 0, 0, 0], 6, 1000, 0, 0, 300, false),
+        (7, "Sword", None, false, 80, 80, [0, 0, 0, 0], 9, 1000, 0, 0, 290, false),
+        (7, "TwoHandSword", None, false, 80, 80, [0, 0, 0, 0], 9, 1000, 0, 0, 360, false),
+        (
+            7,
+            "TwoHandSword",
+            None,
+            false,
+            80,
+            80,
+            [0, 0, 0, 0],
+            16,
+            1000,
+            10,
+            0,
+            310,
+            false,
+        ),
+        (8, "Fist", None, false, 80, 80, [0, 0, 0, 0], 9, 1000, 0, 0, 240, false),
+        (8, "Fist", None, false, 92, 80, [0, 0, 0, 0], 9, 1000, 10, 0, 210, false),
+        (10, "Axe", None, false, 80, 81, [0, 0, 0, 0], 9, 1000, 0, 0, 300, false),
+        (10, "Axe", None, false, 80, 81, [0, 0, 0, 0], 16, 1000, 10, 0, 250, false),
+        (4211, "Fist", None, false, 125, 126, [0, 0, 0, 0], 9, 1000, 0, 0, 130, false),
+        (4211, "Fist", None, true, 126, 127, [0, 0, 0, 0], 9, 1000, 0, -30, 120, false),
+        (4070, "Fist", None, false, 131, 130, [0, 0, 0, 0], 9, 1000, 0, 0, 90, false),
+        (4070, "Fist", None, true, 132, 131, [0, 0, 0, 0], 9, 1000, 0, -30, 110, false),
+        (4070, "Mace", None, false, 131, 130, [0, 0, 0, 0], 9, 1000, 0, -100, 70, true),
+        (4070, "Mace", None, true, 131, 130, [0, 0, 0, 0], 9, 1000, 0, -130, 70, true),
+        (4016, "Mace", None, false, 130, 130, [0, 0, 0, 0], 9, 1000, 0, -100, 100, true),
+        (20, "Whip", None, false, 1, 1, [0, 0, 0, 0], 0, 1000, 0, 0, 490, false),
+        (7, "Fist", None, false, 130, 130, [0, 0, 0, 0], 9, 1000, 0, 0, 110, false),
+        (7, "Fist", None, false, 130, 130, [0, 0, 0, 0], 9, 500, 0, 0, 1060, false),
+        (7, "Fist", None, false, 130, 130, [0, 0, 0, 0], 9, 600, 0, 0, 870, false),
+        (7, "Fist", None, false, 130, 130, [0, 0, 0, 0], 9, 700, 0, 0, 680, false),
+        (7, "Fist", None, false, 130, 130, [0, 0, 0, 0], 9, 800, 0, 0, 490, false),
+        (7, "Fist", None, false, 130, 130, [0, 0, 0, 0], 9, 900, 0, 0, 300, false),
+        (7, "Fist", None, false, 130, 130, [0, 0, 0, 0], 9, 1000, 0, 0, 110, false),
+        (7, "Fist", None, false, 130, 130, [0, 0, 0, 0], 9, 1000, 0, 0, 110, false),
+    ];
+
+    #[test]
+    fn aspd_pipeline_reproduces_skills_gear_statuses_mounts_and_the_class_cap() {
+        use crate::world::stat_formulas::{AspdInputs, attack_motion, class_aspd_base, passive_aspd_bonus};
+        const RANGED: [&str; 8] = [
+            "Bow",
+            "Instrument",
+            "Whip",
+            "Revolver",
+            "Rifle",
+            "GatlingGun",
+            "Shotgun",
+            "GrenadeLauncher",
+        ];
+        let tables = &reference_data().job_tables;
+        assert!(OBSERVED_ASPD_MODIFIERS.len() >= 43);
+        let mut clamped_rows = 0;
+        for &(job_id, right, left, shield, agi, dex, skills, status_flat, rate, percent, flat_ms, observed, clamped) in
+            OBSERVED_ASPD_MODIFIERS
+        {
+            let job = tables.job(job_id).expect("class table");
+            let value = |weapon: &str| job.base_aspd.get(weapon).copied().unwrap_or(0);
+            let inputs = AspdInputs {
+                agi,
+                dex,
+                class_base: class_aspd_base(value(right), left.map(value), if shield { value("Shield") } else { 0 }),
+                ranged: RANGED.contains(&right),
+                passive_bonus: passive_aspd_bonus(
+                    right == "Book",
+                    right == "Instrument",
+                    skills[0],
+                    skills[1],
+                    skills[2],
+                    skills[3],
+                ),
+                status_flat_bonus: status_flat,
+                rate,
+                percent,
+                flat_ms,
+                fixed_ms: 0,
+                max_aspd: job.max_aspd,
+            };
+            let context = format!(
+                "job {job_id} {right}/{left:?} shield {shield} AGI {agi} DEX {dex} skills {skills:?} flat {status_flat} rate {rate} pct \
+                 {percent} flat_ms {flat_ms}"
+            );
+            assert_eq!(attack_motion(&inputs), observed, "{context}");
+            if clamped {
+                // The cap, not the formula, set this motion: without it the
+                // motion would have been faster than the server allows.
+                let uncapped = attack_motion(&AspdInputs { max_aspd: 199, ..inputs });
+                assert!(
+                    uncapped < observed,
+                    "{context}: uncapped {uncapped} should be below the cap {observed}"
+                );
+                clamped_rows += 1;
+            }
+        }
+        assert_eq!(clamped_rows, 3, "both caps (190 and 193) must be exercised");
+    }
+
     #[test]
     fn aspd_formula_reproduces_the_attack_motion_a_live_server_reported() {
-        use crate::world::stat_formulas::{attack_motion_ms, base_aspd, class_aspd_base};
+        use crate::world::stat_formulas::{AspdInputs, attack_motion, class_aspd_base};
         const RANGED: [&str; 8] = [
             "Bow",
             "Instrument",
@@ -2399,10 +2550,16 @@ mod tests {
         for &(job_id, right, left, shield, agi, dex, observed) in OBSERVED_ASPD {
             let job = tables.job(job_id).expect("class table");
             let value = |weapon: &str| job.base_aspd.get(weapon).copied().unwrap_or(0);
-            let class_base = class_aspd_base(value(right), left.map(value), if shield { value("Shield") } else { 0 });
-            let aspd = base_aspd(dex, agi, class_base, RANGED.contains(&right), 0);
+            let inputs = AspdInputs {
+                agi,
+                dex,
+                class_base: class_aspd_base(value(right), left.map(value), if shield { value("Shield") } else { 0 }),
+                ranged: RANGED.contains(&right),
+                max_aspd: job.max_aspd,
+                ..AspdInputs::default()
+            };
             assert_eq!(
-                attack_motion_ms(aspd, job.max_aspd),
+                attack_motion(&inputs),
                 observed,
                 "job {job_id} {right}/{left:?} shield {shield} AGI {agi} DEX {dex}"
             );

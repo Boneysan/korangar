@@ -1800,18 +1800,76 @@ fn append_class_table_details(lines: &mut Vec<String>, job_id: u16) {
         "Base ASPD values by weapon (the B in the ASPD rule): {values}. Maximum ASPD {}.",
         job.max_aspd
     ));
+    // Passive ASPD skills this job learns, at their maximum level. They add to
+    // the base formula and only count with the right weapon.
+    if let Some(tree) = data.job_skill_tree_by_id(job_id) {
+        let passives = [
+            (274, "Advanced Book (with a book)", 1),
+            (509, "Single Action", 2),
+            (225, "Plagiarism", 3),
+            (315, "Musical Lesson (with an instrument)", 4),
+        ];
+        let listed: Vec<String> = passives
+            .iter()
+            .filter_map(|(skill_id, label, slot)| {
+                let max_level = tree.skills.iter().find(|skill| skill.skill_id == *skill_id)?.max_level as i32;
+                let mut levels = [0; 4];
+                levels[slot - 1] = max_level;
+                let bonus = stat_formulas::passive_aspd_bonus(true, true, levels[0], levels[1], levels[2], levels[3]);
+                Some(format!("{label} +{bonus}"))
+            })
+            .collect();
+        if !listed.is_empty() {
+            lines.push(format!(
+                "Passive ASPD skills at maximum level (added inside the base ASPD formula): {}.",
+                listed.join(", ")
+            ));
+        }
+    }
     let at_cap = weapons
         .iter()
         .filter(|(name, _)| name.as_str() != "Shield")
         .map(|(name, value)| {
-            let aspd = stat_formulas::base_aspd(cap, cap, **value, is_ranged_weapon(name), 0);
-            format!("{} {aspd}", spaced(name))
+            // The server's own pipeline, including the class cap, then back to
+            // the ASPD number the game displays: 200 - motion / 10.
+            let motion = stat_formulas::attack_motion(&stat_formulas::AspdInputs {
+                agi: cap,
+                dex: cap,
+                class_base: **value,
+                ranged: is_ranged_weapon(name),
+                max_aspd: job.max_aspd,
+                ..Default::default()
+            });
+            format!("{} {}", spaced(name), 200 - motion / 10)
         })
         .collect::<Vec<_>>()
         .join(", ");
     lines.push(format!(
         "Base ASPD at DEX {cap} and AGI {cap}, no passive ASPD skills, no shield, before gear and statuses: {at_cap}."
     ));
+    // A shield adds its value to B, which slows you down.
+    let shield = job.base_aspd.get("Shield").copied().unwrap_or(0);
+    if shield > 0 {
+        let with_shield = ["Fist", "Dagger", "Sword", "Spear", "Axe", "Mace", "Rod", "Knuckle", "Book"]
+            .iter()
+            .filter_map(|weapon| {
+                let value = *job.base_aspd.get(*weapon)?;
+                let motion = stat_formulas::attack_motion(&stat_formulas::AspdInputs {
+                    agi: cap,
+                    dex: cap,
+                    class_base: stat_formulas::class_aspd_base(value, None, shield),
+                    ranged: false,
+                    max_aspd: job.max_aspd,
+                    ..Default::default()
+                });
+                Some(format!("{} {}", spaced(weapon), 200 - motion / 10))
+            })
+            .collect::<Vec<_>>()
+            .join(", ");
+        lines.push(format!(
+            "The same with a shield worn (its value, {shield}, slows you down): {with_shield}."
+        ));
+    }
 }
 
 fn append_stat_rule_details(lines: &mut Vec<String>, job_id: u16) {
@@ -3910,6 +3968,11 @@ mod tests {
         assert!(text.contains("Maximum ASPD 190"), "{text}");
         // 196 + sqrt(99^2/5 + 99^2/2)/4 = 216.7 -> 216, minus 45 = 171.
         assert!(text.contains("Sword 171"), "{text}");
+        // Sword 45 + Shield 5 = 50: 216 - 50 = 166.
+        assert!(
+            text.contains("The same with a shield worn (its value, 5, slows you down)") && text.contains("Sword 166"),
+            "{text}"
+        );
         assert!(!text.contains("Shield 171"), "the shield value is not a weapon: {text}");
     }
 
@@ -3930,6 +3993,22 @@ mod tests {
             !page("Knight").contains("Warning: this class's"),
             "Knight has no collapsed table"
         );
+    }
+
+    #[test]
+    fn job_pages_list_the_passive_aspd_skills_with_their_bonus() {
+        let page = |name: &str| {
+            let (id, name) = job_names()
+                .find(|(_, listed)| *listed == name)
+                .unwrap_or_else(|| panic!("{name} job"));
+            super::job_details(id, name).join("\n")
+        };
+        // Skill level 10 each: (10 - 1) / 2 + 1 = 5, (10 + 1) / 2 = 5, 10, 10.
+        assert!(page("Sage").contains("Advanced Book (with a book) +5"), "Sage");
+        assert!(page("Gunslinger").contains("Single Action +5"), "Gunslinger");
+        assert!(page("Rogue").contains("Plagiarism +10"), "Rogue");
+        assert!(page("Bard").contains("Musical Lesson (with an instrument) +10"), "Bard");
+        assert!(!page("Knight").contains("Passive ASPD skills"), "Knight has none");
     }
 
     #[test]
@@ -3970,9 +4049,13 @@ mod tests {
         assert!(aspd.contains("DEX x DEX / 7"), "{aspd}");
         assert!(aspd.contains("193: BabyThirdClasses, SuperNovice, ThirdClasses"), "{aspd}");
         assert!(
-            aspd.contains("72 measurements") && aspd.contains("Every value matched"),
+            aspd.contains("115 measurements") && aspd.contains("Every value matched"),
             "{aspd}"
         );
+        assert!(aspd.contains("only the strongest potion counts"), "{aspd}");
+        assert!(aspd.contains("(500 + 100 x Cavalier Mastery level) / 1000"), "{aspd}");
+        assert!(aspd.contains("100 ms at 190, 70 ms at 193"), "{aspd}");
+        assert!(aspd.contains("not compared: the Dragon mount"), "{aspd}");
     }
 
     #[test]

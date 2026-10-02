@@ -156,20 +156,112 @@ pub fn base_aspd(dex: i32, agi: i32, class_base: u16, ranged: bool, skill_bonus:
     raw - i32::from(class_base.min(200))
 }
 
+/// Everything that feeds the server's attack-motion calculation for a player
+/// (`status_base_amotion_pc` and the assembly in `status_calc_bl_main`, Renewal
+/// ASPD). All fields are values the server derives from skills, equipment and
+/// statuses; the defaults describe a bare character with none of them.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct AspdInputs {
+    pub agi: i32,
+    pub dex: i32,
+    /// `B` from [`class_aspd_base`].
+    pub class_base: u16,
+    /// Bow, instrument, whip or gun: DEX counts as `dex^2 / 7`.
+    pub ranged: bool,
+    /// Passive skill bonuses (see [`passive_aspd_bonus`]).
+    pub passive_bonus: i32,
+    /// Status bonuses that join the passive term: potions (`+4`/`+6`/`+9`),
+    /// Quicken (`7`), Adrenaline Rush (`7`), Berserk (`15`), and so on
+    /// (`status_calc_aspd` with flag 1).
+    pub status_flat_bonus: i32,
+    /// `st->aspd_rate`, 1000 by default. Mounts lower it (a Peco rider without
+    /// Cavalier Mastery has 500); it multiplies the ASPD value itself.
+    pub rate: i32,
+    /// Percent of the gap to ASPD 195 that is closed: equipment `bAspdRate`
+    /// plus the percentage statuses (`status_calc_aspd` with flag 2). May be
+    /// negative.
+    pub percent: i32,
+    /// Equipment `bAspd` in milliseconds (`-10` per point; negative is faster).
+    pub flat_ms: i32,
+    /// Milliseconds the fixed status adjustments remove
+    /// (`status_calc_fix_aspd`).
+    pub fixed_ms: i32,
+    pub max_aspd: u16,
+}
+
+impl Default for AspdInputs {
+    fn default() -> Self {
+        Self {
+            agi: 1,
+            dex: 1,
+            class_base: 0,
+            ranged: false,
+            passive_bonus: 0,
+            status_flat_bonus: 0,
+            rate: 1000,
+            percent: 0,
+            flat_ms: 0,
+            fixed_ms: 0,
+            max_aspd: 190,
+        }
+    }
+}
+
+/// The server's attack motion in milliseconds, in the order the C code applies
+/// the steps: base ASPD, the rate multiplier, the share of the gap to 195,
+/// conversion to milliseconds, the flat equipment bonus, the fixed status
+/// adjustments, and the clamp to the class cap and 2000.
+pub fn attack_motion(inputs: &AspdInputs) -> u32 {
+    let mut aspd = base_aspd(
+        inputs.dex,
+        inputs.agi,
+        inputs.class_base,
+        inputs.ranged,
+        inputs.passive_bonus + inputs.status_flat_bonus,
+    );
+    if inputs.rate != 1000 {
+        aspd = aspd * inputs.rate / 1000;
+    }
+    // `amotion += (max(0xc3 - amotion, 2) * (aspd_rate2 + calc_aspd(2))) / 100`
+    aspd += (195 - aspd).max(2) * inputs.percent / 100;
+    let motion = 10 * (200 - aspd) + inputs.flat_ms - inputs.fixed_ms;
+    let fastest = 10 * (200 - i32::from(inputs.max_aspd));
+    motion.clamp(fastest, 2000) as u32
+}
+
+/// The passive ASPD skills the server adds to the base formula (all
+/// whole-number divisions): Advanced Book with a book `(level - 1) / 2 + 1`,
+/// Single Action `(level + 1) / 2` (any weapon), Plagiarism `level`, and
+/// Musical Lesson with an instrument `level`.
+pub fn passive_aspd_bonus(
+    book: bool,
+    instrument: bool,
+    advanced_book: i32,
+    single_action: i32,
+    plagiarism: i32,
+    musical_lesson: i32,
+) -> i32 {
+    let mut bonus = 0;
+    if book && advanced_book > 0 {
+        bonus += (advanced_book - 1) / 2 + 1;
+    }
+    if single_action > 0 {
+        bonus += (single_action + 1) / 2;
+    }
+    if plagiarism > 0 {
+        bonus += plagiarism;
+    }
+    if instrument && musical_lesson > 0 {
+        bonus += musical_lesson;
+    }
+    bonus
+}
+
 /// The class base ASPD `B` for an equipment setup (`status_base_amotion_pc`):
 /// the right-hand weapon's value, plus a quarter of the left-hand weapon's
 /// value when dual wielding, plus the Shield value when a shield is worn.
 pub fn class_aspd_base(right_weapon: u16, left_weapon: Option<u16>, shield: u16) -> u16 {
     right_weapon + left_weapon.map_or(0, |value| value / 4) + shield
-}
-
-/// Attack motion in milliseconds from an ASPD, floored at the class's own cap:
-/// `10 x (200 - ASPD)`, never below `10 x (200 - max_aspd)` (the server clamps
-/// the motion to the class's `MaxASPD`).
-pub fn attack_motion_ms(aspd: i32, max_aspd: u16) -> u32 {
-    let motion = 10 * (200 - aspd);
-    let fastest = 10 * (200 - i32::from(max_aspd));
-    motion.clamp(fastest, 2000) as u32
 }
 
 #[cfg(test)]
@@ -323,12 +415,62 @@ mod tests {
 
     #[test]
     fn attack_motion_is_ten_times_the_gap_and_respects_the_class_cap() {
-        assert_eq!(attack_motion_ms(150, 190), 500);
-        assert_eq!(attack_motion_ms(190, 190), 100);
-        // Above the cap the motion stops at the cap's value.
-        assert_eq!(attack_motion_ms(199, 190), 100);
-        assert_eq!(attack_motion_ms(199, 193), 70);
-        // A very low ASPD cannot exceed the slowest motion the server allows.
-        assert_eq!(attack_motion_ms(-50, 190), 2000);
+        // A bare character with class base 0 and AGI/DEX 1: ASPD 196, motion 40,
+        // which the class cap raises to 100 (190) or 70 (193).
+        let bare = AspdInputs {
+            class_base: 0,
+            ..AspdInputs::default()
+        };
+        assert_eq!(attack_motion(&bare), 100);
+        assert_eq!(attack_motion(&AspdInputs { max_aspd: 193, ..bare }), 70);
+        // With a class base of 50: ASPD 146 and motion 540.
+        assert_eq!(
+            attack_motion(&AspdInputs {
+                class_base: 50,
+                ..AspdInputs::default()
+            }),
+            540
+        );
+        // A very slow character cannot exceed the slowest motion the server allows.
+        assert_eq!(
+            attack_motion(&AspdInputs {
+                class_base: 200,
+                rate: 100,
+                ..AspdInputs::default()
+            }),
+            2000
+        );
+    }
+
+    #[test]
+    fn rate_percent_and_flat_follow_the_servers_order_with_c_truncation() {
+        let base = AspdInputs {
+            agi: 130,
+            dex: 130,
+            class_base: 40,
+            ..AspdInputs::default()
+        };
+        // ASPD 183 with these stats; 183 * 500 / 1000 = 91 (a mounted Knight with no
+        // mastery).
+        assert_eq!(attack_motion(&AspdInputs { rate: 500, ..base }), 1090);
+        // 10 % of the gap to 195: (195 - 183) * 10 / 100 = 1 (rounded toward zero).
+        assert_eq!(attack_motion(&AspdInputs { percent: 10, ..base }), attack_motion(&base) - 10);
+        // A negative percentage also rounds toward zero: (195 - 183) * -5 / 100 = 0.
+        assert_eq!(attack_motion(&AspdInputs { percent: -5, ..base }), attack_motion(&base));
+        // Flat bonuses are in milliseconds, after the conversion.
+        assert_eq!(attack_motion(&AspdInputs { flat_ms: 50, ..base }), attack_motion(&base) + 50);
+    }
+
+    #[test]
+    fn passive_aspd_skills_need_their_weapon_and_use_whole_number_division() {
+        // Advanced Book: (level - 1) / 2 + 1, only with a book.
+        assert_eq!(passive_aspd_bonus(true, false, 10, 0, 0, 0), 5);
+        assert_eq!(passive_aspd_bonus(false, false, 10, 0, 0, 0), 0);
+        assert_eq!(passive_aspd_bonus(true, false, 1, 0, 0, 0), 1);
+        // Single Action: (level + 1) / 2, any weapon. Plagiarism: its level.
+        assert_eq!(passive_aspd_bonus(false, false, 0, 9, 7, 0), 5 + 7);
+        // Musical Lesson needs an instrument.
+        assert_eq!(passive_aspd_bonus(false, true, 0, 0, 0, 10), 10);
+        assert_eq!(passive_aspd_bonus(false, false, 0, 0, 0, 10), 0);
     }
 }
