@@ -103,6 +103,11 @@ pub struct TestContext {
     pub max_spell_points: u32,
     pub vitality: (i32, i32),
     pub intelligence: (i32, i32),
+    pub agility: (i32, i32),
+    pub dexterity: (i32, i32),
+    /// The server's attack motion in milliseconds (`SP_ASPD` carries
+    /// `amotion`); the displayed ASPD is `200 - attack_speed / 10`.
+    pub attack_speed: u32,
     pub map_name: String,
     pub position: TilePosition,
     pub entities: HashMap<EntityId, EntityData>,
@@ -302,6 +307,9 @@ impl TestContext {
             max_spell_points: 0,
             vitality: (0, 0),
             intelligence: (0, 0),
+            agility: (0, 0),
+            dexterity: (0, 0),
+            attack_speed: 0,
             map_name: String::new(),
             position: TilePosition { x: 0, y: 0 },
             entities: HashMap::new(),
@@ -669,6 +677,9 @@ impl TestContext {
                 StatType::MaximumSpellPoints(value) => self.max_spell_points = *value,
                 StatType::Vitality(base, bonus) => self.vitality = (*base, *bonus),
                 StatType::Intelligence(base, bonus) => self.intelligence = (*base, *bonus),
+                StatType::Agility(base, bonus) => self.agility = (*base, *bonus),
+                StatType::Dexterity(base, bonus) => self.dexterity = (*base, *bonus),
+                StatType::AttackSpeed(value) => self.attack_speed = *value,
                 _ => {}
             },
             NetworkEvent::ChangeJob { account_id, job_id } if account_id.0 == self.account_id.0 => {

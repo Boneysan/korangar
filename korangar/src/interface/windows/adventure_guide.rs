@@ -3969,6 +3969,10 @@ mod tests {
         assert!(aspd.contains("sqrt(DEX x DEX / 5 + AGI x AGI / 2) / 4"), "{aspd}");
         assert!(aspd.contains("DEX x DEX / 7"), "{aspd}");
         assert!(aspd.contains("193: BabyThirdClasses, SuperNovice, ThirdClasses"), "{aspd}");
+        assert!(
+            aspd.contains("72 measurements") && aspd.contains("Every value matched"),
+            "{aspd}"
+        );
     }
 
     #[test]

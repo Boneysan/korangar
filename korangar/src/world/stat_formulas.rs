@@ -156,6 +156,22 @@ pub fn base_aspd(dex: i32, agi: i32, class_base: u16, ranged: bool, skill_bonus:
     raw - i32::from(class_base.min(200))
 }
 
+/// The class base ASPD `B` for an equipment setup (`status_base_amotion_pc`):
+/// the right-hand weapon's value, plus a quarter of the left-hand weapon's
+/// value when dual wielding, plus the Shield value when a shield is worn.
+pub fn class_aspd_base(right_weapon: u16, left_weapon: Option<u16>, shield: u16) -> u16 {
+    right_weapon + left_weapon.map_or(0, |value| value / 4) + shield
+}
+
+/// Attack motion in milliseconds from an ASPD, floored at the class's own cap:
+/// `10 x (200 - ASPD)`, never below `10 x (200 - max_aspd)` (the server clamps
+/// the motion to the class's `MaxASPD`).
+pub fn attack_motion_ms(aspd: i32, max_aspd: u16) -> u32 {
+    let motion = 10 * (200 - aspd);
+    let fastest = 10 * (200 - i32::from(max_aspd));
+    motion.clamp(fastest, 2000) as u32
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -295,5 +311,24 @@ mod tests {
         // The class base is capped at 200, so 250 behaves like 200.
         assert_eq!(base_aspd(1, 1, 250, false, 0), base_aspd(1, 1, 200, false, 0));
         assert_eq!(base_aspd(1, 1, 250, false, 0), -4);
+    }
+
+    #[test]
+    fn class_base_adds_shield_and_a_quarter_of_the_off_hand_weapon() {
+        assert_eq!(class_aspd_base(45, None, 0), 45);
+        assert_eq!(class_aspd_base(45, None, 5), 50);
+        // Dual daggers: 49 + 49 / 4 = 61.
+        assert_eq!(class_aspd_base(49, Some(49), 0), 61);
+    }
+
+    #[test]
+    fn attack_motion_is_ten_times_the_gap_and_respects_the_class_cap() {
+        assert_eq!(attack_motion_ms(150, 190), 500);
+        assert_eq!(attack_motion_ms(190, 190), 100);
+        // Above the cap the motion stops at the cap's value.
+        assert_eq!(attack_motion_ms(199, 190), 100);
+        assert_eq!(attack_motion_ms(199, 193), 70);
+        // A very low ASPD cannot exceed the slowest motion the server allows.
+        assert_eq!(attack_motion_ms(-50, 190), 2000);
     }
 }

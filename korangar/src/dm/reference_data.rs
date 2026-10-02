@@ -2294,6 +2294,121 @@ mod tests {
         (4229, 151, 31, 21, 36, 9),
     ];
 
+    /// Ground truth for ASPD, measured on 2026-10-01 by the `aspd-ground-truth`
+    /// provisioning scenario: the attack motion (ms) the server itself reported
+    /// for one character as (job, right-hand weapon type, left-hand weapon
+    /// type, shield worn, total AGI, total DEX, server attack motion). 72
+    /// measurements across three stat stages cover fist/knife, one- and
+    /// two-handed melee, shield, dual wield, katar, knuckle, book, rod,
+    /// bow, instrument and five gun types (DEX counts as dex^2 / 7 for the
+    /// ranged ones), and baby, upper and third-class inheritance. Not
+    /// covered: the class cap (a bare character cannot reach it), passive
+    /// ASPD skills, equipment and status modifiers, and whips (they need a
+    /// female Dancer). The first Knight row is "fist" in the scenario but
+    /// the character still wore its starting Knife.
+    const OBSERVED_ASPD: &[(u16, &str, Option<&str>, bool, i32, i32, u32)] = &[
+        (7, "Dagger", None, false, 1, 1, 530),
+        (7, "Sword", None, false, 1, 1, 490),
+        (7, "Sword", None, true, 1, 1, 540),
+        (7, "Axe", None, false, 1, 1, 540),
+        (7, "Mace", None, false, 1, 1, 490),
+        (7, "Spear", None, false, 1, 1, 590),
+        (7, "TwoHandSword", None, false, 1, 1, 560),
+        (7, "TwoHandAxe", None, false, 1, 1, 590),
+        (12, "Dagger", None, false, 2, 1, 460),
+        (12, "Dagger", Some("Dagger"), false, 2, 1, 560),
+        (12, "Katar", None, false, 2, 1, 460),
+        (11, "Bow", None, false, 1, 2, 520),
+        (19, "Instrument", None, false, 1, 2, 490),
+        (8, "Knuckle", None, false, 1, 1, 640),
+        (8, "Book", None, false, 1, 1, 480),
+        (9, "Rod", None, false, 1, 1, 570),
+        (24, "Revolver", None, false, 1, 2, 490),
+        (24, "Rifle", None, false, 1, 2, 590),
+        (24, "GatlingGun", None, false, 1, 2, 540),
+        (24, "Shotgun", None, false, 1, 2, 940),
+        (24, "GrenadeLauncher", None, false, 1, 2, 1040),
+        (4008, "Sword", None, false, 1, 1, 490),
+        (4054, "Sword", None, false, 1, 1, 560),
+        (4024, "Sword", None, false, 1, 1, 510),
+        (7, "Fist", None, false, 40, 30, 370),
+        (7, "Sword", None, false, 40, 30, 420),
+        (7, "Sword", None, true, 40, 30, 470),
+        (7, "Axe", None, false, 40, 30, 470),
+        (7, "Mace", None, false, 40, 30, 420),
+        (7, "Spear", None, false, 40, 30, 520),
+        (7, "TwoHandSword", None, false, 40, 30, 490),
+        (7, "TwoHandAxe", None, false, 40, 30, 520),
+        (12, "Dagger", None, false, 41, 30, 390),
+        (12, "Dagger", Some("Dagger"), false, 41, 30, 490),
+        (12, "Katar", None, false, 41, 30, 390),
+        (11, "Bow", None, false, 40, 31, 450),
+        (19, "Instrument", None, false, 40, 31, 420),
+        (8, "Knuckle", None, false, 40, 30, 570),
+        (8, "Book", None, false, 40, 30, 410),
+        (9, "Rod", None, false, 40, 30, 500),
+        (24, "Revolver", None, false, 40, 31, 420),
+        (24, "Rifle", None, false, 40, 31, 520),
+        (24, "GatlingGun", None, false, 40, 31, 470),
+        (24, "Shotgun", None, false, 40, 31, 870),
+        (24, "GrenadeLauncher", None, false, 40, 31, 970),
+        (4008, "Sword", None, false, 40, 30, 420),
+        (4054, "Sword", None, false, 40, 30, 490),
+        (4024, "Sword", None, false, 40, 30, 440),
+        (7, "Fist", None, false, 80, 80, 280),
+        (7, "Sword", None, false, 80, 80, 330),
+        (7, "Sword", None, true, 80, 80, 380),
+        (7, "Axe", None, false, 80, 80, 380),
+        (7, "Mace", None, false, 80, 80, 330),
+        (7, "Spear", None, false, 80, 80, 430),
+        (7, "TwoHandSword", None, false, 80, 80, 400),
+        (7, "TwoHandAxe", None, false, 80, 80, 430),
+        (12, "Dagger", None, false, 81, 80, 300),
+        (12, "Dagger", Some("Dagger"), false, 81, 80, 400),
+        (12, "Katar", None, false, 81, 80, 300),
+        (11, "Bow", None, false, 80, 81, 360),
+        (19, "Instrument", None, false, 80, 81, 330),
+        (8, "Knuckle", None, false, 80, 80, 480),
+        (8, "Book", None, false, 80, 80, 320),
+        (9, "Rod", None, false, 80, 80, 410),
+        (24, "Revolver", None, false, 80, 81, 330),
+        (24, "Rifle", None, false, 80, 81, 430),
+        (24, "GatlingGun", None, false, 80, 81, 380),
+        (24, "Shotgun", None, false, 80, 81, 780),
+        (24, "GrenadeLauncher", None, false, 80, 81, 880),
+        (4008, "Sword", None, false, 80, 80, 330),
+        (4054, "Sword", None, false, 80, 80, 400),
+        (4024, "Sword", None, false, 80, 80, 350),
+    ];
+
+    #[test]
+    fn aspd_formula_reproduces_the_attack_motion_a_live_server_reported() {
+        use crate::world::stat_formulas::{attack_motion_ms, base_aspd, class_aspd_base};
+        const RANGED: [&str; 8] = [
+            "Bow",
+            "Instrument",
+            "Whip",
+            "Revolver",
+            "Rifle",
+            "GatlingGun",
+            "Shotgun",
+            "GrenadeLauncher",
+        ];
+        let tables = &reference_data().job_tables;
+        assert!(OBSERVED_ASPD.len() >= 72);
+        for &(job_id, right, left, shield, agi, dex, observed) in OBSERVED_ASPD {
+            let job = tables.job(job_id).expect("class table");
+            let value = |weapon: &str| job.base_aspd.get(weapon).copied().unwrap_or(0);
+            let class_base = class_aspd_base(value(right), left.map(value), if shield { value("Shield") } else { 0 });
+            let aspd = base_aspd(dex, agi, class_base, RANGED.contains(&right), 0);
+            assert_eq!(
+                attack_motion_ms(aspd, job.max_aspd),
+                observed,
+                "job {job_id} {right}/{left:?} shield {shield} AGI {agi} DEX {dex}"
+            );
+        }
+    }
+
     #[test]
     fn class_tables_reproduce_baby_super_novice_and_high_level_characters() {
         let data = reference_data();

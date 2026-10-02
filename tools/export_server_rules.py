@@ -325,7 +325,7 @@ def aspd_rule() -> dict[str, object]:
             "Passive bonuses P: Advanced Book (with a book) gives (level - 1) / 2 + 1; Single Action gives (level + 1) / 2; Plagiarism gives its level; Musical Lesson (with an instrument) gives its level. Whole-number division.",
             "Attack motion in milliseconds is 10 x (200 - ASPD). Mounts, statuses such as Adrenaline Rush, and equipment 'ASPD +x%' bonuses also adjust the result and are not covered here.",
             f"No class can exceed its MaxASPD, by parameter group: {caps}.",
-            "These were confirmed from the source and are unit-tested in the client, not observed on a live server.",
+            "Confirmed from the source and compared with the attack motion this server reported in 72 measurements: fist and knife, one- and two-handed melee, shield, dual wield, katar, knuckle, book, rod, bow, instrument and five gun types, across three stat levels and baby, upper and third classes. Every value matched. Not compared: the class cap, passive ASPD skills, equipment and status modifiers, and whips.",
         ],
         "sources": [
             {"path": "src/map/status.c", "record": "status_base_amotion_pc (Renewal ASPD) and the amotion assembly in status_calc_bl_main"},
