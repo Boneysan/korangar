@@ -160,6 +160,11 @@ pub struct SkillTree {
 }
 
 impl SkillTree {
+    /// `(skill id, learned level)` for every skill the character has.
+    pub fn learned_levels(&self) -> impl Iterator<Item = (u16, u16)> + '_ {
+        self.skills.iter().map(|skill| (skill.skill_id.0, skill.skill_level.0))
+    }
+
     /// Remove character-specific skill data while retaining globally cached
     /// SPR/ACT resources in the loaders.
     pub fn clear(&mut self) {

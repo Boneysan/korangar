@@ -206,7 +206,7 @@ impl WindowCache {
             WindowClass::Inventory => state(AnchorPoint::TopRight, -(380.0 + MARGIN), MARGIN, 380.0, 320.0),
             WindowClass::Equipment => state(AnchorPoint::TopRight, -(280.0 + MARGIN), 340.0, 280.0, 420.0),
             WindowClass::Stats => state(AnchorPoint::CenterRight, -(280.0 + MARGIN), -120.0, 280.0, 360.0),
-            WindowClass::BuildPlanner => state(AnchorPoint::CenterRight, -(280.0 + MARGIN * 2.0 + 420.0), -120.0, 420.0, 520.0),
+            WindowClass::BuildPlanner => state(AnchorPoint::CenterRight, -(280.0 + MARGIN * 2.0 + 420.0), -120.0, 420.0, 700.0),
             WindowClass::SkillTree => state(AnchorPoint::CenterLeft, MARGIN, -200.0, 420.0, 400.0),
             WindowClass::FriendList => state(AnchorPoint::CenterLeft, MARGIN, 80.0, 280.0, 360.0),
             // Quest log sits in the same left column as the skill tree.

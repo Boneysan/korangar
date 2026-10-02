@@ -221,6 +221,15 @@ pub struct BuildPlan {
     pub target_job_level: usize,
     pub stats: PlannedStats,
     pub skills: HashMap<u16, u16>,
+    /// Skill points the live character had learned plus unspent when the plan
+    /// started. Points are earned per job tier, so budgeting from
+    /// `target_job_level - 1` over every skill (the legacy rule, used when
+    /// this is `None`) cannot work for a second class. With a starting point,
+    /// only job levels gained *after* `start_job_level` add points.
+    #[serde(default)]
+    pub skill_points_at_start: Option<u32>,
+    #[serde(default)]
+    pub start_job_level: usize,
 }
 
 impl BuildPlan {
@@ -233,6 +242,8 @@ impl BuildPlan {
             target_job_level: 1,
             stats: PlannedStats::default(),
             skills: HashMap::new(),
+            skill_points_at_start: None,
+            start_job_level: 0,
         }
     }
 
@@ -254,7 +265,10 @@ impl BuildPlan {
     /// Total skill points available at `target_job_level` (1 point per job
     /// level after Lv 1).
     pub fn total_skill_points(&self) -> u32 {
-        self.target_job_level.saturating_sub(1) as u32
+        match self.skill_points_at_start {
+            Some(at_start) => at_start + self.target_job_level.saturating_sub(self.start_job_level) as u32,
+            None => self.target_job_level.saturating_sub(1) as u32,
+        }
     }
 
     /// Skill points spent across all planned skills.

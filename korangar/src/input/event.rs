@@ -232,6 +232,11 @@ pub enum InputEvent {
         stat: crate::world::StatKind,
         change: i8,
     },
+    /// Adjust one planned skill by one level; never sent to the server.
+    BuildPlannerSkill {
+        skill_id: u16,
+        change: i8,
+    },
     /// Move the planner's target Base Level.
     BuildPlannerBaseLevel {
         change: i16,

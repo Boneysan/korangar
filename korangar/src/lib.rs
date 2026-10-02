@@ -7445,7 +7445,11 @@ impl Client {
             max_hp: common.maximum_health_points,
             max_sp: player.maximum_spell_points,
             max_weight: player.maximum_weight,
+            skills: Default::default(),
+            skill_points: player.skill_points,
         };
+        let skills = self.client_state.follow(client_state().skill_tree()).learned_levels().collect();
+        let baseline = PlannerBaseline { skills, ..baseline };
         self.client_state.follow_mut(client_state().build_planner()).start(baseline);
     }
 
@@ -8505,6 +8509,11 @@ impl Client {
                     self.client_state
                         .follow_mut(client_state().build_planner())
                         .adjust_stat(stat, change);
+                }
+                InputEvent::BuildPlannerSkill { skill_id, change } => {
+                    self.client_state
+                        .follow_mut(client_state().build_planner())
+                        .adjust_skill(skill_id, change);
                 }
                 InputEvent::BuildPlannerBaseLevel { change } => {
                     self.client_state

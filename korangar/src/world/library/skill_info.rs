@@ -140,6 +140,17 @@ fn table() -> &'static HashMap<u16, SkillRow> {
     })
 }
 
+/// The skill's display name from `skill_db` (its description), falling back to
+/// the constant name.
+pub fn skill_display_name(skill_id: u16) -> Option<&'static str> {
+    let row = table().get(&skill_id)?;
+    match row.description.is_empty() {
+        false => Some(row.description.as_str()),
+        true if !row.name.is_empty() => Some(row.name.as_str()),
+        true => None,
+    }
+}
+
 /// Look up the configured status change associated with a skill.
 pub fn skill_status_change(skill_id: u16) -> Option<&'static str> {
     table().get(&skill_id)?.status_change.as_deref()

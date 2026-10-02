@@ -1,6 +1,9 @@
+use std::collections::HashMap;
+
 use korangar_interface::element::StateElement;
 use rust_state::RustState;
 
+use crate::dm::reference_data::reference_data;
 use crate::world::{BuildPlan, PlannedStats, ProjectedCombatStats, StatKind};
 
 /// Hercules `conf/map/battle/player.conf` `max_parameter`.
@@ -30,6 +33,17 @@ pub struct PlannerBaseline {
     pub max_hp: usize,
     pub max_sp: usize,
     pub max_weight: u32,
+    /// Live learned skill levels.
+    pub skills: HashMap<u16, u16>,
+    /// Live unspent skill points.
+    pub skill_points: u32,
+}
+
+/// One line of the planned skill list.
+#[derive(Clone, Default, RustState)]
+pub struct PlannerSkillRow {
+    pub skill_id: u16,
+    pub text: String,
 }
 
 impl PlannerBaseline {
@@ -71,6 +85,8 @@ pub struct BuildPlannerState {
     plan: Option<BuildPlan>,
     #[hidden_element]
     baseline: PlannerBaseline,
+    #[hidden_element]
+    skill_rows: Vec<PlannerSkillRow>,
     header_text: String,
     base_level_text: String,
     job_level_text: String,
@@ -94,6 +110,30 @@ fn delta(value: i64, baseline: i64) -> String {
     format!("{value} ({:+})", value - baseline)
 }
 
+fn skill_rows(plan: &BuildPlan, baseline: &PlannerBaseline) -> Vec<PlannerSkillRow> {
+    let Some(tree) = reference_data().job_skill_tree_by_id(plan.job_id) else {
+        return Vec::new();
+    };
+    tree.skills
+        .iter()
+        .map(|skill| {
+            let level = plan.skills.get(&skill.skill_id).copied().unwrap_or(0);
+            let learned = baseline.skills.get(&skill.skill_id).copied().unwrap_or(0);
+            let name = crate::world::skill_display_name(skill.skill_id).unwrap_or(skill.name.as_str());
+            let mut text = format!("{name} {level}/{} ({:+})", skill.max_level, level as i32 - learned as i32);
+            if level < skill.max_level {
+                if let Err(reason) = plan.can_increase_skill(skill.skill_id, skill.max_level, Some(tree)) {
+                    text.push_str(&format!(" · {reason}"));
+                }
+            }
+            PlannerSkillRow {
+                skill_id: skill.skill_id,
+                text,
+            }
+        })
+        .collect()
+}
+
 impl BuildPlannerState {
     /// Start (or restart) a plan at the live character's current point.
     pub fn start(&mut self, baseline: PlannerBaseline) {
@@ -104,6 +144,9 @@ impl BuildPlannerState {
         plan.target_base_level = baseline.base_level;
         plan.target_job_level = baseline.job_level;
         plan.stats = baseline.stats.clone();
+        plan.skills = baseline.skills.clone();
+        plan.skill_points_at_start = Some(baseline.skills.values().map(|&level| level as u32).sum::<u32>() + baseline.skill_points);
+        plan.start_job_level = baseline.job_level;
         self.plan = Some(plan);
         self.baseline = baseline;
         self.status_text = "Simulation only: nothing is sent to the server.".to_owned();
@@ -146,12 +189,38 @@ impl BuildPlannerState {
 
     pub fn adjust_job_level(&mut self, change: i16) {
         let Some(plan) = self.plan.as_mut() else { return };
-        let target = (plan.target_job_level as i32 + change as i32).max(1) as usize;
+        // Job levels already earned cannot be un-earned, so the floor is the
+        // live level the plan started from.
+        let floor = plan.start_job_level.max(1);
+        let target = (plan.target_job_level as i32 + change as i32).max(floor as i32) as usize;
         let previous = plan.target_job_level;
         plan.set_target_job_level(target, PLANNER_MAX_JOB_LEVEL);
         if plan.spent_skill_points() > plan.total_skill_points() {
             plan.target_job_level = previous;
         }
+        self.refresh();
+    }
+
+    pub fn adjust_skill(&mut self, skill_id: u16, change: i8) {
+        let Some(plan) = self.plan.as_mut() else { return };
+        let tree = reference_data().job_skill_tree_by_id(plan.job_id);
+        let maximum = tree
+            .and_then(|tree| tree.skills.iter().find(|skill| skill.skill_id == skill_id))
+            .map(|skill| skill.max_level)
+            .unwrap_or(0);
+        let learned = self.baseline.skills.get(&skill_id).copied().unwrap_or(0);
+        let current = plan.skills.get(&skill_id).copied().unwrap_or(0);
+        let result = match change >= 0 {
+            true => plan.increase_skill(skill_id, maximum, tree),
+            // Levels the character already has are spent for good; only
+            // levels added in the plan can be taken back.
+            false if current <= learned => Err("levels already learned cannot be taken back".to_owned()),
+            false => plan.decrease_skill(skill_id, tree),
+        };
+        self.status_text = match result {
+            Ok(()) => "Simulation only: nothing is sent to the server.".to_owned(),
+            Err(reason) => reason,
+        };
         self.refresh();
     }
 
@@ -227,6 +296,7 @@ impl BuildPlannerState {
             projected.crit_tenth_percent as f32 / 10.0,
             projected.perfect_dodge_tenth_percent as f32 / 10.0
         );
+        self.skill_rows = skill_rows(plan, baseline);
         self.cast_weight_text = format!(
             "Variable cast -{:.1}% (estimate) · Weight {}",
             projected.variable_cast_reduction_pct,
@@ -253,6 +323,8 @@ mod tests {
             max_hp: 3_000,
             max_sp: 400,
             max_weight: 20_000,
+            skills: HashMap::new(),
+            skill_points: 0,
         }
     }
 
@@ -342,5 +414,97 @@ mod tests {
         state.adjust_stat(StatKind::Strength, 1);
         assert_eq!(state.plan().stats.get_stat(StatKind::Strength), 99);
         assert!(state.status_text.contains("maximum"));
+    }
+
+    fn knight() -> PlannerBaseline {
+        PlannerBaseline {
+            job_id: 7,
+            base_level: 60,
+            job_level: 40,
+            // NV_BASIC 9 and SM_SWORD 10 learned, three points unspent.
+            skills: HashMap::from([(1, 9), (2, 10)]),
+            skill_points: 3,
+            ..baseline()
+        }
+    }
+
+    #[test]
+    fn skill_budget_is_the_live_unspent_points_not_the_job_level() {
+        let mut state = BuildPlannerState::default();
+        state.start(knight());
+        // 49 skill points would be "job level 40 - 1 = 39" under the legacy
+        // rule, which a second class's live levels already exceed.
+        assert_eq!(state.plan().remaining_skill_points(), 3);
+        assert_eq!(state.plan().total_skill_points(), 22);
+    }
+
+    #[test]
+    fn raising_a_skill_spends_a_point_and_follows_prerequisites() {
+        let mut state = BuildPlannerState::default();
+        state.start(knight());
+
+        // Two-Hand Quicken needs Two-Hand Sword Mastery Lv 1, which is not learned.
+        state.adjust_skill(60, 1);
+        assert_eq!(state.plan().skills.get(&60), None);
+        assert!(state.status_text.contains("SM_TWOHAND"), "{}", state.status_text);
+
+        state.adjust_skill(3, 1);
+        state.adjust_skill(60, 1);
+        assert_eq!(state.plan().skills.get(&3), Some(&1));
+        assert_eq!(state.plan().skills.get(&60), Some(&1));
+        assert_eq!(state.plan().remaining_skill_points(), 1);
+    }
+
+    #[test]
+    fn a_prerequisite_cannot_be_lowered_under_a_planned_skill() {
+        let mut state = BuildPlannerState::default();
+        state.start(knight());
+        state.adjust_skill(3, 1);
+        state.adjust_skill(60, 1);
+        state.adjust_skill(3, -1);
+        assert_eq!(state.plan().skills.get(&3), Some(&1));
+        assert!(state.status_text.contains("cannot reduce"), "{}", state.status_text);
+    }
+
+    #[test]
+    fn levels_the_character_already_has_cannot_be_taken_back() {
+        let mut state = BuildPlannerState::default();
+        state.start(knight());
+        state.adjust_skill(2, -1);
+        assert_eq!(state.plan().skills.get(&2), Some(&10));
+        assert!(state.status_text.contains("already learned"), "{}", state.status_text);
+    }
+
+    #[test]
+    fn skill_points_run_out_and_job_levels_add_one_each() {
+        let mut state = BuildPlannerState::default();
+        state.start(knight());
+        for _ in 0..3 {
+            state.adjust_skill(55, 1);
+        }
+        assert_eq!(state.plan().remaining_skill_points(), 0);
+        state.adjust_skill(55, 1);
+        assert_eq!(state.plan().skills.get(&55), Some(&3));
+        assert!(state.status_text.contains("no unallocated"), "{}", state.status_text);
+
+        state.adjust_job_level(2);
+        assert_eq!(state.plan().remaining_skill_points(), 2);
+        // Earned job levels cannot be un-earned below the live level.
+        state.adjust_job_level(-10);
+        assert_eq!(state.plan().target_job_level, 40);
+    }
+
+    #[test]
+    fn the_list_has_one_row_per_tree_skill_with_the_blocker_shown() {
+        let mut state = BuildPlannerState::default();
+        state.start(knight());
+        let rows = &state.skill_rows;
+        assert_eq!(rows.len(), reference_data().job_skill_tree_by_id(7).unwrap().skills.len());
+        let quicken = rows.iter().find(|row| row.skill_id == 60).expect("row");
+        assert!(
+            quicken.text.contains("0/10") && quicken.text.contains("SM_TWOHAND"),
+            "{}",
+            quicken.text
+        );
     }
 }
