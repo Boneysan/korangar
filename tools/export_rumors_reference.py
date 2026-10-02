@@ -93,9 +93,9 @@ AUTHORED_RUMORS: list[dict[str, Any]] = [
         "map_name": "prt_fild05",
         "coordinates": [270, 212],
         "source_location": "Knight Recruitment Officer",
-        # 1017 (Thief Bug Female) is in mob_db.conf but absent from the Guide's
-        # bestiary, so linking it was a dead link; the text names thief bugs
-        # generally. Restore a link once the bestiary has the record.
+        # 1017 (Thief Bug Female) is commented out of mob_db.conf, so the server
+        # does not load it and the Guide correctly has no entry; linking it was
+        # a dead link. The text names thief bugs generally.
         "related_monster_id": None,
         "related_item_id": None,
         "is_story_spoiler": False,
