@@ -3372,6 +3372,73 @@ mod tests {
         assert!(aliased.iter().any(|status| status.name == "Stun"));
     }
 
+    /// GDD 9.5: "No result is a dead end." Every `@guide:` link any detail page
+    /// emits must open a real entry. This walks every entry of every category.
+    #[test]
+    fn no_guide_page_links_to_an_entry_that_does_not_exist() {
+        let data = reference_data();
+        let mk = |kind: &str, id: u32| GuideResult {
+            label: String::new(),
+            kind: kind.to_owned(),
+            id,
+        };
+        let mut entries: Vec<GuideResult> = Vec::new();
+        entries.extend(data.monsters.iter().map(|entry| mk("monster", entry.id)));
+        entries.extend(data.items.iter().map(|entry| mk("item", entry.id)));
+        entries.extend(data.cards.iter().map(|entry| mk("card", entry.id)));
+        entries.extend(data.skills.iter().map(|entry| mk("skill", entry.id as u32)));
+        entries.extend(data.statuses.iter().map(|entry| mk("status", entry.id)));
+        entries.extend(data.quests.iter().map(|entry| mk("quest", entry.id)));
+        entries.extend(data.npcs.iter().map(|entry| mk("npc", entry.id)));
+        entries.extend((0..data.npc_services.len()).map(|index| mk("service", index as u32)));
+        entries.extend(data.rumors.iter().map(|entry| mk("rumor", entry.id)));
+        entries.extend(job_names().map(|(id, _)| mk("job", id as u32)));
+        entries.extend((0..crate::world::navigation_graph().maps.len()).map(|index| mk("map", index as u32)));
+
+        let mut dead = Vec::new();
+        for entry in &entries {
+            for line in resolve_details(entry) {
+                let Some(link) = parse_guide_link(&line) else { continue };
+                let opens = resolve_details(&link);
+                if opens
+                    .first()
+                    .is_some_and(|first| first.contains("unavailable") || first.contains("Unsupported"))
+                {
+                    dead.push(format!("{}:{} -> {}:{}", entry.kind, entry.id, link.kind, link.id));
+                }
+            }
+        }
+        assert!(
+            dead.is_empty(),
+            "{} dead guide links, e.g. {:?}",
+            dead.len(),
+            &dead[..dead.len().min(5)]
+        );
+    }
+
+    #[test]
+    fn rumors_are_not_presented_as_verified_and_link_only_real_entries() {
+        let data = reference_data();
+        assert!(!data.rumors.is_empty());
+        for rumor in &data.rumors {
+            // Authored flavour: nothing in the server delivers it.
+            assert_ne!(
+                rumor.evidence_state,
+                crate::dm::reference_data::EvidenceState::Verified,
+                "rumor {}",
+                rumor.id
+            );
+            if let Some(id) = rumor.related_monster_id {
+                assert!(data.monster_by_id(id).is_some(), "rumor {} monster {id}", rumor.id);
+            }
+            if let Some(id) = rumor.related_item_id {
+                assert!(data.item_by_id(id).is_some(), "rumor {} item {id}", rumor.id);
+            }
+        }
+        let lines = rumor_details(&data.rumors[0]);
+        assert!(lines.iter().any(|line| line == "Evidence state: not reviewed"), "{lines:?}");
+    }
+
     #[test]
     fn all_search_finds_matching_monster_card_and_quest_together() {
         let rows = search_all_categories("poring", &DiscoveryState::default(), &[]);

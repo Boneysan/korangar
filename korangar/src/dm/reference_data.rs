@@ -1230,6 +1230,16 @@ impl ReferenceData {
         }
         let monster_ids: HashSet<u32> = monsters_by_id.keys().copied().collect();
         let item_ids: HashSet<u32> = items_by_id.keys().copied().collect();
+        for rumor in &rumors.entries {
+            if rumor.related_monster_id.is_some_and(|id| !monster_ids.contains(&id))
+                || rumor.related_item_id.is_some_and(|id| !item_ids.contains(&id))
+            {
+                return Err(format!(
+                    "rumor {} links a monster or item that is not in the Guide data (monster {:?}, item {:?})",
+                    rumor.id, rumor.related_monster_id, rumor.related_item_id
+                ));
+            }
+        }
 
         for quest in &quests.entries {
             if quest.npc_references.iter().any(|npc| {
@@ -1996,7 +2006,8 @@ mod tests {
         let byalan_rumor = data.rumor_by_id(1).expect("Byalan rumor");
         assert_eq!(byalan_rumor.title, "Unusual Sea Creatures of Byalan");
         assert_eq!(byalan_rumor.is_story_spoiler, false);
-        assert_eq!(byalan_rumor.evidence_state, EvidenceState::Verified);
+        // Authored flavour: no server script delivers it, so it is not "verified".
+        assert_eq!(byalan_rumor.evidence_state, EvidenceState::NotReviewed);
         assert!(data.search_rumors("ant jaws", 5).iter().any(|r| r.id == 2));
     }
 }

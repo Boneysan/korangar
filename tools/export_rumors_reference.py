@@ -31,7 +31,7 @@ AUTHORED_RUMORS: list[dict[str, Any]] = [
         "related_monster_id": 1068,
         "related_item_id": None,
         "is_story_spoiler": False,
-        "evidence_state": "verified",
+        "evidence_state": "not_reviewed",
     },
     {
         "id": 2,
@@ -44,7 +44,7 @@ AUTHORED_RUMORS: list[dict[str, Any]] = [
         "related_monster_id": 1094,
         "related_item_id": 907,
         "is_story_spoiler": False,
-        "evidence_state": "verified",
+        "evidence_state": "not_reviewed",
     },
     {
         "id": 3,
@@ -57,7 +57,7 @@ AUTHORED_RUMORS: list[dict[str, Any]] = [
         "related_monster_id": 1015,
         "related_item_id": None,
         "is_story_spoiler": False,
-        "evidence_state": "verified",
+        "evidence_state": "not_reviewed",
     },
     {
         "id": 4,
@@ -70,7 +70,7 @@ AUTHORED_RUMORS: list[dict[str, Any]] = [
         "related_monster_id": None,
         "related_item_id": 984,
         "is_story_spoiler": False,
-        "evidence_state": "verified",
+        "evidence_state": "not_reviewed",
     },
     {
         "id": 5,
@@ -83,7 +83,7 @@ AUTHORED_RUMORS: list[dict[str, Any]] = [
         "related_monster_id": 1071,
         "related_item_id": None,
         "is_story_spoiler": False,
-        "evidence_state": "verified",
+        "evidence_state": "not_reviewed",
     },
     {
         "id": 6,
@@ -93,10 +93,13 @@ AUTHORED_RUMORS: list[dict[str, Any]] = [
         "map_name": "prt_fild05",
         "coordinates": [270, 212],
         "source_location": "Knight Recruitment Officer",
-        "related_monster_id": 1017,
+        # 1017 (Thief Bug Female) is in mob_db.conf but absent from the Guide's
+        # bestiary, so linking it was a dead link; the text names thief bugs
+        # generally. Restore a link once the bestiary has the record.
+        "related_monster_id": None,
         "related_item_id": None,
         "is_story_spoiler": False,
-        "evidence_state": "verified",
+        "evidence_state": "not_reviewed",
     },
     {
         "id": 7,
@@ -109,7 +112,7 @@ AUTHORED_RUMORS: list[dict[str, Any]] = [
         "related_monster_id": None,
         "related_item_id": None,
         "is_story_spoiler": False,
-        "evidence_state": "verified",
+        "evidence_state": "not_reviewed",
     },
     {
         "id": 8,
@@ -122,9 +125,23 @@ AUTHORED_RUMORS: list[dict[str, Any]] = [
         "related_monster_id": None,
         "related_item_id": None,
         "is_story_spoiler": False,
-        "evidence_state": "verified",
+        "evidence_state": "not_reviewed",
     },
 ]
+
+
+def _entry_ids(name: str) -> set[int]:
+    payload = json.loads((ROOT / "docs" / name).read_text(encoding="utf-8"))
+    entries = payload["entries"] if isinstance(payload, dict) else payload
+    return {int(entry["id"]) for entry in entries}
+
+
+def BESTIARY_IDS() -> set[int]:
+    return _entry_ids("bestiary.v1.json")
+
+
+def ITEM_IDS() -> set[int]:
+    return _entry_ids("items.v1.json")
 
 
 def build() -> dict[str, Any]:
@@ -137,6 +154,17 @@ def build() -> dict[str, Any]:
         seen_ids.add(entry_id)
         if entry["is_story_spoiler"]:
             raise ValueError(f"rumor {entry_id} must not contain story campaign spoilers")
+        # These are authored world flavour. Nothing in the server delivers
+        # them (no Journal_AddRumor call exists) and their named sources are
+        # not loaded NPCs, so no review can honestly call them verified.
+        if entry["evidence_state"] == "verified":
+            raise ValueError(f"rumor {entry_id} is authored and cannot be marked verified")
+        monster_id = entry.get("related_monster_id")
+        if monster_id is not None and monster_id not in BESTIARY_IDS():
+            raise ValueError(f"rumor {entry_id} links monster {monster_id}, which is not in the Guide bestiary")
+        item_id = entry.get("related_item_id")
+        if item_id is not None and item_id not in ITEM_IDS():
+            raise ValueError(f"rumor {entry_id} links item {item_id}, which is not in the Guide item data")
     return {
         "schema_version": 1,
         "source_revision": revision,
