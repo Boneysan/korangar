@@ -223,6 +223,10 @@ where
                     layout.register_click_handler(MouseButton::Right, &self.pickup);
                     let level = learned.map_or(1, |learned| learned.skill_level.0);
                     let text = skill_tooltip_text(skill.skill_id.0, &skill.skill_name, level, skill.maximum_level.0);
+                    if let Some(learned) = learned {
+                        let attack_range = learned.attack_range;
+                        state.update_value_with(client_state().hovered_skill_range(), move |range| *range = Some(attack_range));
+                    }
                     unsafe {
                         *self.tooltip_text.get() = text;
                         layout.add_tooltip(self.tooltip_text.as_ref_unchecked().as_str(), HotbarSlotTooltip.tooltip_id());

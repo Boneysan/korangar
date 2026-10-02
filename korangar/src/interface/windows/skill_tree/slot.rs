@@ -18,7 +18,7 @@ use crate::loaders::OverflowBehavior;
 use crate::renderer::LayoutExt;
 use crate::state::skills::{LearnableSkill, LearnedSkill, SkillAcquisition};
 use crate::state::theme::{InterfaceThemePathExt, SkillTreeThemePathExt};
-use crate::state::{ClientState, client_theme};
+use crate::state::{ClientState, ClientStatePathExt, client_state, client_theme};
 use crate::world::skill_tooltip_text;
 
 struct LevelDisplay {
@@ -548,8 +548,10 @@ where
 
             if is_hovered {
                 layout.register_click_handler(MouseButton::Left, &self.click_handler);
-                if learned_skill.is_some() {
+                if let Some(learned) = learned_skill {
                     layout.register_click_handler(MouseButton::Right, &self.assign_to_hotbar_handler);
+                    let attack_range = learned.attack_range;
+                    state.update_value_with(client_state().hovered_skill_range(), move |range| *range = Some(attack_range));
                 }
 
                 struct SkillSlotTooltip;

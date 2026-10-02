@@ -101,7 +101,7 @@ pub use self::login::{LoginWindow, LoginWindowState, LoginWindowStatePathExt};
 pub use self::maps::MapsWindow;
 pub use self::menu::MenuWindow;
 pub use self::minimap::MinimapWindow;
-pub use self::monster_target::MonsterTargetWindow;
+pub use self::monster_target::{BossTargetWindow, MonsterTargetWindow};
 #[cfg(feature = "debug")]
 pub use self::packet_inspector::PacketInspectorWindow;
 pub use self::party::{PartyWindow, PartyWindowState};
@@ -172,6 +172,8 @@ pub enum WindowClass {
     PlayerTarget,
     /// Reactive HUD frame for the selected monster.
     MonsterTarget,
+    /// Larger reactive HUD frame for MVP and story boss monsters.
+    BossTarget,
     Storage,
     Trade,
     TradeRequest,

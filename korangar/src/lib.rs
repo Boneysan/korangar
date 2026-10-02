@@ -1222,6 +1222,176 @@ mod resolve_pending_cast_tests {
         // Only an item the tables cannot name may show an id.
         assert_eq!(trade_item_label(None, ItemId(501), 12, 0), "item #501 x12");
     }
+
+    #[test]
+    fn effective_skill_range_prioritizes_armed_and_falls_back_to_hovered() {
+        use super::effective_skill_range;
+
+        assert_eq!(effective_skill_range(None, None), None);
+        assert_eq!(effective_skill_range(None, Some(AttackRange(4))), Some(AttackRange(4)));
+        assert_eq!(
+            effective_skill_range(Some(AttackRange(9)), Some(AttackRange(4))),
+            Some(AttackRange(9))
+        );
+    }
+
+    #[test]
+    fn stippled_footprint_cells_creates_dual_cue_when_out_of_range() {
+        use super::stippled_footprint_cells;
+
+        let cells = vec![(-1, -1), (-1, 0), (-1, 1), (0, -1), (0, 0), (0, 1), (1, -1), (1, 0), (1, 1)];
+        let in_range_cells = stippled_footprint_cells(&cells, true);
+        assert_eq!(in_range_cells.len(), 9);
+
+        let out_of_range_cells = stippled_footprint_cells(&cells, false);
+        assert_eq!(out_of_range_cells.len(), 5);
+        assert!(out_of_range_cells.iter().all(|(dx, dy)| (dx + dy) % 2 == 0));
+    }
+
+    #[test]
+    fn pending_skill_cursor_state_changes_shape_beyond_color() {
+        use super::pending_skill_cursor_state;
+        use crate::interface::cursor::MouseCursorState;
+
+        assert_eq!(pending_skill_cursor_state(true), MouseCursorState::Attack);
+        assert_eq!(pending_skill_cursor_state(false), MouseCursorState::NoAction);
+    }
+
+    #[test]
+    fn should_reissue_hold_mouse_move_throttles_to_200ms() {
+        use ragnarok_packets::ClientTick;
+
+        use super::should_reissue_hold_mouse_move;
+
+        let start_pos = TilePosition { x: 10, y: 10 };
+        let dest1 = TilePosition { x: 15, y: 20 };
+        let dest2 = TilePosition { x: 16, y: 21 };
+
+        // Sub-200ms ticks must not re-issue packets (no flood)
+        assert!(!should_reissue_hold_mouse_move(
+            ClientTick(0),
+            ClientTick(16),
+            Some(dest1),
+            dest2,
+            Some(start_pos)
+        ));
+        assert!(!should_reissue_hold_mouse_move(
+            ClientTick(0),
+            ClientTick(199),
+            Some(dest1),
+            dest2,
+            Some(start_pos)
+        ));
+
+        // At or above 200ms with changed destination, re-issues
+        assert!(should_reissue_hold_mouse_move(
+            ClientTick(0),
+            ClientTick(200),
+            Some(dest1),
+            dest2,
+            Some(start_pos)
+        ));
+
+        // At or above 200ms holding towards same destination while player hasn't
+        // arrived, re-issues
+        assert!(should_reissue_hold_mouse_move(
+            ClientTick(0),
+            ClientTick(200),
+            Some(dest1),
+            dest1,
+            Some(start_pos)
+        ));
+
+        // Once player reaches destination, stops re-issuing
+        assert!(!should_reissue_hold_mouse_move(
+            ClientTick(0),
+            ClientTick(200),
+            Some(dest1),
+            dest1,
+            Some(dest1)
+        ));
+    }
+
+    fn create_test_monster(
+        name: &str,
+        lv: u16,
+        element: Option<&str>,
+        race: Option<&str>,
+        size: Option<&str>,
+        has_mvp_drops: bool,
+    ) -> crate::dm::data::BestiaryMonster {
+        crate::dm::data::BestiaryMonster {
+            id: 1000,
+            sprite_name: name.to_string(),
+            name: name.to_string(),
+            lv,
+            hp: 100,
+            sp: 10,
+            exp: 10,
+            job_exp: 10,
+            attack_range: 1,
+            def: 0,
+            mdef: 0,
+            attack: [10, 15],
+            phys_dps: 10.0,
+            magic_dps: 0.0,
+            drops_count: 1,
+            has_mvp_drops,
+            mvp_exp: if has_mvp_drops { 1000 } else { 0 },
+            element: element.map(str::to_string),
+            race: race.map(str::to_string),
+            size: size.map(str::to_string),
+            view_range: None,
+            chase_range: None,
+        }
+    }
+
+    #[test]
+    fn format_monster_target_summary_handles_mvp_badge_and_chips() {
+        use super::format_monster_target_summary;
+
+        let monster = create_test_monster("Poring", 1, Some("Water 1"), Some("Plant"), Some("Medium"), false);
+
+        let (summary, is_boss) = format_monster_target_summary("Poring", 50, 50, 0, 0, None, None, Some(&monster));
+        assert!(!is_boss);
+        assert!(summary.contains("Poring"));
+        assert!(summary.contains("Lv 1  Water 1  Plant  Medium"));
+        assert!(summary.contains("HP 50/50"));
+        assert!(!summary.contains("[MVP]"));
+
+        // MVP monster
+        let baphomet = create_test_monster("Baphomet", 81, Some("Dark 3"), Some("Demon"), Some("Large"), true);
+
+        let (boss_summary, is_boss) = format_monster_target_summary("Baphomet", 666000, 666000, 0, 0, None, None, Some(&baphomet));
+        assert!(is_boss);
+        assert!(boss_summary.contains("[MVP] Baphomet"));
+        assert!(boss_summary.contains("Lv 81  Dark 3  Demon  Large"));
+        assert!(boss_summary.contains("HP 666000/666000"));
+    }
+
+    #[test]
+    fn format_monster_target_summary_shows_cast_cue_target_of_target_and_statuses() {
+        use super::{TargetOfTargetInfo, format_monster_target_summary};
+
+        let monster = create_test_monster("Dark Lord", 80, None, None, None, true);
+
+        let active_cast = Some(("Meteor Storm", Some(1250.0)));
+        let target_player = Some(TargetOfTargetInfo::Player);
+
+        // Body state 2 = Frozen, Health state 1 = Poisoned
+        let (summary, is_boss) =
+            format_monster_target_summary("Dark Lord", 200000, 720000, 2, 1, active_cast, target_player, Some(&monster));
+
+        assert!(is_boss);
+        assert!(summary.contains("Status: Frozen, Poisoned"));
+        assert!(summary.contains("Casting: Meteor Storm (1250ms)"));
+        assert!(summary.contains("Target: You"));
+
+        // Targeting another entity
+        let target_other = Some(TargetOfTargetInfo::EntityName("Novice".to_string()));
+        let (summary_other, _) = format_monster_target_summary("Dark Lord", 200000, 720000, 0, 0, None, target_other, Some(&monster));
+        assert!(summary_other.contains("Target: Novice"));
+    }
 }
 
 /// A skill armed for targeting. Pressing a targeted skill's hotbar key while
@@ -1319,6 +1489,129 @@ fn skill_range_ring(attack_range: AttackRange) -> Vec<(i8, i8)> {
         }
     }
     cells
+}
+
+fn effective_skill_range(pending_range: Option<AttackRange>, hovered_range: Option<AttackRange>) -> Option<AttackRange> {
+    pending_range.or(hovered_range)
+}
+
+fn stippled_footprint_cells(cells: &[(i8, i8)], in_range: bool) -> Vec<(i8, i8)> {
+    if in_range {
+        cells.to_vec()
+    } else {
+        cells.iter().copied().filter(|(dx, dy)| (dx + dy) % 2 == 0).collect()
+    }
+}
+
+fn pending_skill_cursor_state(in_range: bool) -> MouseCursorState {
+    if in_range {
+        MouseCursorState::Attack
+    } else {
+        MouseCursorState::NoAction
+    }
+}
+
+fn should_reissue_hold_mouse_move(
+    last_tick: ClientTick,
+    current_tick: ClientTick,
+    last_destination: Option<TilePosition>,
+    current_destination: TilePosition,
+    player_position: Option<TilePosition>,
+) -> bool {
+    let elapsed = current_tick.0.wrapping_sub(last_tick.0);
+    if elapsed < 200 {
+        return false;
+    }
+    if last_destination != Some(current_destination) {
+        true
+    } else {
+        player_position != Some(current_destination)
+    }
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+enum TargetOfTargetInfo {
+    Player,
+    EntityName(String),
+}
+
+fn format_monster_target_summary(
+    name: &str,
+    health: usize,
+    maximum: usize,
+    body_state: u16,
+    health_state: u16,
+    active_cast: Option<(&str, Option<f32>)>,
+    target_info: Option<TargetOfTargetInfo>,
+    bestiary: Option<&crate::dm::data::BestiaryMonster>,
+) -> (String, bool) {
+    let is_mvp = bestiary.is_some_and(|m| m.has_mvp_drops || m.mvp_exp > 0);
+
+    let display_title = match (is_mvp, bestiary.map(|m| m.name.as_str())) {
+        (true, Some(bname)) => format!("[MVP] {bname}"),
+        (true, None) => format!("[MVP] {name}"),
+        (false, Some(bname)) => bname.to_string(),
+        (false, None) => name.to_string(),
+    };
+
+    let facts = bestiary.map(|monster| {
+        let mut chips = vec![format!("Lv {}", monster.lv)];
+        if let Some(element) = &monster.element {
+            chips.push(element.clone());
+        }
+        if let Some(race) = &monster.race {
+            chips.push(race.clone());
+        }
+        if let Some(size) = &monster.size {
+            chips.push(size.clone());
+        }
+        chips.join("  ")
+    });
+
+    let hp_line = match maximum {
+        max if max > 0 => format!("HP {health}/{max}"),
+        _ => "HP unknown".to_string(),
+    };
+
+    let mut lines = Vec::new();
+    lines.push(display_title);
+    if let Some(chips) = facts {
+        lines.push(chips);
+    }
+    lines.push(hp_line);
+
+    let mut statuses = Vec::new();
+    match body_state {
+        1 => statuses.push("Petrified"),
+        2 => statuses.push("Frozen"),
+        3 => statuses.push("Stunned"),
+        4 => statuses.push("Asleep"),
+        6 => statuses.push("Petrifying"),
+        _ => {}
+    }
+    if health_state & 0x0001 != 0 {
+        statuses.push("Poisoned");
+    }
+    if !statuses.is_empty() {
+        lines.push(format!("Status: {}", statuses.join(", ")));
+    }
+
+    if let Some((skill_name, remaining_ms)) = active_cast {
+        if let Some(ms) = remaining_ms {
+            lines.push(format!("Casting: {skill_name} ({:.0}ms)", ms));
+        } else {
+            lines.push(format!("Casting: {skill_name}"));
+        }
+    }
+
+    if let Some(tgt) = target_info {
+        match tgt {
+            TargetOfTargetInfo::Player => lines.push("Target: You".to_string()),
+            TargetOfTargetInfo::EntityName(tgt_name) => lines.push(format!("Target: {tgt_name}")),
+        }
+    }
+
+    (lines.join("\n"), is_mvp)
 }
 
 const TIMED_ACTION_BUFFER_MS: u32 = 200;
@@ -1874,6 +2167,11 @@ pub struct Client {
     character_preview: Option<(CharacterSex, HairStyle)>,
     /// Last WASD destination packet, so we do not trip flood protection.
     keyboard_move_last_tick: ClientTick,
+    /// Last hold-mouse destination packet, throttled to 200 ms to avoid flood
+    /// protection (F10).
+    hold_mouse_move_last_tick: ClientTick,
+    /// Latest client tick recorded for reactive target frames and combat cues.
+    last_client_tick: ClientTick,
     /// A stat spread chosen at character creation, waiting for the character it
     /// belongs to. Stats cannot ride the creation packet, so the allocation is
     /// replayed as ordinary `StatUp` requests once that character is in the
@@ -3505,6 +3803,8 @@ impl Client {
             },
             character_preview: None,
             keyboard_move_last_tick: ClientTick(0),
+            hold_mouse_move_last_tick: ClientTick(0),
+            last_client_tick: ClientTick(0),
             pending_stat_plan: None,
             armed_stat_plan: None,
             active_graphics_settings: graphics_settings,
@@ -5158,6 +5458,14 @@ impl Client {
                     let player_id = self.client_state.try_follow(this_entity()).map(|player| player.get_entity_id());
                     if player_id.is_some_and(|player_id| player_id == source_entity_id || player_id == destination_entity_id) {
                         self.interface.note_player_combat();
+                    }
+                    if let Some(source_entity) = self
+                        .client_state
+                        .follow_mut(client_state().entities())
+                        .iter_mut()
+                        .find(|entity| entity.get_entity_id() == source_entity_id)
+                    {
+                        source_entity.set_last_target(Some(destination_entity_id));
                     }
                     let camera_direction = self.player_camera.camera_direction();
                     if std::env::var_os("KORANGAR_PACKET_LOG").is_some() {
@@ -8112,61 +8420,106 @@ impl Client {
         self.targeted_monster = target;
         *self.client_state.follow_mut(client_state().targeted_monster()) = target;
         self.refresh_monster_target_summary();
-        if target.is_some() {
-            self.interface.open_window(MonsterTargetWindow);
+        let is_boss = *self.client_state.follow(client_state().targeted_monster_is_boss());
+        match target {
+            Some(_) if is_boss => {
+                self.interface.close_window_with_class(WindowClass::MonsterTarget);
+                self.interface.open_window(BossTargetWindow);
+            }
+            Some(_) => {
+                self.interface.close_window_with_class(WindowClass::BossTarget);
+                self.interface.open_window(MonsterTargetWindow);
+            }
+            None => {
+                self.interface.close_window_with_class(WindowClass::MonsterTarget);
+                self.interface.close_window_with_class(WindowClass::BossTarget);
+            }
         }
     }
 
     fn refresh_monster_target_summary(&mut self) {
-        let summary = self
-            .targeted_monster
-            .and_then(|target_id| {
-                self.client_state
-                    .follow(client_state().entities())
+        let result = self.targeted_monster.and_then(|target_id| {
+            let this_entity_id = self.client_state.try_follow(this_entity()).map(Entity::get_entity_id);
+            let entity = self
+                .client_state
+                .follow(client_state().entities())
+                .iter()
+                .find(|entity| entity.get_entity_id() == target_id)?;
+
+            if entity.is_dead() {
+                return None;
+            }
+
+            let name = entity
+                .get_details()
+                .map(|details| details.split('#').next().unwrap_or(details))
+                .unwrap_or("Monster");
+            let (health, maximum) = entity.health_points();
+            let bestiary = crate::dm::dm_data()
+                .bestiary
+                .iter()
+                .find(|monster| monster.sprite_name.eq_ignore_ascii_case(name) || monster.name.eq_ignore_ascii_case(name));
+
+            let body_state = entity.body_state();
+            let health_state = entity.health_state();
+
+            let active_cast = entity.cast_target(self.last_client_tick).map(|(skill_id, ..)| {
+                let skill_name = crate::dm::reference_data::reference_data()
+                    .skills
                     .iter()
-                    .find(|entity| entity.get_entity_id() == target_id)
-                    .map(|entity| {
-                        let name = entity
-                            .get_details()
-                            .map(|details| details.split('#').next().unwrap_or(details))
-                            .unwrap_or("Monster");
-                        let (health, maximum) = entity.health_points();
-                        let bestiary = crate::dm::dm_data()
-                            .bestiary
-                            .iter()
-                            .find(|monster| monster.sprite_name.eq_ignore_ascii_case(name) || monster.name.eq_ignore_ascii_case(name));
-                        let facts = bestiary.map(|monster| {
-                            let mut chips = vec![format!("Lv {}", monster.lv)];
-                            if let Some(element) = &monster.element {
-                                chips.push(element.clone());
-                            }
-                            if let Some(race) = &monster.race {
-                                chips.push(race.clone());
-                            }
-                            if let Some(size) = &monster.size {
-                                chips.push(size.clone());
-                            }
-                            (monster.name.as_str(), chips.join("  "))
-                        });
-                        match (facts, maximum) {
-                            (Some((display_name, facts)), maximum) if maximum > 0 => {
-                                format!("{display_name}\n{facts}\nHP {health}/{maximum}")
-                            }
-                            (Some((display_name, facts)), _) => format!("{display_name}\n{facts}\nHP unknown"),
-                            (None, maximum) if maximum > 0 => format!("{name}\nHP {health}/{maximum}"),
-                            (None, _) => format!("{name}\nHP unknown"),
-                        }
-                    })
-            })
-            .unwrap_or_else(|| {
-                if self.targeted_monster.is_some() {
-                    "Target lost"
-                } else {
-                    "No monster selected"
-                }
-                .to_owned()
+                    .find(|s| s.id == skill_id.0)
+                    .map(|s| s.name.as_str())
+                    .unwrap_or("Unknown Skill");
+                let remaining_ms = entity.cast_bar(self.last_client_tick).map(|(rem, _)| rem);
+                (skill_name, remaining_ms)
             });
-        *self.client_state.follow_mut(client_state().targeted_monster_summary()) = summary;
+
+            let active_target_id = entity
+                .cast_target(self.last_client_tick)
+                .and_then(|(_, tid, _)| (tid.0 != 0).then_some(tid))
+                .or_else(|| entity.last_target());
+
+            let target_info = active_target_id.map(|tgt_id| {
+                if this_entity_id == Some(tgt_id) {
+                    TargetOfTargetInfo::Player
+                } else {
+                    let tgt_name = self
+                        .client_state
+                        .follow(client_state().entities())
+                        .iter()
+                        .find(|e| e.get_entity_id() == tgt_id)
+                        .and_then(|e| e.get_details().map(|d| d.split('#').next().unwrap_or(d).to_string()))
+                        .unwrap_or_else(|| format!("#{}", tgt_id.0));
+                    TargetOfTargetInfo::EntityName(tgt_name)
+                }
+            });
+
+            Some(format_monster_target_summary(
+                name,
+                health,
+                maximum,
+                body_state,
+                health_state,
+                active_cast,
+                target_info,
+                bestiary,
+            ))
+        });
+
+        match result {
+            Some((summary, is_boss)) => {
+                *self.client_state.follow_mut(client_state().targeted_monster_summary()) = summary;
+                *self.client_state.follow_mut(client_state().targeted_monster_is_boss()) = is_boss;
+            }
+            None => {
+                if self.targeted_monster.is_some() {
+                    self.set_targeted_monster(None);
+                } else {
+                    *self.client_state.follow_mut(client_state().targeted_monster_summary()) = "No monster selected".to_owned();
+                    *self.client_state.follow_mut(client_state().targeted_monster_is_boss()) = false;
+                }
+            }
+        }
     }
 
     fn report_monster_target(&mut self) {
@@ -11923,6 +12276,7 @@ impl Client {
         self.update_character_preview();
         self.update_character_select_previews();
 
+        self.last_client_tick = client_tick;
         let input_report = self.input_system.update_delta(client_tick);
 
         self.request_entity_details(&input_report);
@@ -12092,6 +12446,8 @@ impl Client {
             let is_grabbing = mouse_mode.is_grabbing();
             let is_chat_open = self.interface.is_window_with_class_open(WindowClass::Chat);
 
+            *self.client_state.follow_mut(client_state().hovered_skill_range()) = None;
+
             let mut interface_frame = self
                 .interface
                 .lay_out_windows(&self.client_state, scaling.get_factor(), input_report.mouse_position);
@@ -12104,9 +12460,36 @@ impl Client {
             let cursor_state = match input_report.mouse_target {
                 _ if is_rotating_camera => MouseCursorState::RotateCamera,
                 _ if is_grabbing => MouseCursorState::GrabResource,
-                // A skill is armed and waiting for a target: show the attack reticle over
-                // the world so it's clear the next click aims the skill, not a walk.
-                _ if self.pending_skill.is_some() && !is_interface_hovered => MouseCursorState::Attack,
+                // A skill is armed and waiting for a target: show the attack reticle if
+                // in range, or the no-action cue if out of range (color is not the only cue, F09).
+                _ if self.pending_skill.is_some() && !is_interface_hovered => {
+                    let in_range = match input_report.mouse_target {
+                        PickerTarget::Tile { x, y } => {
+                            let target = TilePosition { x, y };
+                            self.client_state
+                                .try_follow(this_entity())
+                                .map(Entity::get_tile_position)
+                                .is_some_and(|player_pos| {
+                                    is_within_skill_range(player_pos, target, self.pending_skill.as_ref().unwrap().attack_range)
+                                })
+                        }
+                        PickerTarget::Entity(entity_id) => {
+                            let target_pos = self
+                                .client_state
+                                .follow(client_state().entities())
+                                .iter()
+                                .find(|e| e.get_entity_id() == entity_id)
+                                .map(Entity::get_tile_position);
+                            let player_pos = self.client_state.try_follow(this_entity()).map(Entity::get_tile_position);
+                            match (player_pos, target_pos) {
+                                (Some(p), Some(t)) => is_within_skill_range(p, t, self.pending_skill.as_ref().unwrap().attack_range),
+                                _ => false,
+                            }
+                        }
+                        _ => false,
+                    };
+                    pending_skill_cursor_state(in_range)
+                }
                 PickerTarget::Entity(entity_id) if !is_interface_hovered => {
                     if self
                         .client_state
@@ -12216,6 +12599,7 @@ impl Client {
                                 }
                                 PickerTarget::Tile { x, y } => {
                                     let destination = TilePosition { x, y };
+                                    self.hold_mouse_move_last_tick = client_tick;
 
                                     interface_frame.set_mouse_mode(MouseInputMode::Walk { destination });
 
@@ -12245,14 +12629,22 @@ impl Client {
                         self.input_event_buffer.push(InputEvent::ResetCameraRotation);
                     }
                 }
-            } else if let Some(last_destination) = last_walking_destination
-                && let PickerTarget::Tile { x, y } = input_report.mouse_target
-                && input_report.left_mouse_button_down
+            } else if input_report.left_mouse_button_down
+                && !is_interface_hovered
                 && self.pending_skill.is_none()
+                && let PickerTarget::Tile { x, y } = input_report.mouse_target
             {
                 let destination = TilePosition { x, y };
+                let player_pos = self.client_state.try_follow(this_entity()).map(Entity::get_tile_position);
 
-                if last_destination != destination {
+                if should_reissue_hold_mouse_move(
+                    self.hold_mouse_move_last_tick,
+                    client_tick,
+                    last_walking_destination,
+                    destination,
+                    player_pos,
+                ) {
+                    self.hold_mouse_move_last_tick = client_tick;
                     interface_frame.set_mouse_mode(MouseInputMode::Walk { destination });
                     self.input_event_buffer.push(InputEvent::PlayerMove { destination });
                 }
@@ -13040,13 +13432,20 @@ impl<'a, 'm: 'a> MapRenderContext<'a, 'm> {
         if !self.currently_playing {
             return;
         }
-        let (Some(pending), Some(texture)) = (self.pending_skill, self.skill_footprint_texture) else {
+        let Some(texture) = self.skill_footprint_texture else {
+            return;
+        };
+        let range = effective_skill_range(
+            self.pending_skill.as_ref().map(|p| p.attack_range),
+            *self.client_state.follow(client_state().hovered_skill_range()),
+        );
+        let Some(attack_range) = range else {
             return;
         };
         let Some(player_position) = self.client_state.try_follow(this_entity()).map(Entity::get_tile_position) else {
             return;
         };
-        let cells = skill_range_ring(pending.attack_range);
+        let cells = skill_range_ring(attack_range);
         if cells.is_empty() {
             return;
         }
@@ -13096,13 +13495,16 @@ impl<'a, 'm: 'a> MapRenderContext<'a, 'm> {
             return;
         }
 
-        let color = match is_within_skill_range(player_position, target, pending.attack_range) {
+        let in_range = is_within_skill_range(player_position, target, pending.attack_range);
+        let color = match in_range {
             true => *self.client_state.follow(client_state().world_theme().skill_aim_in_range()),
             false => *self.client_state.follow(client_state().world_theme().skill_aim_out_of_range()),
         };
 
+        let cells_to_render = stippled_footprint_cells(&cells, in_range);
+
         self.map
-            .render_skill_footprint(self.effect_renderer, texture, target, &cells, color);
+            .render_skill_footprint(self.effect_renderer, texture, target, &cells_to_render, color);
     }
 
     fn render_skill_cast_telegraphs(&mut self) {

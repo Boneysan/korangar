@@ -285,6 +285,8 @@ pub struct Common {
     su_stoop: bool,
     #[hidden_element]
     active_cast: Option<ActorCast>,
+    #[hidden_element]
+    last_target: Option<EntityId>,
     stopped_moving: bool,
     #[hidden_element]
     fade_state: FadeState,
@@ -1236,6 +1238,7 @@ impl Common {
             su_hide: false,
             su_stoop: false,
             active_cast: None,
+            last_target: None,
             stopped_moving: false,
             fade_state: FadeState::new(FADE_IN_DURATION_MS, client_tick),
             scale,
@@ -2799,6 +2802,27 @@ impl Entity {
     pub fn cast_target(&self, client_tick: ClientTick) -> Option<(SkillId, EntityId, TilePosition)> {
         let cast = self.get_common().active_cast?;
         (cast.ends_at.0 > client_tick.0).then_some((cast.skill_id, cast.target_entity_id, cast.target_position))
+    }
+
+    /// Remaining cast time progress as `(remaining, total)` for the cast bar.
+    pub fn cast_bar(&self, now: ClientTick) -> Option<(f32, f32)> {
+        self.get_common().cast_bar(now)
+    }
+
+    pub fn body_state(&self) -> u16 {
+        self.get_common().body_state
+    }
+
+    pub fn health_state(&self) -> u16 {
+        self.get_common().health_state
+    }
+
+    pub fn last_target(&self) -> Option<EntityId> {
+        self.get_common().last_target
+    }
+
+    pub fn set_last_target(&mut self, target: Option<EntityId>) {
+        self.get_common_mut().last_target = target;
     }
 
     pub fn update(&mut self, audio_engine: &AudioEngine<GameFileLoader>, map: &Map, camera: &dyn Camera, client_tick: ClientTick) {

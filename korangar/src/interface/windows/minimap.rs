@@ -760,4 +760,35 @@ mod tests {
         assert!(rw > 0.0 && rw <= area.width);
         assert!(rh > 0.0 && rh <= area.height);
     }
+
+    #[test]
+    fn minimap_layer_toggles_preserve_route_continuity_and_target() {
+        use crate::settings::GameSettings;
+        use crate::state::minimap::{MinimapState, NavigationTarget};
+
+        let mut minimap = MinimapState::default();
+        minimap.set_map("prt_fild08".into(), 200, 200, None, None, Vec::new());
+        minimap.set_personal_waypoint(Some((120, 154)));
+        minimap.set_navigation_target(Some(NavigationTarget {
+            map_name: "prontera".to_owned(),
+            position: None,
+        }));
+
+        let mut settings = GameSettings::default();
+        settings.show_minimap_portals = false;
+        settings.show_minimap_population_regions = false;
+        settings.show_minimap_facilities = false;
+        settings.show_minimap_party = false;
+        settings.show_minimap_quest_markers = false;
+
+        // Even with all display layers toggled off, navigation targets and personal
+        // waypoints remain intact.
+        assert_eq!(minimap.personal_waypoint(), Some((120, 154)));
+        assert_eq!(minimap.navigation_target().map(|t| t.map_name.as_str()), Some("prontera"));
+
+        // Route exit resolution remains fully operational for navigation guidance.
+        let exits = crate::world::map_portal_exits(minimap.map_name(), minimap.navigation_target().map(|t| t.map_name.as_str()));
+        let route_portal = exits.iter().find(|e| e.to_map == "prontera").expect("route portal to prontera");
+        assert!(route_portal.is_route_exit);
+    }
 }

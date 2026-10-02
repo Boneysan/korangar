@@ -105,7 +105,10 @@ fn no_recent_combat() -> Cell<Option<Instant>> {
 }
 
 fn combat_only_by_default(class: WindowClass) -> bool {
-    matches!(class, WindowClass::Hotbar | WindowClass::StatusBar | WindowClass::MonsterTarget)
+    matches!(
+        class,
+        WindowClass::Hotbar | WindowClass::StatusBar | WindowClass::MonsterTarget | WindowClass::BossTarget
+    )
 }
 
 const fn current_version() -> u16 {
@@ -249,6 +252,7 @@ impl WindowCache {
             WindowClass::Instance => state(AnchorPoint::TopRight, -MARGIN, MARGIN + 60.0, 280.0, 120.0),
             WindowClass::PlayerTarget => state(AnchorPoint::TopLeft, MARGIN, MARGIN + 120.0, 260.0, 200.0),
             WindowClass::MonsterTarget => state(AnchorPoint::TopLeft, MARGIN, MARGIN + 320.0, 280.0, 150.0),
+            WindowClass::BossTarget => state(AnchorPoint::TopLeft, MARGIN, MARGIN + 320.0, 360.0, 200.0),
             // Centered error popup — wrong password / disconnect (must be visible
             // over the login form; class-less windows could open with no size).
             WindowClass::Error => state(AnchorPoint::Center, 0.0, -40.0, 360.0, 140.0),
@@ -840,6 +844,7 @@ mod tests {
         assert!((cache.window_alpha(WindowClass::Hotbar) - 0.35).abs() < f32::EPSILON);
         assert!((cache.window_alpha(WindowClass::StatusBar) - 0.35).abs() < f32::EPSILON);
         assert!((cache.window_alpha(WindowClass::MonsterTarget) - 0.35).abs() < f32::EPSILON);
+        assert!((cache.window_alpha(WindowClass::BossTarget) - 0.35).abs() < f32::EPSILON);
         assert_eq!(cache.window_alpha(WindowClass::Chat), 1.0);
         assert_eq!(cache.window_alpha(WindowClass::Minimap), 1.0);
 

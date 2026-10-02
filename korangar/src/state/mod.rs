@@ -323,6 +323,12 @@ pub struct ClientState {
     targeted_monster: Option<EntityId>,
     /// Live formatted summary for the selected monster target frame.
     targeted_monster_summary: String,
+    /// Whether the currently targeted monster is an MVP / boss, opening the
+    /// larger boss target frame.
+    targeted_monster_is_boss: bool,
+    /// Range of a currently hovered skill on hotbar or skill tree, showing the
+    /// range ring.
+    hovered_skill_range: Option<AttackRange>,
     /// Ammunition each remote player has loaded, keyed by account id.
     ///
     /// Deliberately **not** stored on the [`Entity`]. The server broadcasts
@@ -659,6 +665,8 @@ impl ClientState {
             entities: Vec::new(),
             targeted_monster: None,
             targeted_monster_summary: String::new(),
+            targeted_monster_is_boss: false,
+            hovered_skill_range: None,
             remote_ammunition: HashMap::new(),
             dead_entities: Vec::new(),
             ground_items: Vec::new(),
