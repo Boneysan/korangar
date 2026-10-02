@@ -56,23 +56,9 @@ impl PlannerBaseline {
             self.job_level,
             &self.stats,
             None,
-            self.hp_per_level_and_vit(),
-            self.sp_per_level_and_int(),
             self.weight_without_strength(),
+            self.job_id,
         )
-    }
-
-    /// Scale the live maximum HP back to the per-level baseline the
-    /// projection formula multiplies, so the plan's *current* point reads
-    /// exactly the live value and only the deltas are estimates.
-    fn hp_per_level_and_vit(&self) -> usize {
-        let divisor = self.base_level.max(1) * (100 + self.stats.vitality as usize);
-        (self.max_hp * 100).checked_div(divisor).unwrap_or(0)
-    }
-
-    fn sp_per_level_and_int(&self) -> usize {
-        let divisor = self.base_level.max(1) * (100 + self.stats.intelligence as usize);
-        (self.max_sp * 100).checked_div(divisor).unwrap_or(0)
     }
 
     fn weight_without_strength(&self) -> u32 {
@@ -312,9 +298,8 @@ impl BuildPlannerState {
             plan.target_job_level,
             &plan.stats,
             None,
-            baseline.hp_per_level_and_vit(),
-            baseline.sp_per_level_and_int(),
             baseline.weight_without_strength(),
+            plan.job_id,
         );
         let current = baseline.projections();
 
@@ -351,11 +336,21 @@ impl BuildPlannerState {
         self.dexterity_text = dexterity;
         self.luck_text = luck;
 
-        self.hp_sp_text = format!(
-            "HP {} · SP {} (estimate)",
-            delta(projected.max_hp_estimate as i64, current.max_hp_estimate as i64),
-            delta(projected.max_sp_estimate as i64, current.max_sp_estimate as i64)
-        );
+        self.hp_sp_text = match (
+            projected.base_max_hp,
+            current.base_max_hp,
+            projected.base_max_sp,
+            current.base_max_sp,
+        ) {
+            (Some(hp), Some(current_hp), Some(sp), Some(current_sp)) => format!(
+                "Base HP {} · Base SP {} (class table; gear and statuses add to these; now {} / {} with gear)",
+                delta(hp as i64, current_hp as i64),
+                delta(sp as i64, current_sp as i64),
+                baseline.max_hp,
+                baseline.max_sp
+            ),
+            _ => "HP and SP: no class table for this job".to_owned(),
+        };
         self.hit_flee_text = format!(
             "HIT {} · FLEE {}",
             delta(projected.hit as i64, current.hit as i64),
@@ -414,10 +409,28 @@ mod tests {
         state.start(baseline());
 
         assert!(state.strength_text.contains("40 (+0)"), "{}", state.strength_text);
-        // The baseline scaling means the unchanged plan reproduces live HP.
-        let live = baseline().projections();
-        assert!(live.max_hp_estimate.abs_diff(3_000) <= 50, "{}", live.max_hp_estimate);
-        assert!(state.hp_sp_text.contains("(+0)"), "{}", state.hp_sp_text);
+        // Knight (job 7), level 50, VIT 30, INT 10. From the exported class
+        // tables: HP[50] = 2208, so 2208 + 2208 * 30 / 100 = 2870; SP[50] = 160,
+        // so 160 + 160 * 10 / 100 = 176. The unchanged plan has no delta.
+        assert!(state.hp_sp_text.contains("Base HP 2870 (+0)"), "{}", state.hp_sp_text);
+        assert!(state.hp_sp_text.contains("Base SP 176 (+0)"), "{}", state.hp_sp_text);
+        assert!(state.hp_sp_text.contains("now 3000 / 400 with gear"), "{}", state.hp_sp_text);
+    }
+
+    #[test]
+    fn a_point_of_vit_changes_base_hp_by_the_servers_integer_percent() {
+        let mut state = BuildPlannerState::default();
+        state.start(baseline());
+        state.adjust_stat(StatKind::Vitality, 1);
+        // VIT 31: 2208 + 2208 * 31 / 100 = 2208 + 684 = 2892, which is +22.
+        assert!(state.hp_sp_text.contains("Base HP 2892 (+22)"), "{}", state.hp_sp_text);
+    }
+
+    #[test]
+    fn a_job_without_a_class_table_says_so_instead_of_guessing() {
+        let mut state = BuildPlannerState::default();
+        state.start(PlannerBaseline { job_id: 13, ..baseline() });
+        assert!(state.hp_sp_text.contains("no class table for this job"), "{}", state.hp_sp_text);
     }
 
     #[test]

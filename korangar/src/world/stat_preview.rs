@@ -13,8 +13,9 @@
 //!   units)
 //! - Perfect Dodge: +0.1 per LUK / 1 per 10 LUK (`st->flee2 += luk + 10` in
 //!   0.1% units)
-//! - Max HP: +1% base Max HP per VIT (`val += val * vit / 100`)
-//! - Max SP: +1% base Max SP per INT (`val += val * int / 100`)
+//! - Max HP / SP: the class table value, adjusted for upper/baby classes, then
+//!   +1% per VIT / INT in integer steps (`status_get_base_maxhp`/`maxsp`);
+//!   exact when the job is known, otherwise estimated from the live total
 //! - Variable Cast: `(1 - sqrt((dex * 2 + int) / 530))` of the variable part
 //!   (`skill_vfcastfix`); see `stat_formulas`, which holds the exact arithmetic
 //! - Status ATK: +1 per STR (melee) / DEX (ranged), +0.2 opposite, +0.33 per
@@ -67,6 +68,9 @@ pub struct StatPreviewInput {
     pub bonus_luck: i32,
     pub max_hp: usize,
     pub max_sp: usize,
+    /// The character's job, when known: lets the HP/SP lines use the server's
+    /// class tables instead of estimating from the live total.
+    pub job_id: Option<u16>,
 }
 
 impl StatPreviewInput {
@@ -142,6 +146,14 @@ pub fn stat_preview_tooltip(stat: StatKind, input: &StatPreviewInput, cost: u8, 
         }
         StatKind::Vitality => {
             let vit = input.total_vit();
+            let level = input.base_level;
+            // Exact when the job's class table is known: HP is the table value
+            // plus 1% per VIT in integer steps, so one point is worth the
+            // difference of two evaluations. Gear bonuses add on top.
+            let exact_hp_gain = input.job_id.and_then(|job| {
+                let tables = &crate::dm::reference_data::reference_data().job_tables;
+                Some(tables.base_max_hp(job, level, vit + 1)? as i64 - tables.base_max_hp(job, level, vit)? as i64)
+            });
             let hp_gain = if input.max_hp > 0 {
                 let est_base_hp = (input.max_hp as f32 / (1.0 + vit as f32 / 100.0)).round() as usize;
                 max(1, (est_base_hp as f32 * 0.01).round() as usize)
@@ -154,7 +166,10 @@ pub fn stat_preview_tooltip(stat: StatKind, input: &StatPreviewInput, cost: u8, 
             let def_delta = stat_formulas::soft_def(level, vit + 1, agi) - stat_formulas::soft_def(level, vit, agi);
             let mdef_delta = stat_formulas::soft_mdef(level, int, dex, vit + 1) - stat_formulas::soft_mdef(level, int, dex, vit);
 
-            lines.push(format!("· Max HP: +1% Base HP (~+{hp_gain} HP)"));
+            lines.push(match exact_hp_gain {
+                Some(gain) => format!("· Max HP: +{gain} (class table; gear bonuses add on top)"),
+                None => format!("· Max HP: +1% Base HP (~+{hp_gain} HP)"),
+            });
             lines.push(format!("· Soft DEF: +{def_delta}"));
             lines.push(format!("· Soft MDEF: +{mdef_delta}"));
             lines.push("· Natural HP Recovery: +1 HP per 5 VIT".to_owned());
@@ -168,10 +183,18 @@ pub fn stat_preview_tooltip(stat: StatKind, input: &StatPreviewInput, cost: u8, 
             } else {
                 1
             };
+            let exact_sp_gain = input.job_id.and_then(|job| {
+                let tables = &crate::dm::reference_data::reference_data().job_tables;
+                let level = input.base_level;
+                Some(tables.base_max_sp(job, level, int_val + 1)? as i64 - tables.base_max_sp(job, level, int_val)? as i64)
+            });
 
             let matk_delta = ((int_val + 1) + (int_val + 1) / 2) - (int_val + int_val / 2);
 
-            lines.push(format!("· Max SP: +1% Base SP (~+{sp_gain} SP)"));
+            lines.push(match exact_sp_gain {
+                Some(gain) => format!("· Max SP: +{gain} (class table; gear bonuses add on top)"),
+                None => format!("· Max SP: +1% Base SP (~+{sp_gain} SP)"),
+            });
             lines.push(format!("· Status MATK: +{matk_delta}"));
             let (level, dex, vit) = (input.base_level as i32, input.total_dex(), input.total_vit());
             let mdef_delta = stat_formulas::soft_mdef(level, int_val + 1, dex, vit) - stat_formulas::soft_mdef(level, int_val, dex, vit);
@@ -364,5 +387,55 @@ mod tests {
         };
         let text = stat_preview_tooltip(StatKind::Vitality, &input, 2, 10);
         assert!(text.contains("Soft DEF: +1"), "{text}");
+    }
+
+    #[test]
+    fn hp_and_sp_gains_are_exact_when_the_job_is_known() {
+        // Knight, level 50, VIT 30 -> 31. Class table HP[50] = 2208:
+        // 2208 + 2208 * 31 / 100 = 2892 against 2208 + 2208 * 30 / 100 = 2870.
+        let knight = StatPreviewInput {
+            base_level: 50,
+            vitality: 30,
+            job_id: Some(7),
+            max_hp: 3000,
+            ..Default::default()
+        };
+        let text = stat_preview_tooltip(StatKind::Vitality, &knight, 4, 10);
+        assert!(text.contains("Max HP: +22 (class table; gear bonuses add on top)"), "{text}");
+
+        // Lord Knight is an upper class: 2208 + 25% = 2760 first, then VIT.
+        // 2760 + 2760 * 31 / 100 = 3615 against 2760 + 2760 * 30 / 100 = 3588.
+        let lord_knight = StatPreviewInput {
+            job_id: Some(4008),
+            ..knight
+        };
+        let text = stat_preview_tooltip(StatKind::Vitality, &lord_knight, 4, 10);
+        assert!(text.contains("Max HP: +27 (class table; gear bonuses add on top)"), "{text}");
+
+        // Wizard, level 50, INT 45 -> 46. SP[50] = 460:
+        // 460 + 460 * 46 / 100 = 671 against 460 + 460 * 45 / 100 = 667.
+        let wizard = StatPreviewInput {
+            base_level: 50,
+            intelligence: 45,
+            job_id: Some(9),
+            max_sp: 700,
+            ..Default::default()
+        };
+        let text = stat_preview_tooltip(StatKind::Intelligence, &wizard, 5, 20);
+        assert!(text.contains("Max SP: +4 (class table; gear bonuses add on top)"), "{text}");
+    }
+
+    #[test]
+    fn an_unknown_job_keeps_the_labelled_estimate() {
+        let input = StatPreviewInput {
+            base_level: 50,
+            vitality: 29,
+            bonus_vitality: 1,
+            max_hp: 3_000,
+            job_id: Some(13),
+            ..Default::default()
+        };
+        let text = stat_preview_tooltip(StatKind::Vitality, &input, 4, 10);
+        assert!(text.contains("Max HP: +1% Base HP (~+"), "{text}");
     }
 }

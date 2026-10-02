@@ -111,6 +111,11 @@
         "total": 151,
         "basis": "Guide job entries with a server stat cap and upper-class flag"
       },
+      "job_class_tables": {
+        "observed": 128,
+        "total": 151,
+        "basis": "Guide job entries with server base HP/SP and ASPD class tables"
+      },
       "upper_class_jobs": 33,
       "exp_groups": {
         "base": 7,
@@ -208,7 +213,7 @@
         "total": 1,
         "basis": "runtime map-flag call groups whose loaded-script control flow and conditions were reviewed; live map state is not observed"
       },
-      "server_rule_entries": 18,
+      "server_rule_entries": 20,
       "element_matchup_tables": {
         "observed": 10,
         "total": 10,

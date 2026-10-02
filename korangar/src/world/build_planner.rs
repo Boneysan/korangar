@@ -140,8 +140,10 @@ impl PlannedStats {
 pub struct ProjectedCombatStats {
     pub base_level: usize,
     pub job_level: usize,
-    pub max_hp_estimate: usize,
-    pub max_sp_estimate: usize,
+    /// Base max HP/SP from the class table (before equipment and status
+    /// bonuses); `None` for a job the server's tables do not name.
+    pub base_max_hp: Option<u64>,
+    pub base_max_sp: Option<u64>,
     pub hit: i32,
     pub flee: i32,
     pub soft_def: i32,
@@ -160,9 +162,8 @@ impl ProjectedCombatStats {
         job_level: usize,
         stats: &PlannedStats,
         job_bonuses: Option<&PlannedStats>,
-        base_hp_baseline: usize,
-        base_sp_baseline: usize,
         base_weight_limit: u32,
+        job_id: u16,
     ) -> Self {
         let zero_bonuses = PlannedStats::new(0, 0, 0, 0, 0, 0);
         let bonuses = job_bonuses.unwrap_or(&zero_bonuses);
@@ -191,14 +192,17 @@ impl ProjectedCombatStats {
 
         let max_weight = base_weight_limit + (stats.strength as u32 * 300);
 
-        let max_hp_estimate = base_hp_baseline * base_level * (100 + total_vit.max(0) as usize) / 100;
-        let max_sp_estimate = base_sp_baseline * base_level * (100 + total_int.max(0) as usize) / 100;
+        // The server reads HP and SP from per-class tables (not a straight line
+        // in level), then adds +1% per VIT / INT; see `stat_formulas`.
+        let tables = &crate::dm::reference_data::reference_data().job_tables;
+        let base_max_hp = tables.base_max_hp(job_id, base_level, total_vit);
+        let base_max_sp = tables.base_max_sp(job_id, base_level, total_int);
 
         Self {
             base_level,
             job_level,
-            max_hp_estimate,
-            max_sp_estimate,
+            base_max_hp,
+            base_max_sp,
             hit,
             flee,
             soft_def,
@@ -425,21 +429,14 @@ impl BuildPlan {
     }
 
     /// Compute projected combat parameters.
-    pub fn calculate_projections(
-        &self,
-        job_bonuses: Option<&PlannedStats>,
-        base_hp_baseline: usize,
-        base_sp_baseline: usize,
-        base_weight_limit: u32,
-    ) -> ProjectedCombatStats {
+    pub fn calculate_projections(&self, job_bonuses: Option<&PlannedStats>, base_weight_limit: u32) -> ProjectedCombatStats {
         ProjectedCombatStats::calculate(
             self.target_base_level,
             self.target_job_level,
             &self.stats,
             job_bonuses,
-            base_hp_baseline,
-            base_sp_baseline,
             base_weight_limit,
+            self.job_id,
         )
     }
 }
@@ -603,7 +600,7 @@ mod tests {
         assert_eq!(plan.stats.dexterity, 50);
 
         let job_bonuses = PlannedStats::new(8, 2, 4, 0, 3, 2);
-        let projections = plan.calculate_projections(Some(&job_bonuses), 40, 5, 2000);
+        let projections = plan.calculate_projections(Some(&job_bonuses), 2000);
 
         // Verify combat projection values
         assert_eq!(projections.base_level, 99);

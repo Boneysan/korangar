@@ -79,6 +79,80 @@ pub fn variable_cast_reduction_percent(dex: i32, int: i32) -> f32 {
     (stat / VCAST_STAT_SCALE).sqrt().min(1.0) * 100.0
 }
 
+/// The class facts `status_get_base_maxhp` and `status_get_base_maxsp` branch
+/// on.
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+pub struct ClassFlags {
+    pub upper: bool,
+    pub baby: bool,
+    pub super_novice: bool,
+    pub expanded_super_novice: bool,
+}
+
+impl From<&crate::dm::reference_data::ReferenceJobTables> for ClassFlags {
+    fn from(job: &crate::dm::reference_data::ReferenceJobTables) -> Self {
+        Self {
+            upper: job.upper,
+            baby: job.baby,
+            super_novice: job.super_novice,
+            expanded_super_novice: job.expanded_super_novice,
+        }
+    }
+}
+
+/// `status_get_base_maxhp`: the class table value, +2000 for a Super Novice at
+/// Base Level 99 (Expanded Super Novice at 150), +25% for upper classes or
+/// x70% for babies, then +1% per VIT. All integer arithmetic. Equipment and
+/// status bonuses are added afterwards by the server and are not included.
+/// (The server also triples HP for a ranked Taekwon over level 90; that needs
+/// a live ranking and is not modelled.)
+pub fn base_max_hp(table_value: u64, base_level: usize, vit: i32, class: ClassFlags) -> u64 {
+    let mut value = table_value;
+    if class.super_novice && base_level >= 99 {
+        value += 2000;
+    }
+    if class.expanded_super_novice && base_level >= 150 {
+        value += 2000;
+    }
+    if class.upper {
+        value += value * 25 / 100;
+    } else if class.baby {
+        value = value * 70 / 100;
+    }
+    value + value * vit.max(0) as u64 / 100
+}
+
+/// `status_get_base_maxsp`: the class table value, +25% for upper classes or
+/// x70% for babies, then +1% per INT (integer arithmetic, before equipment and
+/// status bonuses).
+pub fn base_max_sp(table_value: u64, int: i32, class: ClassFlags) -> u64 {
+    let mut value = table_value;
+    if class.upper {
+        value += value * 25 / 100;
+    } else if class.baby {
+        value = value * 70 / 100;
+    }
+    value + value * int.max(0) as u64 / 100
+}
+
+/// Base ASPD from stats and the job's base ASPD for the weapon, before status
+/// effects, equipment bonuses and the class cap (`status_base_amotion_pc`,
+/// Renewal ASPD):
+/// `(int)(sqrt(dex^2 / 5 + agi^2 / 2) / 4 + 196 + skill_bonus * agi / 200) -
+/// min(class_base, 200)`.
+///
+/// `ranged` is true for bows, instruments, whips and guns, where DEX counts for
+/// `dex^2 / 7` instead of `dex^2 / 5`. `skill_bonus` is the sum of the passive
+/// ASPD skills the server adds (Advanced Book, Single Action, Plagiarism,
+/// Musical Lesson). The mixed `float`/`double` steps follow the C source.
+pub fn base_aspd(dex: i32, agi: i32, class_base: u16, ranged: bool, skill_bonus: i32) -> i32 {
+    let dex_term = (dex * dex) as f32 / if ranged { 7.0 } else { 5.0 };
+    let stats = dex_term + (agi * agi) as f32 * 0.5;
+    let temp = ((stats as f64).sqrt() * 0.25f32 as f64) as f32 + 196.0;
+    let raw = (temp + (skill_bonus as f32 * agi as f32 / 200.0)) as i32;
+    raw - i32::from(class_base.min(200))
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -150,5 +224,73 @@ mod tests {
         // Early points matter most: a fifth of the scale (106 of 530) already
         // removes 44.7% of the variable cast.
         assert!((variable_cast_reduction_percent(53, 0) - 44.7).abs() < 0.1);
+    }
+
+    fn knight() -> ClassFlags {
+        ClassFlags::default()
+    }
+
+    #[test]
+    fn base_max_hp_applies_class_adjustments_then_vit_in_integer_percent() {
+        // Upper: 1000 + 250 = 1250, then + 1250 * 50 / 100 = 625.
+        let upper = ClassFlags { upper: true, ..knight() };
+        assert_eq!(base_max_hp(1000, 50, 50, upper), 1875);
+        // Baby: 1000 * 70 / 100 = 700, then + 700 * 10 / 100 = 70.
+        let baby = ClassFlags { baby: true, ..knight() };
+        assert_eq!(base_max_hp(1000, 50, 10, baby), 770);
+        // Integer division: 1001 + 1001 * 25 / 100 = 1001 + 250 = 1251.
+        assert_eq!(base_max_hp(1001, 50, 0, upper), 1251);
+        // No VIT, no adjustment: the table value as is.
+        assert_eq!(base_max_hp(1000, 50, 0, knight()), 1000);
+    }
+
+    #[test]
+    fn super_novices_get_their_flat_hp_before_the_percent_steps() {
+        let super_novice = ClassFlags {
+            super_novice: true,
+            ..knight()
+        };
+        assert_eq!(base_max_hp(1000, 99, 0, super_novice), 3000, "+2000 at level 99");
+        assert_eq!(base_max_hp(1000, 98, 0, super_novice), 1000, "not before level 99");
+        // Expanded Super Novice is both: +2000 at 99 and another +2000 at 150.
+        let expanded = ClassFlags {
+            super_novice: true,
+            expanded_super_novice: true,
+            ..knight()
+        };
+        assert_eq!(base_max_hp(1000, 150, 0, expanded), 5000);
+        assert_eq!(base_max_hp(1000, 149, 0, expanded), 3000);
+    }
+
+    #[test]
+    fn base_max_sp_uses_the_same_class_steps_with_int() {
+        let upper = ClassFlags { upper: true, ..knight() };
+        // 160 + 160 * 25 / 100 = 200, then + 200 * 10 / 100 = 20.
+        assert_eq!(base_max_sp(160, 10, upper), 220);
+        // Super Novice has no flat SP bonus.
+        let super_novice = ClassFlags {
+            super_novice: true,
+            ..knight()
+        };
+        assert_eq!(base_max_sp(160, 0, super_novice), 160);
+        assert_eq!(base_max_sp(160, 10, knight()), 176);
+    }
+
+    #[test]
+    fn base_aspd_follows_the_renewal_formula() {
+        // Values computed independently: 196 + sqrt(dex^2/5 + agi^2/2)/4 + skill * agi
+        // / 200, truncated, minus the job's base ASPD for the weapon (capped at
+        // 200).
+        assert_eq!(base_aspd(1, 1, 45, false, 0), 151);
+        assert_eq!(base_aspd(99, 99, 45, false, 0), 171);
+        // Ten points of passive ASPD skills add 10 * 99 / 200 = 4.95 before truncation.
+        assert_eq!(base_aspd(99, 99, 45, false, 10), 176);
+        assert_eq!(base_aspd(50, 70, 55, false, 0), 154);
+        // Ranged weapons weigh DEX as dex^2 / 7.
+        assert_eq!(base_aspd(99, 99, 0, true, 0), 215);
+        assert!(base_aspd(99, 99, 0, true, 0) < base_aspd(99, 99, 0, false, 0));
+        // The class base is capped at 200, so 250 behaves like 200.
+        assert_eq!(base_aspd(1, 1, 250, false, 0), base_aspd(1, 1, 200, false, 0));
+        assert_eq!(base_aspd(1, 1, 250, false, 0), -4);
     }
 }

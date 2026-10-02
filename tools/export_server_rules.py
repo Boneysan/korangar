@@ -252,6 +252,89 @@ def stat_point_rule() -> dict[str, object]:
     }
 
 
+def max_hp_sp_rule() -> dict[str, object]:
+    """Built from export_job_tables (imported lazily: it imports this package's helpers)."""
+    from export_job_tables import build as build_job_tables
+
+    tables = build_job_tables()
+    jobs = {job["job_id"]: job for job in tables["jobs"]}  # type: ignore[index]
+
+    def hp(job_id: int, level: int, vit: int) -> int:
+        job = jobs[job_id]
+        value = tables["hp_tables"][job["hp_table"]][level - 1]  # type: ignore[index]
+        if job["super_novice"] and level >= 99:
+            value += 2000
+        if job["expanded_super_novice"] and level >= 150:
+            value += 2000
+        if job["upper"]:
+            value += value * 25 // 100
+        elif job["baby"]:
+            value = value * 70 // 100
+        return value + value * vit // 100
+
+    def sp(job_id: int, level: int, int_stat: int) -> int:
+        job = jobs[job_id]
+        value = tables["sp_tables"][job["sp_table"]][level - 1]  # type: ignore[index]
+        if job["upper"]:
+            value += value * 25 // 100
+        elif job["baby"]:
+            value = value * 70 // 100
+        return value + value * int_stat // 100
+
+    return {
+        "id": "max-hp-sp",
+        "category": "Mechanics",
+        "title": "Max HP and SP: class tables",
+        "summary": "A class's base max HP and SP come from per-class tables by level, adjusted for upper and baby classes, then scaled by VIT and INT. Equipment and status effects add to the result.",
+        "details": [
+            "Base max HP = the class table value at your Base Level; plus 2000 for a Super Novice at level 99 or higher (Expanded Super Novice: another 2000 at level 150); then plus 25% for upper classes or times 70% for baby classes; then plus 1% per VIT. Each step uses whole numbers.",
+            "Base max SP = the class table value at your Base Level; plus 25% for upper classes or times 70% for baby classes; then plus 1% per INT. Super Novices get no flat SP bonus.",
+            f"Example, level 99 with VIT 99: Knight {hp(7, 99, 99):,} base HP; Lord Knight (upper) {hp(4008, 99, 99):,}; Baby Swordsman (baby) {hp(4024, 99, 99):,}. Level 99 Wizard with INT 99: {sp(9, 99, 99):,} base SP.",
+            "The tables are the ones in job_db.conf, read through the server's own loader: a class with no table of its own inherits from another, and levels a table does not list are filled in from an average increment. Open a job's page for its HP and SP at several levels.",
+            "Equipment bonuses, skills and status effects (for example Increase HP, Berserk) change the final value afterwards and are not included here. A top-ranked Taekwon over level 90 gets triple HP and SP from a live ranking this client cannot see.",
+            "Confirmed from the source and compared with the max HP and SP this server saved for 18 characters across 12 classes (first and second classes, upper classes and a third class, all level 99 or below): every value matched. Baby classes, Super Novices and levels above 99 have not been compared.",
+        ],
+        "sources": [
+            {"path": "db/re/job_db.conf", "record": "HPTable, SPTable, Inherit, InheritHP, InheritSP per job"},
+            {"path": "src/map/status.c", "record": "status_read_job_db_sub (table loader), status_get_base_maxhp, status_get_base_maxsp"},
+            {"path": "db/re/unit_parameters_db.conf", "record": "MaxHP caps applied to table values"},
+        ],
+    }
+
+
+def aspd_rule() -> dict[str, object]:
+    from export_job_tables import build as build_job_tables
+    from export_stat_rules import build as build_stat_rules
+
+    tables = build_job_tables()
+    stat_jobs = {job["job_id"]: job for job in build_stat_rules()["jobs"]}  # type: ignore[index]
+    by_cap: dict[int, set[str]] = {}
+    for job in tables["jobs"]:  # type: ignore[index]
+        by_cap.setdefault(job["max_aspd"], set()).add(stat_jobs[job["job_id"]]["parameters_group"])
+    caps = "; ".join(f"{cap}: {', '.join(sorted(groups))}" for cap, groups in sorted(by_cap.items()))
+    return {
+        "id": "aspd",
+        "category": "Mechanics",
+        "title": "Attack speed (ASPD)",
+        "summary": "Base ASPD comes from AGI, DEX and the class's value for the weapon; skills, equipment and statuses then change it, and each class has a cap.",
+        "details": [
+            "Base ASPD = floor(196 + sqrt(DEX x DEX / 5 + AGI x AGI / 2) / 4 + P x AGI / 200) - min(B, 200), where B is the class's base ASPD for your weapon and P is the sum of passive bonuses below.",
+            "For bows, instruments, whips and guns, DEX counts as DEX x DEX / 7 instead of DEX x DEX / 5.",
+            "B is the class's value for the weapon type, plus its Shield value when a shield is equipped, plus a quarter of the second weapon's value when dual wielding. Each job's page lists its values.",
+            "Passive bonuses P: Advanced Book (with a book) gives (level - 1) / 2 + 1; Single Action gives (level + 1) / 2; Plagiarism gives its level; Musical Lesson (with an instrument) gives its level. Whole-number division.",
+            "Attack motion in milliseconds is 10 x (200 - ASPD). Mounts, statuses such as Adrenaline Rush, and equipment 'ASPD +x%' bonuses also adjust the result and are not covered here.",
+            f"No class can exceed its MaxASPD, by parameter group: {caps}.",
+            "These were confirmed from the source and are unit-tested in the client, not observed on a live server.",
+        ],
+        "sources": [
+            {"path": "src/map/status.c", "record": "status_base_amotion_pc (Renewal ASPD) and the amotion assembly in status_calc_bl_main"},
+            {"path": "db/re/job_db.conf", "record": "BaseASPD per weapon per job"},
+            {"path": "db/re/unit_parameters_db.conf", "record": "MaxASPD per parameter group"},
+            {"path": "src/config/renewal.h", "record": "RENEWAL_ASPD"},
+        ],
+    }
+
+
 def level_penalty_rule(path: Path) -> dict[str, object]:
     table = parse_level_penalty(path)
 
@@ -478,6 +561,8 @@ def build() -> dict[str, object]:
             level_penalty_rule(level_penalty_path),
             derived_stat_formula_rule(battle),
             stat_point_rule(),
+            max_hp_sp_rule(),
+            aspd_rule(),
             {
                 "id": "weapon-size-adjustments",
                 "category": "Mechanics",

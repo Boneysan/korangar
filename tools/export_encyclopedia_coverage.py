@@ -20,6 +20,7 @@ VERSIONED = {
     "job_skills": ROOT / "docs" / "job-skills.v1.json",
     "exp_tables": ROOT / "docs" / "exp-tables.v1.json",
     "stat_rules": ROOT / "docs" / "stat-rules.v1.json",
+    "job_tables": ROOT / "docs" / "job-tables.v1.json",
     "job_bonuses": ROOT / "docs" / "job-bonuses.v1.json",
     "statuses": ROOT / "docs" / "status-effects.v1.json",
     "quests": ROOT / "docs" / "quests.v1.json",
@@ -112,6 +113,8 @@ def build_report() -> dict:
     exp_job_ids = {job["job_id"] for job in exp_tables["jobs"]}
     stat_rules = data["stat_rules"]
     stat_job_ids = {job["job_id"] for job in stat_rules["jobs"]}
+    job_tables = data["job_tables"]
+    class_table_job_ids = {job["job_id"] for job in job_tables["jobs"]}
     rules = entries(data["server_rules"])
     refine = data["refine"]
     npc_service_clues = entries(data["npc_service_clues"])
@@ -196,6 +199,7 @@ def build_report() -> dict:
             "job_bonus_schedules": len(job_bonuses),
             "job_exp_tables": dimension(len(guide_job_ids & exp_job_ids), len(guide_job_ids), "Guide job entries whose base and job EXP groups the server defines"),
             "job_stat_rules": dimension(len(guide_job_ids & stat_job_ids), len(guide_job_ids), "Guide job entries with a server stat cap and upper-class flag"),
+            "job_class_tables": dimension(len(guide_job_ids & class_table_job_ids), len(guide_job_ids), "Guide job entries with server base HP/SP and ASPD class tables"),
             "upper_class_jobs": sum(1 for job in stat_rules["jobs"] if job["upper"]),
             "exp_groups": {"base": len(exp_tables["base_groups"]), "job": len(exp_tables["job_groups"])},
             "reviewed_formula_records": len(skill_formula_reviews),

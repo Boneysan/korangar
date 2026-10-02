@@ -31,6 +31,7 @@ const ITEM_EXCHANGES_JSON: &str = include_str!("../../../docs/item-exchanges.v1.
 const SKILL_FORMULA_REVIEWS_JSON: &str = include_str!("../../../docs/skill-formula-reviews.v1.json");
 const NPC_SERVICE_REVIEWS_JSON: &str = include_str!("../../../docs/npc-service-reviews.v1.json");
 const RUMORS_JSON: &str = include_str!("../../../docs/rumors.v1.json");
+const JOB_TABLES_JSON: &str = include_str!("../../../docs/job-tables.v1.json");
 const STAT_RULES_JSON: &str = include_str!("../../../docs/stat-rules.v1.json");
 const EXP_TABLES_JSON: &str = include_str!("../../../docs/exp-tables.v1.json");
 const SEARCH_ALIASES_JSON: &str = include_str!("../../../docs/search-aliases.v1.json");
@@ -848,6 +849,72 @@ pub struct ReferenceServerRule {
     pub sources: Vec<ReferenceSource>,
 }
 
+/// One job's class tables: base HP/SP by level, base ASPD by weapon, and the
+/// class flags `status_get_base_maxhp` branches on. Read from `job_db.conf`
+/// through a port of the server's loader (inheritance and generated tails
+/// included), so these are the tables the server uses.
+#[derive(Debug, Deserialize)]
+pub struct ReferenceJobTables {
+    pub job_id: u16,
+    pub name: String,
+    pub max_level: u16,
+    pub hp_table: String,
+    pub sp_table: String,
+    pub weight_base: u32,
+    pub max_aspd: u16,
+    pub base_aspd: HashMap<String, u16>,
+    pub upper: bool,
+    pub baby: bool,
+    pub super_novice: bool,
+    pub expanded_super_novice: bool,
+}
+
+#[derive(Debug, Deserialize)]
+pub struct ReferenceJobTablesFile {
+    pub schema_version: u32,
+    pub mode: String,
+    pub hp_tables: HashMap<String, Vec<u64>>,
+    pub sp_tables: HashMap<String, Vec<u64>>,
+    pub jobs: Vec<ReferenceJobTables>,
+}
+
+impl ReferenceJobTablesFile {
+    pub fn job(&self, job_id: u16) -> Option<&ReferenceJobTables> {
+        self.jobs.iter().find(|job| job.job_id == job_id)
+    }
+
+    /// The class table value for `level`.
+    pub fn table_hp(&self, job: &ReferenceJobTables, level: usize) -> Option<u64> {
+        self.hp_tables.get(&job.hp_table)?.get(level.checked_sub(1)?).copied()
+    }
+
+    pub fn table_sp(&self, job: &ReferenceJobTables, level: usize) -> Option<u64> {
+        self.sp_tables.get(&job.sp_table)?.get(level.checked_sub(1)?).copied()
+    }
+
+    /// Base max HP at `level` and VIT: `status_get_base_maxhp`, before
+    /// equipment and status bonuses.
+    pub fn base_max_hp(&self, job_id: u16, level: usize, vit: i32) -> Option<u64> {
+        let job = self.job(job_id)?;
+        Some(crate::world::stat_formulas::base_max_hp(
+            self.table_hp(job, level)?,
+            level,
+            vit,
+            crate::world::stat_formulas::ClassFlags::from(job),
+        ))
+    }
+
+    /// Base max SP at `level` and INT: `status_get_base_maxsp`.
+    pub fn base_max_sp(&self, job_id: u16, level: usize, int: i32) -> Option<u64> {
+        let job = self.job(job_id)?;
+        Some(crate::world::stat_formulas::base_max_sp(
+            self.table_sp(job, level)?,
+            int,
+            crate::world::stat_formulas::ClassFlags::from(job),
+        ))
+    }
+}
+
 /// One job's stat rules: its stat cap and whether a stat reset grants the
 /// upper-class extra points.
 #[derive(Debug, Deserialize)]
@@ -1121,6 +1188,7 @@ pub struct ReferenceData {
     pub aliases: Vec<ReferenceAlias>,
     pub exp_tables: ReferenceExpTables,
     pub stat_rules: ReferenceStatRules,
+    pub job_tables: ReferenceJobTablesFile,
     pub map_flags: Vec<ReferenceMapFlag>,
     pub runtime_map_flag_clues: Vec<ReferenceRuntimeMapFlagClue>,
     pub runtime_map_flag_reviews: Vec<ReferenceRuntimeMapFlagReview>,
@@ -1173,6 +1241,27 @@ impl ReferenceData {
             .map_err(|error| format!("embedded skill-formula-reviews.v1.json is invalid: {error}"))?;
         let npc_services: VersionedNpcServiceReviewsFile = serde_json::from_str(NPC_SERVICE_REVIEWS_JSON)
             .map_err(|error| format!("embedded npc-service-reviews.v1.json is invalid: {error}"))?;
+        let job_tables: ReferenceJobTablesFile =
+            serde_json::from_str(JOB_TABLES_JSON).map_err(|error| format!("embedded job-tables.v1.json is invalid: {error}"))?;
+        if job_tables.schema_version != 1 || job_tables.mode != "renewal" {
+            return Err("unsupported job-tables.v1.json schema or mode".to_owned());
+        }
+        for job in &job_tables.jobs {
+            let hp_ok = job_tables
+                .hp_tables
+                .get(&job.hp_table)
+                .is_some_and(|table| table.len() == job.max_level as usize);
+            let sp_ok = job_tables
+                .sp_tables
+                .get(&job.sp_table)
+                .is_some_and(|table| table.len() == job.max_level as usize);
+            if !hp_ok || !sp_ok {
+                return Err(format!(
+                    "job table for {} is missing or not {} levels long",
+                    job.name, job.max_level
+                ));
+            }
+        }
         let stat_rules: ReferenceStatRules =
             serde_json::from_str(STAT_RULES_JSON).map_err(|error| format!("embedded stat-rules.v1.json is invalid: {error}"))?;
         if stat_rules.schema_version != 1 || stat_rules.mode != "renewal" || stat_rules.points_at_level.len() != 175 {
@@ -1576,6 +1665,7 @@ impl ReferenceData {
             aliases: aliases.entries,
             exp_tables,
             stat_rules,
+            job_tables,
             map_flags: map_flags.entries,
             runtime_map_flag_clues: map_flags.runtime_clues,
             runtime_map_flag_reviews: map_flags.runtime_reviews,
@@ -2146,5 +2236,65 @@ mod tests {
         // Authored flavour: no server script delivers it, so it is not "verified".
         assert_eq!(byalan_rumor.evidence_state, EvidenceState::NotReviewed);
         assert!(data.search_rumors("ant jaws", 5).iter().any(|r| r.id == 2));
+    }
+    /// Ground truth: `max_hp` and `max_sp` that a live Hercules server computed
+    /// and saved for 18 characters of the local database (observed 2026-10-01),
+    /// as (class, base level, job level, base VIT, base INT, saved max HP,
+    /// saved max SP). The server's total VIT/INT adds the job-level stat
+    /// bonuses, so the test adds them from `job-bonuses.v1.json` too. The
+    /// characters carried gear with no HP/SP bonuses (every difference was 0).
+    ///
+    /// What this covers: own tables (Novice, Swordsman, Magician, Acolyte,
+    /// Priest, Knight HP, Rune Knight), `InheritHP`/`InheritSP` (Merchant,
+    /// Thief, Archer SP, Knight SP), full `Inherit` (Assassin Cross, Stalker),
+    /// the +25% upper-class step and a third class, all at or below level 99.
+    /// It does not cover baby (x70%), Super Novice, levels above 99, or
+    /// generated table tails.
+    const OBSERVED_CHARACTERS: &[(u16, usize, u16, i32, i32, u64, u64)] = &[
+        (0, 1, 1, 1, 1, 40, 11),
+        (0, 1, 3, 1, 1, 40, 11),
+        (0, 1, 1, 5, 1, 42, 11),
+        (0, 4, 7, 1, 1, 55, 14),
+        (0, 4, 7, 5, 1, 57, 14),
+        (1, 1, 1, 1, 1, 40, 12),
+        (1, 33, 28, 22, 1, 735, 76),
+        (1, 50, 39, 1, 1, 1226, 111),
+        (2, 27, 24, 20, 25, 342, 220),
+        (3, 27, 23, 5, 1, 383, 65),
+        (4, 36, 29, 22, 41, 591, 269),
+        (5, 8, 10, 10, 11, 98, 37),
+        (6, 36, 31, 15, 12, 644, 92),
+        (7, 99, 50, 0, 0, 8775, 307),
+        (8, 50, 1, 1, 1, 1259, 414),
+        (4013, 99, 70, 0, 0, 7697, 507),
+        (4018, 99, 70, 0, 0, 6159, 649),
+        (4054, 99, 60, 1, 1, 8667, 333),
+    ];
+
+    #[test]
+    fn class_tables_reproduce_the_hp_and_sp_a_live_server_saved() {
+        let data = reference_data();
+        assert!(OBSERVED_CHARACTERS.len() >= 18);
+        for &(class, level, job_level, vit, int, saved_hp, saved_sp) in OBSERVED_CHARACTERS {
+            let bonus = |stat: &str| {
+                data.job_bonuses_by_id(class).map_or(0, |bonuses| {
+                    bonuses
+                        .bonus_levels
+                        .iter()
+                        .filter(|bonus| bonus.stat == stat && bonus.job_level <= job_level)
+                        .count() as i32
+                })
+            };
+            let hp = data.job_tables.base_max_hp(class, level, vit + bonus("VIT")).expect("class table");
+            let sp = data.job_tables.base_max_sp(class, level, int + bonus("INT")).expect("class table");
+            assert_eq!(
+                hp, saved_hp,
+                "max HP for class {class} level {level} (job level {job_level}, VIT {vit})"
+            );
+            assert_eq!(
+                sp, saved_sp,
+                "max SP for class {class} level {level} (job level {job_level}, INT {int})"
+            );
+        }
     }
 }

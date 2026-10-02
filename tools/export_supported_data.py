@@ -50,6 +50,7 @@ EXPORTERS = (
     "export_rumors_reference.py",
     "export_exp_tables.py",
     "export_stat_rules.py",
+    "export_job_tables.py",
     "export_encyclopedia_coverage.py",
 )
 

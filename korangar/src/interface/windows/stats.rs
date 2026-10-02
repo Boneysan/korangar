@@ -107,6 +107,7 @@ struct StatSnapshot {
     bonus_luck: i32,
     max_hp: usize,
     max_sp: usize,
+    job_id: u16,
 }
 
 struct StatPreviewSelector<A> {
@@ -160,6 +161,7 @@ where
             bonus_luck: player.bonus_luck,
             max_hp: player.get_common().maximum_health_points,
             max_sp: player.maximum_spell_points,
+            job_id: player.get_common().job_id.0,
         };
 
         unsafe {
@@ -182,6 +184,7 @@ where
                     bonus_luck: snapshot.bonus_luck,
                     max_hp: snapshot.max_hp,
                     max_sp: snapshot.max_sp,
+                    job_id: Some(snapshot.job_id),
                 };
 
                 *self.text.get() = stat_preview_tooltip(self.stat, &input, stat_cost, player.stat_points);

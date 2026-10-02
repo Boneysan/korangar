@@ -21,7 +21,7 @@ use crate::interface::windows::WindowClass;
 use crate::loaders::OverflowBehavior;
 use crate::state::theme::InterfaceThemeType;
 use crate::state::{ClientState, ClientStatePathExt, client_state};
-use crate::world::{Library, TownPoi};
+use crate::world::{Library, TownPoi, stat_formulas};
 
 const MAX_QUERY: usize = 48;
 const MAX_RESULTS: usize = 60;
@@ -1629,6 +1629,7 @@ fn job_details(job_id: u16, name: &str) -> Vec<String> {
     }
     append_exp_details(&mut lines, job_id);
     append_stat_rule_details(&mut lines, job_id);
+    append_class_table_details(&mut lines, job_id);
     let Some(tree) = data.job_skill_tree_by_id(job_id) else {
         lines.push("No matching skill tree is present in the bundled Hercules job-skill export.".to_owned());
         lines.push("Job bonus source: bundled Hercules job_db2.txt export; conditional-script effects are not inferred.".to_owned());
@@ -1700,6 +1701,95 @@ fn append_exp_table(lines: &mut Vec<String>, label: &str, group_name: &str, grou
             group_digits(total)
         ));
     }
+}
+
+/// `GatlingGun` -> `Gatling Gun`.
+fn spaced(name: &str) -> String {
+    let mut spaced = String::new();
+    for (index, character) in name.chars().enumerate() {
+        if index > 0 && character.is_uppercase() {
+            spaced.push(' ');
+        }
+        spaced.push(character);
+    }
+    spaced
+}
+
+fn is_ranged_weapon(weapon: &str) -> bool {
+    matches!(
+        weapon,
+        "Bow" | "Instrument" | "Whip" | "Revolver" | "Rifle" | "GatlingGun" | "Shotgun" | "GrenadeLauncher"
+    )
+}
+
+/// Base HP/SP at a few levels and the class's base ASPD per weapon, from the
+/// server's class tables (see the Max HP/SP and ASPD rules for the formulas).
+fn append_class_table_details(lines: &mut Vec<String>, job_id: u16) {
+    let data = reference_data();
+    let Some(job) = data.job_tables.job(job_id) else {
+        lines.push("No class table is defined for this job in Hercules job_db.conf.".to_owned());
+        return;
+    };
+    let cap = data.stat_job(job_id).map_or(99, |stat| stat.max_stats as i32);
+    let mut levels: Vec<usize> = [1, 50, job.max_level as usize]
+        .into_iter()
+        .filter(|level| *level <= job.max_level as usize)
+        .collect();
+    levels.dedup();
+
+    let figures = |at_one: &dyn Fn(usize) -> Option<u64>, at_cap: &dyn Fn(usize) -> Option<u64>| {
+        levels
+            .iter()
+            .filter_map(|level| {
+                Some(format!(
+                    "level {level}: {} / {}",
+                    group_digits(at_one(*level)?),
+                    group_digits(at_cap(*level)?)
+                ))
+            })
+            .collect::<Vec<_>>()
+            .join("; ")
+    };
+    lines.push(format!(
+        "Base max HP at VIT 1 / VIT {cap} (class table before gear and statuses): {}",
+        figures(&|level| data.job_tables.base_max_hp(job_id, level, 1), &|level| data
+            .job_tables
+            .base_max_hp(job_id, level, cap))
+    ));
+    lines.push(format!(
+        "Base max SP at INT 1 / INT {cap}: {}",
+        figures(&|level| data.job_tables.base_max_sp(job_id, level, 1), &|level| data
+            .job_tables
+            .base_max_sp(job_id, level, cap))
+    ));
+
+    let mut weapons: Vec<(&String, &u16)> = job.base_aspd.iter().filter(|(_, value)| **value > 0).collect();
+    weapons.sort_by_key(|(name, _)| name.as_str());
+    if weapons.is_empty() {
+        lines.push("No base ASPD values are defined for this job.".to_owned());
+        return;
+    }
+    let values = weapons
+        .iter()
+        .map(|(name, value)| format!("{} {value}", spaced(name)))
+        .collect::<Vec<_>>()
+        .join(", ");
+    lines.push(format!(
+        "Base ASPD values by weapon (the B in the ASPD rule): {values}. Maximum ASPD {}.",
+        job.max_aspd
+    ));
+    let at_cap = weapons
+        .iter()
+        .filter(|(name, _)| name.as_str() != "Shield")
+        .map(|(name, value)| {
+            let aspd = stat_formulas::base_aspd(cap, cap, **value, is_ranged_weapon(name), 0);
+            format!("{} {aspd}", spaced(name))
+        })
+        .collect::<Vec<_>>()
+        .join(", ");
+    lines.push(format!(
+        "Base ASPD at DEX {cap} and AGI {cap}, no passive ASPD skills, no shield, before gear and statuses: {at_cap}."
+    ));
 }
 
 fn append_stat_rule_details(lines: &mut Vec<String>, job_id: u16) {
@@ -3774,6 +3864,69 @@ mod tests {
         assert!(detail.contains("plus 52 extra points for upper classes"), "{detail}");
         assert!(detail.contains("130: ThirdClasses"), "{detail}");
         assert!(detail.contains("max_parameter is not the player cap"), "{detail}");
+    }
+
+    #[test]
+    fn job_pages_show_class_hp_sp_and_aspd_from_the_servers_tables() {
+        let (id, name) = job_names().find(|(_, name)| *name == "Knight").expect("Knight job");
+        let text = super::job_details(id, name).join("\n");
+        // Computed from the exported tables: HP[1] = 40, HP[50] = 2208, HP[99] = 7978,
+        // then + 1% per VIT in integer steps (VIT 1 and VIT 99).
+        assert!(
+            text.contains("level 1: 40 / 79; level 50: 2,230 / 4,393; level 99: 8,057 / 15,876"),
+            "{text}"
+        );
+        assert!(
+            text.contains("Base max SP at INT 1 / INT 99: level 1: 13 / 25; level 50: 161 / 318; level 99: 310 / 610"),
+            "{text}"
+        );
+        // job_db.conf BaseASPD for Knight, and the cap from MaxASPD.
+        assert!(
+            text.contains("Sword 45") && text.contains("Two Hand Sword 52") && text.contains("Shield 5"),
+            "{text}"
+        );
+        assert!(text.contains("Maximum ASPD 190"), "{text}");
+        // 196 + sqrt(99^2/5 + 99^2/2)/4 = 216.7 -> 216, minus 45 = 171.
+        assert!(text.contains("Sword 171"), "{text}");
+        assert!(!text.contains("Shield 171"), "the shield value is not a weapon: {text}");
+    }
+
+    #[test]
+    fn a_job_with_no_class_table_says_so_instead_of_inventing_hp() {
+        let data = reference_data();
+        let (id, name) = job_names()
+            .find(|(id, _)| data.job_tables.job(*id).is_none())
+            .expect("a listed job with no job_db.conf block");
+        let text = super::job_details(id, name).join("\n");
+        assert!(text.contains("No class table is defined for this job"), "{name}: {text}");
+        assert!(!text.contains("Base max HP"), "{name}: {text}");
+    }
+
+    #[test]
+    fn hp_sp_and_aspd_rules_are_searchable_and_state_the_formulas() {
+        let data = reference_data();
+        let find = |query: &str, title: &str| {
+            let rows = search_all_categories(query, &DiscoveryState::default(), &[]);
+            let row = rows
+                .iter()
+                .find(|row| row.kind == "server-rule" && data.server_rules[row.id as usize].title.contains(title))
+                .unwrap_or_else(|| panic!("{title} is searchable"));
+            resolve_details(row).join("\n")
+        };
+        let hp = find("max hp and sp", "Max HP and SP");
+        assert!(hp.contains("plus 25% for upper classes or times 70% for baby classes"), "{hp}");
+        assert!(hp.contains("plus 1% per VIT"), "{hp}");
+        // Worked example from the exported tables: Lord Knight, level 99, VIT 99.
+        assert!(hp.contains("Lord Knight (upper) 19,844"), "{hp}");
+        assert!(hp.contains("every value matched"), "{hp}");
+        assert!(
+            hp.contains("Baby classes, Super Novices and levels above 99 have not been compared"),
+            "{hp}"
+        );
+        let aspd = find("attack speed", "Attack speed (ASPD)");
+        assert!(aspd.contains("sqrt(DEX x DEX / 5 + AGI x AGI / 2) / 4"), "{aspd}");
+        assert!(aspd.contains("DEX x DEX / 7"), "{aspd}");
+        assert!(aspd.contains("193: BabyThirdClasses, SuperNovice, ThirdClasses"), "{aspd}");
     }
 
     #[test]
