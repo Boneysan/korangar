@@ -237,6 +237,14 @@ pub enum InputEvent {
         skill_id: u16,
         change: i8,
     },
+    /// Write the planner's plan to a numbered slot under `client/build_plans`.
+    BuildPlannerSave {
+        slot: u8,
+    },
+    /// Load a numbered slot, re-fitted to the character as it is now.
+    BuildPlannerLoad {
+        slot: u8,
+    },
     /// Move the planner's target Base Level.
     BuildPlannerBaseLevel {
         change: i16,

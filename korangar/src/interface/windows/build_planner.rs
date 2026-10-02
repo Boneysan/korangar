@@ -167,6 +167,20 @@ impl CustomWindow<ClientState> for BuildPlannerWindow {
                 scroll_view! {
                     children: SkillList::new(client_state().build_planner().skill_rows()),
                 },
+                split! {
+                    children: (
+                        button! { text: "Save 1", event: InputEvent::BuildPlannerSave { slot: 1 } },
+                        button! { text: "Save 2", event: InputEvent::BuildPlannerSave { slot: 2 } },
+                        button! { text: "Save 3", event: InputEvent::BuildPlannerSave { slot: 3 } },
+                    ),
+                },
+                split! {
+                    children: (
+                        button! { text: "Load 1", event: InputEvent::BuildPlannerLoad { slot: 1 } },
+                        button! { text: "Load 2", event: InputEvent::BuildPlannerLoad { slot: 2 } },
+                        button! { text: "Load 3", event: InputEvent::BuildPlannerLoad { slot: 3 } },
+                    ),
+                },
                 button! { text: "Reset to current character", event: InputEvent::BuildPlannerReset },
                 line!(status_text),
             ),

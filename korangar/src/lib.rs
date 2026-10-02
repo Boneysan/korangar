@@ -8515,6 +8515,16 @@ impl Client {
                         .follow_mut(client_state().build_planner())
                         .adjust_skill(skill_id, change);
                 }
+                InputEvent::BuildPlannerSave { slot } => {
+                    let planner = self.client_state.follow_mut(client_state().build_planner());
+                    let result = planner.save_slot(std::path::Path::new("client/build_plans"), slot);
+                    planner.report(result);
+                }
+                InputEvent::BuildPlannerLoad { slot } => {
+                    let planner = self.client_state.follow_mut(client_state().build_planner());
+                    let result = planner.load_slot(std::path::Path::new("client/build_plans"), slot);
+                    planner.report(result);
+                }
                 InputEvent::BuildPlannerBaseLevel { change } => {
                     self.client_state
                         .follow_mut(client_state().build_planner())

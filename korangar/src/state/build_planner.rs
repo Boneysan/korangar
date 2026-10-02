@@ -1,4 +1,5 @@
 use std::collections::HashMap;
+use std::path::{Path, PathBuf};
 
 use korangar_interface::element::StateElement;
 use rust_state::RustState;
@@ -151,6 +152,78 @@ impl BuildPlannerState {
         self.baseline = baseline;
         self.status_text = "Simulation only: nothing is sent to the server.".to_owned();
         self.refresh();
+    }
+
+    /// Where a slot lives. Plans are per job: a Knight's plan is meaningless
+    /// to a Wizard, and keying the file keeps one slot per class.
+    pub fn slot_path(directory: &Path, job_id: u16, slot: u8) -> PathBuf {
+        directory.join(format!("job-{job_id}-slot-{slot}.json"))
+    }
+
+    /// Write the current plan to `slot`. Nothing is sent to the server.
+    pub fn save_slot(&mut self, directory: &Path, slot: u8) -> Result<(), String> {
+        let plan = self.plan.as_mut().ok_or("no plan is open")?;
+        plan.name = format!("Slot {slot}");
+        let json = plan.save_to_json()?;
+        std::fs::create_dir_all(directory).map_err(|error| format!("cannot create {}: {error}", directory.display()))?;
+        let path = Self::slot_path(directory, plan.job_id, slot);
+        std::fs::write(&path, json).map_err(|error| format!("cannot write {}: {error}", path.display()))?;
+        self.status_text = format!("Saved to slot {slot}.");
+        Ok(())
+    }
+
+    /// Replace the plan with the one in `slot`, re-fitted to the character as
+    /// it is *now*. Only the intent (target levels, stats, skills) is taken
+    /// from the file: the point budget is rebuilt from the live character,
+    /// because the saved one describes the character as it was when saved.
+    pub fn load_slot(&mut self, directory: &Path, slot: u8) -> Result<(), String> {
+        let current = self.plan.as_ref().ok_or("no plan is open")?;
+        let path = Self::slot_path(directory, current.job_id, slot);
+        let json = std::fs::read_to_string(&path).map_err(|_| format!("slot {slot} is empty"))?;
+        self.load_json(&json)
+            .inspect(|()| self.status_text = format!("Loaded slot {slot}."))
+    }
+
+    fn load_json(&mut self, json: &str) -> Result<(), String> {
+        let loaded = BuildPlan::load_from_json(json)?;
+        let mut plan = self.plan.clone().ok_or("no plan is open")?;
+        if loaded.job_id != plan.job_id {
+            return Err(format!(
+                "plan is for job {}, this character is job {}",
+                loaded.job_id, plan.job_id
+            ));
+        }
+        plan.target_base_level = loaded.target_base_level.clamp(1, PLANNER_MAX_BASE_LEVEL);
+        plan.target_job_level = loaded.target_job_level.clamp(plan.start_job_level.max(1), PLANNER_MAX_JOB_LEVEL);
+        plan.stats = loaded.stats;
+        plan.skills = loaded.skills;
+        // Levels the character already has are spent for good.
+        for (&skill_id, &level) in &self.baseline.skills {
+            let entry = plan.skills.entry(skill_id).or_insert(0);
+            *entry = (*entry).max(level);
+        }
+        if ALL_STATS
+            .iter()
+            .any(|&stat| plan.stats.get_stat(stat) > PLANNER_MAX_STAT || plan.stats.get_stat(stat) == 0)
+        {
+            return Err("plan has a stat outside 1..=99".to_owned());
+        }
+        if plan.spent_stat_points() > plan.total_stat_points() {
+            return Err("plan no longer fits: it spends more stat points than that level grants".to_owned());
+        }
+        if plan.spent_skill_points() > plan.total_skill_points() {
+            return Err("plan no longer fits: it spends more skill points than this character has".to_owned());
+        }
+        self.plan = Some(plan);
+        self.refresh();
+        Ok(())
+    }
+
+    /// Show the outcome of a save or load in the window.
+    pub fn report(&mut self, result: Result<(), String>) {
+        if let Err(reason) = result {
+            self.status_text = reason;
+        }
     }
 
     pub fn reset(&mut self) {
@@ -506,5 +579,104 @@ mod tests {
             "{}",
             quicken.text
         );
+    }
+
+    fn scratch_dir(name: &str) -> PathBuf {
+        let directory = std::env::temp_dir().join(format!("korangar-planner-{name}-{}", std::process::id()));
+        let _ = std::fs::remove_dir_all(&directory);
+        directory
+    }
+
+    #[test]
+    fn a_saved_plan_loads_back_identically() {
+        let directory = scratch_dir("roundtrip");
+        let mut state = BuildPlannerState::default();
+        state.start(knight());
+        state.adjust_stat(StatKind::Luck, -1);
+        state.adjust_skill(3, 1);
+        state.adjust_job_level(2);
+        let saved = state.plan().clone();
+        state.save_slot(&directory, 2).unwrap();
+
+        let mut fresh = BuildPlannerState::default();
+        fresh.start(knight());
+        fresh.load_slot(&directory, 2).unwrap();
+        assert_eq!(fresh.plan().stats, saved.stats);
+        assert_eq!(fresh.plan().skills, saved.skills);
+        assert_eq!(fresh.plan().target_job_level, saved.target_job_level);
+        assert!(fresh.status_text.contains("Loaded slot 2"), "{}", fresh.status_text);
+        let _ = std::fs::remove_dir_all(&directory);
+    }
+
+    #[test]
+    fn an_empty_slot_is_reported_and_changes_nothing() {
+        let directory = scratch_dir("empty");
+        let mut state = BuildPlannerState::default();
+        state.start(knight());
+        let before = state.plan().clone();
+        let error = state.load_slot(&directory, 3).unwrap_err();
+        assert_eq!(error, "slot 3 is empty");
+        assert_eq!(*state.plan(), before);
+    }
+
+    #[test]
+    fn a_plan_for_another_job_is_refused() {
+        let directory = scratch_dir("job");
+        let mut wizard = BuildPlannerState::default();
+        wizard.start(PlannerBaseline { job_id: 9, ..knight() });
+        wizard.save_slot(&directory, 1).unwrap();
+        // Put the wizard's file where the knight's slot would be.
+        std::fs::copy(
+            BuildPlannerState::slot_path(&directory, 9, 1),
+            BuildPlannerState::slot_path(&directory, 7, 1),
+        )
+        .unwrap();
+
+        let mut state = BuildPlannerState::default();
+        state.start(knight());
+        let before = state.plan().clone();
+        let error = state.load_slot(&directory, 1).unwrap_err();
+        assert!(error.contains("job 9"), "{error}");
+        assert_eq!(*state.plan(), before);
+        let _ = std::fs::remove_dir_all(&directory);
+    }
+
+    #[test]
+    fn a_plan_that_no_longer_fits_is_refused_and_leaves_the_plan_alone() {
+        let directory = scratch_dir("stale");
+        let mut state = BuildPlannerState::default();
+        state.start(knight());
+        state.adjust_skill(3, 1);
+        state.save_slot(&directory, 1).unwrap();
+
+        // The same character, but with no points left to have bought that.
+        let mut poorer = BuildPlannerState::default();
+        poorer.start(PlannerBaseline {
+            skill_points: 0,
+            ..knight()
+        });
+        let before = poorer.plan().clone();
+        let error = poorer.load_slot(&directory, 1).unwrap_err();
+        assert!(error.contains("no longer fits"), "{error}");
+        assert_eq!(*poorer.plan(), before);
+        let _ = std::fs::remove_dir_all(&directory);
+    }
+
+    #[test]
+    fn loading_cannot_undo_levels_the_character_has_since_learned() {
+        let directory = scratch_dir("learned");
+        let mut state = BuildPlannerState::default();
+        state.start(knight());
+        state.save_slot(&directory, 1).unwrap();
+
+        // Since saving, the character learned Spear Mastery 2.
+        let mut later = BuildPlannerState::default();
+        later.start(PlannerBaseline {
+            skills: HashMap::from([(1, 9), (2, 10), (55, 2)]),
+            ..knight()
+        });
+        later.load_slot(&directory, 1).unwrap();
+        assert_eq!(later.plan().skills.get(&55), Some(&2));
+        let _ = std::fs::remove_dir_all(&directory);
     }
 }
