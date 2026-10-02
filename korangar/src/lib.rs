@@ -7420,6 +7420,35 @@ impl Client {
     }
 
     /// Keep the Map window chrome in sync with [`MinimapState::display_side`].
+    /// Seed the simulated planner from the live character's current point.
+    fn start_build_planner(&mut self) {
+        use crate::state::build_planner::PlannerBaseline;
+        use crate::world::PlannedStats;
+
+        let Some(player) = self.client_state.try_follow(this_player()) else {
+            return;
+        };
+        let common = player.get_common();
+        let clamp = |value: i32| value.clamp(1, u16::MAX as i32) as u16;
+        let baseline = PlannerBaseline {
+            job_id: common.job_id.0,
+            base_level: player.base_level,
+            job_level: player.job_level,
+            stats: PlannedStats::new(
+                clamp(player.strength),
+                clamp(player.agility),
+                clamp(player.vitality),
+                clamp(player.intelligence),
+                clamp(player.dexterity),
+                clamp(player.luck),
+            ),
+            max_hp: common.maximum_health_points,
+            max_sp: player.maximum_spell_points,
+            max_weight: player.maximum_weight,
+        };
+        self.client_state.follow_mut(client_state().build_planner()).start(baseline);
+    }
+
     fn sync_minimap_window_size(&mut self) {
         use crate::state::minimap::{MAX_MINIMAP_SIDE, MIN_MINIMAP_SIDE};
 
@@ -8460,6 +8489,35 @@ impl Client {
                             false => self.interface.open_window(StatsWindow::new(this_player().manually_asserted())),
                         }
                     }
+                }
+                InputEvent::ToggleBuildPlannerWindow => {
+                    if self.client_state.try_follow(this_player()).is_some() {
+                        match self.interface.is_window_with_class_open(WindowClass::BuildPlanner) {
+                            true => self.interface.close_window_with_class(WindowClass::BuildPlanner),
+                            false => {
+                                self.start_build_planner();
+                                self.interface.open_window(BuildPlannerWindow);
+                            }
+                        }
+                    }
+                }
+                InputEvent::BuildPlannerStat { stat, change } => {
+                    self.client_state
+                        .follow_mut(client_state().build_planner())
+                        .adjust_stat(stat, change);
+                }
+                InputEvent::BuildPlannerBaseLevel { change } => {
+                    self.client_state
+                        .follow_mut(client_state().build_planner())
+                        .adjust_base_level(change);
+                }
+                InputEvent::BuildPlannerJobLevel { change } => {
+                    self.client_state
+                        .follow_mut(client_state().build_planner())
+                        .adjust_job_level(change);
+                }
+                InputEvent::BuildPlannerReset => {
+                    self.client_state.follow_mut(client_state().build_planner()).reset();
                 }
                 InputEvent::ToggleGameSettingsWindow => match self.interface.is_window_with_class_open(WindowClass::GameSettings) {
                     true => self.interface.close_window_with_class(WindowClass::GameSettings),

@@ -225,6 +225,23 @@ pub enum InputEvent {
     ToggleSit,
     /// Toggle the in-game minimap window (official-style map corner).
     ToggleMinimapWindow,
+    /// Open or close the simulated build planner (GDD F03).
+    ToggleBuildPlannerWindow,
+    /// Adjust one planned stat by one point; never sent to the server.
+    BuildPlannerStat {
+        stat: crate::world::StatKind,
+        change: i8,
+    },
+    /// Move the planner's target Base Level.
+    BuildPlannerBaseLevel {
+        change: i16,
+    },
+    /// Move the planner's target Job Level.
+    BuildPlannerJobLevel {
+        change: i16,
+    },
+    /// Return the planner to the live character's current point.
+    BuildPlannerReset,
     /// Grow the minimap square (button / scroll).
     MinimapZoomIn,
     /// Shrink the minimap square (button / scroll).

@@ -288,6 +288,11 @@ where
                 stat_row!(intelligence_text, intelligence, bonus_intelligence, intelligence_stat_points_cost, Intelligence),
                 stat_row!(dexterity_text, dexterity, bonus_dexterity, dexterity_stat_points_cost, Dexterity),
                 stat_row!(luck_text, luck, bonus_luck, luck_stat_points_cost, Luck),
+                button! {
+                    text: "Build planner",
+                    tooltip: "Simulate future levels and stat allocations. Nothing is sent to the server.",
+                    event: InputEvent::ToggleBuildPlannerWindow,
+                },
             ),
         }
     }

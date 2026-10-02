@@ -1,3 +1,4 @@
+pub mod build_planner;
 #[cfg(feature = "debug")]
 pub mod cache_statistics;
 pub mod character_creation;
@@ -85,6 +86,7 @@ use crate::renderer::InterfaceRenderer;
 use crate::settings::{
     GameSettings, GraphicsSettingsCapabilities, InterfaceSettings, InterfaceSettingsCapabilities, LoginSettings, ServiceSettings,
 };
+use crate::state::build_planner::BuildPlannerState;
 use crate::state::character_creation::CharacterCreation;
 use crate::state::character_slots::CharacterSlots;
 use crate::state::discovery::DiscoveryState;
@@ -398,6 +400,8 @@ pub struct ClientState {
     /// Current-map minimap texture and dimensions.
     #[hidden_element]
     minimap: MinimapState,
+    /// Simulated build planner (GDD F03); never sends packets.
+    build_planner: BuildPlannerState,
 
     /// List of all available character servers.
     character_servers: Vec<CharacterServerInformation>,
@@ -582,6 +586,7 @@ impl ClientState {
             let skill_cooldowns = SkillCooldowns::default();
             let toasts = ToastQueue::default();
             let minimap = MinimapState::default();
+            let build_planner = BuildPlannerState::default();
             let skill_tree_window = SkillTreeWindowState::default();
         });
 
@@ -676,6 +681,7 @@ impl ClientState {
             skill_cooldowns,
             toasts,
             minimap,
+            build_planner,
             character_servers,
             server_select_status: String::new(),
             character_slots,

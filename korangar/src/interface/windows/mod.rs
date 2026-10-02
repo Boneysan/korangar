@@ -1,6 +1,7 @@
 mod adventure_guide;
 mod audio_settings;
 mod auto_spell;
+mod build_planner;
 mod buy;
 mod buy_cart;
 mod buy_or_sell;
@@ -66,6 +67,7 @@ use serde::{Deserialize, Serialize};
 pub use self::adventure_guide::{AdventureGuideWindow, AdventureGuideWindowState, open_item_entry};
 pub use self::audio_settings::AudioSettingsWindow;
 pub use self::auto_spell::AutoSpellWindow;
+pub use self::build_planner::BuildPlannerWindow;
 pub use self::buy::BuyWindow;
 pub use self::buy_cart::BuyCartWindow;
 pub use self::buy_or_sell::BuyOrSellWindow;
@@ -151,6 +153,7 @@ pub enum WindowClass {
     StatusBar,
     SkillTree,
     Stats,
+    BuildPlanner,
     FriendList,
     FriendRequest,
     Login,
