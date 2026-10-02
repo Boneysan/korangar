@@ -34,6 +34,7 @@ VERSIONED = {
     "skill_formula_reviews": ROOT / "docs" / "skill-formula-reviews.v1.json",
     "scripted_spawn_reviews": ROOT / "docs" / "scripted-spawn-reviews.v1.json",
     "dispositions": ROOT / "docs" / "encyclopedia-dispositions.v1.json",
+    "rumors": ROOT / "docs" / "rumors.v1.json",
 }
 
 class EvidenceState(str, Enum):
@@ -103,6 +104,7 @@ def build_report() -> dict:
     boss_behaviors = entries(data["boss_behavior"])
     skill_formula_reviews = entries(data["skill_formula_reviews"])
     scripted_spawn_reviews = entries(data["scripted_spawn_reviews"])
+    rumors = entries(data["rumors"])
 
     monster_spawn_rows = [entry for entry in monsters if entry.get("spawn_regions")]
     monster_script_rows = [entry for entry in monsters if entry.get("scripted_spawn_references")]
@@ -224,6 +226,12 @@ def build_report() -> dict:
         "crafting_and_mechanics": {
             "production_and_conversion_recipes": len(recipes),
             "refinement_weapon_levels": len(refine.get("weapon_levels", [])),
+        },
+        "rumors": {
+            "non_story_rumors": len(rumors),
+            "rumors_with_map_notes": dimension(sum(bool(r.get("map_name")) for r in rumors), len(rumors), "non-story rumors with associated map locations and route coordinates"),
+            "rumors_with_monster_leads": sum(bool(r.get("related_monster_id")) for r in rumors),
+            "rumors_with_item_leads": sum(bool(r.get("related_item_id")) for r in rumors),
         },
     }
 

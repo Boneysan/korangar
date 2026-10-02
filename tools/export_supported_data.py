@@ -40,12 +40,14 @@ EXPORTERS = (
     "export_npc_service_reviews.py",
     "export_map_flags.py",
     "export_bestiary_reference.py",
+    "export_spawn_rectangles.py",
     "export_boss_behavior_reviews.py",
     "export_scripted_spawn_reviews.py",
     "export_quest_reference.py",
     "export_skill_formula_reviews.py",
     "export_encyclopedia_dispositions.py",
     "generate_navigation_graph.py",
+    "export_rumors_reference.py",
     "export_encyclopedia_coverage.py",
 )
 

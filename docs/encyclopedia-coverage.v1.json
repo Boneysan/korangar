@@ -223,6 +223,16 @@
     "crafting_and_mechanics": {
       "production_and_conversion_recipes": 919,
       "refinement_weapon_levels": 4
+    },
+    "rumors": {
+      "non_story_rumors": 8,
+      "rumors_with_map_notes": {
+        "observed": 8,
+        "total": 8,
+        "basis": "non-story rumors with associated map locations and route coordinates"
+      },
+      "rumors_with_monster_leads": 5,
+      "rumors_with_item_leads": 2
     }
   }
 }
