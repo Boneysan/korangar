@@ -18,6 +18,7 @@ VERSIONED = {
     "items": ROOT / "docs" / "items.v1.json",
     "cards": ROOT / "docs" / "cards.v1.json",
     "job_skills": ROOT / "docs" / "job-skills.v1.json",
+    "exp_tables": ROOT / "docs" / "exp-tables.v1.json",
     "job_bonuses": ROOT / "docs" / "job-bonuses.v1.json",
     "statuses": ROOT / "docs" / "status-effects.v1.json",
     "quests": ROOT / "docs" / "quests.v1.json",
@@ -101,6 +102,13 @@ def build_report() -> dict:
     status_icons = read_json(ROOT / "docs" / "status_effects.json")
     job_skills = entries(data["job_skills"])
     job_bonuses = entries(data["job_bonuses"])
+    exp_tables = data["exp_tables"]
+    guide_job_names = [
+        line for line in (ROOT / "korangar/src/world/library/hercules_job_names.tsv").read_text(encoding="utf-8").splitlines()
+        if line.strip() and not line.startswith("#")
+    ]
+    guide_job_ids = {int(line.split("\t")[0]) for line in guide_job_names}
+    exp_job_ids = {job["job_id"] for job in exp_tables["jobs"]}
     rules = entries(data["server_rules"])
     refine = data["refine"]
     npc_service_clues = entries(data["npc_service_clues"])
@@ -183,6 +191,8 @@ def build_report() -> dict:
             "skill_records": len(skill_data) if isinstance(skill_data, list) else 0,
             "job_skill_trees": len(job_skills),
             "job_bonus_schedules": len(job_bonuses),
+            "job_exp_tables": dimension(len(guide_job_ids & exp_job_ids), len(guide_job_ids), "Guide job entries whose base and job EXP groups the server defines"),
+            "exp_groups": {"base": len(exp_tables["base_groups"]), "job": len(exp_tables["job_groups"])},
             "reviewed_formula_records": len(skill_formula_reviews),
             "skills_covered_by_reviewed_formulas": len({skill["skill_id"] for review in skill_formula_reviews for skill in review.get("skill_ids", [])}),
         },

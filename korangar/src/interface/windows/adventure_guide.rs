@@ -1627,6 +1627,7 @@ fn job_details(job_id: u16, name: &str) -> Vec<String> {
     } else {
         lines.push("No job-level stat bonus schedule is present for this job ID in Hercules job_db2.txt.".to_owned());
     }
+    append_exp_details(&mut lines, job_id);
     let Some(tree) = data.job_skill_tree_by_id(job_id) else {
         lines.push("No matching skill tree is present in the bundled Hercules job-skill export.".to_owned());
         lines.push("Job bonus source: bundled Hercules job_db2.txt export; conditional-script effects are not inferred.".to_owned());
@@ -1660,6 +1661,58 @@ fn job_details(job_id: u16, name: &str) -> Vec<String> {
             .to_owned(),
     );
     lines
+}
+
+/// `1234567` -> `1,234,567`.
+fn group_digits(value: u64) -> String {
+    let digits = value.to_string();
+    let mut grouped = String::new();
+    for (index, digit) in digits.chars().enumerate() {
+        if index > 0 && (digits.len() - index) % 3 == 0 {
+            grouped.push(',');
+        }
+        grouped.push(digit);
+    }
+    grouped
+}
+
+fn append_exp_table(lines: &mut Vec<String>, label: &str, group_name: &str, group: &crate::dm::reference_data::ReferenceExpGroup) {
+    lines.push(format!(
+        "{label} EXP (server group {group_name}, maximum level {}): EXP to advance from level to the next",
+        group.max_level
+    ));
+    let mut milestones: Vec<u16> = (1..=group.exp.len() as u16)
+        .filter(|level| *level == 1 || level % 10 == 0)
+        .collect();
+    if let Some(last) = u16::try_from(group.exp.len()).ok().filter(|last| !milestones.contains(last)) {
+        milestones.push(last);
+    }
+    let steps = milestones
+        .iter()
+        .filter_map(|level| Some(format!("{level}→{}: {}", level + 1, group_digits(group.exp_to_next(*level)?))))
+        .collect::<Vec<_>>();
+    lines.push(format!("  {}", steps.join("; ")));
+    if let Some(total) = group.total_to_reach(group.max_level) {
+        lines.push(format!(
+            "  Total from level 1 to level {}: {}",
+            group.max_level,
+            group_digits(total)
+        ));
+    }
+}
+
+fn append_exp_details(lines: &mut Vec<String>, job_id: u16) {
+    let Some((job, base, job_group)) = reference_data().exp_groups_for_job(job_id) else {
+        lines.push("No EXP group is defined for this job in Hercules job_db.conf.".to_owned());
+        return;
+    };
+    append_exp_table(lines, "Base", &job.base_group, base);
+    append_exp_table(lines, "Job", &job.job_group, job_group);
+    lines.push(
+        "EXP table source: Hercules db/re/exp_group_db.conf and job_db.conf. These are the table values; the server's base, job and quest \
+         EXP rates (see the Experience and drop modifiers rule) and the level-difference modifiers scale what a kill awards."
+            .to_owned(),
+    );
 }
 
 fn append_job_bonus_details(lines: &mut Vec<String>, bonuses: &ReferenceJobBonuses) {
@@ -3592,6 +3645,56 @@ mod tests {
         // unmodified.
         assert!(detail.contains("Any other difference takes 100%"), "{detail}");
         assert!(detail.contains("not observed in play"), "{detail}");
+    }
+
+    #[test]
+    fn job_pages_show_the_servers_exp_tables_for_that_job() {
+        let data = reference_data();
+        let (knight, base, job) = data.exp_groups_for_job(7).expect("Knight has EXP groups");
+        assert_eq!(
+            (knight.base_group.as_str(), knight.job_group.as_str()),
+            ("FirstClasses", "SecondClasses")
+        );
+        let (lord_knight, ..) = data.exp_groups_for_job(4008).expect("Lord Knight has EXP groups");
+        assert_eq!(lord_knight.base_group, "TranscendedClasses");
+        // Values read straight from db/re/exp_group_db.conf: FirstClasses starts at
+        // 350, its 50th entry is 47000, and its last (level 98 -> 99) is 3300000.
+        assert_eq!(base.exp_to_next(1), Some(350));
+        assert_eq!(base.exp_to_next(50), Some(47_000));
+        assert_eq!(base.exp_to_next(98), Some(3_300_000));
+        assert_eq!(base.exp_to_next(99), None, "no table entry past the last level");
+        assert_eq!(base.exp_to_next(0), None);
+        assert_eq!(base.total_to_reach(1), Some(0));
+        assert_eq!(base.total_to_reach(2), Some(350));
+        assert!(job.max_level >= 2);
+
+        let (id, name) = job_names().find(|(_, name)| *name == "Knight").expect("Knight job");
+        let text = super::job_details(id, name).join("\n");
+        assert!(text.contains("server group FirstClasses, maximum level 99"), "{text}");
+        assert!(text.contains("1→2: 350"), "{text}");
+        assert!(text.contains("50→51: 47,000"), "{text}");
+        assert!(text.contains("98→99: 3,300,000"), "{text}");
+        assert!(text.contains("Total from level 1 to level 99:"), "{text}");
+        assert!(text.contains("server group SecondClasses"), "{text}");
+    }
+
+    #[test]
+    fn a_job_the_server_has_no_exp_group_for_says_so_instead_of_guessing() {
+        let data = reference_data();
+        let missing = job_names().find(|(id, _)| data.exp_groups_for_job(*id).is_none());
+        let (id, name) = missing.expect("some listed job has no job_db.conf block");
+        let text = super::job_details(id, name).join("\n");
+        assert!(text.contains("No EXP group is defined for this job"), "{name}: {text}");
+        assert!(!text.contains("server group"), "{name}: {text}");
+    }
+
+    #[test]
+    fn exp_numbers_are_grouped_in_threes() {
+        assert_eq!(super::group_digits(0), "0");
+        assert_eq!(super::group_digits(350), "350");
+        assert_eq!(super::group_digits(47_000), "47,000");
+        assert_eq!(super::group_digits(3_300_000), "3,300,000");
+        assert_eq!(super::group_digits(1_000), "1,000");
     }
 
     #[test]

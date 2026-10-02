@@ -48,6 +48,7 @@ EXPORTERS = (
     "export_encyclopedia_dispositions.py",
     "generate_navigation_graph.py",
     "export_rumors_reference.py",
+    "export_exp_tables.py",
     "export_encyclopedia_coverage.py",
 )
 

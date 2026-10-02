@@ -31,6 +31,7 @@ const ITEM_EXCHANGES_JSON: &str = include_str!("../../../docs/item-exchanges.v1.
 const SKILL_FORMULA_REVIEWS_JSON: &str = include_str!("../../../docs/skill-formula-reviews.v1.json");
 const NPC_SERVICE_REVIEWS_JSON: &str = include_str!("../../../docs/npc-service-reviews.v1.json");
 const RUMORS_JSON: &str = include_str!("../../../docs/rumors.v1.json");
+const EXP_TABLES_JSON: &str = include_str!("../../../docs/exp-tables.v1.json");
 const SEARCH_ALIASES_JSON: &str = include_str!("../../../docs/search-aliases.v1.json");
 
 #[derive(Deserialize)]
@@ -846,6 +847,44 @@ pub struct ReferenceServerRule {
     pub sources: Vec<ReferenceSource>,
 }
 
+/// One server EXP group: `exp[n - 1]` is the EXP needed to advance from level
+/// `n` to `n + 1`, and the group holds at most `max_level - 1` values.
+#[derive(Debug, Deserialize)]
+pub struct ReferenceExpGroup {
+    pub max_level: u16,
+    pub exp: Vec<u64>,
+}
+
+impl ReferenceExpGroup {
+    /// EXP needed to advance from `level` to `level + 1`.
+    pub fn exp_to_next(&self, level: u16) -> Option<u64> {
+        self.exp.get((level as usize).checked_sub(1)?).copied()
+    }
+
+    /// Total EXP needed to climb from level 1 to `level`.
+    pub fn total_to_reach(&self, level: u16) -> Option<u64> {
+        let steps = (level as usize).checked_sub(1)?;
+        (steps <= self.exp.len()).then(|| self.exp[..steps].iter().sum())
+    }
+}
+
+#[derive(Debug, Deserialize)]
+pub struct ReferenceExpJob {
+    pub job_id: u16,
+    pub name: String,
+    pub base_group: String,
+    pub job_group: String,
+}
+
+#[derive(Debug, Deserialize)]
+pub struct ReferenceExpTables {
+    pub schema_version: u32,
+    pub mode: String,
+    pub base_groups: HashMap<String, ReferenceExpGroup>,
+    pub job_groups: HashMap<String, ReferenceExpGroup>,
+    pub jobs: Vec<ReferenceExpJob>,
+}
+
 /// An authored player term that leads to an existing Guide target.
 #[derive(Debug, Deserialize)]
 pub struct ReferenceAlias {
@@ -1049,6 +1088,7 @@ pub struct ReferenceData {
     pub npc_services: Vec<ReferenceNpcServiceReview>,
     pub rumors: Vec<ReferenceRumor>,
     pub aliases: Vec<ReferenceAlias>,
+    pub exp_tables: ReferenceExpTables,
     pub map_flags: Vec<ReferenceMapFlag>,
     pub runtime_map_flag_clues: Vec<ReferenceRuntimeMapFlagClue>,
     pub runtime_map_flag_reviews: Vec<ReferenceRuntimeMapFlagReview>,
@@ -1101,6 +1141,16 @@ impl ReferenceData {
             .map_err(|error| format!("embedded skill-formula-reviews.v1.json is invalid: {error}"))?;
         let npc_services: VersionedNpcServiceReviewsFile = serde_json::from_str(NPC_SERVICE_REVIEWS_JSON)
             .map_err(|error| format!("embedded npc-service-reviews.v1.json is invalid: {error}"))?;
+        let exp_tables: ReferenceExpTables =
+            serde_json::from_str(EXP_TABLES_JSON).map_err(|error| format!("embedded exp-tables.v1.json is invalid: {error}"))?;
+        if exp_tables.schema_version != 1 || exp_tables.mode != "renewal" {
+            return Err("unsupported exp-tables.v1.json schema or mode".to_owned());
+        }
+        for job in &exp_tables.jobs {
+            if !exp_tables.base_groups.contains_key(&job.base_group) || !exp_tables.job_groups.contains_key(&job.job_group) {
+                return Err(format!("EXP job {} names an unknown group", job.name));
+            }
+        }
         let aliases: VersionedAliasesFile =
             serde_json::from_str(SEARCH_ALIASES_JSON).map_err(|error| format!("embedded search-aliases.v1.json is invalid: {error}"))?;
         let rumors: VersionedRumorsFile =
@@ -1487,6 +1537,7 @@ impl ReferenceData {
             npc_services: npc_services.entries,
             rumors: rumors.entries,
             aliases: aliases.entries,
+            exp_tables,
             map_flags: map_flags.entries,
             runtime_map_flag_clues: map_flags.runtime_clues,
             runtime_map_flag_reviews: map_flags.runtime_reviews,
@@ -1759,6 +1810,17 @@ impl ReferenceData {
         matches.sort_by_key(|skill| (skill.description.to_lowercase(), skill.id));
         matches.truncate(limit);
         matches
+    }
+
+    /// The base and job EXP groups a job advances on, if the server defines
+    /// them.
+    pub fn exp_groups_for_job(&self, job_id: u16) -> Option<(&ReferenceExpJob, &ReferenceExpGroup, &ReferenceExpGroup)> {
+        let job = self.exp_tables.jobs.iter().find(|job| job.job_id == job_id)?;
+        Some((
+            job,
+            self.exp_tables.base_groups.get(&job.base_group)?,
+            self.exp_tables.job_groups.get(&job.job_group)?,
+        ))
     }
 
     /// Targets of every alias of `kind` that `query` reaches.

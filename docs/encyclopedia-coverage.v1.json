@@ -101,6 +101,15 @@
       "skill_records": 1170,
       "job_skill_trees": 128,
       "job_bonus_schedules": 147,
+      "job_exp_tables": {
+        "observed": 128,
+        "total": 151,
+        "basis": "Guide job entries whose base and job EXP groups the server defines"
+      },
+      "exp_groups": {
+        "base": 7,
+        "job": 13
+      },
       "reviewed_formula_records": 12,
       "skills_covered_by_reviewed_formulas": 50
     },
