@@ -368,6 +368,131 @@ def level_penalty_rule(path: Path) -> dict[str, object]:
     }
 
 
+def dm_campaign_rule(battle: dict[str, dict[str, object]]) -> dict[str, object]:
+    timeout_ms = value(battle, "campaign_combat_timeout_ms")
+    sit_interval_ms = value(battle, "campaign_sit_recovery_interval_ms")
+    sit_percent = value(battle, "campaign_sit_recovery_percent")
+    respawn_percent = value(battle, "campaign_respawn_percent")
+    fill_ms = value(battle, "campaign_respawn_fill_ms")
+    weight_mult = value(battle, "campaign_max_weight_multiplier")
+    return {
+        "id": "dm-campaign-rules",
+        "category": "Progression",
+        "title": "DM Campaign progression and recovery",
+        "summary": "Settings for combat recovery, sitting regeneration, respawn, weight capacity, and party story synchronization active during DM Session campaign play.",
+        "details": [
+            f"Campaign combat timeout: {timeout_ms} ms ({timeout_ms // 1000} seconds) without taking or dealing damage before leaving combat state.",
+            f"Rest and sit recovery: sitting out of combat recovers {sit_percent}% of max HP and max SP every {sit_interval_ms} ms ({sit_interval_ms // 1000} seconds).",
+            f"Campaign respawn: defeated characters respawn with {respawn_percent}% HP and SP, filling to 100% linearly over {fill_ms} ms ({fill_ms // 1000} seconds).",
+            f"Exploration weight capacity: maximum weight capacity is multiplied by {weight_mult}x during campaign sessions.",
+            "Party story synchronization: characters in an active campaign party (dm_campaign_checkpoint_member) catch up to the party's journaled story quests and beat flags (dm_campaign_party_event) upon joining or map change. Personal choices and past rewards are never overwritten.",
+        ],
+        "sources": sources(
+            required(battle, "campaign_combat_timeout_ms"),
+            required(battle, "campaign_sit_recovery_interval_ms"),
+            required(battle, "campaign_sit_recovery_percent"),
+            required(battle, "campaign_respawn_percent"),
+            required(battle, "campaign_respawn_fill_ms"),
+            required(battle, "campaign_max_weight_multiplier"),
+        ) + [
+            {"path": "src/map/combat_state.c", "record": "campaign combat timeout, sit recovery, and respawn fill"},
+            {"path": "src/map/party.c", "record": "party_campaign_catchup_others and party_campaign_push_others"},
+        ],
+    }
+
+
+def view_distance_rule(battle: dict[str, dict[str, object]]) -> dict[str, object]:
+    area = value(battle, "area_size")
+    dead_area = value(battle, "dead_area_size")
+    return {
+        "id": "view-distance-and-aoe",
+        "category": "Mechanics",
+        "title": "View distance and area radius",
+        "summary": "Entity view radius and despawn margin configured for modern high-resolution client display.",
+        "details": [
+            f"Active entity view radius (area_size): {area} cells ({area * 2}-cell diameter), configured in conf/import/battle.conf to prevent pop-in on modern high-resolution displays (overriding the stock 14-cell client.conf default).",
+            f"Despawn margin (dead_area_size): {dead_area} cells, keeping snap-dodge margin and entity tracking consistent with the expanded view radius.",
+            f"Shared party quest kill credit uses the same {area}-cell area radius around the defeated monster.",
+        ],
+        "sources": sources(
+            required(battle, "area_size"),
+            required(battle, "dead_area_size"),
+        ) + [
+            {"path": "conf/map/battle/client.conf", "record": "stock area_size: 14 default"},
+            {"path": "src/map/mob.c", "record": "party quest objective update within AREA_SIZE"},
+        ],
+    }
+
+
+def natural_recovery_rule(battle: dict[str, dict[str, object]]) -> dict[str, object]:
+    hp_ms = value(battle, "natural_healhp_interval")
+    sp_ms = value(battle, "natural_healsp_interval")
+    return {
+        "id": "natural-recovery-and-weight",
+        "category": "Mechanics",
+        "title": "Natural recovery and weight thresholds",
+        "summary": "Standing and sitting HP/SP regeneration intervals and the 50%/90% overweight capacity thresholds.",
+        "details": [
+            f"Natural HP recovery interval: {hp_ms} ms ({hp_ms // 1000} seconds) while standing.",
+            f"Natural SP recovery interval: {sp_ms} ms ({sp_ms // 1000} seconds) while standing.",
+            f"Sitting doubles natural recovery frequency (halving the tick interval to {hp_ms // 2000} seconds for HP and {sp_ms // 2000} seconds for SP). Moving or attacking resets the interval.",
+            "Overweight 50% limit: when inventory weight reaches or exceeds 50% of maximum capacity, natural HP and SP regeneration stops completely.",
+            "Overweight 90% limit: when inventory weight reaches or exceeds 90% of maximum capacity, normal attacks and skill casting are disabled.",
+        ],
+        "sources": sources(
+            required(battle, "natural_healhp_interval"),
+            required(battle, "natural_healsp_interval"),
+        ) + [
+            {"path": "src/map/status.c", "record": "natural heal calculation and sitting double rate"},
+            {"path": "src/map/pc.h", "record": "pc_isoverhealweight (50%) and pc_is90overweight (90%) macros"},
+        ],
+    }
+
+
+def progression_limits_rule(battle: dict[str, dict[str, object]]) -> dict[str, object]:
+    max_param = value(battle, "max_parameter")
+    multi_up = bool(required(battle, "multi_level_up")["value"])
+    return {
+        "id": "progression-limits",
+        "category": "Progression",
+        "title": "Multi-level-up and progression limits",
+        "summary": "Level advancement gating, baseline parameter limits, and server combat mode.",
+        "details": [
+            f"Multi-level-up: {'enabled' if multi_up else 'disabled (multi_level_up: false)'}. A single EXP gain from a monster or quest cannot advance a character by more than one level; excess EXP is retained toward the next level up to 99%.",
+            f"Base parameter limit: {max_param}. Player classes override this with per-job MaxStats from unit_parameters_db.conf (e.g. 130 for Third Classes, 125 for Super Novice and Extended Classes, 80 for Baby Classes).",
+            "PvP and War of Emperium: WoE guild castle battle modules are excluded from the server's battle include tree (this is a PvE and DM campaign server).",
+        ],
+        "sources": sources(
+            required(battle, "multi_level_up"),
+            required(battle, "max_parameter"),
+        ) + [
+            {"path": "conf/map/battle.conf", "record": "WoE guild battle includes commented out"},
+            {"path": "db/re/unit_parameters_db.conf", "record": "per-job MaxStats parameter caps"},
+        ],
+    }
+
+
+def equipment_refinement_rule() -> dict[str, object]:
+    return {
+        "id": "equipment-refinement",
+        "category": "Mechanics",
+        "title": "Equipment refinement odds and mechanics",
+        "summary": "Safe limits, materials, Zeny costs, failure consequences, and stat bonuses for Armor and Weapons.",
+        "details": [
+            "Safe refine limits (100% success): Armor +4; Weapon Level 1 +7; Weapon Level 2 +6; Weapon Level 3 +5; Weapon Level 4 +4.",
+            "Failure consequence: refining past the safe limit carries a risk of permanent destruction — on failure, the item is destroyed outright and lost forever.",
+            "NPC Blacksmith costs: Armor uses 1 Elunium (2,000 Zeny); Weapon Lv 1 uses 1 Phracon (50 Zeny); Weapon Lv 2 uses 1 Emveretarcon (200 Zeny); Weapon Lv 3 uses 1 Oridecon (5,000 Zeny); Weapon Lv 4 uses 1 Oridecon (20,000 Zeny).",
+            "Whitesmith self-refine (WS_WEAPONREFINE): consumes 1 ore material with 0 Zeny cost; adds +0.5% success chance per job level above 50 (+10% flat for Mechanic Transcendent), but has no safe refine limit (can fail even at +1).",
+            "Stat bonuses: Armor gains +1 DEF per level (Lv 1–4), +2 DEF per level (Lv 5–8), +3 DEF per level (Lv 9–10). Weapons gain flat ATK/MATK per level (+2 for Lv1, +3 for Lv2, +5 for Lv3, +7 for Lv4), plus random ATK bonuses on unsafe levels.",
+        ],
+        "sources": [
+            {"path": "db/re/refine_db.conf", "record": "Armors and WeaponLevel1-4 Rates and StatsPerLevel"},
+            {"path": "npc/merchants/refine.txt", "record": "refinemain materials, fees, and failure destruction"},
+            {"path": "src/map/skill.c", "record": "skill_weaponrefine formula and material list"},
+        ],
+    }
+
+
 def build() -> dict[str, object]:
     battle = effective_settings(HERCULES / "conf/map/battle.conf")
     inter = effective_settings(HERCULES / "conf/common/inter-server.conf")
@@ -585,6 +710,11 @@ def build() -> dict[str, object]:
                     {"path": "src/map/battle.c", "record": "weapon damage calculation uses target size adjustment"},
                 ],
             },
+            dm_campaign_rule(battle),
+            view_distance_rule(battle),
+            natural_recovery_rule(battle),
+            progression_limits_rule(battle),
+            equipment_refinement_rule(),
         ],
     }
 

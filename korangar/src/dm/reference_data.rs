@@ -623,7 +623,19 @@ pub struct ReferenceRefinement {
     pub job_level_bonus_per_job_level_from_50_per_mille: i16,
     pub mechanic_transcendent_flat_bonus_percent: i16,
     pub on_failure: String,
+    #[serde(default)]
+    pub armor: Option<ReferenceRefinementArmor>,
     pub weapon_levels: Vec<ReferenceRefinementWeaponLevel>,
+}
+
+#[derive(Clone, Debug, Deserialize)]
+pub struct ReferenceRefinementArmor {
+    pub material: String,
+    pub cost_zeny: u32,
+    pub safe_level: u8,
+    pub on_failure: String,
+    pub base_chance_percent_by_target_level: HashMap<String, u16>,
+    pub def_bonus_by_target_level: HashMap<String, u16>,
 }
 
 #[derive(Debug, Deserialize)]
@@ -631,6 +643,16 @@ pub struct ReferenceRefinementWeaponLevel {
     pub weapon_level: u8,
     pub material: String,
     pub base_chance_percent_by_target_level: HashMap<String, u16>,
+    #[serde(default)]
+    pub cost_zeny: u32,
+    #[serde(default)]
+    pub safe_level: u8,
+    #[serde(default)]
+    pub stat_per_level: u16,
+    #[serde(default)]
+    pub random_bonus_start_level: u8,
+    #[serde(default)]
+    pub random_bonus_max_per_level: u16,
 }
 
 #[derive(Debug, Deserialize)]
@@ -1396,6 +1418,17 @@ impl ReferenceData {
         {
             return Err("embedded refine reference rows are empty or invalid".to_owned());
         }
+        if let Some(armor) = &refinement.armor {
+            if armor.safe_level == 0
+                || armor.safe_level > refinement.max_useful_refine_level
+                || armor.material.trim().is_empty()
+                || armor.base_chance_percent_by_target_level.len() != refinement.max_useful_refine_level as usize
+                || (1..=refinement.max_useful_refine_level)
+                    .any(|level| !armor.base_chance_percent_by_target_level.contains_key(&level.to_string()))
+            {
+                return Err("embedded armor refine reference rows are invalid".to_owned());
+            }
+        }
         let mut statuses = status_reference.entries;
         statuses.sort_by_key(|status| status.id);
         if statuses.is_empty() || statuses.iter().any(|status| status.name.trim().is_empty()) {
@@ -1415,15 +1448,31 @@ impl ReferenceData {
             return Err("unsupported search-aliases.v1.json schema".to_owned());
         }
         for alias in &aliases.entries {
-            let resolves = match alias.kind.as_str() {
-                "status" => statuses
-                    .iter()
-                    .any(|status| status.statuses.iter().any(|mechanic| mechanic.constant == alias.target)),
-                // Job names live in the client's job table, not in reference
-                // data; the guide tests resolve these.
-                "job" => !alias.target.trim().is_empty(),
-                other => return Err(format!("search alias {:?} has unknown kind {other:?}", alias.alias)),
-            };
+            let resolves =
+                match alias.kind.as_str() {
+                    "status" => statuses
+                        .iter()
+                        .any(|status| status.statuses.iter().any(|mechanic| mechanic.constant == alias.target)),
+                    // Job names live in the client's job table, not in reference
+                    // data; the guide tests resolve these.
+                    "job" => !alias.target.trim().is_empty(),
+                    "item" => {
+                        items.entries.iter().any(|item| {
+                            item.aegis_name.eq_ignore_ascii_case(&alias.target) || item.name.eq_ignore_ascii_case(&alias.target)
+                        }) || cards.entries.iter().any(|card| {
+                            card.aegis_name.eq_ignore_ascii_case(&alias.target) || card.name.eq_ignore_ascii_case(&alias.target)
+                        })
+                    }
+                    "monster" => bestiary.entries.iter().any(|monster| {
+                        monster.sprite_name.eq_ignore_ascii_case(&alias.target) || monster.name.eq_ignore_ascii_case(&alias.target)
+                    }),
+                    "skill" => skills.iter().any(|skill| {
+                        skill.name.eq_ignore_ascii_case(&alias.target) || skill.description.eq_ignore_ascii_case(&alias.target)
+                    }),
+                    // Maps live in navigation graph, checked in guide tests.
+                    "map" => !alias.target.trim().is_empty(),
+                    other => return Err(format!("search alias {:?} has unknown kind {other:?}", alias.alias)),
+                };
             if alias.alias.trim().is_empty() || alias.basis.trim().is_empty() || !resolves {
                 return Err(format!(
                     "search alias {:?} -> {:?} ({}) is empty, has no basis, or names a target that does not exist",
@@ -1925,6 +1974,7 @@ impl ReferenceData {
 
     pub fn search_skills(&self, query: &str, limit: usize) -> Vec<&ReferenceSkill> {
         let query = query.to_lowercase();
+        let alias_targets = self.alias_targets("skill", &query);
         let mut matches: Vec<_> = self
             .skills
             .iter()
@@ -1933,6 +1983,9 @@ impl ReferenceData {
                     || skill.name.to_lowercase().contains(&query)
                     || skill.description.to_lowercase().contains(&query)
                     || skill.id.to_string() == query
+                    || alias_targets
+                        .iter()
+                        .any(|target| skill.name.eq_ignore_ascii_case(target) || skill.description.eq_ignore_ascii_case(target))
             })
             .collect();
         matches.sort_by_key(|skill| (skill.description.to_lowercase(), skill.id));
@@ -1996,6 +2049,7 @@ impl ReferenceData {
 
     pub fn search_monsters(&self, query: &str, limit: usize) -> Vec<&ReferenceMonster> {
         let query = query.to_lowercase();
+        let alias_targets = self.alias_targets("monster", &query);
         let mut matches: Vec<_> = self
             .monsters
             .iter()
@@ -2004,6 +2058,9 @@ impl ReferenceData {
                     || monster.name.to_lowercase().contains(&query)
                     || monster.jname.to_lowercase().contains(&query)
                     || monster.sprite_name.to_lowercase().contains(&query)
+                    || alias_targets
+                        .iter()
+                        .any(|target| monster.sprite_name.eq_ignore_ascii_case(target) || monster.name.eq_ignore_ascii_case(target))
             })
             .collect();
         matches.sort_by_key(|monster| (monster.level, monster.id));
@@ -2028,7 +2085,11 @@ impl ReferenceData {
     }
 
     fn item_matches_query(&self, item: &ReferenceItem, query: &str) -> bool {
+        let alias_targets = self.alias_targets("item", query);
         item.matches_lowercase_query(query)
+            || alias_targets
+                .iter()
+                .any(|target| item.aegis_name.eq_ignore_ascii_case(target) || item.name.eq_ignore_ascii_case(target))
             || item.drops_from.iter().any(|drop| {
                 self.monster_by_id(drop.monster_id).is_some_and(|monster| {
                     monster.name.to_lowercase().contains(query)

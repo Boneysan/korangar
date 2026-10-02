@@ -670,25 +670,114 @@ fn item_details(item: &ReferenceItem, card: bool) -> Vec<String> {
     lines
 }
 
-fn refinement_details(refinement: &ReferenceRefinement) -> Vec<String> {
+fn refinement_details(refinement: &ReferenceRefinement, id: u32) -> Vec<String> {
+    if id == 0 {
+        // Armor Refinement Details
+        let mut lines = vec![
+            "Armor Refinement (NPC Blacksmith)".to_owned(),
+            "Armor can be refined by Blacksmith NPCs (such as Hollgrehenn, Antonio, Aragham).".to_owned(),
+        ];
+        if let Some(armor) = &refinement.armor {
+            lines.push(format!(
+                "Material: 1 {} per attempt · Fee: {} Zeny.",
+                armor.material, armor.cost_zeny
+            ));
+            lines.push(format!(
+                "Safe refine limit: +{} (100% success chance up to +{}).",
+                armor.safe_level, armor.safe_level
+            ));
+            lines.push(format!("On failure: {}.", armor.on_failure));
+            lines.push("Stat bonuses: +1 DEF per level (Lv 1–4), +2 DEF per level (Lv 5–8), +3 DEF per level (Lv 9–10).".to_owned());
+            let odds = (1..=refinement.max_useful_refine_level)
+                .filter_map(|target| {
+                    armor
+                        .base_chance_percent_by_target_level
+                        .get(&target.to_string())
+                        .map(|chance| format!("+{target}: {chance}%"))
+                })
+                .collect::<Vec<_>>()
+                .join(" · ");
+            lines.push(format!("Success chances: {odds}"));
+            let def_line = (1..=refinement.max_useful_refine_level)
+                .filter_map(|target| {
+                    armor
+                        .def_bonus_by_target_level
+                        .get(&target.to_string())
+                        .map(|def| format!("+{target}: +{def} DEF"))
+                })
+                .collect::<Vec<_>>()
+                .join(" · ");
+            lines.push(format!("DEF increment: {def_line}"));
+        } else {
+            lines.push("Armor refine reference data is unavailable.".to_owned());
+        }
+        lines.push("Source: bundled Hercules refine_db.conf (Armors) and npc/merchants/refine.txt.".to_owned());
+        return lines;
+    }
+
+    if (1..=4).contains(&id) {
+        // Specific Weapon Level Refinement Details
+        let weapon_level = id as u8;
+        let mut lines = vec![format!("Weapon Level {weapon_level} Refinement")];
+        if let Some(weapon) = refinement.weapon_levels.iter().find(|w| w.weapon_level == weapon_level) {
+            lines.push(format!(
+                "NPC Blacksmith: consumes 1 {} and {} Zeny. Safe limit: +{} (100% chance).",
+                weapon.material, weapon.cost_zeny, weapon.safe_level
+            ));
+            lines.push(format!(
+                "Stat bonus: +{} ATK & MATK per refine level. Past +{}, adds a random ATK bonus of 0 to (Lv - {}) x {}.",
+                weapon.stat_per_level,
+                weapon.random_bonus_start_level.saturating_sub(1),
+                weapon.random_bonus_start_level.saturating_sub(1),
+                weapon.random_bonus_max_per_level
+            ));
+            lines.push(format!("On failure: {}.", refinement.on_failure));
+            let odds = (1..=refinement.max_useful_refine_level)
+                .filter_map(|target| {
+                    weapon
+                        .base_chance_percent_by_target_level
+                        .get(&target.to_string())
+                        .map(|chance| format!("+{target}: {chance}%"))
+                })
+                .collect::<Vec<_>>()
+                .join(" · ");
+            lines.push(format!("Base success chances: {odds}"));
+            lines.push("Whitesmith Weapon Refine (WS_WEAPONREFINE):".to_owned());
+            lines.push(format!(
+                "Consumes 1 {} with 0 Zeny cost. Adds +{}% chance per job level relative to 50 (+{}% for Mechanic Transcendent).",
+                weapon.material,
+                refinement.job_level_bonus_per_job_level_from_50_per_mille as f32 / 10.0,
+                refinement.mechanic_transcendent_flat_bonus_percent
+            ));
+            lines.push("Whitesmith self-refine has no safe limit: even +1 can fail if the caster's job level is low.".to_owned());
+        }
+        lines.push("Source: bundled Hercules refine_db.conf, npc/merchants/refine.txt, and skill_weaponrefine.".to_owned());
+        return lines;
+    }
+
+    // General Weapon Refine / Full Overview
     let mut lines = vec![
-        "Whitesmith Weapon Refine (WS_WEAPONREFINE)".to_owned(),
-        "The chance shown is the configured base chance; the caster's job level changes the final chance.".to_owned(),
+        "Weapon Refinement (WS_WEAPONREFINE & NPC Blacksmith)".to_owned(),
+        "Weapons can be refined at NPC Blacksmiths or via the Whitesmith WS_WEAPONREFINE skill.".to_owned(),
+        "NPC Blacksmith safe limits: Weapon Lv 1 +7; Lv 2 +6; Lv 3 +5; Lv 4 +4. Refining past the safe limit risks item destruction."
+            .to_owned(),
+        format!("On failure: {}.", refinement.on_failure),
         format!(
-            "Bonus: {} percentage points per job level relative to 50 (positive above 50, negative below), or +{} points for Mechanic \
-             (Transcendent).",
+            "Whitesmith self-refine bonus: {} percentage points per job level relative to 50 (or +{} points for Mechanic Transcendent).",
             refinement.job_level_bonus_per_job_level_from_50_per_mille as f32 / 10.0,
             refinement.mechanic_transcendent_flat_bonus_percent
         ),
         format!(
-            "A weapon can be refined only below the skill level and below +{}.",
+            "A weapon can be refined with WS_WEAPONREFINE only below the skill level and below +{}.",
             refinement.max_useful_refine_level
         ),
-        format!("On failure: {}.", refinement.on_failure),
-        "No Zeny cost is charged by this skill; one material is consumed per attempt.".to_owned(),
+        "No Zeny cost is charged by WS_WEAPONREFINE; one ore material is consumed per attempt.".to_owned(),
     ];
     for weapon in &refinement.weapon_levels {
-        lines.push(format!("Weapon Level {} — material: {}", weapon.weapon_level, weapon.material));
+        lines.push(format!(
+            "Weapon Level {} — material: {}, fee: {} Zeny, safe limit: +{}, stat: +{} ATK/MATK per level",
+            weapon.weapon_level, weapon.material, weapon.cost_zeny, weapon.safe_level, weapon.stat_per_level
+        ));
         let odds = (1..=refinement.max_useful_refine_level)
             .filter_map(|target| {
                 weapon
@@ -700,19 +789,45 @@ fn refinement_details(refinement: &ReferenceRefinement) -> Vec<String> {
             .join(" · ");
         lines.push(odds);
     }
-    lines.push(
-        "Source: bundled Hercules refine_db.conf and skill_weaponrefine implementation. Rates may differ if the server data changes."
-            .to_owned(),
-    );
+    if let Some(armor) = &refinement.armor {
+        lines.push(format!(
+            "Armor — material: {}, fee: {} Zeny, safe limit: +{}, stat: +1 to +3 DEF per level",
+            armor.material, armor.cost_zeny, armor.safe_level
+        ));
+        let odds = (1..=refinement.max_useful_refine_level)
+            .filter_map(|target| {
+                armor
+                    .base_chance_percent_by_target_level
+                    .get(&target.to_string())
+                    .map(|chance| format!("+{target}: {chance}%"))
+            })
+            .collect::<Vec<_>>()
+            .join(" · ");
+        lines.push(odds);
+    }
+    lines.push("Source: bundled Hercules refine_db.conf, npc/merchants/refine.txt, and skill_weaponrefine implementation.".to_owned());
     lines
 }
 
 fn refinement_query_matches(query: &str) -> bool {
     let query = query.to_lowercase();
     query.is_empty()
-        || ["refine", "weapon", "phracon", "emveretarcon", "oridecon", "whitesmith", "mechanic"]
-            .iter()
-            .any(|term| term.contains(&query) || query.contains(term))
+        || [
+            "refine",
+            "weapon",
+            "armor",
+            "phracon",
+            "emveretarcon",
+            "oridecon",
+            "elunium",
+            "whitesmith",
+            "mechanic",
+            "hollgrehenn",
+            "blacksmith",
+            "safe limit",
+        ]
+        .iter()
+        .any(|term| term.contains(&query) || query.contains(term))
 }
 
 fn server_rule_matches(rule: &crate::dm::reference_data::ReferenceServerRule, query: &str) -> bool {
@@ -1589,7 +1704,7 @@ fn resolve_details(result: &GuideResult) -> Vec<String> {
             .find(|(id, _)| *id as u32 == result.id)
             .map(|(_, name)| job_details(result.id as u16, name))
             .unwrap_or_else(|| vec!["Job entry unavailable.".to_owned()]),
-        "mechanic" => refinement_details(&data.refinement),
+        "mechanic" => refinement_details(&data.refinement, result.id),
         "coverage" => coverage_details(),
         "server-rule" => data
             .server_rules
@@ -2441,7 +2556,7 @@ where
                 .maps
                 .iter()
                 .enumerate()
-                .filter(|(_, map)| query.is_empty() || map.to_lowercase().contains(&query))
+                .filter(|(_, map)| map_matches(&query, map))
                 .take(MAX_RESULTS)
                 .map(|(index, map)| GuideResult {
                     label: format!(
@@ -2462,7 +2577,7 @@ where
             templates
                 .iter()
                 .enumerate()
-                .filter(|(_, map)| query.is_empty() || map.to_lowercase().contains(&query))
+                .filter(|(_, map)| map_matches(&query, map))
                 .take(MAX_RESULTS.saturating_sub(rows.len()))
                 .map(|(index, map)| GuideResult {
                     label: format!("{map}  (instance map template)"),
@@ -2524,8 +2639,15 @@ where
             rows.push(GuideResult {
                 label: "Weapon refinement odds and rules".to_owned(),
                 kind: "mechanic".to_owned(),
-                id: 1,
+                id: 100,
             });
+            if data.refinement.armor.is_some() {
+                rows.push(GuideResult {
+                    label: "Armor refinement odds and rules".to_owned(),
+                    kind: "mechanic".to_owned(),
+                    id: 0,
+                });
+            }
         }
         for weapon in &data.refinement.weapon_levels {
             let label = format!("Weapon Level {} refinement ({})", weapon.weapon_level, weapon.material);
@@ -2533,7 +2655,7 @@ where
                 rows.push(GuideResult {
                     label,
                     kind: "mechanic".to_owned(),
-                    id: 1,
+                    id: weapon.weapon_level as u32,
                 });
             }
         }
@@ -2562,8 +2684,15 @@ where
             rows.push(GuideResult {
                 label: "Weapon refinement odds and rules".to_owned(),
                 kind: "mechanic".to_owned(),
-                id: 1,
+                id: 100,
             });
+            if data.refinement.armor.is_some() {
+                rows.push(GuideResult {
+                    label: "Armor refinement odds and rules".to_owned(),
+                    kind: "mechanic".to_owned(),
+                    id: 0,
+                });
+            }
         }
         rows.extend(
             data.server_rules
@@ -2649,8 +2778,15 @@ fn search_all_categories(
         rows.push(GuideResult {
             label: "Weapon refinement odds and rules (Mechanics)".to_owned(),
             kind: "mechanic".to_owned(),
-            id: 1,
+            id: 100,
         });
+        if data.refinement.armor.is_some() {
+            rows.push(GuideResult {
+                label: "Armor refinement odds and rules (Mechanics)".to_owned(),
+                kind: "mechanic".to_owned(),
+                id: 0,
+            });
+        }
     }
     rows.extend(
         data.server_rules
@@ -2732,7 +2868,7 @@ fn search_all_categories(
             .maps
             .iter()
             .enumerate()
-            .filter(|(_, map)| query.is_empty() || map.to_lowercase().contains(query))
+            .filter(|(_, map)| map_matches(query, map))
             .take(all_category_result_slots(&rows))
             .map(|(index, map)| GuideResult {
                 label: format!("{map}  (Map{})", if discovery.visited_map(map) { ", Visited" } else { "" }),
@@ -2745,7 +2881,7 @@ fn search_all_categories(
         templates
             .iter()
             .enumerate()
-            .filter(|(_, map)| query.is_empty() || map.to_lowercase().contains(query))
+            .filter(|(_, map)| map_matches(query, map))
             .take(all_category_result_slots(&rows))
             .map(|(index, map)| GuideResult {
                 label: format!("{map}  (Instance map template)"),
@@ -4065,11 +4201,162 @@ mod tests {
         assert!(rows.iter().any(|row| row.kind == "card" && row.id == 4001));
         assert!(rows.iter().any(|row| row.kind == "quest"));
     }
+
+    #[test]
+    fn armor_and_weapon_refinement_are_searchable_and_display_rates() {
+        let data = reference_data();
+        let armor_lines = refinement_details(&data.refinement, 0).join("\n");
+        assert!(armor_lines.contains("Armor Refinement"), "{armor_lines}");
+        assert!(armor_lines.contains("Elunium"), "{armor_lines}");
+        assert!(armor_lines.contains("2000 Zeny"), "{armor_lines}");
+        assert!(armor_lines.contains("Safe refine limit: +4"), "{armor_lines}");
+        assert!(armor_lines.contains("+1 DEF per level (Lv 1–4)"), "{armor_lines}");
+        assert!(armor_lines.contains("+2 DEF per level (Lv 5–8)"), "{armor_lines}");
+        assert!(armor_lines.contains("+3 DEF per level (Lv 9–10)"), "{armor_lines}");
+
+        let w1_lines = refinement_details(&data.refinement, 1).join("\n");
+        assert!(w1_lines.contains("Weapon Level 1 Refinement"), "{w1_lines}");
+        assert!(w1_lines.contains("Phracon"), "{w1_lines}");
+        assert!(w1_lines.contains("50 Zeny"), "{w1_lines}");
+        assert!(w1_lines.contains("Safe limit: +7"), "{w1_lines}");
+
+        let w4_lines = refinement_details(&data.refinement, 4).join("\n");
+        assert!(w4_lines.contains("Weapon Level 4 Refinement"), "{w4_lines}");
+        assert!(w4_lines.contains("Oridecon"), "{w4_lines}");
+        assert!(w4_lines.contains("20000 Zeny"), "{w4_lines}");
+        assert!(w4_lines.contains("Safe limit: +4"), "{w4_lines}");
+        assert!(w4_lines.contains("WS_WEAPONREFINE"), "{w4_lines}");
+
+        let armor_search = search_all_categories("armor", &DiscoveryState::default(), &[]);
+        assert!(
+            armor_search
+                .iter()
+                .any(|r| r.kind == "mechanic" && r.id == 0 && r.label.contains("Armor refinement odds"))
+        );
+
+        let refine_search = search_all_categories("refine", &DiscoveryState::default(), &[]);
+        assert!(
+            refine_search
+                .iter()
+                .any(|r| r.kind == "mechanic" && r.id == 100 && r.label.contains("Weapon refinement odds"))
+        );
+        assert!(
+            refine_search
+                .iter()
+                .any(|r| r.kind == "mechanic" && r.id == 0 && r.label.contains("Armor refinement odds"))
+        );
+    }
+
+    #[test]
+    fn server_rules_cover_campaign_distance_recovery_and_limits() {
+        let data = reference_data();
+        let find_rule = |title: &str| {
+            data.server_rules
+                .iter()
+                .find(|rule| rule.title.contains(title))
+                .unwrap_or_else(|| panic!("server rule '{title}' should exist"))
+        };
+
+        let campaign = find_rule("DM Campaign progression and recovery");
+        assert_eq!(campaign.id, "dm-campaign-rules");
+        let campaign_text = campaign.details.join(" ");
+        assert!(campaign_text.contains("8000 ms"), "{campaign_text}");
+        assert!(campaign_text.contains("10000 ms"), "{campaign_text}");
+        assert!(campaign_text.contains("5x"), "{campaign_text}");
+        assert!(campaign_text.contains("Party story synchronization"), "{campaign_text}");
+
+        let distance = find_rule("View distance and area radius");
+        assert_eq!(distance.id, "view-distance-and-aoe");
+        let distance_text = distance.details.join(" ");
+        assert!(distance_text.contains("30 cells"), "{distance_text}");
+        assert!(distance_text.contains("48 cells"), "{distance_text}");
+
+        let recovery = find_rule("Natural recovery and weight thresholds");
+        assert_eq!(recovery.id, "natural-recovery-and-weight");
+        let recovery_text = recovery.details.join(" ");
+        assert!(recovery_text.contains("6000 ms"), "{recovery_text}");
+        assert!(recovery_text.contains("8000 ms"), "{recovery_text}");
+        assert!(recovery_text.contains("50%"), "{recovery_text}");
+        assert!(recovery_text.contains("90%"), "{recovery_text}");
+
+        let limits = find_rule("Multi-level-up and progression limits");
+        assert_eq!(limits.id, "progression-limits");
+        let limits_text = limits.details.join(" ");
+        assert!(limits_text.contains("multi_level_up"), "{limits_text}");
+        assert!(limits_text.contains("MaxStats"), "{limits_text}");
+        assert!(limits_text.contains("WoE"), "{limits_text}");
+
+        let equip_refine = find_rule("Equipment refinement odds and mechanics");
+        assert_eq!(equip_refine.id, "equipment-refinement");
+        let equip_text = equip_refine.details.join(" ");
+        assert!(equip_text.contains("Elunium"), "{equip_text}");
+        assert!(equip_text.contains("Phracon"), "{equip_text}");
+    }
+
+    #[test]
+    fn search_aliases_resolve_for_items_monsters_skills_and_maps() {
+        let data = reference_data();
+
+        // Item aliases
+        let white_pots = data.search_items("hp pot", 5);
+        assert!(white_pots.iter().any(|item| item.aegis_name == "White_Potion"), "hp pot alias");
+        let obb = data.search_items("obb", 5);
+        assert!(obb.iter().any(|item| item.aegis_name == "Old_Blue_Box"), "obb alias");
+        let gr_card = data.search_cards("gr card", 5);
+        assert!(gr_card.iter().any(|card| card.aegis_name == "Ghostring_Card"), "gr card alias");
+
+        // Monster aliases
+        let bapho = data.search_monsters("bapho", 10);
+        assert!(
+            bapho.iter().any(|m| m.sprite_name.eq_ignore_ascii_case("BAPHOMET")),
+            "bapho alias"
+        );
+        let gtb = data.search_monsters("gtb", 5);
+        assert!(
+            gtb.iter().any(|m| m.sprite_name.eq_ignore_ascii_case("GOLDEN_BUG")),
+            "gtb alias"
+        );
+
+        // Skill aliases
+        let bb = data.search_skills("bb", 5);
+        assert!(
+            bb.iter().any(|s| s.description.eq_ignore_ascii_case("Bowling Bash")),
+            "bb alias"
+        );
+        let edp = data.search_skills("edp", 5);
+        assert!(
+            edp.iter().any(|s| s.description.eq_ignore_ascii_case("Enchant Deadly Poison")),
+            "edp alias"
+        );
+
+        // Map aliases
+        let gh_search = search_all_categories("gh", &DiscoveryState::default(), &[]);
+        assert!(
+            gh_search.iter().any(|r| r.kind == "map" && r.label.contains("glast_01")),
+            "gh alias"
+        );
+        let prt_search = search_all_categories("prt", &DiscoveryState::default(), &[]);
+        assert!(
+            prt_search.iter().any(|r| r.kind == "map" && r.label.contains("prontera")),
+            "prt alias"
+        );
+    }
 }
 
 /// A job matches by name, or by an authored alias such as "lk" or "pally".
 fn job_matches(query: &str, name: &str) -> bool {
     query.is_empty() || name.to_lowercase().contains(query) || reference_data().alias_targets("job", query).contains(&name)
+}
+
+/// A map matches by filename, or by an authored alias such as "gh" or "prt".
+fn map_matches(query: &str, map: &str) -> bool {
+    let query_lower = query.to_lowercase();
+    query.is_empty()
+        || map.to_lowercase().contains(&query_lower)
+        || reference_data()
+            .alias_targets("map", query)
+            .iter()
+            .any(|target| target.eq_ignore_ascii_case(map) || map.to_lowercase().contains(&target.to_lowercase()))
 }
 
 fn job_names() -> impl Iterator<Item = (u16, &'static str)> {
