@@ -89,7 +89,11 @@ def build_report() -> dict:
     flags = entries(data["map_flags"])
     runtime_flags = data["map_flags"].get("runtime_clues", [])
     runtime_flag_reviews = data["map_flags"].get("runtime_reviews", [])
-    statuses = entries(data["statuses"])
+    all_status_entries = entries(data["statuses"])
+    # Icon rows and iconless server statuses are different populations: the
+    # icon ratio below must not be diluted by rows that never had an icon.
+    statuses = [entry for entry in all_status_entries if not entry.get("iconless")]
+    iconless_statuses = [entry for entry in all_status_entries if entry.get("iconless")]
     grants = data["item_grants"].get("entries", [])
     consumptions = data["item_grants"].get("consumptions", [])
     recipes = entries(data["crafting"])
@@ -114,7 +118,7 @@ def build_report() -> dict:
         for entry in [*items, *cards]
         for combo in entry.get("combos", [])
     }
-    all_status_mechanics = [status for entry in statuses for status in entry.get("statuses", [])]
+    all_status_mechanics = [status for entry in all_status_entries for status in entry.get("statuses", [])]
     linked_status_icon_rows = sum(bool(entry.get("statuses")) for entry in statuses)
     quest_npc_relations = [npc for quest in quests for npc in quest.get("npc_references", [])]
     quest_reward_candidates = [candidate for quest in quests for candidate in quest.get("item_reward_candidates", [])]
@@ -185,6 +189,7 @@ def build_report() -> dict:
         "statuses": {
             "icon_records": len(status_icons),
             "icon_rows_linked_to_server_status": dimension(linked_status_icon_rows, len(statuses), "status icon rows with one or more server status mechanics linked"),
+            "iconless_server_statuses": len(iconless_statuses),
             "linked_server_statuses": len(all_status_mechanics),
             "literal_call_site_clues": len(call_sites),
             "statuses_with_call_sites": len(statuses_with_call_sites),

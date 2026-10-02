@@ -1733,7 +1733,7 @@ fn skill_details(skill: &ReferenceSkill) -> Vec<String> {
     if !linked_statuses.is_empty() {
         lines.push("Associated status references:".to_owned());
         for status in &linked_statuses {
-            lines.push(format!("@guide:status:{}|{} (icon {})", status.id, status.name, status.id));
+            lines.push(format!("@guide:status:{}|{} ({})", status.id, status.name, status_tag(status)));
         }
     }
     if let Some(status_change) = &skill.status_change {
@@ -1784,8 +1784,23 @@ fn skill_details(skill: &ReferenceSkill) -> Vec<String> {
     lines
 }
 
+/// How a status is identified in a list: its client icon id, or, for the
+/// classic ailments that have no icon, the server constant.
+fn status_tag(status: &crate::dm::reference_data::ReferenceStatus) -> String {
+    match (status.iconless, status.statuses.first()) {
+        (true, Some(mechanic)) => format!("server status {}", mechanic.constant),
+        _ => format!("icon {}", status.id),
+    }
+}
+
 fn status_details(status: &crate::dm::reference_data::ReferenceStatus) -> Vec<String> {
-    let mut lines = vec![format!("{}  (Status icon ID {})", status.name, status.id)];
+    let mut lines = vec![match status.iconless {
+        true => format!("{}  ({})", status.name, status_tag(status)),
+        false => format!("{}  (Status icon ID {})", status.name, status.id),
+    }];
+    if status.iconless {
+        lines.push("The client has no icon or name for this status; the name is derived from the server constant.".to_owned());
+    }
     if status.statuses.is_empty() {
         lines.push("Verified reference: server status-icon name only; no matching sc_config record.".to_owned());
     } else {
@@ -2150,7 +2165,7 @@ where
         }));
     } else if category == "Status Effects" {
         rows.extend(data.search_statuses(&query, MAX_RESULTS).into_iter().map(|status| GuideResult {
-            label: format!("{}  (status icon {})", status.name, status.id),
+            label: format!("{}  ({})", status.name, status_tag(status).replacen("icon", "status icon", 1)),
             kind: "status".to_owned(),
             id: status.id,
         }));
@@ -2440,7 +2455,7 @@ fn search_all_categories(
         data.search_statuses(query, all_category_result_slots(&rows))
             .into_iter()
             .map(|status| GuideResult {
-                label: format!("{}  (Status icon {})", status.name, status.id),
+                label: format!("{}  ({})", status.name, status_tag(status).replacen("icon", "Status icon", 1)),
                 kind: "status".to_owned(),
                 id: status.id,
             }),
@@ -2637,7 +2652,7 @@ mod tests {
     use super::{
         GuideResult, ReferenceItem, display_name, item_details, job_names, map_details, monster_details, parse_guide_link,
         parse_route_cell_link, quest_details, quest_reference_details, reference_data, refinement_details, resolve_details, rumor_details,
-        search_all_categories, service_details, skill_details, status_details,
+        search_all_categories, service_details, skill_details, status_details, status_tag,
     };
     use crate::dm::reference_data::{ReferenceQuest, ReferenceQuestTarget};
     use crate::state::discovery::DiscoveryState;
@@ -3031,7 +3046,7 @@ mod tests {
             details
                 .contains("Its exact effect, duration, per-level odds, complete sources, interactions, and cures are not documented yet.")
         );
-        assert_eq!(data.statuses.len(), 700);
+        assert_eq!(data.statuses.iter().filter(|status| !status.iconless).count(), 700);
         assert!(
             data.search_statuses(&blessing.id.to_string(), 1)
                 .iter()
@@ -3211,6 +3226,86 @@ mod tests {
                 .any(|line| line.contains("does not prove NPC role or current availability"))
         );
         assert!(detail.iter().any(|line| line.starts_with("@route-cell:prontera:100:100|")));
+    }
+
+    #[test]
+    fn classic_ailments_without_a_client_icon_are_searchable_statuses() {
+        let data = reference_data();
+        for (constant, label) in [
+            ("SC_STONE", "Stone"),
+            ("SC_FREEZE", "Freeze"),
+            ("SC_STUN", "Stun"),
+            ("SC_SLEEP", "Sleep"),
+            ("SC_CURSE", "Curse"),
+            ("SC_CONFUSION", "Confusion"),
+            ("SC_BLIND", "Blind"),
+        ] {
+            let status = data
+                .search_statuses(constant, 10)
+                .into_iter()
+                .find(|status| status.statuses.iter().any(|mechanic| mechanic.constant == constant))
+                .unwrap_or_else(|| panic!("{constant} is not a guide status"));
+            assert!(status.iconless, "{constant}");
+            assert_eq!(status.name, label);
+            let detail = status_details(status).join("\n");
+            assert!(detail.contains(&format!("server status {constant}")), "{detail}");
+            assert!(detail.contains("derived from the server constant"), "{detail}");
+        }
+    }
+
+    #[test]
+    fn a_petrify_search_reaches_stone_through_the_skill_that_applies_it() {
+        let rows = search_all_categories("petrify", &DiscoveryState::default(), &[]);
+        let stone = reference_data()
+            .search_statuses("SC_STONE", 10)
+            .into_iter()
+            .find(|status| status.iconless)
+            .expect("stone status");
+        assert!(
+            rows.iter().any(|row| row.kind == "status" && row.id == stone.id),
+            "petrify results: {:?}",
+            rows.iter().map(|row| row.label.as_str()).collect::<Vec<_>>()
+        );
+    }
+
+    #[test]
+    fn a_skill_links_the_iconless_status_it_inflicts_and_back() {
+        let data = reference_data();
+        let stone = data
+            .search_statuses("SC_STONE", 10)
+            .into_iter()
+            .find(|status| status.iconless)
+            .expect("stone status");
+        let skill_link = stone
+            .statuses
+            .iter()
+            .flat_map(|mechanic| mechanic.status_change_skills.iter().chain(mechanic.associated_skill.iter()))
+            .next()
+            .expect("a skill that applies stone");
+        let skill = data
+            .search_skills(&skill_link.name, 10)
+            .into_iter()
+            .find(|skill| skill.name == skill_link.name)
+            .expect("skill row");
+        assert!(
+            skill_details(skill)
+                .iter()
+                .any(|line| line == &format!("@guide:status:{}|{} ({})", stone.id, stone.name, status_tag(stone))),
+            "skill page must link the status"
+        );
+        assert!(
+            status_details(stone)
+                .iter()
+                .any(|line| line.starts_with(&format!("@guide:skill:{}|", skill_link.id)))
+        );
+    }
+
+    #[test]
+    fn iconless_statuses_rank_after_client_visible_ones() {
+        let rows = reference_data().search_statuses("basilica", 10);
+        let first_iconless = rows.iter().position(|status| status.iconless).expect("an iconless basilica status");
+        let last_icon = rows.iter().rposition(|status| !status.iconless).expect("an icon basilica status");
+        assert!(last_icon < first_iconless);
     }
 
     #[test]

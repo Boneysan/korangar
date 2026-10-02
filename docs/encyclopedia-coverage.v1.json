@@ -111,9 +111,10 @@
         "total": 700,
         "basis": "status icon rows with one or more server status mechanics linked"
       },
-      "linked_server_statuses": 545,
-      "literal_call_site_clues": 114,
-      "statuses_with_call_sites": 75
+      "iconless_server_statuses": 100,
+      "linked_server_statuses": 645,
+      "literal_call_site_clues": 267,
+      "statuses_with_call_sites": 119
     },
     "quests": {
       "records": 3172,

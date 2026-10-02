@@ -835,6 +835,11 @@ pub struct ReferenceServerRule {
 pub struct ReferenceStatus {
     pub id: u32,
     pub name: String,
+    /// A server status with no client icon (the classic ailments). Its name
+    /// is derived from the server constant, and its id sits above every icon
+    /// id.
+    #[serde(default)]
+    pub iconless: bool,
     #[serde(default)]
     pub statuses: Vec<ReferenceStatusMechanic>,
 }
@@ -1163,8 +1168,15 @@ impl ReferenceData {
         if statuses.is_empty() || statuses.iter().any(|status| status.name.trim().is_empty()) {
             return Err("embedded status reference rows are empty or invalid".to_owned());
         }
-        if statuses.len() != 700 {
-            return Err(format!("expected 700 status icon rows, found {}", statuses.len()));
+        let icon_rows = statuses.iter().filter(|status| !status.iconless).count();
+        if icon_rows != 700 {
+            return Err(format!("expected 700 status icon rows, found {icon_rows}"));
+        }
+        if statuses
+            .iter()
+            .any(|status| status.iconless && (status.id < 100_000 || status.statuses.len() != 1))
+        {
+            return Err("an iconless status row must have an id of 100000 or more and exactly one server status".to_owned());
         }
         let monster_ids: HashSet<u32> = monsters_by_id.keys().copied().collect();
         let item_ids: HashSet<u32> = items_by_id.keys().copied().collect();
@@ -1676,7 +1688,9 @@ impl ReferenceData {
                     })
             })
             .collect();
-        matches.sort_by_key(|status| (status.name.to_lowercase(), status.id));
+        // Statuses the client shows an icon for rank first; iconless server
+        // statuses follow, so adding them never displaces an established result.
+        matches.sort_by_key(|status| (status.iconless, status.name.to_lowercase(), status.id));
         matches.truncate(limit);
         matches
     }
