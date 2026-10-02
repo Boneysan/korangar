@@ -26,6 +26,7 @@ mod skill_unit_registry;
 mod sound;
 mod special_effect;
 mod sprite_effect;
+pub mod stat_formulas;
 pub mod stat_preview;
 pub mod stat_view;
 mod unit_recipe;

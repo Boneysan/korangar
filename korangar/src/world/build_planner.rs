@@ -13,6 +13,7 @@ use std::collections::HashMap;
 
 use serde::{Deserialize, Serialize};
 
+use super::stat_formulas;
 use super::stat_preview::StatKind;
 use crate::dm::reference_data::ReferenceJobSkillTree;
 
@@ -175,17 +176,18 @@ impl ProjectedCombatStats {
 
         let level_i32 = base_level as i32;
 
-        let hit = level_i32 + total_dex + total_luk / 3 + 175;
-        let flee = level_i32 + total_agi + total_luk / 5 + 100;
-        let soft_def = (level_i32 + total_vit) / 2 + total_agi / 5;
-        let soft_mdef = total_int + level_i32 / 4 + (total_dex + total_vit) / 5;
-        let crit_tenth_percent = 10 + total_luk * 10 / 3;
-        let perfect_dodge_tenth_percent = total_luk + 10;
-        let status_atk = level_i32 / 4 + total_str + total_dex / 5 + total_luk / 3;
-        let status_matk = level_i32 / 4 + total_int + total_int / 2 + total_dex / 5 + total_luk / 3;
-
-        let cast_stat_sum = total_dex * 2 + total_int;
-        let variable_cast_reduction_pct = (cast_stat_sum as f32 / 530.0).clamp(0.0, 1.0) * 100.0;
+        // Mirrors `status.c`; see `stat_formulas` for the arithmetic. Status ATK
+        // is the melee-weapon figure (bows, instruments, whips and guns swap
+        // STR and DEX), which the planner does not know about.
+        let hit = stat_formulas::hit(level_i32, total_dex, total_luk);
+        let flee = stat_formulas::flee(level_i32, total_agi, total_luk);
+        let soft_def = stat_formulas::soft_def(level_i32, total_vit, total_agi);
+        let soft_mdef = stat_formulas::soft_mdef(level_i32, total_int, total_dex, total_vit);
+        let crit_tenth_percent = stat_formulas::critical_tenths(total_luk);
+        let perfect_dodge_tenth_percent = stat_formulas::perfect_dodge_tenths(total_luk);
+        let status_atk = stat_formulas::status_atk(level_i32, total_str, total_dex, total_luk, false);
+        let status_matk = stat_formulas::status_matk(level_i32, total_int, total_dex, total_luk);
+        let variable_cast_reduction_pct = stat_formulas::variable_cast_reduction_percent(total_dex, total_int);
 
         let max_weight = base_weight_limit + (stats.strength as u32 * 300);
 

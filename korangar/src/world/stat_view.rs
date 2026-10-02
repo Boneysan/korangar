@@ -16,6 +16,7 @@
 
 use serde::{Deserialize, Serialize};
 
+use super::stat_formulas;
 use super::stat_preview::StatKind;
 
 /// Display mode for the Character Stats interface (GDD §10.8).
@@ -397,79 +398,72 @@ impl AdvancedStatMetrics {
         let dex_val = input.total_dex() as i32;
         let luk_val = input.total_luk() as i32;
 
-        // Status ATK (Melee) = floor(BaseLv/4) + STR + floor(DEX/5) + floor(LUK/3)
-        let status_atk = (lv / 4) + str_val + (dex_val / 5) + (luk_val / 3);
+        // Every formula below is `stat_formulas`, which mirrors `status.c`
+        // expression for expression (including the float arithmetic that is
+        // truncated once, not term by term).
+        let exact = Provenance::Exact.label();
+
+        // Status ATK, melee weapons. Bows, instruments, whips and guns swap STR
+        // and DEX; the view does not know the equipped weapon type.
+        let status_atk = stat_formulas::status_atk(lv, str_val, dex_val, luk_val, false);
         let status_atk_formula = format!(
-            "floor({lv}/4) [{}] + STR [{str_val}] + floor({dex_val}/5) [{}] + floor({luk_val}/3) [{}] = {status_atk} {}",
-            lv / 4,
-            dex_val / 5,
-            luk_val / 3,
-            Provenance::Exact.label()
+            "STR [{str_val}] + DEX/5 [{dex_val}/5] + LUK/3 [{luk_val}/3] + BaseLv/4 [{lv}/4] = {:.2} -> {status_atk} (truncated once; \
+             melee weapons, ranged weapons swap STR and DEX) {exact}",
+            str_val as f32 + dex_val as f32 / 5.0 + luk_val as f32 / 3.0 + lv as f32 / 4.0,
         );
 
-        // Status MATK = floor(BaseLv/4) + INT + floor(INT/2) + floor(DEX/5) +
-        // floor(LUK/3)
-        let status_matk = (lv / 4) + int_val + (int_val / 2) + (dex_val / 5) + (luk_val / 3);
+        // Status MATK: integer divisions.
+        let status_matk = stat_formulas::status_matk(lv, int_val, dex_val, luk_val);
         let status_matk_formula = format!(
-            "floor({lv}/4) [{}] + INT [{int_val}] + floor({int_val}/2) [{}] + floor({dex_val}/5) [{}] + floor({luk_val}/3) [{}] = \
-             {status_matk} {}",
-            lv / 4,
+            "INT [{int_val}] + floor({int_val}/2) [{}] + floor({dex_val}/5) [{}] + floor({luk_val}/3) [{}] + floor({lv}/4) [{}] = \
+             {status_matk} {exact}",
             int_val / 2,
             dex_val / 5,
             luk_val / 3,
-            Provenance::Exact.label()
-        );
-
-        // HIT = 175 + BaseLv + DEX + floor(LUK/3)
-        let hit = 175 + lv + dex_val + (luk_val / 3);
-        let hit_formula = format!(
-            "175 + BaseLv [{lv}] + DEX [{dex_val}] + floor({luk_val}/3) [{}] = {hit} {}",
-            luk_val / 3,
-            Provenance::Exact.label()
-        );
-
-        // FLEE = 100 + BaseLv + AGI + floor(LUK/5)
-        let flee = 100 + lv + agi_val + (luk_val / 5);
-        let flee_formula = format!(
-            "100 + BaseLv [{lv}] + AGI [{agi_val}] + floor({luk_val}/5) [{}] = {flee} {}",
-            luk_val / 5,
-            Provenance::Exact.label()
-        );
-
-        // Soft DEF = floor((BaseLv + VIT) / 2) + floor(AGI / 5)
-        let soft_def = ((lv + vit_val) / 2) + (agi_val / 5);
-        let soft_def_formula = format!(
-            "floor(({lv} + {vit_val})/2) [{}] + floor({agi_val}/5) [{}] = {soft_def} {}",
-            (lv + vit_val) / 2,
-            agi_val / 5,
-            Provenance::Exact.label()
-        );
-
-        // Soft MDEF = INT + floor(VIT/5) + floor(DEX/5) + floor(BaseLv/4)
-        let soft_mdef = int_val + (vit_val / 5) + (dex_val / 5) + (lv / 4);
-        let soft_mdef_formula = format!(
-            "INT [{int_val}] + floor({vit_val}/5) [{}] + floor({dex_val}/5) [{}] + floor({lv}/4) [{}] = {soft_mdef} {}",
-            vit_val / 5,
-            dex_val / 5,
             lv / 4,
-            Provenance::Exact.label()
         );
 
-        // CRIT = 1.0 + (LUK * 0.3)
-        let crit = 1.0 + (luk_val as f32 * 0.3);
-        let crit_formula = format!("1.0 + ({luk_val} * 0.3) = {crit:.1} {}", Provenance::Exact.label());
-
-        // Perfect Dodge = 1.0 + (LUK * 0.1)
-        let perfect_dodge = 1.0 + (luk_val as f32 * 0.1);
-        let perfect_dodge_formula = format!("1.0 + ({luk_val} * 0.1) = {perfect_dodge:.1} {}", Provenance::Exact.label());
-
-        // Variable Cast Reduction = min(100%, (DEX*2 + INT) / 530 * 100%)
-        let cast_stat_sum = (dex_val * 2 + int_val) as f32;
-        let variable_cast_reduction_pct = ((cast_stat_sum / 530.0) * 100.0).clamp(0.0, 100.0);
-        let variable_cast_formula = format!(
-            "(({dex_val} * 2 + {int_val}) / 530) * 100% = {variable_cast_reduction_pct:.1}% {}",
-            Provenance::Estimate.label()
+        let hit = stat_formulas::hit(lv, dex_val, luk_val);
+        let hit_formula = format!(
+            "175 + BaseLv [{lv}] + DEX [{dex_val}] + floor({luk_val}/3) [{}] = {hit} {exact}",
+            luk_val / 3,
         );
+
+        let flee = stat_formulas::flee(lv, agi_val, luk_val);
+        let flee_formula = format!(
+            "100 + BaseLv [{lv}] + AGI [{agi_val}] + floor({luk_val}/5) [{}] = {flee} {exact}",
+            luk_val / 5,
+        );
+
+        // Soft DEF: (BaseLv + VIT) / 2 + AGI / 5, truncated once.
+        let soft_def = stat_formulas::soft_def(lv, vit_val, agi_val);
+        let soft_def_formula = format!(
+            "({lv} + {vit_val})/2 + {agi_val}/5 = {:.2} -> {soft_def} (truncated once) {exact}",
+            (lv + vit_val) as f32 / 2.0 + agi_val as f32 / 5.0,
+        );
+
+        // Soft MDEF: INT + BaseLv / 4 + (DEX + VIT) / 5, truncated once.
+        let soft_mdef = stat_formulas::soft_mdef(lv, int_val, dex_val, vit_val);
+        let soft_mdef_formula = format!(
+            "{int_val} + {lv}/4 + ({dex_val} + {vit_val})/5 = {:.2} -> {soft_mdef} (truncated once) {exact}",
+            int_val as f32 + lv as f32 / 4.0 + (dex_val + vit_val) as f32 / 5.0,
+        );
+
+        // CRIT = (10 + LUK * 10 / 3) tenths of a percent.
+        let crit_tenths = stat_formulas::critical_tenths(luk_val);
+        let crit = crit_tenths as f32 / 10.0;
+        let crit_formula = format!("(10 + {luk_val} * 10 / 3) / 10 = {crit:.1} {exact}");
+
+        // Perfect Dodge = (LUK + 10) tenths of a percent.
+        let perfect_dodge = stat_formulas::perfect_dodge_tenths(luk_val) as f32 / 10.0;
+        let perfect_dodge_formula = format!("({luk_val} + 10) / 10 = {perfect_dodge:.1} {exact}");
+
+        // Variable cast: a square root of (DEX * 2 + INT) / 530. It removes this
+        // share of the *variable* part of a cast only; the fixed part is
+        // reduced by other bonuses, not by these stats.
+        let variable_cast_reduction_pct = stat_formulas::variable_cast_reduction_percent(dex_val, int_val);
+        let variable_cast_formula =
+            format!("sqrt(({dex_val} * 2 + {int_val}) / 530) * 100% = {variable_cast_reduction_pct:.1}% of the variable cast time {exact}");
 
         // Max Weight = BaseWeight + (BaseSTR * 300)
         let max_weight = input.base_weight + (input.strength as u32 * 300);
@@ -480,28 +474,46 @@ impl AdvancedStatMetrics {
             Provenance::Exact.label()
         );
 
-        // Breakpoint tracking
+        // Breakpoints: how many more points of one stat raise a derived value,
+        // found by searching the same functions the values come from. (The
+        // server adds fractions before truncating, so a remainder test on one
+        // stat alone is not enough: Soft DEF depends on BaseLv + VIT + AGI.)
         let mut breakpoints = Vec::new();
-        let vit_sum = (lv + vit_val) as u32;
-        if vit_sum % 2 != 0 {
-            breakpoints.push("Soft DEF: 1 more VIT or BaseLv will yield +1 DEF".to_owned());
-        }
-        let agi_rem = agi_val % 5;
-        if agi_rem != 0 {
-            breakpoints.push(format!("Soft DEF: {} more AGI will yield +1 DEF", 5 - agi_rem));
-        }
-        let dex_rem = dex_val % 5;
-        if dex_rem != 0 {
-            breakpoints.push(format!("Status ATK/MATK & Soft MDEF: {} more DEX will yield +1", 5 - dex_rem));
-        }
-        let luk_rem = luk_val % 3;
-        if luk_rem != 0 {
-            breakpoints.push(format!("CRIT & Status ATK/MATK: {} more LUK will yield +1", 3 - luk_rem));
-        }
-        let pd_rem = luk_val % 10;
-        if pd_rem != 0 {
-            breakpoints.push(format!("Perfect Dodge: {} more LUK will yield +1", 10 - pd_rem));
-        }
+        let mut breakpoint = |label: &str, stat: &str, value_after: &dyn Fn(i32) -> i32| {
+            if let Some(more) = (1..=10).find(|extra| value_after(*extra) > value_after(0)) {
+                breakpoints.push(match more {
+                    1 => format!("{label}: the next point of {stat} raises it by 1"),
+                    _ => format!("{label}: {more} more {stat} raises it by 1"),
+                });
+            }
+        };
+        breakpoint("Soft DEF", "AGI", &|extra| {
+            stat_formulas::soft_def(lv, vit_val, agi_val + extra)
+        });
+        breakpoint("Soft DEF", "VIT", &|extra| {
+            stat_formulas::soft_def(lv, vit_val + extra, agi_val)
+        });
+        breakpoint("Soft MDEF", "VIT", &|extra| {
+            stat_formulas::soft_mdef(lv, int_val, dex_val, vit_val + extra)
+        });
+        breakpoint("Soft MDEF", "DEX", &|extra| {
+            stat_formulas::soft_mdef(lv, int_val, dex_val + extra, vit_val)
+        });
+        breakpoint("Status ATK", "DEX", &|extra| {
+            stat_formulas::status_atk(lv, str_val, dex_val + extra, luk_val, false)
+        });
+        breakpoint("Status ATK", "LUK", &|extra| {
+            stat_formulas::status_atk(lv, str_val, dex_val, luk_val + extra, false)
+        });
+        breakpoint("Status MATK", "DEX", &|extra| {
+            stat_formulas::status_matk(lv, int_val, dex_val + extra, luk_val)
+        });
+        breakpoint("Status MATK", "LUK", &|extra| {
+            stat_formulas::status_matk(lv, int_val, dex_val, luk_val + extra)
+        });
+        breakpoint("HIT", "LUK", &|extra| stat_formulas::hit(lv, dex_val, luk_val + extra));
+        breakpoint("FLEE", "LUK", &|extra| stat_formulas::flee(lv, agi_val, luk_val + extra));
+        breakpoint("CRIT", "LUK", &|extra| stat_formulas::critical_tenths(luk_val + extra) / 10);
 
         Self {
             base_level: input.base_level,
@@ -598,12 +610,10 @@ mod tests {
         let input = sample_level_99_knight();
         let metrics = AdvancedStatMetrics::calculate(&input);
 
-        // STR = 88, DEX = 53, LUK = 11, BaseLv = 99
-        // floor(99/4) = 24
-        // floor(53/5) = 10
-        // floor(11/3) = 3
-        // Status ATK = 24 + 88 + 10 + 3 = 125
-        assert_eq!(metrics.status_atk, 125);
+        // STR = 88, DEX = 53, LUK = 11, BaseLv = 99. status_base_atk adds the
+        // fractions before truncating: 88 + 10.6 + 3.667 + 24.75 = 127.017 -> 127.
+        // (Flooring each term first, as this view once did, gives 125.)
+        assert_eq!(metrics.status_atk, 127);
         assert!(metrics.status_atk_formula.contains("(exact)"));
 
         // HIT = 175 + 99 + 53 + 3 = 330
@@ -615,17 +625,66 @@ mod tests {
         assert_eq!(metrics.flee, 273);
         assert!(metrics.flee_formula.contains("(exact)"));
 
-        // VIT = 74, floor((99+74)/2) = 86, floor(72/5) = 14
-        // Soft DEF = 86 + 14 = 100
+        // VIT = 74, AGI = 72: (99 + 74) / 2 + 72 / 5 = 86.5 + 14.4 = 100.9 -> 100.
         assert_eq!(metrics.soft_def, 100);
         assert!(metrics.soft_def_formula.contains("(exact)"));
 
-        // Variable cast time labelled as estimate
-        assert!(metrics.variable_cast_formula.contains("(estimate)"));
+        // Variable cast: sqrt((DEX * 2 + INT) / 530), a square root, not a line.
+        assert!(metrics.variable_cast_formula.contains("sqrt("));
+        assert!(metrics.variable_cast_formula.contains("(exact)"));
         assert!(metrics.variable_cast_reduction_pct > 0.0);
+        let linear = ((input.total_dex() as f32 * 2.0 + input.total_int() as f32) / 530.0) * 100.0;
+        assert!(
+            metrics.variable_cast_reduction_pct > linear,
+            "the square root removes more than a straight line below the scale"
+        );
 
         // Max Weight: 2000 + 80 * 300 = 26000
         assert_eq!(metrics.max_weight, 26000);
         assert!(metrics.max_weight_formula.contains("(exact)"));
+    }
+
+    #[test]
+    fn breakpoints_follow_the_summed_fraction_not_one_stat_alone() {
+        let input = CharacterStatsInput {
+            base_level: 3,
+            job_level: 1,
+            strength: 1,
+            bonus_strength: 0,
+            agility: 3,
+            bonus_agility: 0,
+            vitality: 2,
+            bonus_vitality: 0,
+            intelligence: 1,
+            bonus_intelligence: 0,
+            dexterity: 1,
+            bonus_dexterity: 0,
+            luck: 1,
+            bonus_luck: 0,
+            max_hp: 100,
+            max_sp: 10,
+            base_weight: 2000,
+        };
+        let metrics = AdvancedStatMetrics::calculate(&input);
+        // (3 + 2) / 2 + 3 / 5 = 3.1 -> 3. AGI 7 gives 3.9 (still 3) and AGI 8
+        // gives 4.1, so it takes 5 more AGI. A remainder test on AGI alone
+        // would have said 2.
+        assert_eq!(metrics.soft_def, 3);
+        assert!(
+            metrics.breakpoints.contains(&"Soft DEF: 5 more AGI raises it by 1".to_owned()),
+            "{:?}",
+            metrics.breakpoints
+        );
+        // VIT 4 gives 3.5 + 0.6 = 4.1, so 2 more VIT (1 more gives 3.6).
+        assert!(
+            metrics.breakpoints.contains(&"Soft DEF: 2 more VIT raises it by 1".to_owned()),
+            "{:?}",
+            metrics.breakpoints
+        );
+        assert!(
+            !metrics.breakpoints.iter().any(|line| line.contains("2 more AGI")),
+            "{:?}",
+            metrics.breakpoints
+        );
     }
 }

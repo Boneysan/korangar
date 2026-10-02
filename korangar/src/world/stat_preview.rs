@@ -5,17 +5,18 @@
 //! `Hercules/src/map/skill.c`):
 //! - HIT: +1 per DEX, +1 per 3 LUK (`st->hit += level + dex + luk / 3 + 175`)
 //! - FLEE: +1 per AGI, +1 per 5 LUK (`st->flee += level + agi + luk / 5 + 100`)
-//! - Soft DEF: +0.5 per VIT, +0.2 per AGI (`st->def2 += (level + vit) / 2 + agi
-//!   / 5`)
-//! - Soft MDEF: +1.0 per INT, +0.2 per DEX, +0.2 per VIT (`st->mdef2 += int +
-//!   level / 4 + (dex + vit) / 5`)
+//! - Soft DEF: `(int)((level + vit) / 2 + agi / 5)` in floats, truncated once
+//!   (see `stat_formulas`)
+//! - Soft MDEF: `(int)(int + level / 4 + (dex + vit) / 5)` in floats, truncated
+//!   once (see `stat_formulas`)
 //! - CRIT: +0.33 per LUK / 1 per 3 LUK (`st->cri += 10 + luk * 10 / 3` in 0.1%
 //!   units)
 //! - Perfect Dodge: +0.1 per LUK / 1 per 10 LUK (`st->flee2 += luk + 10` in
 //!   0.1% units)
 //! - Max HP: +1% base Max HP per VIT (`val += val * vit / 100`)
 //! - Max SP: +1% base Max SP per INT (`val += val * int / 100`)
-//! - Variable Cast: `dex * 2 + int` towards stat scale 530
+//! - Variable Cast: `(1 - sqrt((dex * 2 + int) / 530))` of the variable part
+//!   (`skill_vfcastfix`); see `stat_formulas`, which holds the exact arithmetic
 //! - Status ATK: +1 per STR (melee) / DEX (ranged), +0.2 opposite, +0.33 per
 //!   LUK
 //! - Max Weight: +30 per STR (+300 raw units)
@@ -23,6 +24,8 @@
 use std::cmp::max;
 
 use serde::{Deserialize, Serialize};
+
+use super::stat_formulas;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 pub enum StatKind {
@@ -94,6 +97,16 @@ impl StatPreviewInput {
 }
 
 /// Compute the next-point stat preview tooltip for the given stat.
+/// The cast-time line: how much of the variable cast time DEX and INT remove
+/// now, and after the next point (a square root of `(DEX * 2 + INT) / 530`).
+fn variable_cast_line(dex: i32, int: i32, next_dex: i32, next_int: i32) -> String {
+    format!(
+        "· Variable Cast Time: {:.1}% -> {:.1}% of the variable part removed",
+        stat_formulas::variable_cast_reduction_percent(dex, int),
+        stat_formulas::variable_cast_reduction_percent(next_dex, next_int)
+    )
+}
+
 pub fn stat_preview_tooltip(stat: StatKind, input: &StatPreviewInput, cost: u8, available_points: u32) -> String {
     let name = stat.name();
     let mut lines = Vec::with_capacity(7);
@@ -119,15 +132,12 @@ pub fn stat_preview_tooltip(stat: StatKind, input: &StatPreviewInput, cost: u8, 
         }
         StatKind::Agility => {
             let agi = input.total_agi();
-            let def_delta = ((agi + 1) / 5) - (agi / 5);
+            let (level, vit) = (input.base_level as i32, input.total_vit());
+            let def_delta = stat_formulas::soft_def(level, vit, agi + 1) - stat_formulas::soft_def(level, vit, agi);
 
             lines.push("· FLEE: +1".to_owned());
             lines.push("· Attack Speed: increases (reduces attack delay)".to_owned());
-            if def_delta > 0 {
-                lines.push("· Soft DEF: +1 (breakpoint reached: 5 AGI)".to_owned());
-            } else {
-                lines.push("· Soft DEF: +0 (+1 at next multiple of 5 AGI)".to_owned());
-            }
+            lines.push(format!("· Soft DEF: +{def_delta}"));
             lines.push("^888888[estimate] Increases evasion rate, attack speed, and soft defense.^000000".to_owned());
         }
         StatKind::Vitality => {
@@ -140,21 +150,13 @@ pub fn stat_preview_tooltip(stat: StatKind, input: &StatPreviewInput, cost: u8, 
             };
 
             let level = input.base_level as i32;
-            let def_delta = ((level + vit + 1) / 2) - ((level + vit) / 2);
-            let dex = input.total_dex();
-            let mdef_delta = ((dex + vit + 1) / 5) - ((dex + vit) / 5);
+            let (agi, int, dex) = (input.total_agi(), input.total_int(), input.total_dex());
+            let def_delta = stat_formulas::soft_def(level, vit + 1, agi) - stat_formulas::soft_def(level, vit, agi);
+            let mdef_delta = stat_formulas::soft_mdef(level, int, dex, vit + 1) - stat_formulas::soft_mdef(level, int, dex, vit);
 
             lines.push(format!("· Max HP: +1% Base HP (~+{hp_gain} HP)"));
-            if def_delta > 0 {
-                lines.push("· Soft DEF: +1 (breakpoint reached: 2 VIT)".to_owned());
-            } else {
-                lines.push("· Soft DEF: +0 (+1 at next multiple of 2 VIT)".to_owned());
-            }
-            if mdef_delta > 0 {
-                lines.push("· Soft MDEF: +1 (breakpoint reached: 5 DEX+VIT)".to_owned());
-            } else {
-                lines.push("· Soft MDEF: +0 (+1 at next multiple of 5 DEX+VIT)".to_owned());
-            }
+            lines.push(format!("· Soft DEF: +{def_delta}"));
+            lines.push(format!("· Soft MDEF: +{mdef_delta}"));
             lines.push("· Natural HP Recovery: +1 HP per 5 VIT".to_owned());
             lines.push("^888888[estimate] Increases max HP, physical & magic defense, and healing received.^000000".to_owned());
         }
@@ -171,25 +173,24 @@ pub fn stat_preview_tooltip(stat: StatKind, input: &StatPreviewInput, cost: u8, 
 
             lines.push(format!("· Max SP: +1% Base SP (~+{sp_gain} SP)"));
             lines.push(format!("· Status MATK: +{matk_delta}"));
-            lines.push("· Soft MDEF: +1".to_owned());
-            lines.push("· Variable Cast Time: +1 towards stat scale (530)".to_owned());
+            let (level, dex, vit) = (input.base_level as i32, input.total_dex(), input.total_vit());
+            let mdef_delta = stat_formulas::soft_mdef(level, int_val + 1, dex, vit) - stat_formulas::soft_mdef(level, int_val, dex, vit);
+            lines.push(format!("· Soft MDEF: +{mdef_delta}"));
+            lines.push(variable_cast_line(dex, int_val, dex, int_val + 1));
             lines.push("· Natural SP Recovery: +1 SP per 6 INT".to_owned());
             lines.push("^888888[estimate] Increases magic attack, max SP, magic defense, and cast speed.^000000".to_owned());
         }
         StatKind::Dexterity => {
             let dex = input.total_dex();
             let vit = input.total_vit();
-            let mdef_delta = ((dex + 1 + vit) / 5) - ((dex + vit) / 5);
+            let (level, int) = (input.base_level as i32, input.total_int());
+            let mdef_delta = stat_formulas::soft_mdef(level, int, dex + 1, vit) - stat_formulas::soft_mdef(level, int, dex, vit);
 
             lines.push("· HIT: +1".to_owned());
-            lines.push("· Variable Cast Time: +2 towards stat scale (530)".to_owned());
+            lines.push(variable_cast_line(dex, int, dex + 1, int));
             lines.push("· Status ATK: +1 (ranged) / +0.2 (melee)".to_owned());
             lines.push("· Attack Speed: slightly increases".to_owned());
-            if mdef_delta > 0 {
-                lines.push("· Soft MDEF: +1 (breakpoint reached: 5 DEX+VIT)".to_owned());
-            } else {
-                lines.push("· Soft MDEF: +0 (+1 at next multiple of 5 DEX+VIT)".to_owned());
-            }
+            lines.push(format!("· Soft MDEF: +{mdef_delta}"));
             lines.push("^888888[estimate] Increases hit rate, cast speed, ranged attack, and weapon stability.^000000".to_owned());
         }
         StatKind::Luck => {
@@ -255,7 +256,7 @@ mod tests {
         };
         let text_break = stat_preview_tooltip(StatKind::Agility, &input_break, 2, 5);
         assert!(text_break.contains("FLEE: +1"));
-        assert!(text_break.contains("Soft DEF: +1 (breakpoint reached: 5 AGI)"));
+        assert!(text_break.contains("Soft DEF: +1"), "{text_break}");
 
         // AGI 5 -> 6 does not reach a breakpoint.
         let input_no_break = StatPreviewInput {
@@ -264,7 +265,7 @@ mod tests {
             ..Default::default()
         };
         let text_no_break = stat_preview_tooltip(StatKind::Agility, &input_no_break, 2, 5);
-        assert!(text_no_break.contains("Soft DEF: +0 (+1 at next multiple of 5 AGI)"));
+        assert!(text_no_break.contains("Soft DEF: +0"), "{text_no_break}");
     }
 
     #[test]
@@ -292,7 +293,11 @@ mod tests {
         let text = stat_preview_tooltip(StatKind::Intelligence, &input, 5, 20);
         assert!(text.contains("Max SP: +1% Base SP"));
         assert!(text.contains("Soft MDEF: +1"));
-        assert!(text.contains("Variable Cast Time: +1 towards stat scale (530)"));
+        // sqrt(45 / 530) = 29.14% -> sqrt(46 / 530) = 29.46%.
+        assert!(
+            text.contains("Variable Cast Time: 29.1% -> 29.5% of the variable part removed"),
+            "{text}"
+        );
     }
 
     #[test]
@@ -304,7 +309,12 @@ mod tests {
         };
         let text = stat_preview_tooltip(StatKind::Dexterity, &input, 4, 10);
         assert!(text.contains("HIT: +1"));
-        assert!(text.contains("Variable Cast Time: +2 towards stat scale (530)"));
+        // DEX 32 -> 33 adds 2 to DEX * 2 + INT: sqrt(64 / 530) = 34.75% -> sqrt(66 /
+        // 530) = 35.29%.
+        assert!(
+            text.contains("Variable Cast Time: 34.7% -> 35.3% of the variable part removed"),
+            "{text}"
+        );
         assert!(text.contains("Status ATK: +1 (ranged) / +0.2 (melee)"));
     }
 
@@ -339,5 +349,20 @@ mod tests {
 
         let maxed = stat_preview_tooltip(StatKind::Strength, &input, 0, 99);
         assert!(maxed.contains("Max level reached"));
+    }
+
+    #[test]
+    fn soft_def_preview_adds_the_fractions_before_truncating() {
+        // Level 3, VIT 1, AGI 4: (3 + 1) / 2 + 4 / 5 = 2.8 -> 2. One more VIT
+        // gives 5 / 2 + 0.8 = 3.3 -> 3, so the next point is worth +1 Soft DEF.
+        // Flooring each term separately (the old model) says (4 -> 5)/2 = 2 -> 2: +0.
+        let input = StatPreviewInput {
+            base_level: 3,
+            vitality: 1,
+            agility: 4,
+            ..Default::default()
+        };
+        let text = stat_preview_tooltip(StatKind::Vitality, &input, 2, 10);
+        assert!(text.contains("Soft DEF: +1"), "{text}");
     }
 }

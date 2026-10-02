@@ -168,6 +168,44 @@ def parse_level_penalty(path: Path) -> dict[str, dict[str, dict[int, int]]]:
     return result
 
 
+def derived_stat_formula_rule(battle: dict[str, dict[str, object]]) -> dict[str, object]:
+    """Authored from a source review of status.c / skill.c (Renewal build).
+
+    The arithmetic below is restated, not parsed: it was read from the C
+    expressions named in `sources`, and the client's `stat_formulas` module
+    mirrors the same expressions and is unit-tested against hand-computed
+    values. Only the cast scale is read from configuration.
+    """
+    scale = required(battle, "vcast_stat_scale")
+    scale_value = value(battle, "vcast_stat_scale")
+    return {
+        "id": "derived-stat-formulas",
+        "category": "Mechanics",
+        "title": "Derived stat formulas (players)",
+        "summary": "How the server turns base stats into HIT, FLEE, DEF, MDEF, CRIT, ATK, MATK and cast time on this Renewal build. Equipment, cards, skills and status effects add to or scale these afterwards.",
+        "details": [
+            "HIT = Base Level + DEX + floor(LUK / 3) + 175.",
+            "FLEE = Base Level + AGI + floor(LUK / 5) + 100.",
+            "Soft DEF = (Base Level + VIT) / 2 + AGI / 5, with the fractions added first and the total rounded down once.",
+            "Soft MDEF = INT + Base Level / 4 + (DEX + VIT) / 5, with the fractions added first and the total rounded down once.",
+            "Critical = (10 + floor(LUK x 10 / 3)) tenths of a percent, about 1% plus a third of a percent per LUK.",
+            "Perfect dodge = (LUK + 10) tenths of a percent.",
+            "Status ATK = STR + DEX / 5 + LUK / 3 + Base Level / 4, rounded down once. Bows, instruments, whips and guns swap STR and DEX.",
+            "Status MATK = INT + floor(INT / 2) + floor(DEX / 5) + floor(LUK / 3) + floor(Base Level / 4).",
+            f"Variable cast time: DEX and INT remove sqrt((DEX x 2 + INT) / {scale_value}) of the variable part of a cast (a square root, not a straight line, so the first points matter most). At DEX x 2 + INT of {scale_value} or more, no variable cast remains.",
+            "A skill with no configured fixed cast time is split 20% fixed and 80% variable; a configured fixed time is kept as the fixed part, and a negative one means no fixed part. Stats do not reduce the fixed part; equipment and status bonuses can.",
+            "Not covered here: Max HP/SP, ASPD, the equipment DEF/MDEF bonuses, and how items and statuses modify these values.",
+            "These were confirmed from the source and are unit-tested in the client, not observed on a live server.",
+        ],
+        "sources": [
+            {"path": "src/map/status.c", "record": "status_calc_misc (HIT, FLEE, DEF2, MDEF2, CRI, FLEE2)"},
+            {"path": "src/map/status.c", "record": "status_base_atk and status_base_matk (Renewal)"},
+            {"path": "src/map/skill.c", "record": "skill_vfcastfix (variable and fixed cast)"},
+            scale["source"],  # type: ignore[list-item]
+        ],
+    }
+
+
 def level_penalty_rule(path: Path) -> dict[str, object]:
     table = parse_level_penalty(path)
 
@@ -392,6 +430,7 @@ def build() -> dict[str, object]:
             },
             *element_rules,
             level_penalty_rule(level_penalty_path),
+            derived_stat_formula_rule(battle),
             {
                 "id": "weapon-size-adjustments",
                 "category": "Mechanics",

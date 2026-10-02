@@ -3698,6 +3698,27 @@ mod tests {
     }
 
     #[test]
+    fn derived_stat_formulas_rule_states_the_server_arithmetic() {
+        let data = reference_data();
+        let rows = search_all_categories("derived stat formulas", &DiscoveryState::default(), &[]);
+        let row = rows
+            .iter()
+            .find(|row| row.kind == "server-rule" && data.server_rules[row.id as usize].title.contains("Derived stat formulas"))
+            .expect("the derived stat formulas rule is searchable");
+        let detail = resolve_details(row).join("\n");
+        assert!(detail.contains("HIT = Base Level + DEX + floor(LUK / 3) + 175"), "{detail}");
+        // The two corrections that matter most: one truncation for DEF/MDEF, and a
+        // square root for cast time.
+        assert!(detail.contains("rounded down once"), "{detail}");
+        assert!(detail.contains("sqrt((DEX x 2 + INT) / 530)"), "{detail}");
+        assert!(detail.contains("a square root, not a straight line"), "{detail}");
+        assert!(detail.contains("swap STR and DEX"), "{detail}");
+        assert!(detail.contains("not observed on a live server"), "{detail}");
+        // The 530 comes from the configured scale, so the entry cites it.
+        assert!(detail.contains("skill.conf"), "{detail}");
+    }
+
+    #[test]
     fn all_search_finds_matching_monster_card_and_quest_together() {
         let rows = search_all_categories("poring", &DiscoveryState::default(), &[]);
         assert!(rows.iter().any(|row| row.kind == "monster" && row.id == 1002));
