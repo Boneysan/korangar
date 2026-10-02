@@ -148,6 +148,55 @@ def parse_weapon_size_adjustments(path: Path) -> dict[str, dict[str, int]]:
     return {size: dict(zip(weapons, table[size], strict=True)) for size in sizes}
 
 
+def parse_level_penalty(path: Path) -> dict[str, dict[str, dict[int, int]]]:
+    """Parse type/race/diff/rate rows from Hercules level_penalty.conf."""
+    text = re.sub(r"/\*.*?\*/", "", path.read_text(encoding="utf-8", errors="replace"), flags=re.S)
+    text = re.sub(r"//.*", "", text)
+    rows = re.findall(
+        r'\{\s*type:\s*"(\w+)"\s*,\s*race:\s*"(\w+)"\s*,\s*diff:\s*(-?\d+)\s*,\s*rate:\s*(\d+)\s*\}', text
+    )
+    result: dict[str, dict[str, dict[int, int]]] = {}
+    for kind, race, diff, rate in rows:
+        if kind not in {"EXP_PENALTY_RATE", "ITEM_DROP_PENALTY_RATE"} or race not in {"RC_NonBoss", "RC_Boss"}:
+            raise ExportError(f"unexpected level_penalty row: {kind} {race}")
+        table = result.setdefault(kind, {}).setdefault(race, {})
+        if int(diff) in table:
+            raise ExportError(f"duplicate level_penalty row: {kind} {race} {diff}")
+        table[int(diff)] = int(rate)
+    if text.count("type:") != len(rows) or set(result) != {"EXP_PENALTY_RATE", "ITEM_DROP_PENALTY_RATE"}:
+        raise ExportError("level_penalty.conf has rows this parser does not understand")
+    return result
+
+
+def level_penalty_rule(path: Path) -> dict[str, object]:
+    table = parse_level_penalty(path)
+
+    def listed(kind: str) -> str:
+        rows = sorted(table[kind]["RC_NonBoss"].items(), key=lambda row: row[0])
+        return "; ".join(f"{diff:+d}: {rate}%" for diff, rate in rows)
+
+    return {
+        "id": "level-difference-modifiers",
+        "category": "Mechanics",
+        "title": "Level difference EXP and drop modifiers",
+        "summary": "Monster level minus player Base Level can scale EXP and item drop rates, but this server applies a modifier only at the exact differences listed here.",
+        "details": [
+            "Difference = monster level minus the player's Base Level. EXP uses the player receiving the EXP; drop rates use the monster's top-credited attacker (MVP, else second, else third).",
+            f"EXP modifier (applies to base and job EXP) at these exact differences: {listed('EXP_PENALTY_RATE')}.",
+            f"Item drop-rate modifier at these exact differences: {listed('ITEM_DROP_PENALTY_RATE')}.",
+            "Any other difference takes 100%: the server reads each row at its exact difference and does not carry a value across the gaps or beyond the last row. A monster 17 or more levels above, or any gap such as -5, is therefore unmodified.",
+            "Bosses have no separate penalty rows (the boss row lists only difference 0 at 100%); the same non-boss rows apply to them.",
+            "This describes how the server loads and looks up the table. It was confirmed from the source, not observed in play; an @mobinfo check against a monster at a listed and an unlisted level difference in a live session would confirm it.",
+        ],
+        "sources": [
+            {"path": path.relative_to(HERCULES).as_posix(), "record": "level_penalty_db rows"},
+            {"path": "src/map/pc.c", "record": "pc_level_penalty_mod exact-difference lookup; pc_read_level_penalty_db_sub loader"},
+            {"path": "src/map/mob.c", "record": "drop modifier from the top-credited attacker's level"},
+            {"path": "src/config/renewal.h", "record": "RENEWAL_EXP and RENEWAL_DROP"},
+        ],
+    }
+
+
 def build() -> dict[str, object]:
     battle = effective_settings(HERCULES / "conf/map/battle.conf")
     inter = effective_settings(HERCULES / "conf/common/inter-server.conf")
@@ -207,6 +256,7 @@ def build() -> dict[str, object]:
     }
     attr_fix_path = HERCULES / "db/re/attr_fix.conf"
     elemental_adjustments = parse_element_adjustments(attr_fix_path)
+    level_penalty_path = HERCULES / "db/re/level_penalty.conf"
     size_fix_path = HERCULES / "db/re/size_fix.txt"
     size_adjustments = parse_weapon_size_adjustments(size_fix_path)
     element_names = {
@@ -257,6 +307,7 @@ def build() -> dict[str, object]:
             drops_path.relative_to(HERCULES).as_posix(),
             attr_fix_path.relative_to(HERCULES).as_posix(),
             size_fix_path.relative_to(HERCULES).as_posix(),
+            level_penalty_path.relative_to(HERCULES).as_posix(),
         ],
         "entries": [
             {
@@ -340,6 +391,7 @@ def build() -> dict[str, object]:
                 ],
             },
             *element_rules,
+            level_penalty_rule(level_penalty_path),
             {
                 "id": "weapon-size-adjustments",
                 "category": "Mechanics",

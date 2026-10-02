@@ -3575,6 +3575,26 @@ mod tests {
     }
 
     #[test]
+    fn level_difference_rule_is_searchable_and_states_the_exact_difference_behaviour() {
+        let data = reference_data();
+        let rows = search_all_categories("level difference", &DiscoveryState::default(), &[]);
+        let row = rows
+            .iter()
+            .find(|row| row.kind == "server-rule" && data.server_rules[row.id as usize].title.contains("Level difference"))
+            .expect("the level difference rule is searchable");
+        let detail = resolve_details(row).join("\n");
+        // Spot values from db/re/level_penalty.conf: +10 is 140% EXP, -6 is 95%, +16
+        // drops 50%.
+        assert!(detail.contains("+10: 140%"), "{detail}");
+        assert!(detail.contains("-6: 95%"), "{detail}");
+        assert!(detail.contains("+16: 50%"), "{detail}");
+        // The caveat that matters: gaps and anything beyond the last row are
+        // unmodified.
+        assert!(detail.contains("Any other difference takes 100%"), "{detail}");
+        assert!(detail.contains("not observed in play"), "{detail}");
+    }
+
+    #[test]
     fn all_search_finds_matching_monster_card_and_quest_together() {
         let rows = search_all_categories("poring", &DiscoveryState::default(), &[]);
         assert!(rows.iter().any(|row| row.kind == "monster" && row.id == 1002));

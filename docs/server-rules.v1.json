@@ -10,7 +10,8 @@
   "conf/groups.conf",
   "conf/map/battle/drops.conf",
   "db/re/attr_fix.conf",
-  "db/re/size_fix.txt"
+  "db/re/size_fix.txt",
+  "db/re/level_penalty.conf"
  ],
  "entries": [
   {
@@ -402,6 +403,38 @@
     {
      "path": "db/re/attr_fix.conf",
      "record": "Ele_Wind"
+    }
+   ]
+  },
+  {
+   "id": "level-difference-modifiers",
+   "category": "Mechanics",
+   "title": "Level difference EXP and drop modifiers",
+   "summary": "Monster level minus player Base Level can scale EXP and item drop rates, but this server applies a modifier only at the exact differences listed here.",
+   "details": [
+    "Difference = monster level minus the player's Base Level. EXP uses the player receiving the EXP; drop rates use the monster's top-credited attacker (MVP, else second, else third).",
+    "EXP modifier (applies to base and job EXP) at these exact differences: -31: 10%; -26: 35%; -21: 60%; -16: 85%; -11: 90%; -6: 95%; -1: 100%; +0: 100%; +3: 105%; +4: 110%; +5: 115%; +6: 120%; +7: 125%; +8: 130%; +9: 135%; +10: 140%; +11: 135%; +12: 130%; +13: 125%; +14: 120%; +15: 115%; +16: 40%.",
+    "Item drop-rate modifier at these exact differences: -16: 50%; -13: 60%; -10: 70%; -7: 80%; -4: 90%; +0: 100%; +4: 90%; +7: 80%; +10: 70%; +13: 60%; +16: 50%.",
+    "Any other difference takes 100%: the server reads each row at its exact difference and does not carry a value across the gaps or beyond the last row. A monster 17 or more levels above, or any gap such as -5, is therefore unmodified.",
+    "Bosses have no separate penalty rows (the boss row lists only difference 0 at 100%); the same non-boss rows apply to them.",
+    "This describes how the server loads and looks up the table. It was confirmed from the source, not observed in play; an @mobinfo check against a monster at a listed and an unlisted level difference in a live session would confirm it."
+   ],
+   "sources": [
+    {
+     "path": "db/re/level_penalty.conf",
+     "record": "level_penalty_db rows"
+    },
+    {
+     "path": "src/map/pc.c",
+     "record": "pc_level_penalty_mod exact-difference lookup; pc_read_level_penalty_db_sub loader"
+    },
+    {
+     "path": "src/map/mob.c",
+     "record": "drop modifier from the top-credited attacker's level"
+    },
+    {
+     "path": "src/config/renewal.h",
+     "record": "RENEWAL_EXP and RENEWAL_DROP"
     }
    ]
   },
