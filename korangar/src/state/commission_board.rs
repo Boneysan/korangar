@@ -8,8 +8,8 @@
 
 use ragnarok_packets::ItemId;
 
-pub const NON_CUSTODIAL_RISK_DISCLOSURE: &str =
-    "Non-custodial: Materials & payment must be traded directly. No automated escrow. Crafting failure risk borne by requester unless negotiated.";
+pub const NON_CUSTODIAL_RISK_DISCLOSURE: &str = "Non-custodial: Materials & payment must be traded directly. No automated escrow. \
+                                                 Crafting failure risk borne by requester unless negotiated.";
 
 /// Status of a commission request.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Default)]
@@ -232,14 +232,7 @@ mod tests {
     fn cancellation_requires_requester_authorization() {
         let mut board = CommissionBoardState::default();
 
-        let id = board.post_request(
-            "Alice",
-            ItemId(501),
-            "Red Potion x100",
-            "Herb x100 provided",
-            0,
-            10_000,
-        );
+        let id = board.post_request("Alice", ItemId(501), "Red Potion x100", "Herb x100 provided", 0, 10_000);
 
         // Unauthorized cancel fails
         assert_eq!(
@@ -252,9 +245,6 @@ mod tests {
         assert_eq!(board.get_request(id).unwrap().status, CommissionStatus::Cancelled);
 
         // Double cancel fails
-        assert_eq!(
-            board.cancel_request(id, "Alice"),
-            Err("Commission is already cancelled")
-        );
+        assert_eq!(board.cancel_request(id, "Alice"), Err("Commission is already cancelled"));
     }
 }

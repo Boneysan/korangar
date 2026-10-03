@@ -1,13 +1,14 @@
 # Korangar — agent notes
 
-**CURRENT PRIORITY (verified 2026-09-27): GDD v0.2 modernization, Phase 1.** Start with
-[docs/plans/gdd-next-slices.md](docs/plans/gdd-next-slices.md) (per-slice status and the
-2026-09-27 verification notes) and [docs/GDD.md Appendix E](docs/GDD.md). G1 data drift and
-S3's uncommitted `party_share_level` were fixed 2026-09-27; the open issue to know first is
-that the only full headless run since the newest scenario (`death-recovery-ten-kill-threshold`)
-was added **failed `skills-professor`** and never reached that scenario — re-run the full
-suite before trusting the "163 green" figure. The
-July animation/live-pass notes below are historical context for effect work, not the active queue.
+**CURRENT PRIORITY (refreshed 2026-10-03): GDD v0.2 modernization.** Per-feature status is
+in the F01–F39 rows of [docs/plans/gdd-improvement-plan.md](docs/plans/gdd-improvement-plan.md),
+summarized at the top of [docs/GDD.md Appendix E](docs/GDD.md). Almost every GUI feature is
+implemented and test-covered but **never seen on screen**; the next gate is the live GUI pass
+(`docs/plans/gui-verification-pass.md`). Latest evidence: `cargo test -p korangar --lib` 687
+passed / 17 ignored (2026-10-03); last full headless run 168 passed / 1 failed
+(`skills-professor`, two skills with no protocol response) / 1 expected skip
+(`tools/testing/runs/20261002-184210.log`). The July animation/live-pass notes below are
+historical context for effect work, not the active queue.
 
 **Encyclopedia (Adventure Guide) data work — active parallel thread, updated 2026-09-30.**
 Reviewed data so far: 87 item exchanges (302 items linked), 107/107 indexed NPC service-call

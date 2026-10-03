@@ -385,9 +385,9 @@ fn ranged_keeper_orc_archer(config: &Config) -> Result<(), String> {
     Ok(())
 }
 
-/// `RAYDRIC_ARCHER` on `gl_knt01`: RangedKeeper, PreferredRange 6, Cooldown 2000.
-/// Stand still next to one: it should back off a cell at a time until it is out
-/// of the band.
+/// `RAYDRIC_ARCHER` on `gl_knt01`: RangedKeeper, PreferredRange 6, Cooldown
+/// 2000. Stand still next to one: it should back off a cell at a time until it
+/// is out of the band.
 fn ranged_keeper_raydric_archer(config: &Config) -> Result<(), String> {
     const PREFERRED_RANGE: i32 = 6;
     const COOLDOWN_MS: u32 = 2000;
@@ -445,7 +445,9 @@ fn ranged_keeper_raydric_archer(config: &Config) -> Result<(), String> {
         break;
     }
     if !proven {
-        return Err(format!("no attempt showed the raydric archer keeping its distance: {last_problem}"));
+        return Err(format!(
+            "no attempt showed the raydric archer keeping its distance: {last_problem}"
+        ));
     }
 
     // The control: a stock raydric archer next to the player does not back off.
@@ -563,8 +565,8 @@ fn eddga_attempt(config: &Config) -> Result<(), String> {
 /// activates its enrage skills (Powerup 349 / Speedup 332).
 ///
 /// Eddga has 947,500 HP; @setmobhp is used to deterministically bring Eddga
-/// to 700,000 HP (< 80% HP) to test Meteor Storm, and then to 200,000 HP (< 30% HP)
-/// to test the escalation enrage window without killing it.
+/// to 700,000 HP (< 80% HP) to test Meteor Storm, and then to 200,000 HP (< 30%
+/// HP) to test the escalation enrage window without killing it.
 fn eddga_meteor_and_enrage(config: &Config) -> Result<(), String> {
     let mut problems = Vec::new();
     for attempt in 1..=ATTEMPTS {
@@ -586,7 +588,8 @@ fn eddga_meteor_attempt(config: &Config) -> Result<(), String> {
         context.pump(Duration::from_millis(300));
 
         let eddga = context.spawn_monster(EDDGA.0, EDDGA.1)?;
-        // Bring Eddga under 80% HP (947,500 * 0.80 = 758,000) so Meteor Storm is eligible.
+        // Bring Eddga under 80% HP (947,500 * 0.80 = 758,000) so Meteor Storm is
+        // eligible.
         context.say(&format!("@setmobhp {} 700000", eddga.0))?;
         context.pump(Duration::from_millis(200));
 
@@ -604,8 +607,8 @@ fn eddga_meteor_attempt(config: &Config) -> Result<(), String> {
                 context.say("@alive")?;
             }
 
-            // Once Meteor Storm has been observed, bring Eddga under 30% HP (947,500 * 0.30 = 284,250)
-            // to test the escalation enrage window.
+            // Once Meteor Storm has been observed, bring Eddga under 30% HP (947,500 * 0.30
+            // = 284,250) to test the escalation enrage window.
             if !meteor_casts.is_empty() && !set_enrage_hp {
                 context.say(&format!("@setmobhp {} 200000", eddga.0))?;
                 context.pump(Duration::from_millis(200));
@@ -649,7 +652,8 @@ fn eddga_meteor_attempt(config: &Config) -> Result<(), String> {
             }
             record(&context, eddga, events, &mut seen);
 
-            // Once both Meteor Storm (<80% HP) and Enrage (<30% HP) have been proven, stop early.
+            // Once both Meteor Storm (<80% HP) and Enrage (<30% HP) have been proven, stop
+            // early.
             if !meteor_casts.is_empty() && !enrage_effects.is_empty() {
                 break;
             }
@@ -657,7 +661,8 @@ fn eddga_meteor_attempt(config: &Config) -> Result<(), String> {
 
         if meteor_casts.is_empty() {
             return Err(format!(
-                "Eddga never cast Meteor Storm (skill {SKILL_METEOR}) in {} ms of being fought. All casts: {all_casts:?}. All nodamage: {all_nodamage:?}. Swings: {}",
+                "Eddga never cast Meteor Storm (skill {SKILL_METEOR}) in {} ms of being fought. All casts: {all_casts:?}. All nodamage: \
+                 {all_nodamage:?}. Swings: {}",
                 started.elapsed().as_millis(),
                 summary(&seen)
             ));
@@ -669,7 +674,8 @@ fn eddga_meteor_attempt(config: &Config) -> Result<(), String> {
         }
         if enrage_effects.is_empty() {
             return Err(format!(
-                "Eddga never activated enrage skills (Powerup {SKILL_POWERUP} / Speedup {SKILL_SPEEDUP}) in {} ms of being fought. All casts: {all_casts:?}. All nodamage: {all_nodamage:?}. Swings: {}",
+                "Eddga never activated enrage skills (Powerup {SKILL_POWERUP} / Speedup {SKILL_SPEEDUP}) in {} ms of being fought. All \
+                 casts: {all_casts:?}. All nodamage: {all_nodamage:?}. Swings: {}",
                 started.elapsed().as_millis(),
                 summary(&seen)
             ));

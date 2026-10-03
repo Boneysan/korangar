@@ -64,6 +64,166 @@ impl<A> AdventureGuideWindow<A> {
     }
 }
 
+fn listed<T: std::fmt::Display>(value: Option<T>) -> String {
+    value.map_or_else(|| "not listed".to_owned(), |value| value.to_string())
+}
+
+/// EXP, combat numbers and behavior straight from the monster's `mob_db.conf`
+/// record. Values are shown as configured; `Attack` keeps the database's own
+/// two-number form because the two values feed different damage paths.
+fn monster_combat_lines(monster: &ReferenceMonster) -> Vec<String> {
+    let attack = monster
+        .attack
+        .map_or_else(|| "not listed".to_owned(), |[first, second]| format!("{first} / {second}"));
+    let speed = match monster.move_speed {
+        Some(speed) => format!("{speed} ms per cell (an unhasted player is 150; lower is faster)"),
+        None => "not listed".to_owned(),
+    };
+    vec![
+        format!("EXP: base {}   job {}", listed(monster.base_exp), listed(monster.job_exp)),
+        format!(
+            "Attack (database attack1 / attack2): {attack}   DEF {}   MDEF {}",
+            listed(monster.defense),
+            listed(monster.magic_defense)
+        ),
+        format!(
+            "Attack range {} cells   Sight range {} cells",
+            listed(monster.attack_range),
+            listed(monster.view_range)
+        ),
+        format!("Move speed: {speed}"),
+        format!("Behavior: {}", monster_behavior(&monster.modes)),
+    ]
+}
+
+/// Player-facing reading of Hercules `Mode` flags. Each phrase follows the
+/// server code path, not the flag's name: only `Aggressive` makes a monster
+/// look for targets on its own (`mob.c` target search), while `Angry` changes
+/// its skill state and is left out. Flags without a verified description are
+/// listed by name.
+fn monster_behavior(modes: &[String]) -> String {
+    let has = |flag: &str| modes.iter().any(|mode| mode == flag);
+    let mut parts = Vec::new();
+
+    if !has("CanAttack") {
+        parts.push("never attacks".to_owned());
+    } else if has("Aggressive") {
+        parts.push("aggressive — attacks players on sight".to_owned());
+    } else {
+        parts.push("passive — fights back only when attacked".to_owned());
+    }
+    if !has("CanMove") {
+        parts.push("does not move".to_owned());
+    }
+    if has("Assist") {
+        parts.push("nearby monsters of the same kind join its fights".to_owned());
+    }
+    if has("Looter") {
+        parts.push("picks up items from the ground".to_owned());
+    }
+    if has("Detector") {
+        parts.push("sees hidden and cloaked players".to_owned());
+    }
+    if has("CastSensorIdle") || has("CastSensorChase") {
+        parts.push("turns on a player who starts casting a skill at it".to_owned());
+    }
+    if has("Boss") {
+        parts.push("boss".to_owned());
+    }
+
+    const DESCRIBED: [&str; 9] = [
+        "CanAttack",
+        "Aggressive",
+        "CanMove",
+        "Assist",
+        "Looter",
+        "Detector",
+        "CastSensorIdle",
+        "CastSensorChase",
+        "Boss",
+    ];
+    let other: Vec<&str> = modes.iter().map(String::as_str).filter(|mode| !DESCRIBED.contains(mode)).collect();
+    let mut text = parts.join("; ");
+    if !other.is_empty() {
+        text.push_str(&format!(" (other server flags: {})", other.join(", ")));
+    }
+    text
+}
+
+/// One monster skill list with trigger and target notes, capped at eight rows.
+fn push_monster_skills(
+    lines: &mut Vec<String>,
+    heading: &str,
+    skills: &[crate::dm::reference_data::ReferenceMobSkill],
+    source: &Option<crate::dm::reference_data::ReferenceSource>,
+) {
+    let data = reference_data();
+    if skills.is_empty() {
+        lines.push(format!("{heading} none."));
+        return;
+    }
+    lines.push(heading.to_owned());
+    for mob_skill in skills.iter().take(8) {
+        let chance = if mob_skill.rate > 0 {
+            format!("{:.2}%", mob_skill.rate as f32 / 100.0)
+        } else {
+            "not available".to_owned()
+        };
+        let cast_time = if mob_skill.cast_time_ms > 0 {
+            format!("; cast time {:.1}s", mob_skill.cast_time_ms as f32 / 1000.0)
+        } else {
+            String::new()
+        };
+        let cancel = if mob_skill.cancelable {
+            "; cast can be interrupted"
+        } else {
+            "; cast is not configured as interruptible"
+        };
+        let label = data
+            .skills
+            .iter()
+            .find(|skill| skill.name.eq_ignore_ascii_case(&mob_skill.skill_name))
+            .map(|skill| {
+                format!(
+                    "@guide:skill:{}|{} — Lv {} — {} — retry delay {:.1}s{}{}",
+                    skill.id,
+                    display_name(&skill.description, &skill.name),
+                    mob_skill.level,
+                    chance,
+                    mob_skill.delay_ms as f32 / 1000.0,
+                    cast_time,
+                    cancel
+                )
+            })
+            .unwrap_or_else(|| {
+                format!(
+                    "{} — Lv {} — {} — retry delay {:.1}s{}{} (no matching skill reference)",
+                    mob_skill.skill_name,
+                    mob_skill.level,
+                    chance,
+                    mob_skill.delay_ms as f32 / 1000.0,
+                    cast_time,
+                    cancel
+                )
+            });
+        lines.push(label);
+        if !mob_skill.trigger_summary.is_empty() {
+            lines.push(format!("  {}", mob_skill.trigger_summary));
+        } else {
+            lines.push("  Trigger details have not been translated from the server record.".to_owned());
+        }
+        if !mob_skill.target_summary.is_empty() {
+            lines.push(format!("  {}", mob_skill.target_summary));
+        }
+    }
+    if skills.len() > 8 {
+        lines.push(format!("{} additional skill records omitted.", skills.len() - 8));
+    }
+    if let Some(source) = source {
+        lines.push(format!("Monster-skill source: {} ({})", source.path, source.record));
+    }
+}
+
 fn monster_details(monster: &ReferenceMonster) -> Vec<String> {
     let data = reference_data();
     let mut lines = vec![
@@ -80,68 +240,47 @@ fn monster_details(monster: &ReferenceMonster) -> Vec<String> {
     if let Some(size) = &monster.size {
         lines.push(format!("Size: {size}"));
     }
+    lines.extend(monster_combat_lines(monster));
     lines.push(format!("Skills: {}   Drops: {}", monster.skills.len(), monster.drops.len()));
-    if !monster.skills.is_empty() {
-        lines.push("Configured monster skills and trigger conditions:".to_owned());
-        for mob_skill in monster.skills.iter().take(8) {
-            let chance = if mob_skill.rate > 0 {
-                format!("{:.2}%", mob_skill.rate as f32 / 100.0)
-            } else {
-                "not available".to_owned()
+    let pilot = data.pilot_skill_layer.as_ref();
+    match (&monster.pilot_skills, pilot) {
+        (Some(pilot_skills), Some(layer)) => {
+            let state = match layer.active {
+                true => "ON on this server",
+                false => "off on this server",
             };
-            let cast_time = if mob_skill.cast_time_ms > 0 {
-                format!("; cast time {:.1}s", mob_skill.cast_time_ms as f32 / 1000.0)
-            } else {
-                String::new()
+            lines.push(format!(
+                "AI pilot layer: {} = {} in {} ({state}). While it is on, this monster uses the pilot skills; while it is off, the stock \
+                 skills.",
+                layer.setting, layer.configured_value, layer.config_source
+            ));
+            let (first, second) = match layer.active {
+                true => ("Pilot skills (in use):", "Stock skills (used only when the pilot is off):"),
+                false => ("Stock skills (in use):", "Pilot skills (used only when the pilot is on):"),
             };
-            let cancel = if mob_skill.cancelable {
-                "; cast can be interrupted"
-            } else {
-                "; cast is not configured as interruptible"
+            let (first_skills, first_source, second_skills, second_source) = match layer.active {
+                true => (
+                    pilot_skills.as_slice(),
+                    &monster.pilot_skills_source,
+                    monster.skills.as_slice(),
+                    &monster.skills_source,
+                ),
+                false => (
+                    monster.skills.as_slice(),
+                    &monster.skills_source,
+                    pilot_skills.as_slice(),
+                    &monster.pilot_skills_source,
+                ),
             };
-            let label = data
-                .skills
-                .iter()
-                .find(|skill| skill.name.eq_ignore_ascii_case(&mob_skill.skill_name))
-                .map(|skill| {
-                    format!(
-                        "@guide:skill:{}|{} — Lv {} — {} — retry delay {:.1}s{}{}",
-                        skill.id,
-                        display_name(&skill.description, &skill.name),
-                        mob_skill.level,
-                        chance,
-                        mob_skill.delay_ms as f32 / 1000.0,
-                        cast_time,
-                        cancel
-                    )
-                })
-                .unwrap_or_else(|| {
-                    format!(
-                        "{} — Lv {} — {} — retry delay {:.1}s{}{} (no matching skill reference)",
-                        mob_skill.skill_name,
-                        mob_skill.level,
-                        chance,
-                        mob_skill.delay_ms as f32 / 1000.0,
-                        cast_time,
-                        cancel
-                    )
-                });
-            lines.push(label);
-            if !mob_skill.trigger_summary.is_empty() {
-                lines.push(format!("  {}", mob_skill.trigger_summary));
-            } else {
-                lines.push("  Trigger details have not been translated from the server record.".to_owned());
-            }
-            if !mob_skill.target_summary.is_empty() {
-                lines.push(format!("  {}", mob_skill.target_summary));
-            }
+            push_monster_skills(&mut lines, first, first_skills, first_source);
+            push_monster_skills(&mut lines, second, second_skills, second_source);
         }
-        if monster.skills.len() > 8 {
-            lines.push(format!("{} additional skill records omitted.", monster.skills.len() - 8));
-        }
-        if let Some(source) = &monster.skills_source {
-            lines.push(format!("Monster-skill source: {} ({})", source.path, source.record));
-        }
+        _ => push_monster_skills(
+            &mut lines,
+            "Configured monster skills and trigger conditions:",
+            &monster.skills,
+            &monster.skills_source,
+        ),
     }
     if !monster.drops.is_empty() {
         lines.push("Configured database drop rates (server modifiers may change realized chances):".to_owned());
@@ -268,6 +407,21 @@ fn monster_details(monster: &ReferenceMonster) -> Vec<String> {
         }
     }
     lines
+}
+
+/// One clickable "dropped by" row: the monster's player-facing name and level
+/// when the bestiary has it, falling back to the database sprite name.
+fn drop_source_line(monster_id: u32, sprite_name: &str, kind: &str, rate_per_10000: u32) -> String {
+    let (name, level) = match reference_data().monster_by_id(monster_id) {
+        Some(monster) => (display_name(&monster.name, &monster.sprite_name), Some(monster.level)),
+        None => (sprite_name.to_owned(), None),
+    };
+    let level = level.map(|level| format!(", Lv {level}")).unwrap_or_default();
+    format!(
+        "@guide:monster:{monster_id}|{name} (ID {monster_id}{level}) — {} drop {:.2}%",
+        if kind == "mvp" { "MVP" } else { "normal" },
+        rate_per_10000 as f32 / 100.0
+    )
 }
 
 fn item_details(item: &ReferenceItem, card: bool) -> Vec<String> {
@@ -652,13 +806,11 @@ fn item_details(item: &ReferenceItem, card: bool) -> Vec<String> {
     if !item.drops_from.is_empty() {
         lines.push("Monster database drop rates (server modifiers may change realized chances):".to_owned());
         for source in item.drops_from.iter().take(8) {
-            lines.push(format!(
-                "@guide:monster:{}|{} (ID {}) — {} drop {:.2}%",
+            lines.push(drop_source_line(
                 source.monster_id,
-                source.sprite_name,
-                source.monster_id,
-                if source.kind == "mvp" { "MVP" } else { "normal" },
-                source.rate_per_10000 as f32 / 100.0
+                &source.sprite_name,
+                &source.kind,
+                source.rate_per_10000,
             ));
             if let Some(monster) = reference_data().monster_by_id(source.monster_id) {
                 for region in monster.spawn_regions.iter().take(3) {
@@ -675,13 +827,11 @@ fn item_details(item: &ReferenceItem, card: bool) -> Vec<String> {
             lines.push("Monster database drop sources (server modifiers may change realized chances):".to_owned());
             for monster in dropping_monsters.iter().take(8) {
                 if let Some(drop) = monster.drops.iter().find(|d| d.item_id == item.id) {
-                    lines.push(format!(
-                        "@guide:monster:{}|{} (ID {}) — {} drop {:.2}%",
+                    lines.push(drop_source_line(
                         monster.id,
-                        monster.sprite_name,
-                        monster.id,
-                        if drop.kind == "mvp" { "MVP" } else { "normal" },
-                        drop.rate_per_10000 as f32 / 100.0
+                        &monster.sprite_name,
+                        &drop.kind,
+                        drop.rate_per_10000,
                     ));
                     for region in monster.spawn_regions.iter().take(3) {
                         if !is_graph_map(&region.map) {
@@ -2476,6 +2626,72 @@ where
     }
 }
 
+/// How a Guide route link is presented from the player's current map.
+#[derive(Debug, PartialEq)]
+enum RouteOffer {
+    /// A clickable route labelled with how many map transitions it takes,
+    /// followed by the lock and unlock steps of any locked hop on it.
+    Button { text: String, notes: Vec<String> },
+    /// No verified route from here: the reason, as text, instead of a button
+    /// that would only fail with a toast after the click.
+    Unavailable(Vec<String>),
+}
+
+/// "3 maps · 1,200 z · ~180 cells · 1 locked step" for a route button.
+fn route_summary_text(summary: crate::world::RouteSummary) -> String {
+    let mut parts = vec![match summary.hops {
+        1 => "1 map".to_owned(),
+        hops => format!("{hops} maps"),
+    }];
+    if summary.zeny > 0 {
+        parts.push(format!("{} z", group_digits(u64::from(summary.zeny))));
+    }
+    parts.push(format!("~{} cells", group_digits(u64::from(summary.walk_cells))));
+    match summary.locked_hops {
+        0 => {}
+        1 => parts.push("1 locked step".to_owned()),
+        locked => parts.push(format!("{locked} locked steps")),
+    }
+    parts.join(" · ")
+}
+
+fn route_offer(current_map: &str, target_map: &str, label: &str) -> RouteOffer {
+    // Outside a map (or before the minimap knows it) there is nothing to
+    // measure from; keep the plain action and let the click handler decide.
+    if current_map.is_empty() {
+        return RouteOffer::Button {
+            text: label.to_owned(),
+            notes: Vec::new(),
+        };
+    }
+    let Some(summary) = crate::world::route_summary(current_map, target_map) else {
+        return RouteOffer::Unavailable(crate::world::unreachable_explanation(current_map, target_map));
+    };
+    let text = match summary.hops {
+        0 => format!("{label} (this map)"),
+        _ => format!(
+            "{label} ({}; {})",
+            route_summary_text(summary),
+            crate::world::route_preference().label()
+        ),
+    };
+    RouteOffer::Button {
+        text,
+        notes: crate::world::route_lock_notes(current_map, target_map),
+    }
+}
+
+/// Plain wrapped text rows under a Guide line (route lock steps, reasons).
+fn push_text_lines(elements: &mut Vec<ElementBox<ClientState>>, lines: Vec<String>) {
+    use korangar_interface::prelude::*;
+
+    for line in lines {
+        elements.push(ErasedElement::new(
+            text! { text: line, overflow_behavior: OverflowBehavior::Shrink },
+        ));
+    }
+}
+
 struct GuideLines<A> {
     path: A,
     elements: Vec<ElementBox<ClientState>>,
@@ -2507,6 +2723,7 @@ where
             // Detail strings contain dynamic cross-links/actions; rebuild them
             // when the selected entry changes, even if the line count does not.
             self.elements.clear();
+            let current_map = state.get(&client_state().minimap()).map_name().to_owned();
             let count = state.get(&self.path).len();
             for index in 0..count {
                 let line = self.path.index(index).manually_asserted();
@@ -2522,16 +2739,28 @@ where
                         event: InputEvent::AddClientHuntingGoal { monster_id },
                     }));
                 } else if let Some((map_name, x, y, label)) = parse_route_cell_link(&value) {
-                    self.elements.push(ErasedElement::new(button! {
-                        text: label,
-                        event: InputEvent::SetNavigationDestination { map_name, x, y },
-                    }));
+                    match route_offer(&current_map, &map_name, &label) {
+                        RouteOffer::Button { text, notes } => {
+                            self.elements.push(ErasedElement::new(button! {
+                                text: text,
+                                event: InputEvent::SetNavigationDestination { map_name, x, y },
+                            }));
+                            push_text_lines(&mut self.elements, notes);
+                        }
+                        RouteOffer::Unavailable(lines) => push_text_lines(&mut self.elements, lines),
+                    }
                 } else if let Some(map_name) = value.strip_prefix("@route:") {
                     let map_name = map_name.to_owned();
-                    self.elements.push(ErasedElement::new(button! {
-                        text: format!("Route to {map_name}"),
-                        event: InputEvent::SetNavigationMapDestination { map_name },
-                    }));
+                    match route_offer(&current_map, &map_name, &format!("Route to {map_name}")) {
+                        RouteOffer::Button { text, notes } => {
+                            self.elements.push(ErasedElement::new(button! {
+                                text: text,
+                                event: InputEvent::SetNavigationMapDestination { map_name },
+                            }));
+                            push_text_lines(&mut self.elements, notes);
+                        }
+                        RouteOffer::Unavailable(lines) => push_text_lines(&mut self.elements, lines),
+                    }
                 } else if let Some(result) = parse_guide_link(&value) {
                     let detail_path = self.path;
                     self.elements.push(ErasedElement::new(button! {
@@ -3460,9 +3689,16 @@ mod tests {
         };
         let detail = resolve_details(&result);
 
-        // Izlude now has two verified outbound NPC services: the Byalan ferry
-        // and the Malangdo cat fleet (added 2026-09-27).
-        assert!(detail.iter().any(|line| line == "Verified NPC travel services: 2"));
+        // Izlude's verified outbound NPC services: the Byalan ferry, the
+        // Malangdo cat fleet (2026-09-27), four Kafra teleport destinations
+        // from `F_KafSet`'s Izlude branch, and the Jawaii honeymoon boat
+        // (2026-10-03).
+        assert!(detail.iter().any(|line| line == "Verified NPC travel services: 7"));
+        assert!(
+            detail
+                .iter()
+                .any(|line| line.contains("choose the teleport service, then Al De Baran."))
+        );
         assert!(
             detail
                 .iter()
@@ -4518,4 +4754,111 @@ fn job_names() -> impl Iterator<Item = (u16, &'static str)> {
         let (id, name) = line.split_once('\t')?;
         Some((id.parse().ok()?, name.trim()))
     })
+}
+
+#[cfg(test)]
+mod monster_page_and_route_offer_tests {
+    use super::{RouteOffer, drop_source_line, monster_behavior, monster_details, route_offer};
+    use crate::dm::reference_data::reference_data;
+
+    #[test]
+    fn monster_page_shows_exp_combat_numbers_and_behavior_from_the_database() {
+        let poring = reference_data().monster_by_id(1002).expect("Poring is exported");
+        let lines = monster_details(poring);
+
+        assert!(lines.contains(&"EXP: base 36   job 20".to_owned()), "{lines:#?}");
+        assert!(lines.contains(&"Attack (database attack1 / attack2): 8 / 1   DEF 2   MDEF 5".to_owned()));
+        assert!(lines.contains(&"Attack range 1 cells   Sight range 10 cells".to_owned()));
+        assert!(lines.iter().any(|line| line.starts_with("Move speed: 400 ms per cell")));
+        assert!(lines.contains(&"Behavior: passive — fights back only when attacked; picks up items from the ground".to_owned()));
+    }
+
+    #[test]
+    fn pilot_skills_are_shown_as_in_use_while_the_server_switch_is_on() {
+        let layer = reference_data()
+            .pilot_skill_layer
+            .as_ref()
+            .expect("bestiary records the pilot switch");
+        assert_eq!(layer.setting, "mob_pilot_version");
+        assert!(layer.active, "this server's import config turns the pilot on");
+
+        let elite = monster_details(reference_data().monster_by_id(20901).expect("the elite is exported"));
+        assert!(
+            elite.iter().any(|line| line.starts_with("AI pilot layer: mob_pilot_version = 1")),
+            "{elite:#?}"
+        );
+        let in_use = elite.iter().position(|line| line == "Pilot skills (in use):").expect("pilot list");
+        let stock = elite
+            .iter()
+            .position(|line| line == "Stock skills (used only when the pilot is off): none.")
+            .expect("the elite has no stock skills");
+        assert!(elite[in_use..stock].iter().any(|line| line.contains("Bash")), "{elite:#?}");
+
+        let eddga = monster_details(reference_data().monster_by_id(1115).expect("Eddga is exported"));
+        assert!(eddga.contains(&"Pilot skills (in use):".to_owned()));
+        assert!(eddga.contains(&"Stock skills (used only when the pilot is off):".to_owned()));
+
+        // Monsters the pilot file does not touch keep the single list.
+        let poring = monster_details(reference_data().monster_by_id(1002).expect("Poring is exported"));
+        assert!(poring.contains(&"Configured monster skills and trigger conditions:".to_owned()));
+        assert!(!poring.iter().any(|line| line.starts_with("AI pilot layer")));
+    }
+
+    #[test]
+    fn only_the_aggressive_flag_makes_a_monster_aggressive() {
+        let orc_skeleton = reference_data().monster_by_id(1152).expect("Orc Skeleton is exported");
+        let behavior = monster_behavior(&orc_skeleton.modes);
+        assert!(behavior.starts_with("aggressive — attacks players on sight"), "{behavior}");
+
+        // `Angry` alone selects a skill state; it does not start fights.
+        let angry_only = monster_behavior(&["CanAttack".to_owned(), "CanMove".to_owned(), "Angry".to_owned()]);
+        assert!(angry_only.starts_with("passive"), "{angry_only}");
+        assert!(angry_only.ends_with("(other server flags: Angry)"), "{angry_only}");
+
+        let plant = monster_behavior(&["Plant".to_owned()]);
+        assert!(plant.starts_with("never attacks; does not move"), "{plant}");
+    }
+
+    #[test]
+    fn drop_rows_name_the_monster_and_its_level() {
+        let line = drop_source_line(1002, "PORING", "normal", 150);
+        assert_eq!(line, "@guide:monster:1002|Poring (ID 1002, Lv 1) — normal drop 1.50%");
+
+        // A monster missing from the bestiary keeps the database name.
+        let unknown = drop_source_line(999_999, "NOT_EXPORTED", "mvp", 1);
+        assert_eq!(unknown, "@guide:monster:999999|NOT_EXPORTED (ID 999999) — MVP drop 0.01%");
+    }
+
+    #[test]
+    fn routes_say_how_far_they_are_or_why_they_are_not_offered() {
+        let plain = |text: &str| RouteOffer::Button {
+            text: text.to_owned(),
+            notes: Vec::new(),
+        };
+        assert_eq!(route_offer("", "izlude", "Route to izlude"), plain("Route to izlude"));
+        assert_eq!(
+            route_offer("prontera", "prontera", "Route to prontera"),
+            plain("Route to prontera (this map)")
+        );
+
+        let RouteOffer::Button { text, notes } = route_offer("prontera", "izlude", "Route to izlude") else {
+            panic!("prontera reaches izlude");
+        };
+        assert!(text.starts_with("Route to izlude (1 map · 600 z · ~"), "{text}");
+        assert!(text.ends_with(" cells; Fewest maps)"), "{text}");
+        assert!(notes.is_empty());
+
+        let RouteOffer::Button { notes, .. } = route_offer("prontera", "eclage", "Route to eclage") else {
+            panic!("eclage is routable through its locked entrance");
+        };
+        assert!(
+            notes.iter().any(|line| line.starts_with("Locked step ecl_fild01 → eclage")),
+            "{notes:#?}"
+        );
+
+        let RouteOffer::Unavailable(lines) = route_offer("prontera", "gld_dun01", "Route to gld_dun01") else {
+            panic!("guild dungeons have no known entrance");
+        };
+        assert!(lines[0].starts_with("gld_dun01: no loaded warp"), "{lines:#?}");
+    }
 }

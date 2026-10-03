@@ -111,6 +111,9 @@ pub enum InputEvent {
     /// Cycle how many other-player skill visuals are drawn (full / reduced /
     /// minimal).
     CycleEffectDensity,
+    /// Cycle the route preference (fewest maps / cheapest / shortest walk /
+    /// avoid locked steps).
+    CycleRoutePreference,
     /// Cycle combat text font size through small, normal, and large.
     CycleCombatTextSize,
     /// Open or close the interface settings window.
@@ -669,7 +672,8 @@ pub enum InputEvent {
     /// Open or close the GM/DM commands window. Only works while playing.
     ToggleCommandsWindow,
     ToggleDiceWindow,
-    /// Open or close the crafting commission board window. Only works while playing.
+    /// Open or close the crafting commission board window. Only works while
+    /// playing.
     ToggleCommissionBoardWindow,
     /// Open or close the player emote palette. Only works while playing.
     ToggleEmoteWindow,

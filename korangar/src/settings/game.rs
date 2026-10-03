@@ -280,6 +280,9 @@ pub struct GameSettings {
     /// Thin other players' cosmetic skill visuals in crowded fights.
     #[serde(default)]
     pub effect_density: EffectDensity,
+    /// What routes minimise first: fewest maps, zeny, walking, or locked steps.
+    #[serde(default)]
+    pub route_preference: crate::world::RoutePreference,
     /// Cast a ground-targeted skill at the current cursor cell when selected,
     /// falling back to the armed aim-and-click flow when the cursor has no map
     /// target.
@@ -403,6 +406,7 @@ impl Default for GameSettings {
             reduce_flashing: false,
             audio_cues: true,
             effect_density: EffectDensity::default(),
+            route_preference: crate::world::RoutePreference::default(),
             quickcast_ground_skills: false,
             hold_aim_release_ground_skills: false,
             ground_skill_target_modes: HashMap::new(),
@@ -749,6 +753,7 @@ mod tests {
         assert!(!old_settings.reduce_flashing);
         assert!(old_settings.audio_cues, "older settings files keep cues on");
         assert_eq!(old_settings.effect_density, super::EffectDensity::Full);
+        assert_eq!(old_settings.route_preference, crate::world::RoutePreference::FewestMaps);
         assert!(!old_settings.quickcast_ground_skills);
         assert!(!old_settings.hold_aim_release_ground_skills);
         assert!(old_settings.show_quest_markers);
@@ -1020,9 +1025,10 @@ mod tests {
 
     #[test]
     fn effect_density_minimal_preserves_telegraphs_and_threats() {
+        use ragnarok_packets::{SkillId, SkillLevel};
+
         use super::{EffectDensity, EffectSource};
         use crate::world::{level_invariant_skill_footprint, skill_footprint};
-        use ragnarok_packets::{SkillId, SkillLevel};
 
         let density = EffectDensity::Minimal;
         // Hostile warnings and local actions are always permitted.
@@ -1032,8 +1038,8 @@ mod tests {
         assert!(!density.shows_skill_visual(EffectSource::Party));
         assert!(!density.shows_skill_visual(EffectSource::Bystander));
 
-        // Lethal ground hazards and telegraph footprints (e.g., Storm Gust 89, Pneuma 34)
-        // are computed independently of effect density and remain intact.
+        // Lethal ground hazards and telegraph footprints (e.g., Storm Gust 89, Pneuma
+        // 34) are computed independently of effect density and remain intact.
         let storm_gust = skill_footprint(SkillId(89), SkillLevel(5), 0);
         assert!(storm_gust.is_some(), "Storm Gust telegraph footprint must exist");
         let invariant = level_invariant_skill_footprint(SkillId(89), 0);
@@ -1044,9 +1050,10 @@ mod tests {
 
     #[test]
     fn effect_density_never_thins_cast_telegraph_footprints() {
+        use ragnarok_packets::SkillId;
+
         use super::{EffectDensity, EffectSource};
         use crate::world::level_invariant_skill_footprint;
-        use ragnarok_packets::SkillId;
 
         // Across all densities, hostile casts and local warnings are never suppressed.
         for density in [EffectDensity::Full, EffectDensity::Reduced, EffectDensity::Minimal] {

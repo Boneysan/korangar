@@ -47,6 +47,20 @@ struct VersionedFile<T> {
     runtime_clues: Vec<ReferenceRuntimeMapFlagClue>,
     #[serde(default)]
     runtime_reviews: Vec<ReferenceRuntimeMapFlagReview>,
+    /// Bestiary only: the conditional pilot skill layer and its switch.
+    #[serde(default)]
+    pilot_skill_layer: Option<ReferencePilotSkillLayer>,
+}
+
+/// `db/re/mob_pilot_skill_db.conf` loads after the stock skill files, and only
+/// while battle config `mob_pilot_version` is 1 or more (`mob_readskilldb`).
+#[derive(Debug, Deserialize)]
+pub struct ReferencePilotSkillLayer {
+    pub setting: String,
+    pub configured_value: u32,
+    pub active: bool,
+    pub config_source: String,
+    pub skill_source: String,
 }
 
 #[derive(Deserialize)]
@@ -124,6 +138,13 @@ pub struct ReferenceMonster {
     pub skills: Vec<ReferenceMobSkill>,
     #[serde(default)]
     pub skills_source: Option<ReferenceSource>,
+    /// The skills this monster uses when the pilot layer is on, after its
+    /// `ClearSkills` entries are applied. `None` when the pilot file does not
+    /// touch this monster; `skills` above is then used either way.
+    #[serde(default)]
+    pub pilot_skills: Option<Vec<ReferenceMobSkill>>,
+    #[serde(default)]
+    pub pilot_skills_source: Option<ReferenceSource>,
     #[serde(default)]
     pub drops: Vec<ReferenceMonsterDrop>,
     #[serde(default)]
@@ -132,6 +153,31 @@ pub struct ReferenceMonster {
     pub scripted_spawn_references: Vec<ReferenceScriptedSpawn>,
     #[serde(default)]
     pub source: Option<ReferenceSource>,
+    // `mob_db.conf` combat fields. `None` means the record does not set the
+    // field, so the server's own default applies; the Guide says "not listed"
+    // rather than printing a guessed default.
+    #[serde(default)]
+    pub base_exp: Option<u32>,
+    #[serde(default)]
+    pub job_exp: Option<u32>,
+    /// `Attack: [attack1, attack2]`, exactly as the database lists it.
+    #[serde(default)]
+    pub attack: Option<[u32; 2]>,
+    #[serde(default)]
+    pub defense: Option<i32>,
+    #[serde(default)]
+    pub magic_defense: Option<i32>,
+    #[serde(default)]
+    pub attack_range: Option<u16>,
+    #[serde(default)]
+    pub view_range: Option<u16>,
+    /// Milliseconds per cell; an unhasted player walks at 150
+    /// (`DEFAULT_WALK_SPEED`).
+    #[serde(default)]
+    pub move_speed: Option<u32>,
+    /// Hercules `Mode` flags set on the record (`Aggressive`, `Looter`, ...).
+    #[serde(default)]
+    pub modes: Vec<String>,
 }
 
 #[derive(Debug, Deserialize)]
@@ -1192,6 +1238,7 @@ pub struct ReferenceData {
     pub source_worktree_dirty: bool,
     pub mode: String,
     pub coverage_report: ReferenceCoverageReport,
+    pub pilot_skill_layer: Option<ReferencePilotSkillLayer>,
     pub monsters: Vec<ReferenceMonster>,
     pub items: Vec<ReferenceItem>,
     pub cards: Vec<ReferenceItem>,
@@ -1697,6 +1744,7 @@ impl ReferenceData {
             source_worktree_dirty: bestiary.source_worktree_dirty,
             mode: bestiary.mode,
             coverage_report,
+            pilot_skill_layer: bestiary.pilot_skill_layer,
             monsters: bestiary.entries,
             items: items.entries,
             cards: cards.entries,
@@ -2207,7 +2255,8 @@ mod tests {
     fn versioned_reference_data_loads_and_reconciles_all_links() {
         let data = reference_data();
         assert_eq!(data.mode, "renewal");
-        assert_eq!(data.monsters.len(), 1759);
+        // 1,759 stock `re/mob_db.conf` records plus the `mob_db2.conf` elite.
+        assert_eq!(data.monsters.len(), 1760);
         assert_eq!(data.items.len(), 13183);
         assert_eq!(data.cards.len(), 1012);
         assert_eq!(data.job_skill_trees.len(), 128);

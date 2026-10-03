@@ -814,17 +814,10 @@ fn party_quest_interaction_credit(config: &Config) -> Result<(), String> {
         partner.pump(Duration::from_millis(300));
         let partner_account = partner.account_id;
         partner.say("@kill")?;
-        primary.wait_for_within(
-            "partner death report",
-            Duration::from_secs(5),
-            &mut |event| match event {
-                NetworkEvent::PartyMemberAlive {
-                    account_id,
-                    is_dead: true,
-                } if account_id.0 == partner_account.0 => Some(()),
-                _ => None,
-            },
-        )?;
+        primary.wait_for_within("partner death report", Duration::from_secs(5), &mut |event| match event {
+            NetworkEvent::PartyMemberAlive { account_id, is_dead: true } if account_id.0 == partner_account.0 => Some(()),
+            _ => None,
+        })?;
         primary.flush();
         partner.flush();
         let credited = share(&mut primary, 1)?;
@@ -837,17 +830,13 @@ fn party_quest_interaction_credit(config: &Config) -> Result<(), String> {
 
         // F. Revived member: after revival, sharing credits the partner.
         partner.say("@alive")?;
-        primary.wait_for_within(
-            "partner alive report",
-            Duration::from_secs(5),
-            &mut |event| match event {
-                NetworkEvent::PartyMemberAlive {
-                    account_id,
-                    is_dead: false,
-                } if account_id.0 == partner_account.0 => Some(()),
-                _ => None,
-            },
-        )?;
+        primary.wait_for_within("partner alive report", Duration::from_secs(5), &mut |event| match event {
+            NetworkEvent::PartyMemberAlive {
+                account_id,
+                is_dead: false,
+            } if account_id.0 == partner_account.0 => Some(()),
+            _ => None,
+        })?;
         partner.say("@heal")?;
         partner.pump(Duration::from_millis(300));
         clear_quests(&mut primary);
@@ -882,7 +871,8 @@ fn party_quest_interaction_credit(config: &Config) -> Result<(), String> {
         primary.pump(Duration::from_millis(300));
         partner.pump(Duration::from_millis(300));
 
-        // H. Former party member: after the partner leaves the party there is nobody to credit.
+        // H. Former party member: after the partner leaves the party there is nobody to
+        // credit.
         clear_quests(&mut primary);
         clear_quests(&mut partner);
         add_quest(&mut primary, QUEST_A)?;

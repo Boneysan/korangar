@@ -57,7 +57,8 @@ fn list_commissions() -> impl Fn(&State<ClientState>, &mut EventQueue<ClientStat
     }
 }
 
-/// Graphical window for the Non-Custodial Crafting Commission Board (F31 / Decision D7).
+/// Graphical window for the Non-Custodial Crafting Commission Board (F31 /
+/// Decision D7).
 pub struct CommissionBoardWindow<A> {
     commission_board_window_state: A,
 }

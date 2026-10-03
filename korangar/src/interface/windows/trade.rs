@@ -1,13 +1,22 @@
+use korangar_interface::MouseMode;
 use korangar_interface::components::text_box::DefaultHandler;
-use korangar_interface::element::StateElement;
+use korangar_interface::element::store::{ElementStore, ElementStoreMut};
+use korangar_interface::element::{Element, StateElement};
+use korangar_interface::event::{DropHandler, EventQueue};
+use korangar_interface::layout::area::Area;
+use korangar_interface::layout::{Resolvers, WindowLayout, with_single_resolver};
 use korangar_interface::window::{CustomWindow, Window};
+use korangar_networking::InventoryItem;
 use rust_state::{Path, RustState, State};
 
-use crate::input::InputEvent;
+use crate::input::{InputEvent, MouseInputMode};
+use crate::interface::resource::ItemSource;
 use crate::interface::windows::WindowClass;
-use crate::state::theme::InterfaceThemeType;
+use crate::interface::windows::item_actions::inventory_item_amount;
+use crate::state::theme::{GlobalThemePathExt, InterfaceThemePathExt, InterfaceThemeType};
 use crate::state::trade::{TradeState, TradeStatePathExt};
-use crate::state::{ClientState, ClientStatePathExt, client_state};
+use crate::state::{ClientState, ClientStatePathExt, client_state, client_theme};
+use crate::world::ResourceMetadata;
 
 /// Active trade window (after accept / when we initiated and partner accepted).
 /// Zeny amounts top out well below `u32::MAX`; ten digits is plenty and stops
@@ -83,9 +92,9 @@ where
             closable: false,
             elements: (
                 text! { text: text_path },
-                text! {
-                    text: "Right-click an inventory item to add it.",
-                },
+                TradeDropArea::new(text! {
+                    text: "Drag an inventory item here, or right-click it, to add it.",
+                }),
                 text_box! {
                     ghost_text: "Zeny to offer",
                     state: zeny_path,
@@ -135,6 +144,102 @@ where
                 },
             )
         }
+    }
+}
+
+/// The trade add a drag produces: only an inventory item, and its whole stack,
+/// matching the right-click menu's "trade all". Equipment, storage and hotbar
+/// drags are not offers -- worn gear must come off through the inventory first,
+/// and a hotbar slot is a shortcut, not an item.
+fn trade_add_for_drag(source: ItemSource, item: &InventoryItem<ResourceMetadata>) -> Option<InputEvent> {
+    match source {
+        ItemSource::Inventory => Some(InputEvent::TradeAddItem {
+            inventory_index: item.index,
+            amount: u32::from(inventory_item_amount(item)),
+        }),
+        ItemSource::Equipment { .. } | ItemSource::Storage | ItemSource::Hotbar { .. } => None,
+    }
+}
+
+/// Drop target around part of the trade window (GDD F28 item-grid drag). It
+/// only highlights and accepts while an inventory item is being dragged, so a
+/// drag that cannot become an offer never looks droppable.
+struct TradeDropArea<Children> {
+    children: Children,
+}
+
+impl<Children> TradeDropArea<Children> {
+    fn new(children: Children) -> Self {
+        Self { children }
+    }
+}
+
+impl<Children> DropHandler<ClientState> for TradeDropArea<Children> {
+    fn handle_drop(&self, _: &State<ClientState>, queue: &mut EventQueue<ClientState>, mouse_mode: &MouseMode<ClientState>) {
+        if let MouseMode::Custom {
+            mode: MouseInputMode::MoveItem { source, item },
+        } = mouse_mode
+            && let Some(event) = trade_add_for_drag(*source, item)
+        {
+            queue.queue(event);
+        }
+    }
+}
+
+impl<Children> Element<ClientState> for TradeDropArea<Children>
+where
+    Children: Element<ClientState>,
+{
+    type LayoutInfo = (Area, Children::LayoutInfo);
+
+    fn create_layout_info(
+        &mut self,
+        state: &State<ClientState>,
+        store: ElementStoreMut,
+        resolvers: &mut dyn Resolvers<ClientState>,
+    ) -> Self::LayoutInfo {
+        with_single_resolver(resolvers, |resolver| {
+            resolver.with_derived_unchanged(|resolver| self.children.create_layout_info(state, store, resolver))
+        })
+    }
+
+    fn lay_out<'a>(
+        &'a self,
+        state: &'a State<ClientState>,
+        store: ElementStore<'a>,
+        layout_info: &'a Self::LayoutInfo,
+        layout: &mut WindowLayout<'a, ClientState>,
+    ) {
+        use korangar_interface::prelude::*;
+
+        if let MouseMode::Custom {
+            mode: MouseInputMode::MoveItem { source, item },
+        } = layout.get_mouse_mode()
+            && trade_add_for_drag(*source, item).is_some()
+        {
+            let is_hovered = layout_info.0.check().any_mouse_mode().run(layout);
+            let color = match is_hovered {
+                true => *state.get(&client_theme().global().hovered_drop_area_color()),
+                false => *state.get(&client_theme().global().drop_area_color()),
+            };
+
+            layout.add_rectangle(
+                layout_info.0,
+                *state.get(&client_theme().window().corner_diameter()),
+                color.multiply_alpha(*state.get(&client_theme().global().fill_alpha())),
+                color,
+                *state.get(&client_theme().global().drop_area_outline()),
+            );
+
+            if is_hovered {
+                // Not in default mouse mode, so the window has to be marked hovered.
+                layout.set_hovered();
+
+                layout.register_drop_handler(self);
+            }
+        }
+
+        self.children.lay_out(state, store, &layout_info.1, layout);
     }
 }
 
@@ -202,5 +307,64 @@ impl CustomWindow<ClientState> for TradeRequestWindow {
                 },
             )
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use korangar_networking::{InventoryItem, InventoryItemDetails};
+    use ragnarok_packets::{EquipPosition, InventoryIndex, ItemId, RegularItemFlags};
+
+    use super::trade_add_for_drag;
+    use crate::input::InputEvent;
+    use crate::interface::resource::ItemSource;
+    use crate::world::ResourceMetadata;
+
+    fn stack(index: u16, amount: u16) -> InventoryItem<ResourceMetadata> {
+        InventoryItem {
+            metadata: ResourceMetadata {
+                texture: None,
+                name: "Red Potion".to_owned(),
+            },
+            index: InventoryIndex(index),
+            item_id: ItemId(501),
+            item_type: 0,
+            slot: [0; 4],
+            hire_expiration_date: 0,
+            details: InventoryItemDetails::Regular {
+                amount,
+                equipped_position: EquipPosition::NONE,
+                flags: RegularItemFlags::empty(),
+            },
+        }
+    }
+
+    #[test]
+    fn inventory_drag_offers_the_dragged_index_and_its_whole_stack() {
+        let event = trade_add_for_drag(ItemSource::Inventory, &stack(7, 25));
+
+        assert!(matches!(
+            event,
+            Some(InputEvent::TradeAddItem {
+                inventory_index: InventoryIndex(7),
+                amount: 25,
+            })
+        ));
+    }
+
+    #[test]
+    fn drags_from_anywhere_but_the_inventory_are_not_offers() {
+        let item = stack(7, 25);
+
+        assert!(trade_add_for_drag(ItemSource::Storage, &item).is_none());
+        assert!(
+            trade_add_for_drag(
+                ItemSource::Equipment {
+                    position: EquipPosition::NONE
+                },
+                &item
+            )
+            .is_none()
+        );
     }
 }

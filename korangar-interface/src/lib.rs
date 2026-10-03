@@ -317,8 +317,10 @@ where
                     );
 
                     let min_visible = 32.0;
-                    let clamped_left = (wrapper.display_information.real_area.left + delta.width())
-                        .clamp(min_visible - scaled_size.width(), (self.window_size.width() - min_visible).max(0.0));
+                    let clamped_left = (wrapper.display_information.real_area.left + delta.width()).clamp(
+                        min_visible - scaled_size.width(),
+                        (self.window_size.width() - min_visible).max(0.0),
+                    );
                     let clamped_top = (wrapper.display_information.real_area.top + delta.height())
                         .clamp(0.0, (self.window_size.height() - min_visible).max(0.0));
                     let new_position = App::Position::new(clamped_left, clamped_top);

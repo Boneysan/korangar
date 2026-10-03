@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "source_revision": "f6974e0ad9a8d77f0dca4ebf8fda965273f91726",
+  "source_revision": "cdddb916294433bb1c7e3495635d90f0e659e2ae",
   "source_worktree_dirty": false,
   "mode": "renewal",
   "rule": "A disposition closes one queue unit's subject without a full review: a configured value, a documented absence after searching the declared scope, a specific unknown with the statement that blocks it, or not applicable with the reason. It is not a clue and not a guess.",

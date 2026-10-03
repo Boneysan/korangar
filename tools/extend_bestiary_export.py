@@ -74,7 +74,7 @@ def parse_mob_db():
     return out
 
 
-def parse_mob_skill_db(include_triggers=False):
+def parse_mob_skill_db(include_triggers=False, path=MOB_SKILL_DB):
     """SpriteName -> [{Skill, Level, Rate, Delay}].
 
     Structure is `mob_skill_db:( { SPRITE: { SKILL: { fields } } } )` --
@@ -83,7 +83,7 @@ def parse_mob_skill_db(include_triggers=False):
     "{"/"}" in its illustrative example text, so block comments must be
     stripped before depth-counting or they desync the whole parse.
     """
-    text = MOB_SKILL_DB.read_text(encoding="utf-8", errors="replace")
+    text = path.read_text(encoding="utf-8", errors="replace")
     text = re.sub(r"/\*.*?\*/", "", text, flags=re.S)
     lines = text.splitlines()
     out = {}
@@ -111,13 +111,20 @@ def parse_mob_skill_db(include_triggers=False):
             fm = re.match(r"(\w+):\s*(.+)", stripped)
             if fm:
                 key, val = fm.group(1), fm.group(2).strip('"')
-                if key in ("SkillLevel", "Rate", "Delay", "CastTime", "ConditionData", "val0"):
+                if key == "ClearSkills":
+                    cur[key] = val.lower() == "true"
+                elif key in ("SkillLevel", "Rate", "Delay", "CastTime", "ConditionData", "val0"):
                     cur[key] = int(val) if val.lstrip("-").isdigit() else val
                 elif include_triggers and key in ("SkillState", "SkillTarget", "CastCondition", "Cancelable"):
                     clean = val.strip('"')
                     cur[key] = clean.lower() == "true" if key == "Cancelable" and clean.lower() in ("true", "false") else clean
             depth += opens - closes
             if depth == 2:  # skill block closed
+                if cur.get("ClearSkills"):
+                    # `mob_skill_db_libconfig_sub_skill` drops every skill
+                    # loaded so far for this monster and adds nothing itself.
+                    out.setdefault(sprite, []).append({"ClearSkills": True})
+                    continue
                 row = {
                     "Skill": skill,
                     "Level": cur.get("SkillLevel", 1),
@@ -143,13 +150,31 @@ def parse_mob_skill_db(include_triggers=False):
     return out
 
 
+def apply_skill_layers(layers):
+    """Effective skills per sprite after loading ``layers`` in server order.
+
+    Each layer is a ``parse_mob_skill_db`` result. Rows append to a monster's
+    list; a ``ClearSkills`` marker empties it first (Hercules
+    ``mob_skill_db_libconfig_sub_skill``).
+    """
+    out = {}
+    for layer in layers:
+        for sprite, rows in layer.items():
+            for row in rows:
+                if row.get("ClearSkills"):
+                    out[sprite] = []
+                else:
+                    out.setdefault(sprite, []).append(row)
+    return out
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--check", action="store_true", help="fail without writing if bestiary.json would change")
     args = parser.parse_args()
 
     mob_fields = parse_mob_db()
-    skills = parse_mob_skill_db()
+    skills = apply_skill_layers([parse_mob_skill_db()])
     print(f"mob_db.conf: {len(mob_fields)} entries parsed")
     print(f"mob_skill_db.conf: {len(skills)} sprites with skills")
 

@@ -1,12 +1,13 @@
 {
   "schema_version": 1,
-  "source_revision": "f6974e0ad9a8d77f0dca4ebf8fda965273f91726",
+  "source_revision": "cdddb916294433bb1c7e3495635d90f0e659e2ae",
   "source_worktree_dirty": false,
   "mode": "renewal",
   "sources": [
     "db/re/item_db.conf",
     "db/item_db2.conf",
     "db/re/mob_db.conf",
+    "db/mob_db2.conf",
     "db/re/item_combo_db.conf",
     "db/re/item_group.conf",
     "src/map/itemdb.c:itemdb_searchrandomid",
@@ -5635,6 +5636,13 @@
           "rate_per_10000": 1,
           "kind": "normal",
           "source_record": "db/re/mob_db.conf:Id=2724"
+        },
+        {
+          "monster_id": 20901,
+          "sprite_name": "ELITE_ORC_SKELETON",
+          "rate_per_10000": 1,
+          "kind": "normal",
+          "source_record": "db/mob_db2.conf:Id=20901"
         }
       ],
       "contained_in_groups": [

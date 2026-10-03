@@ -1,12 +1,13 @@
-//! Crafting and forging success formulas, mirrored from Hercules `src/map/skill.c` (GDD §12.3 / F30).
+//! Crafting and forging success formulas, mirrored from Hercules
+//! `src/map/skill.c` (GDD §12.3 / F30).
 //!
 //! Exposes exact, verified success chance calculations for:
 //! 1. Blacksmith Weapon Forging (`BS_DAGGER`, `BS_SWORD`, etc.)
 //! 2. Alchemist Potion Preparation (`AM_PHARMACY`)
 //! 3. Metal & Ore Tempering (`BS_IRON`, `BS_STEEL`, `BS_ENCHANTEDSTONE`)
 //!
-//! Uses integer basis points (0.01% units, where 10,000 = 100.00%) matching the server's
-//! exact arithmetic.
+//! Uses integer basis points (0.01% units, where 10,000 = 100.00%) matching the
+//! server's exact arithmetic.
 
 /// Quality bonus provided by anvil held in inventory during forging.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Default)]
@@ -30,7 +31,8 @@ impl AnvilType {
     }
 }
 
-/// Calculate the exact base success rate for Blacksmith Weapon Forging (skill.c:20501).
+/// Calculate the exact base success rate for Blacksmith Weapon Forging
+/// (skill.c:20501).
 ///
 /// # Parameters:
 /// - `job_level`: Blacksmith job level (1..=70)
@@ -38,14 +40,16 @@ impl AnvilType {
 /// - `luk`: Total Luck including bonuses
 /// - `smithing_skill_lv`: Specific weapon smithing skill level (1..=3)
 /// - `weaponry_research_lv`: Weaponry Research level (0..=10)
-/// - `oridecon_research_lv`: Oridecon Research level (0..=5, applied if weapon level >= 3)
+/// - `oridecon_research_lv`: Oridecon Research level (0..=5, applied if weapon
+///   level >= 3)
 /// - `weapon_level`: Weapon Level (1..=3)
 /// - `elemental_stone`: Whether an Elemental Stone is used (-20.00%)
 /// - `star_crumbs`: Number of Star Crumbs added (0..=3, -15.00% each)
 /// - `anvil`: Best anvil carried in inventory
 /// - `is_baby`: Whether the character is a Baby class (-50% penalty)
 ///
-/// Returns success rate in basis points (100 = 1.00%, 10_000 = 100.00%), clamped to 1..=10000.
+/// Returns success rate in basis points (100 = 1.00%, 10_000 = 100.00%),
+/// clamped to 1..=10000.
 pub fn weapon_forge_success_rate(
     job_level: i32,
     dex: i32,
@@ -59,19 +63,22 @@ pub fn weapon_forge_success_rate(
     anvil: AnvilType,
     is_baby: bool,
 ) -> i32 {
-    // skill.c:20502: make_per = 5000 + sd->status.job_level*20 + st->dex*10 + st->luk*10;
+    // skill.c:20502: make_per = 5000 + sd->status.job_level*20 + st->dex*10 +
+    // st->luk*10;
     let mut rate = 5000 + (job_level * 20) + (dex * 10) + (luk * 10);
 
     // skill.c:20503: make_per += pc->checkskill(sd,skill_id)*500; (+5%, +10%, +15%)
     rate += smithing_skill_lv * 500;
 
-    // skill.c:20504: Weaponry Research (+1% per lv) + Oridecon Research (+1% per lv for Lv3 weapons)
+    // skill.c:20504: Weaponry Research (+1% per lv) + Oridecon Research (+1% per lv
+    // for Lv3 weapons)
     rate += weaponry_research_lv * 100;
     if weapon_level >= 3 {
         rate += oridecon_research_lv * 100;
     }
 
-    // skill.c:20505: malus for element (-20%), star crumbs (-15% each), weapon level (>1 => wlv * 1000)
+    // skill.c:20505: malus for element (-20%), star crumbs (-15% each), weapon
+    // level (>1 => wlv * 1000)
     if elemental_stone {
         rate -= 2000;
     }
@@ -119,7 +126,8 @@ impl PotionType {
     }
 }
 
-/// Calculate the expected base success rate for Alchemist Potion Preparation (skill.c:20290).
+/// Calculate the expected base success rate for Alchemist Potion Preparation
+/// (skill.c:20290).
 ///
 /// Returns base success rate in basis points (1..=10000) excluding random roll.
 pub fn pharmacy_base_success_rate(
@@ -136,12 +144,7 @@ pub fn pharmacy_base_success_rate(
     // make_per = pc->checkskill(sd,AM_LEARNINGPOTION)*50
     //   + pc->checkskill(sd,AM_PHARMACY)*300 + sd->status.job_level*20
     //   + (st->int_/2)*10 + st->dex*10+st->luk*10;
-    let mut rate = (learning_potion_lv * 50)
-        + (pharmacy_lv * 300)
-        + (job_level * 20)
-        + ((int_ / 2) * 10)
-        + (dex * 10)
-        + (luk * 10);
+    let mut rate = (learning_potion_lv * 50) + (pharmacy_lv * 300) + (job_level * 20) + ((int_ / 2) * 10) + (dex * 10) + (luk * 10);
 
     // Vanilmirth Instruction Change bonus: +1% per level
     rate += vanilmirth_instruction_lv.clamp(0, 5) * 100;
@@ -156,7 +159,7 @@ pub fn pharmacy_base_success_rate(
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Default)]
 pub enum CookingKitType {
     #[default]
-    OutdoorKit,      // val == 11
+    OutdoorKit, // val == 11
     HomeKit,         // val == 12
     ProfessionalKit, // val == 13
     RoyalKit,        // val == 14
@@ -176,12 +179,14 @@ impl CookingKitType {
     }
 }
 
-/// Calculate base expected success rate for Cooking Dishes in basis points (skill.c:20508).
+/// Calculate base expected success rate for Cooking Dishes in basis points
+/// (skill.c:20508).
 ///
 /// In Hercules C:
 /// - Legendary Cooking Set (`kit_val >= 15`): 10,000 (100.00% guarantee).
-/// - Other kits:
-///   `1200 * (kit_val - 10) + 20 * (base_level + 1) + 20 * (dex + 1) + mastery_avg - 400 * dish_level - 10 * (100 - luk + 1) - 500 * (extra_ingredients - 1) - rnd_malus`
+/// - Other kits: `1200 * (kit_val - 10) + 20 * (base_level + 1) + 20 * (dex +
+///   1) + mastery_avg - 400 * dish_level - 10 * (100 - luk + 1) - 500 *
+///   (extra_ingredients - 1) - rnd_malus`
 ///
 /// Returns expected rate clamped to 1..=10000.
 pub fn cooking_dish_expected_rate(
@@ -295,12 +300,14 @@ mod tests {
         // Home Cooking Kit (val 12 -> 1200 * 2 = 2400)
         // Lv 80, DEX 60, LUK 50, Cook Mastery 400, Lv 5 dish, 2 materials
         // min = 6 + 5 = 11, max = 30 + 5 = 35, avg = 23 -> 2300
-        // rate = 2400 + 20*81 (1620) + 20*61 (1220) + 2300 - 400*5 (2000) - 10*(51) (510) - 500*1 (500) - 200
-        // = 2400 + 1620 + 1220 + 2300 - 2000 - 510 - 500 - 200 = 4330
+        // rate = 2400 + 20*81 (1620) + 20*61 (1220) + 2300 - 400*5 (2000) - 10*(51)
+        // (510) - 500*1 (500) - 200 = 2400 + 1620 + 1220 + 2300 - 2000 - 510 -
+        // 500 - 200 = 4330
         let home_kit = cooking_dish_expected_rate(80, 60, 50, 400, 5, 2, CookingKitType::HomeKit);
         assert_eq!(home_kit, 4330);
 
-        // Geneticist Mix Cooking Rating: Job 50/4 (12) + LUK 60/2 (30) + DEX 90/3 (30) = 72
+        // Geneticist Mix Cooking Rating: Job 50/4 (12) + LUK 60/2 (30) + DEX 90/3 (30)
+        // = 72
         let mix_rating = mix_cooking_rating(50, 90, 60);
         assert_eq!(mix_rating, 72);
     }

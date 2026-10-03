@@ -81,9 +81,9 @@ use crate::graphics::RenderOptions;
 use crate::graphics::{Color, CornerDiameter, ScreenClip, ScreenPosition, ScreenSize, ShadowPadding};
 use crate::input::{InputEvent, MouseInputMode};
 use crate::interface::windows::{
-    AdventureGuideWindowState, BestiaryWindowState, ChatWindowState, CommandsWindowState, CommissionBoardWindowState, DialogWindowState, DiceWindowState,
-    FriendListWindowState, LoginWindowState, LoginWindowStatePathExt, LootWindowState, PartyWindowState, SkillTreeWindowState,
-    TradeWindowState, WindowCache, WindowClass,
+    AdventureGuideWindowState, BestiaryWindowState, ChatWindowState, CommandsWindowState, CommissionBoardWindowState, DialogWindowState,
+    DiceWindowState, FriendListWindowState, LoginWindowState, LoginWindowStatePathExt, LootWindowState, PartyWindowState,
+    SkillTreeWindowState, TradeWindowState, WindowCache, WindowClass,
 };
 #[cfg(feature = "debug")]
 use crate::interface::windows::{ProfilerWindowState, ThemeInspectorWindowState};
@@ -516,6 +516,7 @@ impl ClientState {
             let mut login_settings = LoginSettings::new();
             let audio_settings = AudioSettings::new();
             let game_settings = GameSettings::new();
+            crate::world::set_route_preference(game_settings.route_preference);
             let interface_settings = InterfaceSettings::new();
             let interface_settings_capabilities = InterfaceSettingsCapabilities::default();
         });

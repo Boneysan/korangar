@@ -22,7 +22,8 @@ pub struct EncounterRecap {
 }
 
 impl EncounterRecap {
-    /// Format a concise, readable multi-line recap for display in the HUD or combat log.
+    /// Format a concise, readable multi-line recap for display in the HUD or
+    /// combat log.
     pub fn format_summary(&self) -> String {
         let seconds = (self.duration_ms as f32) / 1000.0;
         let mut lines = vec![
@@ -59,7 +60,8 @@ pub struct EncounterRecapState {
 }
 
 impl EncounterRecapState {
-    /// Begin or continue tracking an encounter with a verified MVP / Boss entity.
+    /// Begin or continue tracking an encounter with a verified MVP / Boss
+    /// entity.
     pub fn start_or_continue_encounter(&mut self, boss_id: EntityId, boss_name: &str, now: ClientTick) {
         if self.active_boss_id == Some(boss_id) {
             return;

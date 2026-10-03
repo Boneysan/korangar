@@ -1392,6 +1392,24 @@ mod resolve_pending_cast_tests {
         let (summary_other, _) = format_monster_target_summary("Dark Lord", 200000, 720000, 0, 0, None, target_other, Some(&monster));
         assert!(summary_other.contains("Target: Novice"));
     }
+
+    #[test]
+    fn an_elite_keeps_its_badge_and_hides_the_base_level() {
+        use super::{elite_base_name, format_monster_target_summary};
+
+        assert_eq!(elite_base_name("[Elite] Orc Skeleton"), Some("Orc Skeleton"));
+        assert_eq!(elite_base_name("Orc Skeleton"), None);
+        assert_eq!(elite_base_name("[Elite] "), None);
+
+        let base = create_test_monster("Orc Skeleton", 53, None, None, None, false);
+        let (summary, _) = format_monster_target_summary("[Elite] Orc Skeleton", 6231, 6231, 0, 0, None, None, Some(&base));
+        let mut lines = summary.lines();
+
+        assert_eq!(lines.next(), Some("[Elite] Orc Skeleton"));
+        let facts = lines.next().expect("facts line");
+        assert!(facts.starts_with("Elite"), "badge leads the facts: {facts}");
+        assert!(!facts.contains("Lv 53"), "the base level is not the elite's level: {facts}");
+    }
 }
 
 /// A skill armed for targeting. Pressing a targeted skill's hotbar key while
@@ -1535,6 +1553,13 @@ enum TargetOfTargetInfo {
     EntityName(String),
 }
 
+/// F15 marks elite variants only by a `[Elite] ` name prefix
+/// (`db/mob_db2.conf`); this returns the base monster's name for those, `None`
+/// for anything else.
+fn elite_base_name(name: &str) -> Option<&str> {
+    name.strip_prefix("[Elite] ").map(str::trim).filter(|base| !base.is_empty())
+}
+
 fn format_monster_target_summary(
     name: &str,
     health: usize,
@@ -1546,16 +1571,26 @@ fn format_monster_target_summary(
     bestiary: Option<&crate::dm::data::BestiaryMonster>,
 ) -> (String, bool) {
     let is_mvp = bestiary.is_some_and(|m| m.has_mvp_drops || m.mvp_exp > 0);
+    let is_elite = elite_base_name(name).is_some();
 
-    let display_title = match (is_mvp, bestiary.map(|m| m.name.as_str())) {
-        (true, Some(bname)) => format!("[MVP] {bname}"),
-        (true, None) => format!("[MVP] {name}"),
-        (false, Some(bname)) => bname.to_string(),
-        (false, None) => name.to_string(),
+    let display_title = match (is_elite, is_mvp, bestiary.map(|m| m.name.as_str())) {
+        // The server's own name carries the elite marker; a base-monster
+        // bestiary name would hide it.
+        (true, ..) => name.to_string(),
+        (false, true, Some(bname)) => format!("[MVP] {bname}"),
+        (false, true, None) => format!("[MVP] {name}"),
+        (false, false, Some(bname)) => bname.to_string(),
+        (false, false, None) => name.to_string(),
     };
 
     let facts = bestiary.map(|monster| {
-        let mut chips = vec![format!("Lv {}", monster.lv)];
+        // An elite shares its base monster's element/race/size but not its
+        // level (F15's Orc Skeleton elite is Lv 55 over a Lv 53 base), so the
+        // base level is replaced by the badge rather than shown wrong.
+        let mut chips = match is_elite {
+            true => vec!["Elite".to_string()],
+            false => vec![format!("Lv {}", monster.lv)],
+        };
         if let Some(element) = &monster.element {
             chips.push(element.clone());
         }
@@ -8874,10 +8909,11 @@ impl Client {
                 .map(|details| details.split('#').next().unwrap_or(details))
                 .unwrap_or("Monster");
             let (health, maximum) = entity.health_points();
+            let lookup_name = elite_base_name(name).unwrap_or(name);
             let bestiary = crate::dm::dm_data()
                 .bestiary
                 .iter()
-                .find(|monster| monster.sprite_name.eq_ignore_ascii_case(name) || monster.name.eq_ignore_ascii_case(name));
+                .find(|monster| monster.sprite_name.eq_ignore_ascii_case(lookup_name) || monster.name.eq_ignore_ascii_case(lookup_name));
 
             let body_state = entity.body_state();
             let health_state = entity.health_state();
@@ -9483,6 +9519,18 @@ impl Client {
                         MessageColor::Information,
                     ));
                 }
+                InputEvent::CycleRoutePreference => {
+                    let settings = self.client_state.follow_mut(client_state().game_settings());
+                    settings.route_preference = settings.route_preference.next();
+                    let preference = settings.route_preference;
+                    crate::world::set_route_preference(preference);
+                    // The breadcrumb trail was planned under the old preference.
+                    self.refresh_navigation_marker();
+                    self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
+                        format!("Route preference: {}.", preference.label()),
+                        MessageColor::Information,
+                    ));
+                }
                 InputEvent::CycleCombatTextFrequency => {
                     let settings = self.client_state.follow_mut(client_state().game_settings());
                     settings.combat_text_frequency = settings.combat_text_frequency.next();
@@ -10014,7 +10062,9 @@ impl Client {
                                 if self.map.is_some() {
                                     match self.interface.is_window_with_class_open(WindowClass::CommissionBoard) {
                                         true => self.interface.close_window_with_class(WindowClass::CommissionBoard),
-                                        false => self.interface.open_window(CommissionBoardWindow::new(client_state().commission_board_window())),
+                                        false => self
+                                            .interface
+                                            .open_window(CommissionBoardWindow::new(client_state().commission_board_window())),
                                     }
                                 }
                             }
@@ -10025,7 +10075,10 @@ impl Client {
                             "post" => {
                                 let item_name = words.next().unwrap_or("");
                                 if item_name.is_empty() {
-                                    chat(&mut self.client_state, "Usage: /commission post <item_name> [zeny_fee]".to_string());
+                                    chat(
+                                        &mut self.client_state,
+                                        "Usage: /commission post <item_name> [zeny_fee]".to_string(),
+                                    );
                                 } else {
                                     let fee: u32 = words.next().and_then(|w| w.parse().ok()).unwrap_or(0);
                                     let player_name = self.client_state.follow(client_state().player_name()).to_owned();
@@ -10037,14 +10090,24 @@ impl Client {
                                         0,
                                         fee,
                                     );
-                                    chat(&mut self.client_state, format!("Posted commission request #{id} for {item_name} (Fee: {fee}z). Reminder: Non-custodial, trade items directly."));
+                                    chat(
+                                        &mut self.client_state,
+                                        format!(
+                                            "Posted commission request #{id} for {item_name} (Fee: {fee}z). Reminder: Non-custodial, \
+                                             trade items directly."
+                                        ),
+                                    );
                                 }
                             }
                             "cancel" => {
                                 let id_opt: Option<u32> = words.next().and_then(|w| w.parse().ok());
                                 if let Some(id) = id_opt {
                                     let player_name = self.client_state.follow(client_state().player_name()).to_owned();
-                                    match self.client_state.follow_mut(client_state().commission_board()).cancel_request(id, &player_name) {
+                                    match self
+                                        .client_state
+                                        .follow_mut(client_state().commission_board())
+                                        .cancel_request(id, &player_name)
+                                    {
                                         Ok(()) => chat(&mut self.client_state, format!("Cancelled commission request #{id}.")),
                                         Err(err) => chat(&mut self.client_state, format!("Cannot cancel commission #{id}: {err}")),
                                     }
@@ -10053,7 +10116,10 @@ impl Client {
                                 }
                             }
                             _ => {
-                                chat(&mut self.client_state, "Usage: /commission <board|list|post <item> [fee]|cancel <id>>".to_string());
+                                chat(
+                                    &mut self.client_state,
+                                    "Usage: /commission <board|list|post <item> [fee]|cancel <id>>".to_string(),
+                                );
                             }
                         }
                         continue;
@@ -11616,7 +11682,10 @@ impl Client {
                     if !destination_is_valid {
                         self.client_state.follow_mut(client_state().toasts()).push(
                             "navigation-unavailable",
-                            format!("No verified map route or valid destination is available for {destination}."),
+                            crate::world::unreachable_explanation(&current_map, &destination)
+                                .into_iter()
+                                .next()
+                                .unwrap_or_else(|| format!("No verified map route or valid destination is available for {destination}.")),
                             crate::state::toasts::ToastPriority::Normal,
                         );
                     } else {
@@ -11648,7 +11717,10 @@ impl Client {
                     if !destination_is_valid {
                         self.client_state.follow_mut(client_state().toasts()).push(
                             "navigation-unavailable",
-                            format!("No verified map route is available for {destination}."),
+                            crate::world::unreachable_explanation(&current_map, &destination)
+                                .into_iter()
+                                .next()
+                                .unwrap_or_else(|| format!("No verified map route is available for {destination}.")),
                             crate::state::toasts::ToastPriority::Normal,
                         );
                     } else {
@@ -12058,7 +12130,9 @@ impl Client {
                     if self.map.is_some() {
                         match self.interface.is_window_with_class_open(WindowClass::CommissionBoard) {
                             true => self.interface.close_window_with_class(WindowClass::CommissionBoard),
-                            false => self.interface.open_window(CommissionBoardWindow::new(client_state().commission_board_window())),
+                            false => self
+                                .interface
+                                .open_window(CommissionBoardWindow::new(client_state().commission_board_window())),
                         }
                     }
                 }
@@ -14341,11 +14415,10 @@ impl<'a, 'm: 'a> MapRenderContext<'a, 'm> {
             .render_skill_footprint(self.effect_renderer, texture, target, &cells_to_render, color);
     }
 
-    fn render_skill_cast_telegraphs(&mut self) {
-        let Some(texture) = self.skill_footprint_texture else {
-            return;
-        };
-
+    /// Incoming casts that get a ground telegraph: those whose footprint is the
+    /// same at every level (so the drawn cells are right whatever level was
+    /// cast) and covers more than one cell.
+    fn telegraphed_casts(&self) -> Vec<(SkillId, TilePosition, Vec<(i8, i8)>)> {
         let mut casts = Vec::new();
         if let Some(player) = self.client_state.try_follow(this_entity()) {
             if let Some((skill_id, _, target_position)) = player.cast_target(self.client_tick) {
@@ -14359,18 +14432,50 @@ impl<'a, 'm: 'a> MapRenderContext<'a, 'm> {
             }
         }
 
+        casts
+            .into_iter()
+            .filter_map(|(caster_position, skill_id, target_position)| {
+                let direction = facing_direction(caster_position, target_position);
+                let cells = level_invariant_skill_footprint(skill_id, direction)?;
+                (cells.len() > 1).then_some((skill_id, target_position, cells))
+            })
+            .collect()
+    }
+
+    /// F32: each telegraph also gets a text label, so it does not rely on
+    /// color alone. Runs before the particle pass that draws the labels.
+    fn update_cast_telegraph_labels(&mut self) {
+        let map = self.map;
+        let labels = self
+            .telegraphed_casts()
+            .into_iter()
+            .filter_map(|(skill_id, target_position, _)| {
+                let position = map.get_world_position(target_position)?;
+                let skill_name = crate::dm::reference_data::reference_data()
+                    .skills
+                    .iter()
+                    .find(|skill| skill.id == skill_id.0)
+                    .map(|skill| skill.name.as_str());
+                Some(crate::world::TelegraphLabel::new(
+                    position,
+                    crate::world::telegraph_label_text(skill_name),
+                ))
+            })
+            .collect();
+        self.particle_holder.set_telegraph_labels(labels);
+    }
+
+    fn render_skill_cast_telegraphs(&mut self) {
+        let Some(texture) = self.skill_footprint_texture else {
+            return;
+        };
+
         // The selected world palette keeps an incoming server cast distinct
         // from the local targeting preview.
         let color = *self.client_state.follow(client_state().world_theme().enemy_telegraph());
-        for (caster_position, skill_id, target_position) in casts {
-            let direction = facing_direction(caster_position, target_position);
-            let Some(cells) = level_invariant_skill_footprint(skill_id, direction) else {
-                continue;
-            };
-            if cells.len() > 1 {
-                self.map
-                    .render_skill_footprint(self.effect_renderer, texture, target_position, &cells, color);
-            }
+        for (_, target_position, cells) in self.telegraphed_casts() {
+            self.map
+                .render_skill_footprint(self.effect_renderer, texture, target_position, &cells, color);
         }
     }
 
@@ -14389,6 +14494,7 @@ impl<'a, 'm: 'a> MapRenderContext<'a, 'm> {
             );
         }
 
+        self.update_cast_telegraph_labels();
         self.particle_holder.render(
             self.bottom_interface_renderer,
             self.current_camera,
@@ -14620,23 +14726,40 @@ mod slash_command_tests {
     #[test]
     fn cast_telegraph_pass_ignores_density_audio_and_motion_settings() {
         let source = include_str!("lib.rs");
-        let start = source.find("fn render_skill_cast_telegraphs").expect("telegraph pass exists");
-        let body = &source[start..];
-        let end = body[1..]
-            .find("\n    fn ")
-            .or_else(|| body[1..].find("\n    #[inline"))
-            .expect("end of function");
-        let body = &body[..end];
-        for setting in [
-            "effect_density",
-            "audio_cues",
-            "reduce_motion",
-            "reduce_flashing",
-            "skill_visual_allowed",
-        ] {
-            assert!(!body.contains(setting), "telegraph pass must not depend on {setting}");
+        let function_body = |name: &str| {
+            let start = source.find(name).unwrap_or_else(|| panic!("{name} exists"));
+            let body = &source[start..];
+            let end = body[1..]
+                .find("\n    fn ")
+                .or_else(|| body[1..].find("\n    #[inline"))
+                .or_else(|| body[1..].find("\n    ///"))
+                .expect("end of function");
+            &body[..end]
+        };
+        // The footprints, the cast selection they share, and their text labels
+        // all have to survive every comfort setting.
+        let passes = [
+            function_body("fn telegraphed_casts"),
+            function_body("fn update_cast_telegraph_labels"),
+            function_body("fn render_skill_cast_telegraphs"),
+        ];
+        for body in passes {
+            for setting in [
+                "effect_density",
+                "audio_cues",
+                "reduce_motion",
+                "reduce_flashing",
+                "skill_visual_allowed",
+            ] {
+                assert!(!body.contains(setting), "telegraph pass must not depend on {setting}");
+            }
         }
-        assert!(body.contains("render_skill_footprint"), "the pass still draws footprints");
+        assert!(passes[2].contains("render_skill_footprint"), "the pass still draws footprints");
+        assert!(
+            passes[2].contains("telegraphed_casts"),
+            "footprints use the shared cast selection"
+        );
+        assert!(passes[1].contains("telegraphed_casts"), "labels use the shared cast selection");
     }
 
     /// Every command the chat handler implements needs an entry here, because

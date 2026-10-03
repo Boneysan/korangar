@@ -383,6 +383,7 @@ where
                     event: Toggle(self.game_settings_path.show_combat_text()),
                 },
                 button! { text: "Cycle effect density (full / reduced / minimal)", tooltip: "Thins other players' cosmetic skill visuals in crowded fights. Your own skills, enemy skills, ground telegraphs, cast bars, and combat text are never hidden.", event: InputEvent::CycleEffectDensity },
+                button! { text: "Cycle route preference (fewest maps / cheapest / shortest walk / avoid locked)", tooltip: "Like a GPS route option. Shortest walk is an estimate: it measures straight lines inside each map and ignores walls. Avoid locked steps prefers routes without quest, item, or marriage gates.", event: InputEvent::CycleRoutePreference },
                 button! { text: "Cycle combat text detail (all / important / status only)", tooltip: "All shows every number; Important keeps critical hits, misses, and healing; Status only hides floating numbers while leaving textual status notices visible.", event: InputEvent::CycleCombatTextFrequency },
                 button! { text: "Cycle combat text size (small / normal / large)", tooltip: "Adjusts floating combat text size independently from the overall interface scale.", event: InputEvent::CycleCombatTextSize },
                 text! { text: "Keyboard shortcuts — select an action, then press its replacement chord. Escape cancels." },

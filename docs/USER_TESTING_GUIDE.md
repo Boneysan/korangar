@@ -268,6 +268,16 @@ Log into `GM_Tester` and execute the following GM command sequence in chat:
   - No skill packet is sent to the server.
   - A subtle client cancellation notification is displayed.
 
+### Test Case 2.7: Telegraph Text Label
+- **Objective:** Verify incoming cast telegraphs don't rely on color alone (F32, added 2026-10-03).
+- **Steps:**
+  1. Have a second character, or a monster, cast a multi-cell ground skill whose layout is the same at every level near you. Only skills whose cell layout is identical at every level get a footprint (`level_invariant_skill_footprint` in `world/skill_layout.rs`); a skill whose layout changes by level shows only the cast bar.
+  2. Repeat with Effect density set to Minimal, and again with the Deuteranopia palette.
+- **Expected Results:**
+  - The enemy footprint shows white `! <Skill name>` text with a dark shadow, readable on any ground texture.
+  - An unknown skill shows `! Area attack`.
+  - The label and footprint appear and disappear together, and both stay visible at Minimal density.
+
 ---
 
 ## Section 3: Monster AI Archetypes, Mob Families & Elite Encounters
@@ -325,12 +335,14 @@ Log into `GM_Tester` and execute the following GM command sequence in chat:
 - **Preconditions:** `@warp orcsdun01 100 100` (`mob_pilot_version: 1`).
 - **Steps:**
   1. Locate `[Elite] Orc Skeleton` (Mob ID `20901`).
-  2. Check monster nameplate and target frame.
+  2. Check the monster's sprite, nameplate and target frame.
   3. Engage in combat; wait for its telegraphed skill.
   4. Defeat the Elite monster.
 - **Expected Results:**
+  - The monster is drawn with the stock Orc Skeleton sprite, not a townsperson (`ViewData: { SpriteId: 1152 }`, added 2026-10-03).
   - Nameplate displays `[Elite] Orc Skeleton`.
-  - Monster has 3x normal Orc Skeleton HP (approx 9,000 HP).
+  - The target frame title is `[Elite] Orc Skeleton`. The facts line starts with `Elite` and shows Undead / Undead / Medium, with no `Lv` chip.
+  - Monster has 3x normal Orc Skeleton HP (6,231 HP; stock is 2,077).
   - Monster casts *Bash* (Lv 10) with a visible 1.2s cast bar.
   - Grants 3x Base and Job EXP upon defeat.
   - Drops *Orcish Cuspid* and *Skel-Bone* at elevated rates.
@@ -361,7 +373,7 @@ Every modernized MVP encounter enforces the 6-component design pattern:
 6. **Recovery Window:** $\ge 15.0$ seconds of quiet recovery (standard auto-attacks only) between signature moves.
 7. **Zero Teleport-on-Hit:** Boss NEVER teleports away when attacked at range or surrounded.
 8. **BossTargetWindow:** Dedicated 360x200 window displaying HP bar, Level, Element chip, and Target-of-Target (`Target: You` or `Target: <PartyMember>`).
-9. **Encounter Recap Toast:** Tracking damage dealt/taken, interrupted casts, duration, and defeat announcement.
+9. **Encounter Recap Toast:** On defeat, a toast shows `Defeated <boss>! Dealt <n> dmg in <s>s`. Damage taken and interrupted casts are recorded in client state but not displayed yet.
 
 ---
 
@@ -794,6 +806,17 @@ Every modernized MVP encounter enforces the 6-component design pattern:
   - Trade completes cleanly.
   - Client A receives 25,000 Zeny; Client B receives `Knife [3]`.
   - Zero item duplication or zeny loss.
+
+### Test Case 9.6: Drag an Item into the Trade Window
+- **Objective:** Verify drag-to-offer (F28, added 2026-10-03).
+- **Steps:**
+  1. With a trade open, start dragging a stackable inventory item (e.g. 25 Red Potions).
+  2. Watch the trade window's "Drag an inventory item here…" line while dragging, then drop on it.
+  3. Repeat with a drag that starts from the equipment window or from storage.
+- **Expected Results:**
+  - While an inventory item is dragged, the line shows the drop-area highlight, which brightens on hover.
+  - Dropping offers the whole stack (both clients see 25 Red Potions), the same as right-click "trade all".
+  - Equipment, storage and hotbar drags show no highlight and offer nothing.
 
 ---
 

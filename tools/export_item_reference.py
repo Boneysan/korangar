@@ -29,6 +29,8 @@ ROOT = Path(__file__).resolve().parent.parent
 HERCULES = ROOT.parent / "Hercules"
 ITEM_SOURCES = (HERCULES / "db/re/item_db.conf", HERCULES / "db/item_db2.conf")
 MOB_SOURCE = HERCULES / "db/re/mob_db.conf"
+# Loaded after MOB_SOURCE; a same-Id record replaces the stock one.
+MOB_OVERRIDE_SOURCE = HERCULES / "db/mob_db2.conf"
 COMBO_SOURCE = HERCULES / "db/re/item_combo_db.conf"
 ITEM_GROUP_SOURCE = HERCULES / "db/re/item_group.conf"
 SKILL_DB_SOURCE = HERCULES / "db/re/skill_db.conf"
@@ -1385,9 +1387,17 @@ def build() -> tuple[dict[str, Any], dict[str, Any]]:
             # overrides matching IDs and can introduce server-only records.
             merged[int(row["Id"])] = (row, path)
 
-    mobs = read_records(MOB_SOURCE)
-    check_unique(mobs, "Id", MOB_SOURCE)
-    check_unique(mobs, "SpriteName", MOB_SOURCE)
+    mob_by_id: dict[int, tuple[dict[str, Any], Path]] = {}
+    for mob_source in (MOB_SOURCE, MOB_OVERRIDE_SOURCE):
+        if mob_source == MOB_OVERRIDE_SOURCE and not mob_source.is_file():
+            continue
+        source_mobs = read_records(mob_source)
+        check_unique(source_mobs, "Id", mob_source)
+        check_unique(source_mobs, "SpriteName", mob_source)
+        for mob in source_mobs:
+            mob_by_id[int(mob["Id"])] = (mob, mob_source)
+    mobs = [mob for mob, _ in mob_by_id.values()]
+    check_unique(mobs, "SpriteName", MOB_OVERRIDE_SOURCE)
     item_by_aegis: dict[str, int] = {}
     item_by_id: dict[int, tuple[dict[str, Any], Path]] = merged
     for item_id, (row, path) in merged.items():
@@ -1486,8 +1496,8 @@ def build() -> tuple[dict[str, Any], dict[str, Any]]:
 
     drops_by_item: dict[int, list[dict[str, Any]]] = defaultdict(list)
     unresolved: list[str] = []
-    mob_path = MOB_SOURCE.relative_to(HERCULES).as_posix()
     for mob in mobs:
+        mob_path = mob_by_id[int(mob["Id"])][1].relative_to(HERCULES).as_posix()
         for drop_kind, field in (("normal", "Drops"), ("mvp", "MvpDrops")):
             for aegis_name, raw_rate in (mob.get(field) or {}).items():
                 rate = raw_rate[0] if isinstance(raw_rate, list) and raw_rate else raw_rate
@@ -1548,7 +1558,7 @@ def build() -> tuple[dict[str, Any], dict[str, Any]]:
         "mode": "renewal",
         "sources": [
             path.relative_to(HERCULES).as_posix()
-            for path in (*ITEM_SOURCES, MOB_SOURCE, COMBO_SOURCE, ITEM_GROUP_SOURCE)
+            for path in (*ITEM_SOURCES, MOB_SOURCE, MOB_OVERRIDE_SOURCE, COMBO_SOURCE, ITEM_GROUP_SOURCE)
         ] + ["src/map/itemdb.c:itemdb_searchrandomid", "npc/re/scripts_main.conf (loaded shop source manifest)"],
         "shop_coverage": shop_coverage,
     }
