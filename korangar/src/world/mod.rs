@@ -3,6 +3,7 @@ pub(crate) mod animation;
 mod attack_element;
 pub mod build_planner;
 mod cameras;
+pub mod crafting;
 mod effect;
 mod emote;
 mod entity;
@@ -42,6 +43,8 @@ pub use self::attack_element::{ElementCue, elemental_effectiveness, identify_pla
 #[allow(unused_imports)]
 pub use self::build_planner::*;
 pub use self::cameras::*;
+#[allow(unused_imports)]
+pub use self::crafting::*;
 pub use self::effect::*;
 pub use self::emote::*;
 pub use self::entity::*;

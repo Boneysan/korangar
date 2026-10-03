@@ -11,6 +11,7 @@ mod character_overview;
 mod character_selection;
 mod chat;
 mod commands;
+mod commission_board;
 mod dialog;
 mod dice;
 mod disconnect_notice;
@@ -77,6 +78,7 @@ pub use self::character_overview::CharacterOverviewWindow;
 pub use self::character_selection::CharacterSelectionWindow;
 pub use self::chat::{ChatTextBox, ChatWindow, ChatWindowState};
 pub use self::commands::{CommandsWindow, CommandsWindowState};
+pub use self::commission_board::{CommissionBoardWindow, CommissionBoardWindowState};
 pub use self::dialog::{DialogWindow, DialogWindowState};
 pub use self::dice::{DiceWindow, DiceWindowState};
 pub use self::disconnect_notice::DisconnectNoticeWindow;
@@ -190,6 +192,8 @@ pub enum WindowClass {
     Commands,
     /// Dice roller (sends `@roll`). Available to all players in all builds.
     Dice,
+    /// Crafting commission bulletin board (F31).
+    CommissionBoard,
     /// Bestiary journal (Seal Cascade campaign, unlock-on-kill).
     Bestiary,
     /// Open-search player reference guide, separate from DM campaign tools.

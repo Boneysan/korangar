@@ -203,13 +203,13 @@ def e0_checks() -> list[tuple[bool, str]]:
     quest = next(e for e in read_json(ROOT / "docs/quests.v1.json")["entries"] if e["id"] == 12106)
     flow = quest.get("flow_review") or {}
     check(flow.get("evidence_state") in REVIEWED_STATES and flow.get("sources"), "quest 12106's reviewed flow has a reviewed state and sources")
-    npc = next(e for e in read_json(ROOT / "docs/npcs.v1.json")["entries"] if e["id"] == 99)
+    npc = next(e for e in read_json(ROOT / "docs/npcs.v1.json")["entries"] if e.get("name") == "Tool Dealer#alb")
     sells = True
     for offer in npc.get("offers", []):
         path, line = offer["source"].rsplit(":", 1)
         text = source_lines(path)[int(line) - 1]
         sells &= "sellitem" in text
-    check(npc.get("offers") and sells, "NPC 99 (Tool Dealer#alb): every listed offer points at a literal sellitem line")
+    check(npc.get("offers") and sells, f"NPC {npc['id']} (Tool Dealer#alb): every listed offer points at a literal sellitem line")
     flags = read_json(ROOT / "docs/map-flags.v1.json")
     check(not any(c.get("evidence_state") in REVIEWED_STATES for c in flags.get("runtime_clues", [])), "no runtime map-flag clue is labeled as reviewed")
     spawn = next(e for e in read_json(ROOT / "docs/scripted-spawn-reviews.v1.json")["entries"] if e["id"] == "bakonawalake_onmobspawn_1_at_ma_b")

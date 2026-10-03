@@ -1,6 +1,6 @@
 {
  "schema_version": 1,
- "source_revision": "593d20ef94f1882bd4788fb04941e03aa6917a77",
+ "source_revision": "f6974e0ad9a8d77f0dca4ebf8fda965273f91726",
  "source_worktree_dirty": false,
  "mode": "renewal",
  "sources": [
@@ -20,7 +20,7 @@
   "with_skills": 1237,
   "with_drops": 1287,
   "spawn_regions": {
-   "active_script_files_scanned": 653,
+   "active_script_files_scanned": 657,
    "static_spawn_records": 3380,
    "records_with_unknown_maps": 0,
    "records_with_unknown_mob_ids": 0,
@@ -28,14 +28,14 @@
    "mobs_without_static_spawn_regions": 794
   },
   "scripted_spawn_references": {
-   "direct_spawn_calls": 1227,
+   "direct_spawn_calls": 1229,
    "calls_resolved_to_monster_db": 1217,
    "calls_with_known_map": 60,
    "calls_with_literal_map_and_cells": 60,
    "calls_associated_with_map_or_instance_template": 436,
    "calls_with_approximate_instance_template": 376,
    "calls_with_literal_amount": 1172,
-   "calls_with_unresolved_monster_token": 10,
+   "calls_with_unresolved_monster_token": 12,
    "trigger_and_runtime_population": "not_inferred"
   },
   "scripted_spawn_conditions": "call-site indexed; execution conditions and runtime population are not inferred",

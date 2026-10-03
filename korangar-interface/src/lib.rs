@@ -311,15 +311,17 @@ where
             MouseMode::Default => {}
             MouseMode::MovingWindow { window_id } => {
                 if let Some(wrapper) = self.windows.iter_mut().find(|window| window.data.id == window_id) {
-                    let new_position = App::Position::new(
-                        wrapper.display_information.real_area.left + delta.width(),
-                        wrapper.display_information.real_area.top + delta.height(),
-                    );
-
                     let scaled_size = App::Size::new(
                         wrapper.display_information.real_area.width * interface_scaling,
                         wrapper.display_information.display_height * interface_scaling,
                     );
+
+                    let min_visible = 32.0;
+                    let clamped_left = (wrapper.display_information.real_area.left + delta.width())
+                        .clamp(min_visible - scaled_size.width(), (self.window_size.width() - min_visible).max(0.0));
+                    let clamped_top = (wrapper.display_information.real_area.top + delta.height())
+                        .clamp(0.0, (self.window_size.height() - min_visible).max(0.0));
+                    let new_position = App::Position::new(clamped_left, clamped_top);
 
                     wrapper.data.anchor.update(self.window_size, new_position, scaled_size);
                     if let Some(grid_size) = snap_grid_size {
@@ -485,6 +487,10 @@ where
 
     pub fn has_focus(&self) -> bool {
         self.focused_element.is_some()
+    }
+
+    pub fn unfocus(&mut self) {
+        self.focused_element = None;
     }
 
     #[cfg_attr(feature = "debug", korangar_debug::profile)]
@@ -936,11 +942,17 @@ impl<App: Application> InterfaceFrame<'_, App> {
 
             vertical_offset += text_dimensions.height() + border * 2.0 + gap;
 
-            // TODO: Actually get the text dimensions and scale the tooltip size.
+            let tooltip_width = text_dimensions.width() + border * 2.0;
+            let tooltip_height = text_dimensions.height() + border * 2.0;
+
+            let max_left = (self.window_size.width() - tooltip_width).max(0.0);
+            let max_top = (self.window_size.height() - tooltip_height).max(0.0);
+            let clamped_left = tooltip_left.clamp(0.0, max_left);
+            let clamped_top = tooltip_top.clamp(0.0, max_top);
 
             renderer.render_rectangle(
-                App::Position::new(tooltip_left, tooltip_top),
-                App::Size::new(text_dimensions.width() + border * 2.0, text_dimensions.height() + border * 2.0),
+                App::Position::new(clamped_left, clamped_top),
+                App::Size::new(tooltip_width, tooltip_height),
                 App::Clip::unbound(),
                 corner_diameter,
                 background_color,
@@ -950,7 +962,7 @@ impl<App: Application> InterfaceFrame<'_, App> {
 
             renderer.render_text(
                 tooltip,
-                App::Position::new(tooltip_left + border, tooltip_top + border),
+                App::Position::new(clamped_left + border, clamped_top + border),
                 available_width,
                 App::Clip::unbound(),
                 foreground_color,

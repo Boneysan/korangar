@@ -263,6 +263,7 @@ impl WindowCache {
             WindowClass::AdventureGuide => state(AnchorPoint::CenterRight, -(420.0 + MARGIN), -260.0, 400.0, 520.0),
             WindowClass::DmLoot => state(AnchorPoint::Center, -190.0, -180.0, 380.0, 360.0),
             WindowClass::Dice => state(AnchorPoint::CenterRight, -(300.0 + MARGIN), -180.0, 300.0, 360.0),
+            WindowClass::CommissionBoard => state(AnchorPoint::Center, -210.0, -190.0, 420.0, 380.0),
             WindowClass::Emotes => state(AnchorPoint::CenterRight, -(540.0 + MARGIN), -240.0, 520.0, 480.0),
             WindowClass::Maps => state(AnchorPoint::Center, 0.0, -40.0, 900.0, 650.0),
             // Login / char select stay centered (menu flow).
@@ -315,6 +316,7 @@ impl WindowCache {
             WindowClass::Maps,
             WindowClass::Emotes,
             WindowClass::AdventureGuide,
+            WindowClass::CommissionBoard,
             // Centered error popup (wrong password / disconnect).
             WindowClass::Error,
             WindowClass::DisconnectNotice,

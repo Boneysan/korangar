@@ -1,6 +1,6 @@
 {
  "schema_version": 1,
- "source_revision": "593d20ef94f1882bd4788fb04941e03aa6917a77",
+ "source_revision": "f6974e0ad9a8d77f0dca4ebf8fda965273f91726",
  "source_worktree_dirty": false,
  "mode": "renewal",
  "source": "db/quest_db.conf",
@@ -9,7 +9,7 @@
   "npc/custom"
  ],
  "reward_candidate_coverage": {
-  "loaded_script_files_scanned": 653,
+  "loaded_script_files_scanned": 657,
   "quests_with_nearby_literal_item_grants": 28,
   "candidate_records": 41,
   "quests_with_reviewed_flow": 124,
@@ -989,14 +989,14 @@
     {
      "name": "Sir Aldric Unfrocked#dm",
      "map_name": "geffen",
-     "x": 120,
-     "y": 120,
+     "x": 118,
+     "y": 115,
      "source_path": "npc/custom/dm_campaign/act_02/arc_08_glast_heim.txt",
-     "script_line": 23,
+     "script_line": 90,
      "uses": [
       "questprogress"
      ],
-     "source_line": 25
+     "source_line": 92
     }
    ],
    "item_reward_candidates": [],
@@ -1358,11 +1358,11 @@
      "x": 100,
      "y": 100,
      "source_path": "npc/custom/dm_campaign/act_03/arc_13_nameless_island.txt",
-     "script_line": 23,
+     "script_line": 97,
      "uses": [
       "questprogress"
      ],
-     "source_line": 102
+     "source_line": 188
     }
    ],
    "item_reward_candidates": [],
@@ -2008,14 +2008,14 @@
     {
      "name": "Keeper Lysandra#dm",
      "map_name": "aldebaran",
-     "x": 100,
-     "y": 100,
+     "x": 99,
+     "y": 99,
      "source_path": "npc/custom/dm_campaign/act_04/arc_15_thanatos.txt",
-     "script_line": 24,
+     "script_line": 91,
      "uses": [
       "questprogress"
      ],
-     "source_line": 126
+     "source_line": 199
     }
    ],
    "item_reward_candidates": [],
@@ -4086,28 +4086,16 @@
    "targets": [],
    "npc_references": [
     {
-     "name": "Himmelmez#dm",
-     "map_name": "nif_in",
-     "x": 150,
-     "y": 150,
-     "source_path": "npc/custom/dm_campaign/act_04/arc_18_niflheim.txt",
-     "script_line": 180,
-     "uses": [
-      "questprogress"
-     ],
-     "source_line": 197
-    },
-    {
      "name": "The Familiar Dead#dm",
      "map_name": "niflheim",
-     "x": 100,
-     "y": 100,
+     "x": 95,
+     "y": 95,
      "source_path": "npc/custom/dm_campaign/act_04/arc_18_niflheim.txt",
-     "script_line": 22,
+     "script_line": 70,
      "uses": [
       "questprogress"
      ],
-     "source_line": 126
+     "source_line": 180
     }
    ],
    "item_reward_candidates": [],
@@ -5088,20 +5076,7 @@
    "id": 20232,
    "name": "Beyond the Veil",
    "targets": [],
-   "npc_references": [
-    {
-     "name": "Loki The Voice#dm",
-     "map_name": "moc_ruins",
-     "x": 150,
-     "y": 150,
-     "source_path": "npc/custom/dm_campaign/act_04/arc_19_finale.txt",
-     "script_line": 25,
-     "uses": [
-      "questprogress"
-     ],
-     "source_line": 113
-    }
-   ],
+   "npc_references": [],
    "item_reward_candidates": [],
    "source_record": "quest 20232"
   },
@@ -5117,20 +5092,7 @@
    "id": 20214,
    "name": "Biosphere Sample Rotation",
    "targets": [],
-   "npc_references": [
-    {
-     "name": "Doctor Mira Tressa#dm",
-     "map_name": "ba_in01",
-     "x": 100,
-     "y": 100,
-     "source_path": "npc/custom/dm_campaign/act_04/arc_17_varmundt.txt",
-     "script_line": 25,
-     "uses": [
-      "questprogress"
-     ],
-     "source_line": 151
-    }
-   ],
+   "npc_references": [],
    "item_reward_candidates": [],
    "source_record": "quest 20214"
   },
@@ -12884,11 +12846,11 @@
      "x": 100,
      "y": 100,
      "source_path": "npc/custom/dm_campaign/act_03/arc_11_hugel.txt",
-     "script_line": 23,
+     "script_line": 84,
      "uses": [
       "questprogress"
      ],
-     "source_line": 127
+     "source_line": 199
     }
    ],
    "item_reward_candidates": [],
@@ -13171,11 +13133,11 @@
      "x": 120,
      "y": 120,
      "source_path": "npc/custom/dm_campaign/act_02/arc_10_lighthalzen.txt",
-     "script_line": 24,
+     "script_line": 90,
      "uses": [
       "questprogress"
      ],
-     "source_line": 157
+     "source_line": 237
     }
    ],
    "item_reward_candidates": [],
@@ -14850,14 +14812,14 @@
     {
      "name": "Greta Holm#dm",
      "map_name": "einbroch",
-     "x": 145,
-     "y": 230,
+     "x": 171,
+     "y": 226,
      "source_path": "npc/custom/dm_campaign/act_02/arc_07_einbroch.txt",
-     "script_line": 24,
+     "script_line": 89,
      "uses": [
       "questprogress"
      ],
-     "source_line": 96
+     "source_line": 212
     }
    ],
    "item_reward_candidates": [],
@@ -15039,14 +15001,14 @@
     {
      "name": "Sir Aldric Unfrocked#dm",
      "map_name": "geffen",
-     "x": 120,
-     "y": 120,
+     "x": 118,
+     "y": 115,
      "source_path": "npc/custom/dm_campaign/act_02/arc_08_glast_heim.txt",
-     "script_line": 23,
+     "script_line": 90,
      "uses": [
       "questprogress"
      ],
-     "source_line": 118
+     "source_line": 192
     }
    ],
    "item_reward_candidates": [],
@@ -18728,11 +18690,11 @@
      "x": 100,
      "y": 100,
      "source_path": "npc/custom/dm_campaign/act_03/arc_11_hugel.txt",
-     "script_line": 23,
+     "script_line": 84,
      "uses": [
       "questprogress"
      ],
-     "source_line": 101
+     "source_line": 195
     }
    ],
    "item_reward_candidates": [],
@@ -19326,11 +19288,11 @@
      "x": 155,
      "y": 185,
      "source_path": "npc/custom/dm_campaign/act_02/arc_06_yuno.txt",
-     "script_line": 25,
+     "script_line": 105,
      "uses": [
       "questprogress"
      ],
-     "source_line": 107
+     "source_line": 240
     }
    ],
    "item_reward_candidates": [],
@@ -20507,11 +20469,11 @@
      "x": 120,
      "y": 120,
      "source_path": "npc/custom/dm_campaign/act_02/arc_09_rachel.txt",
-     "script_line": 23,
+     "script_line": 82,
      "uses": [
       "questprogress"
      ],
-     "source_line": 126
+     "source_line": 196
     }
    ],
    "item_reward_candidates": [],
@@ -23949,11 +23911,11 @@
      "x": 120,
      "y": 120,
      "source_path": "npc/custom/dm_campaign/act_02/arc_09_rachel.txt",
-     "script_line": 23,
+     "script_line": 82,
      "uses": [
       "questprogress"
      ],
-     "source_line": 99
+     "source_line": 192
     }
    ],
    "item_reward_candidates": [],
@@ -24027,14 +23989,14 @@
     {
      "name": "Doctor Mira Tressa#dm",
      "map_name": "ba_in01",
-     "x": 100,
-     "y": 100,
+     "x": 104,
+     "y": 96,
      "source_path": "npc/custom/dm_campaign/act_04/arc_17_varmundt.txt",
-     "script_line": 25,
+     "script_line": 102,
      "uses": [
       "questprogress"
      ],
-     "source_line": 27
+     "source_line": 104
     },
     {
      "name": "The Administrator#dm",
@@ -24042,11 +24004,11 @@
      "x": 110,
      "y": 100,
      "source_path": "npc/custom/dm_campaign/act_04/arc_17_varmundt.txt",
-     "script_line": 196,
+     "script_line": 233,
      "uses": [
       "questprogress"
      ],
-     "source_line": 204
+     "source_line": 240
     }
    ],
    "item_reward_candidates": [],
@@ -27064,11 +27026,11 @@
      "x": 155,
      "y": 185,
      "source_path": "npc/custom/dm_campaign/act_02/arc_06_yuno.txt",
-     "script_line": 25,
+     "script_line": 105,
      "uses": [
       "questprogress"
      ],
-     "source_line": 134
+     "source_line": 244
     }
    ],
    "item_reward_candidates": [],
@@ -28244,11 +28206,11 @@
      "x": 120,
      "y": 120,
      "source_path": "npc/custom/dm_campaign/act_02/arc_10_lighthalzen.txt",
-     "script_line": 24,
+     "script_line": 90,
      "uses": [
       "questprogress"
      ],
-     "source_line": 106
+     "source_line": 206
     }
    ],
    "item_reward_candidates": [],
@@ -28673,14 +28635,14 @@
     {
      "name": "Foreman Dunmar#dm",
      "map_name": "veins",
-     "x": 100,
-     "y": 100,
+     "x": 111,
+     "y": 112,
      "source_path": "npc/custom/dm_campaign/act_03/arc_14_veins.txt",
-     "script_line": 24,
+     "script_line": 93,
      "uses": [
       "questprogress"
      ],
-     "source_line": 125
+     "source_line": 202
     }
    ],
    "item_reward_candidates": [],
@@ -30438,11 +30400,11 @@
      "x": 120,
      "y": 120,
      "source_path": "npc/custom/dm_campaign/act_02/arc_10_lighthalzen.txt",
-     "script_line": 24,
+     "script_line": 90,
      "uses": [
       "questprogress"
      ],
-     "source_line": 132
+     "source_line": 210
     }
    ],
    "item_reward_candidates": [],
@@ -31898,14 +31860,14 @@
     {
      "name": "Greta Holm#dm",
      "map_name": "einbroch",
-     "x": 145,
-     "y": 230,
+     "x": 171,
+     "y": 226,
      "source_path": "npc/custom/dm_campaign/act_02/arc_07_einbroch.txt",
-     "script_line": 24,
+     "script_line": 89,
      "uses": [
       "questprogress"
      ],
-     "source_line": 123
+     "source_line": 216
     }
    ],
    "item_reward_candidates": [],
@@ -32119,16 +32081,16 @@
    "targets": [],
    "npc_references": [
     {
-     "name": "Greta Holm#dm",
+     "name": "Medical Station#dm",
      "map_name": "einbroch",
-     "x": 145,
-     "y": 230,
+     "x": 166,
+     "y": 222,
      "source_path": "npc/custom/dm_campaign/act_02/arc_07_einbroch.txt",
-     "script_line": 24,
+     "script_line": 412,
      "uses": [
       "questprogress"
      ],
-     "source_line": 150
+     "source_line": 425
     }
    ],
    "item_reward_candidates": [],
@@ -33627,14 +33589,14 @@
     {
      "name": "Envoy Aelith#dm",
      "map_name": "mid_camp",
-     "x": 100,
-     "y": 100,
+     "x": 95,
+     "y": 95,
      "source_path": "npc/custom/dm_campaign/act_03/arc_12_new_world.txt",
-     "script_line": 22,
+     "script_line": 83,
      "uses": [
       "questprogress"
      ],
-     "source_line": 121
+     "source_line": 180
     }
    ],
    "item_reward_candidates": [],
@@ -34014,14 +33976,14 @@
     {
      "name": "Envoy Aelith#dm",
      "map_name": "mid_camp",
-     "x": 100,
-     "y": 100,
+     "x": 95,
+     "y": 95,
      "source_path": "npc/custom/dm_campaign/act_03/arc_12_new_world.txt",
-     "script_line": 22,
+     "script_line": 83,
      "uses": [
       "questprogress"
      ],
-     "source_line": 95
+     "source_line": 176
     }
    ],
    "item_reward_candidates": [],
@@ -34407,11 +34369,11 @@
      "x": 155,
      "y": 185,
      "source_path": "npc/custom/dm_campaign/act_02/arc_06_yuno.txt",
-     "script_line": 25,
+     "script_line": 105,
      "uses": [
       "questprogress"
      ],
-     "source_line": 166
+     "source_line": 248
     }
    ],
    "item_reward_candidates": [],
@@ -36078,14 +36040,14 @@
     {
      "name": "Sir Aldric Unfrocked#dm",
      "map_name": "geffen",
-     "x": 120,
-     "y": 120,
+     "x": 118,
+     "y": 115,
      "source_path": "npc/custom/dm_campaign/act_02/arc_08_glast_heim.txt",
-     "script_line": 23,
+     "script_line": 90,
      "uses": [
       "questprogress"
      ],
-     "source_line": 92
+     "source_line": 188
     }
    ],
    "item_reward_candidates": [],
@@ -44034,9 +43996,9 @@
      {
       "path": "db/re/item_db.conf",
       "lines": [
-       99727,
-       99728,
-       99729
+       85457,
+       85458,
+       85459
       ]
      }
     ],
@@ -44639,20 +44601,7 @@
    "id": 20204,
    "name": "Royal House Audience Rounds",
    "targets": [],
-   "npc_references": [
-    {
-     "name": "Kronecker G Heine#dm",
-     "map_name": "prontera",
-     "x": 150,
-     "y": 150,
-     "source_path": "npc/custom/dm_campaign/act_04/arc_16_prontera_banquet.txt",
-     "script_line": 24,
-     "uses": [
-      "questprogress"
-     ],
-     "source_line": 150
-    }
-   ],
+   "npc_references": [],
    "item_reward_candidates": [],
    "source_record": "quest 20204"
   },
@@ -44941,14 +44890,14 @@
     {
      "name": "Doctor Mira Tressa#dm",
      "map_name": "ba_in01",
-     "x": 100,
-     "y": 100,
+     "x": 104,
+     "y": 96,
      "source_path": "npc/custom/dm_campaign/act_04/arc_17_varmundt.txt",
-     "script_line": 25,
+     "script_line": 102,
      "uses": [
       "questprogress"
      ],
-     "source_line": 100
+     "source_line": 202
     }
    ],
    "item_reward_candidates": [],
@@ -45121,11 +45070,11 @@
      "x": 100,
      "y": 100,
      "source_path": "npc/custom/dm_campaign/act_03/arc_13_nameless_island.txt",
-     "script_line": 23,
+     "script_line": 97,
      "uses": [
       "questprogress"
      ],
-     "source_line": 128
+     "source_line": 192
     }
    ],
    "item_reward_candidates": [],
@@ -48822,14 +48771,14 @@
     {
      "name": "Doctor Mira Tressa#dm",
      "map_name": "ba_in01",
-     "x": 100,
-     "y": 100,
+     "x": 104,
+     "y": 96,
      "source_path": "npc/custom/dm_campaign/act_04/arc_17_varmundt.txt",
-     "script_line": 25,
+     "script_line": 102,
      "uses": [
       "questprogress"
      ],
-     "source_line": 126
+     "source_line": 206
     }
    ],
    "item_reward_candidates": [],
@@ -49355,11 +49304,11 @@
      "x": 150,
      "y": 150,
      "source_path": "npc/custom/dm_campaign/act_04/arc_16_prontera_banquet.txt",
-     "script_line": 24,
+     "script_line": 121,
      "uses": [
       "questprogress"
      ],
-     "source_line": 125
+     "source_line": 225
     }
    ],
    "item_reward_candidates": [],
@@ -49671,23 +49620,23 @@
      "x": 120,
      "y": 120,
      "source_path": "npc/custom/dm_campaign/act_02/arc_09_rachel.txt",
-     "script_line": 23,
+     "script_line": 82,
      "uses": [
       "questprogress"
      ],
-     "source_line": 25
+     "source_line": 84
     },
     {
      "name": "High Prelate Karsh#dm",
      "map_name": "rachel",
-     "x": 130,
-     "y": 120,
+     "x": 129,
+     "y": 119,
      "source_path": "npc/custom/dm_campaign/act_02/arc_09_rachel.txt",
-     "script_line": 220,
+     "script_line": 375,
      "uses": [
       "questprogress"
      ],
-     "source_line": 228
+     "source_line": 382
     }
    ],
    "item_reward_candidates": [],
@@ -49697,20 +49646,7 @@
    "id": 20175,
    "name": "The Broker's Terms",
    "targets": [],
-   "npc_references": [
-    {
-     "name": "Father Quill#dm",
-     "map_name": "nameless_i",
-     "x": 100,
-     "y": 100,
-     "source_path": "npc/custom/dm_campaign/act_03/arc_13_nameless_island.txt",
-     "script_line": 23,
-     "uses": [
-      "questprogress"
-     ],
-     "source_line": 153
-    }
-   ],
+   "npc_references": [],
    "item_reward_candidates": [],
    "source_record": "quest 20175"
   },
@@ -49782,20 +49718,7 @@
    "id": 20233,
    "name": "The Choice He Never Had",
    "targets": [],
-   "npc_references": [
-    {
-     "name": "Loki The Voice#dm",
-     "map_name": "moc_ruins",
-     "x": 150,
-     "y": 150,
-     "source_path": "npc/custom/dm_campaign/act_04/arc_19_finale.txt",
-     "script_line": 25,
-     "uses": [
-      "questprogress"
-     ],
-     "source_line": 127
-    }
-   ],
+   "npc_references": [],
    "item_reward_candidates": [],
    "source_record": "quest 20233"
   },
@@ -49875,23 +49798,11 @@
      "x": 100,
      "y": 100,
      "source_path": "npc/custom/dm_campaign/act_03/arc_13_nameless_island.txt",
-     "script_line": 23,
+     "script_line": 97,
      "uses": [
       "questprogress"
      ],
-     "source_line": 25
-    },
-    {
-     "name": "The Broker Carrion#dm",
-     "map_name": "nameless_i",
-     "x": 110,
-     "y": 100,
-     "source_path": "npc/custom/dm_campaign/act_03/arc_13_nameless_island.txt",
-     "script_line": 213,
-     "uses": [
-      "questprogress"
-     ],
-     "source_line": 221
+     "source_line": 99
     }
    ],
    "item_reward_candidates": [],
@@ -50106,28 +50017,16 @@
    "targets": [],
    "npc_references": [
     {
-     "name": "Himmelmez#dm",
-     "map_name": "nif_in",
-     "x": 150,
-     "y": 150,
-     "source_path": "npc/custom/dm_campaign/act_04/arc_18_niflheim.txt",
-     "script_line": 180,
-     "uses": [
-      "questprogress"
-     ],
-     "source_line": 197
-    },
-    {
      "name": "The Familiar Dead#dm",
      "map_name": "niflheim",
-     "x": 100,
-     "y": 100,
+     "x": 95,
+     "y": 95,
      "source_path": "npc/custom/dm_campaign/act_04/arc_18_niflheim.txt",
-     "script_line": 22,
+     "script_line": 70,
      "uses": [
       "questprogress"
      ],
-     "source_line": 100
+     "source_line": 176
     }
    ],
    "item_reward_candidates": [],
@@ -50594,14 +50493,14 @@
     {
      "name": "Keeper Lysandra#dm",
      "map_name": "aldebaran",
-     "x": 100,
-     "y": 100,
+     "x": 99,
+     "y": 99,
      "source_path": "npc/custom/dm_campaign/act_04/arc_15_thanatos.txt",
-     "script_line": 24,
+     "script_line": 91,
      "uses": [
       "questprogress"
      ],
-     "source_line": 26
+     "source_line": 93
     },
     {
      "name": "Scholar Pratt#dm",
@@ -50609,11 +50508,11 @@
      "x": 110,
      "y": 100,
      "source_path": "npc/custom/dm_campaign/act_04/arc_15_thanatos.txt",
-     "script_line": 196,
+     "script_line": 226,
      "uses": [
       "questprogress"
      ],
-     "source_line": 204
+     "source_line": 233
     }
    ],
    "item_reward_candidates": [],
@@ -50739,11 +50638,11 @@
      "x": 155,
      "y": 185,
      "source_path": "npc/custom/dm_campaign/act_02/arc_06_yuno.txt",
-     "script_line": 25,
+     "script_line": 105,
      "uses": [
       "questprogress"
      ],
-     "source_line": 27
+     "source_line": 107
     }
    ],
    "item_reward_candidates": [],
@@ -50757,26 +50656,14 @@
     {
      "name": "Foreman Dunmar#dm",
      "map_name": "veins",
-     "x": 100,
-     "y": 100,
+     "x": 111,
+     "y": 112,
      "source_path": "npc/custom/dm_campaign/act_03/arc_14_veins.txt",
-     "script_line": 24,
+     "script_line": 93,
      "uses": [
       "questprogress"
      ],
-     "source_line": 26
-    },
-    {
-     "name": "Prelate Hesma#dm",
-     "map_name": "veins",
-     "x": 110,
-     "y": 100,
-     "source_path": "npc/custom/dm_campaign/act_03/arc_14_veins.txt",
-     "script_line": 195,
-     "uses": [
-      "questprogress"
-     ],
-     "source_line": 203
+     "source_line": 95
     }
    ],
    "item_reward_candidates": [],
@@ -50801,11 +50688,11 @@
      "x": 130,
      "y": 120,
      "source_path": "npc/custom/dm_campaign/act_02/arc_10_lighthalzen.txt",
-     "script_line": 221,
+     "script_line": 317,
      "uses": [
       "questprogress"
      ],
-     "source_line": 229
+     "source_line": 324
     },
     {
      "name": "Doctor Sabine Reuter#dm",
@@ -50813,11 +50700,11 @@
      "x": 120,
      "y": 120,
      "source_path": "npc/custom/dm_campaign/act_02/arc_10_lighthalzen.txt",
-     "script_line": 24,
+     "script_line": 90,
      "uses": [
       "questprogress"
      ],
-     "source_line": 26
+     "source_line": 92
     }
    ],
    "item_reward_candidates": [],
@@ -51047,20 +50934,7 @@
    "id": 20194,
    "name": "The Method's Price",
    "targets": [],
-   "npc_references": [
-    {
-     "name": "Keeper Lysandra#dm",
-     "map_name": "aldebaran",
-     "x": 100,
-     "y": 100,
-     "source_path": "npc/custom/dm_campaign/act_04/arc_15_thanatos.txt",
-     "script_line": 24,
-     "uses": [
-      "questprogress"
-     ],
-     "source_line": 151
-    }
-   ],
+   "npc_references": [],
    "item_reward_candidates": [],
    "source_record": "quest 20194"
   },
@@ -51199,11 +51073,11 @@
      "x": 155,
      "y": 185,
      "source_path": "npc/custom/dm_campaign/act_02/arc_06_yuno.txt",
-     "script_line": 25,
+     "script_line": 105,
      "uses": [
       "questprogress"
      ],
-     "source_line": 176
+     "source_line": 291
     }
    ],
    "item_reward_candidates": [],
@@ -51360,20 +51234,7 @@
    "id": 20134,
    "name": "The Prelate's Record",
    "targets": [],
-   "npc_references": [
-    {
-     "name": "Acolyte Naima#dm",
-     "map_name": "rachel",
-     "x": 120,
-     "y": 120,
-     "source_path": "npc/custom/dm_campaign/act_02/arc_09_rachel.txt",
-     "script_line": 23,
-     "uses": [
-      "questprogress"
-     ],
-     "source_line": 156
-    }
-   ],
+   "npc_references": [],
    "item_reward_candidates": [],
    "source_record": "quest 20134"
   },
@@ -51381,20 +51242,7 @@
    "id": 20185,
    "name": "The Prelate's Silence",
    "targets": [],
-   "npc_references": [
-    {
-     "name": "Foreman Dunmar#dm",
-     "map_name": "veins",
-     "x": 100,
-     "y": 100,
-     "source_path": "npc/custom/dm_campaign/act_03/arc_14_veins.txt",
-     "script_line": 24,
-     "uses": [
-      "questprogress"
-     ],
-     "source_line": 150
-    }
-   ],
+   "npc_references": [],
    "item_reward_candidates": [],
    "source_record": "quest 20185"
   },
@@ -51414,26 +51262,26 @@
     {
      "name": "Himmelmez#dm",
      "map_name": "nif_in",
-     "x": 150,
-     "y": 150,
+     "x": 138,
+     "y": 162,
      "source_path": "npc/custom/dm_campaign/act_04/arc_18_niflheim.txt",
-     "script_line": 180,
+     "script_line": 305,
      "uses": [
       "questprogress"
      ],
-     "source_line": 182
+     "source_line": 307
     },
     {
      "name": "The Familiar Dead#dm",
      "map_name": "niflheim",
-     "x": 100,
-     "y": 100,
+     "x": 95,
+     "y": 95,
      "source_path": "npc/custom/dm_campaign/act_04/arc_18_niflheim.txt",
-     "script_line": 22,
+     "script_line": 70,
      "uses": [
       "questprogress"
      ],
-     "source_line": 24
+     "source_line": 72
     }
    ],
    "item_reward_candidates": [],
@@ -51511,11 +51359,11 @@
      "x": 150,
      "y": 150,
      "source_path": "npc/custom/dm_campaign/act_04/arc_16_prontera_banquet.txt",
-     "script_line": 24,
+     "script_line": 121,
      "uses": [
       "questprogress"
      ],
-     "source_line": 26
+     "source_line": 123
     },
     {
      "name": "Matron Rina#dm",
@@ -51523,11 +51371,11 @@
      "x": 100,
      "y": 100,
      "source_path": "npc/custom/dm_campaign/act_04/arc_16_prontera_banquet.txt",
-     "script_line": 207,
+     "script_line": 356,
      "uses": [
       "questprogress"
      ],
-     "source_line": 215
+     "source_line": 363
     }
    ],
    "item_reward_candidates": [],
@@ -52747,26 +52595,26 @@
     {
      "name": "Greta Holm#dm",
      "map_name": "einbroch",
-     "x": 145,
-     "y": 230,
+     "x": 171,
+     "y": 226,
      "source_path": "npc/custom/dm_campaign/act_02/arc_07_einbroch.txt",
-     "script_line": 24,
+     "script_line": 89,
      "uses": [
       "questprogress"
      ],
-     "source_line": 26
+     "source_line": 91
     },
     {
      "name": "Supervisor Kessler#dm",
      "map_name": "einbroch",
-     "x": 160,
-     "y": 200,
+     "x": 174,
+     "y": 197,
      "source_path": "npc/custom/dm_campaign/act_02/arc_07_einbroch.txt",
-     "script_line": 226,
+     "script_line": 332,
      "uses": [
       "questprogress"
      ],
-     "source_line": 234
+     "source_line": 340
     }
    ],
    "item_reward_candidates": [],
@@ -52784,20 +52632,7 @@
    "id": 20165,
    "name": "The Vance Proposal",
    "targets": [],
-   "npc_references": [
-    {
-     "name": "Envoy Aelith#dm",
-     "map_name": "mid_camp",
-     "x": 100,
-     "y": 100,
-     "source_path": "npc/custom/dm_campaign/act_03/arc_12_new_world.txt",
-     "script_line": 22,
-     "uses": [
-      "questprogress"
-     ],
-     "source_line": 148
-    }
-   ],
+   "npc_references": [],
    "item_reward_candidates": [],
    "source_record": "quest 20165"
   },
@@ -52936,20 +52771,7 @@
    "id": 20124,
    "name": "The Weight of Faith",
    "targets": [],
-   "npc_references": [
-    {
-     "name": "Sir Aldric Unfrocked#dm",
-     "map_name": "geffen",
-     "x": 120,
-     "y": 120,
-     "source_path": "npc/custom/dm_campaign/act_02/arc_08_glast_heim.txt",
-     "script_line": 23,
-     "uses": [
-      "questprogress"
-     ],
-     "source_line": 143
-    }
-   ],
+   "npc_references": [],
    "item_reward_candidates": [],
    "source_record": "quest 20124"
   },
@@ -52967,28 +52789,16 @@
    "targets": [],
    "npc_references": [
     {
-     "name": "Captain Vance#dm",
-     "map_name": "mid_camp",
-     "x": 110,
-     "y": 100,
-     "source_path": "npc/custom/dm_campaign/act_03/arc_12_new_world.txt",
-     "script_line": 205,
-     "uses": [
-      "questprogress"
-     ],
-     "source_line": 213
-    },
-    {
      "name": "Envoy Aelith#dm",
      "map_name": "mid_camp",
-     "x": 100,
-     "y": 100,
+     "x": 95,
+     "y": 95,
      "source_path": "npc/custom/dm_campaign/act_03/arc_12_new_world.txt",
-     "script_line": 22,
+     "script_line": 83,
      "uses": [
       "questprogress"
      ],
-     "source_line": 24
+     "source_line": 85
     }
    ],
    "item_reward_candidates": [],
@@ -52998,20 +52808,7 @@
    "id": 20155,
    "name": "The Zealot's Testimony",
    "targets": [],
-   "npc_references": [
-    {
-     "name": "Priest Eadric#dm",
-     "map_name": "hugel",
-     "x": 100,
-     "y": 100,
-     "source_path": "npc/custom/dm_campaign/act_03/arc_11_hugel.txt",
-     "script_line": 23,
-     "uses": [
-      "questprogress"
-     ],
-     "source_line": 152
-    }
-   ],
+   "npc_references": [],
    "item_reward_candidates": [],
    "source_record": "quest 20155"
   },
@@ -54815,11 +54612,11 @@
      "x": 150,
      "y": 150,
      "source_path": "npc/custom/dm_campaign/act_04/arc_16_prontera_banquet.txt",
-     "script_line": 24,
+     "script_line": 121,
      "uses": [
       "questprogress"
      ],
-     "source_line": 99
+     "source_line": 221
     }
    ],
    "item_reward_candidates": [],
@@ -56109,14 +55906,14 @@
     {
      "name": "Foreman Dunmar#dm",
      "map_name": "veins",
-     "x": 100,
-     "y": 100,
+     "x": 111,
+     "y": 112,
      "source_path": "npc/custom/dm_campaign/act_03/arc_14_veins.txt",
-     "script_line": 24,
+     "script_line": 93,
      "uses": [
       "questprogress"
      ],
-     "source_line": 99
+     "source_line": 198
     }
    ],
    "item_reward_candidates": [],
@@ -56725,14 +56522,14 @@
     {
      "name": "Keeper Lysandra#dm",
      "map_name": "aldebaran",
-     "x": 100,
-     "y": 100,
+     "x": 99,
+     "y": 99,
      "source_path": "npc/custom/dm_campaign/act_04/arc_15_thanatos.txt",
-     "script_line": 24,
+     "script_line": 91,
      "uses": [
       "questprogress"
      ],
-     "source_line": 100
+     "source_line": 195
     }
    ],
    "item_reward_candidates": [],
@@ -56806,11 +56603,11 @@
      "x": 100,
      "y": 100,
      "source_path": "npc/custom/dm_campaign/act_03/arc_11_hugel.txt",
-     "script_line": 23,
+     "script_line": 84,
      "uses": [
       "questprogress"
      ],
-     "source_line": 25
+     "source_line": 86
     }
    ],
    "item_reward_candidates": [],
@@ -56900,14 +56697,14 @@
     {
      "name": "Greta Holm#dm",
      "map_name": "einbroch",
-     "x": 145,
-     "y": 230,
+     "x": 171,
+     "y": 226,
      "source_path": "npc/custom/dm_campaign/act_02/arc_07_einbroch.txt",
-     "script_line": 24,
+     "script_line": 89,
      "uses": [
       "questprogress"
      ],
-     "source_line": 163
+     "source_line": 243
     }
    ],
    "item_reward_candidates": [],

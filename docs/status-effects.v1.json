@@ -1,6 +1,6 @@
 {
  "schema_version": 1,
- "source_revision": "593d20ef94f1882bd4788fb04941e03aa6917a77",
+ "source_revision": "f6974e0ad9a8d77f0dca4ebf8fda965273f91726",
  "source_worktree_dirty": false,
  "mode": "renewal",
  "source": [
@@ -18130,7 +18130,7 @@
       },
       {
        "path": "src/map/script.c",
-       "line": 25074
+       "line": 25144
       }
      ]
     }
@@ -26644,19 +26644,19 @@
       },
       {
        "path": "src/map/mob.c",
-       "line": 3563
+       "line": 3564
       },
       {
        "path": "src/map/mob.c",
-       "line": 3568
+       "line": 3569
       },
       {
        "path": "src/map/mob.c",
-       "line": 3573
+       "line": 3574
       },
       {
        "path": "src/map/mob.c",
-       "line": 3575
+       "line": 3576
       },
       {
        "path": "src/map/script.c",

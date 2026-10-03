@@ -188,6 +188,8 @@ fn death_recovery_ten_kill_threshold(config: &Config) -> Result<(), String> {
     context.pump(Duration::from_millis(300));
 
     for kill_index in 1..=10 {
+        let _ = context.say("@killmonster");
+        context.pump(Duration::from_millis(50));
         let target = context.spawn_monster("PORING", 1002)?;
         let mut dead = false;
         for _ in 0..30 {
@@ -196,7 +198,9 @@ fn death_recovery_ten_kill_threshold(config: &Config) -> Result<(), String> {
                 .get(&target)
                 .map(|entity| entity.position.tile_position())
                 .ok_or("spawned Poring vanished before the test killed it")?;
-            context.walk_to(position.x.saturating_sub(1), position.y)?;
+            if context.position.x.abs_diff(position.x) > 1 || context.position.y.abs_diff(position.y) > 1 {
+                let _ = context.walk_to(position.x.saturating_sub(1), position.y);
+            }
             context.flush();
             context.net.player_attack(target).map_err(|_| "disconnected")?;
             match context.wait_for_within("Poring hit or death", Duration::from_secs(6), &mut |event| match event {

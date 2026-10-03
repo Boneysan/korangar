@@ -4,8 +4,10 @@ pub mod build_planner;
 pub mod cache_statistics;
 pub mod character_creation;
 pub mod character_slots;
+pub mod commission_board;
 pub mod discovery;
 pub mod dm_journal;
+pub mod encounter_recap;
 pub mod equipment_plan;
 pub mod friends;
 pub mod hotbar;
@@ -79,7 +81,7 @@ use crate::graphics::RenderOptions;
 use crate::graphics::{Color, CornerDiameter, ScreenClip, ScreenPosition, ScreenSize, ShadowPadding};
 use crate::input::{InputEvent, MouseInputMode};
 use crate::interface::windows::{
-    AdventureGuideWindowState, BestiaryWindowState, ChatWindowState, CommandsWindowState, DialogWindowState, DiceWindowState,
+    AdventureGuideWindowState, BestiaryWindowState, ChatWindowState, CommandsWindowState, CommissionBoardWindowState, DialogWindowState, DiceWindowState,
     FriendListWindowState, LoginWindowState, LoginWindowStatePathExt, LootWindowState, PartyWindowState, SkillTreeWindowState,
     TradeWindowState, WindowCache, WindowClass,
 };
@@ -93,8 +95,10 @@ use crate::settings::{
 use crate::state::build_planner::BuildPlannerState;
 use crate::state::character_creation::CharacterCreation;
 use crate::state::character_slots::CharacterSlots;
+use crate::state::commission_board::CommissionBoardState;
 use crate::state::discovery::DiscoveryState;
 use crate::state::dm_journal::DmJournalState;
+use crate::state::encounter_recap::EncounterRecapState;
 use crate::state::friends::FriendEntry;
 use crate::state::hotbar::Hotbar;
 use crate::state::identify::IdentifyState;
@@ -291,6 +295,8 @@ pub struct ClientState {
     dice_window: DiceWindowState,
     /// Internal state of the GM / DM command panel.
     commands_window: CommandsWindowState,
+    /// Internal state of the crafting commission board window.
+    commission_board_window: CommissionBoardWindowState,
     /// Internal state of the friend list window.
     friend_list_window: FriendListWindowState,
     /// Internal state of the party window.
@@ -319,6 +325,12 @@ pub struct ClientState {
     /// Account-scoped monster knowledge synchronized from Hercules.
     #[hidden_element]
     discovery: DiscoveryState,
+    /// Active boss encounter statistics and final recap.
+    #[hidden_element]
+    encounter_recap: EncounterRecapState,
+    /// Non-custodial crafting commission requests.
+    #[hidden_element]
+    commission_board: CommissionBoardState,
     /// Active quests and, for campaign hunting contracts, what they want
     /// handed in.
     quest_log: QuestLogState,
@@ -663,11 +675,14 @@ impl ClientState {
             chat_window,
             dice_window,
             commands_window,
+            commission_board_window: CommissionBoardWindowState::default(),
             bestiary_window,
             adventure_guide,
             loot_window,
             dm_campaign,
             discovery: DiscoveryState::default(),
+            encounter_recap: EncounterRecapState::default(),
+            commission_board: CommissionBoardState::default(),
             quest_log,
             friend_list_window,
             party_window,

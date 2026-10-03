@@ -500,6 +500,74 @@ def require_source(path: str, needle: str) -> None:
         raise ExportError(f"{path} no longer contains {needle!r}; review the rule text that quotes it")
 
 
+def card_socketing_rule() -> dict[str, object]:
+    require_source("src/map/pc.c", "pc_insert_card")
+    require_source("src/map/battle.c", "battle_calc_cardfix")
+    return {
+        "id": "card-socketing-and-binding",
+        "category": "Mechanics",
+        "title": "Card socketing and slot binding mechanics",
+        "summary": "Rules for inserting monster cards into slotted equipment, permanent binding, and bonus stacking.",
+        "details": [
+            "Slotted equipment contains between 1 and 4 card slots depending on the item definition.",
+            "Double-clicking a card opens the socketing interface to insert it into an eligible equipment piece with an open slot.",
+            "Permanent slot binding: under standard server rules, socketing a card binds it permanently into the item. Cards cannot be removed or extracted without specialized separation services.",
+            "Damage modifier stacking: identical percentage bonuses stack additively with each other (e.g. two 20% cards = +40%), while different modifier categories stack multiplicatively (Size × Element × Race × Boss).",
+            "Target validation: weapons, armors, shields, garments, shoes, and accessories only accept cards matching their specific equipment slot type.",
+        ],
+        "sources": [
+            {"path": "src/map/pc.c", "record": "pc_insert_card and pc_can_insert_card_into"},
+            {"path": "src/map/battle.c", "record": "battle_calc_cardfix card bonus damage calculations"},
+        ],
+    }
+
+
+def first_job_progression_rule() -> dict[str, object]:
+    require_source("src/map/pc.c", "pc_jobchange")
+    return {
+        "id": "first-job-progression",
+        "category": "Progression",
+        "title": "First Job combat archetypes and stat priorities",
+        "summary": "Core combat identities, stat investment guidance, and career paths for the 6 primary First Job classes.",
+        "details": [
+            "Swordsman (Melee Tank / Striker): Focuses on STR and VIT (or AGI for two-hand speed). Key skills: Bash, Magnum Break, Provoke, Endure, Increase HP Recovery. Advances to Knight or Crusader.",
+            "Mage (Elemental Ranged Artillery): Focuses on INT and DEX. Casts Fire, Cold, and Lightning bolts, Fire Wall, and Stone Curse. Relies on variable cast reduction and elemental advantage. Advances to Wizard or Sage.",
+            "Archer (Precision Physical Ranged): Focuses on DEX and AGI. Specializes in bows, elemental arrows, Owl's Eye, Vulture's Eye, Double Strafe, and Arrow Shower. Advances to Hunter, Bard, or Dancer.",
+            "Thief (Evasion & Rapid Melee): Focuses on AGI and STR with moderate DEX. Utilizes Double Attack, Improve Dodge, Steal, and Hiding. Advances to Assassin or Rogue.",
+            "Acolyte (Divine Support & Undead Purging): Focuses on INT, VIT, and DEX. Core foundation of party gameplay with Heal, Blessing, Increase AGI, Angelus, and Holy Light. Advances to Priest or Monk.",
+            "Merchant (Economy & Logistics): Focuses on STR, VIT, and DEX (or LUK for forging). Unique capabilities include Pushcart, Discount, Overcharge, Vending, Mammonite, and Item Appraisal. Advances to Blacksmith or Alchemist.",
+            "Job Advancement: Novices become eligible for First Job change upon reaching Job Level 10. Advancing to Second Job requires Job Level 40 minimum (Job Level 50 strongly recommended for complete skill points).",
+        ],
+        "sources": [
+            {"path": "src/map/pc.c", "record": "pc_jobchange class transition handling"},
+            {"path": "db/re/job_db.conf", "record": "First and Second Job stat allocations and skill trees"},
+        ],
+    }
+
+
+def second_job_progression_rule() -> dict[str, object]:
+    require_source("src/map/pc.c", "pc_jobchange")
+    return {
+        "id": "second-job-progression",
+        "category": "Progression",
+        "title": "Second Job specializations and combat branch paths",
+        "summary": "Combat specializations, distinctive build branches, and primary stat and skill synergies for the 12 classic Second Job classes.",
+        "details": [
+            "Knight & Crusader (Swordsman branches): Knight excels in mobile burst (Bowling Bash, Pierce, Brandish Spear, Two-Hand Quicken) with STR/AGI or STR/VIT. Crusader excels in holy defense and sacrifice (Grand Cross, Shield Charge, Holy Cross, Devotion, Auto Guard) with STR/VIT/INT.",
+            "Wizard & Sage (Mage branches): Wizard specializes in devastating area denial (Storm Gust, Meteor Storm, Lord of Vermilion, Quagmire) with high INT/DEX. Sage specializes in counter-magic and combat casting (Free Cast, Cast Cancel, Dispell, Land Protector, Endow elements).",
+            "Hunter & Bard/Dancer (Archer branches): Hunter brings long-range sustained DPS and tactical zoning (Blitz Beat, Ankle Snare, Claymore Trap, Arrow Repel) with DEX/AGI/LUK. Bard & Dancer provide party area songs and ensembles (Poem of Bragi, Service for You, Dissonance, Frost Joker) scaling with DEX/INT/VIT.",
+            "Assassin & Rogue (Thief branches): Assassin deals lethal dual-wielding and katar critical burst (Sonic Blow, Grimtooth, Cloaking, Katar Mastery) with AGI/STR/LUK. Rogue provides utility, strip combat, and skill copying (Snatch, Strip Weapon/Shield/Armor, Tunnel Drive, Plagiarism) with DEX/AGI/STR.",
+            "Priest & Monk (Acolyte branches): Priest acts as the party's essential anchor (Sanctuary, Resurrection, Magnificat, Kyrie Eleison, Gloria, Lex Aeterna, Aspersio) with INT/VIT/DEX. Monk channels divine martial arts into devastating combo strikes and burst (Triple Attack, Combo Finish, Steel Body, Asura Strike / Guillotine Fist) with STR/INT/DEX.",
+            "Blacksmith & Alchemist (Merchant branches): Blacksmith masters weapon forging and melee party buffs (Adrenaline Rush, Weapon Perfection, Overthrust, Hammer Fall) with STR/AGI or DEX/LUK. Alchemist commands potion brewing, homunculus creation, and chemical warfare (Demon Demonstration, Acid Terror, Aid Potion, Pharmacy) with INT/DEX/LUK.",
+            "Career Progression: Second Job classes unlock at Job Level 40-50, granting 49 additional skill points. They represent the core combat identities for mid-to-endgame party composition and dungeon delves.",
+        ],
+        "sources": [
+            {"path": "src/map/pc.c", "record": "pc_jobchange handles advancement from First Job to Second Job branches"},
+            {"path": "db/re/job_db.conf", "record": "Second Job stat modifiers, weapon ASPD tables, and HP/SP pools"},
+        ],
+    }
+
+
 def config_precedence_rule() -> dict[str, object]:
     root = HERCULES / "conf/map/battle.conf"
     order = [path.relative_to(HERCULES).as_posix() for path in ordered_config_files(root)]
@@ -802,6 +870,9 @@ def build() -> dict[str, object]:
             natural_recovery_rule(battle),
             progression_limits_rule(battle),
             equipment_refinement_rule(),
+            card_socketing_rule(),
+            first_job_progression_rule(),
+            second_job_progression_rule(),
             config_precedence_rule(),
             discovery_scope_rule(),
             quest_guidance_rule(),

@@ -669,6 +669,8 @@ pub enum InputEvent {
     /// Open or close the GM/DM commands window. Only works while playing.
     ToggleCommandsWindow,
     ToggleDiceWindow,
+    /// Open or close the crafting commission board window. Only works while playing.
+    ToggleCommissionBoardWindow,
     /// Open or close the player emote palette. Only works while playing.
     ToggleEmoteWindow,
     /// Open or close the quest log. Only works while playing.

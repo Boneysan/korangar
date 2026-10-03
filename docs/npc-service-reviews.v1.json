@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "source_revision": "593d20ef94f1882bd4788fb04941e03aa6917a77",
+  "source_revision": "f6974e0ad9a8d77f0dca4ebf8fda965273f91726",
   "source_worktree_dirty": false,
   "mode": "renewal",
   "reviewed_by": "Repository source review",
@@ -140,7 +140,7 @@
         "map": "nif_in",
         "x": 190,
         "y": 112,
-        "npc_id": 5557
+        "npc_id": 5598
       }
     },
     {
@@ -178,7 +178,7 @@
         "map": "izlude",
         "x": 127,
         "y": 175,
-        "npc_id": 3036
+        "npc_id": 3060
       }
     },
     {
@@ -1429,7 +1429,7 @@
         "map": "aldeba_in",
         "x": 96,
         "y": 181,
-        "npc_id": 317
+        "npc_id": 318
       }
     },
     {
@@ -1569,7 +1569,7 @@
         "map": "izlude",
         "x": 158,
         "y": 130,
-        "npc_id": 3047
+        "npc_id": 3071
       }
     },
     {

@@ -1041,4 +1041,35 @@ mod tests {
         let pneuma = skill_footprint(SkillId(25), SkillLevel(1), 0);
         assert!(pneuma.is_some(), "Pneuma telegraph footprint must exist");
     }
+
+    #[test]
+    fn effect_density_never_thins_cast_telegraph_footprints() {
+        use super::{EffectDensity, EffectSource};
+        use crate::world::level_invariant_skill_footprint;
+        use ragnarok_packets::SkillId;
+
+        // Across all densities, hostile casts and local warnings are never suppressed.
+        for density in [EffectDensity::Full, EffectDensity::Reduced, EffectDensity::Minimal] {
+            assert!(density.shows_skill_visual(EffectSource::Hostile));
+            assert!(density.shows_skill_visual(EffectSource::Local));
+        }
+
+        // Critical lethal and area hazards retain their exact multi-cell footprint.
+        let lethal_skills = [
+            SkillId(89),  // Storm Gust
+            SkillId(70),  // Sanctuary
+            SkillId(18),  // Fire Wall
+            SkillId(87),  // Ice Wall
+            SkillId(25),  // Pneuma
+            SkillId(254), // Grand Cross
+            SkillId(404), // Fog Wall
+        ];
+
+        for skill_id in lethal_skills {
+            let footprint = level_invariant_skill_footprint(skill_id, 0);
+            assert!(footprint.is_some(), "Skill {skill_id:?} must retain invariant footprint");
+            let cells = footprint.unwrap();
+            assert!(!cells.is_empty(), "Skill {skill_id:?} footprint must not be empty");
+        }
+    }
 }

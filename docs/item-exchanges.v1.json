@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "source_revision": "593d20ef94f1882bd4788fb04941e03aa6917a77",
+  "source_revision": "f6974e0ad9a8d77f0dca4ebf8fda965273f91726",
   "source_worktree_dirty": false,
   "mode": "renewal",
   "reviewed_by": "Repository source review",
@@ -17,7 +17,7 @@
         "x": 50,
         "y": 66,
         "service_role": "In-flight apple juice vendor",
-        "npc_id": 63
+        "npc_id": 64
       },
       "inputs": [
         {
@@ -78,7 +78,7 @@
         "x": 50,
         "y": 66,
         "service_role": "Airship apple-juice conversion (displayed in dialogue as Fruitz)",
-        "npc_id": 27
+        "npc_id": 28
       },
       "inputs": [
         {
@@ -141,7 +141,7 @@
         "x": 151,
         "y": 78,
         "service_role": "Costume-item crafting",
-        "npc_id": 119
+        "npc_id": 120
       },
       "inputs": [
         {
@@ -225,7 +225,7 @@
         "x": 122,
         "y": 53,
         "service_role": "Horn-collector trade",
-        "npc_id": 190
+        "npc_id": 191
       },
       "inputs": [
         {
@@ -282,7 +282,7 @@
         "x": 28,
         "y": 145,
         "service_role": "Novelty item trade",
-        "npc_id": 192
+        "npc_id": 193
       },
       "inputs": [
         {
@@ -339,7 +339,7 @@
         "x": 26,
         "y": 229,
         "service_role": "Bunny Band event crafting",
-        "npc_id": 144
+        "npc_id": 145
       },
       "inputs": [
         {
@@ -414,7 +414,7 @@
         "x": 118,
         "y": 157,
         "service_role": "Gunslinger bullet magazine and cartridge packaging",
-        "npc_id": 148
+        "npc_id": 149
       },
       "inputs": [
         {
@@ -622,7 +622,7 @@
         "x": 88,
         "y": 180,
         "service_role": "Alarm Mask crafting trade",
-        "npc_id": 247
+        "npc_id": 248
       },
       "inputs": [
         {
@@ -686,7 +686,7 @@
         "x": 152,
         "y": 166,
         "service_role": "Costume-item crafting",
-        "npc_id": 327
+        "npc_id": 328
       },
       "inputs": [
         {
@@ -818,7 +818,7 @@
         "x": 43,
         "y": 30,
         "service_role": "Cooking lesson and recipe ingredients exchange",
-        "npc_id": 6208
+        "npc_id": 6254
       },
       "inputs": [
         {
@@ -926,7 +926,7 @@
         "x": 43,
         "y": 30,
         "service_role": "Cooking lesson and recipe ingredients exchange",
-        "npc_id": 6208
+        "npc_id": 6254
       },
       "inputs": [
         {
@@ -1034,7 +1034,7 @@
         "x": 43,
         "y": 30,
         "service_role": "Cooking lesson and recipe ingredients exchange",
-        "npc_id": 6208
+        "npc_id": 6254
       },
       "inputs": [
         {
@@ -1142,7 +1142,7 @@
         "x": 43,
         "y": 30,
         "service_role": "Cooking lesson and recipe ingredients exchange",
-        "npc_id": 6208
+        "npc_id": 6254
       },
       "inputs": [
         {
@@ -1243,7 +1243,7 @@
         "x": 43,
         "y": 30,
         "service_role": "Cooking lesson and recipe ingredients exchange",
-        "npc_id": 6208
+        "npc_id": 6254
       },
       "inputs": [
         {
@@ -1351,7 +1351,7 @@
         "x": 43,
         "y": 30,
         "service_role": "Cooking lesson and recipe ingredients exchange",
-        "npc_id": 6208
+        "npc_id": 6254
       },
       "inputs": [
         {
@@ -1459,7 +1459,7 @@
         "x": 236,
         "y": 164,
         "service_role": "Costume-item crafting",
-        "npc_id": 1266
+        "npc_id": 1276
       },
       "inputs": [
         {
@@ -1543,7 +1543,7 @@
         "x": 204,
         "y": 230,
         "service_role": "Flavor-only zero-value trade",
-        "npc_id": 1350
+        "npc_id": 1360
       },
       "inputs": [
         {
@@ -1599,7 +1599,7 @@
         "x": 92,
         "y": 57,
         "service_role": "Eden 26-40 delivery turn-in",
-        "npc_id": 7963
+        "npc_id": 8024
       },
       "inputs": [
         {
@@ -1666,7 +1666,7 @@
         "x": 30,
         "y": 254,
         "service_role": "Eden 26-40 delivery turn-in",
-        "npc_id": 6336
+        "npc_id": 6382
       },
       "inputs": [
         {
@@ -1733,7 +1733,7 @@
         "x": 83,
         "y": 89,
         "service_role": "Eden 26-40 delivery turn-in",
-        "npc_id": 5749
+        "npc_id": 5792
       },
       "inputs": [
         {
@@ -1800,7 +1800,7 @@
         "x": 27,
         "y": 35,
         "service_role": "Eden Group membership mark upgrade",
-        "npc_id": 4972
+        "npc_id": 5008
       },
       "inputs": [
         {
@@ -1857,7 +1857,7 @@
         "x": 38,
         "y": 29,
         "service_role": "Einbroch blacksmith supplier and ore processor",
-        "npc_id": 1821
+        "npc_id": 1835
       },
       "inputs": [
         {
@@ -1951,7 +1951,7 @@
         "x": 46,
         "y": 164,
         "service_role": "Blacksmith 2-1 job-change weapon-delivery step; four parallel branches exist for the same step: Bismarc/Ring Pommel Saber (hugel), Krongast/Tsurugi (lighthalzen), Wickebine/Gladius (morocc), and Talpiz/Arbalest (payon)",
-        "npc_id": 2097
+        "npc_id": 2114
       },
       "inputs": [
         {
@@ -2008,7 +2008,7 @@
         "x": 144,
         "y": 166,
         "service_role": "Welding Mask crafting trade",
-        "npc_id": 2146
+        "npc_id": 2163
       },
       "inputs": [
         {
@@ -2068,7 +2068,7 @@
         "x": 110,
         "y": 172,
         "service_role": "Blacksmith anvil/tool salesman and rough ore refiner",
-        "npc_id": 2149
+        "npc_id": 2166
       },
       "inputs": [
         {
@@ -2159,7 +2159,7 @@
         "x": 30,
         "y": 71,
         "service_role": "Headset crafting",
-        "npc_id": 2153
+        "npc_id": 2170
       },
       "inputs": [
         {
@@ -2233,7 +2233,7 @@
         "x": 141,
         "y": 140,
         "service_role": "Alchemist potion crafting",
-        "npc_id": 2189
+        "npc_id": 2206
       },
       "inputs": [
         {
@@ -2333,7 +2333,7 @@
         "x": 67,
         "y": 87,
         "service_role": "Mushroom Band crafting trade",
-        "npc_id": 2120
+        "npc_id": 2137
       },
       "inputs": [
         {
@@ -2388,7 +2388,7 @@
         "x": 83,
         "y": 189,
         "service_role": "Tulip Hairpin crafting trade",
-        "npc_id": 2136
+        "npc_id": 2153
       },
       "inputs": [
         {
@@ -2469,7 +2469,7 @@
         "x": 210,
         "y": 273,
         "service_role": "Old Glast Heim instance boots crafting",
-        "npc_id": 2390
+        "npc_id": 2410
       },
       "inputs": [
         {
@@ -2527,7 +2527,7 @@
         "x": 210,
         "y": 273,
         "service_role": "Old Glast Heim instance boots upgrade",
-        "npc_id": 2390
+        "npc_id": 2410
       },
       "inputs": [
         {
@@ -2619,7 +2619,7 @@
         "x": 237,
         "y": 226,
         "service_role": "Heirloom-return flavor trade",
-        "npc_id": 2555
+        "npc_id": 2576
       },
       "inputs": [
         {
@@ -2678,7 +2678,7 @@
         "x": 149,
         "y": 189,
         "service_role": "Fairy Flower crafting",
-        "npc_id": 2568
+        "npc_id": 2589
       },
       "inputs": [
         {
@@ -2762,7 +2762,7 @@
         "x": 168,
         "y": 183,
         "service_role": "Blacksmith 2-1 job-change weapon delivery",
-        "npc_id": 2708
+        "npc_id": 2729
       },
       "inputs": [
         {
@@ -2818,7 +2818,7 @@
         "x": 155,
         "y": 132,
         "service_role": "Novice Training Ground stone refine (one branch of a longer dialogue tree; other branches relate to unreviewed quest 5155 content)",
-        "npc_id": 3042
+        "npc_id": 3066
       },
       "inputs": [
         {
@@ -2897,7 +2897,7 @@
         "x": 214,
         "y": 36,
         "service_role": "Rebellion job-line firearm crafting, gated behind quest 12342",
-        "npc_id": 3316
+        "npc_id": 3340
       },
       "inputs": [
         {
@@ -2964,7 +2964,7 @@
         "x": 276,
         "y": 281,
         "service_role": "Necktie crafting",
-        "npc_id": 3865
+        "npc_id": 3899
       },
       "inputs": [
         {
@@ -3041,7 +3041,7 @@
         "x": 281,
         "y": 24,
         "service_role": "Shared stone-refine service, also offered as Dietrich (prt_in), Hakhim (payon), Abdula (morocc_in), Xenophon Zolotas (alberta_in), Delight (yuno_in01), and Matestein (ein_in01), all calling the same orimain function",
-        "npc_id": 3867
+        "npc_id": 3901
       },
       "inputs": [
         {
@@ -3137,7 +3137,7 @@
         "x": 209,
         "y": 80,
         "service_role": "Blacksmith 2-1 job-change weapon delivery",
-        "npc_id": 4034
+        "npc_id": 4068
       },
       "inputs": [
         {
@@ -3193,7 +3193,7 @@
         "x": 43,
         "y": 147,
         "service_role": "Gunpowder crafting",
-        "npc_id": 4118
+        "npc_id": 4152
       },
       "inputs": [
         {
@@ -3263,7 +3263,7 @@
         "x": 238,
         "y": 198,
         "service_role": "Tikbalang-taming item crafting",
-        "npc_id": 4237
+        "npc_id": 4271
       },
       "inputs": [
         {
@@ -3320,7 +3320,7 @@
         "x": 133,
         "y": 125,
         "service_role": "Reverse of the malangdo_1st_rate_point_fill_bucket water-carrying pair",
-        "npc_id": 4290
+        "npc_id": 4324
       },
       "inputs": [
         {
@@ -3378,7 +3378,7 @@
         "x": 246,
         "y": 184,
         "service_role": "Bucket-filling water source",
-        "npc_id": 4387
+        "npc_id": 4421
       },
       "inputs": [
         {
@@ -3435,7 +3435,7 @@
         "x": 137,
         "y": 200,
         "service_role": "Fish-specimen turn-in",
-        "npc_id": 4432
+        "npc_id": 4466
       },
       "inputs": [
         {
@@ -3492,7 +3492,7 @@
         "x": 80,
         "y": 248,
         "service_role": "Source-proven single-branch item exchange",
-        "npc_id": 4516
+        "npc_id": 4550
       },
       "inputs": [
         {
@@ -3549,7 +3549,7 @@
         "x": 52,
         "y": 148,
         "service_role": "Source-proven single-branch item exchange",
-        "npc_id": 4640
+        "npc_id": 4674
       },
       "inputs": [
         {
@@ -3605,7 +3605,7 @@
         "x": 30,
         "y": 168,
         "service_role": "Source-proven single-branch item exchange",
-        "npc_id": 4653
+        "npc_id": 4687
       },
       "inputs": [
         {
@@ -3662,7 +3662,7 @@
         "x": 160,
         "y": 298,
         "service_role": "Source-proven single-branch item exchange",
-        "npc_id": 4660
+        "npc_id": 4694
       },
       "inputs": [
         {
@@ -3719,7 +3719,7 @@
         "x": 41,
         "y": 169,
         "service_role": "Energy Crystal headgear donation",
-        "npc_id": 4970
+        "npc_id": 5006
       },
       "inputs": [
         {
@@ -3898,7 +3898,7 @@
         "x": 118,
         "y": 176,
         "service_role": "Novelty item crafting",
-        "npc_id": 5021
+        "npc_id": 5057
       },
       "inputs": [
         {
@@ -3965,7 +3965,7 @@
         "x": 91,
         "y": 150,
         "service_role": "Mage guild potion-bottling service",
-        "npc_id": 5055
+        "npc_id": 5092
       },
       "inputs": [
         {
@@ -4027,7 +4027,7 @@
         "x": 113,
         "y": 181,
         "service_role": "MacMillan's Workshop novelty crafting",
-        "npc_id": 5072
+        "npc_id": 5109
       },
       "inputs": [
         {
@@ -4094,7 +4094,7 @@
         "x": 88,
         "y": 89,
         "service_role": "Mora relic and coin exchange",
-        "npc_id": 5157
+        "npc_id": 5194
       },
       "inputs": [
         {
@@ -4281,7 +4281,7 @@
         "x": 88,
         "y": 89,
         "service_role": "Reverse direction of the reviewed Mora relic exchange (mora_keeper_relic_exchange): trades a previously obtained relic ring back for Mora Coins instead of coins for a relic",
-        "npc_id": 5157
+        "npc_id": 5194
       },
       "inputs": [
         {
@@ -4348,7 +4348,7 @@
         "x": 88,
         "y": 89,
         "service_role": "Mora relic and coin exchange",
-        "npc_id": 5157
+        "npc_id": 5194
       },
       "inputs": [
         {
@@ -4437,7 +4437,7 @@
         "x": 105,
         "y": 176,
         "service_role": "Mora coin shop",
-        "npc_id": 5164
+        "npc_id": 5201
       },
       "inputs": [
         {
@@ -4494,7 +4494,7 @@
         "x": 27,
         "y": 112,
         "service_role": "Blacksmith 2-1 job-change weapon delivery",
-        "npc_id": 5270
+        "npc_id": 5307
       },
       "inputs": [
         {
@@ -4550,7 +4550,7 @@
         "x": 208,
         "y": 182,
         "service_role": "Acorn-for-gem gambling",
-        "npc_id": 5350
+        "npc_id": 5387
       },
       "inputs": [
         {
@@ -4825,7 +4825,7 @@
         "x": 67,
         "y": 45,
         "service_role": "Monster Race single-race prize booth",
-        "npc_id": 5672
+        "npc_id": 5715
       },
       "inputs": [
         {
@@ -4881,7 +4881,7 @@
         "x": 67,
         "y": 45,
         "service_role": "Monster Race prize redemption",
-        "npc_id": 5681
+        "npc_id": 5724
       },
       "inputs": [
         {
@@ -4939,7 +4939,7 @@
         "x": 122,
         "y": 100,
         "service_role": "Mage guild potion-bottling service (Payon branch of the same mage_solution.txt pattern as Ponka-Hontas)",
-        "npc_id": 5692
+        "npc_id": 5735
       },
       "inputs": [
         {
@@ -5001,7 +5001,7 @@
         "x": 48,
         "y": 84,
         "service_role": "Novelty headgear trade",
-        "npc_id": 5711
+        "npc_id": 5754
       },
       "inputs": [
         {
@@ -5060,7 +5060,7 @@
         "x": 99,
         "y": 72,
         "service_role": "Heirloom-gift flavor trade",
-        "npc_id": 5911
+        "npc_id": 5954
       },
       "inputs": [
         {
@@ -5117,7 +5117,7 @@
         "x": 5,
         "y": 134,
         "service_role": "Arrow Quiver packaging service",
-        "npc_id": 5913
+        "npc_id": 5956
       },
       "inputs": [
         {
@@ -5411,7 +5411,7 @@
         "x": 18,
         "y": 10,
         "service_role": "Ear Muffs trade",
-        "npc_id": 5914
+        "npc_id": 5957
       },
       "inputs": [
         {
@@ -5484,7 +5484,7 @@
         "x": 25,
         "y": 71,
         "service_role": "Ora Ora collection",
-        "npc_id": 5941
+        "npc_id": 5984
       },
       "inputs": [
         {
@@ -5542,7 +5542,7 @@
         "x": 188,
         "y": 146,
         "service_role": "Fruit juice processor",
-        "npc_id": 5974
+        "npc_id": 6017
       },
       "inputs": [
         {
@@ -5679,7 +5679,7 @@
         "x": 91,
         "y": 77,
         "service_role": "Thief-guild crafting",
-        "npc_id": 5834
+        "npc_id": 5877
       },
       "inputs": [
         {
@@ -5749,7 +5749,7 @@
         "x": 214,
         "y": 79,
         "service_role": "Blacksmith 2-1 job-change weapon delivery",
-        "npc_id": 5897
+        "npc_id": 5940
       },
       "inputs": [
         {
@@ -5805,7 +5805,7 @@
         "x": 218,
         "y": 218,
         "service_role": "Wanderer pet-food conversion",
-        "npc_id": 6102
+        "npc_id": 6147
       },
       "inputs": [
         {
@@ -5869,7 +5869,7 @@
         "x": 44,
         "y": 151,
         "service_role": "God-item crafting",
-        "npc_id": 6264
+        "npc_id": 6310
       },
       "inputs": [
         {
@@ -5950,7 +5950,7 @@
         "x": 87,
         "y": 92,
         "service_role": "Weapon crafting",
-        "npc_id": 6522
+        "npc_id": 6568
       },
       "inputs": [
         {
@@ -6005,7 +6005,7 @@
         "x": 38,
         "y": 108,
         "service_role": "Ph.D Hat trade",
-        "npc_id": 6527
+        "npc_id": 6573
       },
       "inputs": [
         {
@@ -6081,7 +6081,7 @@
         "x": 28,
         "y": 260,
         "service_role": "Acolyte job-quest letter delivery",
-        "npc_id": 6688
+        "npc_id": 6734
       },
       "inputs": [
         {
@@ -6141,7 +6141,7 @@
         "x": 21,
         "y": 72,
         "service_role": "Ninja armor crafting",
-        "npc_id": 6970
+        "npc_id": 7017
       },
       "inputs": [
         {
@@ -6269,7 +6269,7 @@
         "x": 23,
         "y": 70,
         "service_role": "Ninja weapon crafting",
-        "npc_id": 6971
+        "npc_id": 7018
       },
       "inputs": [
         {
@@ -6374,7 +6374,7 @@
         "x": 170,
         "y": 46,
         "service_role": "Rachel temple lottery redemption",
-        "npc_id": 7171
+        "npc_id": 7218
       },
       "inputs": [
         {
@@ -6607,7 +6607,7 @@
         "x": 139,
         "y": 65,
         "service_role": "Source-proven single-branch item exchange",
-        "npc_id": 7409
+        "npc_id": 7464
       },
       "inputs": [
         {
@@ -6664,7 +6664,7 @@
         "x": 60,
         "y": 231,
         "service_role": "Warlock equipment replacement",
-        "npc_id": 7421
+        "npc_id": 7476
       },
       "inputs": [
         {
@@ -6740,7 +6740,7 @@
         "x": 49,
         "y": 65,
         "service_role": "Source-proven single-branch item exchange",
-        "npc_id": 7516
+        "npc_id": 7571
       },
       "inputs": [
         {
@@ -6796,7 +6796,7 @@
         "x": 90,
         "y": 65,
         "service_role": "Source-proven single-branch item exchange",
-        "npc_id": 7517
+        "npc_id": 7572
       },
       "inputs": [
         {
@@ -6852,7 +6852,7 @@
         "x": 90,
         "y": 153,
         "service_role": "Source-proven single-branch item exchange",
-        "npc_id": 7514
+        "npc_id": 7569
       },
       "inputs": [
         {
@@ -6908,7 +6908,7 @@
         "x": 49,
         "y": 153,
         "service_role": "Source-proven single-branch item exchange",
-        "npc_id": 7515
+        "npc_id": 7570
       },
       "inputs": [
         {
@@ -6964,7 +6964,7 @@
         "x": 89,
         "y": 170,
         "service_role": "Instrument crafting",
-        "npc_id": 7623
+        "npc_id": 7679
       },
       "inputs": [
         {
@@ -7019,7 +7019,7 @@
         "x": 59,
         "y": 243,
         "service_role": "Meat-for-materials trade",
-        "npc_id": 7745
+        "npc_id": 7801
       },
       "inputs": [
         {
@@ -7099,7 +7099,7 @@
         "x": 115,
         "y": 297,
         "service_role": "Festive item crafting machine",
-        "npc_id": 7945
+        "npc_id": 8006
       },
       "inputs": [
         {
@@ -7277,7 +7277,7 @@
         "x": 179,
         "y": 174,
         "service_role": "Two-handed weapon crafting",
-        "npc_id": 8016
+        "npc_id": 8078
       },
       "inputs": [
         {

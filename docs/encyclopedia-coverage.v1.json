@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "source_revision": "593d20ef94f1882bd4788fb04941e03aa6917a77",
+  "source_revision": "f6974e0ad9a8d77f0dca4ebf8fda965273f91726",
   "mode": "renewal",
   "evidence_states": {
     "verified": "Source or reviewed control flow establishes this claim for the exported server revision.",
@@ -144,7 +144,7 @@
         "basis": "quest records with at least one exported hunt target"
       },
       "hunt_target_rows": 462,
-      "npc_stage_relations": 1345,
+      "npc_stage_relations": 1329,
       "quests_with_reviewed_flow": {
         "observed": 124,
         "total": 3172,
@@ -152,7 +152,7 @@
       },
       "reviewed_npc_stage_relations": {
         "observed": 14,
-        "total": 1345,
+        "total": 1329,
         "basis": "NPC-stage relations with an authored reviewed role"
       },
       "verified_npc_rewards": 6,
@@ -169,10 +169,10 @@
       "nearby_item_reward_clues": 41
     },
     "npcs_and_services": {
-      "declarations": 8348,
+      "declarations": 8413,
       "map_known_declarations": {
-        "observed": 8348,
-        "total": 8348,
+        "observed": 8413,
+        "total": 8413,
         "basis": "declarations whose map identifier resolves in the static map index"
       },
       "literal_shop_offers": 1854,

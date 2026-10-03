@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "source_revision": "593d20ef94f1882bd4788fb04941e03aa6917a77",
+  "source_revision": "f6974e0ad9a8d77f0dca4ebf8fda965273f91726",
   "source_worktree_dirty": false,
   "mode": "renewal",
   "sources": [
@@ -13,7 +13,7 @@
     "npc/re/scripts_main.conf (loaded shop source manifest)"
   ],
   "shop_coverage": {
-    "loaded_script_files": 653,
+    "loaded_script_files": 657,
     "literal_shop_npcs_scanned": 235,
     "literal_shop_offers": 1854,
     "sellitem_commands_in_loaded_scripts": 1845,

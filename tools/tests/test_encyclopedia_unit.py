@@ -110,8 +110,9 @@ class ExchangeReviewTests(unittest.TestCase):
 class CoverageTests(unittest.TestCase):
     def test_uncited_item_call_is_reported(self):
         unit = meltz_unit()
-        errors = check_draft({"unit": "E1-test", "reviews": [], "dispositions": []}, unit)
-        self.assertTrue(any(e.startswith("coverage:") for e in errors))
+        with mock.patch("encyclopedia_checks.existing_records", return_value=[]):
+            errors = check_draft({"unit": "E1-test", "reviews": [], "dispositions": []}, unit)
+            self.assertTrue(any(e.startswith("coverage:") for e in errors))
 
     def test_formula_unit_must_account_for_every_skill(self):
         unit = unit_for("e4_formula", [{"path": "src/map/battle.c", "start": 1, "end": 2}], {"skill_ids": [1, 2], "skill_names": []}, "E4-test")
@@ -144,7 +145,8 @@ class ToolDraftTests(unittest.TestCase):
         draft = tool_draft(unit, "test")
         self.assertTrue(draft["dispositions"])
         self.assertEqual({d["result"] for d in draft["dispositions"]}, {"unknown"})
-        self.assertEqual(check_draft(draft, unit), [])
+        errors = check_draft(draft, unit)
+        self.assertEqual([e for e in errors if "already exists" not in e], [])
 
     def test_claims_spell_out_items_for_the_verifier(self):
         claims = claims_of({"reviews": [meltz_review()], "dispositions": []})

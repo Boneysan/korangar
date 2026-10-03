@@ -1,6 +1,6 @@
 {
   "coverage": {
-    "active_script_files_scanned": 653,
+    "active_script_files_scanned": 657,
     "authored_services": 6,
     "coordinate_validation": "map names validated against db/map_index.txt; map cache unavailable to this generator",
     "directed_edges": 3189,
@@ -57412,8 +57412,8 @@
       }
     }
   ],
-  "hercules_revision": "593d20ef94f1882bd4788fb04941e03aa6917a77",
-  "hercules_worktree_dirty": true,
+  "hercules_revision": "f6974e0ad9a8d77f0dca4ebf8fda965273f91726",
+  "hercules_worktree_dirty": false,
   "maps": [
     "abbey01",
     "abbey02",

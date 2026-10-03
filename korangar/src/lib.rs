@@ -5140,6 +5140,22 @@ impl Client {
                 NetworkEvent::RemoveEntity { entity_id, reason } => {
                     // If the motive is dead, you need to set the player to dead.
                     if reason == DisappearanceReason::Died {
+                        if let Some(recap) = self
+                            .client_state
+                            .follow_mut(client_state().encounter_recap())
+                            .finish_encounter(entity_id, client_tick)
+                        {
+                            self.client_state.follow_mut(client_state().toasts()).push(
+                                "boss-encounter-recap",
+                                format!(
+                                    "Defeated {}! Dealt {} dmg in {:.1}s",
+                                    recap.boss_name,
+                                    recap.damage_dealt,
+                                    (recap.duration_ms as f32) / 1000.0
+                                ),
+                                crate::state::toasts::ToastPriority::High,
+                            );
+                        }
                         if let Some(entity) = self
                             .client_state
                             .follow_mut(client_state().entities())
@@ -5398,6 +5414,7 @@ impl Client {
                     self.client_state.follow_mut(client_state().status_effects()).clear();
                     self.client_state.follow_mut(client_state().skill_cooldowns()).clear();
                     self.client_state.follow_mut(client_state().toasts()).clear();
+                    self.client_state.follow_mut(client_state().encounter_recap()).clear_active();
                     self.client_state.follow_mut(client_state().party_state()).clear_target_markers();
                     self.audio_cue_limiter.clear();
                     // A respawn-to-save-point (die → Respawn) arrives as a map
@@ -5562,6 +5579,18 @@ impl Client {
                     let player_id = self.client_state.try_follow(this_entity()).map(|player| player.get_entity_id());
                     if player_id.is_some_and(|player_id| player_id == source_entity_id || player_id == destination_entity_id) {
                         self.interface.note_player_combat();
+                    }
+                    if let Some(player_id) = player_id {
+                        let amount = damage_amount.unwrap_or(0) as u32;
+                        if source_entity_id == player_id {
+                            self.client_state
+                                .follow_mut(client_state().encounter_recap())
+                                .record_damage_dealt(destination_entity_id, amount);
+                        } else if destination_entity_id == player_id {
+                            self.client_state
+                                .follow_mut(client_state().encounter_recap())
+                                .record_damage_taken(source_entity_id, amount);
+                        }
                     }
                     if let Some(source_entity) = self
                         .client_state
@@ -7502,6 +7531,9 @@ impl Client {
                             .map(Entity::get_position)
                     {
                         self.play_audio_cue(crate::state::audio_cues::AudioCue::Interrupt, Some(position), client_tick);
+                        self.client_state
+                            .follow_mut(client_state().encounter_recap())
+                            .record_cast_interrupted(source_entity_id);
                     }
                     if let Some(source_entity_id) = source_entity_id
                         && let Some(entity) = self
@@ -8799,7 +8831,17 @@ impl Client {
         self.refresh_monster_target_summary();
         let is_boss = *self.client_state.follow(client_state().targeted_monster_is_boss());
         match target {
-            Some(_) if is_boss => {
+            Some(target_id) if is_boss => {
+                let boss_name = self
+                    .client_state
+                    .follow(client_state().entities())
+                    .iter()
+                    .find(|e| e.get_entity_id() == target_id)
+                    .and_then(|e| e.get_details().map(|d| d.split('#').next().unwrap_or(d).to_string()))
+                    .unwrap_or_else(|| "Boss".to_string());
+                self.client_state
+                    .follow_mut(client_state().encounter_recap())
+                    .start_or_continue_encounter(target_id, &boss_name, self.last_client_tick);
                 self.interface.close_window_with_class(WindowClass::MonsterTarget);
                 self.interface.open_window(BossTargetWindow);
             }
@@ -9581,6 +9623,7 @@ impl Client {
                 InputEvent::CycleMonsterTarget { reverse } => self.cycle_monster_target(reverse),
                 InputEvent::CyclePartyTarget => self.cycle_party_target(),
                 InputEvent::Escape => {
+                    self.interface.unfocus();
                     if self.pending_skill.is_some() {
                         self.pending_skill = None;
                         *self.client_state.follow_mut(client_state().buffered_action()) = None;
@@ -9952,6 +9995,67 @@ impl Client {
                     // Sit/stand toggle — works from chat when Insert is awkward under WSL.
                     if matches!(text.as_str(), "/sit" | "/stand") {
                         toggle_sit = true;
+                        continue;
+                    }
+
+                    // Crafting Commission Board (F31, Decision D7 - non-custodial).
+                    if text.as_str() == "/commission" || text.starts_with("/commission ") {
+                        let mut words = text.split_whitespace();
+                        let _cmd = words.next();
+                        let subcmd = words.next().unwrap_or("board");
+                        let chat = |state: &mut State<ClientState>, line: String| {
+                            state
+                                .follow_mut(client_state().chat_messages())
+                                .push(ChatMessage::new(line, MessageColor::Information));
+                        };
+
+                        match subcmd {
+                            "board" | "window" | "open" => {
+                                if self.map.is_some() {
+                                    match self.interface.is_window_with_class_open(WindowClass::CommissionBoard) {
+                                        true => self.interface.close_window_with_class(WindowClass::CommissionBoard),
+                                        false => self.interface.open_window(CommissionBoardWindow::new(client_state().commission_board_window())),
+                                    }
+                                }
+                            }
+                            "list" => {
+                                let list = self.client_state.follow(client_state().commission_board()).format_list();
+                                chat(&mut self.client_state, list);
+                            }
+                            "post" => {
+                                let item_name = words.next().unwrap_or("");
+                                if item_name.is_empty() {
+                                    chat(&mut self.client_state, "Usage: /commission post <item_name> [zeny_fee]".to_string());
+                                } else {
+                                    let fee: u32 = words.next().and_then(|w| w.parse().ok()).unwrap_or(0);
+                                    let player_name = self.client_state.follow(client_state().player_name()).to_owned();
+                                    let id = self.client_state.follow_mut(client_state().commission_board()).post_request(
+                                        &player_name,
+                                        ItemId(0),
+                                        item_name,
+                                        "Negotiated via peer trade",
+                                        0,
+                                        fee,
+                                    );
+                                    chat(&mut self.client_state, format!("Posted commission request #{id} for {item_name} (Fee: {fee}z). Reminder: Non-custodial, trade items directly."));
+                                }
+                            }
+                            "cancel" => {
+                                let id_opt: Option<u32> = words.next().and_then(|w| w.parse().ok());
+                                if let Some(id) = id_opt {
+                                    let player_name = self.client_state.follow(client_state().player_name()).to_owned();
+                                    match self.client_state.follow_mut(client_state().commission_board()).cancel_request(id, &player_name) {
+                                        Ok(()) => chat(&mut self.client_state, format!("Cancelled commission request #{id}.")),
+                                        Err(err) => chat(&mut self.client_state, format!("Cannot cancel commission #{id}: {err}")),
+                                    }
+                                } else {
+                                    chat(&mut self.client_state, "Usage: /commission cancel <request_id>".to_string());
+                                }
+                            }
+                            _ => {
+                                chat(&mut self.client_state, "Usage: /commission <board|list|post <item> [fee]|cancel <id>>".to_string());
+                            }
+                        }
                         continue;
                     }
 
@@ -11947,6 +12051,14 @@ impl Client {
                         match self.interface.is_window_with_class_open(WindowClass::Dice) {
                             true => self.interface.close_window_with_class(WindowClass::Dice),
                             false => self.interface.open_window(DiceWindow::new(client_state().dice_window())),
+                        }
+                    }
+                }
+                InputEvent::ToggleCommissionBoardWindow => {
+                    if self.map.is_some() {
+                        match self.interface.is_window_with_class_open(WindowClass::CommissionBoard) {
+                            true => self.interface.close_window_with_class(WindowClass::CommissionBoard),
+                            false => self.interface.open_window(CommissionBoardWindow::new(client_state().commission_board_window())),
                         }
                     }
                 }
