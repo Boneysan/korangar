@@ -12,8 +12,9 @@
 
 use crate::world::library::skill_element_name;
 
-// A verbatim copy of Hercules `db/re/attr_fix.conf`: the client must build without
-// a sibling Hercules checkout (CI). `tools/audits/generated-drift.sh` keeps it in sync.
+// A verbatim copy of Hercules `db/re/attr_fix.conf`: the client must build
+// without a sibling Hercules checkout (CI). `tools/audits/generated-drift.sh`
+// keeps it in sync.
 const ATTR_FIX: &str = include_str!("../../data/attr_fix.conf");
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
