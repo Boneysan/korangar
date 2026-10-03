@@ -1,9 +1,12 @@
+pub mod audio_cues;
 pub mod build_planner;
 #[cfg(feature = "debug")]
 pub mod cache_statistics;
 pub mod character_creation;
 pub mod character_slots;
 pub mod discovery;
+pub mod dm_journal;
+pub mod equipment_plan;
 pub mod friends;
 pub mod hotbar;
 pub mod identify;
@@ -13,6 +16,7 @@ pub mod localization;
 pub mod minimap;
 pub mod party;
 pub mod quests;
+pub mod recovery;
 pub mod skill_cooldowns;
 pub mod skills;
 pub mod status_effects;
@@ -90,6 +94,7 @@ use crate::state::build_planner::BuildPlannerState;
 use crate::state::character_creation::CharacterCreation;
 use crate::state::character_slots::CharacterSlots;
 use crate::state::discovery::DiscoveryState;
+use crate::state::dm_journal::DmJournalState;
 use crate::state::friends::FriendEntry;
 use crate::state::hotbar::Hotbar;
 use crate::state::identify::IdentifyState;
@@ -98,6 +103,7 @@ use crate::state::inventory::Inventory;
 use crate::state::minimap::MinimapState;
 use crate::state::party::PartyState;
 use crate::state::quests::QuestLogState;
+use crate::state::recovery::RecoveryState;
 use crate::state::skill_cooldowns::SkillCooldowns;
 use crate::state::skills::SkillTree;
 use crate::state::status_effects::StatusEffects;
@@ -403,6 +409,12 @@ pub struct ClientState {
     /// Short on-screen notices. Chat history is still the durable copy.
     #[hidden_element]
     toasts: ToastQueue,
+    /// Why the character is, or is not, regenerating (fork packet 0x0EFD).
+    #[hidden_element]
+    recovery: RecoveryState,
+    /// Campaign state the server reports as `[DMJ]` lines.
+    #[hidden_element]
+    dm_journal: DmJournalState,
     /// Current-map minimap texture and dimensions.
     #[hidden_element]
     minimap: MinimapState,
@@ -591,6 +603,8 @@ impl ClientState {
             let status_effects = StatusEffects::default();
             let skill_cooldowns = SkillCooldowns::default();
             let toasts = ToastQueue::default();
+            let recovery = RecoveryState::default();
+            let dm_journal = DmJournalState::default();
             let minimap = MinimapState::default();
             let build_planner = BuildPlannerState::default();
             let skill_tree_window = SkillTreeWindowState::default();
@@ -688,6 +702,8 @@ impl ClientState {
             status_effects,
             skill_cooldowns,
             toasts,
+            recovery,
+            dm_journal,
             minimap,
             build_planner,
             character_servers,

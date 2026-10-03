@@ -213,7 +213,7 @@
         "total": 1,
         "basis": "runtime map-flag call groups whose loaded-script control flow and conditions were reviewed; live map state is not observed"
       },
-      "server_rule_entries": 25,
+      "server_rule_entries": 29,
       "element_matchup_tables": {
         "observed": 10,
         "total": 10,

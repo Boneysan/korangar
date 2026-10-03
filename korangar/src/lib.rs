@@ -136,7 +136,7 @@ use crate::settings::{
     IN_GAME_THEMES_PATH, LightingMode, MENU_THEMES_PATH, ServiceSettingsPathExt, WORLD_THEMES_PATH, should_render_ground_item,
 };
 use crate::state::character_creation::{CharacterCreationPathExt, CharacterSex, HairStyle, StatSpread};
-use crate::state::quests::{ClientHuntingGoalEntry, QuestEntry, QuestHuntObjectiveEntry, QuestRequirementEntry};
+use crate::state::quests::{ClientHuntingGoalEntry, QuestEntry, QuestHuntObjectiveEntry, QuestLocationEntry, QuestRequirementEntry};
 use crate::state::skills::{LearnedSkill, SkillTreeLayoutPathExt, bring_skill_to_level};
 use crate::state::theme::{InterfaceTheme, InterfaceThemeType, WorldTheme};
 use crate::state::{BufferedAction, SelectedServicePath};
@@ -2004,6 +2004,8 @@ fn slash_command_usage(command: &str) -> Option<&'static str> {
         "/deleteset" => "Usage: /deleteset <name>",
         "/loot" => "Usage: /loot <all|gear|cards>",
         "/wishlist" => "Usage: /wishlist <item_id> (or /wishlist clear)",
+        "/mark" => "Usage: /mark <focus|attack|cc|assist|clear>  (marks your selected monster)",
+        "/goal" => "Usage: /goal add <text>, /goal done <number>, /goal clear, /goal list",
         _ => return None,
     })
 }
@@ -2154,6 +2156,7 @@ pub struct Client {
     tile_texture_set: Arc<TextureSet>,
 
     main_menu_click_sound_effect: SoundEffectKey,
+    audio_cue_limiter: crate::state::audio_cues::AudioCueLimiter,
 
     #[cfg(feature = "debug")]
     networking_system: NetworkingSystem<PacketHistoryCallback>,
@@ -2295,6 +2298,58 @@ impl Client {
                 self.texture_loader.create_color("korangar://flat-tile", image, true)
             })
             .clone()
+    }
+
+    /// Classify who produced a skill visual for the effect-density setting.
+    fn effect_source(&self, source_entity_id: EntityId) -> crate::settings::EffectSource {
+        use crate::settings::EffectSource;
+
+        if self.client_state.try_follow(this_entity()).map(Entity::get_entity_id) == Some(source_entity_id) {
+            return EffectSource::Local;
+        }
+        if self
+            .client_state
+            .follow(client_state().entities())
+            .iter()
+            .any(|entity| entity.get_entity_id() == source_entity_id && entity.get_entity_type() == EntityType::Monster)
+        {
+            return EffectSource::Hostile;
+        }
+        if self
+            .client_state
+            .follow(client_state().party_state())
+            .members()
+            .iter()
+            .any(|member| member.account_id().0 == source_entity_id.0)
+        {
+            return EffectSource::Party;
+        }
+        EffectSource::Bystander
+    }
+
+    /// Whether a cosmetic skill visual from `source_entity_id` should be drawn
+    /// under the current effect density. Telegraphs never call this.
+    fn skill_visual_allowed(&self, source_entity_id: EntityId) -> bool {
+        self.client_state
+            .follow(client_state().game_settings())
+            .effect_density
+            .shows_skill_visual(self.effect_source(source_entity_id))
+    }
+
+    /// Play an optional audio cue if the setting is on and the limiter allows
+    /// it. `position` makes the cue spatial (a caster's location); `None`
+    /// plays flat.
+    fn play_audio_cue(&mut self, cue: crate::state::audio_cues::AudioCue, position: Option<Point3<f32>>, now: ClientTick) {
+        const CUE_RANGE: f32 = 250.0;
+
+        if !*self.client_state.follow(client_state().game_settings().audio_cues()) || !self.audio_cue_limiter.allow(cue, now.0) {
+            return;
+        }
+        let key = self.audio_engine.load(cue.path());
+        match position {
+            Some(position) => self.audio_engine.play_spatial_sound_effect(key, position, CUE_RANGE),
+            None => self.audio_engine.play_sound_effect(key),
+        }
     }
 
     fn play_spatial_skill_sound(&self, path: &'static str, position: Point3<f32>) {
@@ -2471,6 +2526,9 @@ impl Client {
     }
 
     fn spawn_successful_caster_skill_effect(&mut self, skill_id: SkillId, source_entity_id: EntityId, position: Point3<f32>) {
+        if !self.skill_visual_allowed(source_entity_id) {
+            return;
+        }
         let recipe = skill_presentation_recipe(skill_id);
         if recipe.successful_caster_effect.is_none() && recipe.successful_caster_sounds.is_empty() {
             return;
@@ -2536,6 +2594,9 @@ impl Client {
         impact_delay_ms: u32,
         client_tick: ClientTick,
     ) {
+        if !self.skill_visual_allowed(source_entity_id) {
+            return;
+        }
         let recipe = skill_presentation_recipe(skill_id);
         let has_projectile = recipe.projectile.is_some();
         if recipe.damage_caster_effect.is_none() && !has_projectile && recipe.damage_caster_sounds.is_empty() {
@@ -3209,6 +3270,9 @@ impl Client {
         destination_entity_id: EntityId,
         target_position: Point3<f32>,
     ) {
+        if !self.skill_visual_allowed(source_entity_id) {
+            return;
+        }
         let recipe = skill_presentation_recipe(skill_id);
         let target_light_id = PointLightId::new(destination_entity_id.0 ^ u32::from(skill_id.0));
         let neutral = Color::rgb_u8(235, 220, 180);
@@ -3799,6 +3863,7 @@ impl Client {
             #[cfg(feature = "debug")]
             tile_texture_set,
             main_menu_click_sound_effect,
+            audio_cue_limiter: Default::default(),
             networking_system,
             audio_engine,
             active_interface_settings,
@@ -4497,6 +4562,9 @@ impl Client {
         self.client_state
             .follow_mut(client_state().party_state())
             .tick_ready_check(client_tick);
+        self.client_state
+            .follow_mut(client_state().party_state())
+            .tick_target_markers(client_tick);
         self.networking_system.get_events(&mut self.network_event_buffer);
 
         // Deferred: cannot call &mut self helpers while draining network_event_buffer.
@@ -4956,6 +5024,8 @@ impl Client {
                         client_state().skill_cooldowns(),
                         client_state().toasts(),
                         client_state().quest_log(),
+                        client_state().party_state(),
+                        client_state().recovery(),
                     ));
                     self.interface
                         .open_window(PartyWindow::new(client_state().party_window(), client_state().party_state()));
@@ -5198,7 +5268,7 @@ impl Client {
                             } else {
                                 format!("★ Wishlist Item Drop: {item_name}!")
                             };
-                            self.audio_engine.play_sound_effect(self.main_menu_click_sound_effect);
+                            self.play_audio_cue(crate::state::audio_cues::AudioCue::CardDrop, None, client_tick);
                             self.client_state.follow_mut(client_state().toasts()).push(
                                 format!("ground_drop_{raw_id}"),
                                 alert_msg.clone(),
@@ -5328,6 +5398,8 @@ impl Client {
                     self.client_state.follow_mut(client_state().status_effects()).clear();
                     self.client_state.follow_mut(client_state().skill_cooldowns()).clear();
                     self.client_state.follow_mut(client_state().toasts()).clear();
+                    self.client_state.follow_mut(client_state().party_state()).clear_target_markers();
+                    self.audio_cue_limiter.clear();
                     // A respawn-to-save-point (die → Respawn) arrives as a map
                     // change, and the local player survives the truncate(1)
                     // above carrying its death animation. Revive it to idle so
@@ -5364,7 +5436,12 @@ impl Client {
                             .client_state
                             .follow_mut(client_state().discovery())
                             .receive_server_line(&text, local_account_id);
-                    if !discovery_packet {
+                    // Campaign state arrives as `[DMJ]` JSON lines from the same server-only
+                    // channel. Every such line is kept out of chat, understood or not.
+                    let dmj_packet = !discovery_packet
+                        && matches!(color, MessageColor::Server)
+                        && self.client_state.follow_mut(client_state().dm_journal()).receive_server_line(&text);
+                    if !discovery_packet && !dmj_packet {
                         self.client_state
                             .follow_mut(client_state().chat_messages())
                             .push(ChatMessage::new(text, color));
@@ -5979,6 +6056,7 @@ impl Client {
                         .map(|quest| quest.name().to_owned())
                         .unwrap_or_else(|| format!("Quest {quest_id}"));
                     let message = format!("Quest ended: {quest_name}");
+                    self.play_audio_cue(crate::state::audio_cues::AudioCue::QuestComplete, None, client_tick);
                     self.client_state.follow_mut(client_state().toasts()).push(
                         format!("quest:{quest_id}"),
                         message.clone(),
@@ -6189,6 +6267,7 @@ impl Client {
                         identified,
                         refine,
                         name.as_deref(),
+                        client_tick,
                     );
                 }
                 NetworkEvent::TradeAddItemResult { inventory_index, result } => {
@@ -6364,6 +6443,9 @@ impl Client {
                     self.client_state
                         .follow_mut(client_state().chat_messages())
                         .push(ChatMessage::new(text, MessageColor::Server));
+                }
+                NetworkEvent::RecoveryState { mode, block } => {
+                    self.client_state.follow_mut(client_state().recovery()).set(mode, block);
                 }
                 NetworkEvent::SkillAdded { skill_information } => {
                     // The full tree only arrives at login and on job change, so a
@@ -6608,6 +6690,8 @@ impl Client {
                     self.client_state.follow_mut(client_state().skill_tree()).clear();
                     self.client_state.follow_mut(client_state().hotbar()).clear();
                     self.client_state.follow_mut(client_state().quest_log()).clear();
+                    self.client_state.follow_mut(client_state().recovery()).clear();
+                    self.client_state.follow_mut(client_state().dm_journal()).clear();
                     self.networking_system.disconnect_from_map_server();
                 }
                 NetworkEvent::FriendRequest { requestee } => {
@@ -7001,6 +7085,7 @@ impl Client {
                                 .set_party_ping(ping.clone(), client_tick)
                             {
                                 self.update_party_ping_world_marker(&ping);
+                                self.play_audio_cue(crate::state::audio_cues::AudioCue::PartyPing, None, client_tick);
                                 self.client_state.follow_mut(client_state().toasts()).push(
                                     format!("party-ping:{}", ping.sender),
                                     format!("{} sent a {} ping at {}, {}", ping.sender, ping.kind, ping.x, ping.y),
@@ -7022,12 +7107,7 @@ impl Client {
                         && self
                             .client_state
                             .follow(client_state().party_state())
-                            .message_sender_matches(account_id, match &message {
-                                crate::state::party::PartySessionMessage::DestinationSet { sender, .. }
-                                | crate::state::party::PartySessionMessage::DestinationAccepted { sender, .. }
-                                | crate::state::party::PartySessionMessage::ReadyStart { sender, .. }
-                                | crate::state::party::PartySessionMessage::ReadyResponse { sender, .. } => sender,
-                            })
+                            .message_sender_matches(account_id, message.sender())
                     {
                         match message {
                             crate::state::party::PartySessionMessage::DestinationSet {
@@ -7086,6 +7166,38 @@ impl Client {
                                         crate::state::toasts::ToastPriority::Normal,
                                     );
                                 }
+                            }
+                            crate::state::party::PartySessionMessage::MarkSet { sender, kind, entity_id } => {
+                                self.client_state.follow_mut(client_state().party_state()).set_target_marker(
+                                    &sender,
+                                    kind,
+                                    entity_id,
+                                    client_tick,
+                                );
+                            }
+                            crate::state::party::PartySessionMessage::MarkClear { sender, entity_id } => {
+                                self.client_state
+                                    .follow_mut(client_state().party_state())
+                                    .clear_target_marker(&sender, entity_id);
+                            }
+                            crate::state::party::PartySessionMessage::GoalAdd { sender, nonce, text } => {
+                                let added = self
+                                    .client_state
+                                    .follow_mut(client_state().party_state())
+                                    .add_goal(&sender, nonce, &text);
+                                if added {
+                                    self.client_state.follow_mut(client_state().toasts()).push(
+                                        format!("party-goal:{nonce}"),
+                                        format!("{sender} added a goal: {text}"),
+                                        crate::state::toasts::ToastPriority::Normal,
+                                    );
+                                }
+                            }
+                            crate::state::party::PartySessionMessage::GoalDone { nonce, .. } => {
+                                self.client_state.follow_mut(client_state().party_state()).complete_goal(nonce);
+                            }
+                            crate::state::party::PartySessionMessage::GoalClear { .. } => {
+                                self.client_state.follow_mut(client_state().party_state()).clear_goals();
                             }
                         }
                     }
@@ -7346,6 +7458,19 @@ impl Client {
                             source_entity_id.0
                         );
                     }
+                    // Dangerous cast cue: a long enemy cast aimed at us or the ground.
+                    let local_entity_id = self.client_state.try_follow(this_entity()).map(Entity::get_entity_id);
+                    let hostile_caster_position = self
+                        .client_state
+                        .follow(client_state().entities())
+                        .iter()
+                        .find(|entity| entity.get_entity_id() == source_entity_id && entity.get_entity_type() == EntityType::Monster)
+                        .map(Entity::get_position);
+                    if let Some(position) = hostile_caster_position
+                        && crate::state::audio_cues::is_dangerous_cast(cast_ms, target_entity_id, source_entity_id, local_entity_id)
+                    {
+                        self.play_audio_cue(crate::state::audio_cues::AudioCue::DangerousCast, Some(position), client_tick);
+                    }
                     if let Some(entity) = self
                         .client_state
                         .follow_mut(client_state().entities())
@@ -7362,6 +7487,22 @@ impl Client {
                     }
                 }
                 NetworkEvent::SkillCastCancelled { source_entity_id } => {
+                    // Interrupt cue: only when a hostile monster's visible cast bar
+                    // was actually running, so a stray cancel packet stays silent.
+                    if let Some(source_entity_id) = source_entity_id
+                        && let Some(position) = self
+                            .client_state
+                            .follow(client_state().entities())
+                            .iter()
+                            .find(|entity| {
+                                entity.get_entity_id() == source_entity_id
+                                    && entity.get_entity_type() == EntityType::Monster
+                                    && entity.is_casting(client_tick)
+                            })
+                            .map(Entity::get_position)
+                    {
+                        self.play_audio_cue(crate::state::audio_cues::AudioCue::Interrupt, Some(position), client_tick);
+                    }
                     if let Some(source_entity_id) = source_entity_id
                         && let Some(entity) = self
                             .client_state
@@ -8075,6 +8216,31 @@ impl Client {
         );
     }
 
+    /// Press Confirm on the trade. Every path to the server's commit goes
+    /// through here (the button and `/trade commit`), so the
+    /// last-second-change guard cannot be bypassed by typing the command.
+    fn confirm_trade(&mut self, client_tick: ClientTick) {
+        let decision = self
+            .client_state
+            .follow_mut(client_state().trade_state())
+            .confirm_decision(client_tick);
+        match decision {
+            crate::state::trade::ConfirmDecision::Send => {
+                let _ = self.networking_system.trade_commit();
+            }
+            crate::state::trade::ConfirmDecision::Refuse(reason) => {
+                self.client_state
+                    .follow_mut(client_state().chat_messages())
+                    .push(ChatMessage::new(reason.clone(), MessageColor::Error));
+                self.client_state.follow_mut(client_state().toasts()).push(
+                    "trade-confirm-refused",
+                    reason,
+                    crate::state::toasts::ToastPriority::High,
+                );
+            }
+        }
+    }
+
     pub fn equip_named_set(&mut self, name: &str) {
         let Some(character_id) = self.current_character_id else {
             self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
@@ -8099,51 +8265,43 @@ impl Client {
         let item_ids = set.item_ids.clone();
         let set_name = set.name.clone();
 
+        let plan_items: Vec<crate::state::equipment_plan::PlanItem> = self
+            .client_state
+            .follow(client_state().inventory())
+            .items()
+            .iter()
+            .filter_map(|item| match item.details {
+                korangar_networking::InventoryItemDetails::Equippable {
+                    equip_position,
+                    equipped_position,
+                    ..
+                } => Some(crate::state::equipment_plan::PlanItem {
+                    index: item.index,
+                    item_id: item.item_id.0,
+                    worn: equipped_position != ragnarok_packets::EquipPosition::NONE,
+                    equip_position,
+                }),
+                _ => None,
+            })
+            .collect();
+        let plan = crate::state::equipment_plan::plan_equipment_set(&item_ids, &plan_items);
+
+        let already_equipped_count = plan.already_worn;
         let mut queued_count = 0;
-        let mut already_equipped_count = 0;
-        let mut missing_items: Vec<String> = Vec::new();
-
-        for item_id in item_ids {
-            let inventory_items = self.client_state.follow(client_state().inventory()).items();
-            let already_equipped = inventory_items.iter().any(|item| {
-                item.item_id.0 == item_id
-                    && matches!(
-                        item.details,
-                        korangar_networking::InventoryItemDetails::Equippable { equipped_position, .. }
-                            if equipped_position != ragnarok_packets::EquipPosition::NONE
-                    )
-            });
-
-            if already_equipped {
-                already_equipped_count += 1;
-                continue;
-            }
-
-            let candidate = inventory_items.iter().find(|item| {
-                item.item_id.0 == item_id
-                    && matches!(
-                        item.details,
-                        korangar_networking::InventoryItemDetails::Equippable { equipped_position, .. }
-                            if equipped_position == ragnarok_packets::EquipPosition::NONE
-                    )
-            });
-
-            if let Some(item) = candidate {
-                let index = item.index;
-                let equip_pos = match item.details {
-                    korangar_networking::InventoryItemDetails::Equippable { equip_position, .. } => equip_position,
-                    _ => ragnarok_packets::EquipPosition::NONE,
-                };
-                if self.networking_system.request_item_equip(index, equip_pos).is_ok() {
-                    queued_count += 1;
-                }
-            } else {
-                let name_str = crate::world::item_stats(item_id)
-                    .map(|s| s.name.clone())
-                    .unwrap_or_else(|| format!("ID {item_id}"));
-                missing_items.push(name_str);
+        for (index, equip_position) in plan.to_equip {
+            if self.networking_system.request_item_equip(index, equip_position).is_ok() {
+                queued_count += 1;
             }
         }
+        let missing_items: Vec<String> = plan
+            .missing
+            .into_iter()
+            .map(|item_id| {
+                crate::world::item_stats(item_id)
+                    .map(|stats| stats.name.clone())
+                    .unwrap_or_else(|| format!("ID {item_id}"))
+            })
+            .collect();
 
         if queued_count > 0 {
             self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
@@ -9270,6 +9428,19 @@ impl Client {
                         MessageColor::Information,
                     ));
                 }
+                InputEvent::CycleEffectDensity => {
+                    let settings = self.client_state.follow_mut(client_state().game_settings());
+                    settings.effect_density = settings.effect_density.next();
+                    let detail = match settings.effect_density {
+                        crate::settings::EffectDensity::Full => "full (all skill visuals)",
+                        crate::settings::EffectDensity::Reduced => "reduced (other players' skill visuals hidden; party kept)",
+                        crate::settings::EffectDensity::Minimal => "minimal (only your own and enemy skill visuals)",
+                    };
+                    self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
+                        format!("Effect density set to {detail}. Telegraphs are always shown."),
+                        MessageColor::Information,
+                    ));
+                }
                 InputEvent::CycleCombatTextFrequency => {
                     let settings = self.client_state.follow_mut(client_state().game_settings());
                     settings.combat_text_frequency = settings.combat_text_frequency.next();
@@ -9396,6 +9567,8 @@ impl Client {
                                 client_state().skill_cooldowns(),
                                 client_state().toasts(),
                                 client_state().quest_log(),
+                                client_state().party_state(),
+                                client_state().recovery(),
                             )),
                         }
                     }
@@ -9782,6 +9955,117 @@ impl Client {
                         continue;
                     }
 
+                    // Party target markers and Tonight's Goals (F20). Both ride the
+                    // versioned party-chat carrier; peers can only change their own
+                    // marker and the shared ephemeral goal list.
+                    if text.as_str() == "/mark" || text.starts_with("/mark ") || text.as_str() == "/goal" || text.starts_with("/goal ") {
+                        let usage = if text.starts_with("/mark") {
+                            "Usage: /mark <focus|attack|cc|assist|clear>  (marks your selected monster)"
+                        } else {
+                            "Usage: /goal add <text>, /goal done <number>, /goal clear, /goal list"
+                        };
+                        let mut words = text.split_whitespace();
+                        let command = words.next().unwrap_or_default();
+                        let arguments: Vec<&str> = words.collect();
+                        let (in_party, account_component, goal_nonce) = {
+                            let party = self.client_state.follow(client_state().party_state());
+                            let index = arguments.get(1).and_then(|word| word.parse::<usize>().ok());
+                            (
+                                party.in_party(),
+                                party.local_account_id().map_or(0, |account_id| account_id.0.rotate_left(11)),
+                                index.and_then(|index| party.goals().get(index.wrapping_sub(1)).map(|goal| goal.nonce)),
+                            )
+                        };
+                        let nonce = client_tick.0 ^ account_component;
+                        let name = self.client_state.follow(client_state().player_name()).to_owned();
+                        let selected = self.client_state.follow(client_state().minimap()).selected_monster_id();
+                        // (wire body, local effect to apply once the send succeeds)
+                        enum Local {
+                            Mark(crate::state::party::TargetMarkerKind, u32),
+                            ClearMark(u32),
+                            AddGoal(String),
+                            DoneGoal(u32),
+                            ClearGoals,
+                        }
+                        let request: Option<(String, Local)> = match (command, arguments.as_slice()) {
+                            ("/mark", ["clear"]) => selected.map(|id| (format!("mark-clear {id}"), Local::ClearMark(id))),
+                            ("/mark", [kind]) => {
+                                let kind = match *kind {
+                                    "focus" => Some(crate::state::party::TargetMarkerKind::Focus),
+                                    "attack" => Some(crate::state::party::TargetMarkerKind::Attack),
+                                    "cc" => Some(crate::state::party::TargetMarkerKind::Crowd),
+                                    "assist" => Some(crate::state::party::TargetMarkerKind::Assist),
+                                    _ => None,
+                                };
+                                kind.zip(selected)
+                                    .map(|(kind, id)| (format!("mark-set {} {id}", kind.token()), Local::Mark(kind, id)))
+                            }
+                            ("/goal", ["add", goal @ ..]) if !goal.is_empty() => {
+                                let goal = goal.join(" ");
+                                crate::state::party::is_valid_goal_text(&goal)
+                                    .then(|| (format!("goal-add {nonce} {goal}"), Local::AddGoal(goal)))
+                            }
+                            ("/goal", ["done", _]) => goal_nonce.map(|nonce| (format!("goal-done {nonce}"), Local::DoneGoal(nonce))),
+                            ("/goal", ["clear"]) => Some(("goal-clear".to_owned(), Local::ClearGoals)),
+                            _ => None,
+                        };
+                        let chat = |state: &mut State<ClientState>, line: String| {
+                            state
+                                .follow_mut(client_state().chat_messages())
+                                .push(ChatMessage::new(line, MessageColor::Information));
+                        };
+                        if command == "/goal" && arguments.as_slice() == ["list"] {
+                            let list = self.client_state.follow(client_state().party_state()).goals_text().to_owned();
+                            chat(&mut self.client_state, format!("Tonight's goals:\n{list}"));
+                        } else if !in_party {
+                            chat(&mut self.client_state, "Join a party first.".to_owned());
+                        } else if command == "/mark" && request.is_none() && arguments.as_slice() != ["clear"] && selected.is_none() {
+                            chat(
+                                &mut self.client_state,
+                                "Select a monster first (click it or press Tab).".to_owned(),
+                            );
+                        } else if let Some((body, local)) = request {
+                            if !self
+                                .client_state
+                                .follow_mut(client_state().minimap())
+                                .allow_party_session_message_send(client_tick)
+                            {
+                                self.client_state.follow_mut(client_state().toasts()).push(
+                                    "party-session-cooldown",
+                                    "Please wait before sending another party update.",
+                                    crate::state::toasts::ToastPriority::Normal,
+                                );
+                            } else if self
+                                .networking_system
+                                .send_party_chat_message(&name, &format!("[KORANGAR-SESSION:v1] {body}"))
+                                .is_ok()
+                            {
+                                let party = self.client_state.follow_mut(client_state().party_state());
+                                match local {
+                                    Local::Mark(kind, id) => party.set_target_marker(&name, kind, id, client_tick),
+                                    Local::ClearMark(id) => {
+                                        party.clear_target_marker(&name, id);
+                                    }
+                                    Local::AddGoal(goal) => {
+                                        party.add_goal(&name, nonce, &goal);
+                                    }
+                                    Local::DoneGoal(nonce) => {
+                                        party.complete_goal(nonce);
+                                    }
+                                    Local::ClearGoals => party.clear_goals(),
+                                }
+                            } else {
+                                chat(
+                                    &mut self.client_state,
+                                    "Party update could not be sent: not connected to the map server.".to_owned(),
+                                );
+                            }
+                        } else {
+                            chat(&mut self.client_state, usage.to_owned());
+                        }
+                        continue;
+                    }
+
                     if let Some(rest) = text.strip_prefix("/emotion ").or_else(|| text.strip_prefix("/e ")) {
                         if let Ok(emotion) = rest.trim().parse::<u8>() {
                             let _ = self.networking_system.request_emotion(emotion);
@@ -9967,7 +10251,7 @@ impl Client {
                                 let _ = self.networking_system.trade_ok();
                             }
                             "commit" => {
-                                let _ = self.networking_system.trade_commit();
+                                self.confirm_trade(client_tick);
                             }
                             "cancel" => {
                                 let _ = self.networking_system.trade_cancel();
@@ -10517,7 +10801,7 @@ impl Client {
                     let _ = self.networking_system.trade_ok();
                 }
                 InputEvent::TradeCommit => {
-                    let _ = self.networking_system.trade_commit();
+                    self.confirm_trade(client_tick);
                 }
                 InputEvent::TradeCancel => {
                     let _ = self.networking_system.trade_cancel();
@@ -11405,6 +11689,27 @@ impl Client {
                         ));
                     }
                 }
+                InputEvent::DeclinePartyDestination => {
+                    // Local only: nothing is sent, so the proposer and every
+                    // other member keep their own routes.
+                    let had_destination = self
+                        .client_state
+                        .follow(client_state().party_state())
+                        .shared_destination()
+                        .is_some();
+                    self.client_state
+                        .follow_mut(client_state().party_state())
+                        .clear_shared_destination_all();
+                    self.client_state.follow_mut(client_state().toasts()).push(
+                        "party-destination-declined",
+                        if had_destination {
+                            "Shared destination declined."
+                        } else {
+                            "There is no shared party destination to decline."
+                        },
+                        crate::state::toasts::ToastPriority::Normal,
+                    );
+                }
                 InputEvent::AcceptPartyDestination => {
                     let Some(destination) = self.client_state.follow(client_state().party_state()).shared_destination().cloned() else {
                         self.client_state.follow_mut(client_state().toasts()).push(
@@ -11629,9 +11934,11 @@ impl Client {
                     if self.map.is_some() {
                         match self.interface.is_window_with_class_open(WindowClass::QuestLog) {
                             true => self.interface.close_window_with_class(WindowClass::QuestLog),
-                            false => self
-                                .interface
-                                .open_window(QuestLogWindow::new(client_state().quest_log(), client_state().inventory())),
+                            false => self.interface.open_window(QuestLogWindow::new(
+                                client_state().quest_log(),
+                                client_state().inventory(),
+                                client_state().dm_journal(),
+                            )),
                         }
                     }
                 }
@@ -12141,6 +12448,23 @@ impl Client {
     /// anything else (a story quest, or a quest outside the campaign) is listed
     /// by id, which is still more than the log showed before it existed.
     fn resolve_quest_entry(&self, quest_id: u32) -> QuestEntry {
+        let location = self.library.campaign_quest_location(quest_id).map(|location| QuestLocationEntry {
+            is_turn_in: location.is_turn_in,
+            npc: location.npc.clone(),
+            map_name: location.map_name.clone(),
+            x: location.x,
+            y: location.y,
+        });
+        let guidance = self
+            .library
+            .campaign_quest_guidance(quest_id)
+            .map(|guidance| {
+                std::iter::once(format!("Found around: {}", guidance.area))
+                    .chain(guidance.steps.iter().cloned())
+                    .collect()
+            })
+            .unwrap_or_default();
+
         match self.library.campaign_quest(quest_id) {
             Some(contract) => QuestEntry {
                 quest_id,
@@ -12161,12 +12485,16 @@ impl Client {
                     })
                     .collect(),
                 hunt_objectives: Vec::new(),
+                location,
+                guidance,
             },
             None => QuestEntry {
                 quest_id,
                 name: format!("Quest {quest_id}"),
                 requirements: Vec::new(),
                 hunt_objectives: Vec::new(),
+                location,
+                guidance,
             },
         }
     }
@@ -14052,6 +14380,38 @@ impl<'a, 'm: 'a> MapRenderContext<'a, 'm> {
             );
         }
 
+        // Party target markers (F20): frame the monster's bars and label the kind.
+        {
+            let party = self.client_state.follow(client_state().party_state());
+            if !party.target_markers().is_empty() {
+                let theme = self.client_state.follow(client_state().world_theme());
+                for marker in party.target_markers() {
+                    let Some(entity) = self
+                        .client_state
+                        .follow(client_state().entities())
+                        .iter()
+                        .find(|entity| entity.get_entity_id().0 == marker.entity_id && entity.is_targetable_monster())
+                    else {
+                        continue;
+                    };
+                    entity.render_status(
+                        self.middle_interface_renderer,
+                        self.current_camera,
+                        theme,
+                        self.screen_size,
+                        self.client_tick,
+                    );
+                    entity.render_target_outline(self.middle_interface_renderer, self.current_camera, theme, self.screen_size);
+                    entity.render_party_marker_label(
+                        self.middle_interface_renderer,
+                        self.current_camera,
+                        self.screen_size,
+                        &format!("{} {}", marker.kind.label(), marker.sender),
+                    );
+                }
+            }
+        }
+
         match self.mouse_target {
             PickerTarget::Tile { x, y } => {
                 // Only show if the mouse mode is default or walking.
@@ -14142,6 +14502,31 @@ impl<'a, 'm: 'a> MapRenderContext<'a, 'm> {
 mod slash_command_tests {
     use super::slash_command_usage;
 
+    /// F32: lethal telegraphs must stay visible at the lowest effect density,
+    /// with audio off, and with reduce-motion/flashing on. The footprint pass
+    /// therefore must not consult any of those settings.
+    #[test]
+    fn cast_telegraph_pass_ignores_density_audio_and_motion_settings() {
+        let source = include_str!("lib.rs");
+        let start = source.find("fn render_skill_cast_telegraphs").expect("telegraph pass exists");
+        let body = &source[start..];
+        let end = body[1..]
+            .find("\n    fn ")
+            .or_else(|| body[1..].find("\n    #[inline"))
+            .expect("end of function");
+        let body = &body[..end];
+        for setting in [
+            "effect_density",
+            "audio_cues",
+            "reduce_motion",
+            "reduce_flashing",
+            "skill_visual_allowed",
+        ] {
+            assert!(!body.contains(setting), "telegraph pass must not depend on {setting}");
+        }
+        assert!(body.contains("render_skill_footprint"), "the pass still draws footprints");
+    }
+
     /// Every command the chat handler implements needs an entry here, because
     /// the fall-through guard uses this table to decide between a usage hint
     /// and "unknown command". Both alias spellings must resolve.
@@ -14161,6 +14546,8 @@ mod slash_command_tests {
             "/unignore",
             "/loot",
             "/wishlist",
+            "/mark",
+            "/goal",
         ] {
             assert!(slash_command_usage(command).is_some(), "{command} has no usage line");
         }

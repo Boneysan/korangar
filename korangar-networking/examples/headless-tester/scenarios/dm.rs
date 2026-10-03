@@ -25,6 +25,16 @@ pub fn scenarios() -> Vec<Scenario> {
         Scenario::new("dm-flags-status", 9, dm_flags_status),
         Scenario::new("dm-quest-lifecycle", 9, dm_quest_lifecycle),
         Scenario::new("quest-log-multi", 9, quest_log_multi),
+        Scenario::new("gm-metrics", 9, gm_metrics),
+        // These party scenarios run BEFORE the two whose end-of-run SQL audits
+        // read the journal of one specific party (offline-replay, alternate-
+        // character): party ids are reused, so a later party scenario would
+        // append to that journal and move its tail past the audited cursors.
+        Scenario::new("dm-dmj-echo", 9, dm_dmj_echo),
+        Scenario::new("dm-flag-channel", 9, dm_flag_channel),
+        Scenario::new("dm-party-offline-transitions", 9, dm_party_offline_transitions),
+        Scenario::new("dm-party-reward-isolation", 9, dm_party_reward_isolation),
+        Scenario::new("dm-party-recreation-isolation", 9, dm_party_recreation_isolation),
         Scenario::new("dm-party-offline-replay", 9, dm_party_offline_replay),
         Scenario::new("dm-party-alternate-character", 9, dm_party_alternate_character),
         Scenario::new("dm-reward-delta", 9, dm_reward_delta),
@@ -38,7 +48,7 @@ pub fn scenarios() -> Vec<Scenario> {
     ]
 }
 
-fn wait_for_text(context: &mut TestContext, label: &str, needle: &str) -> Result<String, String> {
+pub(super) fn wait_for_text(context: &mut TestContext, label: &str, needle: &str) -> Result<String, String> {
     context.wait_for(label, |event| match event {
         NetworkEvent::ChatMessage { text, .. } if text.contains(needle) => Some(text.clone()),
         _ => None,
@@ -46,7 +56,7 @@ fn wait_for_text(context: &mut TestContext, label: &str, needle: &str) -> Result
 }
 
 /// Send a command and require feedback text containing `needle`.
-fn say_expect(context: &mut TestContext, command: &str, needle: &str) -> Result<String, String> {
+pub(super) fn say_expect(context: &mut TestContext, command: &str, needle: &str) -> Result<String, String> {
     context.flush();
     context.say(command)?;
     wait_for_text(context, &format!("feedback for {command}"), needle)
@@ -361,6 +371,545 @@ fn dm_party_offline_replay(config: &Config) -> Result<(), String> {
         let _ = primary.say("@dm reset confirm");
         primary.pump(Duration::from_millis(250));
     }
+    result
+}
+
+/// The server reports campaign state to the client as `[DMJ]{json}` lines sent
+/// with `dispbottom` (`dm_dmj.txt`, `dm_checkpoint.txt`). They arrive as
+/// ordinary chat text, so the *client* is what must intercept them; this pins
+/// the server half: a reconcile preview by a party member really produces
+/// typed, versioned JSON, and nothing else about the line is free-form.
+fn dm_dmj_echo(config: &Config) -> Result<(), String> {
+    let (mut primary, mut partner) = connect_pair(config)?;
+    let result: Result<(), String> = (|| {
+        ensure_no_party(&mut primary);
+        ensure_no_party(&mut partner);
+        form_party(&mut primary, &mut partner)?;
+        say_expect(&mut primary, "@dm reset confirm", "Campaign reset complete")?;
+        say_expect(&mut primary, "@dm mode on", "Campaign NPCs are active")?;
+
+        primary.flush();
+        partner.flush();
+        primary.say("@dm reconcile preview")?;
+        let mut lines: Vec<String> = Vec::new();
+        for context in [&mut primary, &mut partner] {
+            for event in context.collect_for(Duration::from_millis(900)) {
+                if let NetworkEvent::ChatMessage { text, color } = event {
+                    if text.contains("[DMJ]") {
+                        // The client intercepts only server-coloured lines that START
+                        // with the prefix (as the discovery channel does). A line that
+                        // arrives differently would show up in chat as raw JSON.
+                        if !matches!(color, korangar_networking::MessageColor::Server) {
+                            return Err(format!("[DMJ] line arrived with a non-server colour: {text:?}"));
+                        }
+                        let Some(json) = text.strip_prefix("[DMJ]") else {
+                            return Err(format!("[DMJ] line does not start with the prefix: {text:?}"));
+                        };
+                        lines.push(json.to_owned());
+                    }
+                }
+            }
+        }
+        if lines.is_empty() {
+            return Err("no [DMJ] echo reached either party member after `@dm reconcile preview`".to_owned());
+        }
+        for json in &lines {
+            let object: serde_json::Value =
+                serde_json::from_str(json.trim()).map_err(|error| format!("[DMJ] line is not JSON ({error}): {json:?}"))?;
+            if object.get("t").and_then(|t| t.as_str()).is_none() || object.get("v").and_then(|v| v.as_u64()) != Some(1) {
+                return Err(format!("[DMJ] line lacks a string \"t\" and \"v\": 1: {json:?}"));
+            }
+        }
+        Ok(())
+    })();
+
+    let _ = primary.say("@dm mode off");
+    primary.pump(Duration::from_millis(150));
+    leave_party_both(&mut primary, &mut partner);
+    result
+}
+
+/// The change `@metrics baseline diff` reports for `key` (`area.name`), as the
+/// signed number on that line.
+fn metrics_delta(context: &mut TestContext, label: &str, key: &str) -> Result<i64, String> {
+    context.flush();
+    context.say(&format!("@metrics baseline diff {label}"))?;
+    // Collect the whole reply: a missing line is only explicable by what did
+    // arrive.
+    let replies: Vec<String> = context
+        .collect_for(Duration::from_millis(1500))
+        .into_iter()
+        .filter_map(|event| match event {
+            NetworkEvent::ChatMessage { text, .. } => Some(text),
+            _ => None,
+        })
+        .collect();
+    let needle = format!("{key} ");
+    let line = replies
+        .iter()
+        .find(|text| text.contains(&needle))
+        .ok_or_else(|| format!("no `{needle}` line in the diff reply: {replies:?}"))?;
+    let after = line
+        .split(&needle)
+        .nth(1)
+        .ok_or_else(|| format!("no value after {key} in {line:?}"))?;
+    after
+        .trim()
+        .trim_start_matches('+')
+        .parse()
+        .map_err(|error| format!("could not read the change for {key} from {line:?}: {error}"))
+}
+
+/// F36 GM metrics: collection is opt-in and default off; once on, events are
+/// counted as totals; a baseline diff shows the change; `off` stops counting;
+/// the live reports answer; a bad baseline label is refused.
+fn gm_metrics(config: &Config) -> Result<(), String> {
+    const LABEL: &str = "headless_probe";
+
+    let mut context = TestContext::connect(config)?;
+    let result: Result<(), String> = (|| {
+        say_expect(&mut context, "@metrics off", "Collection OFF")?;
+        say_expect(&mut context, "@metrics status", "Collection is OFF")?;
+
+        say_expect(&mut context, "@metrics on", "Collection ON")?;
+        say_expect(&mut context, "@metrics status", "Collection is ON")?;
+        say_expect(&mut context, &format!("@metrics baseline save {LABEL}"), "saved")?;
+
+        // One death while collection is on. (`@alive` so later steps are not dead.)
+        context.say("@die")?;
+        std::thread::sleep(Duration::from_millis(900));
+        context.say("@alive")?;
+        std::thread::sleep(Duration::from_millis(500));
+        let deaths = metrics_delta(&mut context, LABEL, "combat.player_deaths")?;
+        if deaths < 1 {
+            return Err(format!("a death with collection on counted as {deaths}"));
+        }
+        say_expect(&mut context, "@metrics report", "combat.player_deaths = ")?;
+
+        // Two fresh logins while collection is on.
+        for _ in 0..2 {
+            std::thread::sleep(Duration::from_millis(700));
+            context = TestContext::connect(config)?;
+        }
+        let logins = metrics_delta(&mut context, LABEL, "session.logins")?;
+        if logins < 2 {
+            return Err(format!("two logins with collection on counted as {logins}"));
+        }
+
+        // Off: another death and another login must not change either count.
+        say_expect(&mut context, "@metrics off", "Collection OFF")?;
+        context.say("@die")?;
+        std::thread::sleep(Duration::from_millis(900));
+        context.say("@alive")?;
+        std::thread::sleep(Duration::from_millis(500));
+        std::thread::sleep(Duration::from_millis(700));
+        context = TestContext::connect(config)?;
+        let deaths_after = metrics_delta(&mut context, LABEL, "combat.player_deaths")?;
+        let logins_after = metrics_delta(&mut context, LABEL, "session.logins")?;
+        if (deaths_after, logins_after) != (deaths, logins) {
+            return Err(format!(
+                "events were counted while collection was off: deaths {deaths} -> {deaths_after}, logins {logins} -> {logins_after}"
+            ));
+        }
+
+        // Economy gauges ride along with the baseline.
+        let economy = wait_for_text_after(&mut context, &format!("@metrics baseline diff {LABEL}"), "economy.zeny_total ")?;
+        if !economy.contains("->") {
+            return Err(format!("economy gauge has no before/after: {economy:?}"));
+        }
+
+        // The live reports.
+        say_expect(&mut context, "@metrics spawns prt_fild08", "monster(s)")?;
+        say_expect(&mut context, "@metrics party", "player(s) online")?;
+        say_expect(&mut context, "@metrics economy", "character(s) hold")?;
+
+        // Quest divergence is a read-only wrapper: it either says no session is active
+        // or reports for the active party. Both are correct; silence is not.
+        context.flush();
+        context.say("@metrics quests")?;
+        let quest_reply: Vec<String> = context
+            .collect_for(Duration::from_millis(1200))
+            .into_iter()
+            .filter_map(|event| match event {
+                NetworkEvent::ChatMessage { text, .. } if text.contains("[Metrics]") => Some(text),
+                _ => None,
+            })
+            .collect();
+        if !quest_reply
+            .iter()
+            .any(|text| text.contains("No campaign session is active") || text.contains("Campaign state divergence"))
+        {
+            return Err(format!("@metrics quests gave no usable reply: {quest_reply:?}"));
+        }
+
+        // A label that is not a plain name is refused, and an unknown baseline is
+        // reported.
+        say_expect(&mut context, "@metrics baseline save Bad Label!", "A label is")?;
+        say_expect(&mut context, "@metrics baseline diff no_such_baseline", "No baseline named")?;
+        Ok(())
+    })();
+
+    let _ = context.say("@metrics off");
+    context.pump(Duration::from_millis(150));
+    result
+}
+
+fn wait_for_text_after(context: &mut TestContext, command: &str, needle: &str) -> Result<String, String> {
+    context.flush();
+    context.say(command)?;
+    wait_for_text(context, &format!("`{needle}` after {command}"), needle)
+}
+
+/// The `[DMJ]` lines among some events, parsed. Anything that is not a
+/// server-coloured line starting with the prefix is not ours.
+fn dmj_lines(events: Vec<NetworkEvent>) -> Result<Vec<serde_json::Value>, String> {
+    let mut lines = Vec::new();
+    for event in events {
+        let NetworkEvent::ChatMessage { text, color } = event else {
+            continue;
+        };
+        let Some(json) = text.strip_prefix("[DMJ]") else {
+            continue;
+        };
+        if !matches!(color, korangar_networking::MessageColor::Server) {
+            return Err(format!("[DMJ] line with a non-server colour: {text:?}"));
+        }
+        lines.push(serde_json::from_str(json.trim()).map_err(|error| format!("[DMJ] line is not JSON ({error}): {text:?}"))?);
+    }
+    Ok(lines)
+}
+
+/// Every complete flag snapshot among `lines`, as `(seq, flag name -> value)`.
+/// A snapshot counts only when all of its `of` parts are present.
+fn flag_snapshots(lines: &[serde_json::Value]) -> Vec<(u64, std::collections::BTreeMap<String, i64>)> {
+    let mut by_seq: std::collections::BTreeMap<u64, (u64, std::collections::BTreeMap<u64, Vec<(String, i64)>>)> = Default::default();
+    for line in lines.iter().filter(|line| line.get("t").and_then(|t| t.as_str()) == Some("flags")) {
+        let (Some(seq), Some(part), Some(of)) = (
+            line.get("seq").and_then(|v| v.as_u64()),
+            line.get("part").and_then(|v| v.as_u64()),
+            line.get("of").and_then(|v| v.as_u64()),
+        ) else {
+            continue;
+        };
+        let flags = line
+            .get("flags")
+            .and_then(|f| f.as_object())
+            .map(|object| object.iter().filter_map(|(k, v)| Some((k.clone(), v.as_i64()?))).collect())
+            .unwrap_or_default();
+        by_seq.entry(seq).or_insert((of, Default::default())).1.insert(part, flags);
+    }
+    by_seq
+        .into_iter()
+        .filter(|(_, (of, parts))| parts.len() as u64 == *of)
+        .map(|(seq, (_, parts))| (seq, parts.into_values().flatten().collect()))
+        .collect()
+}
+
+/// The server half of the flag channel (docs/specs/dm-flag-channel.md, C2): an
+/// allowlisted flag change is reported to the member who changed it; a flag off
+/// the allowlist is never reported; the other member gets a complete snapshot
+/// of exactly the allowlisted flags when the party publishes, and again on
+/// login, carrying the value that was replayed to them.
+fn dm_flag_channel(config: &Config) -> Result<(), String> {
+    // Must match `DM_ClientFlagList` in dm_client_flags.txt.
+    const ALLOWED: [&str; 6] = [
+        "dm_arc01_started",
+        "dm_arc01_child_found",
+        "dm_arc01_clue_mask",
+        "dm_arc01_chamber_drained",
+        "dm_arc01_binding_applied",
+        "dm_arc01_holt_approach",
+    ];
+    const CLUE_FLAG: &str = "dm_arc01_clue_mask";
+    const SECRET_FLAG: &str = "dm_flagchan_private";
+
+    let (mut primary, partner) = TestContext::connect_pair(config)?;
+    let mut partner = Some(partner);
+    let result: Result<(), String> = (|| {
+        form_party(&mut primary, partner.as_mut().ok_or("partner disconnected")?)?;
+        say_expect(&mut primary, "@dm reset confirm", "Campaign reset complete")?;
+        say_expect(&mut primary, "@dm mode on", "Campaign NPCs are active")?;
+
+        // The delta: an allowlisted flag is reported to the member who set it.
+        primary.flush();
+        primary.say(&format!("@dmflag set {CLUE_FLAG} 5"))?;
+        let delta = dmj_lines(primary.collect_for(Duration::from_millis(900)))?;
+        let reported = delta.iter().any(|line| {
+            line.get("t").and_then(|t| t.as_str()) == Some("flag")
+                && line.get("name").and_then(|n| n.as_str()) == Some(CLUE_FLAG)
+                && line.get("value").and_then(|v| v.as_i64()) == Some(5)
+        });
+        if !reported {
+            return Err(format!(
+                "no flag delta for {CLUE_FLAG} = 5 reached the member who set it: {delta:?}"
+            ));
+        }
+
+        // A flag off the allowlist is never reported.
+        primary.flush();
+        say_expect(&mut primary, &format!("@dmflag set {SECRET_FLAG} 7"), "set to 7")?;
+        let leaked = dmj_lines(primary.collect_for(Duration::from_millis(700)))?
+            .into_iter()
+            .any(|line| line.to_string().contains(SECRET_FLAG));
+        if leaked {
+            return Err(format!("{SECRET_FLAG} is not on the allowlist but was reported to the client"));
+        }
+
+        // The party publishes: the other member gets a complete, exact snapshot.
+        let other = partner.as_mut().ok_or("partner disconnected")?;
+        other.flush();
+        say_expect(&mut primary, "@dm catchup", "Catch-up ran")?;
+        let lines = dmj_lines(other.collect_for(Duration::from_millis(1500)))?;
+        check_snapshot("after the party published", &lines, &ALLOWED, CLUE_FLAG, 5)?;
+
+        // Login: the same snapshot, from the quest-log restore hook.
+        drop(partner.take().ok_or("partner disconnected")?);
+        std::thread::sleep(Duration::from_millis(700));
+        let mut returning = TestContext::connect_partner(config)?;
+        let lines = dmj_lines(returning.collect_for(Duration::from_millis(2500)))?;
+        check_snapshot("after logging in", &lines, &ALLOWED, CLUE_FLAG, 5)?;
+        partner = Some(returning);
+        Ok(())
+    })();
+
+    let _ = primary.say(&format!("@dmflag clear {CLUE_FLAG}"));
+    primary.pump(Duration::from_millis(150));
+    let _ = primary.say(&format!("@dmflag clear {SECRET_FLAG}"));
+    primary.pump(Duration::from_millis(150));
+    let _ = primary.say("@dm mode off");
+    primary.pump(Duration::from_millis(150));
+    if let Some(partner) = partner.as_mut() {
+        let _ = leave_party_both(&mut primary, partner);
+    } else {
+        let _ = primary.say("@dm reset confirm");
+        primary.pump(Duration::from_millis(250));
+    }
+    result
+}
+
+fn check_snapshot(when: &str, lines: &[serde_json::Value], allowed: &[&str], flag: &str, value: i64) -> Result<(), String> {
+    let snapshots = flag_snapshots(lines);
+    let Some((_, table)) = snapshots.last() else {
+        return Err(format!("no complete flag snapshot arrived {when}: {lines:?}"));
+    };
+    let names: Vec<&str> = table.keys().map(String::as_str).collect();
+    let mut expected: Vec<&str> = allowed.to_vec();
+    expected.sort_unstable();
+    if names != expected {
+        return Err(format!(
+            "snapshot {when} lists {names:?}, expected exactly the allowlist {expected:?}"
+        ));
+    }
+    if table.get(flag).copied() != Some(value) {
+        return Err(format!("snapshot {when} has {flag} = {:?}, expected {value}", table.get(flag)));
+    }
+    Ok(())
+}
+
+/// S10 acceptance 2, the multi-transition half: while one enrolled member is
+/// offline the party starts two quests, completes one, sets two flags and
+/// clears one. On return the member must land in exactly the final state, and a
+/// forced second catch-up must change nothing and re-announce nothing.
+fn dm_party_offline_transitions(config: &Config) -> Result<(), String> {
+    const QUEST_DONE: u32 = 20001; // started, then completed
+    const QUEST_OPEN: u32 = 20002; // started, left active
+    const FLAG_KEPT: &str = "dm_trans_kept";
+    const FLAG_CLEARED: &str = "dm_trans_cleared";
+
+    let (mut primary, partner) = TestContext::connect_pair(config)?;
+    let mut partner = Some(partner);
+    let result: Result<(), String> = (|| {
+        form_party(&mut primary, partner.as_mut().ok_or("partner disconnected")?)?;
+        say_expect(&mut primary, "@dm reset confirm", "Campaign reset complete")?;
+        say_expect(&mut primary, "@dm mode on", "Campaign NPCs are active")?;
+
+        drop(partner.take().ok_or("partner disconnected")?);
+        std::thread::sleep(Duration::from_millis(700));
+
+        say_expect(&mut primary, &format!("@dmquest start {QUEST_DONE}"), "started")?;
+        say_expect(&mut primary, &format!("@dmquest start {QUEST_OPEN}"), "started")?;
+        say_expect(&mut primary, &format!("@dmquest complete {QUEST_DONE}"), "completed")?;
+        say_expect(&mut primary, &format!("@dmflag set {FLAG_KEPT} 3"), "set to 3")?;
+        say_expect(&mut primary, &format!("@dmflag set {FLAG_CLEARED} 5"), "set to 5")?;
+        say_expect(&mut primary, &format!("@dmflag clear {FLAG_CLEARED}"), "cleared")?;
+
+        partner = Some(TestContext::connect_partner(config)?);
+        let returning = partner.as_mut().ok_or("partner reconnect failed")?;
+        returning.wait_for("the still-active quest replays", |event| match event {
+            NetworkEvent::QuestAdded { quest_id, active: true } if *quest_id == QUEST_OPEN => Some(()),
+            _ => None,
+        })?;
+        say_expect(returning, &format!("@dmflag get {FLAG_KEPT}"), &format!("{FLAG_KEPT} = 3"))?;
+        say_expect(
+            returning,
+            &format!("@dmflag get {FLAG_CLEARED}"),
+            &format!("{FLAG_CLEARED} = 0"),
+        )?;
+        // Arc 1's tracker digit 2 means "completed"; arc 1 must read as completed, not
+        // merely started.
+        say_expect(returning, "@dmstatus", "A01:2")?;
+
+        say_expect(returning, "@dm catchup", "Catch-up ran")?;
+        let again = returning.collect_for(Duration::from_millis(400));
+        if again.iter().any(|event| matches!(event, NetworkEvent::QuestAdded { .. })) {
+            return Err("a repeated catch-up re-announced a quest after several offline transitions".to_owned());
+        }
+        say_expect(returning, &format!("@dmflag get {FLAG_KEPT}"), &format!("{FLAG_KEPT} = 3"))?;
+        say_expect(returning, "@dmstatus", "A01:2")?;
+        Ok(())
+    })();
+
+    if let Some(partner) = partner.as_mut() {
+        for id in [QUEST_DONE, QUEST_OPEN] {
+            let _ = primary.say(&format!("@dmquest erase {id}"));
+            primary.pump(Duration::from_millis(150));
+            partner.pump(Duration::from_millis(150));
+        }
+        for flag in [FLAG_KEPT, FLAG_CLEARED] {
+            let _ = primary.say(&format!("@dmflag clear {flag}"));
+            primary.pump(Duration::from_millis(150));
+            partner.pump(Duration::from_millis(150));
+        }
+        let _ = primary.say("@dm mode off");
+        primary.pump(Duration::from_millis(150));
+        let _ = leave_party_both(&mut primary, partner);
+    } else {
+        let _ = primary.say("@dm reset confirm");
+        primary.pump(Duration::from_millis(250));
+    }
+    result
+}
+
+/// S10 reward isolation: a reward granted while a member is offline is queued
+/// once for that character (`DM_QueueGrant`) and paid exactly once on return.
+/// Quest/flag catch-up replays progress, never rewards, so repeating it - or
+/// logging in again - must not pay the member a second time.
+fn dm_party_reward_isolation(config: &Config) -> Result<(), String> {
+    const FLAG_NAME: &str = "dm_reward_probe";
+
+    let (mut primary, partner) = TestContext::connect_pair(config)?;
+    let mut partner = Some(partner);
+    let result: Result<(), String> = (|| {
+        form_party(&mut primary, partner.as_mut().ok_or("partner disconnected")?)?;
+        say_expect(&mut primary, "@dm reset confirm", "Campaign reset complete")?;
+        say_expect(&mut primary, "@dm mode on", "Campaign NPCs are active")?;
+
+        let zeny_before = probe_zeny(partner.as_mut().ok_or("partner disconnected")?)?;
+        drop(partner.take().ok_or("partner disconnected")?);
+        std::thread::sleep(Duration::from_millis(700));
+
+        say_expect(&mut primary, &format!("@dmflag set {FLAG_NAME} 11"), "set to 11")?;
+        let announce = say_expect(&mut primary, "@dmreward 2 uncommon", "Awarded uncommon Arc 2 loot")?;
+        let zeny_granted: u32 = announce
+            .split_once(" and ")
+            .and_then(|(_, tail)| tail.split_once(" zeny"))
+            .map(|(zeny, _)| zeny.replace(',', ""))
+            .and_then(|zeny| zeny.trim().parse().ok())
+            .ok_or_else(|| format!("could not parse zeny amount from {announce:?}"))?;
+        if zeny_granted == 0 {
+            return Err(format!(
+                "the reward paid no zeny, so isolation cannot be observed: {announce:?}"
+            ));
+        }
+
+        // First return: the queued grant is claimed, once.
+        partner = Some(TestContext::connect_partner(config)?);
+        let returning = partner.as_mut().ok_or("partner reconnect failed")?;
+        say_expect(returning, &format!("@dmflag get {FLAG_NAME}"), &format!("{FLAG_NAME} = 11"))?;
+        let expected = zeny_before + zeny_granted;
+        let after_return = probe_zeny(returning)?;
+        if after_return != expected {
+            return Err(format!(
+                "offline member holds {after_return} zeny after returning; expected {expected} ({zeny_before} + the announced \
+                 {zeny_granted})"
+            ));
+        }
+
+        // Repeating catch-up must not pay again.
+        say_expect(returning, "@dm catchup", "Catch-up ran")?;
+        returning.collect_for(Duration::from_millis(500));
+        let after_catchup = probe_zeny(returning)?;
+        if after_catchup != expected {
+            return Err(format!(
+                "a repeated catch-up changed the member's zeny from {expected} to {after_catchup}"
+            ));
+        }
+
+        // A fresh login runs the same hooks again; it must not pay again either.
+        drop(partner.take().ok_or("partner disconnected")?);
+        std::thread::sleep(Duration::from_millis(700));
+        partner = Some(TestContext::connect_partner(config)?);
+        let relogged = partner.as_mut().ok_or("partner reconnect failed")?;
+        let after_relog = probe_zeny(relogged)?;
+        if after_relog != expected {
+            return Err(format!(
+                "logging in again changed the member's zeny from {expected} to {after_relog}"
+            ));
+        }
+        Ok(())
+    })();
+
+    if let Some(partner) = partner.as_mut() {
+        let _ = primary.say(&format!("@dmflag clear {FLAG_NAME}"));
+        primary.pump(Duration::from_millis(150));
+        partner.pump(Duration::from_millis(150));
+        let _ = primary.say("@dm mode off");
+        primary.pump(Duration::from_millis(150));
+        let _ = leave_party_both(&mut primary, partner);
+    } else {
+        let _ = primary.say("@dm reset confirm");
+        primary.pump(Duration::from_millis(250));
+    }
+    result
+}
+
+/// S10 acceptance 4: re-creating a party must not copy one run's progress onto
+/// a character who was never part of that run. Progress journaled under party A
+/// (primary alone) must not arrive when the partner later joins a *new* party.
+fn dm_party_recreation_isolation(config: &Config) -> Result<(), String> {
+    const FLAG_NAME: &str = "dm_recreate_probe";
+    const QUEST_ID: u32 = 20003;
+
+    let (mut primary, mut partner) = connect_pair(config)?;
+    let result: Result<(), String> = (|| {
+        ensure_no_party(&mut primary);
+        ensure_no_party(&mut partner);
+        // Run 1: the primary alone, in a party of one.
+        create_party(&mut primary)?;
+        say_expect(&mut primary, "@dm reset confirm", "Campaign reset complete")?;
+        say_expect(&mut primary, "@dm mode on", "Campaign NPCs are active")?;
+        say_expect(&mut primary, &format!("@dmflag set {FLAG_NAME} 9"), "set to 9")?;
+        say_expect(&mut primary, &format!("@dmquest start {QUEST_ID}"), "started")?;
+        say_expect(&mut partner, &format!("@dmflag get {FLAG_NAME}"), &format!("{FLAG_NAME} = 0"))?;
+
+        // End run 1, then make a different party and bring the partner in.
+        say_expect(&mut primary, "@dm mode off", "DnD mode disabled")?;
+        let _ = primary.net.leave_party();
+        primary.pump(Duration::from_millis(400));
+        form_party(&mut primary, &mut partner)?;
+        say_expect(&mut primary, "@dm mode on", "Campaign NPCs are active")?;
+
+        partner.flush();
+        let joined = partner.collect_for(Duration::from_millis(700));
+        if joined
+            .iter()
+            .any(|event| matches!(event, NetworkEvent::QuestAdded { quest_id, .. } if *quest_id == QUEST_ID))
+        {
+            return Err("a quest from a previous party's run reached a character who joined a new party".to_owned());
+        }
+        say_expect(&mut partner, &format!("@dmflag get {FLAG_NAME}"), &format!("{FLAG_NAME} = 0"))?;
+        // The original owner keeps their own progress through the re-creation.
+        say_expect(&mut primary, &format!("@dmflag get {FLAG_NAME}"), &format!("{FLAG_NAME} = 9"))?;
+        Ok(())
+    })();
+
+    let _ = primary.say(&format!("@dmquest erase {QUEST_ID}"));
+    primary.pump(Duration::from_millis(150));
+    let _ = primary.say(&format!("@dmflag clear {FLAG_NAME}"));
+    primary.pump(Duration::from_millis(150));
+    let _ = primary.say("@dm mode off");
+    primary.pump(Duration::from_millis(150));
+    leave_party_both(&mut primary, &mut partner);
     result
 }
 

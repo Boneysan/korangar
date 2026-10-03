@@ -177,13 +177,21 @@
     }
   ],
   "last_checks": [
-    "export_supported_data.py: passed",
-    "export_supported_data.py --check: passed",
-    "item effect phrase tests: passed"
+    "PASS coverage report defines exactly the evidence states verified, conditional, configured_estimate, source_clue, not_reviewed, unknown",
+    "PASS \"unknown\" (searched, no answer) and \"not reviewed\" (not searched) have different descriptions",
+    "PASS the client's EvidenceState enum has the same six states",
+    "PASS item 501 (Red Potion) is translated and has a summary",
+    "PASS no untranslated item carries a summary",
+    "PASS quest 12106's reviewed flow has a reviewed state and sources",
+    "PASS NPC 99 (Tool Dealer#alb): every listed offer points at a literal sellitem line",
+    "PASS no runtime map-flag clue is labeled as reviewed",
+    "PASS scripted spawn bakonawalake_onmobspawn_1_at_ma_b is reviewed, not a clue",
+    "PASS formula al_heal_renewal_formula is reviewed and cites sources",
+    "PASS every exported exchange carries a reviewed state"
   ],
   "last_coverage_delta": null,
-  "next_action": "Run: python3 tools/encyclopedia_unit.py next",
-  "last_checkpoint_utc": "2026-10-01T07:37:09Z",
+  "next_action": "Run python3 tools/encyclopedia_unit.py next",
+  "last_checkpoint_utc": "2026-10-03T04:37:15Z",
   "unit_queue": "docs/plans/encyclopedia-unit-queue.json",
   "queue_summary": {
     "E0": {

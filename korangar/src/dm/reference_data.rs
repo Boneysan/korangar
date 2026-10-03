@@ -1187,6 +1187,9 @@ pub struct ReferenceQuestTarget {
 
 pub struct ReferenceData {
     pub source_revision: String,
+    /// Whether the server tree had uncommitted changes when this data was
+    /// exported. The loader requires every export to agree on it.
+    pub source_worktree_dirty: bool,
     pub mode: String,
     pub coverage_report: ReferenceCoverageReport,
     pub monsters: Vec<ReferenceMonster>,
@@ -1691,6 +1694,7 @@ impl ReferenceData {
 
         Ok(Self {
             source_revision: bestiary.source_revision,
+            source_worktree_dirty: bestiary.source_worktree_dirty,
             mode: bestiary.mode,
             coverage_report,
             monsters: bestiary.entries,

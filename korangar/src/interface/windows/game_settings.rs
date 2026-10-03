@@ -315,6 +315,12 @@ where
                     event: Toggle(self.game_settings_path.reduce_motion()),
                 },
                 state_button! {
+                    text: "Audio cues",
+                    tooltip: "Short sounds for dangerous enemy casts, interrupts, quest completion, party pings, and card drops. Each one also has a visual cue; sound is never the only warning.",
+                    state: self.game_settings_path.audio_cues(),
+                    event: Toggle(self.game_settings_path.audio_cues()),
+                },
+                state_button! {
                     text: "Reduce flashing",
                     tooltip: "Dim procedural combat bursts and their point lights. Skill timing, telegraphs, and sounds remain unchanged.",
                     state: self.game_settings_path.reduce_flashing(),
@@ -376,6 +382,7 @@ where
                     state: self.game_settings_path.show_combat_text(),
                     event: Toggle(self.game_settings_path.show_combat_text()),
                 },
+                button! { text: "Cycle effect density (full / reduced / minimal)", tooltip: "Thins other players' cosmetic skill visuals in crowded fights. Your own skills, enemy skills, ground telegraphs, cast bars, and combat text are never hidden.", event: InputEvent::CycleEffectDensity },
                 button! { text: "Cycle combat text detail (all / important / status only)", tooltip: "All shows every number; Important keeps critical hits, misses, and healing; Status only hides floating numbers while leaving textual status notices visible.", event: InputEvent::CycleCombatTextFrequency },
                 button! { text: "Cycle combat text size (small / normal / large)", tooltip: "Adjusts floating combat text size independently from the overall interface scale.", event: InputEvent::CycleCombatTextSize },
                 text! { text: "Keyboard shortcuts — select an action, then press its replacement chord. Escape cancels." },

@@ -310,9 +310,9 @@
         {
           "path": "db/re/item_db.conf",
           "lines": [
-            99727,
-            99728,
-            99729
+            85457,
+            85458,
+            85459
           ],
           "required_source_literals": [
             "Id: 11533",

@@ -882,8 +882,23 @@ fn server_rule_details(rule: &crate::dm::reference_data::ReferenceServerRule) ->
     lines.extend(rule.details.iter().cloned());
     lines.push("Source configuration:".to_owned());
     lines.extend(rule.sources.iter().map(|source| format!("{} ({})", source.path, source.record)));
+    lines.push(data_provenance_line());
     lines.push("Values are exported from this Hercules source revision and can change with server configuration.".to_owned());
     lines
+}
+
+/// Which server revision the Guide's numbers were read from, so a player (or
+/// the DM) can tell when they might be out of date. The Guide never reads the
+/// live server.
+fn data_provenance_line() -> String {
+    let data = reference_data();
+    let revision: String = data.source_revision.chars().take(10).collect();
+    let tree = if data.source_worktree_dirty {
+        "the server had uncommitted changes at export"
+    } else {
+        "the server tree was committed at export"
+    };
+    format!("Exported from Hercules {revision} ({} mode); {tree}.", data.mode)
 }
 
 fn coverage_details() -> Vec<String> {
@@ -1437,6 +1452,20 @@ fn map_details(map_name: &str, town_pois: &[TownPoi]) -> Vec<String> {
             if !rumor.is_story_spoiler {
                 lines.push(format!("@guide:rumor:{}|{} ({})", rumor.id, rumor.title, rumor.category));
             }
+        }
+    }
+    let chests = crate::world::hidden_chests_for_map(map_name);
+    if !chests.is_empty() {
+        lines.push(format!(
+            "Hidden treasure chests ({}): each appears when you walk close and opens once per character. This list cannot show which you \
+             have opened.",
+            chests.len()
+        ));
+        for chest in chests {
+            lines.push(format!(
+                "@route-cell:{map_name}:{}:{}|Route to hidden chest — {map_name} ({}, {})",
+                chest.x, chest.y, chest.x, chest.y
+            ));
         }
     }
     lines.push("Spawn rosters are configured data and script clues; they do not represent live monster counts.".to_owned());
@@ -3083,7 +3112,7 @@ mod tests {
     use super::{
         GuideResult, ReferenceItem, display_name, item_details, job_matches, job_names, map_details, monster_details, parse_guide_link,
         parse_route_cell_link, quest_details, quest_reference_details, reference_data, refinement_details, resolve_details, rumor_details,
-        search_all_categories, skill_details, status_details, status_tag,
+        search_all_categories, server_rule_details, skill_details, status_details, status_tag,
     };
     use crate::dm::reference_data::{ReferenceQuest, ReferenceQuestTarget};
     use crate::state::discovery::DiscoveryState;
@@ -3390,6 +3419,34 @@ mod tests {
     }
 
     #[test]
+    fn guide_map_details_list_hidden_chests_as_exact_cell_routes() {
+        let maps = &crate::world::navigation_graph().maps;
+        let index = maps.iter().position(|map| map == "prt_fild01").expect("known map");
+        let result = GuideResult {
+            label: "prt_fild01".to_owned(),
+            kind: "map".to_owned(),
+            id: index as u32,
+        };
+        let detail = resolve_details(&result);
+        assert!(detail.iter().any(|line| line.starts_with("Hidden treasure chests (1):")));
+        let route = detail
+            .iter()
+            .find(|line| line.contains("Route to hidden chest"))
+            .and_then(|line| parse_route_cell_link(line))
+            .expect("the chest has an exact-cell route");
+        assert_eq!((route.0.as_str(), route.1, route.2), ("prt_fild01", 146, 126));
+
+        // A map with no chest gets no chest section.
+        let index = maps.iter().position(|map| map == "prontera").expect("known map");
+        let none = resolve_details(&GuideResult {
+            label: "prontera".to_owned(),
+            kind: "map".to_owned(),
+            id: index as u32,
+        });
+        assert!(!none.iter().any(|line| line.starts_with("Hidden treasure chests")));
+    }
+
+    #[test]
     fn guide_map_details_show_npc_service_action_and_requirement() {
         let index = crate::world::navigation_graph()
             .maps
@@ -3541,6 +3598,8 @@ mod tests {
                 total_count: 10,
                 current_count: 3,
             }],
+            location: None,
+            guidance: Vec::new(),
         };
         let detail = quest_details(&quest);
         assert!(detail.iter().any(|line| line.contains("Poring — 3/10")));
@@ -4283,6 +4342,59 @@ mod tests {
                 .iter()
                 .any(|r| r.kind == "mechanic" && r.id == 0 && r.label.contains("Armor refinement odds"))
         );
+    }
+
+    #[test]
+    fn provenance_rules_cover_precedence_discovery_guidance_and_dm_mode() {
+        let data = reference_data();
+        let rule = |id: &str| {
+            data.server_rules
+                .iter()
+                .find(|rule| rule.id == id)
+                .unwrap_or_else(|| panic!("provenance rule '{id}' should exist"))
+        };
+
+        // Import precedence names the real load order, ending in the server's
+        // overrides.
+        let precedence = rule("config-precedence").details.join(" ");
+        assert!(precedence.contains("conf/map/battle.conf"), "{precedence}");
+        assert!(precedence.contains("conf/import/battle.conf"), "{precedence}");
+        assert!(precedence.contains("later wins"), "{precedence}");
+
+        // Discovery never gates mechanics and is never shared with the party.
+        let discovery = rule("discovery-scope").details.join(" ");
+        assert!(discovery.contains("never shared with party members"), "{discovery}");
+        assert!(
+            discovery.contains("does not hide or reveal mechanical information"),
+            "{discovery}"
+        );
+
+        // Guidance is the client's, not the server's.
+        let guidance = rule("quest-guidance").details.join(" ");
+        assert!(guidance.contains("does not send item turn-in lists"), "{guidance}");
+
+        // DM mode: party-bound content, but MVP suppression is server-wide.
+        let dm_mode = rule("dm-mode").details.join(" ");
+        assert!(dm_mode.contains("needs a party"), "{dm_mode}");
+        assert!(dm_mode.contains("server-wide"), "{dm_mode}");
+
+        // Every rule cites at least one source file.
+        assert!(data.server_rules.iter().all(|rule| !rule.sources.is_empty()));
+    }
+
+    #[test]
+    fn a_rule_page_names_the_server_revision_it_was_exported_from() {
+        let data = reference_data();
+        let rule = data.server_rules.first().expect("at least one rule");
+        let lines = server_rule_details(rule);
+        let revision: String = data.source_revision.chars().take(10).collect();
+        let provenance = lines
+            .iter()
+            .find(|line| line.starts_with("Exported from Hercules "))
+            .unwrap_or_else(|| panic!("no revision line in {lines:?}"));
+        assert!(provenance.contains(&revision), "{provenance}");
+        assert!(provenance.contains("mode"), "{provenance}");
+        assert!(provenance.contains("at export"), "{provenance}");
     }
 
     #[test]

@@ -16,6 +16,7 @@ pub fn scenarios() -> Vec<Scenario> {
         Scenario::new("navigation-izlude-ferry-service", 3, navigation_izlude_ferry_service),
         Scenario::new("entity-details", 3, entity_details),
         Scenario::new("sit-stand", 3, sit_stand),
+        Scenario::new("recovery-state-packet", 3, recovery_state_packet),
         Scenario::new("tick-sync", 3, tick_sync),
     ]
 }
@@ -318,6 +319,41 @@ fn sit_stand(config: &Config) -> Result<(), String> {
     context.net.player_stand().map_err(|_| "disconnected")?;
     context.wait_for("PlayerStandUp", |event| match event {
         NetworkEvent::PlayerStandUp { entity_id } if entity_id.0 == player_id.0 => Some(()),
+        _ => None,
+    })?;
+    Ok(())
+}
+
+/// The fork's `ZC_RECOVERY_STATE` (0x0EFD) must reach the client as an event.
+/// It was registered as a no-op for weeks while the server sent it, so the
+/// recovery HUD had nothing to show; asserting the *event* is what catches
+/// that. Sitting is the one state change a headless session can cause on
+/// demand.
+fn recovery_state_packet(config: &Config) -> Result<(), String> {
+    let mut context = TestContext::connect(config)?;
+    context.flush();
+    context.say("@allskill")?;
+    context.wait_for("SkillTree after @allskill", |event| match event {
+        NetworkEvent::SkillTree { skill_information } if !skill_information.is_empty() => Some(()),
+        _ => None,
+    })?;
+
+    context.flush();
+    context.net.player_sit().map_err(|_| "disconnected")?;
+    // mode 2 = sitting, block 0 = nothing in the way (`recovery_mode` /
+    // `recovery_block` in Hercules `combat_state.h`).
+    let (mode, block) = context.wait_for("RecoveryState while sitting", |event| match event {
+        NetworkEvent::RecoveryState { mode: 2, block } => Some((2, *block)),
+        _ => None,
+    })?;
+    if block != 0 {
+        return Err(format!("sitting reported recovery block {block}, expected 0 (mode {mode})"));
+    }
+
+    context.flush();
+    context.net.player_stand().map_err(|_| "disconnected")?;
+    context.wait_for("RecoveryState after standing", |event| match event {
+        NetworkEvent::RecoveryState { mode: 1, .. } => Some(()),
         _ => None,
     })?;
     Ok(())

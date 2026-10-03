@@ -44,6 +44,18 @@ pub struct ClientHuntingGoalEntry {
     pub monster_name: String,
 }
 
+/// Where to go for a quest: the exact cell of the NPC the scripts name.
+#[derive(Clone, Debug, Eq, PartialEq, RustState, StateElement)]
+pub struct QuestLocationEntry {
+    /// A hunting contract's turn-in NPC (`true`), or the NPC a story quest is
+    /// marked on.
+    pub is_turn_in: bool,
+    pub npc: String,
+    pub map_name: String,
+    pub x: u16,
+    pub y: u16,
+}
+
 /// A quest in the log.
 #[derive(Clone, Debug, RustState, StateElement)]
 pub struct QuestEntry {
@@ -55,6 +67,11 @@ pub struct QuestEntry {
     pub requirements: Vec<QuestRequirementEntry>,
     /// Explicit monster objectives from Hercules hunting-quest packets.
     pub hunt_objectives: Vec<QuestHuntObjectiveEntry>,
+    /// The NPC to visit, when the campaign scripts name one.
+    pub location: Option<QuestLocationEntry>,
+    /// Where the items are found, then what to do, one line each. Empty when
+    /// there is no outline.
+    pub guidance: Vec<String>,
 }
 
 impl QuestEntry {
@@ -68,6 +85,14 @@ impl QuestEntry {
 
     pub fn hunt_objectives(&self) -> &[QuestHuntObjectiveEntry] {
         &self.hunt_objectives
+    }
+
+    pub fn location(&self) -> Option<&QuestLocationEntry> {
+        self.location.as_ref()
+    }
+
+    pub fn guidance(&self) -> &[String] {
+        &self.guidance
     }
 }
 
@@ -203,6 +228,8 @@ impl QuestLogState {
                 name: format!("Quest {quest_id}"),
                 requirements: Vec::new(),
                 hunt_objectives: objectives,
+                location: None,
+                guidance: Vec::new(),
             });
             return;
         };
@@ -290,6 +317,8 @@ mod tests {
                 needed: 7,
             }],
             hunt_objectives: Vec::new(),
+            location: None,
+            guidance: Vec::new(),
         }
     }
 

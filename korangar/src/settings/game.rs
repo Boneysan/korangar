@@ -124,6 +124,53 @@ impl GroundLootFilter {
     }
 }
 
+/// Who produced a skill visual, for the effect-density policy.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum EffectSource {
+    /// The local player's own skills.
+    Local,
+    /// A party member.
+    Party,
+    /// A monster. Hostile visuals are warnings and are never thinned.
+    Hostile,
+    /// Any other player.
+    Bystander,
+}
+
+/// How many cosmetic skill visuals from *other players* to draw (GDD 15, 16).
+/// Telegraph footprints, cast bars, markers, and combat text are not skill
+/// visuals in this sense and ignore this setting entirely.
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq, Serialize, Deserialize, RustState, StateElement)]
+pub enum EffectDensity {
+    /// Draw everything.
+    #[default]
+    Full,
+    /// Hide bystander players' skill visuals; keep yours, party, and hostile.
+    Reduced,
+    /// Keep only your own and hostile skill visuals.
+    Minimal,
+}
+
+impl EffectDensity {
+    pub fn next(self) -> Self {
+        match self {
+            Self::Full => Self::Reduced,
+            Self::Reduced => Self::Minimal,
+            Self::Minimal => Self::Full,
+        }
+    }
+
+    pub fn shows_skill_visual(self, source: EffectSource) -> bool {
+        match (self, source) {
+            (_, EffectSource::Local | EffectSource::Hostile) => true,
+            (Self::Full, _) => true,
+            (Self::Reduced, EffectSource::Party) => true,
+            (Self::Reduced, EffectSource::Bystander) => false,
+            (Self::Minimal, EffectSource::Party | EffectSource::Bystander) => false,
+        }
+    }
+}
+
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq, Serialize, Deserialize, RustState, StateElement)]
 pub enum CombatTextFrequency {
     /// Show every damage, miss, and healing number.
@@ -226,6 +273,13 @@ pub struct GameSettings {
     /// lights.
     #[serde(default)]
     pub reduce_flashing: bool,
+    /// Restrained audio cues for dangerous casts, interrupts, quest
+    /// completion, party pings, and card drops. Every cue also has a visual.
+    #[serde(default = "default_true")]
+    pub audio_cues: bool,
+    /// Thin other players' cosmetic skill visuals in crowded fights.
+    #[serde(default)]
+    pub effect_density: EffectDensity,
     /// Cast a ground-targeted skill at the current cursor cell when selected,
     /// falling back to the armed aim-and-click flow when the cursor has no map
     /// target.
@@ -347,6 +401,8 @@ impl Default for GameSettings {
             wasd_movement: true,
             reduce_motion: false,
             reduce_flashing: false,
+            audio_cues: true,
+            effect_density: EffectDensity::default(),
             quickcast_ground_skills: false,
             hold_aim_release_ground_skills: false,
             ground_skill_target_modes: HashMap::new(),
@@ -670,6 +726,7 @@ mod tests {
         let default_settings = ManuallyDrop::new(GameSettings::default());
         assert!(!default_settings.reduce_motion);
         assert!(!default_settings.reduce_flashing);
+        assert!(default_settings.audio_cues);
         assert!(!default_settings.quickcast_ground_skills);
         assert!(!default_settings.hold_aim_release_ground_skills);
         assert!(default_settings.show_quest_markers);
@@ -690,6 +747,8 @@ mod tests {
         let old_settings: ManuallyDrop<GameSettings> = ManuallyDrop::new(ron::from_str("(auto_attack:true)").unwrap());
         assert!(!old_settings.reduce_motion);
         assert!(!old_settings.reduce_flashing);
+        assert!(old_settings.audio_cues, "older settings files keep cues on");
+        assert_eq!(old_settings.effect_density, super::EffectDensity::Full);
         assert!(!old_settings.quickcast_ground_skills);
         assert!(!old_settings.hold_aim_release_ground_skills);
         assert!(old_settings.show_quest_markers);
@@ -934,5 +993,52 @@ mod tests {
         loaded.remove_wishlist(914);
         assert!(!loaded.is_wishlisted(914));
         assert!(loaded.is_wishlisted(501));
+    }
+
+    #[test]
+    fn effect_density_never_thins_your_own_or_hostile_visuals() {
+        use super::{EffectDensity, EffectSource};
+        for density in [EffectDensity::Full, EffectDensity::Reduced, EffectDensity::Minimal] {
+            assert!(
+                density.shows_skill_visual(EffectSource::Local),
+                "{density:?} hides your own skill"
+            );
+            assert!(
+                density.shows_skill_visual(EffectSource::Hostile),
+                "{density:?} hides a hostile warning"
+            );
+        }
+        assert!(EffectDensity::Full.shows_skill_visual(EffectSource::Bystander));
+        assert!(EffectDensity::Reduced.shows_skill_visual(EffectSource::Party));
+        assert!(!EffectDensity::Reduced.shows_skill_visual(EffectSource::Bystander));
+        assert!(!EffectDensity::Minimal.shows_skill_visual(EffectSource::Party));
+        assert!(!EffectDensity::Minimal.shows_skill_visual(EffectSource::Bystander));
+        assert_eq!(EffectDensity::Full.next(), EffectDensity::Reduced);
+        assert_eq!(EffectDensity::Reduced.next(), EffectDensity::Minimal);
+        assert_eq!(EffectDensity::Minimal.next(), EffectDensity::Full);
+    }
+
+    #[test]
+    fn effect_density_minimal_preserves_telegraphs_and_threats() {
+        use super::{EffectDensity, EffectSource};
+        use crate::world::{level_invariant_skill_footprint, skill_footprint};
+        use ragnarok_packets::{SkillId, SkillLevel};
+
+        let density = EffectDensity::Minimal;
+        // Hostile warnings and local actions are always permitted.
+        assert!(density.shows_skill_visual(EffectSource::Hostile));
+        assert!(density.shows_skill_visual(EffectSource::Local));
+        // Non-hostile visuals are suppressed.
+        assert!(!density.shows_skill_visual(EffectSource::Party));
+        assert!(!density.shows_skill_visual(EffectSource::Bystander));
+
+        // Lethal ground hazards and telegraph footprints (e.g., Storm Gust 89, Pneuma 34)
+        // are computed independently of effect density and remain intact.
+        let storm_gust = skill_footprint(SkillId(89), SkillLevel(5), 0);
+        assert!(storm_gust.is_some(), "Storm Gust telegraph footprint must exist");
+        let invariant = level_invariant_skill_footprint(SkillId(89), 0);
+        assert!(invariant.is_some(), "Storm Gust level-invariant footprint must exist");
+        let pneuma = skill_footprint(SkillId(25), SkillLevel(1), 0);
+        assert!(pneuma.is_some(), "Pneuma telegraph footprint must exist");
     }
 }

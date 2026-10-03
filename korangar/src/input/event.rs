@@ -108,6 +108,9 @@ pub enum InputEvent {
     CycleGroundSkillTargetMode(u16),
     /// Cycle between all combat text and important-only combat text.
     CycleCombatTextFrequency,
+    /// Cycle how many other-player skill visuals are drawn (full / reduced /
+    /// minimal).
+    CycleEffectDensity,
     /// Cycle combat text font size through small, normal, and large.
     CycleCombatTextSize,
     /// Open or close the interface settings window.
@@ -655,6 +658,8 @@ pub enum InputEvent {
     SharePartyDestination,
     /// Route to the party's current shared destination and acknowledge it.
     AcceptPartyDestination,
+    /// Dismiss the shared destination for this client only; nothing is sent.
+    DeclinePartyDestination,
     /// Start a bounded party-wide ready check.
     StartPartyReadyCheck,
     /// Respond once to the active party ready check.

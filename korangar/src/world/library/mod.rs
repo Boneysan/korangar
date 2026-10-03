@@ -1,6 +1,8 @@
 mod accessory_name;
 mod baby_job;
 mod campaign_quest;
+mod hidden_chests;
+mod hunt_story;
 mod item_info;
 mod item_name;
 mod item_resource;
@@ -24,7 +26,9 @@ use mlua::{Lua, LuaOptions, StdLib};
 
 pub use self::accessory_name::{AccessoryName, AccessoryNameKey};
 pub use self::baby_job::IsBabyJob;
-pub use self::campaign_quest::{CampaignQuest, CampaignQuestTable};
+pub use self::campaign_quest::{CampaignQuest, CampaignQuestTable, QuestGuidance, QuestLocation};
+pub use self::hidden_chests::hidden_chests_for_map;
+pub use self::hunt_story::{StoryStep, visible_story_steps};
 pub use self::item_info::ItemInfo;
 pub use self::item_name::{ItemName, ItemNameKey};
 pub use self::item_resource::{ItemResource, ItemResourceKey};
@@ -117,6 +121,14 @@ impl Library {
     #[inline]
     pub fn campaign_quest(&self, quest_id: u32) -> Option<&CampaignQuest> {
         self.campaign_quest_table.get(quest_id)
+    }
+
+    pub fn campaign_quest_location(&self, quest_id: u32) -> Option<&QuestLocation> {
+        self.campaign_quest_table.location(quest_id)
+    }
+
+    pub fn campaign_quest_guidance(&self, quest_id: u32) -> Option<&QuestGuidance> {
+        self.campaign_quest_table.guidance(quest_id)
     }
 
     /// Resolve a `ZC_MSG` / `ZC_MSG_COLOR` id via msgstringtable.

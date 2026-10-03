@@ -17,6 +17,7 @@ pub fn scenarios() -> Vec<Scenario> {
         Scenario::new("party-lifecycle", 8, party_lifecycle),
         Scenario::new("party-message-carrier", 8, party_message_carrier),
         Scenario::new("party-quest-credit", 8, party_quest_credit),
+        Scenario::new("party-quest-interaction-credit", 8, party_quest_interaction_credit),
         Scenario::new("account-discovery-isolation", 8, account_discovery_isolation),
         Scenario::new("party-reject-block", 8, party_reject_block),
         Scenario::new("party-member-vitals", 8, party_member_vitals),
@@ -28,12 +29,14 @@ pub fn scenarios() -> Vec<Scenario> {
         Scenario::new("party-promote-leader", 8, party_promote_leader),
         Scenario::new("party-share-options", 8, party_share_options),
         Scenario::new("party-experience-sharing", 8, party_experience_sharing),
+        Scenario::new("party-markers-and-goals", 8, party_markers_and_goals),
         Scenario::new("whisper-ignore", 8, whisper_ignore),
         Scenario::new("trade-add-item", 8, trade_add_item),
         Scenario::new("trade-reject", 8, trade_reject),
         Scenario::new("trade-invalid-offers", 8, trade_invalid_offers),
         Scenario::new("trade-cancel", 8, trade_cancel),
         Scenario::new("trade-commit", 8, trade_commit),
+        Scenario::new("trade-partner-change-after-lock", 8, trade_partner_change_after_lock),
     ]
 }
 
@@ -530,6 +533,380 @@ fn party_message_carrier(config: &Config) -> Result<(), String> {
         Ok(())
     })();
     leave_party_both(&mut primary, &mut partner);
+    result
+}
+
+/// F20: target markers (`mark-set`, `mark-clear`) and Tonight's Goals
+/// (`goal-add`, `goal-done`, `goal-clear`) replicate between live clients over
+/// Hercules within the carrier and rate limit bounds.
+fn party_markers_and_goals(config: &Config) -> Result<(), String> {
+    let (mut primary, mut partner) = connect_pair(config)?;
+    let primary_account = primary.account_id;
+    let partner_account = partner.account_id;
+    let primary_name = primary.character_name.clone();
+    let partner_name = partner.character_name.clone();
+    let primary_prefix = format!("{primary_name} : ");
+    let partner_prefix = format!("{partner_name} : ");
+
+    let result: Result<(), String> = (|| {
+        form_party(&mut primary, &mut partner)?;
+
+        // 1. Target markers replication
+        const MARK_ATTACK: &str = "[KORANGAR-SESSION:v1] mark-set attack 12345";
+        const MARK_CLEAR: &str = "[KORANGAR-SESSION:v1] mark-clear 12345";
+        const PARTNER_MARK_FOCUS: &str = "[KORANGAR-SESSION:v1] mark-set focus 67890";
+
+        primary.flush();
+        partner.flush();
+        primary
+            .net
+            .send_party_chat_message(&primary_name, MARK_ATTACK)
+            .map_err(|_| "primary disconnected")?;
+
+        partner.wait_for("target marker set relay", |event| match event {
+            NetworkEvent::PartyChatMessage { account_id, text }
+                if *account_id == primary_account && text.starts_with(&primary_prefix) && text.contains(MARK_ATTACK) =>
+            {
+                Some(())
+            }
+            _ => None,
+        })?;
+
+        // Obey sender 1-second rate limit
+        let _ = partner.collect_for(Duration::from_millis(1050));
+        primary.flush();
+        partner.flush();
+
+        primary
+            .net
+            .send_party_chat_message(&primary_name, MARK_CLEAR)
+            .map_err(|_| "primary disconnected")?;
+
+        partner.wait_for("target marker clear relay", |event| match event {
+            NetworkEvent::PartyChatMessage { account_id, text }
+                if *account_id == primary_account && text.starts_with(&primary_prefix) && text.contains(MARK_CLEAR) =>
+            {
+                Some(())
+            }
+            _ => None,
+        })?;
+
+        // Partner sets focus marker; primary receives it
+        partner
+            .net
+            .send_party_chat_message(&partner_name, PARTNER_MARK_FOCUS)
+            .map_err(|_| "partner disconnected")?;
+
+        primary.wait_for("partner target marker relay", |event| match event {
+            NetworkEvent::PartyChatMessage { account_id, text }
+                if *account_id == partner_account && text.starts_with(&partner_prefix) && text.contains(PARTNER_MARK_FOCUS) =>
+            {
+                Some(())
+            }
+            _ => None,
+        })?;
+
+        // 2. Tonight's Goals replication
+        const GOAL_ADD: &str = "[KORANGAR-SESSION:v1] goal-add 1 Raydric Card";
+        const GOAL_DONE: &str = "[KORANGAR-SESSION:v1] goal-done 1";
+        const GOAL_CLEAR: &str = "[KORANGAR-SESSION:v1] goal-clear";
+
+        let _ = partner.collect_for(Duration::from_millis(1050));
+        primary.flush();
+        partner.flush();
+
+        primary
+            .net
+            .send_party_chat_message(&primary_name, GOAL_ADD)
+            .map_err(|_| "primary disconnected")?;
+
+        partner.wait_for("goal add relay", |event| match event {
+            NetworkEvent::PartyChatMessage { account_id, text }
+                if *account_id == primary_account && text.starts_with(&primary_prefix) && text.contains(GOAL_ADD) =>
+            {
+                Some(())
+            }
+            _ => None,
+        })?;
+
+        let _ = primary.collect_for(Duration::from_millis(1050));
+        partner
+            .net
+            .send_party_chat_message(&partner_name, GOAL_DONE)
+            .map_err(|_| "partner disconnected")?;
+
+        primary.wait_for("goal done relay", |event| match event {
+            NetworkEvent::PartyChatMessage { account_id, text }
+                if *account_id == partner_account && text.starts_with(&partner_prefix) && text.contains(GOAL_DONE) =>
+            {
+                Some(())
+            }
+            _ => None,
+        })?;
+
+        let _ = partner.collect_for(Duration::from_millis(1050));
+        primary
+            .net
+            .send_party_chat_message(&primary_name, GOAL_CLEAR)
+            .map_err(|_| "primary disconnected")?;
+
+        partner.wait_for("goal clear relay", |event| match event {
+            NetworkEvent::PartyChatMessage { account_id, text }
+                if *account_id == primary_account && text.starts_with(&primary_prefix) && text.contains(GOAL_CLEAR) =>
+            {
+                Some(())
+            }
+            _ => None,
+        })?;
+
+        // 3. Party leave cleanly notifies remaining members
+        partner.net.leave_party().map_err(|_| "partner disconnected")?;
+        primary.wait_for("partner left party", |event| match event {
+            NetworkEvent::PartyMemberRemoved { character_name, .. } if character_name == &partner_name => Some(()),
+            _ => None,
+        })?;
+
+        Ok(())
+    })();
+
+    leave_party_both(&mut primary, &mut partner);
+    result
+}
+
+/// F39: `partycompletequest` credits a shared quest step only to nearby party
+/// members who already have it active. Needs the `f39_party_credit_test.txt`
+/// fixture (enabled by `run-integration-tests.sh`).
+fn party_quest_interaction_credit(config: &Config) -> Result<(), String> {
+    const NPC_X: u16 = 168;
+    const NPC_Y: u16 = 205;
+    const QUEST_A: u32 = 11118;
+    const QUEST_B: u32 = 11119;
+    // `area_size` in this checkout's conf/import/battle.conf.
+    const RANGE: u16 = 30;
+
+    fn add_quest(context: &mut TestContext, quest_id: u32) -> Result<(), String> {
+        context.say(&format!("@quest add {quest_id}"))?;
+        context.wait_for("quest added", |event| match event {
+            NetworkEvent::QuestAdded {
+                quest_id: id,
+                active: true,
+            } if *id == quest_id => Some(()),
+            _ => None,
+        })
+    }
+
+    fn clear_quests(context: &mut TestContext) {
+        for quest_id in [QUEST_A, QUEST_B] {
+            let _ = context.say(&format!("@quest del {quest_id}"));
+        }
+        context.pump(Duration::from_millis(200));
+        context.flush();
+    }
+
+    fn has_quest_event(events: &[NetworkEvent], quest_id: u32) -> bool {
+        events.iter().any(|event| match event {
+            NetworkEvent::QuestAdded { quest_id: id, .. } | NetworkEvent::QuestRemoved { quest_id: id } => *id == quest_id,
+            _ => false,
+        })
+    }
+
+    /// Talk to the fixture, choose `choice`, and return the "Credited N" count.
+    fn share(context: &mut TestContext, choice: i8) -> Result<u32, String> {
+        let npc_id = context
+            .entities
+            .iter()
+            .find(|(id, data)| {
+                id.0 >= 100_000_000 && {
+                    let position = data.position.tile_position();
+                    position.x.abs_diff(NPC_X) <= 1 && position.y.abs_diff(NPC_Y) <= 1
+                }
+            })
+            .map(|(id, _)| *id)
+            .ok_or("Party Credit Test NPC not visible (is f39_party_credit_test.txt enabled?)")?;
+        context.flush();
+        context.net.start_dialog(npc_id).map_err(|_| "disconnected")?;
+        context.wait_for("greeting page", |event| match event {
+            NetworkEvent::AddNextButton { npc_id: id } if *id == npc_id => Some(()),
+            _ => None,
+        })?;
+        context.flush();
+        context.net.next_dialog(npc_id).map_err(|_| "disconnected")?;
+        context.wait_for("quest choice", |event| match event {
+            NetworkEvent::AddChoiceButtons { npc_id: id, .. } if *id == npc_id => Some(()),
+            _ => None,
+        })?;
+        context.flush();
+        context.net.choose_dialog_option(npc_id, choice as _).map_err(|_| "disconnected")?;
+        let events = context.collect_for(Duration::from_millis(700));
+        let _ = context.net.close_dialog(npc_id);
+        events
+            .iter()
+            .filter_map(|event| match event {
+                NetworkEvent::OpenDialog { npc_id: id, text } if *id == npc_id => text.strip_prefix("Credited "),
+                _ => None,
+            })
+            .find_map(|rest| rest.split_whitespace().next()?.parse::<u32>().ok())
+            .ok_or_else(|| "fixture did not report a credited count".to_owned())
+    }
+
+    let (mut primary, partner_ctx) = connect_pair(config)?;
+    let mut partner_opt = Some(partner_ctx);
+    let result = (|| -> Result<(), String> {
+        let partner = partner_opt.as_mut().ok_or("partner missing")?;
+        form_party(&mut primary, partner)?;
+        clear_quests(&mut primary);
+        clear_quests(partner);
+        primary.warp("prontera", NPC_X - 2, NPC_Y)?;
+
+        // A. Mixed ownership: the partner lacks the quest, so nothing is granted.
+        partner.warp("prontera", NPC_X - 1, NPC_Y)?;
+        primary.pump(Duration::from_millis(300));
+        partner.pump(Duration::from_millis(300));
+        add_quest(&mut primary, QUEST_A)?;
+        partner.flush();
+        let credited = share(&mut primary, 1)?;
+        if credited != 0 {
+            return Err(format!("member without the quest was credited ({credited})"));
+        }
+        if has_quest_event(&partner.collect_for(Duration::from_millis(400)), QUEST_A) {
+            return Err("share granted or changed a quest for a member who did not have it".to_owned());
+        }
+
+        // B. Both active and in range: exactly one member credited, once.
+        add_quest(&mut primary, QUEST_B)?;
+        add_quest(partner, QUEST_B)?;
+        primary.flush();
+        let credited = share(&mut primary, 2)?;
+        if credited != 1 {
+            return Err(format!("expected 1 nearby member credited, got {credited}"));
+        }
+        partner.wait_for("partner's quest completed by the shared step", |event| match event {
+            NetworkEvent::QuestRemoved { quest_id } if *quest_id == QUEST_B => Some(()),
+            _ => None,
+        })?;
+
+        // C/D. Range: one cell beyond AREA_SIZE is not credited, at the limit is.
+        for (distance, expected) in [(RANGE + 1, 0), (RANGE, 1)] {
+            clear_quests(&mut primary);
+            clear_quests(partner);
+            add_quest(&mut primary, QUEST_A)?;
+            add_quest(partner, QUEST_A)?;
+            partner.warp("prontera", NPC_X - 2 + distance, NPC_Y)?;
+            primary.pump(Duration::from_millis(300));
+            partner.pump(Duration::from_millis(300));
+            primary.flush();
+            partner.flush();
+            let credited = share(&mut primary, 1)?;
+            if credited != expected {
+                return Err(format!(
+                    "partner {distance} cells away: expected {expected} credited, got {credited}"
+                ));
+            }
+        }
+
+        // E. Dead member: in range and has quest, but dead -> credited 0.
+        clear_quests(&mut primary);
+        clear_quests(partner);
+        add_quest(&mut primary, QUEST_A)?;
+        add_quest(partner, QUEST_A)?;
+        partner.warp("prontera", NPC_X - 1, NPC_Y)?;
+        primary.pump(Duration::from_millis(300));
+        partner.pump(Duration::from_millis(300));
+        let partner_account = partner.account_id;
+        partner.say("@kill")?;
+        primary.wait_for_within(
+            "partner death report",
+            Duration::from_secs(5),
+            &mut |event| match event {
+                NetworkEvent::PartyMemberAlive {
+                    account_id,
+                    is_dead: true,
+                } if account_id.0 == partner_account.0 => Some(()),
+                _ => None,
+            },
+        )?;
+        primary.flush();
+        partner.flush();
+        let credited = share(&mut primary, 1)?;
+        if credited != 0 {
+            return Err(format!("dead party member was credited ({credited})"));
+        }
+        if has_quest_event(&partner.collect_for(Duration::from_millis(400)), QUEST_A) {
+            return Err("dead party member received quest update event".to_owned());
+        }
+
+        // F. Revived member: after revival, sharing credits the partner.
+        partner.say("@alive")?;
+        primary.wait_for_within(
+            "partner alive report",
+            Duration::from_secs(5),
+            &mut |event| match event {
+                NetworkEvent::PartyMemberAlive {
+                    account_id,
+                    is_dead: false,
+                } if account_id.0 == partner_account.0 => Some(()),
+                _ => None,
+            },
+        )?;
+        partner.say("@heal")?;
+        partner.pump(Duration::from_millis(300));
+        clear_quests(&mut primary);
+        add_quest(&mut primary, QUEST_A)?;
+        primary.flush();
+        partner.flush();
+        let credited = share(&mut primary, 1)?;
+        if credited != 1 {
+            return Err(format!("expected revived party member to be credited, got {credited}"));
+        }
+        partner.wait_for("partner's quest completed after revival", |event| match event {
+            NetworkEvent::QuestRemoved { quest_id } if *quest_id == QUEST_A => Some(()),
+            _ => None,
+        })?;
+
+        // G. Disconnected member: partner drops connection, share yields 0.
+        clear_quests(&mut primary);
+        clear_quests(partner);
+        add_quest(&mut primary, QUEST_A)?;
+        add_quest(partner, QUEST_A)?;
+        partner_opt = None; // Drops connection
+        primary.pump(Duration::from_millis(600));
+        primary.flush();
+        let credited = share(&mut primary, 1)?;
+        if credited != 0 {
+            return Err(format!("disconnected party member was credited ({credited})"));
+        }
+
+        // Reconnect partner.
+        let mut partner = TestContext::connect_partner(config)?;
+        partner.warp("prontera", NPC_X - 1, NPC_Y)?;
+        primary.pump(Duration::from_millis(300));
+        partner.pump(Duration::from_millis(300));
+
+        // H. Former party member: after the partner leaves the party there is nobody to credit.
+        clear_quests(&mut primary);
+        clear_quests(&mut partner);
+        add_quest(&mut primary, QUEST_A)?;
+        add_quest(&mut partner, QUEST_A)?;
+        let partner_name = partner.character_name.clone();
+        partner.net.leave_party().map_err(|_| "partner disconnected")?;
+        primary.wait_for("partner left", |event| match event {
+            NetworkEvent::PartyMemberRemoved { character_name, .. } if character_name == &partner_name => Some(()),
+            _ => None,
+        })?;
+        primary.flush();
+        partner.flush();
+        let credited = share(&mut primary, 1)?;
+        if credited != 0 {
+            return Err(format!("former party member was credited ({credited})"));
+        }
+        partner_opt = Some(partner);
+        Ok(())
+    })();
+    clear_quests(&mut primary);
+    if let Some(mut partner) = partner_opt {
+        clear_quests(&mut partner);
+        leave_party_both(&mut primary, &mut partner);
+    }
     result
 }
 
@@ -2174,4 +2551,66 @@ fn trade_commit(config: &Config) -> Result<(), String> {
         NetworkEvent::TradeCompleted { success: true } => Some(()),
         _ => None,
     })
+}
+
+/// The server facts the client's last-second-change guard rests on
+/// (`state/trade.rs`, GDD F28):
+///
+/// 1. a partner's zeny arrives as an exchange item with id 0, and its amount is
+///    the NEW TOTAL (`deal.zeny = amount`), so a later offer replaces an
+///    earlier one;
+/// 2. a side that has locked cannot add, but the OTHER side can still change
+///    their offer, including lowering their zeny, and the first side stays
+///    locked.
+///
+/// If either stopped being true the guard would protect against the wrong
+/// thing, so this asserts them against the real server and not only from the
+/// source.
+fn trade_partner_change_after_lock(config: &Config) -> Result<(), String> {
+    let (mut primary, mut partner) = connect_pair(config)?;
+    partner.say("@zeny 9000")?;
+    partner.pump(Duration::from_millis(300));
+    begin_trade(&mut primary, &mut partner)?;
+
+    let result: Result<(), String> = (|| {
+        // 1. Zeny is item 0 and the amount is the total.
+        partner.net.trade_add_zeny(5000).map_err(|_| "partner disconnected")?;
+        primary.wait_for("partner zeny arrives as item id 0 with the amount", |event| match event {
+            NetworkEvent::TradePartnerItem { item_id, amount: 5000, .. } if item_id.0 == 0 => Some(()),
+            _ => None,
+        })?;
+
+        // 2a. We lock. The partner is still free to change their offer.
+        primary.net.trade_ok().map_err(|_| "primary disconnected")?;
+        primary.wait_for("our own lock is acknowledged", |event| match event {
+            NetworkEvent::TradeLocked { who: 0 } => Some(()),
+            _ => None,
+        })?;
+        partner.net.trade_add_zeny(1).map_err(|_| "partner disconnected")?;
+        primary.wait_for(
+            "partner LOWERS their zeny after we locked; the amount is the new total",
+            |event| match event {
+                NetworkEvent::TradePartnerItem { item_id, amount: 1, .. } if item_id.0 == 0 => Some(()),
+                _ => None,
+            },
+        )?;
+
+        // 2b. We are locked and cannot add: the partner is told nothing.
+        partner.flush();
+        primary.net.trade_add_zeny(8000).map_err(|_| "primary disconnected")?;
+        let leaked = partner
+            .collect_for(Duration::from_millis(800))
+            .into_iter()
+            .any(|event| matches!(event, NetworkEvent::TradePartnerItem { amount: 8000, .. }));
+        if leaked {
+            return Err("a side that had locked was still able to add zeny".to_owned());
+        }
+        Ok(())
+    })();
+
+    let _ = primary.net.trade_cancel();
+    let _ = partner.net.trade_cancel();
+    primary.pump(Duration::from_millis(300));
+    partner.pump(Duration::from_millis(300));
+    result
 }

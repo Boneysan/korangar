@@ -21,7 +21,8 @@ db_host="${INTEGRATION_DB_HOST:-127.0.0.1}"
 db_port="${INTEGRATION_DB_PORT:-3306}"
 db_admin="${INTEGRATION_DB_ADMIN:-root}"
 db_password="${INTEGRATION_DB_ADMIN_PASSWORD:-}"
-db_name="korangar_integration_$$"
+db_prefix="${INTEGRATION_DB_PREFIX:-}"
+db_name="${db_prefix}korangar_integration_$$"
 ready_timeout="${INTEGRATION_READY_TIMEOUT:-900}"
 build_jobs="${INTEGRATION_BUILD_JOBS:-2}"
 scratch="$(mktemp -d)"
@@ -130,7 +131,7 @@ is_our_artifact() {
     local name="$1" path="$2"
     [ -f "$path" ] || return 1
     if [ "$name" = integration-sql ]; then
-        grep -q 'db_database: "korangar_integration_[0-9]\+"' "$path"
+        grep -E -q 'db_database: "([a-zA-Z0-9_]*_)?korangar_integration_[0-9]+"' "$path"
     else
         static_override "$name" | cmp -s - "$path"
     fi
@@ -161,7 +162,7 @@ enable_dev_npcs() {
         # `#` as the delimiter, NOT `|`: the alternation below would otherwise
         # terminate the s command and sed would abort, leaving this file as just
         # the marker line.
-        sed -E 's#^//("npc/custom/(headless_dialog_test|identify_test)\.txt",)#\1#' \
+        sed -E 's#^//("npc/custom/(headless_dialog_test|identify_test|f39_party_credit_test)\.txt",)#\1#' \
             "$scratch/scripts_dev.conf"
     } > "$hercules_repo/$dev_npc_list"
 }
@@ -215,7 +216,7 @@ reclaim_orphans() {
     # pid reuse can only make us skip a drop, never take one that is in use.
     leaked="$("${mysql_admin[@]}" --batch --skip-column-names --execute="
         SELECT schema_name FROM information_schema.schemata
-         WHERE schema_name REGEXP '^korangar_integration_[0-9]+$';" 2>/dev/null || true)"
+         WHERE schema_name REGEXP '^([a-zA-Z0-9_]*_)?korangar_integration_[0-9]+$';" 2>/dev/null || true)"
     while IFS= read -r name; do
         [ -n "$name" ] || continue
         pid="${name##*_}"

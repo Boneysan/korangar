@@ -49,6 +49,9 @@ fn death_recovery_ten_kill_threshold(config: &Config) -> Result<(), String> {
     let (mut context, mut healer) = TestContext::connect_pair(config)?;
     context.ensure_job(1)?;
     context.ensure_base_level(50)?;
+    context.say("@str 60")?;
+    context.say("@dex 60")?;
+    context.say("@heal")?;
     context.flush();
     context.say("@jlevel 19")?;
     context.wait_for("job level 20 for measurable penalty", |event| match event {
@@ -180,6 +183,9 @@ fn death_recovery_ten_kill_threshold(config: &Config) -> Result<(), String> {
     if context.map_name != DEATH_MAP {
         return Err(format!("Resurrection left death map {DEATH_MAP}: {:?}", context.map_name));
     }
+    let _ = context.say("@killmonster");
+    context.say("@heal")?;
+    context.pump(Duration::from_millis(300));
 
     for kill_index in 1..=10 {
         let target = context.spawn_monster("PORING", 1002)?;

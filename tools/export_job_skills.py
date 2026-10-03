@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import re
 import subprocess
 import sys
@@ -93,12 +94,19 @@ def job_ids(text: str) -> dict[str, int]:
 
 
 def source_revision() -> tuple[str, bool]:
+    """The Hercules revision an export was read from, and whether the tree had
+    uncommitted changes. `KORANGAR_EXPORT_IGNORE_DIRTY=1` reports the tree as
+    clean, so `--check` compares CONTENT only: that is what
+    `check_reference_drift.py` sets, because an unrelated uncommitted server
+    change is not drift in the exported values."""
     try:
         revision = subprocess.check_output(["git", "-C", str(HERCULES), "rev-parse", "HEAD"], text=True, stderr=subprocess.DEVNULL).strip()
         dirty = subprocess.run(
             ["git", "-C", str(HERCULES), "diff-index", "--quiet", "HEAD"],
             capture_output=True,
         ).returncode != 0
+        if os.environ.get("KORANGAR_EXPORT_IGNORE_DIRTY") == "1":
+            dirty = False
         return revision, dirty
     except (OSError, subprocess.CalledProcessError):
         return "unknown", False

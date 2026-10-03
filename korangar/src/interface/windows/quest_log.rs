@@ -9,33 +9,60 @@ use crate::graphics::Color;
 use crate::input::InputEvent;
 use crate::loaders::OverflowBehavior;
 use crate::state::ClientState;
+use crate::state::dm_journal::DmJournalState;
 use crate::state::inventory::Inventory;
-use crate::state::quests::QuestLogState;
+use crate::state::quests::{QuestLocationEntry, QuestLogState};
 use crate::state::theme::InterfaceThemeType;
 
 /// Dynamic quest rows, with a Track/Untrack control beside each quest.
-struct QuestLogElement<A, B> {
+struct QuestLogElement<A, B, C> {
     quest_log_path: A,
     inventory_path: B,
+    journal_path: C,
     rows: Vec<ElementBox<ClientState>>,
 }
 
-impl<A, B> QuestLogElement<A, B> {
-    fn new(quest_log_path: A, inventory_path: B) -> Self {
+impl<A, B, C> QuestLogElement<A, B, C> {
+    fn new(quest_log_path: A, inventory_path: B, journal_path: C) -> Self {
         Self {
             quest_log_path,
             inventory_path,
+            journal_path,
             rows: Vec::new(),
         }
     }
 }
 
-impl<A, B> QuestLogElement<A, B>
+/// The Clues section: every investigation step the server has revealed, as the
+/// text rows shown under the quests. One list feeds both the row count and the
+/// rows, so the two cannot drift apart. Empty (and no header) until the server
+/// reports a flag that unlocks a step.
+fn clue_lines(journal: &DmJournalState) -> Vec<String> {
+    let steps = crate::world::visible_story_steps(|flag| journal.flag(flag));
+    if steps.is_empty() {
+        return Vec::new();
+    }
+    let mut lines = vec!["Clues".to_owned()];
+    for step in steps {
+        lines.push(format!("{}: {}", step.speaker, step.clue));
+        if !step.remaining_action.is_empty() {
+            lines.push(format!("  Next: {}", step.remaining_action));
+        }
+    }
+    lines
+}
+
+impl<A, B, C> QuestLogElement<A, B, C>
 where
     A: Path<ClientState, QuestLogState>,
     B: Path<ClientState, Inventory>,
+    C: Path<ClientState, DmJournalState>,
 {
     fn row_count(&self, state: &State<ClientState>) -> usize {
+        self.quest_row_count(state) + clue_lines(state.get(&self.journal_path)).len()
+    }
+
+    fn quest_row_count(&self, state: &State<ClientState>) -> usize {
         let quest_log = state.get(&self.quest_log_path);
         let goals = quest_log.client_hunting_goals();
         if quest_log.is_empty() {
@@ -47,11 +74,13 @@ where
             .iter()
             .map(|quest| {
                 let fallback = usize::from(quest.requirements().is_empty() && quest.hunt_objectives().is_empty());
-                1 + quest
-                    .requirements()
-                    .iter()
-                    .map(|requirement| 1 + requirement_source_routes(requirement.item_id.0).len())
-                    .sum::<usize>()
+                1 + quest.guidance().len()
+                    + usize::from(quest.location().is_some())
+                    + quest
+                        .requirements()
+                        .iter()
+                        .map(|requirement| 1 + requirement_source_routes(requirement.item_id.0).len())
+                        .sum::<usize>()
                     + fallback
                     + quest
                         .hunt_objectives()
@@ -69,6 +98,21 @@ where
         }
         rows
     }
+}
+
+/// A map the navigation graph knows, so a route to it can actually be drawn.
+fn is_graph_known_map(map_name: &str) -> bool {
+    crate::world::navigation_graph()
+        .maps
+        .iter()
+        .any(|known| known.eq_ignore_ascii_case(map_name))
+}
+
+/// The label and, when the map is routable, the exact-cell route for a quest's
+/// NPC.
+fn quest_location_label(location: &QuestLocationEntry) -> String {
+    let role = if location.is_turn_in { "Turn in to" } else { "Quest contact" };
+    format!("{role} {} — {} {},{}", location.npc, location.map_name, location.x, location.y)
 }
 
 fn hunt_spawn_maps(monster_id: u32) -> Vec<String> {
@@ -128,10 +172,11 @@ fn requirement_source_routes(item_id: u32) -> Vec<(String, String)> {
     routes
 }
 
-impl<A, B> Element<ClientState> for QuestLogElement<A, B>
+impl<A, B, C> Element<ClientState> for QuestLogElement<A, B, C>
 where
     A: Path<ClientState, QuestLogState>,
     B: Path<ClientState, Inventory>,
+    C: Path<ClientState, DmJournalState>,
 {
     type LayoutInfo = ();
 
@@ -172,6 +217,31 @@ where
                         text! { text: quest.name().to_owned() },
                     ),
                 }));
+                for line in quest.guidance() {
+                    self.rows.push(ErasedElement::new(text! {
+                        text: line.clone(),
+                        overflow_behavior: OverflowBehavior::Shrink,
+                    }));
+                }
+                if let Some(location) = quest.location() {
+                    let label = quest_location_label(location);
+                    if is_graph_known_map(&location.map_name) {
+                        self.rows.push(ErasedElement::new(button! {
+                            text: format!("Route: {label}"),
+                            tooltip: "Exact cell of the NPC, from the campaign script.",
+                            event: InputEvent::SetNavigationDestination {
+                                map_name: location.map_name.clone(),
+                                x: location.x,
+                                y: location.y,
+                            },
+                        }));
+                    } else {
+                        self.rows.push(ErasedElement::new(text! {
+                            text: label,
+                            overflow_behavior: OverflowBehavior::Shrink,
+                        }));
+                    }
+                }
                 if quest.requirements().is_empty() && quest.hunt_objectives().is_empty() {
                     self.rows
                         .push(ErasedElement::new(text! { text: "No objective details are available yet." }));
@@ -256,6 +326,20 @@ where
             }
         }
 
+        for (index, line) in clue_lines(state.get(&self.journal_path)).into_iter().enumerate() {
+            // The first line is the section header.
+            let color = if index == 0 {
+                Color::rgb_u8(140, 200, 255)
+            } else {
+                Color::monochrome_u8(210)
+            };
+            self.rows.push(ErasedElement::new(text! {
+                text: line,
+                color,
+                overflow_behavior: OverflowBehavior::Shrink,
+            }));
+        }
+
         for (index, row) in self.rows.iter_mut().enumerate() {
             with_nth_resolver(resolvers, index, |resolver| {
                 row.create_layout_info(state, store.child_store(index as u64), resolver);
@@ -283,24 +367,27 @@ where
 /// the player is carrying. Before this existed the three quest packets were
 /// registered and then dropped on the floor, so every quest in the campaign was
 /// invisible outside NPC dialogue.
-pub struct QuestLogWindow<A, B> {
+pub struct QuestLogWindow<A, B, C> {
     quest_log_path: A,
     inventory_path: B,
+    journal_path: C,
 }
 
-impl<A, B> QuestLogWindow<A, B> {
-    pub fn new(quest_log_path: A, inventory_path: B) -> Self {
+impl<A, B, C> QuestLogWindow<A, B, C> {
+    pub fn new(quest_log_path: A, inventory_path: B, journal_path: C) -> Self {
         Self {
             quest_log_path,
             inventory_path,
+            journal_path,
         }
     }
 }
 
-impl<A, B> CustomWindow<ClientState> for QuestLogWindow<A, B>
+impl<A, B, C> CustomWindow<ClientState> for QuestLogWindow<A, B, C>
 where
     A: Path<ClientState, QuestLogState> + 'static,
     B: Path<ClientState, Inventory> + 'static,
+    C: Path<ClientState, DmJournalState> + 'static,
 {
     fn window_class() -> Option<WindowClass> {
         Some(WindowClass::QuestLog)
@@ -316,7 +403,7 @@ where
             closable: true,
             elements: (
                 scroll_view! {
-                    children: QuestLogElement::new(self.quest_log_path, self.inventory_path),
+                    children: QuestLogElement::new(self.quest_log_path, self.inventory_path, self.journal_path),
                 },
             ),
         }
@@ -325,7 +412,54 @@ where
 
 #[cfg(test)]
 mod tests {
-    use super::{hunt_spawn_maps, requirement_source_routes};
+    use super::{clue_lines, hunt_spawn_maps, requirement_source_routes};
+    use crate::state::dm_journal::DmJournalState;
+
+    fn journal(lines: &[&str]) -> DmJournalState {
+        let mut journal = DmJournalState::default();
+        for body in lines {
+            journal.receive_server_line(&format!("[DMJ]{body}"));
+        }
+        journal
+    }
+
+    /// No flag from the server, no Clues section: not even a header.
+    #[test]
+    fn the_clues_section_is_absent_until_the_server_reveals_something() {
+        assert!(clue_lines(&DmJournalState::default()).is_empty());
+    }
+
+    #[test]
+    fn a_revealed_clue_shows_with_its_next_step_under_a_header() {
+        let lines = clue_lines(&journal(&[r#"{"t":"flag","v":1,"seq":0,"name":"dm_arc01_started","value":1}"#]));
+        assert_eq!(lines[0], "Clues");
+        assert!(lines[1].starts_with("Quartermaster Wynne: "), "{lines:?}");
+        assert!(lines[2].starts_with("  Next: "), "{lines:?}");
+        assert_eq!(lines.len(), 3);
+    }
+
+    /// A clue the server has not unlocked must not appear just because a
+    /// neighbouring one did.
+    #[test]
+    fn only_the_unlocked_clues_appear() {
+        let lines = clue_lines(&journal(&[
+            r#"{"t":"flag","v":1,"seq":0,"name":"dm_arc01_clue_mask","value":4}"#,
+        ]))
+        .join("\n");
+        assert!(lines.contains("Tibbets the Keeper"), "{lines}");
+        assert!(!lines.contains("Painted Sluice"), "{lines}");
+        assert!(!lines.contains("Mira"), "{lines}");
+    }
+
+    /// A flag the server clears takes its clue away again.
+    #[test]
+    fn a_flag_going_back_to_zero_hides_the_clue() {
+        let journal = journal(&[
+            r#"{"t":"flag","v":1,"seq":0,"name":"dm_arc01_started","value":1}"#,
+            r#"{"t":"flag","v":1,"seq":0,"name":"dm_arc01_started","value":0}"#,
+        ]);
+        assert!(clue_lines(&journal).is_empty());
+    }
 
     #[test]
     fn item_turn_in_routes_use_only_verified_drop_sources_and_graph_maps() {

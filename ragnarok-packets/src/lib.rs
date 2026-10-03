@@ -5921,8 +5921,9 @@ pub struct SkillFailReasonPacket {
 }
 
 /// Campaign recovery HUD state (`ZC_RECOVERY_STATE`, Hercules fork packet
-/// `0x0EFD`). Korangar currently has no player-facing recovery-state control;
-/// model the exact two-byte payload so headless sessions consume it safely.
+/// `0x0EFD`). Four bytes on the wire: header, `mode`, `block`. The values are
+/// Hercules' `enum recovery_mode` / `enum recovery_block` in `combat_state.h`,
+/// kept as raw bytes so a value added server-side cannot fail the packet.
 #[derive(Debug, Clone, Packet, ServerPacket, MapServer)]
 #[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
 #[header(0x0EFD)]
@@ -6938,6 +6939,15 @@ mod tests {
 
         assert_eq!(packet.party_id, PartyId(7));
         assert_eq!(packet.character_name, "test");
+    }
+
+    /// The fork recovery packet must stay 4 bytes to match
+    /// `packetLen(0x0efd, 4)` in Hercules' hand-maintained `packets_len.h`.
+    #[test]
+    fn recovery_state_packet_matches_fork_layout() {
+        let bytes = [0xFD, 0x0E, 0x02, 0x04];
+        let packet = read_packet::<RecoveryStatePacket>(&bytes);
+        assert_eq!((packet.mode, packet.block), (2, 4));
     }
 
     /// The trade-item notify packet must be 62 bytes to match

@@ -475,6 +475,13 @@ where
                     tooltip: "Set the shared route locally and acknowledge it to the party",
                     event: InputEvent::AcceptPartyDestination,
                 },
+                button! {
+                    text: "Decline shared destination",
+                    tooltip: "Dismiss the shared route on this client only; the party is not told",
+                    event: InputEvent::DeclinePartyDestination,
+                },
+                text! { text: self.party_path.markers_text(), },
+                text! { text: self.party_path.goals_text(), },
                 text! { text: self.party_path.ready_check_text(), },
                 split! { gaps: theme().window().gaps(), children: (
                     button! { text: "Start ready check", tooltip: "Ask current online party members to confirm readiness", event: InputEvent::StartPartyReadyCheck },

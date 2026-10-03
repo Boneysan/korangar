@@ -493,6 +493,93 @@ def equipment_refinement_rule() -> dict[str, object]:
     }
 
 
+def require_source(path: str, needle: str) -> None:
+    """A rule that quotes a script or source file must be able to point at it."""
+    target = HERCULES / path
+    if not target.is_file() or needle not in target.read_text(encoding="utf-8", errors="replace"):
+        raise ExportError(f"{path} no longer contains {needle!r}; review the rule text that quotes it")
+
+
+def config_precedence_rule() -> dict[str, object]:
+    root = HERCULES / "conf/map/battle.conf"
+    order = [path.relative_to(HERCULES).as_posix() for path in ordered_config_files(root)]
+    imports = [name for name in order if name.startswith("conf/import/")]
+    if not imports:
+        raise ExportError("conf/map/battle.conf loads no conf/import file; review the precedence rule")
+    return {
+        "id": "config-precedence",
+        "category": "Provenance",
+        "title": "Where server values come from (import precedence)",
+        "summary": "Every rate and rule in this Guide is the effective value: stock settings, then this server's overrides applied in the order Hercules loads them.",
+        "details": [
+            "Hercules reads its stock configuration first. Files in conf/import/ are read last and replace stock values, so a number you see here is the import value when one exists.",
+            "Battle settings are read in this order (later wins): " + " -> ".join(order),
+            f"{len(order)} files take part; {len(imports)} of them are server overrides ({', '.join(imports)}).",
+            "The Guide does not read the live server. It shows what was exported at the Hercules revision named under Source configuration, so a server that changed afterwards can differ until the data is re-exported.",
+        ],
+        "sources": [{"path": name, "record": "battle settings load order"} for name in order[:1] + imports],
+    }
+
+
+def discovery_scope_rule() -> dict[str, object]:
+    path = "npc/custom/korangar_discovery.txt"
+    require_source(path, "never their party peers")
+    return {
+        "id": "discovery-scope",
+        "category": "Provenance",
+        "title": "What discovery does and does not unlock",
+        "summary": "Reference data is open from the start; discovery only records your own encounters.",
+        "details": [
+            "Mechanical reference data (monsters, items, skills, maps) is searchable without having met the monster or visited the map.",
+            "The server keeps a discovery ledger of encounter milestones and visited maps. It is scoped to your account and is never shared with party members.",
+            "Discovery adds history and badges to Guide entries. It does not hide or reveal mechanical information.",
+            "Campaign (DM session) unlocks are separate and are not part of the account ledger.",
+        ],
+        "sources": [{"path": path, "record": "account discovery ledger and its scope comment"}],
+    }
+
+
+def quest_guidance_rule() -> dict[str, object]:
+    require_source("src/map/quest.c", "quest")
+    return {
+        "id": "quest-guidance",
+        "category": "Provenance",
+        "title": "Where quest guidance comes from",
+        "summary": "Route buttons and quest outlines are client features built from exported data; the server does not decide what guidance you see.",
+        "details": [
+            "The server sends a quest's kill objectives and progress. It does not send item turn-in lists, NPC locations or routes.",
+            "Item requirements, turn-in locations and outlines for campaign contracts come from data exported from the server's own scripts and bundled with the client.",
+            "Guidance and routing are your client's settings. Nothing about them is stored on the server.",
+        ],
+        "sources": [{"path": "src/map/quest.c", "record": "quest packets carry kill objectives only"}],
+    }
+
+
+def dm_mode_rule() -> dict[str, object]:
+    console = "npc/custom/dm_campaign/shared/dm_console.txt"
+    common = "npc/custom/dm_campaign/shared/dm_common.txt"
+    require_source(console, "A session with no party would unlock the campaign for every solo player.")
+    require_source(common, "$dm_mode && $dm_active_party > 0")
+    require_source("src/map/mob.c", "mob_dm_mode_should_suppress")
+    return {
+        "id": "dm-mode",
+        "category": "Provenance",
+        "title": "DM mode: what it switches on",
+        "summary": "A DM turns a campaign session on for one party. Campaign content reacts only to that party.",
+        "details": [
+            "Turning DM mode on needs a party; the session is bound to that party.",
+            "Campaign NPCs and story state respond only while DM mode is on and only to members of the party the session is bound to. Everyone else sees ordinary NPCs.",
+            "While any session is on, map-spawned MVP and boss monsters are held back server-wide (re-checked every 10 seconds). This applies to the whole server, not only the DM's party.",
+            "Turning DM mode off ends the session; story progress is kept for the party.",
+        ],
+        "sources": [
+            {"path": console, "record": "@dm mode on / off"},
+            {"path": common, "record": "DM_SessionAllows"},
+            {"path": "src/map/mob.c", "record": "mob_dm_mode_should_suppress"},
+        ],
+    }
+
+
 def build() -> dict[str, object]:
     battle = effective_settings(HERCULES / "conf/map/battle.conf")
     inter = effective_settings(HERCULES / "conf/common/inter-server.conf")
@@ -715,6 +802,10 @@ def build() -> dict[str, object]:
             natural_recovery_rule(battle),
             progression_limits_rule(battle),
             equipment_refinement_rule(),
+            config_precedence_rule(),
+            discovery_scope_rule(),
+            quest_guidance_rule(),
+            dm_mode_rule(),
         ],
     }
 

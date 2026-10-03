@@ -1,8 +1,10 @@
 mod combat;
 mod dialogue;
 mod dm;
+mod finale;
 mod gm;
 mod items;
+mod mobs;
 mod movement;
 mod observer;
 mod provisioning;
@@ -100,6 +102,8 @@ pub fn all_scenarios() -> Vec<Scenario> {
     scenarios.extend(dialogue::scenarios());
     scenarios.extend(social::scenarios());
     scenarios.extend(dm::scenarios());
+    scenarios.extend(finale::scenarios());
+    scenarios.extend(mobs::scenarios());
     scenarios.extend(observer::scenarios());
     scenarios.push(items::split_stack_scenario());
     scenarios.push(session::death_recovery_threshold_scenario());
