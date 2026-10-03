@@ -80,6 +80,41 @@ CI where missing.
 | F31 | No assign/complete action in the board window | Partial — open |
 | F16 | Recap tracks damage taken/interrupts; toast shows only damage dealt | Partial — open |
 | PR #10 | Live-confirmed 2026-09-18 fixes never reached `main` | Decision needed |
+| F04 | Stat view modes not wired to any window | Claim wrong — open |
+| F03 | Build planner projections not shown | Partial — open |
+| CI | PR gate covers 10/206 scenarios; Batch 1 scenarios only weekly | Open |
+
+## Batch 0 results (2026-10-03)
+
+**Claim checker** (`tools/audits/gdd_claims.py`, 93 rows): every cited name exists except
+F22 `PartyMemberLocationUpdate`, F23 `show_chat_timestamps`/`is_message_visible_in_tab`, and F24
+`RequestEquipItem`/`SavedEquipmentSets`. Existing names prove little on their own, which is why
+the dead-code map matters more.
+
+**Dead-code map.** Removing the file-wide `#![allow(dead_code)]` from six GDD modules shows code
+nothing in the client calls:
+
+| Row | Unused outside tests | Meaning |
+|---|---|---|
+| F04 | `StatViewMode`, `SimpleStatDescription`, `DetailedStatRow`, `AdvancedStatMetrics`, `CharacterStatsInput` | Simple/Detailed/Advanced stat modes are not wired to any window |
+| F03 | `calculate_projections`, `can_increase_stat` | The planner window does not show the promised derived projections |
+| F02 | `skill_cooldown`, `skill_after_cast_*_delay`, `skill_prerequisites`, `skill_status_change`, `skill_source` | Timing helpers unused; check whether the Guide reads the same data another way |
+| F30 | the whole formula module | No window shows a success chance |
+| F04/F10 | `is_unsupported` in `item_bonus.rs` | Minor |
+| Encyclopedia | 21 unread fields/methods in `reference_data.rs` | Data loaded but not shown; triage in Batch 5 |
+
+The blanket allowances should be replaced by item-level ones with a reason, so the compiler
+reports new unused code again.
+
+**Scenario index.** The pull-request gate runs 10 of 206 headless scenarios (smoke, registration,
+connection, character select, three quest scenarios, `skills-mage`, `trade-reject`,
+`party-lifecycle`). Every Batch 1 scenario (monster AI, MVPs, elites, EXP sharing, death recovery,
+quest credit, discovery, DM replay) runs only in the weekly full run on `main`. A green PR says
+nothing about them.
+
+**PR #10.** Its fixes (drag-click sound, Tab confirm-attack, hold-to-walk, pickup toggle, party
+privacy, class on character slot, equipped-gear sell filter) have no equivalent identifiers on
+`main`. Decision still needed: port, or record as dropped.
 
 ## Verdict log
 
