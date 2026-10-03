@@ -267,9 +267,8 @@ pub fn item_tooltip_text_with_target(
         if comparison.hovered_physical_pct != 100 || comparison.equipped_physical_pct != 100 {
             let sign = if comparison.delta_physical_pct > 0 { "+" } else { "" };
             lines.push(format!(
-                "Target Damage Modifier: {}% vs equipped ({}% advantage) (estimate)",
-                comparison.hovered_physical_pct,
-                format!("{sign}{}", comparison.delta_physical_pct)
+                "Target Damage Modifier: {}% vs equipped ({sign}{}% advantage) (estimate)",
+                comparison.hovered_physical_pct, comparison.delta_physical_pct
             ));
         }
         if comparison.hovered_magic_pct != 100 || comparison.equipped_magic_pct != 100 {

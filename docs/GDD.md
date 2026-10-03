@@ -1516,6 +1516,12 @@ This section was added in v0.2 after auditing the two forks that implement this 
 - **Where the plan and the source disagree:**
   - F23 says there is a chat timestamp toggle (`show_chat_timestamps`), but timestamps are always shown, and `<GUIDE:id>` chat links do not exist. Tabs and validated `<ITEM>` links do exist.
   - F16's encounter recap records damage taken and interrupted casts, but the player sees only a defeat toast with damage dealt and duration.
+  - Clippy's dead-code check (2026-10-03) shows code with no production caller:
+    - F30's crafting formulas (`world/crafting.rs`) are tested against `skill.c`, but no window shows a success chance.
+    - F31's commission board has no assign-crafter or complete action in its window.
+    - F16's MVP-award recording and recap summary are unused.
+
+    They are marked as allowed dead code outside tests, with that reason, until a UI uses them.
   - Some symbol names in the plan differ from the code (for example `SavedEquipmentSets` is `NamedEquipmentSet`, and `PartyFrameClick` doesn't exist) while the feature itself does.
 - **Still not built:**
   - F11's exact damage breakdown (decision D4).

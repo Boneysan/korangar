@@ -112,10 +112,10 @@ fn skill_rows(plan: &BuildPlan, baseline: &PlannerBaseline) -> Vec<PlannerSkillR
             let learned = baseline.skills.get(&skill.skill_id).copied().unwrap_or(0);
             let name = crate::world::skill_display_name(skill.skill_id).unwrap_or(skill.name.as_str());
             let mut text = format!("{name} {level}/{} ({:+})", skill.max_level, level as i32 - learned as i32);
-            if level < skill.max_level {
-                if let Err(reason) = plan.can_increase_skill(skill.skill_id, skill.max_level, Some(tree)) {
-                    text.push_str(&format!(" · {reason}"));
-                }
+            if level < skill.max_level
+                && let Err(reason) = plan.can_increase_skill(skill.skill_id, skill.max_level, Some(tree))
+            {
+                text.push_str(&format!(" · {reason}"));
             }
             PlannerSkillRow {
                 skill_id: skill.skill_id,
@@ -137,7 +137,7 @@ impl BuildPlannerState {
         let mut plan = BuildPlan::new("Planner", baseline.job_id, rules.is_some_and(|job| job.upper));
         plan.target_base_level = baseline.base_level;
         plan.target_job_level = baseline.job_level;
-        plan.stats = baseline.stats.clone();
+        plan.stats = baseline.stats;
         plan.skills = baseline.skills.clone();
         plan.skill_points_at_start = Some(baseline.skills.values().map(|&level| level as u32).sum::<u32>() + baseline.skill_points);
         plan.start_job_level = baseline.job_level;

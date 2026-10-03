@@ -260,7 +260,7 @@ pub fn detailed_stat_row(stat: StatKind, input: &CharacterStatsInput) -> Detaile
             next_point_deltas.push("+2% Potion recovery".to_owned());
             let current_vit = input.total_vit();
             let sum = input.base_level as u32 + current_vit as u32;
-            if (sum + 1) % 2 == 0 {
+            if (sum + 1).is_multiple_of(2) {
                 next_point_deltas.push("+1 Soft DEF (breakpoint hit!)".to_owned());
             } else {
                 next_point_deltas.push("Soft DEF breakpoint in 1 VIT".to_owned());

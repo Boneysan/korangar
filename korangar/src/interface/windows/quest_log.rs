@@ -345,7 +345,6 @@ where
                 row.create_layout_info(state, store.child_store(index as u64), resolver);
             });
         }
-        ()
     }
 
     fn lay_out<'a>(

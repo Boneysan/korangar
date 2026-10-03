@@ -1560,6 +1560,7 @@ fn elite_base_name(name: &str) -> Option<&str> {
     name.strip_prefix("[Elite] ").map(str::trim).filter(|base| !base.is_empty())
 }
 
+#[allow(clippy::too_many_arguments)] // one input per target-frame line
 fn format_monster_target_summary(
     name: &str,
     health: usize,
@@ -1650,6 +1651,10 @@ fn format_monster_target_summary(
 }
 
 const TIMED_ACTION_BUFFER_MS: u32 = 200;
+
+/// An incoming cast with a drawable ground footprint: skill, target cell, and
+/// the footprint's cell offsets.
+type TelegraphedCast = (SkillId, TilePosition, Vec<(i8, i8)>);
 
 fn client_tick_reached(now: u32, deadline: u32) -> bool {
     now.wrapping_sub(deadline) < (1 << 31)
@@ -11036,19 +11041,17 @@ impl Client {
                             attack_range,
                         },
                         client_tick,
+                    ) && cast_or_path_entity_skill(
+                        &mut self.networking_system,
+                        &mut self.client_state,
+                        self.map.as_deref(),
+                        &mut self.path_finder,
+                        skill_id,
+                        skill_level,
+                        attack_range,
+                        entity_id,
                     ) {
-                        if cast_or_path_entity_skill(
-                            &mut self.networking_system,
-                            &mut self.client_state,
-                            self.map.as_deref(),
-                            &mut self.path_finder,
-                            skill_id,
-                            skill_level,
-                            attack_range,
-                            entity_id,
-                        ) {
-                            self.predict_local_motion(PredictedMotion::Skill(skill_id), client_tick);
-                        }
+                        self.predict_local_motion(PredictedMotion::Skill(skill_id), client_tick);
                     }
                 }
                 InputEvent::CastSkillAtTile {
@@ -11066,19 +11069,17 @@ impl Client {
                             attack_range,
                         },
                         client_tick,
+                    ) && cast_or_path_ground_skill(
+                        &mut self.networking_system,
+                        &mut self.client_state,
+                        self.map.as_deref(),
+                        &mut self.path_finder,
+                        skill_id,
+                        skill_level,
+                        attack_range,
+                        tile,
                     ) {
-                        if cast_or_path_ground_skill(
-                            &mut self.networking_system,
-                            &mut self.client_state,
-                            self.map.as_deref(),
-                            &mut self.path_finder,
-                            skill_id,
-                            skill_level,
-                            attack_range,
-                            tile,
-                        ) {
-                            self.predict_local_motion(PredictedMotion::Skill(skill_id), client_tick);
-                        }
+                        self.predict_local_motion(PredictedMotion::Skill(skill_id), client_tick);
                     }
                 }
                 InputEvent::CastSkill { slot } => {
@@ -11202,19 +11203,17 @@ impl Client {
                                         attack_range,
                                     },
                                     client_tick,
+                                ) && cast_or_path_entity_skill(
+                                    &mut self.networking_system,
+                                    &mut self.client_state,
+                                    self.map.as_deref(),
+                                    &mut self.path_finder,
+                                    learnable_skill.skill_id,
+                                    skill_level,
+                                    attack_range,
+                                    target_id,
                                 ) {
-                                    if cast_or_path_entity_skill(
-                                        &mut self.networking_system,
-                                        &mut self.client_state,
-                                        self.map.as_deref(),
-                                        &mut self.path_finder,
-                                        learnable_skill.skill_id,
-                                        skill_level,
-                                        attack_range,
-                                        target_id,
-                                    ) {
-                                        self.predict_local_motion(PredictedMotion::Skill(learnable_skill.skill_id), client_tick);
-                                    }
+                                    self.predict_local_motion(PredictedMotion::Skill(learnable_skill.skill_id), client_tick);
                                 }
                             }
                             SkillType::Attack => {
@@ -11239,19 +11238,17 @@ impl Client {
                                                 attack_range: pending.attack_range,
                                             },
                                             client_tick,
+                                        ) && cast_or_path_entity_skill(
+                                            &mut self.networking_system,
+                                            &mut self.client_state,
+                                            self.map.as_deref(),
+                                            &mut self.path_finder,
+                                            pending.skill_id,
+                                            pending.skill_level,
+                                            pending.attack_range,
+                                            entity_id,
                                         ) {
-                                            if cast_or_path_entity_skill(
-                                                &mut self.networking_system,
-                                                &mut self.client_state,
-                                                self.map.as_deref(),
-                                                &mut self.path_finder,
-                                                pending.skill_id,
-                                                pending.skill_level,
-                                                pending.attack_range,
-                                                entity_id,
-                                            ) {
-                                                self.predict_local_motion(PredictedMotion::Skill(pending.skill_id), client_tick);
-                                            }
+                                            self.predict_local_motion(PredictedMotion::Skill(pending.skill_id), client_tick);
                                         }
                                     }
                                     _ => {
@@ -14418,12 +14415,12 @@ impl<'a, 'm: 'a> MapRenderContext<'a, 'm> {
     /// Incoming casts that get a ground telegraph: those whose footprint is the
     /// same at every level (so the drawn cells are right whatever level was
     /// cast) and covers more than one cell.
-    fn telegraphed_casts(&self) -> Vec<(SkillId, TilePosition, Vec<(i8, i8)>)> {
+    fn telegraphed_casts(&self) -> Vec<TelegraphedCast> {
         let mut casts = Vec::new();
-        if let Some(player) = self.client_state.try_follow(this_entity()) {
-            if let Some((skill_id, _, target_position)) = player.cast_target(self.client_tick) {
-                casts.push((player.get_tile_position(), skill_id, target_position));
-            }
+        if let Some(player) = self.client_state.try_follow(this_entity())
+            && let Some((skill_id, _, target_position)) = player.cast_target(self.client_tick)
+        {
+            casts.push((player.get_tile_position(), skill_id, target_position));
         }
 
         for entity in self.client_state.follow(client_state().entities()).iter() {

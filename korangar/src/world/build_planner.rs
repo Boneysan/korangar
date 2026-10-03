@@ -333,22 +333,22 @@ impl BuildPlan {
             return Err(format!("skill #{skill_id} is already at maximum level {max_level}"));
         }
 
-        if let Some(tree) = tree {
-            if let Some(skill_entry) = tree.skills.iter().find(|s| s.skill_id == skill_id) {
-                if self.target_job_level < skill_entry.minimum_job_level as usize {
+        if let Some(tree) = tree
+            && let Some(skill_entry) = tree.skills.iter().find(|s| s.skill_id == skill_id)
+        {
+            if self.target_job_level < skill_entry.minimum_job_level as usize {
+                return Err(format!(
+                    "requires Job Level {} (currently targeted at {})",
+                    skill_entry.minimum_job_level, self.target_job_level
+                ));
+            }
+            for prereq in &skill_entry.prerequisites {
+                let prereq_level = self.skills.get(&prereq.skill_id).copied().unwrap_or(0);
+                if prereq_level < prereq.level {
                     return Err(format!(
-                        "requires Job Level {} (currently targeted at {})",
-                        skill_entry.minimum_job_level, self.target_job_level
+                        "requires {} Lv {} (currently Lv {})",
+                        prereq.name, prereq.level, prereq_level
                     ));
-                }
-                for prereq in &skill_entry.prerequisites {
-                    let prereq_level = self.skills.get(&prereq.skill_id).copied().unwrap_or(0);
-                    if prereq_level < prereq.level {
-                        return Err(format!(
-                            "requires {} Lv {} (currently Lv {})",
-                            prereq.name, prereq.level, prereq_level
-                        ));
-                    }
                 }
             }
         }

@@ -66,7 +66,7 @@ pub struct DmReconcile {
 /// A flag snapshot being assembled from its numbered parts. Nothing in it
 /// touches the flag table until every part of the same `seq` has arrived.
 #[derive(Clone, Debug)]
-struct SnapshotAssembly {
+pub(crate) struct SnapshotAssembly {
     seq: u64,
     of: u64,
     parts: BTreeMap<u64, Vec<(String, i64)>>,

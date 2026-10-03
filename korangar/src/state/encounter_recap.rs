@@ -24,6 +24,7 @@ pub struct EncounterRecap {
 impl EncounterRecap {
     /// Format a concise, readable multi-line recap for display in the HUD or
     /// combat log.
+    #[cfg_attr(not(test), allow(dead_code))] // no recap window yet: the defeat toast is the only consumer
     pub fn format_summary(&self) -> String {
         let seconds = (self.duration_ms as f32) / 1000.0;
         let mut lines = vec![
@@ -100,6 +101,7 @@ impl EncounterRecapState {
     }
 
     /// Record MVP award announcement or bonus item packet.
+    #[cfg_attr(not(test), allow(dead_code))] // no recap window yet: the defeat toast is the only consumer
     pub fn record_mvp_award(&mut self, player_name: Option<String>, reward_item: Option<ItemId>) {
         if player_name.is_some() {
             self.pending_mvp_name = player_name;
@@ -152,16 +154,13 @@ impl EncounterRecapState {
     }
 
     /// Get the most recently completed encounter recap, if any.
+    #[cfg(test)]
     pub fn latest_recap(&self) -> Option<&EncounterRecap> {
         self.latest_recap.as_ref()
     }
 
-    /// Dismiss the latest recap dialog.
-    pub fn dismiss_latest(&mut self) {
-        self.latest_recap = None;
-    }
-
     /// Whether a boss encounter is actively being tracked.
+    #[cfg(test)]
     pub fn is_tracking_boss(&self, boss_id: EntityId) -> bool {
         self.active_boss_id == Some(boss_id)
     }

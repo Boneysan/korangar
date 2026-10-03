@@ -597,14 +597,6 @@ impl GameSettings {
             true
         }
     }
-
-    pub fn add_wishlist(&mut self, item_id: u32) {
-        self.wishlist_items.insert(item_id);
-    }
-
-    pub fn remove_wishlist(&mut self, item_id: u32) {
-        self.wishlist_items.remove(&item_id);
-    }
 }
 
 /// GDD §11.3: Visual ground-loot filter check.
@@ -652,7 +644,7 @@ impl Drop for GameSettings {
 
 impl GameSettings {
     pub fn effective_ground_skill_target_mode(&self, skill_id: u16) -> GroundSkillTargetMode {
-        self.ground_skill_target_modes.get(&skill_id).copied().unwrap_or_else(|| {
+        self.ground_skill_target_modes.get(&skill_id).copied().unwrap_or({
             if self.hold_aim_release_ground_skills {
                 GroundSkillTargetMode::HoldToAimRelease
             } else if self.quickcast_ground_skills {
@@ -981,8 +973,9 @@ mod tests {
     fn ground_loot_settings_round_trip() {
         let mut settings = ManuallyDrop::new(GameSettings::default());
         settings.ground_loot_filter = GroundLootFilter::EquipmentAndCards;
-        settings.add_wishlist(914);
-        settings.add_wishlist(501);
+        // `/wishlist <id>` toggles, so the first call adds.
+        assert!(settings.toggle_wishlist(914));
+        assert!(settings.toggle_wishlist(501));
 
         assert!(settings.is_wishlisted(914));
         assert!(settings.is_wishlisted(501));
@@ -995,7 +988,7 @@ mod tests {
         assert!(loaded.is_wishlisted(501));
 
         let mut loaded = loaded;
-        loaded.remove_wishlist(914);
+        assert!(!loaded.toggle_wishlist(914), "the second toggle removes");
         assert!(!loaded.is_wishlisted(914));
         assert!(loaded.is_wishlisted(501));
     }

@@ -130,6 +130,7 @@ impl CommissionBoardState {
     }
 
     /// Assign an active crafter to a commission request.
+    #[cfg_attr(not(test), allow(dead_code))] // the board window has no assign/complete action yet (F31)
     pub fn assign_crafter(&mut self, id: u32, crafter_name: &str) -> Result<(), &'static str> {
         let req = self
             .requests
@@ -147,6 +148,7 @@ impl CommissionBoardState {
     }
 
     /// Mark a commission request as completed following verified peer trade.
+    #[cfg_attr(not(test), allow(dead_code))] // the board window has no assign/complete action yet (F31)
     pub fn complete_request(&mut self, id: u32) -> Result<(), &'static str> {
         let req = self
             .requests
@@ -171,6 +173,7 @@ impl CommissionBoardState {
     }
 
     /// Get a request by its unique ID.
+    #[cfg(test)]
     pub fn get_request(&self, id: u32) -> Option<&CommissionRequest> {
         self.requests.iter().find(|r| r.id == id)
     }

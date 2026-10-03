@@ -732,10 +732,10 @@ impl PartyState {
     }
 
     pub fn clear_shared_destination(&mut self, nonce: u32) -> bool {
-        if !self
+        if self
             .shared_destination
             .as_ref()
-            .is_some_and(|destination| destination.nonce == nonce)
+            .is_none_or(|destination| destination.nonce != nonce)
         {
             return false;
         }

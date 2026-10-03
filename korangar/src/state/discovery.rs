@@ -701,7 +701,7 @@ fn parse_pairs(payload: &str) -> Option<Vec<DiscoveryMilestone>> {
     }
     let mut entries = Vec::new();
     for pair in payload.split(',') {
-        let Some((id, milestone)) = pair.split_once('=') else { return None };
+        let (id, milestone) = pair.split_once('=')?;
         entries.push(parse_pair(id, milestone)?);
     }
     Some(entries)

@@ -181,6 +181,7 @@ impl TradeState {
         self.rebuild_display();
     }
 
+    #[cfg(test)]
     pub fn partner_zeny(&self) -> u32 {
         self.partner_zeny
     }

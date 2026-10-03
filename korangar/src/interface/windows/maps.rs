@@ -883,6 +883,7 @@ fn available_roads() -> &'static [AtlasRoad] {
     })
 }
 
+#[allow(clippy::too_many_arguments)] // one input per displayed fact
 fn destination_detail_lines(
     current_map: &str,
     target_map: Option<&str>,
@@ -948,7 +949,7 @@ fn destination_detail_lines(
             "No verified route".to_owned(),
             format!("No portal route from {current_map} to {target}"),
         ),
-        (Some(target), Some(edges)) if edges.is_empty() => ("Already at destination".to_owned(), format!("you are on {target}")),
+        (Some(target), Some([])) => ("Already at destination".to_owned(), format!("you are on {target}")),
         (Some(_), Some(edges)) => {
             let edge = edges[0];
             let transport_count = edges.iter().filter(|e| e.kind == "npc_service").count();

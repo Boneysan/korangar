@@ -712,14 +712,14 @@ impl ReferenceItem {
     fn matches_lowercase_query(&self, query: &str) -> bool {
         query.is_empty()
             || self.id.to_string() == query
-            || self.name.to_lowercase().contains(&query)
-            || self.aegis_name.to_lowercase().contains(&query)
-            || self.effect_status.to_lowercase().contains(&query)
+            || self.name.to_lowercase().contains(query)
+            || self.aegis_name.to_lowercase().contains(query)
+            || self.effect_status.to_lowercase().contains(query)
             || self
                 .effect_summary
                 .as_deref()
-                .is_some_and(|effect| effect.to_lowercase().contains(&query))
-            || self.drops_from.iter().any(|drop| drop.sprite_name.to_lowercase().contains(&query))
+                .is_some_and(|effect| effect.to_lowercase().contains(query))
+            || self.drops_from.iter().any(|drop| drop.sprite_name.to_lowercase().contains(query))
     }
 }
 
@@ -1458,16 +1458,15 @@ impl ReferenceData {
         {
             return Err("embedded refine reference rows are empty or invalid".to_owned());
         }
-        if let Some(armor) = &refinement.armor {
-            if armor.safe_level == 0
+        if let Some(armor) = &refinement.armor
+            && (armor.safe_level == 0
                 || armor.safe_level > refinement.max_useful_refine_level
                 || armor.material.trim().is_empty()
                 || armor.base_chance_percent_by_target_level.len() != refinement.max_useful_refine_level as usize
                 || (1..=refinement.max_useful_refine_level)
-                    .any(|level| !armor.base_chance_percent_by_target_level.contains_key(&level.to_string()))
-            {
-                return Err("embedded armor refine reference rows are invalid".to_owned());
-            }
+                    .any(|level| !armor.base_chance_percent_by_target_level.contains_key(&level.to_string())))
+        {
+            return Err("embedded armor refine reference rows are invalid".to_owned());
         }
         let mut statuses = status_reference.entries;
         statuses.sort_by_key(|status| status.id);
@@ -1673,7 +1672,7 @@ impl ReferenceData {
                 || exchange.title.trim().is_empty()
                 || exchange.source.path.trim().is_empty()
                 || exchange.source.lines.is_empty()
-                || exchange.source.lines.iter().any(|line| *line == 0)
+                || exchange.source.lines.contains(&0)
                 || exchange.source.reviewed_lines != exchange.source.lines
             {
                 return Err(format!("reviewed item exchange {} has invalid provenance", exchange.id));

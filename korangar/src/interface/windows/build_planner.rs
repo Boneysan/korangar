@@ -52,9 +52,9 @@ where
                 Ordering::Less => self.elements.truncate(rows.len()),
                 Ordering::Equal => {}
                 Ordering::Greater => {
-                    for index in self.elements.len()..rows.len() {
+                    for (index, planned_row) in rows.iter().enumerate().skip(self.elements.len()) {
                         let row_path = self.rows_path.index(index).manually_asserted();
-                        let skill_id = rows[index].skill_id;
+                        let skill_id = planned_row.skill_id;
 
                         let row = split! {
                             children: (

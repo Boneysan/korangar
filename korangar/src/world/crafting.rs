@@ -8,6 +8,11 @@
 //!
 //! Uses integer basis points (0.01% units, where 10,000 = 100.00%) matching the
 //! server's exact arithmetic.
+//!
+//! Not yet called by any window: the formulas are tested against `skill.c`,
+//! but no UI shows a success chance (GDD Appendix E, 2026-10-03). Remove the
+//! allowance below once a crafting view uses them.
+#![cfg_attr(not(test), allow(dead_code))]
 
 /// Quality bonus provided by anvil held in inventory during forging.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Default)]
@@ -50,6 +55,7 @@ impl AnvilType {
 ///
 /// Returns success rate in basis points (100 = 1.00%, 10_000 = 100.00%),
 /// clamped to 1..=10000.
+#[allow(clippy::too_many_arguments)] // mirrors skill.c's inputs one to one
 pub fn weapon_forge_success_rate(
     job_level: i32,
     dex: i32,
@@ -130,6 +136,7 @@ impl PotionType {
 /// (skill.c:20290).
 ///
 /// Returns base success rate in basis points (1..=10000) excluding random roll.
+#[allow(clippy::too_many_arguments)] // mirrors skill.c's inputs one to one
 pub fn pharmacy_base_success_rate(
     job_level: i32,
     int_: i32,
@@ -184,9 +191,12 @@ impl CookingKitType {
 ///
 /// In Hercules C:
 /// - Legendary Cooking Set (`kit_val >= 15`): 10,000 (100.00% guarantee).
-/// - Other kits: `1200 * (kit_val - 10) + 20 * (base_level + 1) + 20 * (dex +
-///   1) + mastery_avg - 400 * dish_level - 10 * (100 - luk + 1) - 500 *
-///   (extra_ingredients - 1) - rnd_malus`
+/// - Other kits:
+///
+/// ```text
+/// 1200 * (kit_val - 10) + 20 * (base_level + 1) + 20 * (dex + 1) + mastery_avg
+///   - 400 * dish_level - 10 * (100 - luk + 1) - 500 * (extra_ingredients - 1) - rnd_malus
+/// ```
 ///
 /// Returns expected rate clamped to 1..=10000.
 pub fn cooking_dish_expected_rate(
@@ -236,11 +246,6 @@ pub fn cooking_dish_expected_rate(
 /// Formula: `job_level / 4 + luk / 2 + dex / 3`
 pub fn mix_cooking_rating(job_level: i32, dex: i32, luk: i32) -> i32 {
     (job_level / 4) + (luk / 2) + (dex / 3)
-}
-
-/// Crafter signature attribution text on forged or brewed items.
-pub fn format_crafter_signature(char_name: &str) -> String {
-    format!("Forged by {char_name}")
 }
 
 #[cfg(test)]

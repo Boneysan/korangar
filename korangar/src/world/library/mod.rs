@@ -28,7 +28,7 @@ pub use self::accessory_name::{AccessoryName, AccessoryNameKey};
 pub use self::baby_job::IsBabyJob;
 pub use self::campaign_quest::{CampaignQuest, CampaignQuestTable, QuestGuidance, QuestLocation};
 pub use self::hidden_chests::hidden_chests_for_map;
-pub use self::hunt_story::{StoryStep, visible_story_steps};
+pub use self::hunt_story::visible_story_steps;
 pub use self::item_info::ItemInfo;
 pub use self::item_name::{ItemName, ItemNameKey};
 pub use self::item_resource::{ItemResource, ItemResourceKey};
