@@ -150,6 +150,26 @@ fn monster_behavior(modes: &[String]) -> String {
     text
 }
 
+/// `MSS_BERSERK, MSC_MYHPLTMAXRATE 50, MST_SELF` — the raw mob_skill_db
+/// fields; zero or null condition data and `val0` are left out.
+fn raw_mob_skill_record(mob_skill: &crate::dm::reference_data::ReferenceMobSkill) -> String {
+    let meaningful = |value: &serde_json::Value| match value {
+        serde_json::Value::Null => None,
+        serde_json::Value::Number(number) if number.as_i64() == Some(0) => None,
+        serde_json::Value::String(text) if text.is_empty() || text == "0" => None,
+        other => Some(other.to_string().trim_matches('"').to_owned()),
+    };
+    let condition = match meaningful(&mob_skill.condition_data) {
+        Some(data) => format!("{} {data}", mob_skill.cast_condition),
+        None => mob_skill.cast_condition.clone(),
+    };
+    let mut parts = vec![mob_skill.skill_state.clone(), condition, mob_skill.skill_target.clone()];
+    if let Some(value0) = meaningful(&mob_skill.value0) {
+        parts.push(format!("val0 {value0}"));
+    }
+    parts.join(", ")
+}
+
 /// One monster skill list with trigger and target notes, capped at eight rows.
 fn push_monster_skills(
     lines: &mut Vec<String>,
@@ -207,14 +227,21 @@ fn push_monster_skills(
                 )
             });
         lines.push(label);
-        if !mob_skill.trigger_summary.is_empty() {
-            lines.push(format!("  {}", mob_skill.trigger_summary));
-        } else {
-            lines.push("  Trigger details have not been translated from the server record.".to_owned());
+        let translated = mob_skill.trigger_translation_status == "translated" && !mob_skill.trigger_summary.is_empty();
+        match translated {
+            true => lines.push(format!("  {}", mob_skill.trigger_summary)),
+            false => lines.push(format!(
+                "  Trigger details have not been translated from the server record ({}).",
+                display_name(&mob_skill.trigger_translation_status, "no status")
+            )),
         }
         if !mob_skill.target_summary.is_empty() {
             lines.push(format!("  {}", mob_skill.target_summary));
         }
+        // The translation above is derived from these raw fields; showing them
+        // lets a reader check it against mob_skill_db.conf (encyclopedia
+        // evidence contract: keep the raw source beside the explanation).
+        lines.push(format!("  Server record: {}", raw_mob_skill_record(mob_skill)));
     }
     if skills.len() > 8 {
         lines.push(format!("{} additional skill records omitted.", skills.len() - 8));
@@ -461,8 +488,9 @@ fn item_details(item: &ReferenceItem, card: bool) -> Vec<String> {
                     .as_deref()
                     .map(|name| format!("; {name} Lv {} required", recipe.skill_level.unwrap_or_default()))
                     .unwrap_or_default();
+                let item_level = recipe.item_level.map(|level| format!("; item level {level}")).unwrap_or_default();
                 lines.push(format!(
-                    "Makes {} ×{} from {materials}{requirement} — {}:{}",
+                    "Makes {} ×{} from {materials}{requirement}{item_level} — {}:{}",
                     recipe.output_name, recipe.output_amount, recipe.source.path, recipe.source.record
                 ));
             } else {
@@ -524,7 +552,14 @@ fn item_details(item: &ReferenceItem, card: bool) -> Vec<String> {
     if !grants.is_empty() {
         lines.push("Item grant clues in loaded NPC scripts:".to_owned());
         for grant in grants.iter().take(10) {
-            let source = format!("{}:{}", grant.source.path, grant.source.line);
+            let status = match grant.condition_status.as_str() {
+                "script_context_unreviewed" => "conditions not reviewed",
+                other => other,
+            };
+            let source = format!(
+                "via {}, {status} — {}:{}",
+                grant.grant_kind, grant.source.path, grant.source.line
+            );
             if let Some(npc) = &grant.npc_clue {
                 lines.push(format!(
                     "{} ×{} near {} at {} ({}, {}) — {source}",
@@ -587,14 +622,20 @@ fn item_details(item: &ReferenceItem, card: bool) -> Vec<String> {
                 "{} — @guide:npc:{}|{} at {} ({}, {})",
                 exchange.title, exchange.npc.npc_id, exchange.npc.name, exchange.npc.map, exchange.npc.x, exchange.npc.y
             ));
+            // `first_owned_in_list`: the script takes only the first listed item
+            // the player carries, so the inputs are alternatives, not a bundle.
+            let first_owned = exchange.input_selection.as_deref() == Some("first_owned_in_list");
             let cost = exchange
                 .inputs
                 .iter()
                 .map(|input| format!("@guide:item:{}|{} ×{}", input.item_id, input.item_name, input.amount))
                 .collect::<Vec<_>>()
-                .join(", ");
+                .join(if first_owned { " or " } else { ", " });
             if !cost.is_empty() {
-                lines.push(format!("Costs: {cost}"));
+                match first_owned {
+                    true => lines.push(format!("Costs one of (the first listed item you carry is used): {cost}")),
+                    false => lines.push(format!("Costs: {cost}")),
+                }
             }
             for outcome in &exchange.outcomes {
                 let rewards = outcome
@@ -2062,6 +2103,12 @@ fn append_class_table_details(lines: &mut Vec<String>, job_id: u16) {
         lines.push("No class table is defined for this job in Hercules job_db.conf.".to_owned());
         return;
     };
+    // `status.c` `status_calc_pc`: max_weight = class base + 300 × STR, in
+    // tenths of a weight unit; skills such as Enlarge Weight Limit add more.
+    lines.push(format!(
+        "Weight capacity: {} plus 30 per base STR point (before skill bonuses).",
+        group_digits(u64::from(job.weight_base / 10))
+    ));
     let cap = data.stat_job(job_id).map_or(99, |stat| stat.max_stats as i32);
     let mut levels: Vec<usize> = [1, 50, job.max_level as usize]
         .into_iter()
@@ -4802,6 +4849,34 @@ mod monster_page_and_route_offer_tests {
         let poring = monster_details(reference_data().monster_by_id(1002).expect("Poring is exported"));
         assert!(poring.contains(&"Configured monster skills and trigger conditions:".to_owned()));
         assert!(!poring.iter().any(|line| line.starts_with("AI pilot layer")));
+    }
+
+    #[test]
+    fn a_first_owned_exchange_lists_its_inputs_as_alternatives() {
+        let ring = reference_data().item_by_id(2864).expect("Light Of Cure is exported");
+        let lines = super::item_details(ring, false);
+        let costs = lines
+            .iter()
+            .find(|line| line.starts_with("Costs one of (the first listed item you carry is used): "))
+            .unwrap_or_else(|| panic!("{lines:#?}"));
+        assert!(costs.contains(" or "), "{costs}");
+    }
+
+    #[test]
+    fn job_pages_state_weight_capacity_and_skills_show_their_server_record() {
+        let novice = super::job_details(0, "Novice");
+        assert!(
+            novice.contains(&"Weight capacity: 2,000 plus 30 per base STR point (before skill bonuses).".to_owned()),
+            "{novice:#?}"
+        );
+
+        let eddga = monster_details(reference_data().monster_by_id(1115).expect("Eddga is exported"));
+        assert!(
+            eddga
+                .iter()
+                .any(|line| line.starts_with("  Server record: MSS_") && line.contains("MSC_")),
+            "{eddga:#?}"
+        );
     }
 
     #[test]

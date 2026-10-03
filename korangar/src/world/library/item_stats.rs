@@ -272,6 +272,13 @@ pub fn item_tooltip_text_with_target(
                 format!("{sign}{}", comparison.delta_physical_pct)
             ));
         }
+        if comparison.hovered_magic_pct != 100 || comparison.equipped_magic_pct != 100 {
+            let sign = if comparison.delta_magic_pct > 0 { "+" } else { "" };
+            lines.push(format!(
+                "Target Magic Modifier: {}% vs equipped ({sign}{}% advantage) (estimate)",
+                comparison.hovered_magic_pct, comparison.delta_magic_pct
+            ));
+        }
     }
 
     lines.join("\n")

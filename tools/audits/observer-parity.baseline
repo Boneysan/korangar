@@ -36,7 +36,25 @@
 #   SpiritSpheres   — DOES NOT RECOVER. See the A2 entry below: no
 #                     spawn-packet slot, so a miss is permanent — the
 #                     ammunition shape exactly.
-A1|entity-keyed-find-sites=47
+#
+# 47 -> 54 on 2026-10-03, triaged from the GDD F09-F16 work. None stores state
+# that a miss could lose:
+#   DamageEffect set_last_target (target-of-target, F12) — not spawn data,
+#                     but every later hit re-sends it, so a miss is stale for
+#                     one hit at most.
+#   DamageEffect target position / set_skill_attack — rotation and the attack
+#                     animation, transient by nature.
+#   SkillCast dangerous-cast audio cue (F35) — read-only; a caster that has
+#                     not spawned cannot be heard either.
+#   SkillCast start_cast — present before 47 under another shape. A cast that
+#                     begins before the caster enters view stays unshown for
+#                     that one cast: Hercules' clif_getareachar_unit
+#                     (clif.c:5055-5180) never re-sends an in-progress cast,
+#                     so the official client behaves the same.
+#   render_world_overlays (2), refresh_monster_target_summary,
+#   report_monster_target, element_cue_for_player_hit — per-frame or per-hit
+#                     reads of current state; a miss draws nothing that frame.
+A1|entity-keyed-find-sites=54
 #
 # --- A2 ------------------------------------------------------------------
 # why: all eight are re-derived at construction from EntityData, so an
@@ -105,6 +123,12 @@ A9|local-only-mutator=set_idle
 A9|local-only-mutator=set_look
 A9|local-only-mutator=set_position
 A9|local-only-mutator=set_shield
+# why (2026-10-03): set_skill_attack is the attack/skill animation. Remote
+# entities get it in the DamageEffect arm (lib.rs, beside rotate_towards); the
+# local player only through the this_entity() fallback there. It is an
+# event-driven transient like move_from_to, not spawn state, so the AddEntity
+# arm has nothing to restore.
+A9|local-only-mutator=set_skill_attack
 A9|local-only-mutator=set_sit
 A9|local-only-mutator=set_weapon
 #
@@ -212,9 +236,7 @@ B2b|noop=EquippableSwitchItemListPacket
 # parsed so it leaves the unknown-packet backlog, and publishing AddEntity for
 # it would put a phantom actor in the world.
 B2b|noop=FakeNpcDialogAnchorPacket
-B2b|noop=HuntingQuestNotificationPacket
 B2b|noop=HuntingQuestUpdateObjectivePacket
-B2b|noop=HuntingQuestUpdateObjectivePacket4
 B2b|noop=LoginPincodePacket
 B2b|noop=MapTypePacket
 B2b|noop=NavigateToMonsterPacket

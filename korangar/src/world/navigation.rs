@@ -522,7 +522,12 @@ pub fn unreachable_explanation(current_map: &str, target_map: &str) -> Vec<Strin
         for (variable, setters) in &note.variables {
             let where_set = setters
                 .iter()
-                .map(|setter| format!("{} ({} {}, {}) {}", setter.npc, setter.map, setter.x, setter.y, setter.sets))
+                .map(|setter| {
+                    format!(
+                        "{} ({} {}, {}) {} [{}]",
+                        setter.npc, setter.map, setter.x, setter.y, setter.sets, setter.source
+                    )
+                })
                 .collect::<Vec<_>>()
                 .join("; ");
             lines.push(format!("  • {variable}: {where_set}"));

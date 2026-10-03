@@ -68,9 +68,11 @@ MapSkyData.star_effect
 # export can be traced back to `item_db.conf`.
 BestiaryMonster.chase_range
 BestiaryMonster.drops_count
-BestiaryMonster.view_range
-DmCard.aegis_name
-DmItem.aegis_name
+# OPEN: BestiaryMonster.view_range, DmCard.aegis_name and DmItem.aegis_name are
+# OPEN:   still unread, but the audit matches field names across the whole client
+# OPEN:   and now sees the Guide's ReferenceMonster.view_range and
+# OPEN:   ReferenceItem.aegis_name reads. They had to leave the baseline as
+# OPEN:   "stale" (2026-10-03); scope the match by struct to see them again.
 #
 # --- Reflected by a derive, not read by hand -------------------------------
 #

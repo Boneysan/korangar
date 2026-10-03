@@ -537,6 +537,9 @@ pub struct ItemMonsterComparisonDelta {
     pub hovered_physical_pct: i32,
     pub equipped_physical_pct: i32,
     pub delta_physical_pct: i32,
+    pub hovered_magic_pct: i32,
+    pub equipped_magic_pct: i32,
+    pub delta_magic_pct: i32,
     pub elemental_rate_pct: u16,
     pub matched_bonuses: Vec<String>,
 }
@@ -561,6 +564,9 @@ pub fn compare_items_against_monster(
         hovered_physical_pct: hovered_eval.physical_multiplier_pct,
         equipped_physical_pct: equipped_eval.physical_multiplier_pct,
         delta_physical_pct,
+        hovered_magic_pct: hovered_eval.magic_multiplier_pct,
+        equipped_magic_pct: equipped_eval.magic_multiplier_pct,
+        delta_magic_pct: hovered_eval.magic_multiplier_pct - equipped_eval.magic_multiplier_pct,
         elemental_rate_pct: hovered_eval.elemental_effectiveness_pct,
         matched_bonuses: hovered_eval.active_matching_bonuses,
     }
@@ -646,5 +652,14 @@ mod tests {
         assert_eq!(comparison.delta_physical_pct, 35); // +35% damage advantage vs target
         assert_eq!(comparison.elemental_rate_pct, 150); // Fire vs Earth 1 = 150% from attr_fix.conf
         assert_eq!(comparison.matched_bonuses.len(), 2);
+        // Physical cards leave the magic modifier at its base on both sides.
+        assert_eq!((comparison.hovered_magic_pct, comparison.equipped_magic_pct), (100, 100));
+
+        // A caster's bMagicAddRace is reported separately from physical bonuses.
+        let rod = parse_item_script("bonus2 bMagicAddRace,RC_DemiPlayer,10;");
+        let caster = compare_items_against_monster(&rod, &equipped, &orc_archer);
+        assert_eq!(caster.hovered_magic_pct, 110);
+        assert_eq!(caster.delta_magic_pct, 10);
+        assert_eq!(caster.hovered_physical_pct, 100);
     }
 }

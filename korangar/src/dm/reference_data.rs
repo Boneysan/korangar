@@ -277,8 +277,6 @@ pub struct ReferenceMonsterDrop {
     pub name: String,
     pub rate_per_10000: u32,
     pub kind: String,
-    #[serde(default)]
-    pub source_record: String,
 }
 
 #[derive(Debug, Deserialize)]
@@ -337,8 +335,6 @@ pub struct ReferenceItem {
 /// (create_arrow_db.txt)
 #[derive(Debug, Deserialize)]
 pub struct ReferenceCraftingRecipe {
-    #[serde(skip_deserializing)]
-    pub entry_kind: String,
     pub output_id: u32,
     pub output_name: String,
     pub output_amount: u32,
@@ -359,8 +355,6 @@ pub struct ReferenceCraftingRecipe {
 /// An item combo entry from item_combo_db.conf
 #[derive(Debug, Deserialize)]
 pub struct ReferenceItemComboRecipe {
-    #[serde(skip_deserializing)]
-    pub entry_kind: String,
     pub name: String,
     pub members: Vec<String>,
     pub script: String,
@@ -707,8 +701,6 @@ pub struct ReferenceItemDrop {
     pub sprite_name: String,
     pub rate_per_10000: u32,
     pub kind: String,
-    #[serde(default)]
-    pub source_record: String,
 }
 
 impl ReferenceItem {
@@ -868,8 +860,6 @@ pub struct ReferenceNpc {
     pub declared_type: String,
     #[serde(default)]
     pub sprite: String,
-    #[serde(default)]
-    pub map_known: bool,
     pub source: ReferenceNpcSource,
     #[serde(default)]
     pub offers: Vec<ReferenceNpcOffer>,
