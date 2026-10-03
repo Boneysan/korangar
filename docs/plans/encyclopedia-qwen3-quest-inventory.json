@@ -1,0 +1,2604 @@
+{
+  "schema_version": 1,
+  "generated_at_utc": "2026-09-29T00:45:00Z",
+  "quest_db_total": 3202,
+  "reviewed_quest_count": 124,
+  "unreviewed_count": 3078,
+  "script_quests_found": 584,
+  "unreviewed_with_script_references": 473,
+  "unreviewed_without_script_references": 2605,
+  "unreviewed_with_scripts": [
+    {
+      "id": 1109,
+      "name": "Ropewa & Yuridi - Survivors of the Labyrinth",
+      "source_scripts": [
+        {
+          "path": "npc/re/quests/quests_mora.txt",
+          "line": 2039,
+          "action": "unknown"
+        }
+      ]
+    },
+    {
+      "id": 1119,
+      "name": "Neighborhood Knight - Cooldown",
+      "source_scripts": [
+        {
+          "path": "npc/re/quests/quests_mora.txt",
+          "line": 832,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_mora.txt",
+          "line": 833,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_mora.txt",
+          "line": 924,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_mora.txt",
+          "line": 925,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_mora.txt",
+          "line": 1014,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_mora.txt",
+          "line": 1015,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_mora.txt",
+          "line": 1300,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_mora.txt",
+          "line": 1320,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_mora.txt",
+          "line": 5196,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_mora.txt",
+          "line": 5215,
+          "action": "unknown"
+        }
+      ]
+    },
+    {
+      "id": 1145,
+      "name": "Help the poor cat",
+      "source_scripts": [
+        {
+          "path": "npc/re/quests/quests_malangdo.txt",
+          "line": 2987,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_malangdo.txt",
+          "line": 3191,
+          "action": "unknown"
+        }
+      ]
+    },
+    {
+      "id": 1146,
+      "name": "Help the poor cat",
+      "source_scripts": [
+        {
+          "path": "npc/re/quests/quests_malangdo.txt",
+          "line": 3192,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_malangdo.txt",
+          "line": 3245,
+          "action": "unknown"
+        }
+      ]
+    },
+    {
+      "id": 1147,
+      "name": "Help the poor cat",
+      "source_scripts": [
+        {
+          "path": "npc/re/quests/quests_malangdo.txt",
+          "line": 3215,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_malangdo.txt",
+          "line": 3246,
+          "action": "unknown"
+        }
+      ]
+    },
+    {
+      "id": 1148,
+      "name": "Help the poor cat",
+      "source_scripts": [
+        {
+          "path": "npc/re/quests/quests_malangdo.txt",
+          "line": 3216,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_malangdo.txt",
+          "line": 3281,
+          "action": "unknown"
+        }
+      ]
+    },
+    {
+      "id": 1149,
+      "name": "Help the poor cat",
+      "source_scripts": [
+        {
+          "path": "npc/re/quests/quests_malangdo.txt",
+          "line": 3282,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_malangdo.txt",
+          "line": 3412,
+          "action": "unknown"
+        }
+      ]
+    },
+    {
+      "id": 1150,
+      "name": "Help the poor cat",
+      "source_scripts": [
+        {
+          "path": "npc/re/quests/quests_malangdo.txt",
+          "line": 3360,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_malangdo.txt",
+          "line": 3413,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_malangdo.txt",
+          "line": 3567,
+          "action": "unknown"
+        }
+      ]
+    },
+    {
+      "id": 1151,
+      "name": "Help the poor cat",
+      "source_scripts": [
+        {
+          "path": "npc/re/quests/quests_malangdo.txt",
+          "line": 3025,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_malangdo.txt",
+          "line": 3361,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_malangdo.txt",
+          "line": 3568,
+          "action": "unknown"
+        }
+      ]
+    },
+    {
+      "id": 1152,
+      "name": "Help the poor cat",
+      "source_scripts": [
+        {
+          "path": "npc/re/quests/quests_malangdo.txt",
+          "line": 2917,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_malangdo.txt",
+          "line": 2920,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_malangdo.txt",
+          "line": 2921,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_malangdo.txt",
+          "line": 3053,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_malangdo.txt",
+          "line": 3088,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_malangdo.txt",
+          "line": 3557,
+          "action": "unknown"
+        }
+      ]
+    },
+    {
+      "id": 1153,
+      "name": "Help the poor cat",
+      "source_scripts": [
+        {
+          "path": "npc/re/quests/quests_malangdo.txt",
+          "line": 3060,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_malangdo.txt",
+          "line": 3463,
+          "action": "unknown"
+        }
+      ]
+    },
+    {
+      "id": 1154,
+      "name": "Help the poor cat",
+      "source_scripts": [
+        {
+          "path": "npc/re/quests/quests_malangdo.txt",
+          "line": 3464,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_malangdo.txt",
+          "line": 3489,
+          "action": "unknown"
+        }
+      ]
+    },
+    {
+      "id": 1155,
+      "name": "Help the poor cat",
+      "source_scripts": [
+        {
+          "path": "npc/re/quests/quests_malangdo.txt",
+          "line": 3087,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_malangdo.txt",
+          "line": 3490,
+          "action": "unknown"
+        }
+      ]
+    },
+    {
+      "id": 1174,
+      "name": "Rumor, Time and Legend",
+      "source_scripts": [
+        {
+          "path": "npc/re/quests/quests_malaya.txt",
+          "line": 5114,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_malaya.txt",
+          "line": 5584,
+          "action": "unknown"
+        }
+      ]
+    },
+    {
+      "id": 1175,
+      "name": "Rumor, Time and Legend",
+      "source_scripts": [
+        {
+          "path": "npc/re/quests/quests_malaya.txt",
+          "line": 5187,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_malaya.txt",
+          "line": 5585,
+          "action": "unknown"
+        }
+      ]
+    },
+    {
+      "id": 1176,
+      "name": "Rumor, Time and Legend",
+      "source_scripts": [
+        {
+          "path": "npc/re/quests/quests_malaya.txt",
+          "line": 5188,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_malaya.txt",
+          "line": 5330,
+          "action": "unknown"
+        }
+      ]
+    },
+    {
+      "id": 1177,
+      "name": "Rumor, Time and Legend",
+      "source_scripts": [
+        {
+          "path": "npc/re/quests/quests_malaya.txt",
+          "line": 5331,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_malaya.txt",
+          "line": 5436,
+          "action": "unknown"
+        }
+      ]
+    },
+    {
+      "id": 1178,
+      "name": "Rumor, Time and Legend",
+      "source_scripts": [
+        {
+          "path": "npc/re/quests/quests_malaya.txt",
+          "line": 5437,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_malaya.txt",
+          "line": 5500,
+          "action": "unknown"
+        }
+      ]
+    },
+    {
+      "id": 1179,
+      "name": "Rumor, Time and Legend",
+      "source_scripts": [
+        {
+          "path": "npc/re/quests/quests_malaya.txt",
+          "line": 5238,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_malaya.txt",
+          "line": 5501,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_malaya.txt",
+          "line": 6581,
+          "action": "unknown"
+        }
+      ]
+    },
+    {
+      "id": 1180,
+      "name": "Get Rid of Bakonawa",
+      "source_scripts": [
+        {
+          "path": "npc/re/quests/quests_malaya.txt",
+          "line": 5713,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_malaya.txt",
+          "line": 5948,
+          "action": "unknown"
+        }
+      ]
+    },
+    {
+      "id": 1181,
+      "name": "Get Rid of Bakonawa",
+      "source_scripts": [
+        {
+          "path": "npc/re/quests/quests_malaya.txt",
+          "line": 5949,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_malaya.txt",
+          "line": 5999,
+          "action": "unknown"
+        }
+      ]
+    },
+    {
+      "id": 1182,
+      "name": "Get Rid of Bakonawa",
+      "source_scripts": [
+        {
+          "path": "npc/re/quests/quests_malaya.txt",
+          "line": 6000,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_malaya.txt",
+          "line": 6048,
+          "action": "unknown"
+        }
+      ]
+    },
+    {
+      "id": 1183,
+      "name": "Get Rid of Bakonawa",
+      "source_scripts": [
+        {
+          "path": "npc/re/quests/quests_malaya.txt",
+          "line": 6049,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_malaya.txt",
+          "line": 6103,
+          "action": "unknown"
+        }
+      ]
+    },
+    {
+      "id": 1184,
+      "name": "Get Rid of Bakonawa",
+      "source_scripts": [
+        {
+          "path": "npc/re/quests/quests_malaya.txt",
+          "line": 5757,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_malaya.txt",
+          "line": 6104,
+          "action": "unknown"
+        }
+      ]
+    },
+    {
+      "id": 1185,
+      "name": "Get Rid of Bakonawa",
+      "source_scripts": [
+        {
+          "path": "npc/re/quests/quests_malaya.txt",
+          "line": 5758,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_malaya.txt",
+          "line": 6163,
+          "action": "unknown"
+        }
+      ]
+    },
+    {
+      "id": 1186,
+      "name": "Get Rid of Bakonawa",
+      "source_scripts": [
+        {
+          "path": "npc/re/quests/quests_malaya.txt",
+          "line": 6164,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_malaya.txt",
+          "line": 6176,
+          "action": "unknown"
+        }
+      ]
+    },
+    {
+      "id": 1187,
+      "name": "Get Rid of Bakonawa",
+      "source_scripts": [
+        {
+          "path": "npc/re/quests/quests_malaya.txt",
+          "line": 5811,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_malaya.txt",
+          "line": 6177,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_malaya.txt",
+          "line": 6601,
+          "action": "unknown"
+        }
+      ]
+    },
+    {
+      "id": 1188,
+      "name": "Get Rid of Bakonawa",
+      "source_scripts": [
+        {
+          "path": "npc/re/quests/quests_malaya.txt",
+          "line": 5812,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_malaya.txt",
+          "line": 6258,
+          "action": "unknown"
+        }
+      ]
+    },
+    {
+      "id": 1189,
+      "name": "Get Rid of Bakonawa",
+      "source_scripts": [
+        {
+          "path": "npc/re/quests/quests_malaya.txt",
+          "line": 6259,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_malaya.txt",
+          "line": 6328,
+          "action": "unknown"
+        }
+      ]
+    },
+    {
+      "id": 1190,
+      "name": "Get Rid of Bakonawa",
+      "source_scripts": [
+        {
+          "path": "npc/re/quests/quests_malaya.txt",
+          "line": 6329,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_malaya.txt",
+          "line": 6400,
+          "action": "unknown"
+        }
+      ]
+    },
+    {
+      "id": 1191,
+      "name": "Get Rid of Bakonawa",
+      "source_scripts": [
+        {
+          "path": "npc/re/quests/quests_malaya.txt",
+          "line": 6401,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_malaya.txt",
+          "line": 6469,
+          "action": "unknown"
+        }
+      ]
+    },
+    {
+      "id": 1192,
+      "name": "Get Rid of Bakonawa",
+      "source_scripts": [
+        {
+          "path": "npc/re/quests/quests_malaya.txt",
+          "line": 6470,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_malaya.txt",
+          "line": 6535,
+          "action": "unknown"
+        }
+      ]
+    },
+    {
+      "id": 1193,
+      "name": "Get Rid of Bakonawa",
+      "source_scripts": [
+        {
+          "path": "npc/re/quests/quests_malaya.txt",
+          "line": 5863,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_malaya.txt",
+          "line": 6536,
+          "action": "unknown"
+        }
+      ]
+    },
+    {
+      "id": 1214,
+      "name": "Getting back Professor Worm's memory",
+      "source_scripts": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "line": 13764,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "line": 13869,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_dicastes.txt",
+          "line": 2419,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_dicastes.txt",
+          "line": 2428,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_dicastes.txt",
+          "line": 2439,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_dicastes.txt",
+          "line": 2449,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_dicastes.txt",
+          "line": 2459,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_dicastes.txt",
+          "line": 2469,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_dicastes.txt",
+          "line": 2480,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_dicastes.txt",
+          "line": 2490,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_dicastes.txt",
+          "line": 2563,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_dicastes.txt",
+          "line": 2573,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_dicastes.txt",
+          "line": 2578,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_dicastes.txt",
+          "line": 2588,
+          "action": "unknown"
+        }
+      ]
+    },
+    {
+      "id": 1215,
+      "name": "Getting back Professor Worm's memory",
+      "source_scripts": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "line": 13765,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_dicastes.txt",
+          "line": 2593,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_dicastes.txt",
+          "line": 2603,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_dicastes.txt",
+          "line": 2608,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_dicastes.txt",
+          "line": 2618,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_dicastes.txt",
+          "line": 2623,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_dicastes.txt",
+          "line": 2633,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_dicastes.txt",
+          "line": 2638,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_dicastes.txt",
+          "line": 2648,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_dicastes.txt",
+          "line": 2653,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_dicastes.txt",
+          "line": 2663,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_dicastes.txt",
+          "line": 2668,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_dicastes.txt",
+          "line": 2678,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_dicastes.txt",
+          "line": 2683,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_dicastes.txt",
+          "line": 2693,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_dicastes.txt",
+          "line": 2698,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_dicastes.txt",
+          "line": 2708,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_dicastes.txt",
+          "line": 2713,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_dicastes.txt",
+          "line": 2723,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_dicastes.txt",
+          "line": 2946,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_dicastes.txt",
+          "line": 2958,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_dicastes.txt",
+          "line": 2970,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_dicastes.txt",
+          "line": 2985,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_dicastes.txt",
+          "line": 3000,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_dicastes.txt",
+          "line": 3015,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_dicastes.txt",
+          "line": 3030,
+          "action": "unknown"
+        }
+      ]
+    },
+    {
+      "id": 1216,
+      "name": "Getting back Professor Worm's memory",
+      "source_scripts": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "line": 13766,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_dicastes.txt",
+          "line": 1047,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_dicastes.txt",
+          "line": 1062,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_dicastes.txt",
+          "line": 2392,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_dicastes.txt",
+          "line": 2402,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_dicastes.txt",
+          "line": 2411,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_dicastes.txt",
+          "line": 2420,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_dicastes.txt",
+          "line": 2429,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_dicastes.txt",
+          "line": 2440,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_dicastes.txt",
+          "line": 2450,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_dicastes.txt",
+          "line": 2460,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_dicastes.txt",
+          "line": 2470,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_dicastes.txt",
+          "line": 2481,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_dicastes.txt",
+          "line": 2491,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_dicastes.txt",
+          "line": 2564,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_dicastes.txt",
+          "line": 2574,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_dicastes.txt",
+          "line": 2579,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_dicastes.txt",
+          "line": 2589,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_dicastes.txt",
+          "line": 2594,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_dicastes.txt",
+          "line": 2604,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_dicastes.txt",
+          "line": 2609,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_dicastes.txt",
+          "line": 2619,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_dicastes.txt",
+          "line": 2624,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_dicastes.txt",
+          "line": 2634,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_dicastes.txt",
+          "line": 2639,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_dicastes.txt",
+          "line": 2649,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_dicastes.txt",
+          "line": 2654,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_dicastes.txt",
+          "line": 2664,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_dicastes.txt",
+          "line": 2669,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_dicastes.txt",
+          "line": 2679,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_dicastes.txt",
+          "line": 2684,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_dicastes.txt",
+          "line": 2694,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_dicastes.txt",
+          "line": 2699,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_dicastes.txt",
+          "line": 2709,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_dicastes.txt",
+          "line": 2714,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_dicastes.txt",
+          "line": 2724,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_dicastes.txt",
+          "line": 2799,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_dicastes.txt",
+          "line": 2811,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_dicastes.txt",
+          "line": 2823,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_dicastes.txt",
+          "line": 2835,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_dicastes.txt",
+          "line": 2847,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_dicastes.txt",
+          "line": 2859,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_dicastes.txt",
+          "line": 3112,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_dicastes.txt",
+          "line": 3124,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_dicastes.txt",
+          "line": 3136,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_dicastes.txt",
+          "line": 3148,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_dicastes.txt",
+          "line": 3160,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_dicastes.txt",
+          "line": 3172,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_dicastes.txt",
+          "line": 3184,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_dicastes.txt",
+          "line": 3196,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_dicastes.txt",
+          "line": 3208,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_dicastes.txt",
+          "line": 3220,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_dicastes.txt",
+          "line": 3283,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_dicastes.txt",
+          "line": 3295,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_dicastes.txt",
+          "line": 3307,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_dicastes.txt",
+          "line": 3319,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_dicastes.txt",
+          "line": 3331,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_dicastes.txt",
+          "line": 3343,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_dicastes.txt",
+          "line": 3355,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_dicastes.txt",
+          "line": 3367,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_dicastes.txt",
+          "line": 3379,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_dicastes.txt",
+          "line": 3391,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/magic_books.txt",
+          "line": 705,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/magic_books.txt",
+          "line": 815,
+          "action": "unknown"
+        }
+      ]
+    },
+    {
+      "id": 1217,
+      "name": "Getting back Professor Worm's memory",
+      "source_scripts": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "line": 13767,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "line": 13990,
+          "action": "unknown"
+        }
+      ]
+    },
+    {
+      "id": 1218,
+      "name": "Getting back Professor Worm's memory",
+      "source_scripts": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "line": 13768,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "line": 14165,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "line": 14166,
+          "action": "unknown"
+        }
+      ]
+    },
+    {
+      "id": 1219,
+      "name": "Getting back Professor Worm's memory",
+      "source_scripts": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "line": 13769,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "line": 14204,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "line": 14205,
+          "action": "unknown"
+        }
+      ]
+    },
+    {
+      "id": 1220,
+      "name": "Getting back Professor Worm's memory",
+      "source_scripts": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "line": 13770,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "line": 14250,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "line": 14251,
+          "action": "unknown"
+        }
+      ]
+    },
+    {
+      "id": 1221,
+      "name": "Getting back Professor Worm's memory",
+      "source_scripts": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "line": 13771,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "line": 14293,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "line": 14294,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/magic_books.txt",
+          "line": 736,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/magic_books.txt",
+          "line": 754,
+          "action": "unknown"
+        }
+      ]
+    },
+    {
+      "id": 1222,
+      "name": "Getting back Professor Worm's memory",
+      "source_scripts": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "line": 13772,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "line": 14331,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "line": 14332,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_mora.txt",
+          "line": 4442,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_mora.txt",
+          "line": 4452,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_mora.txt",
+          "line": 4462,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_mora.txt",
+          "line": 4472,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_mora.txt",
+          "line": 4482,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/magic_books.txt",
+          "line": 771,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/magic_books.txt",
+          "line": 789,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/magic_books.txt",
+          "line": 807,
+          "action": "unknown"
+        }
+      ]
+    },
+    {
+      "id": 1223,
+      "name": "Getting back Professor Worm's memory",
+      "source_scripts": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "line": 13773,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "line": 14043,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "line": 14386,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_mora.txt",
+          "line": 4443,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_mora.txt",
+          "line": 4453,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_mora.txt",
+          "line": 4463,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_mora.txt",
+          "line": 4473,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_mora.txt",
+          "line": 4483,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_mora.txt",
+          "line": 4538,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_mora.txt",
+          "line": 4625,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_mora.txt",
+          "line": 4635,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_mora.txt",
+          "line": 4645,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_mora.txt",
+          "line": 4655,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_mora.txt",
+          "line": 4665,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_mora.txt",
+          "line": 4821,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_mora.txt",
+          "line": 4831,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_mora.txt",
+          "line": 4841,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_mora.txt",
+          "line": 4851,
+          "action": "unknown"
+        }
+      ]
+    },
+    {
+      "id": 1224,
+      "name": "Getting back Professor Worm's memory",
+      "source_scripts": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "line": 13774,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "line": 14387,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_mora.txt",
+          "line": 4626,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_mora.txt",
+          "line": 4636,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_mora.txt",
+          "line": 4646,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_mora.txt",
+          "line": 4656,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_mora.txt",
+          "line": 4666,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_mora.txt",
+          "line": 4721,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_mora.txt",
+          "line": 4822,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_mora.txt",
+          "line": 4832,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_mora.txt",
+          "line": 4842,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_mora.txt",
+          "line": 4852,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_mora.txt",
+          "line": 4861,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_mora.txt",
+          "line": 4862,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_mora.txt",
+          "line": 4917,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_mora.txt",
+          "line": 5018,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_mora.txt",
+          "line": 5024,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_mora.txt",
+          "line": 5031,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_mora.txt",
+          "line": 5038,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_mora.txt",
+          "line": 5045,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_mora.txt",
+          "line": 5052,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_mora.txt",
+          "line": 5058,
+          "action": "unknown"
+        }
+      ]
+    },
+    {
+      "id": 1225,
+      "name": "Getting back Professor Worm's memory",
+      "source_scripts": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "line": 13775,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_mora.txt",
+          "line": 4995,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_mora.txt",
+          "line": 5019,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_mora.txt",
+          "line": 5025,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_mora.txt",
+          "line": 5032,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_mora.txt",
+          "line": 5039,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_mora.txt",
+          "line": 5046,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_mora.txt",
+          "line": 5053,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_mora.txt",
+          "line": 5059,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_mora.txt",
+          "line": 5064,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_mora.txt",
+          "line": 5065,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_mora.txt",
+          "line": 5071,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_mora.txt",
+          "line": 5072,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_mora.txt",
+          "line": 5077,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_mora.txt",
+          "line": 5078,
+          "action": "unknown"
+        }
+      ]
+    },
+    {
+      "id": 1228,
+      "name": "Getting back Professor Worm's memory",
+      "source_scripts": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "line": 9508,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "line": 9645,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "line": 9646,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "line": 9781,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "line": 9782,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "line": 14079,
+          "action": "unknown"
+        }
+      ]
+    },
+    {
+      "id": 2201,
+      "name": "Brasilis Water Lily",
+      "source_scripts": [
+        {
+          "path": "npc/re/quests/quests_brasilis.txt",
+          "line": 1088,
+          "action": "unknown"
+        }
+      ]
+    },
+    {
+      "id": 2207,
+      "name": "Brasilis Water Lily",
+      "source_scripts": [
+        {
+          "path": "npc/re/quests/quests_brasilis.txt",
+          "line": 1109,
+          "action": "unknown"
+        }
+      ]
+    },
+    {
+      "id": 2208,
+      "name": "Bathroom Ghost",
+      "source_scripts": [
+        {
+          "path": "npc/re/quests/quests_brasilis.txt",
+          "line": 2148,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_brasilis.txt",
+          "line": 2768,
+          "action": "unknown"
+        }
+      ]
+    },
+    {
+      "id": 2271,
+      "name": "Secret in the Woods",
+      "source_scripts": [
+        {
+          "path": "npc/re/quests/quests_malaya.txt",
+          "line": 3885,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_malaya.txt",
+          "line": 3993,
+          "action": "unknown"
+        }
+      ]
+    },
+    {
+      "id": 2272,
+      "name": "Secret in the Woods",
+      "source_scripts": [
+        {
+          "path": "npc/re/quests/quests_malaya.txt",
+          "line": 3994,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_malaya.txt",
+          "line": 4152,
+          "action": "unknown"
+        }
+      ]
+    },
+    {
+      "id": 2273,
+      "name": "Secret in the Woods",
+      "source_scripts": [
+        {
+          "path": "npc/re/quests/quests_malaya.txt",
+          "line": 4153,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_malaya.txt",
+          "line": 4383,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_malaya.txt",
+          "line": 4410,
+          "action": "unknown"
+        }
+      ]
+    },
+    {
+      "id": 2274,
+      "name": "Secret in the Woods",
+      "source_scripts": [
+        {
+          "path": "npc/re/quests/quests_malaya.txt",
+          "line": 4384,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_malaya.txt",
+          "line": 4411,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_malaya.txt",
+          "line": 4425,
+          "action": "unknown"
+        }
+      ]
+    },
+    {
+      "id": 2275,
+      "name": "Secret in the Woods",
+      "source_scripts": [
+        {
+          "path": "npc/re/quests/quests_malaya.txt",
+          "line": 4426,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_malaya.txt",
+          "line": 4525,
+          "action": "unknown"
+        }
+      ]
+    },
+    {
+      "id": 2276,
+      "name": "Secret in the Woods",
+      "source_scripts": [
+        {
+          "path": "npc/re/quests/quests_malaya.txt",
+          "line": 4526,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_malaya.txt",
+          "line": 4637,
+          "action": "unknown"
+        }
+      ]
+    },
+    {
+      "id": 2277,
+      "name": "Secret in the Woods",
+      "source_scripts": [
+        {
+          "path": "npc/re/quests/quests_malaya.txt",
+          "line": 4638,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_malaya.txt",
+          "line": 4804,
+          "action": "unknown"
+        }
+      ]
+    },
+    {
+      "id": 2278,
+      "name": "Secret in the Woods",
+      "source_scripts": [
+        {
+          "path": "npc/re/quests/quests_malaya.txt",
+          "line": 4244,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_malaya.txt",
+          "line": 4805,
+          "action": "unknown"
+        }
+      ]
+    },
+    {
+      "id": 2279,
+      "name": "Secret in the Woods",
+      "source_scripts": [
+        {
+          "path": "npc/re/quests/quests_malaya.txt",
+          "line": 4245,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_malaya.txt",
+          "line": 4278,
+          "action": "unknown"
+        }
+      ]
+    },
+    {
+      "id": 2280,
+      "name": "Secret in the Woods",
+      "source_scripts": [
+        {
+          "path": "npc/re/quests/quests_malaya.txt",
+          "line": 4279,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_malaya.txt",
+          "line": 4660,
+          "action": "unknown"
+        }
+      ]
+    },
+    {
+      "id": 2281,
+      "name": "Get Rid of Buwaya",
+      "source_scripts": [
+        {
+          "path": "npc/re/quests/quests_malaya.txt",
+          "line": 4692,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_malaya.txt",
+          "line": 4706,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_malaya.txt",
+          "line": 4718,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_malaya.txt",
+          "line": 4724,
+          "action": "unknown"
+        }
+      ]
+    },
+    {
+      "id": 2289,
+      "name": "Verit Hunting (Nightmare)",
+      "source_scripts": [
+        {
+          "path": "npc/re/quests/quests_morocc.txt",
+          "line": 170,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_morocc.txt",
+          "line": 189,
+          "action": "unknown"
+        }
+      ]
+    },
+    {
+      "id": 2290,
+      "name": "Verit Hunting - Cooldown",
+      "source_scripts": [
+        {
+          "path": "npc/re/quests/quests_morocc.txt",
+          "line": 145,
+          "action": "unknown"
+        }
+      ]
+    },
+    {
+      "id": 2291,
+      "name": "Mummy Hunting - Cooldown",
+      "source_scripts": [
+        {
+          "path": "npc/re/quests/quests_morocc.txt",
+          "line": 207,
+          "action": "unknown"
+        }
+      ]
+    },
+    {
+      "id": 2292,
+      "name": "Mummy Hunting (Nightmare)",
+      "source_scripts": [
+        {
+          "path": "npc/re/quests/quests_morocc.txt",
+          "line": 230,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_morocc.txt",
+          "line": 249,
+          "action": "unknown"
+        }
+      ]
+    },
+    {
+      "id": 4133,
+      "name": "Iara",
+      "source_scripts": [
+        {
+          "path": "npc/re/quests/quests_brasilis.txt",
+          "line": 2846,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_brasilis.txt",
+          "line": 2918,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_brasilis.txt",
+          "line": 2998,
+          "action": "unknown"
+        }
+      ]
+    },
+    {
+      "id": 4135,
+      "name": "Iara",
+      "source_scripts": [
+        {
+          "path": "npc/re/quests/quests_brasilis.txt",
+          "line": 2823,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_brasilis.txt",
+          "line": 2845,
+          "action": "unknown"
+        }
+      ]
+    },
+    {
+      "id": 4154,
+      "name": "Homunculus Researcher",
+      "source_scripts": [
+        {
+          "path": "npc/re/quests/homun_s.txt",
+          "line": 51,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/homun_s.txt",
+          "line": 166,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/homun_s.txt",
+          "line": 416,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/homun_s.txt",
+          "line": 583,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/homun_s.txt",
+          "line": 813,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/homun_s.txt",
+          "line": 839,
+          "action": "unknown"
+        }
+      ]
+    },
+    {
+      "id": 4155,
+      "name": "Homunculus S Mutation Mission - 1",
+      "source_scripts": [
+        {
+          "path": "npc/re/quests/homun_s.txt",
+          "line": 167,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/homun_s.txt",
+          "line": 394,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/homun_s.txt",
+          "line": 417,
+          "action": "unknown"
+        }
+      ]
+    },
+    {
+      "id": 4156,
+      "name": "Homunculus S Mutation Mission - 2",
+      "source_scripts": [
+        {
+          "path": "npc/re/quests/homun_s.txt",
+          "line": 393,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/homun_s.txt",
+          "line": 681,
+          "action": "unknown"
+        }
+      ]
+    },
+    {
+      "id": 4157,
+      "name": "Homunculus S Mutation Mission - 3",
+      "source_scripts": [
+        {
+          "path": "npc/re/quests/homun_s.txt",
+          "line": 680,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/homun_s.txt",
+          "line": 870,
+          "action": "unknown"
+        }
+      ]
+    },
+    {
+      "id": 4158,
+      "name": "Homunculus S Mutation Mission - 4",
+      "source_scripts": [
+        {
+          "path": "npc/re/quests/homun_s.txt",
+          "line": 767,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/homun_s.txt",
+          "line": 840,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/homun_s.txt",
+          "line": 869,
+          "action": "unknown"
+        }
+      ]
+    },
+    {
+      "id": 4159,
+      "name": "Homunculus S Mutation Mission - 5",
+      "source_scripts": [
+        {
+          "path": "npc/re/quests/homun_s.txt",
+          "line": 52,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/homun_s.txt",
+          "line": 766,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/homun_s.txt",
+          "line": 808,
+          "action": "unknown"
+        }
+      ]
+    },
+    {
+      "id": 4160,
+      "name": "Homunculus S Mutation Mission - 6",
+      "source_scripts": [
+        {
+          "path": "npc/re/quests/homun_s.txt",
+          "line": 582,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/homun_s.txt",
+          "line": 807,
+          "action": "unknown"
+        }
+      ]
+    },
+    {
+      "id": 4256,
+      "name": "An accomplice?",
+      "source_scripts": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "line": 8572,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "line": 8604,
+          "action": "unknown"
+        }
+      ]
+    },
+    {
+      "id": 4258,
+      "name": "Eirinn",
+      "source_scripts": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "line": 8091,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "line": 8654,
+          "action": "unknown"
+        }
+      ]
+    },
+    {
+      "id": 4259,
+      "name": "Bourbon",
+      "source_scripts": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "line": 8338,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "line": 8655,
+          "action": "unknown"
+        }
+      ]
+    },
+    {
+      "id": 4262,
+      "name": "Counterattack (2)",
+      "source_scripts": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "line": 8150,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "line": 8182,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "line": 8853,
+          "action": "unknown"
+        }
+      ]
+    },
+    {
+      "id": 4264,
+      "name": "Counteroffensive (2)",
+      "source_scripts": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "line": 8412,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "line": 8440,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "line": 8827,
+          "action": "unknown"
+        }
+      ]
+    },
+    {
+      "id": 4265,
+      "name": "Bookshelf use",
+      "source_scripts": [
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "line": 8752,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_eclage.txt",
+          "line": 8753,
+          "action": "unknown"
+        }
+      ]
+    },
+    {
+      "id": 5016,
+      "name": "Bring me a Research Tool Bag",
+      "source_scripts": [
+        {
+          "path": "npc/re/quests/quests_mora.txt",
+          "line": 2685,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_mora.txt",
+          "line": 2743,
+          "action": "unknown"
+        }
+      ]
+    },
+    {
+      "id": 5017,
+      "name": "Revenge of the Reseacher",
+      "source_scripts": [
+        {
+          "path": "npc/re/quests/quests_mora.txt",
+          "line": 2819,
+          "action": "unknown"
+        }
+      ]
+    },
+    {
+      "id": 5018,
+      "name": "Revenge of the Reseacher",
+      "source_scripts": [
+        {
+          "path": "npc/re/quests/quests_mora.txt",
+          "line": 2874,
+          "action": "unknown"
+        }
+      ]
+    },
+    {
+      "id": 5019,
+      "name": "Bathroom Sample Studying",
+      "source_scripts": [
+        {
+          "path": "npc/re/quests/quests_mora.txt",
+          "line": 2875,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_mora.txt",
+          "line": 2909,
+          "action": "unknown"
+        }
+      ]
+    },
+    {
+      "id": 5020,
+      "name": "Sample Researching",
+      "source_scripts": [
+        {
+          "path": "npc/re/quests/quests_mora.txt",
+          "line": 2910,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_mora.txt",
+          "line": 2951,
+          "action": "unknown"
+        }
+      ]
+    },
+    {
+      "id": 5023,
+      "name": "Inspection of the Sample",
+      "source_scripts": [
+        {
+          "path": "npc/re/quests/quests_mora.txt",
+          "line": 2995,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_mora.txt",
+          "line": 3035,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_mora.txt",
+          "line": 3078,
+          "action": "unknown"
+        }
+      ]
+    },
+    {
+      "id": 5024,
+      "name": "Eastern Pool Research",
+      "source_scripts": [
+        {
+          "path": "npc/re/quests/quests_mora.txt",
+          "line": 3079,
+          "action": "unknown"
+        }
+      ]
+    },
+    {
+      "id": 5027,
+      "name": "Northern Pool Research",
+      "source_scripts": [
+        {
+          "path": "npc/re/quests/quests_mora.txt",
+          "line": 3212,
+          "action": "unknown"
+        }
+      ]
+    },
+    {
+      "id": 5029,
+      "name": "Unidentified Creature",
+      "source_scripts": [
+        {
+          "path": "npc/re/quests/quests_mora.txt",
+          "line": 3501,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_mora.txt",
+          "line": 3759,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_mora.txt",
+          "line": 3771,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_mora.txt",
+          "line": 3793,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_mora.txt",
+          "line": 3803,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_mora.txt",
+          "line": 3811,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_mora.txt",
+          "line": 3817,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_mora.txt",
+          "line": 4232,
+          "action": "unknown"
+        }
+      ]
+    },
+    {
+      "id": 5030,
+      "name": "The creature's family",
+      "source_scripts": [
+        {
+          "path": "npc/re/quests/quests_mora.txt",
+          "line": 3578,
+          "action": "unknown"
+        }
+      ]
+    },
+    {
+      "id": 5035,
+      "name": "Help the old man!",
+      "source_scripts": [
+        {
+          "path": "npc/re/quests/quests_dewata.txt",
+          "line": 868,
+          "action": "unknown"
+        }
+      ]
+    },
+    {
+      "id": 5044,
+      "name": "Help the old man!",
+      "source_scripts": [
+        {
+          "path": "npc/re/quests/quests_dewata.txt",
+          "line": 785,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_dewata.txt",
+          "line": 787,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_dewata.txt",
+          "line": 788,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_dewata.txt",
+          "line": 1043,
+          "action": "unknown"
+        }
+      ]
+    },
+    {
+      "id": 5045,
+      "name": "Help the old man!",
+      "source_scripts": [
+        {
+          "path": "npc/re/quests/quests_dewata.txt",
+          "line": 1009,
+          "action": "unknown"
+        }
+      ]
+    },
+    {
+      "id": 5052,
+      "name": "Traditional Weapon",
+      "source_scripts": [
+        {
+          "path": "npc/re/quests/quests_dewata.txt",
+          "line": 1810,
+          "action": "unknown"
+        }
+      ]
+    },
+    {
+      "id": 5053,
+      "name": "Traditional Weapon",
+      "source_scripts": [
+        {
+          "path": "npc/re/quests/quests_dewata.txt",
+          "line": 1831,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_dewata.txt",
+          "line": 1895,
+          "action": "unknown"
+        }
+      ]
+    },
+    {
+      "id": 5054,
+      "name": "Traditional Weapon",
+      "source_scripts": [
+        {
+          "path": "npc/re/quests/quests_dewata.txt",
+          "line": 1970,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_dewata.txt",
+          "line": 2017,
+          "action": "unknown"
+        }
+      ]
+    },
+    {
+      "id": 5058,
+      "name": "The mood of the players-(1)",
+      "source_scripts": [
+        {
+          "path": "npc/re/quests/quests_malangdo.txt",
+          "line": 6666,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_malangdo.txt",
+          "line": 7368,
+          "action": "unknown"
+        }
+      ]
+    },
+    {
+      "id": 5059,
+      "name": "The mood of the players-(2)",
+      "source_scripts": [
+        {
+          "path": "npc/re/quests/quests_malangdo.txt",
+          "line": 6701,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_malangdo.txt",
+          "line": 7369,
+          "action": "unknown"
+        }
+      ]
+    },
+    {
+      "id": 5060,
+      "name": "Cat Shock",
+      "source_scripts": [
+        {
+          "path": "npc/re/quests/quests_malangdo.txt",
+          "line": 6702,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_malangdo.txt",
+          "line": 6746,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_malangdo.txt",
+          "line": 6782,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_malangdo.txt",
+          "line": 6824,
+          "action": "unknown"
+        }
+      ]
+    },
+    {
+      "id": 5061,
+      "name": "Am I scared?",
+      "source_scripts": [
+        {
+          "path": "npc/re/quests/quests_malangdo.txt",
+          "line": 6747,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_malangdo.txt",
+          "line": 6781,
+          "action": "unknown"
+        }
+      ]
+    },
+    {
+      "id": 5062,
+      "name": "I met Eryu.",
+      "source_scripts": [
+        {
+          "path": "npc/re/quests/quests_malangdo.txt",
+          "line": 7729,
+          "action": "unknown"
+        },
+        {
+          "path": "npc/re/quests/quests_malangdo.txt",
+          "line": 7730,
+          "action": "unknown"
+        }
+      ]
+    }
+  ],
+  "unreviewed_without_scripts_sample": [
+    1000,
+    1001,
+    1002,
+    1003,
+    1004,
+    1005,
+    1006,
+    1007,
+    1008,
+    1009,
+    1010,
+    1011,
+    1012,
+    1013,
+    1014,
+    1015,
+    1016,
+    1100,
+    1101,
+    1102
+  ]
+}

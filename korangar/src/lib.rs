@@ -132,11 +132,11 @@ use crate::loaders::*;
 use crate::renderer::{AlignHorizontal, DebugMarkerRenderer};
 use crate::renderer::{EffectRenderer, GameInterfaceRenderer};
 use crate::settings::{
-    CombatTextSize, DisplayMode, GameSettings, GameSettingsPathExt, GraphicsSettings, GroundSkillTargetMode, IN_GAME_THEMES_PATH,
-    LightingMode, MENU_THEMES_PATH, ServiceSettingsPathExt, WORLD_THEMES_PATH,
+    CombatTextSize, DisplayMode, GameSettings, GameSettingsPathExt, GraphicsSettings, GroundLootFilter, GroundSkillTargetMode,
+    IN_GAME_THEMES_PATH, LightingMode, MENU_THEMES_PATH, ServiceSettingsPathExt, WORLD_THEMES_PATH, should_render_ground_item,
 };
 use crate::state::character_creation::{CharacterCreationPathExt, CharacterSex, HairStyle, StatSpread};
-use crate::state::quests::{ClientHuntingGoalEntry, QuestEntry, QuestHuntObjectiveEntry, QuestRequirementEntry};
+use crate::state::quests::{ClientHuntingGoalEntry, QuestEntry, QuestHuntObjectiveEntry, QuestLocationEntry, QuestRequirementEntry};
 use crate::state::skills::{LearnedSkill, SkillTreeLayoutPathExt, bring_skill_to_level};
 use crate::state::theme::{InterfaceTheme, InterfaceThemeType, WorldTheme};
 use crate::state::{BufferedAction, SelectedServicePath};
@@ -940,7 +940,7 @@ fn normalize_map_base_name(map_file_name: &str) -> String {
         .to_lowercase()
 }
 
-fn map_difficulty_warning(map_name: &str, mean_level: Option<u16>, player_level: Option<u16>, enabled: bool) -> Option<String> {
+pub(crate) fn map_difficulty_warning(map_name: &str, mean_level: Option<u16>, player_level: Option<u16>, enabled: bool) -> Option<String> {
     if !enabled {
         return None;
     }
@@ -1043,8 +1043,8 @@ mod resolve_pending_cast_tests {
     use ragnarok_packets::{AttackRange, EntityId, HotbarSlot, ItemId, SkillId, SkillLevel, SkillType, TilePosition};
 
     use super::{
-        PendingCastResolution, PendingSkill, is_within_skill_range, pending_held_skill_canceled_by_interface_focus,
-        pending_skill_commits_on_release, resolve_pending_cast,
+        PendingCastResolution, PendingSkill, PredictedMotion, is_within_skill_range, pending_held_skill_canceled_by_interface_focus,
+        pending_skill_commits_on_release, resolve_pending_cast, server_echo_repeats_prediction, skill_range_ring,
     };
     use crate::graphics::PickerTarget;
 
@@ -1149,6 +1149,35 @@ mod resolve_pending_cast_tests {
     }
 
     #[test]
+    fn server_echo_keeps_the_same_predicted_motion() {
+        assert!(server_echo_repeats_prediction(Some(PredictedMotion::BasicAttack), None));
+        assert!(!server_echo_repeats_prediction(
+            Some(PredictedMotion::BasicAttack),
+            Some(SkillId(5))
+        ));
+        assert!(server_echo_repeats_prediction(
+            Some(PredictedMotion::Skill(SkillId(5))),
+            Some(SkillId(5))
+        ));
+        assert!(!server_echo_repeats_prediction(
+            Some(PredictedMotion::Skill(SkillId(5))),
+            Some(SkillId(7))
+        ));
+        assert!(!server_echo_repeats_prediction(None, None));
+    }
+
+    #[test]
+    fn skill_range_ring_is_the_chebyshev_outline() {
+        assert!(skill_range_ring(AttackRange(0)).is_empty());
+        let ring = skill_range_ring(AttackRange(1));
+        assert_eq!(ring.len(), 8);
+        assert!(ring.iter().all(|(dx, dy)| dx.unsigned_abs().max(dy.unsigned_abs()) == 1));
+        let far = skill_range_ring(AttackRange(7));
+        assert_eq!(far.len(), 56);
+        assert!(far.iter().all(|(dx, dy)| dx.unsigned_abs().max(dy.unsigned_abs()) == 7));
+    }
+
+    #[test]
     fn missing_skill_item_names_the_item_when_the_table_knows_it() {
         use super::format_missing_skill_item;
 
@@ -1192,6 +1221,194 @@ mod resolve_pending_cast_tests {
         assert_eq!(trade_item_label(Some("Sword"), ItemId(1101), 1, 7), "+7 Sword x1");
         // Only an item the tables cannot name may show an id.
         assert_eq!(trade_item_label(None, ItemId(501), 12, 0), "item #501 x12");
+    }
+
+    #[test]
+    fn effective_skill_range_prioritizes_armed_and_falls_back_to_hovered() {
+        use super::effective_skill_range;
+
+        assert_eq!(effective_skill_range(None, None), None);
+        assert_eq!(effective_skill_range(None, Some(AttackRange(4))), Some(AttackRange(4)));
+        assert_eq!(
+            effective_skill_range(Some(AttackRange(9)), Some(AttackRange(4))),
+            Some(AttackRange(9))
+        );
+    }
+
+    #[test]
+    fn stippled_footprint_cells_creates_dual_cue_when_out_of_range() {
+        use super::stippled_footprint_cells;
+
+        let cells = vec![(-1, -1), (-1, 0), (-1, 1), (0, -1), (0, 0), (0, 1), (1, -1), (1, 0), (1, 1)];
+        let in_range_cells = stippled_footprint_cells(&cells, true);
+        assert_eq!(in_range_cells.len(), 9);
+
+        let out_of_range_cells = stippled_footprint_cells(&cells, false);
+        assert_eq!(out_of_range_cells.len(), 5);
+        assert!(out_of_range_cells.iter().all(|(dx, dy)| (dx + dy) % 2 == 0));
+    }
+
+    #[test]
+    fn pending_skill_cursor_state_changes_shape_beyond_color() {
+        use super::pending_skill_cursor_state;
+        use crate::interface::cursor::MouseCursorState;
+
+        assert_eq!(pending_skill_cursor_state(true), MouseCursorState::Attack);
+        assert_eq!(pending_skill_cursor_state(false), MouseCursorState::NoAction);
+    }
+
+    #[test]
+    fn should_reissue_hold_mouse_move_throttles_to_200ms() {
+        use ragnarok_packets::ClientTick;
+
+        use super::should_reissue_hold_mouse_move;
+
+        let start_pos = TilePosition { x: 10, y: 10 };
+        let dest1 = TilePosition { x: 15, y: 20 };
+        let dest2 = TilePosition { x: 16, y: 21 };
+
+        // Sub-200ms ticks must not re-issue packets (no flood)
+        assert!(!should_reissue_hold_mouse_move(
+            ClientTick(0),
+            ClientTick(16),
+            Some(dest1),
+            dest2,
+            Some(start_pos)
+        ));
+        assert!(!should_reissue_hold_mouse_move(
+            ClientTick(0),
+            ClientTick(199),
+            Some(dest1),
+            dest2,
+            Some(start_pos)
+        ));
+
+        // At or above 200ms with changed destination, re-issues
+        assert!(should_reissue_hold_mouse_move(
+            ClientTick(0),
+            ClientTick(200),
+            Some(dest1),
+            dest2,
+            Some(start_pos)
+        ));
+
+        // At or above 200ms holding towards same destination while player hasn't
+        // arrived, re-issues
+        assert!(should_reissue_hold_mouse_move(
+            ClientTick(0),
+            ClientTick(200),
+            Some(dest1),
+            dest1,
+            Some(start_pos)
+        ));
+
+        // Once player reaches destination, stops re-issuing
+        assert!(!should_reissue_hold_mouse_move(
+            ClientTick(0),
+            ClientTick(200),
+            Some(dest1),
+            dest1,
+            Some(dest1)
+        ));
+    }
+
+    fn create_test_monster(
+        name: &str,
+        lv: u16,
+        element: Option<&str>,
+        race: Option<&str>,
+        size: Option<&str>,
+        has_mvp_drops: bool,
+    ) -> crate::dm::data::BestiaryMonster {
+        crate::dm::data::BestiaryMonster {
+            id: 1000,
+            sprite_name: name.to_string(),
+            name: name.to_string(),
+            lv,
+            hp: 100,
+            sp: 10,
+            exp: 10,
+            job_exp: 10,
+            attack_range: 1,
+            def: 0,
+            mdef: 0,
+            attack: [10, 15],
+            phys_dps: 10.0,
+            magic_dps: 0.0,
+            drops_count: 1,
+            has_mvp_drops,
+            mvp_exp: if has_mvp_drops { 1000 } else { 0 },
+            element: element.map(str::to_string),
+            race: race.map(str::to_string),
+            size: size.map(str::to_string),
+            view_range: None,
+            chase_range: None,
+        }
+    }
+
+    #[test]
+    fn format_monster_target_summary_handles_mvp_badge_and_chips() {
+        use super::format_monster_target_summary;
+
+        let monster = create_test_monster("Poring", 1, Some("Water 1"), Some("Plant"), Some("Medium"), false);
+
+        let (summary, is_boss) = format_monster_target_summary("Poring", 50, 50, 0, 0, None, None, Some(&monster));
+        assert!(!is_boss);
+        assert!(summary.contains("Poring"));
+        assert!(summary.contains("Lv 1  Water 1  Plant  Medium"));
+        assert!(summary.contains("HP 50/50"));
+        assert!(!summary.contains("[MVP]"));
+
+        // MVP monster
+        let baphomet = create_test_monster("Baphomet", 81, Some("Dark 3"), Some("Demon"), Some("Large"), true);
+
+        let (boss_summary, is_boss) = format_monster_target_summary("Baphomet", 666000, 666000, 0, 0, None, None, Some(&baphomet));
+        assert!(is_boss);
+        assert!(boss_summary.contains("[MVP] Baphomet"));
+        assert!(boss_summary.contains("Lv 81  Dark 3  Demon  Large"));
+        assert!(boss_summary.contains("HP 666000/666000"));
+    }
+
+    #[test]
+    fn format_monster_target_summary_shows_cast_cue_target_of_target_and_statuses() {
+        use super::{TargetOfTargetInfo, format_monster_target_summary};
+
+        let monster = create_test_monster("Dark Lord", 80, None, None, None, true);
+
+        let active_cast = Some(("Meteor Storm", Some(1250.0)));
+        let target_player = Some(TargetOfTargetInfo::Player);
+
+        // Body state 2 = Frozen, Health state 1 = Poisoned
+        let (summary, is_boss) =
+            format_monster_target_summary("Dark Lord", 200000, 720000, 2, 1, active_cast, target_player, Some(&monster));
+
+        assert!(is_boss);
+        assert!(summary.contains("Status: Frozen, Poisoned"));
+        assert!(summary.contains("Casting: Meteor Storm (1250ms)"));
+        assert!(summary.contains("Target: You"));
+
+        // Targeting another entity
+        let target_other = Some(TargetOfTargetInfo::EntityName("Novice".to_string()));
+        let (summary_other, _) = format_monster_target_summary("Dark Lord", 200000, 720000, 0, 0, None, target_other, Some(&monster));
+        assert!(summary_other.contains("Target: Novice"));
+    }
+
+    #[test]
+    fn an_elite_keeps_its_badge_and_hides_the_base_level() {
+        use super::{elite_base_name, format_monster_target_summary};
+
+        assert_eq!(elite_base_name("[Elite] Orc Skeleton"), Some("Orc Skeleton"));
+        assert_eq!(elite_base_name("Orc Skeleton"), None);
+        assert_eq!(elite_base_name("[Elite] "), None);
+
+        let base = create_test_monster("Orc Skeleton", 53, None, None, None, false);
+        let (summary, _) = format_monster_target_summary("[Elite] Orc Skeleton", 6231, 6231, 0, 0, None, None, Some(&base));
+        let mut lines = summary.lines();
+
+        assert_eq!(lines.next(), Some("[Elite] Orc Skeleton"));
+        let facts = lines.next().expect("facts line");
+        assert!(facts.starts_with("Elite"), "badge leads the facts: {facts}");
+        assert!(!facts.contains("Lv 53"), "the base level is not the elite's level: {facts}");
     }
 }
 
@@ -1253,11 +1470,191 @@ fn resolve_pending_cast(skill_type: SkillType, target: PickerTarget) -> PendingC
     }
 }
 
+/// A local swing started before the server confirms the action.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+enum PredictedMotion {
+    BasicAttack,
+    Skill(SkillId),
+}
+
+/// The server echo repeats a prediction when it names the same motion.
+/// A different skill, or a basic attack after a skill, must replace it.
+fn server_echo_repeats_prediction(predicted: Option<PredictedMotion>, incoming_skill: Option<SkillId>) -> bool {
+    match predicted {
+        Some(PredictedMotion::BasicAttack) => incoming_skill.is_none(),
+        Some(PredictedMotion::Skill(skill_id)) => incoming_skill == Some(skill_id),
+        None => false,
+    }
+}
+
 fn is_within_skill_range(player: TilePosition, target: TilePosition, attack_range: AttackRange) -> bool {
     player.x.abs_diff(target.x).max(player.y.abs_diff(target.y)) <= attack_range.0
 }
 
+/// Outline of the Chebyshev square the server uses for skill range.
+/// Cells are `(dx, dy)` from the player. Range 0 has no ring.
+fn skill_range_ring(attack_range: AttackRange) -> Vec<(i8, i8)> {
+    let range = i16::try_from(attack_range.0).unwrap_or(i16::MAX).clamp(0, 20);
+    if range == 0 {
+        return Vec::new();
+    }
+    let mut cells = Vec::with_capacity((range as usize) * 8);
+    for dx in -range..=range {
+        for dy in -range..=range {
+            if dx.abs().max(dy.abs()) == range {
+                cells.push((dx as i8, dy as i8));
+            }
+        }
+    }
+    cells
+}
+
+fn effective_skill_range(pending_range: Option<AttackRange>, hovered_range: Option<AttackRange>) -> Option<AttackRange> {
+    pending_range.or(hovered_range)
+}
+
+fn stippled_footprint_cells(cells: &[(i8, i8)], in_range: bool) -> Vec<(i8, i8)> {
+    if in_range {
+        cells.to_vec()
+    } else {
+        cells.iter().copied().filter(|(dx, dy)| (dx + dy) % 2 == 0).collect()
+    }
+}
+
+fn pending_skill_cursor_state(in_range: bool) -> MouseCursorState {
+    if in_range {
+        MouseCursorState::Attack
+    } else {
+        MouseCursorState::NoAction
+    }
+}
+
+fn should_reissue_hold_mouse_move(
+    last_tick: ClientTick,
+    current_tick: ClientTick,
+    last_destination: Option<TilePosition>,
+    current_destination: TilePosition,
+    player_position: Option<TilePosition>,
+) -> bool {
+    let elapsed = current_tick.0.wrapping_sub(last_tick.0);
+    if elapsed < 200 {
+        return false;
+    }
+    if last_destination != Some(current_destination) {
+        true
+    } else {
+        player_position != Some(current_destination)
+    }
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+enum TargetOfTargetInfo {
+    Player,
+    EntityName(String),
+}
+
+/// F15 marks elite variants only by a `[Elite] ` name prefix
+/// (`db/mob_db2.conf`); this returns the base monster's name for those, `None`
+/// for anything else.
+fn elite_base_name(name: &str) -> Option<&str> {
+    name.strip_prefix("[Elite] ").map(str::trim).filter(|base| !base.is_empty())
+}
+
+#[allow(clippy::too_many_arguments)] // one input per target-frame line
+fn format_monster_target_summary(
+    name: &str,
+    health: usize,
+    maximum: usize,
+    body_state: u16,
+    health_state: u16,
+    active_cast: Option<(&str, Option<f32>)>,
+    target_info: Option<TargetOfTargetInfo>,
+    bestiary: Option<&crate::dm::data::BestiaryMonster>,
+) -> (String, bool) {
+    let is_mvp = bestiary.is_some_and(|m| m.has_mvp_drops || m.mvp_exp > 0);
+    let is_elite = elite_base_name(name).is_some();
+
+    let display_title = match (is_elite, is_mvp, bestiary.map(|m| m.name.as_str())) {
+        // The server's own name carries the elite marker; a base-monster
+        // bestiary name would hide it.
+        (true, ..) => name.to_string(),
+        (false, true, Some(bname)) => format!("[MVP] {bname}"),
+        (false, true, None) => format!("[MVP] {name}"),
+        (false, false, Some(bname)) => bname.to_string(),
+        (false, false, None) => name.to_string(),
+    };
+
+    let facts = bestiary.map(|monster| {
+        // An elite shares its base monster's element/race/size but not its
+        // level (F15's Orc Skeleton elite is Lv 55 over a Lv 53 base), so the
+        // base level is replaced by the badge rather than shown wrong.
+        let mut chips = match is_elite {
+            true => vec!["Elite".to_string()],
+            false => vec![format!("Lv {}", monster.lv)],
+        };
+        if let Some(element) = &monster.element {
+            chips.push(element.clone());
+        }
+        if let Some(race) = &monster.race {
+            chips.push(race.clone());
+        }
+        if let Some(size) = &monster.size {
+            chips.push(size.clone());
+        }
+        chips.join("  ")
+    });
+
+    let hp_line = match maximum {
+        max if max > 0 => format!("HP {health}/{max}"),
+        _ => "HP unknown".to_string(),
+    };
+
+    let mut lines = Vec::new();
+    lines.push(display_title);
+    if let Some(chips) = facts {
+        lines.push(chips);
+    }
+    lines.push(hp_line);
+
+    let mut statuses = Vec::new();
+    match body_state {
+        1 => statuses.push("Petrified"),
+        2 => statuses.push("Frozen"),
+        3 => statuses.push("Stunned"),
+        4 => statuses.push("Asleep"),
+        6 => statuses.push("Petrifying"),
+        _ => {}
+    }
+    if health_state & 0x0001 != 0 {
+        statuses.push("Poisoned");
+    }
+    if !statuses.is_empty() {
+        lines.push(format!("Status: {}", statuses.join(", ")));
+    }
+
+    if let Some((skill_name, remaining_ms)) = active_cast {
+        if let Some(ms) = remaining_ms {
+            lines.push(format!("Casting: {skill_name} ({:.0}ms)", ms));
+        } else {
+            lines.push(format!("Casting: {skill_name}"));
+        }
+    }
+
+    if let Some(tgt) = target_info {
+        match tgt {
+            TargetOfTargetInfo::Player => lines.push("Target: You".to_string()),
+            TargetOfTargetInfo::EntityName(tgt_name) => lines.push(format!("Target: {tgt_name}")),
+        }
+    }
+
+    (lines.join("\n"), is_mvp)
+}
+
 const TIMED_ACTION_BUFFER_MS: u32 = 200;
+
+/// An incoming cast with a drawable ground footprint: skill, target cell, and
+/// the footprint's cell offsets.
+type TelegraphedCast = (SkillId, TilePosition, Vec<(i8, i8)>);
 
 fn client_tick_reached(now: u32, deadline: u32) -> bool {
     now.wrapping_sub(deadline) < (1 << 31)
@@ -1402,7 +1799,7 @@ fn cast_or_path_entity_skill<Callback: PacketCallback + Send>(
     skill_level: SkillLevel,
     attack_range: AttackRange,
     entity_id: EntityId,
-) {
+) -> bool {
     let player_position = state.try_follow(this_entity()).map(Entity::get_tile_position);
     let target_position = state
         .follow(client_state().entities())
@@ -1437,9 +1834,9 @@ fn cast_or_path_entity_skill<Callback: PacketCallback + Send>(
                 MessageColor::Error,
             )),
         }
-    } else {
-        let _ = networking_system.cast_skill(skill_id, skill_level, entity_id);
+        return false;
     }
+    networking_system.cast_skill(skill_id, skill_level, entity_id).is_ok()
 }
 
 /// Cell a ground-targeted resolution lands on, or `None` when the click fizzled
@@ -1478,7 +1875,7 @@ fn cast_or_path_ground_skill<Callback: PacketCallback + Send>(
     skill_level: SkillLevel,
     attack_range: AttackRange,
     tile: TilePosition,
-) {
+) -> bool {
     let player_position = state.try_follow(this_entity()).map(Entity::get_tile_position);
 
     if let (Some(map), Some(player_position)) = (map, player_position)
@@ -1508,10 +1905,10 @@ fn cast_or_path_ground_skill<Callback: PacketCallback + Send>(
                 MessageColor::Error,
             )),
         }
-        return;
+        return false;
     }
 
-    let _ = networking_system.cast_ground_skill(skill_id, skill_level, tile);
+    networking_system.cast_ground_skill(skill_id, skill_level, tile).is_ok()
 }
 
 /// Tell the player which skill is now armed and waiting for a target. The
@@ -1642,6 +2039,13 @@ fn slash_command_usage(command: &str) -> Option<&'static str> {
         "/store" => "Usage: /store <inventory_index> [amount]",
         "/retrieve" => "Usage: /retrieve <storage_index> [amount]",
         "/ignore" | "/unignore" => "Usage: /ignore <name>  or  /unignore <name>",
+        "/saveset" => "Usage: /saveset <name>",
+        "/equip" | "/equipset" => "Usage: /equip <name>  (or /equipset <name>)",
+        "/deleteset" => "Usage: /deleteset <name>",
+        "/loot" => "Usage: /loot <all|gear|cards>",
+        "/wishlist" => "Usage: /wishlist <item_id> (or /wishlist clear)",
+        "/mark" => "Usage: /mark <focus|attack|cc|assist|clear>  (marks your selected monster)",
+        "/goal" => "Usage: /goal add <text>, /goal done <number>, /goal clear, /goal list",
         _ => return None,
     })
 }
@@ -1721,6 +2125,9 @@ pub struct Client {
     /// Last monster this character attacked. A failed skill such as Steal
     /// stops the server-side attack; this is what gets sent again.
     last_attack_target: Option<EntityId>,
+    /// Swing or skill motion started when the packet was sent. Cleared when
+    /// the server echo arrives or the action is refused.
+    predicted_motion: Option<PredictedMotion>,
     /// Monster selected by click or keyboard cycling for the target surface.
     targeted_monster: Option<EntityId>,
     /// Why the map server is dropping us, held from `SC_NOTIFY_BAN` until the
@@ -1789,6 +2196,7 @@ pub struct Client {
     tile_texture_set: Arc<TextureSet>,
 
     main_menu_click_sound_effect: SoundEffectKey,
+    audio_cue_limiter: crate::state::audio_cues::AudioCueLimiter,
 
     #[cfg(feature = "debug")]
     networking_system: NetworkingSystem<PacketHistoryCallback>,
@@ -1807,6 +2215,11 @@ pub struct Client {
     character_preview: Option<(CharacterSex, HairStyle)>,
     /// Last WASD destination packet, so we do not trip flood protection.
     keyboard_move_last_tick: ClientTick,
+    /// Last hold-mouse destination packet, throttled to 200 ms to avoid flood
+    /// protection (F10).
+    hold_mouse_move_last_tick: ClientTick,
+    /// Latest client tick recorded for reactive target frames and combat cues.
+    last_client_tick: ClientTick,
     /// A stat spread chosen at character creation, waiting for the character it
     /// belongs to. Stats cannot ride the creation packet, so the allocation is
     /// replayed as ordinary `StatUp` requests once that character is in the
@@ -1925,6 +2338,58 @@ impl Client {
                 self.texture_loader.create_color("korangar://flat-tile", image, true)
             })
             .clone()
+    }
+
+    /// Classify who produced a skill visual for the effect-density setting.
+    fn effect_source(&self, source_entity_id: EntityId) -> crate::settings::EffectSource {
+        use crate::settings::EffectSource;
+
+        if self.client_state.try_follow(this_entity()).map(Entity::get_entity_id) == Some(source_entity_id) {
+            return EffectSource::Local;
+        }
+        if self
+            .client_state
+            .follow(client_state().entities())
+            .iter()
+            .any(|entity| entity.get_entity_id() == source_entity_id && entity.get_entity_type() == EntityType::Monster)
+        {
+            return EffectSource::Hostile;
+        }
+        if self
+            .client_state
+            .follow(client_state().party_state())
+            .members()
+            .iter()
+            .any(|member| member.account_id().0 == source_entity_id.0)
+        {
+            return EffectSource::Party;
+        }
+        EffectSource::Bystander
+    }
+
+    /// Whether a cosmetic skill visual from `source_entity_id` should be drawn
+    /// under the current effect density. Telegraphs never call this.
+    fn skill_visual_allowed(&self, source_entity_id: EntityId) -> bool {
+        self.client_state
+            .follow(client_state().game_settings())
+            .effect_density
+            .shows_skill_visual(self.effect_source(source_entity_id))
+    }
+
+    /// Play an optional audio cue if the setting is on and the limiter allows
+    /// it. `position` makes the cue spatial (a caster's location); `None`
+    /// plays flat.
+    fn play_audio_cue(&mut self, cue: crate::state::audio_cues::AudioCue, position: Option<Point3<f32>>, now: ClientTick) {
+        const CUE_RANGE: f32 = 250.0;
+
+        if !*self.client_state.follow(client_state().game_settings().audio_cues()) || !self.audio_cue_limiter.allow(cue, now.0) {
+            return;
+        }
+        let key = self.audio_engine.load(cue.path());
+        match position {
+            Some(position) => self.audio_engine.play_spatial_sound_effect(key, position, CUE_RANGE),
+            None => self.audio_engine.play_sound_effect(key),
+        }
     }
 
     fn play_spatial_skill_sound(&self, path: &'static str, position: Point3<f32>) {
@@ -2101,6 +2566,9 @@ impl Client {
     }
 
     fn spawn_successful_caster_skill_effect(&mut self, skill_id: SkillId, source_entity_id: EntityId, position: Point3<f32>) {
+        if !self.skill_visual_allowed(source_entity_id) {
+            return;
+        }
         let recipe = skill_presentation_recipe(skill_id);
         if recipe.successful_caster_effect.is_none() && recipe.successful_caster_sounds.is_empty() {
             return;
@@ -2166,6 +2634,9 @@ impl Client {
         impact_delay_ms: u32,
         client_tick: ClientTick,
     ) {
+        if !self.skill_visual_allowed(source_entity_id) {
+            return;
+        }
         let recipe = skill_presentation_recipe(skill_id);
         let has_projectile = recipe.projectile.is_some();
         if recipe.damage_caster_effect.is_none() && !has_projectile && recipe.damage_caster_sounds.is_empty() {
@@ -2839,6 +3310,9 @@ impl Client {
         destination_entity_id: EntityId,
         target_position: Point3<f32>,
     ) {
+        if !self.skill_visual_allowed(source_entity_id) {
+            return;
+        }
         let recipe = skill_presentation_recipe(skill_id);
         let target_light_id = PointLightId::new(destination_entity_id.0 ^ u32::from(skill_id.0));
         let neutral = Color::rgb_u8(235, 220, 180);
@@ -3392,6 +3866,7 @@ impl Client {
             pending_skill: None,
             support_target: None,
             last_attack_target: None,
+            predicted_motion: None,
             targeted_monster: None,
             pending_disconnect_reason: None,
             disconnect_needs_notice: false,
@@ -3428,6 +3903,7 @@ impl Client {
             #[cfg(feature = "debug")]
             tile_texture_set,
             main_menu_click_sound_effect,
+            audio_cue_limiter: Default::default(),
             networking_system,
             audio_engine,
             active_interface_settings,
@@ -3437,6 +3913,8 @@ impl Client {
             },
             character_preview: None,
             keyboard_move_last_tick: ClientTick(0),
+            hold_mouse_move_last_tick: ClientTick(0),
+            last_client_tick: ClientTick(0),
             pending_stat_plan: None,
             armed_stat_plan: None,
             active_graphics_settings: graphics_settings,
@@ -3863,6 +4341,43 @@ impl Client {
         self.particle_holder.set_party_ping_marker(marker);
     }
 
+    /// Element cue for a hit the local player lands on a known monster.
+    /// Basic attacks and `Ele_Weapon` skills use Neutral, the unendowed weapon
+    /// element.
+    fn element_cue_for_player_hit(
+        &self,
+        source_entity_id: EntityId,
+        destination_entity_id: EntityId,
+        skill_id: Option<SkillId>,
+    ) -> Option<crate::world::ElementCue> {
+        let player_is_source = source_entity_id.0 == 0
+            || self
+                .client_state
+                .try_follow(this_entity())
+                .is_some_and(|player| player.get_entity_id() == source_entity_id);
+        if !player_is_source {
+            return None;
+        }
+        let name = self
+            .client_state
+            .follow(client_state().entities())
+            .iter()
+            .find(|entity| entity.get_entity_id() == destination_entity_id)
+            .and_then(Entity::get_details)?;
+        let name = name.split('#').next().unwrap_or(name);
+        let facts = crate::world::monster_facts(name)?;
+        let skill_level = skill_id
+            .and_then(|skill_id| {
+                self.client_state
+                    .follow(client_state().skill_tree().skills())
+                    .iter()
+                    .find(|skill| skill.skill_id == skill_id)
+                    .map(|skill| skill.skill_level.0)
+            })
+            .unwrap_or(1);
+        crate::world::identify_player_hit(skill_id.map(|skill_id| skill_id.0), skill_level, facts.element)
+    }
+
     /// Apply the target phase of one server-authoritative damage event. The
     /// source action and launch/caster tracks have already started; this phase
     /// owns numbers, hit effects/sounds, and target Hurt.
@@ -3900,6 +4415,7 @@ impl Client {
                             amount_per_hit,
                             hit_count,
                             is_critical,
+                            element_cue: self.element_cue_for_player_hit(source_entity_id, destination_entity_id, skill_id),
                         },
                         font_scale,
                     );
@@ -4086,6 +4602,9 @@ impl Client {
         self.client_state
             .follow_mut(client_state().party_state())
             .tick_ready_check(client_tick);
+        self.client_state
+            .follow_mut(client_state().party_state())
+            .tick_target_markers(client_tick);
         self.networking_system.get_events(&mut self.network_event_buffer);
 
         // Deferred: cannot call &mut self helpers while draining network_event_buffer.
@@ -4545,6 +5064,8 @@ impl Client {
                         client_state().skill_cooldowns(),
                         client_state().toasts(),
                         client_state().quest_log(),
+                        client_state().party_state(),
+                        client_state().recovery(),
                     ));
                     self.interface
                         .open_window(PartyWindow::new(client_state().party_window(), client_state().party_state()));
@@ -4659,6 +5180,22 @@ impl Client {
                 NetworkEvent::RemoveEntity { entity_id, reason } => {
                     // If the motive is dead, you need to set the player to dead.
                     if reason == DisappearanceReason::Died {
+                        if let Some(recap) = self
+                            .client_state
+                            .follow_mut(client_state().encounter_recap())
+                            .finish_encounter(entity_id, client_tick)
+                        {
+                            self.client_state.follow_mut(client_state().toasts()).push(
+                                "boss-encounter-recap",
+                                format!(
+                                    "Defeated {}! Dealt {} dmg in {:.1}s",
+                                    recap.boss_name,
+                                    recap.damage_dealt,
+                                    (recap.duration_ms as f32) / 1000.0
+                                ),
+                                crate::state::toasts::ToastPriority::High,
+                            );
+                        }
                         if let Some(entity) = self
                             .client_state
                             .follow_mut(client_state().entities())
@@ -4775,6 +5312,28 @@ impl Client {
                         }
 
                         ground_items.push(ground_item);
+
+                        let raw_id = item_id.0;
+                        let stats = crate::world::item_stats(raw_id);
+                        let is_card = stats.as_ref().is_some_and(|s| s.item_type.eq_ignore_ascii_case("Card"));
+                        let is_wishlisted = self.client_state.follow(client_state().game_settings()).is_wishlisted(raw_id);
+                        if is_card || is_wishlisted {
+                            let item_name = stats.as_ref().map(|s| s.name.as_str()).unwrap_or("Unknown Item");
+                            let alert_msg = if is_card {
+                                format!("★ Rare Card Drop: {item_name}!")
+                            } else {
+                                format!("★ Wishlist Item Drop: {item_name}!")
+                            };
+                            self.play_audio_cue(crate::state::audio_cues::AudioCue::CardDrop, None, client_tick);
+                            self.client_state.follow_mut(client_state().toasts()).push(
+                                format!("ground_drop_{raw_id}"),
+                                alert_msg.clone(),
+                                crate::state::toasts::ToastPriority::High,
+                            );
+                            self.client_state
+                                .follow_mut(client_state().chat_messages())
+                                .push(ChatMessage::new(alert_msg, MessageColor::Information));
+                        }
                     } else {
                         #[cfg(feature = "debug")]
                         print_debug!("[{}] failed to spawn item", "error".red());
@@ -4895,6 +5454,9 @@ impl Client {
                     self.client_state.follow_mut(client_state().status_effects()).clear();
                     self.client_state.follow_mut(client_state().skill_cooldowns()).clear();
                     self.client_state.follow_mut(client_state().toasts()).clear();
+                    self.client_state.follow_mut(client_state().encounter_recap()).clear_active();
+                    self.client_state.follow_mut(client_state().party_state()).clear_target_markers();
+                    self.audio_cue_limiter.clear();
                     // A respawn-to-save-point (die → Respawn) arrives as a map
                     // change, and the local player survives the truncate(1)
                     // above carrying its death animation. Revive it to idle so
@@ -4931,7 +5493,12 @@ impl Client {
                             .client_state
                             .follow_mut(client_state().discovery())
                             .receive_server_line(&text, local_account_id);
-                    if !discovery_packet {
+                    // Campaign state arrives as `[DMJ]` JSON lines from the same server-only
+                    // channel. Every such line is kept out of chat, understood or not.
+                    let dmj_packet = !discovery_packet
+                        && matches!(color, MessageColor::Server)
+                        && self.client_state.follow_mut(client_state().dm_journal()).receive_server_line(&text);
+                    if !discovery_packet && !dmj_packet {
                         self.client_state
                             .follow_mut(client_state().chat_messages())
                             .push(ChatMessage::new(text, color));
@@ -4944,6 +5511,7 @@ impl Client {
                         .push(ChatMessage::new(text, color));
                 }
                 NetworkEvent::SkillFailed { .. } => {
+                    self.rollback_predicted_motion(client_tick);
                     if cancel_timed_action_on_skill_refusal(self.client_state.follow_mut(client_state().timed_buffered_action())) {
                         self.client_state.follow_mut(client_state().toasts()).push(
                             "action-buffer-refused",
@@ -4953,7 +5521,9 @@ impl Client {
                     }
                     let auto_attack = *self.client_state.follow(client_state().game_settings().auto_attack());
                     if auto_attack && let Some(entity_id) = self.last_attack_target {
-                        let _ = self.networking_system.player_attack(entity_id);
+                        if self.networking_system.player_attack(entity_id).is_ok() {
+                            self.predict_local_motion(PredictedMotion::BasicAttack, client_tick);
+                        }
                         *self.client_state.follow_mut(client_state().buffered_action()) = Some(BufferedAction::AttackEntity { entity_id });
                     }
                 }
@@ -4962,6 +5532,7 @@ impl Client {
                     amount,
                     equipment,
                 } => {
+                    self.rollback_predicted_motion(client_tick);
                     if cancel_timed_action_on_skill_refusal(self.client_state.follow_mut(client_state().timed_buffered_action())) {
                         self.client_state.follow_mut(client_state().toasts()).push(
                             "action-buffer-refused",
@@ -5045,6 +5616,30 @@ impl Client {
                     damage_delay,
                     is_critical,
                 } => {
+                    let player_id = self.client_state.try_follow(this_entity()).map(|player| player.get_entity_id());
+                    if player_id.is_some_and(|player_id| player_id == source_entity_id || player_id == destination_entity_id) {
+                        self.interface.note_player_combat();
+                    }
+                    if let Some(player_id) = player_id {
+                        let amount = damage_amount.unwrap_or(0) as u32;
+                        if source_entity_id == player_id {
+                            self.client_state
+                                .follow_mut(client_state().encounter_recap())
+                                .record_damage_dealt(destination_entity_id, amount);
+                        } else if destination_entity_id == player_id {
+                            self.client_state
+                                .follow_mut(client_state().encounter_recap())
+                                .record_damage_taken(source_entity_id, amount);
+                        }
+                    }
+                    if let Some(source_entity) = self
+                        .client_state
+                        .follow_mut(client_state().entities())
+                        .iter_mut()
+                        .find(|entity| entity.get_entity_id() == source_entity_id)
+                    {
+                        source_entity.set_last_target(Some(destination_entity_id));
+                    }
                     let camera_direction = self.player_camera.camera_direction();
                     if std::env::var_os("KORANGAR_PACKET_LOG").is_some() {
                         client_log!(
@@ -5068,14 +5663,21 @@ impl Client {
                         .is_some_and(|player| player.get_entity_id() == source_entity_id)
                     {
                         let auto_attack = *self.client_state.follow(client_state().game_settings().auto_attack());
-                        let buffered_action = self.client_state.follow_mut(client_state().buffered_action());
-
-                        if let Some(BufferedAction::AttackEntity { entity_id }) = *buffered_action {
-                            self.last_attack_target = Some(entity_id);
-                            let _ = self.networking_system.player_attack(entity_id);
-
-                            if !auto_attack {
+                        let attack_target = {
+                            let buffered_action = self.client_state.follow_mut(client_state().buffered_action());
+                            let attack_target = match *buffered_action {
+                                Some(BufferedAction::AttackEntity { entity_id }) => Some(entity_id),
+                                _ => None,
+                            };
+                            if !auto_attack && attack_target.is_some() {
                                 *buffered_action = None;
+                            }
+                            attack_target
+                        };
+                        if let Some(entity_id) = attack_target {
+                            self.last_attack_target = Some(entity_id);
+                            if self.networking_system.player_attack(entity_id).is_ok() {
+                                self.predict_local_motion(PredictedMotion::BasicAttack, client_tick);
                             }
                         }
                     }
@@ -5108,7 +5710,10 @@ impl Client {
                         if let Some(target_position) = target_position {
                             entity.rotate_towards(target_position);
                         }
-                        entity.set_skill_attack(skill_id, attack_duration, is_critical, client_tick);
+                        let already_playing = server_echo_repeats_prediction(self.predicted_motion.take(), skill_id);
+                        if !already_playing {
+                            entity.set_skill_attack(skill_id, attack_duration, is_critical, client_tick);
+                        }
                         source_impact_delay_ms = entity.impact_delay_ms(skill_id, camera_direction);
                     }
 
@@ -5383,7 +5988,33 @@ impl Client {
                 }
                 NetworkEvent::UpdateStat { stat_type } => {
                     if let Some(player) = self.client_state.try_follow_mut(this_player()) {
+                        let was_overweight = player.is_overweight();
+                        let was_hard_overweight = player.is_hard_overweight();
                         player.update_stat(stat_type);
+                        let is_overweight = player.is_overweight();
+                        let is_hard_overweight = player.is_hard_overweight();
+
+                        if !was_hard_overweight && is_hard_overweight {
+                            let msg = "Warning: 90% Overweight! Cannot attack or cast skills.";
+                            self.client_state.follow_mut(client_state().toasts()).push(
+                                "weight_hard_overweight",
+                                msg,
+                                crate::state::toasts::ToastPriority::High,
+                            );
+                            self.client_state
+                                .follow_mut(client_state().chat_messages())
+                                .push(ChatMessage::new(msg.to_owned(), MessageColor::Error));
+                        } else if !was_overweight && is_overweight {
+                            let msg = "Notice: 50% Overweight. Natural HP/SP recovery stopped.";
+                            self.client_state.follow_mut(client_state().toasts()).push(
+                                "weight_soft_overweight",
+                                msg,
+                                crate::state::toasts::ToastPriority::Normal,
+                            );
+                            self.client_state
+                                .follow_mut(client_state().chat_messages())
+                                .push(ChatMessage::new(msg.to_owned(), MessageColor::Information));
+                        }
                     }
                 }
                 NetworkEvent::CriticalWeightPercent { percent } => {
@@ -5494,6 +6125,7 @@ impl Client {
                         .map(|quest| quest.name().to_owned())
                         .unwrap_or_else(|| format!("Quest {quest_id}"));
                     let message = format!("Quest ended: {quest_name}");
+                    self.play_audio_cue(crate::state::audio_cues::AudioCue::QuestComplete, None, client_tick);
                     self.client_state.follow_mut(client_state().toasts()).push(
                         format!("quest:{quest_id}"),
                         message.clone(),
@@ -5704,6 +6336,7 @@ impl Client {
                         identified,
                         refine,
                         name.as_deref(),
+                        client_tick,
                     );
                 }
                 NetworkEvent::TradeAddItemResult { inventory_index, result } => {
@@ -5879,6 +6512,9 @@ impl Client {
                     self.client_state
                         .follow_mut(client_state().chat_messages())
                         .push(ChatMessage::new(text, MessageColor::Server));
+                }
+                NetworkEvent::RecoveryState { mode, block } => {
+                    self.client_state.follow_mut(client_state().recovery()).set(mode, block);
                 }
                 NetworkEvent::SkillAdded { skill_information } => {
                     // The full tree only arrives at login and on job change, so a
@@ -6123,6 +6759,8 @@ impl Client {
                     self.client_state.follow_mut(client_state().skill_tree()).clear();
                     self.client_state.follow_mut(client_state().hotbar()).clear();
                     self.client_state.follow_mut(client_state().quest_log()).clear();
+                    self.client_state.follow_mut(client_state().recovery()).clear();
+                    self.client_state.follow_mut(client_state().dm_journal()).clear();
                     self.networking_system.disconnect_from_map_server();
                 }
                 NetworkEvent::FriendRequest { requestee } => {
@@ -6485,6 +7123,12 @@ impl Client {
                     result,
                 } => {
                     self.client_state.follow_mut(client_state().party_state()).remove_member(account_id);
+                    if self.support_target == Some(EntityId(account_id.0)) {
+                        self.support_target = None;
+                        if self.interface.is_window_with_class_open(WindowClass::PlayerTarget) {
+                            self.interface.close_window_with_class(WindowClass::PlayerTarget);
+                        }
+                    }
                     self.client_state.follow_mut(client_state().toasts()).push(
                         format!("party:{}", account_id.0),
                         format!("{character_name} left the party"),
@@ -6510,6 +7154,7 @@ impl Client {
                                 .set_party_ping(ping.clone(), client_tick)
                             {
                                 self.update_party_ping_world_marker(&ping);
+                                self.play_audio_cue(crate::state::audio_cues::AudioCue::PartyPing, None, client_tick);
                                 self.client_state.follow_mut(client_state().toasts()).push(
                                     format!("party-ping:{}", ping.sender),
                                     format!("{} sent a {} ping at {}, {}", ping.sender, ping.kind, ping.x, ping.y),
@@ -6531,12 +7176,7 @@ impl Client {
                         && self
                             .client_state
                             .follow(client_state().party_state())
-                            .message_sender_matches(account_id, match &message {
-                                crate::state::party::PartySessionMessage::DestinationSet { sender, .. }
-                                | crate::state::party::PartySessionMessage::DestinationAccepted { sender, .. }
-                                | crate::state::party::PartySessionMessage::ReadyStart { sender, .. }
-                                | crate::state::party::PartySessionMessage::ReadyResponse { sender, .. } => sender,
-                            })
+                            .message_sender_matches(account_id, message.sender())
                     {
                         match message {
                             crate::state::party::PartySessionMessage::DestinationSet {
@@ -6595,6 +7235,38 @@ impl Client {
                                         crate::state::toasts::ToastPriority::Normal,
                                     );
                                 }
+                            }
+                            crate::state::party::PartySessionMessage::MarkSet { sender, kind, entity_id } => {
+                                self.client_state.follow_mut(client_state().party_state()).set_target_marker(
+                                    &sender,
+                                    kind,
+                                    entity_id,
+                                    client_tick,
+                                );
+                            }
+                            crate::state::party::PartySessionMessage::MarkClear { sender, entity_id } => {
+                                self.client_state
+                                    .follow_mut(client_state().party_state())
+                                    .clear_target_marker(&sender, entity_id);
+                            }
+                            crate::state::party::PartySessionMessage::GoalAdd { sender, nonce, text } => {
+                                let added = self
+                                    .client_state
+                                    .follow_mut(client_state().party_state())
+                                    .add_goal(&sender, nonce, &text);
+                                if added {
+                                    self.client_state.follow_mut(client_state().toasts()).push(
+                                        format!("party-goal:{nonce}"),
+                                        format!("{sender} added a goal: {text}"),
+                                        crate::state::toasts::ToastPriority::Normal,
+                                    );
+                                }
+                            }
+                            crate::state::party::PartySessionMessage::GoalDone { nonce, .. } => {
+                                self.client_state.follow_mut(client_state().party_state()).complete_goal(nonce);
+                            }
+                            crate::state::party::PartySessionMessage::GoalClear { .. } => {
+                                self.client_state.follow_mut(client_state().party_state()).clear_goals();
                             }
                         }
                     }
@@ -6855,6 +7527,19 @@ impl Client {
                             source_entity_id.0
                         );
                     }
+                    // Dangerous cast cue: a long enemy cast aimed at us or the ground.
+                    let local_entity_id = self.client_state.try_follow(this_entity()).map(Entity::get_entity_id);
+                    let hostile_caster_position = self
+                        .client_state
+                        .follow(client_state().entities())
+                        .iter()
+                        .find(|entity| entity.get_entity_id() == source_entity_id && entity.get_entity_type() == EntityType::Monster)
+                        .map(Entity::get_position);
+                    if let Some(position) = hostile_caster_position
+                        && crate::state::audio_cues::is_dangerous_cast(cast_ms, target_entity_id, source_entity_id, local_entity_id)
+                    {
+                        self.play_audio_cue(crate::state::audio_cues::AudioCue::DangerousCast, Some(position), client_tick);
+                    }
                     if let Some(entity) = self
                         .client_state
                         .follow_mut(client_state().entities())
@@ -6871,6 +7556,25 @@ impl Client {
                     }
                 }
                 NetworkEvent::SkillCastCancelled { source_entity_id } => {
+                    // Interrupt cue: only when a hostile monster's visible cast bar
+                    // was actually running, so a stray cancel packet stays silent.
+                    if let Some(source_entity_id) = source_entity_id
+                        && let Some(position) = self
+                            .client_state
+                            .follow(client_state().entities())
+                            .iter()
+                            .find(|entity| {
+                                entity.get_entity_id() == source_entity_id
+                                    && entity.get_entity_type() == EntityType::Monster
+                                    && entity.is_casting(client_tick)
+                            })
+                            .map(Entity::get_position)
+                    {
+                        self.play_audio_cue(crate::state::audio_cues::AudioCue::Interrupt, Some(position), client_tick);
+                        self.client_state
+                            .follow_mut(client_state().encounter_recap())
+                            .record_cast_interrupted(source_entity_id);
+                    }
                     if let Some(source_entity_id) = source_entity_id
                         && let Some(entity) = self
                             .client_state
@@ -7296,6 +8000,39 @@ impl Client {
     }
 
     /// Keep the Map window chrome in sync with [`MinimapState::display_side`].
+    /// Seed the simulated planner from the live character's current point.
+    fn start_build_planner(&mut self) {
+        use crate::state::build_planner::PlannerBaseline;
+        use crate::world::PlannedStats;
+
+        let Some(player) = self.client_state.try_follow(this_player()) else {
+            return;
+        };
+        let common = player.get_common();
+        let clamp = |value: i32| value.clamp(1, u16::MAX as i32) as u16;
+        let baseline = PlannerBaseline {
+            job_id: common.job_id.0,
+            base_level: player.base_level,
+            job_level: player.job_level,
+            stats: PlannedStats::new(
+                clamp(player.strength),
+                clamp(player.agility),
+                clamp(player.vitality),
+                clamp(player.intelligence),
+                clamp(player.dexterity),
+                clamp(player.luck),
+            ),
+            max_hp: common.maximum_health_points,
+            max_sp: player.maximum_spell_points,
+            max_weight: player.maximum_weight,
+            skills: Default::default(),
+            skill_points: player.skill_points,
+        };
+        let skills = self.client_state.follow(client_state().skill_tree()).learned_levels().collect();
+        let baseline = PlannerBaseline { skills, ..baseline };
+        self.client_state.follow_mut(client_state().build_planner()).start(baseline);
+    }
+
     fn sync_minimap_window_size(&mut self) {
         use crate::state::minimap::{MAX_MINIMAP_SIDE, MIN_MINIMAP_SIDE};
 
@@ -7501,6 +8238,180 @@ impl Client {
         let settings = self.client_state.follow_mut(client_state().game_settings());
         settings.set_hunting_goals(character_id, &monster_ids);
         settings.save();
+    }
+
+    pub fn save_current_equipment_set(&mut self, name: String) {
+        let Some(character_id) = self.current_character_id else {
+            self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
+                "Cannot save equipment set: character not selected.".to_owned(),
+                MessageColor::Error,
+            ));
+            return;
+        };
+
+        let equipped_ids: Vec<u32> = self
+            .client_state
+            .follow(client_state().inventory())
+            .items()
+            .iter()
+            .filter(|item| {
+                matches!(
+                    item.details,
+                    korangar_networking::InventoryItemDetails::Equippable { equipped_position, .. }
+                        if equipped_position != ragnarok_packets::EquipPosition::NONE
+                )
+            })
+            .map(|item| item.item_id.0)
+            .collect();
+
+        if equipped_ids.is_empty() {
+            self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
+                format!("Equipment set '{name}' not saved: no items currently equipped."),
+                MessageColor::Error,
+            ));
+            return;
+        }
+
+        let count = equipped_ids.len();
+        let settings = self.client_state.follow_mut(client_state().game_settings());
+        settings.save_equipment_set(character_id.0, name.clone(), equipped_ids);
+        settings.save();
+
+        self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
+            format!("Saved equipment set '{name}' with {count} item(s)."),
+            MessageColor::Information,
+        ));
+        self.client_state.follow_mut(client_state().toasts()).push(
+            format!("equip-set:{name}"),
+            format!("Saved set '{name}' ({count} items)"),
+            crate::state::toasts::ToastPriority::Normal,
+        );
+    }
+
+    /// Press Confirm on the trade. Every path to the server's commit goes
+    /// through here (the button and `/trade commit`), so the
+    /// last-second-change guard cannot be bypassed by typing the command.
+    fn confirm_trade(&mut self, client_tick: ClientTick) {
+        let decision = self
+            .client_state
+            .follow_mut(client_state().trade_state())
+            .confirm_decision(client_tick);
+        match decision {
+            crate::state::trade::ConfirmDecision::Send => {
+                let _ = self.networking_system.trade_commit();
+            }
+            crate::state::trade::ConfirmDecision::Refuse(reason) => {
+                self.client_state
+                    .follow_mut(client_state().chat_messages())
+                    .push(ChatMessage::new(reason.clone(), MessageColor::Error));
+                self.client_state.follow_mut(client_state().toasts()).push(
+                    "trade-confirm-refused",
+                    reason,
+                    crate::state::toasts::ToastPriority::High,
+                );
+            }
+        }
+    }
+
+    pub fn equip_named_set(&mut self, name: &str) {
+        let Some(character_id) = self.current_character_id else {
+            self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
+                "Cannot equip set: character not selected.".to_owned(),
+                MessageColor::Error,
+            ));
+            return;
+        };
+
+        let sets = self
+            .client_state
+            .follow(client_state().game_settings())
+            .equipment_sets(character_id.0);
+        let Some(set) = sets.iter().find(|s| s.name.eq_ignore_ascii_case(name)) else {
+            self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
+                format!("Equipment set '{name}' not found. Use '/saveset {name}' to create it."),
+                MessageColor::Error,
+            ));
+            return;
+        };
+
+        let item_ids = set.item_ids.clone();
+        let set_name = set.name.clone();
+
+        let plan_items: Vec<crate::state::equipment_plan::PlanItem> = self
+            .client_state
+            .follow(client_state().inventory())
+            .items()
+            .iter()
+            .filter_map(|item| match item.details {
+                korangar_networking::InventoryItemDetails::Equippable {
+                    equip_position,
+                    equipped_position,
+                    ..
+                } => Some(crate::state::equipment_plan::PlanItem {
+                    index: item.index,
+                    item_id: item.item_id.0,
+                    worn: equipped_position != ragnarok_packets::EquipPosition::NONE,
+                    equip_position,
+                }),
+                _ => None,
+            })
+            .collect();
+        let plan = crate::state::equipment_plan::plan_equipment_set(&item_ids, &plan_items);
+
+        let already_equipped_count = plan.already_worn;
+        let mut queued_count = 0;
+        for (index, equip_position) in plan.to_equip {
+            if self.networking_system.request_item_equip(index, equip_position).is_ok() {
+                queued_count += 1;
+            }
+        }
+        let missing_items: Vec<String> = plan
+            .missing
+            .into_iter()
+            .map(|item_id| {
+                crate::world::item_stats(item_id)
+                    .map(|stats| stats.name.clone())
+                    .unwrap_or_else(|| format!("ID {item_id}"))
+            })
+            .collect();
+
+        if queued_count > 0 {
+            self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
+                format!("Equipping set '{set_name}': {queued_count} equip request(s) queued ({already_equipped_count} already equipped)."),
+                MessageColor::Information,
+            ));
+            self.client_state.follow_mut(client_state().toasts()).push(
+                format!("equip-set:{set_name}"),
+                format!("Equipping '{set_name}' ({queued_count} items)"),
+                crate::state::toasts::ToastPriority::Normal,
+            );
+        } else if already_equipped_count > 0 && missing_items.is_empty() {
+            self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
+                format!("Equipment set '{set_name}' is already fully equipped."),
+                MessageColor::Information,
+            ));
+        }
+
+        if !missing_items.is_empty() {
+            self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
+                format!("Set '{set_name}': missing item(s): {}.", missing_items.join(", ")),
+                MessageColor::Error,
+            ));
+        }
+    }
+
+    pub fn delete_named_equipment_set(&mut self, name: &str) {
+        let Some(character_id) = self.current_character_id else {
+            return;
+        };
+        let settings = self.client_state.follow_mut(client_state().game_settings());
+        if settings.delete_equipment_set(character_id.0, name) {
+            settings.save();
+            self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
+                format!("Deleted equipment set '{name}'."),
+                MessageColor::Information,
+            ));
+        }
     }
 
     /// Resolve minimap BMP only when the archive actually contains it.
@@ -7754,6 +8665,9 @@ impl Client {
                 InputEvent::IdentifyItem { inventory_index } => {
                     let _ = self.networking_system.one_click_item_identify(inventory_index);
                 }
+                InputEvent::SaveEquipmentSet { name } => self.save_current_equipment_set(name),
+                InputEvent::EquipNamedSet { name } => self.equip_named_set(&name),
+                InputEvent::DeleteEquipmentSet { name } => self.delete_named_equipment_set(&name),
                 other => remaining.push(other),
             }
         }
@@ -7955,61 +8869,117 @@ impl Client {
         self.targeted_monster = target;
         *self.client_state.follow_mut(client_state().targeted_monster()) = target;
         self.refresh_monster_target_summary();
-        if target.is_some() {
-            self.interface.open_window(MonsterTargetWindow);
+        let is_boss = *self.client_state.follow(client_state().targeted_monster_is_boss());
+        match target {
+            Some(target_id) if is_boss => {
+                let boss_name = self
+                    .client_state
+                    .follow(client_state().entities())
+                    .iter()
+                    .find(|e| e.get_entity_id() == target_id)
+                    .and_then(|e| e.get_details().map(|d| d.split('#').next().unwrap_or(d).to_string()))
+                    .unwrap_or_else(|| "Boss".to_string());
+                self.client_state
+                    .follow_mut(client_state().encounter_recap())
+                    .start_or_continue_encounter(target_id, &boss_name, self.last_client_tick);
+                self.interface.close_window_with_class(WindowClass::MonsterTarget);
+                self.interface.open_window(BossTargetWindow);
+            }
+            Some(_) => {
+                self.interface.close_window_with_class(WindowClass::BossTarget);
+                self.interface.open_window(MonsterTargetWindow);
+            }
+            None => {
+                self.interface.close_window_with_class(WindowClass::MonsterTarget);
+                self.interface.close_window_with_class(WindowClass::BossTarget);
+            }
         }
     }
 
     fn refresh_monster_target_summary(&mut self) {
-        let summary = self
-            .targeted_monster
-            .and_then(|target_id| {
-                self.client_state
-                    .follow(client_state().entities())
+        let result = self.targeted_monster.and_then(|target_id| {
+            let this_entity_id = self.client_state.try_follow(this_entity()).map(Entity::get_entity_id);
+            let entity = self
+                .client_state
+                .follow(client_state().entities())
+                .iter()
+                .find(|entity| entity.get_entity_id() == target_id)?;
+
+            if entity.is_dead() {
+                return None;
+            }
+
+            let name = entity
+                .get_details()
+                .map(|details| details.split('#').next().unwrap_or(details))
+                .unwrap_or("Monster");
+            let (health, maximum) = entity.health_points();
+            let lookup_name = elite_base_name(name).unwrap_or(name);
+            let bestiary = crate::dm::dm_data()
+                .bestiary
+                .iter()
+                .find(|monster| monster.sprite_name.eq_ignore_ascii_case(lookup_name) || monster.name.eq_ignore_ascii_case(lookup_name));
+
+            let body_state = entity.body_state();
+            let health_state = entity.health_state();
+
+            let active_cast = entity.cast_target(self.last_client_tick).map(|(skill_id, ..)| {
+                let skill_name = crate::dm::reference_data::reference_data()
+                    .skills
                     .iter()
-                    .find(|entity| entity.get_entity_id() == target_id)
-                    .map(|entity| {
-                        let name = entity
-                            .get_details()
-                            .map(|details| details.split('#').next().unwrap_or(details))
-                            .unwrap_or("Monster");
-                        let (health, maximum) = entity.health_points();
-                        let bestiary = crate::dm::dm_data()
-                            .bestiary
-                            .iter()
-                            .find(|monster| monster.sprite_name.eq_ignore_ascii_case(name) || monster.name.eq_ignore_ascii_case(name));
-                        let facts = bestiary.map(|monster| {
-                            let mut chips = vec![format!("Lv {}", monster.lv)];
-                            if let Some(element) = &monster.element {
-                                chips.push(element.clone());
-                            }
-                            if let Some(race) = &monster.race {
-                                chips.push(race.clone());
-                            }
-                            if let Some(size) = &monster.size {
-                                chips.push(size.clone());
-                            }
-                            (monster.name.as_str(), chips.join("  "))
-                        });
-                        match (facts, maximum) {
-                            (Some((display_name, facts)), maximum) if maximum > 0 => {
-                                format!("{display_name}\n{facts}\nHP {health}/{maximum}")
-                            }
-                            (Some((display_name, facts)), _) => format!("{display_name}\n{facts}\nHP unknown"),
-                            (None, maximum) if maximum > 0 => format!("{name}\nHP {health}/{maximum}"),
-                            (None, _) => format!("{name}\nHP unknown"),
-                        }
-                    })
-            })
-            .unwrap_or_else(|| {
-                if self.targeted_monster.is_some() {
-                    "Target lost"
-                } else {
-                    "No monster selected"
-                }
-                .to_owned()
+                    .find(|s| s.id == skill_id.0)
+                    .map(|s| s.name.as_str())
+                    .unwrap_or("Unknown Skill");
+                let remaining_ms = entity.cast_bar(self.last_client_tick).map(|(rem, _)| rem);
+                (skill_name, remaining_ms)
             });
-        *self.client_state.follow_mut(client_state().targeted_monster_summary()) = summary;
+
+            let active_target_id = entity
+                .cast_target(self.last_client_tick)
+                .and_then(|(_, tid, _)| (tid.0 != 0).then_some(tid))
+                .or_else(|| entity.last_target());
+
+            let target_info = active_target_id.map(|tgt_id| {
+                if this_entity_id == Some(tgt_id) {
+                    TargetOfTargetInfo::Player
+                } else {
+                    let tgt_name = self
+                        .client_state
+                        .follow(client_state().entities())
+                        .iter()
+                        .find(|e| e.get_entity_id() == tgt_id)
+                        .and_then(|e| e.get_details().map(|d| d.split('#').next().unwrap_or(d).to_string()))
+                        .unwrap_or_else(|| format!("#{}", tgt_id.0));
+                    TargetOfTargetInfo::EntityName(tgt_name)
+                }
+            });
+
+            Some(format_monster_target_summary(
+                name,
+                health,
+                maximum,
+                body_state,
+                health_state,
+                active_cast,
+                target_info,
+                bestiary,
+            ))
+        });
+
+        match result {
+            Some((summary, is_boss)) => {
+                *self.client_state.follow_mut(client_state().targeted_monster_summary()) = summary;
+                *self.client_state.follow_mut(client_state().targeted_monster_is_boss()) = is_boss;
+            }
+            None => {
+                if self.targeted_monster.is_some() {
+                    self.set_targeted_monster(None);
+                } else {
+                    *self.client_state.follow_mut(client_state().targeted_monster_summary()) = "No monster selected".to_owned();
+                    *self.client_state.follow_mut(client_state().targeted_monster_is_boss()) = false;
+                }
+            }
+        }
     }
 
     fn report_monster_target(&mut self) {
@@ -8075,7 +9045,7 @@ impl Client {
 
     /// T / Shift+1–4. With no skill armed, these keys select the support
     /// target.
-    fn cast_armed_at(&mut self, party_index: Option<usize>) {
+    fn cast_armed_at(&mut self, party_index: Option<usize>, client_tick: ClientTick) {
         let entity_id = match party_index {
             None => self.client_state.try_follow(this_entity()).map(|entity| entity.get_entity_id()),
             Some(index) => self.available_party_targets().get(index).map(|(entity_id, _)| *entity_id),
@@ -8110,7 +9080,7 @@ impl Client {
             ));
             return;
         }
-        cast_or_path_entity_skill(
+        if cast_or_path_entity_skill(
             &mut self.networking_system,
             &mut self.client_state,
             self.map.as_deref(),
@@ -8119,7 +9089,9 @@ impl Client {
             pending.skill_level,
             pending.attack_range,
             entity_id,
-        );
+        ) {
+            self.predict_local_motion(PredictedMotion::Skill(pending.skill_id), client_tick);
+        }
         self.pending_skill = None;
     }
 
@@ -8335,6 +9307,50 @@ impl Client {
                         }
                     }
                 }
+                InputEvent::ToggleBuildPlannerWindow => {
+                    if self.client_state.try_follow(this_player()).is_some() {
+                        match self.interface.is_window_with_class_open(WindowClass::BuildPlanner) {
+                            true => self.interface.close_window_with_class(WindowClass::BuildPlanner),
+                            false => {
+                                self.start_build_planner();
+                                self.interface.open_window(BuildPlannerWindow);
+                            }
+                        }
+                    }
+                }
+                InputEvent::BuildPlannerStat { stat, change } => {
+                    self.client_state
+                        .follow_mut(client_state().build_planner())
+                        .adjust_stat(stat, change);
+                }
+                InputEvent::BuildPlannerSkill { skill_id, change } => {
+                    self.client_state
+                        .follow_mut(client_state().build_planner())
+                        .adjust_skill(skill_id, change);
+                }
+                InputEvent::BuildPlannerSave { slot } => {
+                    let planner = self.client_state.follow_mut(client_state().build_planner());
+                    let result = planner.save_slot(std::path::Path::new("client/build_plans"), slot);
+                    planner.report(result);
+                }
+                InputEvent::BuildPlannerLoad { slot } => {
+                    let planner = self.client_state.follow_mut(client_state().build_planner());
+                    let result = planner.load_slot(std::path::Path::new("client/build_plans"), slot);
+                    planner.report(result);
+                }
+                InputEvent::BuildPlannerBaseLevel { change } => {
+                    self.client_state
+                        .follow_mut(client_state().build_planner())
+                        .adjust_base_level(change);
+                }
+                InputEvent::BuildPlannerJobLevel { change } => {
+                    self.client_state
+                        .follow_mut(client_state().build_planner())
+                        .adjust_job_level(change);
+                }
+                InputEvent::BuildPlannerReset => {
+                    self.client_state.follow_mut(client_state().build_planner()).reset();
+                }
                 InputEvent::ToggleGameSettingsWindow => match self.interface.is_window_with_class_open(WindowClass::GameSettings) {
                     true => self.interface.close_window_with_class(WindowClass::GameSettings),
                     false => self.interface.open_window(GameSettingsWindow::new(client_state().game_settings())),
@@ -8404,6 +9420,17 @@ impl Client {
                     self.client_state
                         .follow_mut(client_state().chat_messages())
                         .push(ChatMessage::new(text, MessageColor::Information));
+                }
+                InputEvent::ToggleCombatHudFade => {
+                    let enabled = self.interface.toggle_combat_fade();
+                    let text = if enabled {
+                        "Combat HUD fades five seconds after the last hit."
+                    } else {
+                        "Combat HUD stays visible out of combat."
+                    };
+                    self.client_state
+                        .follow_mut(client_state().chat_messages())
+                        .push(ChatMessage::new(text.to_owned(), MessageColor::Information));
                 }
                 InputEvent::ToggleHudEditLock => {
                     let locked = self.interface.toggle_window_movement_lock();
@@ -8481,6 +9508,31 @@ impl Client {
                     };
                     self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
                         format!("{skill_name}: {} ({source}).", mode.label()),
+                        MessageColor::Information,
+                    ));
+                }
+                InputEvent::CycleEffectDensity => {
+                    let settings = self.client_state.follow_mut(client_state().game_settings());
+                    settings.effect_density = settings.effect_density.next();
+                    let detail = match settings.effect_density {
+                        crate::settings::EffectDensity::Full => "full (all skill visuals)",
+                        crate::settings::EffectDensity::Reduced => "reduced (other players' skill visuals hidden; party kept)",
+                        crate::settings::EffectDensity::Minimal => "minimal (only your own and enemy skill visuals)",
+                    };
+                    self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
+                        format!("Effect density set to {detail}. Telegraphs are always shown."),
+                        MessageColor::Information,
+                    ));
+                }
+                InputEvent::CycleRoutePreference => {
+                    let settings = self.client_state.follow_mut(client_state().game_settings());
+                    settings.route_preference = settings.route_preference.next();
+                    let preference = settings.route_preference;
+                    crate::world::set_route_preference(preference);
+                    // The breadcrumb trail was planned under the old preference.
+                    self.refresh_navigation_marker();
+                    self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
+                        format!("Route preference: {}.", preference.label()),
                         MessageColor::Information,
                     ));
                 }
@@ -8610,6 +9662,8 @@ impl Client {
                                 client_state().skill_cooldowns(),
                                 client_state().toasts(),
                                 client_state().quest_log(),
+                                client_state().party_state(),
+                                client_state().recovery(),
                             )),
                         }
                     }
@@ -8617,11 +9671,12 @@ impl Client {
                 InputEvent::CloseTopWindow => {
                     let _ = self.interface.close_top_window(&self.client_state);
                 }
-                InputEvent::TargetSelf => self.cast_armed_at(None),
-                InputEvent::TargetPartyMember { index } => self.cast_armed_at(Some(index)),
+                InputEvent::TargetSelf => self.cast_armed_at(None, client_tick),
+                InputEvent::TargetPartyMember { index } => self.cast_armed_at(Some(index), client_tick),
                 InputEvent::CycleMonsterTarget { reverse } => self.cycle_monster_target(reverse),
                 InputEvent::CyclePartyTarget => self.cycle_party_target(),
                 InputEvent::Escape => {
+                    self.interface.unfocus();
                     if self.pending_skill.is_some() {
                         self.pending_skill = None;
                         *self.client_state.follow_mut(client_state().buffered_action()) = None;
@@ -8721,6 +9776,46 @@ impl Client {
                         .networking_system
                         .send_chat_message(self.client_state.follow(client_state().player_name()), &command);
                 }
+                InputEvent::NavigateToPartyMember {
+                    character_name,
+                    map_name,
+                    position,
+                } => {
+                    let destination_map = map_name.trim_end_matches(".gat").to_owned();
+                    let current_map = self.client_state.follow(client_state().minimap()).map_name().to_string();
+                    let route_exists = if current_map.eq_ignore_ascii_case(&destination_map) {
+                        true
+                    } else {
+                        crate::world::route_edges(&current_map, &destination_map).is_some()
+                    };
+                    if !route_exists {
+                        self.client_state.follow_mut(client_state().toasts()).push(
+                            "party-nav-unreachable",
+                            format!("No verified route to {character_name} on {destination_map} is known."),
+                            crate::state::toasts::ToastPriority::Normal,
+                        );
+                    } else {
+                        self.client_state.follow_mut(client_state().minimap()).set_navigation_target(Some(
+                            crate::state::minimap::NavigationTarget {
+                                map_name: destination_map.clone(),
+                                position,
+                            },
+                        ));
+                        self.refresh_navigation_marker();
+                        if !self.interface.is_window_with_class_open(WindowClass::Minimap) {
+                            self.interface.open_window(MinimapWindow);
+                        }
+                        self.client_state.follow_mut(client_state().toasts()).push(
+                            "party-nav",
+                            format!("Navigating to {character_name} ({destination_map})."),
+                            crate::state::toasts::ToastPriority::Normal,
+                        );
+                        self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
+                            format!("Navigating to party member {character_name} ({destination_map})."),
+                            MessageColor::Information,
+                        ));
+                    }
+                }
                 InputEvent::OpenPartyMemberTarget {
                     account_id,
                     character_name,
@@ -8761,6 +9856,34 @@ impl Client {
                     let _ = self
                         .networking_system
                         .send_chat_message(self.client_state.follow(client_state().player_name()), &command);
+                }
+                InputEvent::SetGroundLootFilter { filter } => {
+                    self.client_state.follow_mut(client_state().game_settings()).ground_loot_filter = filter;
+                    let msg = match filter {
+                        GroundLootFilter::All => "Ground loot filter set to: All items.",
+                        GroundLootFilter::EquipmentAndCards => "Ground loot filter set to: Equipment & Cards.",
+                        GroundLootFilter::CardsOnly => "Ground loot filter set to: Cards only.",
+                    };
+                    self.client_state
+                        .follow_mut(client_state().chat_messages())
+                        .push(ChatMessage::new(msg.to_owned(), MessageColor::Information));
+                }
+                InputEvent::ToggleWishlistItem { item_id } => {
+                    let added = self
+                        .client_state
+                        .follow_mut(client_state().game_settings())
+                        .toggle_wishlist(item_id);
+                    let item_name = crate::world::item_stats(item_id)
+                        .map(|s| s.name.clone())
+                        .unwrap_or_else(|| format!("Item {item_id}"));
+                    let msg = if added {
+                        format!("Added {item_name} (ID {item_id}) to loot wishlist.")
+                    } else {
+                        format!("Removed {item_name} (ID {item_id}) from loot wishlist.")
+                    };
+                    self.client_state
+                        .follow_mut(client_state().chat_messages())
+                        .push(ChatMessage::new(msg, MessageColor::Information));
                 }
                 InputEvent::PlayerInteract { entity_id } => {
                     let is_local_player = self
@@ -8811,7 +9934,11 @@ impl Client {
                                         *buffered_action = Some(BufferedAction::AttackEntity { entity_id });
                                     }
                                     self.last_attack_target = Some(entity_id);
-                                    self.networking_system.player_attack(entity_id)
+                                    let sent = self.networking_system.player_attack(entity_id);
+                                    if sent.is_ok() {
+                                        self.predict_local_motion(PredictedMotion::BasicAttack, client_tick);
+                                    }
+                                    sent
                                 }
                             }
                             // Clicking another player used to do nothing at all
@@ -8924,6 +10051,196 @@ impl Client {
                         continue;
                     }
 
+                    // Crafting Commission Board (F31, Decision D7 - non-custodial).
+                    if text.as_str() == "/commission" || text.starts_with("/commission ") {
+                        let mut words = text.split_whitespace();
+                        let _cmd = words.next();
+                        let subcmd = words.next().unwrap_or("board");
+                        let chat = |state: &mut State<ClientState>, line: String| {
+                            state
+                                .follow_mut(client_state().chat_messages())
+                                .push(ChatMessage::new(line, MessageColor::Information));
+                        };
+
+                        match subcmd {
+                            "board" | "window" | "open" => {
+                                if self.map.is_some() {
+                                    match self.interface.is_window_with_class_open(WindowClass::CommissionBoard) {
+                                        true => self.interface.close_window_with_class(WindowClass::CommissionBoard),
+                                        false => self
+                                            .interface
+                                            .open_window(CommissionBoardWindow::new(client_state().commission_board_window())),
+                                    }
+                                }
+                            }
+                            "list" => {
+                                let list = self.client_state.follow(client_state().commission_board()).format_list();
+                                chat(&mut self.client_state, list);
+                            }
+                            "post" => {
+                                let item_name = words.next().unwrap_or("");
+                                if item_name.is_empty() {
+                                    chat(
+                                        &mut self.client_state,
+                                        "Usage: /commission post <item_name> [zeny_fee]".to_string(),
+                                    );
+                                } else {
+                                    let fee: u32 = words.next().and_then(|w| w.parse().ok()).unwrap_or(0);
+                                    let player_name = self.client_state.follow(client_state().player_name()).to_owned();
+                                    let id = self.client_state.follow_mut(client_state().commission_board()).post_request(
+                                        &player_name,
+                                        ItemId(0),
+                                        item_name,
+                                        "Negotiated via peer trade",
+                                        0,
+                                        fee,
+                                    );
+                                    chat(
+                                        &mut self.client_state,
+                                        format!(
+                                            "Posted commission request #{id} for {item_name} (Fee: {fee}z). Reminder: Non-custodial, \
+                                             trade items directly."
+                                        ),
+                                    );
+                                }
+                            }
+                            "cancel" => {
+                                let id_opt: Option<u32> = words.next().and_then(|w| w.parse().ok());
+                                if let Some(id) = id_opt {
+                                    let player_name = self.client_state.follow(client_state().player_name()).to_owned();
+                                    match self
+                                        .client_state
+                                        .follow_mut(client_state().commission_board())
+                                        .cancel_request(id, &player_name)
+                                    {
+                                        Ok(()) => chat(&mut self.client_state, format!("Cancelled commission request #{id}.")),
+                                        Err(err) => chat(&mut self.client_state, format!("Cannot cancel commission #{id}: {err}")),
+                                    }
+                                } else {
+                                    chat(&mut self.client_state, "Usage: /commission cancel <request_id>".to_string());
+                                }
+                            }
+                            _ => {
+                                chat(
+                                    &mut self.client_state,
+                                    "Usage: /commission <board|list|post <item> [fee]|cancel <id>>".to_string(),
+                                );
+                            }
+                        }
+                        continue;
+                    }
+
+                    // Party target markers and Tonight's Goals (F20). Both ride the
+                    // versioned party-chat carrier; peers can only change their own
+                    // marker and the shared ephemeral goal list.
+                    if text.as_str() == "/mark" || text.starts_with("/mark ") || text.as_str() == "/goal" || text.starts_with("/goal ") {
+                        let usage = if text.starts_with("/mark") {
+                            "Usage: /mark <focus|attack|cc|assist|clear>  (marks your selected monster)"
+                        } else {
+                            "Usage: /goal add <text>, /goal done <number>, /goal clear, /goal list"
+                        };
+                        let mut words = text.split_whitespace();
+                        let command = words.next().unwrap_or_default();
+                        let arguments: Vec<&str> = words.collect();
+                        let (in_party, account_component, goal_nonce) = {
+                            let party = self.client_state.follow(client_state().party_state());
+                            let index = arguments.get(1).and_then(|word| word.parse::<usize>().ok());
+                            (
+                                party.in_party(),
+                                party.local_account_id().map_or(0, |account_id| account_id.0.rotate_left(11)),
+                                index.and_then(|index| party.goals().get(index.wrapping_sub(1)).map(|goal| goal.nonce)),
+                            )
+                        };
+                        let nonce = client_tick.0 ^ account_component;
+                        let name = self.client_state.follow(client_state().player_name()).to_owned();
+                        let selected = self.client_state.follow(client_state().minimap()).selected_monster_id();
+                        // (wire body, local effect to apply once the send succeeds)
+                        enum Local {
+                            Mark(crate::state::party::TargetMarkerKind, u32),
+                            ClearMark(u32),
+                            AddGoal(String),
+                            DoneGoal(u32),
+                            ClearGoals,
+                        }
+                        let request: Option<(String, Local)> = match (command, arguments.as_slice()) {
+                            ("/mark", ["clear"]) => selected.map(|id| (format!("mark-clear {id}"), Local::ClearMark(id))),
+                            ("/mark", [kind]) => {
+                                let kind = match *kind {
+                                    "focus" => Some(crate::state::party::TargetMarkerKind::Focus),
+                                    "attack" => Some(crate::state::party::TargetMarkerKind::Attack),
+                                    "cc" => Some(crate::state::party::TargetMarkerKind::Crowd),
+                                    "assist" => Some(crate::state::party::TargetMarkerKind::Assist),
+                                    _ => None,
+                                };
+                                kind.zip(selected)
+                                    .map(|(kind, id)| (format!("mark-set {} {id}", kind.token()), Local::Mark(kind, id)))
+                            }
+                            ("/goal", ["add", goal @ ..]) if !goal.is_empty() => {
+                                let goal = goal.join(" ");
+                                crate::state::party::is_valid_goal_text(&goal)
+                                    .then(|| (format!("goal-add {nonce} {goal}"), Local::AddGoal(goal)))
+                            }
+                            ("/goal", ["done", _]) => goal_nonce.map(|nonce| (format!("goal-done {nonce}"), Local::DoneGoal(nonce))),
+                            ("/goal", ["clear"]) => Some(("goal-clear".to_owned(), Local::ClearGoals)),
+                            _ => None,
+                        };
+                        let chat = |state: &mut State<ClientState>, line: String| {
+                            state
+                                .follow_mut(client_state().chat_messages())
+                                .push(ChatMessage::new(line, MessageColor::Information));
+                        };
+                        if command == "/goal" && arguments.as_slice() == ["list"] {
+                            let list = self.client_state.follow(client_state().party_state()).goals_text().to_owned();
+                            chat(&mut self.client_state, format!("Tonight's goals:\n{list}"));
+                        } else if !in_party {
+                            chat(&mut self.client_state, "Join a party first.".to_owned());
+                        } else if command == "/mark" && request.is_none() && arguments.as_slice() != ["clear"] && selected.is_none() {
+                            chat(
+                                &mut self.client_state,
+                                "Select a monster first (click it or press Tab).".to_owned(),
+                            );
+                        } else if let Some((body, local)) = request {
+                            if !self
+                                .client_state
+                                .follow_mut(client_state().minimap())
+                                .allow_party_session_message_send(client_tick)
+                            {
+                                self.client_state.follow_mut(client_state().toasts()).push(
+                                    "party-session-cooldown",
+                                    "Please wait before sending another party update.",
+                                    crate::state::toasts::ToastPriority::Normal,
+                                );
+                            } else if self
+                                .networking_system
+                                .send_party_chat_message(&name, &format!("[KORANGAR-SESSION:v1] {body}"))
+                                .is_ok()
+                            {
+                                let party = self.client_state.follow_mut(client_state().party_state());
+                                match local {
+                                    Local::Mark(kind, id) => party.set_target_marker(&name, kind, id, client_tick),
+                                    Local::ClearMark(id) => {
+                                        party.clear_target_marker(&name, id);
+                                    }
+                                    Local::AddGoal(goal) => {
+                                        party.add_goal(&name, nonce, &goal);
+                                    }
+                                    Local::DoneGoal(nonce) => {
+                                        party.complete_goal(nonce);
+                                    }
+                                    Local::ClearGoals => party.clear_goals(),
+                                }
+                            } else {
+                                chat(
+                                    &mut self.client_state,
+                                    "Party update could not be sent: not connected to the map server.".to_owned(),
+                                );
+                            }
+                        } else {
+                            chat(&mut self.client_state, usage.to_owned());
+                        }
+                        continue;
+                    }
+
                     if let Some(rest) = text.strip_prefix("/emotion ").or_else(|| text.strip_prefix("/e ")) {
                         if let Ok(emotion) = rest.trim().parse::<u8>() {
                             let _ = self.networking_system.request_emotion(emotion);
@@ -8982,6 +10299,81 @@ impl Client {
                         continue;
                     }
 
+                    if let Some(rest) = text.strip_prefix("/saveset ") {
+                        let name = rest.trim();
+                        if !name.is_empty() {
+                            self.save_current_equipment_set(name.to_owned());
+                        } else {
+                            self.client_state
+                                .follow_mut(client_state().chat_messages())
+                                .push(ChatMessage::new("Usage: /saveset <name>".to_owned(), MessageColor::Information));
+                        }
+                        continue;
+                    }
+
+                    if let Some(rest) = text.strip_prefix("/equip ").or_else(|| text.strip_prefix("/equipset ")) {
+                        let name = rest.trim();
+                        if !name.is_empty() {
+                            self.equip_named_set(name);
+                        } else {
+                            self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
+                                "Usage: /equip <name>  (or /equipset <name>)".to_owned(),
+                                MessageColor::Information,
+                            ));
+                        }
+                        continue;
+                    }
+
+                    if let Some(rest) = text.strip_prefix("/deleteset ") {
+                        let name = rest.trim();
+                        if !name.is_empty() {
+                            self.delete_named_equipment_set(name);
+                        } else {
+                            self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
+                                "Usage: /deleteset <name>".to_owned(),
+                                MessageColor::Information,
+                            ));
+                        }
+                        continue;
+                    }
+
+                    if let Some(rest) = text.strip_prefix("/loot ") {
+                        let mode = rest.trim().to_lowercase();
+                        let filter = match mode.as_str() {
+                            "all" => Some(GroundLootFilter::All),
+                            "gear" | "equipment" | "equip" => Some(GroundLootFilter::EquipmentAndCards),
+                            "cards" | "card" => Some(GroundLootFilter::CardsOnly),
+                            _ => None,
+                        };
+                        if let Some(filter) = filter {
+                            self.input_event_buffer.push(InputEvent::SetGroundLootFilter { filter });
+                        } else {
+                            self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
+                                "Usage: /loot <all|gear|cards>".to_owned(),
+                                MessageColor::Information,
+                            ));
+                        }
+                        continue;
+                    }
+
+                    if let Some(rest) = text.strip_prefix("/wishlist ") {
+                        let arg = rest.trim();
+                        if arg.eq_ignore_ascii_case("clear") {
+                            self.client_state.follow_mut(client_state().game_settings()).wishlist_items.clear();
+                            self.client_state
+                                .follow_mut(client_state().chat_messages())
+                                .push(ChatMessage::new("Loot wishlist cleared.".to_owned(), MessageColor::Information));
+                        } else if let Ok(item_id) = arg.parse::<u32>() {
+                            self.input_event_buffer.push(InputEvent::ToggleWishlistItem { item_id });
+                        } else {
+                            self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
+                                "Usage: /wishlist <item_id> (or /wishlist clear)".to_owned(),
+                                MessageColor::Information,
+                            ));
+                        }
+                        continue;
+                    }
+
                     if let Some(rest) = text.strip_prefix("/trade ") {
                         let rest = rest.trim();
                         let (command, arguments) = rest.split_once(' ').unwrap_or((rest, ""));
@@ -9034,7 +10426,7 @@ impl Client {
                                 let _ = self.networking_system.trade_ok();
                             }
                             "commit" => {
-                                let _ = self.networking_system.trade_commit();
+                                self.confirm_trade(client_tick);
                             }
                             "cancel" => {
                                 let _ = self.networking_system.trade_cancel();
@@ -9482,6 +10874,9 @@ impl Client {
                 InputEvent::CloseItemActions => {
                     self.interface.close_window_with_class(WindowClass::ItemActions);
                 }
+                InputEvent::SaveEquipmentSet { name } => self.save_current_equipment_set(name),
+                InputEvent::EquipNamedSet { name } => self.equip_named_set(&name),
+                InputEvent::DeleteEquipmentSet { name } => self.delete_named_equipment_set(&name),
                 InputEvent::IdentifyItem { inventory_index } => {
                     let _ = self.networking_system.one_click_item_identify(inventory_index);
                 }
@@ -9581,7 +10976,7 @@ impl Client {
                     let _ = self.networking_system.trade_ok();
                 }
                 InputEvent::TradeCommit => {
-                    let _ = self.networking_system.trade_commit();
+                    self.confirm_trade(client_tick);
                 }
                 InputEvent::TradeCancel => {
                     let _ = self.networking_system.trade_cancel();
@@ -9646,17 +11041,17 @@ impl Client {
                             attack_range,
                         },
                         client_tick,
+                    ) && cast_or_path_entity_skill(
+                        &mut self.networking_system,
+                        &mut self.client_state,
+                        self.map.as_deref(),
+                        &mut self.path_finder,
+                        skill_id,
+                        skill_level,
+                        attack_range,
+                        entity_id,
                     ) {
-                        cast_or_path_entity_skill(
-                            &mut self.networking_system,
-                            &mut self.client_state,
-                            self.map.as_deref(),
-                            &mut self.path_finder,
-                            skill_id,
-                            skill_level,
-                            attack_range,
-                            entity_id,
-                        );
+                        self.predict_local_motion(PredictedMotion::Skill(skill_id), client_tick);
                     }
                 }
                 InputEvent::CastSkillAtTile {
@@ -9674,17 +11069,17 @@ impl Client {
                             attack_range,
                         },
                         client_tick,
+                    ) && cast_or_path_ground_skill(
+                        &mut self.networking_system,
+                        &mut self.client_state,
+                        self.map.as_deref(),
+                        &mut self.path_finder,
+                        skill_id,
+                        skill_level,
+                        attack_range,
+                        tile,
                     ) {
-                        cast_or_path_ground_skill(
-                            &mut self.networking_system,
-                            &mut self.client_state,
-                            self.map.as_deref(),
-                            &mut self.path_finder,
-                            skill_id,
-                            skill_level,
-                            attack_range,
-                            tile,
-                        );
+                        self.predict_local_motion(PredictedMotion::Skill(skill_id), client_tick);
                     }
                 }
                 InputEvent::CastSkill { slot } => {
@@ -9748,16 +11143,22 @@ impl Client {
                                 if !queued {
                                     match learnable_skill.skill_id == ROLLING_CUTTER_ID {
                                         true => {
-                                            let _ = self.networking_system.cast_channeling_skill(
-                                                learnable_skill.skill_id,
-                                                skill_level,
-                                                this_entity_id,
-                                            );
+                                            if self
+                                                .networking_system
+                                                .cast_channeling_skill(learnable_skill.skill_id, skill_level, this_entity_id)
+                                                .is_ok()
+                                            {
+                                                self.predict_local_motion(PredictedMotion::Skill(learnable_skill.skill_id), client_tick);
+                                            }
                                         }
                                         false => {
-                                            let _ =
-                                                self.networking_system
-                                                    .cast_skill(learnable_skill.skill_id, skill_level, this_entity_id);
+                                            if self
+                                                .networking_system
+                                                .cast_skill(learnable_skill.skill_id, skill_level, this_entity_id)
+                                                .is_ok()
+                                            {
+                                                self.predict_local_motion(PredictedMotion::Skill(learnable_skill.skill_id), client_tick);
+                                            }
                                         }
                                     }
                                 }
@@ -9802,17 +11203,17 @@ impl Client {
                                         attack_range,
                                     },
                                     client_tick,
+                                ) && cast_or_path_entity_skill(
+                                    &mut self.networking_system,
+                                    &mut self.client_state,
+                                    self.map.as_deref(),
+                                    &mut self.path_finder,
+                                    learnable_skill.skill_id,
+                                    skill_level,
+                                    attack_range,
+                                    target_id,
                                 ) {
-                                    cast_or_path_entity_skill(
-                                        &mut self.networking_system,
-                                        &mut self.client_state,
-                                        self.map.as_deref(),
-                                        &mut self.path_finder,
-                                        learnable_skill.skill_id,
-                                        skill_level,
-                                        attack_range,
-                                        target_id,
-                                    );
+                                    self.predict_local_motion(PredictedMotion::Skill(learnable_skill.skill_id), client_tick);
                                 }
                             }
                             SkillType::Attack => {
@@ -9837,17 +11238,17 @@ impl Client {
                                                 attack_range: pending.attack_range,
                                             },
                                             client_tick,
+                                        ) && cast_or_path_entity_skill(
+                                            &mut self.networking_system,
+                                            &mut self.client_state,
+                                            self.map.as_deref(),
+                                            &mut self.path_finder,
+                                            pending.skill_id,
+                                            pending.skill_level,
+                                            pending.attack_range,
+                                            entity_id,
                                         ) {
-                                            cast_or_path_entity_skill(
-                                                &mut self.networking_system,
-                                                &mut self.client_state,
-                                                self.map.as_deref(),
-                                                &mut self.path_finder,
-                                                pending.skill_id,
-                                                pending.skill_level,
-                                                pending.attack_range,
-                                                entity_id,
-                                            );
+                                            self.predict_local_motion(PredictedMotion::Skill(pending.skill_id), client_tick);
                                         }
                                     }
                                     _ => {
@@ -10278,7 +11679,10 @@ impl Client {
                     if !destination_is_valid {
                         self.client_state.follow_mut(client_state().toasts()).push(
                             "navigation-unavailable",
-                            format!("No verified map route or valid destination is available for {destination}."),
+                            crate::world::unreachable_explanation(&current_map, &destination)
+                                .into_iter()
+                                .next()
+                                .unwrap_or_else(|| format!("No verified map route or valid destination is available for {destination}.")),
                             crate::state::toasts::ToastPriority::Normal,
                         );
                     } else {
@@ -10310,7 +11714,10 @@ impl Client {
                     if !destination_is_valid {
                         self.client_state.follow_mut(client_state().toasts()).push(
                             "navigation-unavailable",
-                            format!("No verified map route is available for {destination}."),
+                            crate::world::unreachable_explanation(&current_map, &destination)
+                                .into_iter()
+                                .next()
+                                .unwrap_or_else(|| format!("No verified map route is available for {destination}.")),
                             crate::state::toasts::ToastPriority::Normal,
                         );
                     } else {
@@ -10454,6 +11861,27 @@ impl Client {
                             MessageColor::Error,
                         ));
                     }
+                }
+                InputEvent::DeclinePartyDestination => {
+                    // Local only: nothing is sent, so the proposer and every
+                    // other member keep their own routes.
+                    let had_destination = self
+                        .client_state
+                        .follow(client_state().party_state())
+                        .shared_destination()
+                        .is_some();
+                    self.client_state
+                        .follow_mut(client_state().party_state())
+                        .clear_shared_destination_all();
+                    self.client_state.follow_mut(client_state().toasts()).push(
+                        "party-destination-declined",
+                        if had_destination {
+                            "Shared destination declined."
+                        } else {
+                            "There is no shared party destination to decline."
+                        },
+                        crate::state::toasts::ToastPriority::Normal,
+                    );
                 }
                 InputEvent::AcceptPartyDestination => {
                     let Some(destination) = self.client_state.follow(client_state().party_state()).shared_destination().cloned() else {
@@ -10679,9 +12107,11 @@ impl Client {
                     if self.map.is_some() {
                         match self.interface.is_window_with_class_open(WindowClass::QuestLog) {
                             true => self.interface.close_window_with_class(WindowClass::QuestLog),
-                            false => self
-                                .interface
-                                .open_window(QuestLogWindow::new(client_state().quest_log(), client_state().inventory())),
+                            false => self.interface.open_window(QuestLogWindow::new(
+                                client_state().quest_log(),
+                                client_state().inventory(),
+                                client_state().dm_journal(),
+                            )),
                         }
                     }
                 }
@@ -10690,6 +12120,16 @@ impl Client {
                         match self.interface.is_window_with_class_open(WindowClass::Dice) {
                             true => self.interface.close_window_with_class(WindowClass::Dice),
                             false => self.interface.open_window(DiceWindow::new(client_state().dice_window())),
+                        }
+                    }
+                }
+                InputEvent::ToggleCommissionBoardWindow => {
+                    if self.map.is_some() {
+                        match self.interface.is_window_with_class_open(WindowClass::CommissionBoard) {
+                            true => self.interface.close_window_with_class(WindowClass::CommissionBoard),
+                            false => self
+                                .interface
+                                .open_window(CommissionBoardWindow::new(client_state().commission_board_window())),
                         }
                     }
                 }
@@ -11191,6 +12631,23 @@ impl Client {
     /// anything else (a story quest, or a quest outside the campaign) is listed
     /// by id, which is still more than the log showed before it existed.
     fn resolve_quest_entry(&self, quest_id: u32) -> QuestEntry {
+        let location = self.library.campaign_quest_location(quest_id).map(|location| QuestLocationEntry {
+            is_turn_in: location.is_turn_in,
+            npc: location.npc.clone(),
+            map_name: location.map_name.clone(),
+            x: location.x,
+            y: location.y,
+        });
+        let guidance = self
+            .library
+            .campaign_quest_guidance(quest_id)
+            .map(|guidance| {
+                std::iter::once(format!("Found around: {}", guidance.area))
+                    .chain(guidance.steps.iter().cloned())
+                    .collect()
+            })
+            .unwrap_or_default();
+
         match self.library.campaign_quest(quest_id) {
             Some(contract) => QuestEntry {
                 quest_id,
@@ -11211,12 +12668,16 @@ impl Client {
                     })
                     .collect(),
                 hunt_objectives: Vec::new(),
+                location,
+                guidance,
             },
             None => QuestEntry {
                 quest_id,
                 name: format!("Quest {quest_id}"),
                 requirements: Vec::new(),
                 hunt_objectives: Vec::new(),
+                location,
+                guidance,
             },
         }
     }
@@ -11277,13 +12738,40 @@ impl Client {
             .retain(|item| !item.should_be_removed(client_tick));
     }
 
+    /// Start the local swing or skill motion as soon as the packet is sent.
+    /// The matching server echo does not restart it. A refusal returns to idle.
+    fn predict_local_motion(&mut self, motion: PredictedMotion, client_tick: ClientTick) {
+        let skill_id = match motion {
+            PredictedMotion::BasicAttack => None,
+            PredictedMotion::Skill(skill_id) => Some(skill_id),
+        };
+        let started = self.client_state.try_follow_mut(this_entity()).is_some_and(|player| {
+            if player.is_dead() || player.is_action_animation_active() {
+                return false;
+            }
+            player.set_skill_attack(skill_id, 0, false, client_tick);
+            true
+        });
+        if started {
+            self.predicted_motion = Some(motion);
+        }
+    }
+
+    fn rollback_predicted_motion(&mut self, client_tick: ClientTick) {
+        if self.predicted_motion.take().is_some()
+            && let Some(player) = self.client_state.try_follow_mut(this_entity())
+        {
+            player.set_idle(client_tick);
+        }
+    }
+
     /// Fire any action that the player buffered while out of range or while
     /// still moving (attack, skill, pick up item). Must be called after
     /// [`Self::update_entities`] so that the player's `stopped_moving` state
     /// reflects this frame.
     #[inline(always)]
     #[cfg_attr(feature = "debug", korangar_debug::profile)]
-    fn process_buffered_action(&mut self) {
+    fn process_buffered_action(&mut self, client_tick: ClientTick) {
         let Some(true) = self.client_state.try_follow(this_entity()).map(|player| player.stopped_moving()) else {
             return;
         };
@@ -11295,7 +12783,9 @@ impl Client {
         match buffered_action {
             BufferedAction::AttackEntity { entity_id } => {
                 self.last_attack_target = Some(entity_id);
-                let _ = self.networking_system.player_attack(entity_id);
+                if self.networking_system.player_attack(entity_id).is_ok() {
+                    self.predict_local_motion(PredictedMotion::BasicAttack, client_tick);
+                }
 
                 let auto_attack = *self.client_state.follow(client_state().game_settings().auto_attack());
                 if auto_attack {
@@ -11328,7 +12818,9 @@ impl Client {
 
                 if let (Some(map), Some(player_position), Some(target_position)) = (self.map.as_deref(), player_position, target_position) {
                     if is_within_skill_range(player_position, target_position, attack_range) {
-                        let _ = self.networking_system.cast_skill(skill_id, skill_level, entity_id);
+                        if self.networking_system.cast_skill(skill_id, skill_level, entity_id).is_ok() {
+                            self.predict_local_motion(PredictedMotion::Skill(skill_id), client_tick);
+                        }
                     } else if let Some(path) =
                         self.path_finder
                             .find_walkable_path_in_range(map, player_position, target_position, attack_range)
@@ -11353,16 +12845,20 @@ impl Client {
                 skill_level,
                 tile,
                 attack_range,
-            } => cast_or_path_ground_skill(
-                &mut self.networking_system,
-                &mut self.client_state,
-                self.map.as_deref(),
-                &mut self.path_finder,
-                skill_id,
-                skill_level,
-                attack_range,
-                tile,
-            ),
+            } => {
+                if cast_or_path_ground_skill(
+                    &mut self.networking_system,
+                    &mut self.client_state,
+                    self.map.as_deref(),
+                    &mut self.path_finder,
+                    skill_id,
+                    skill_level,
+                    attack_range,
+                    tile,
+                ) {
+                    self.predict_local_motion(PredictedMotion::Skill(skill_id), client_tick);
+                }
+            }
         }
     }
 
@@ -11405,7 +12901,9 @@ impl Client {
                     .any(|entity| entity.get_entity_id() == entity_id && !entity.is_dead());
                 if target_is_live {
                     self.last_attack_target = Some(entity_id);
-                    let _ = self.networking_system.player_attack(entity_id);
+                    if self.networking_system.player_attack(entity_id).is_ok() {
+                        self.predict_local_motion(PredictedMotion::BasicAttack, client_tick);
+                    }
                     if *self.client_state.follow(client_state().game_settings().auto_attack()) {
                         *self.client_state.follow_mut(client_state().buffered_action()) = Some(BufferedAction::AttackEntity { entity_id });
                     }
@@ -11472,18 +12970,24 @@ impl Client {
                         crate::state::toasts::ToastPriority::Normal,
                     );
                 } else if skill_id == ROLLING_CUTTER_ID {
-                    let _ = self.networking_system.cast_channeling_skill(skill_id, skill_level, entity_id);
-                } else {
-                    cast_or_path_entity_skill(
-                        &mut self.networking_system,
-                        &mut self.client_state,
-                        self.map.as_deref(),
-                        &mut self.path_finder,
-                        skill_id,
-                        skill_level,
-                        attack_range,
-                        entity_id,
-                    );
+                    if self
+                        .networking_system
+                        .cast_channeling_skill(skill_id, skill_level, entity_id)
+                        .is_ok()
+                    {
+                        self.predict_local_motion(PredictedMotion::Skill(skill_id), client_tick);
+                    }
+                } else if cast_or_path_entity_skill(
+                    &mut self.networking_system,
+                    &mut self.client_state,
+                    self.map.as_deref(),
+                    &mut self.path_finder,
+                    skill_id,
+                    skill_level,
+                    attack_range,
+                    entity_id,
+                ) {
+                    self.predict_local_motion(PredictedMotion::Skill(skill_id), client_tick);
                 }
             }
             BufferedAction::CastGroundSkill {
@@ -11492,7 +12996,7 @@ impl Client {
                 tile,
                 attack_range,
             } => {
-                cast_or_path_ground_skill(
+                if cast_or_path_ground_skill(
                     &mut self.networking_system,
                     &mut self.client_state,
                     self.map.as_deref(),
@@ -11501,7 +13005,9 @@ impl Client {
                     skill_level,
                     attack_range,
                     tile,
-                );
+                ) {
+                    self.predict_local_motion(PredictedMotion::Skill(skill_id), client_tick);
+                }
             }
         }
     }
@@ -11646,6 +13152,7 @@ impl Client {
         self.update_character_preview();
         self.update_character_select_previews();
 
+        self.last_client_tick = client_tick;
         let input_report = self.input_system.update_delta(client_tick);
 
         self.request_entity_details(&input_report);
@@ -11702,7 +13209,7 @@ impl Client {
 
         self.refresh_monster_target_summary();
 
-        self.process_buffered_action();
+        self.process_buffered_action(client_tick);
         self.process_timed_buffered_action(client_tick);
 
         self.update_main_camera(
@@ -11815,6 +13322,8 @@ impl Client {
             let is_grabbing = mouse_mode.is_grabbing();
             let is_chat_open = self.interface.is_window_with_class_open(WindowClass::Chat);
 
+            *self.client_state.follow_mut(client_state().hovered_skill_range()) = None;
+
             let mut interface_frame = self
                 .interface
                 .lay_out_windows(&self.client_state, scaling.get_factor(), input_report.mouse_position);
@@ -11827,16 +13336,42 @@ impl Client {
             let cursor_state = match input_report.mouse_target {
                 _ if is_rotating_camera => MouseCursorState::RotateCamera,
                 _ if is_grabbing => MouseCursorState::GrabResource,
-                // A skill is armed and waiting for a target: show the attack reticle over
-                // the world so it's clear the next click aims the skill, not a walk.
-                _ if self.pending_skill.is_some() && !is_interface_hovered => MouseCursorState::Attack,
+                // A skill is armed and waiting for a target: show the attack reticle if
+                // in range, or the no-action cue if out of range (color is not the only cue, F09).
+                _ if self.pending_skill.is_some() && !is_interface_hovered => {
+                    let in_range = match input_report.mouse_target {
+                        PickerTarget::Tile { x, y } => {
+                            let target = TilePosition { x, y };
+                            self.client_state
+                                .try_follow(this_entity())
+                                .map(Entity::get_tile_position)
+                                .is_some_and(|player_pos| {
+                                    is_within_skill_range(player_pos, target, self.pending_skill.as_ref().unwrap().attack_range)
+                                })
+                        }
+                        PickerTarget::Entity(entity_id) => {
+                            let target_pos = self
+                                .client_state
+                                .follow(client_state().entities())
+                                .iter()
+                                .find(|e| e.get_entity_id() == entity_id)
+                                .map(Entity::get_tile_position);
+                            let player_pos = self.client_state.try_follow(this_entity()).map(Entity::get_tile_position);
+                            match (player_pos, target_pos) {
+                                (Some(p), Some(t)) => is_within_skill_range(p, t, self.pending_skill.as_ref().unwrap().attack_range),
+                                _ => false,
+                            }
+                        }
+                        _ => false,
+                    };
+                    pending_skill_cursor_state(in_range)
+                }
                 PickerTarget::Entity(entity_id) if !is_interface_hovered => {
-                    if self
-                        .client_state
-                        .follow(client_state().ground_items())
-                        .iter()
-                        .any(|item| item.get_entity_id() == entity_id)
-                    {
+                    let game_settings = self.client_state.follow(client_state().game_settings());
+                    if self.client_state.follow(client_state().ground_items()).iter().any(|item| {
+                        item.get_entity_id() == entity_id
+                            && should_render_ground_item(game_settings.ground_loot_filter, &game_settings.wishlist_items, item.item_id.0)
+                    }) {
                         MouseCursorState::HoverItem
                     } else {
                         self.client_state
@@ -11925,11 +13460,15 @@ impl Client {
                             match input_report.mouse_target {
                                 PickerTarget::Nothing => {}
                                 PickerTarget::Entity(entity_id) => {
-                                    let is_ground_item = self
-                                        .client_state
-                                        .follow(client_state().ground_items())
-                                        .iter()
-                                        .any(|item| item.get_entity_id() == entity_id);
+                                    let game_settings = self.client_state.follow(client_state().game_settings());
+                                    let is_ground_item = self.client_state.follow(client_state().ground_items()).iter().any(|item| {
+                                        item.get_entity_id() == entity_id
+                                            && should_render_ground_item(
+                                                game_settings.ground_loot_filter,
+                                                &game_settings.wishlist_items,
+                                                item.item_id.0,
+                                            )
+                                    });
 
                                     if is_ground_item {
                                         self.input_event_buffer.push(InputEvent::PickUpItem { entity_id })
@@ -11939,6 +13478,7 @@ impl Client {
                                 }
                                 PickerTarget::Tile { x, y } => {
                                     let destination = TilePosition { x, y };
+                                    self.hold_mouse_move_last_tick = client_tick;
 
                                     interface_frame.set_mouse_mode(MouseInputMode::Walk { destination });
 
@@ -11968,14 +13508,22 @@ impl Client {
                         self.input_event_buffer.push(InputEvent::ResetCameraRotation);
                     }
                 }
-            } else if let Some(last_destination) = last_walking_destination
-                && let PickerTarget::Tile { x, y } = input_report.mouse_target
-                && input_report.left_mouse_button_down
+            } else if input_report.left_mouse_button_down
+                && !is_interface_hovered
                 && self.pending_skill.is_none()
+                && let PickerTarget::Tile { x, y } = input_report.mouse_target
             {
                 let destination = TilePosition { x, y };
+                let player_pos = self.client_state.try_follow(this_entity()).map(Entity::get_tile_position);
 
-                if last_destination != destination {
+                if should_reissue_hold_mouse_move(
+                    self.hold_mouse_move_last_tick,
+                    client_tick,
+                    last_walking_destination,
+                    destination,
+                    player_pos,
+                ) {
+                    self.hold_mouse_move_last_tick = client_tick;
                     interface_frame.set_mouse_mode(MouseInputMode::Walk { destination });
                     self.input_event_buffer.push(InputEvent::PlayerMove { destination });
                 }
@@ -12535,7 +14083,20 @@ impl<'a, 'm: 'a> MapRenderContext<'a, 'm> {
     fn render_directional_shadows(&mut self) {
         let entities = self.client_state.follow(client_state().entities());
         let dead_entities = self.client_state.follow(client_state().dead_entities());
-        let ground_items = self.client_state.follow(client_state().ground_items());
+        let game_settings = self.client_state.follow(client_state().game_settings());
+        let filtered_ground_items: Vec<GroundItem>;
+        let ground_items: &[GroundItem] = if game_settings.ground_loot_filter == GroundLootFilter::All {
+            self.client_state.follow(client_state().ground_items())
+        } else {
+            filtered_ground_items = self
+                .client_state
+                .follow(client_state().ground_items())
+                .iter()
+                .filter(|item| should_render_ground_item(game_settings.ground_loot_filter, &game_settings.wishlist_items, item.item_id.0))
+                .cloned()
+                .collect();
+            &filtered_ground_items
+        };
 
         for partition_index in 0..PARTITION_COUNT {
             let partition_camera = self.directional_shadow_camera.get_partition_camera(partition_index);
@@ -12634,7 +14195,20 @@ impl<'a, 'm: 'a> MapRenderContext<'a, 'm> {
     fn render_geometry(&mut self) {
         let entities = self.client_state.follow(client_state().entities());
         let dead_entities = self.client_state.follow(client_state().dead_entities());
-        let ground_items = self.client_state.follow(client_state().ground_items());
+        let game_settings = self.client_state.follow(client_state().game_settings());
+        let filtered_ground_items: Vec<GroundItem>;
+        let ground_items: &[GroundItem] = if game_settings.ground_loot_filter == GroundLootFilter::All {
+            self.client_state.follow(client_state().ground_items())
+        } else {
+            filtered_ground_items = self
+                .client_state
+                .follow(client_state().ground_items())
+                .iter()
+                .filter(|item| should_render_ground_item(game_settings.ground_loot_filter, &game_settings.wishlist_items, item.item_id.0))
+                .cloned()
+                .collect();
+            &filtered_ground_items
+        };
         let player = self.client_state.try_follow(this_entity());
 
         let offset = self.model_instructions.len();
@@ -12753,6 +14327,41 @@ impl<'a, 'm: 'a> MapRenderContext<'a, 'm> {
         }
     }
 
+    /// Draws the reach of an armed skill as a ring around the player.
+    ///
+    /// The cursor footprint shows the impact shape. This ring shows how far
+    /// that skill can be used, using the same Chebyshev distance as the server.
+    #[inline(always)]
+    #[cfg_attr(feature = "debug", korangar_debug::profile)]
+    fn render_skill_range_ring(&mut self) {
+        if !self.currently_playing {
+            return;
+        }
+        let Some(texture) = self.skill_footprint_texture else {
+            return;
+        };
+        let range = effective_skill_range(
+            self.pending_skill.as_ref().map(|p| p.attack_range),
+            *self.client_state.follow(client_state().hovered_skill_range()),
+        );
+        let Some(attack_range) = range else {
+            return;
+        };
+        let Some(player_position) = self.client_state.try_follow(this_entity()).map(Entity::get_tile_position) else {
+            return;
+        };
+        let cells = skill_range_ring(attack_range);
+        if cells.is_empty() {
+            return;
+        }
+        let color = self
+            .client_state
+            .follow(client_state().world_theme().skill_aim_in_range())
+            .multiply_alpha(0.55);
+        self.map
+            .render_skill_footprint(self.effect_renderer, texture, player_position, &cells, color);
+    }
+
     /// Draws the ground area an armed skill will cover, under the cursor.
     ///
     /// The shape is the server's own layout (see [`skill_footprint`]),
@@ -12791,25 +14400,27 @@ impl<'a, 'm: 'a> MapRenderContext<'a, 'm> {
             return;
         }
 
-        let color = match is_within_skill_range(player_position, target, pending.attack_range) {
+        let in_range = is_within_skill_range(player_position, target, pending.attack_range);
+        let color = match in_range {
             true => *self.client_state.follow(client_state().world_theme().skill_aim_in_range()),
             false => *self.client_state.follow(client_state().world_theme().skill_aim_out_of_range()),
         };
 
+        let cells_to_render = stippled_footprint_cells(&cells, in_range);
+
         self.map
-            .render_skill_footprint(self.effect_renderer, texture, target, &cells, color);
+            .render_skill_footprint(self.effect_renderer, texture, target, &cells_to_render, color);
     }
 
-    fn render_skill_cast_telegraphs(&mut self) {
-        let Some(texture) = self.skill_footprint_texture else {
-            return;
-        };
-
+    /// Incoming casts that get a ground telegraph: those whose footprint is the
+    /// same at every level (so the drawn cells are right whatever level was
+    /// cast) and covers more than one cell.
+    fn telegraphed_casts(&self) -> Vec<TelegraphedCast> {
         let mut casts = Vec::new();
-        if let Some(player) = self.client_state.try_follow(this_entity()) {
-            if let Some((skill_id, _, target_position)) = player.cast_target(self.client_tick) {
-                casts.push((player.get_tile_position(), skill_id, target_position));
-            }
+        if let Some(player) = self.client_state.try_follow(this_entity())
+            && let Some((skill_id, _, target_position)) = player.cast_target(self.client_tick)
+        {
+            casts.push((player.get_tile_position(), skill_id, target_position));
         }
 
         for entity in self.client_state.follow(client_state().entities()).iter() {
@@ -12818,18 +14429,50 @@ impl<'a, 'm: 'a> MapRenderContext<'a, 'm> {
             }
         }
 
+        casts
+            .into_iter()
+            .filter_map(|(caster_position, skill_id, target_position)| {
+                let direction = facing_direction(caster_position, target_position);
+                let cells = level_invariant_skill_footprint(skill_id, direction)?;
+                (cells.len() > 1).then_some((skill_id, target_position, cells))
+            })
+            .collect()
+    }
+
+    /// F32: each telegraph also gets a text label, so it does not rely on
+    /// color alone. Runs before the particle pass that draws the labels.
+    fn update_cast_telegraph_labels(&mut self) {
+        let map = self.map;
+        let labels = self
+            .telegraphed_casts()
+            .into_iter()
+            .filter_map(|(skill_id, target_position, _)| {
+                let position = map.get_world_position(target_position)?;
+                let skill_name = crate::dm::reference_data::reference_data()
+                    .skills
+                    .iter()
+                    .find(|skill| skill.id == skill_id.0)
+                    .map(|skill| skill.name.as_str());
+                Some(crate::world::TelegraphLabel::new(
+                    position,
+                    crate::world::telegraph_label_text(skill_name),
+                ))
+            })
+            .collect();
+        self.particle_holder.set_telegraph_labels(labels);
+    }
+
+    fn render_skill_cast_telegraphs(&mut self) {
+        let Some(texture) = self.skill_footprint_texture else {
+            return;
+        };
+
         // The selected world palette keeps an incoming server cast distinct
         // from the local targeting preview.
         let color = *self.client_state.follow(client_state().world_theme().enemy_telegraph());
-        for (caster_position, skill_id, target_position) in casts {
-            let direction = facing_direction(caster_position, target_position);
-            let Some(cells) = level_invariant_skill_footprint(skill_id, direction) else {
-                continue;
-            };
-            if cells.len() > 1 {
-                self.map
-                    .render_skill_footprint(self.effect_renderer, texture, target_position, &cells, color);
-            }
+        for (_, target_position, cells) in self.telegraphed_casts() {
+            self.map
+                .render_skill_footprint(self.effect_renderer, texture, target_position, &cells, color);
         }
     }
 
@@ -12848,6 +14491,7 @@ impl<'a, 'm: 'a> MapRenderContext<'a, 'm> {
             );
         }
 
+        self.update_cast_telegraph_labels();
         self.particle_holder.render(
             self.bottom_interface_renderer,
             self.current_camera,
@@ -12859,6 +14503,7 @@ impl<'a, 'm: 'a> MapRenderContext<'a, 'm> {
         self.effect_holder.render(self.effect_renderer, self.current_camera);
 
         self.render_skill_cast_telegraphs();
+        self.render_skill_range_ring();
         self.render_skill_aiming_footprint();
 
         if let Some(player) = self.client_state.try_follow(this_entity()) {
@@ -12950,6 +14595,38 @@ impl<'a, 'm: 'a> MapRenderContext<'a, 'm> {
             );
         }
 
+        // Party target markers (F20): frame the monster's bars and label the kind.
+        {
+            let party = self.client_state.follow(client_state().party_state());
+            if !party.target_markers().is_empty() {
+                let theme = self.client_state.follow(client_state().world_theme());
+                for marker in party.target_markers() {
+                    let Some(entity) = self
+                        .client_state
+                        .follow(client_state().entities())
+                        .iter()
+                        .find(|entity| entity.get_entity_id().0 == marker.entity_id && entity.is_targetable_monster())
+                    else {
+                        continue;
+                    };
+                    entity.render_status(
+                        self.middle_interface_renderer,
+                        self.current_camera,
+                        theme,
+                        self.screen_size,
+                        self.client_tick,
+                    );
+                    entity.render_target_outline(self.middle_interface_renderer, self.current_camera, theme, self.screen_size);
+                    entity.render_party_marker_label(
+                        self.middle_interface_renderer,
+                        self.current_camera,
+                        self.screen_size,
+                        &format!("{} {}", marker.kind.label(), marker.sender),
+                    );
+                }
+            }
+        }
+
         match self.mouse_target {
             PickerTarget::Tile { x, y } => {
                 // Only show if the mouse mode is default or walking.
@@ -13014,12 +14691,11 @@ impl<'a, 'm: 'a> MapRenderContext<'a, 'm> {
                             self.middle_interface_renderer
                                 .render_hover_text(&text, self.scaling, self.mouse_position);
                         }
-                    } else if let Some(item) = self
-                        .client_state
-                        .follow(client_state().ground_items())
-                        .iter()
-                        .find(|item| item.get_entity_id() == entity_id)
-                    {
+                    } else if let Some(item) = self.client_state.follow(client_state().ground_items()).iter().find(|item| {
+                        let game_settings = self.client_state.follow(client_state().game_settings());
+                        item.get_entity_id() == entity_id
+                            && should_render_ground_item(game_settings.ground_loot_filter, &game_settings.wishlist_items, item.item_id.0)
+                    }) {
                         let name = self.library.get::<ItemName>(ItemNameKey {
                             item_id: item.item_id,
                             is_identified: item.is_identified,
@@ -13041,6 +14717,48 @@ impl<'a, 'm: 'a> MapRenderContext<'a, 'm> {
 mod slash_command_tests {
     use super::slash_command_usage;
 
+    /// F32: lethal telegraphs must stay visible at the lowest effect density,
+    /// with audio off, and with reduce-motion/flashing on. The footprint pass
+    /// therefore must not consult any of those settings.
+    #[test]
+    fn cast_telegraph_pass_ignores_density_audio_and_motion_settings() {
+        let source = include_str!("lib.rs");
+        let function_body = |name: &str| {
+            let start = source.find(name).unwrap_or_else(|| panic!("{name} exists"));
+            let body = &source[start..];
+            let end = body[1..]
+                .find("\n    fn ")
+                .or_else(|| body[1..].find("\n    #[inline"))
+                .or_else(|| body[1..].find("\n    ///"))
+                .expect("end of function");
+            &body[..end]
+        };
+        // The footprints, the cast selection they share, and their text labels
+        // all have to survive every comfort setting.
+        let passes = [
+            function_body("fn telegraphed_casts"),
+            function_body("fn update_cast_telegraph_labels"),
+            function_body("fn render_skill_cast_telegraphs"),
+        ];
+        for body in passes {
+            for setting in [
+                "effect_density",
+                "audio_cues",
+                "reduce_motion",
+                "reduce_flashing",
+                "skill_visual_allowed",
+            ] {
+                assert!(!body.contains(setting), "telegraph pass must not depend on {setting}");
+            }
+        }
+        assert!(passes[2].contains("render_skill_footprint"), "the pass still draws footprints");
+        assert!(
+            passes[2].contains("telegraphed_casts"),
+            "footprints use the shared cast selection"
+        );
+        assert!(passes[1].contains("telegraphed_casts"), "labels use the shared cast selection");
+    }
+
     /// Every command the chat handler implements needs an entry here, because
     /// the fall-through guard uses this table to decide between a usage hint
     /// and "unknown command". Both alias spellings must resolve.
@@ -13058,6 +14776,10 @@ mod slash_command_tests {
             "/retrieve",
             "/ignore",
             "/unignore",
+            "/loot",
+            "/wishlist",
+            "/mark",
+            "/goal",
         ] {
             assert!(slash_command_usage(command).is_some(), "{command} has no usage line");
         }

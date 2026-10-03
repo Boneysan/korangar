@@ -141,7 +141,7 @@ where
             class: Self::window_class(),
             theme: InterfaceThemeType::InGame,
             closable: true,
-            elements: [
+            elements: (
                 equip_box(self.items_path, EquipPosition::HEAD_TOP),
                 equip_box(self.items_path, EquipPosition::HEAD_MIDDLE),
                 equip_box(self.items_path, EquipPosition::HEAD_LOWER),
@@ -151,7 +151,37 @@ where
                 equip_box(self.items_path, EquipPosition::LEFT_HAND),
                 equip_box(self.items_path, EquipPosition::RIGHT_HAND),
                 equip_box(self.items_path, EquipPosition::AMMO),
-            ],
+                split! {
+                    gaps: theme().window().gaps(),
+                    children: (
+                        button! {
+                            text: "Equip Set 1",
+                            tooltip: "Equip named set 'Set 1' [/equip Set 1]",
+                            event: crate::input::InputEvent::EquipNamedSet { name: "Set 1".to_owned() },
+                        },
+                        button! {
+                            text: "Save Set 1",
+                            tooltip: "Save currently equipped items as 'Set 1' [/saveset Set 1]",
+                            event: crate::input::InputEvent::SaveEquipmentSet { name: "Set 1".to_owned() },
+                        },
+                    ),
+                },
+                split! {
+                    gaps: theme().window().gaps(),
+                    children: (
+                        button! {
+                            text: "Equip Set 2",
+                            tooltip: "Equip named set 'Set 2' [/equip Set 2]",
+                            event: crate::input::InputEvent::EquipNamedSet { name: "Set 2".to_owned() },
+                        },
+                        button! {
+                            text: "Save Set 2",
+                            tooltip: "Save currently equipped items as 'Set 2' [/saveset Set 2]",
+                            event: crate::input::InputEvent::SaveEquipmentSet { name: "Set 2".to_owned() },
+                        },
+                    ),
+                },
+            ),
         }
     }
 }

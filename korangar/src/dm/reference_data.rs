@@ -28,6 +28,13 @@ const ITEM_GRANTS_JSON: &str = include_str!("../../../docs/item-script-grants.v1
 const MAP_FLAGS_JSON: &str = include_str!("../../../docs/map-flags.v1.json");
 const COVERAGE_JSON: &str = include_str!("../../../docs/encyclopedia-coverage.v1.json");
 const ITEM_EXCHANGES_JSON: &str = include_str!("../../../docs/item-exchanges.v1.json");
+const SKILL_FORMULA_REVIEWS_JSON: &str = include_str!("../../../docs/skill-formula-reviews.v1.json");
+const NPC_SERVICE_REVIEWS_JSON: &str = include_str!("../../../docs/npc-service-reviews.v1.json");
+const RUMORS_JSON: &str = include_str!("../../../docs/rumors.v1.json");
+const JOB_TABLES_JSON: &str = include_str!("../../../docs/job-tables.v1.json");
+const STAT_RULES_JSON: &str = include_str!("../../../docs/stat-rules.v1.json");
+const EXP_TABLES_JSON: &str = include_str!("../../../docs/exp-tables.v1.json");
+const SEARCH_ALIASES_JSON: &str = include_str!("../../../docs/search-aliases.v1.json");
 
 #[derive(Deserialize)]
 struct VersionedFile<T> {
@@ -40,6 +47,20 @@ struct VersionedFile<T> {
     runtime_clues: Vec<ReferenceRuntimeMapFlagClue>,
     #[serde(default)]
     runtime_reviews: Vec<ReferenceRuntimeMapFlagReview>,
+    /// Bestiary only: the conditional pilot skill layer and its switch.
+    #[serde(default)]
+    pilot_skill_layer: Option<ReferencePilotSkillLayer>,
+}
+
+/// `db/re/mob_pilot_skill_db.conf` loads after the stock skill files, and only
+/// while battle config `mob_pilot_version` is 1 or more (`mob_readskilldb`).
+#[derive(Debug, Deserialize)]
+pub struct ReferencePilotSkillLayer {
+    pub setting: String,
+    pub configured_value: u32,
+    pub active: bool,
+    pub config_source: String,
+    pub skill_source: String,
 }
 
 #[derive(Deserialize)]
@@ -117,6 +138,13 @@ pub struct ReferenceMonster {
     pub skills: Vec<ReferenceMobSkill>,
     #[serde(default)]
     pub skills_source: Option<ReferenceSource>,
+    /// The skills this monster uses when the pilot layer is on, after its
+    /// `ClearSkills` entries are applied. `None` when the pilot file does not
+    /// touch this monster; `skills` above is then used either way.
+    #[serde(default)]
+    pub pilot_skills: Option<Vec<ReferenceMobSkill>>,
+    #[serde(default)]
+    pub pilot_skills_source: Option<ReferenceSource>,
     #[serde(default)]
     pub drops: Vec<ReferenceMonsterDrop>,
     #[serde(default)]
@@ -125,6 +153,31 @@ pub struct ReferenceMonster {
     pub scripted_spawn_references: Vec<ReferenceScriptedSpawn>,
     #[serde(default)]
     pub source: Option<ReferenceSource>,
+    // `mob_db.conf` combat fields. `None` means the record does not set the
+    // field, so the server's own default applies; the Guide says "not listed"
+    // rather than printing a guessed default.
+    #[serde(default)]
+    pub base_exp: Option<u32>,
+    #[serde(default)]
+    pub job_exp: Option<u32>,
+    /// `Attack: [attack1, attack2]`, exactly as the database lists it.
+    #[serde(default)]
+    pub attack: Option<[u32; 2]>,
+    #[serde(default)]
+    pub defense: Option<i32>,
+    #[serde(default)]
+    pub magic_defense: Option<i32>,
+    #[serde(default)]
+    pub attack_range: Option<u16>,
+    #[serde(default)]
+    pub view_range: Option<u16>,
+    /// Milliseconds per cell; an unhasted player walks at 150
+    /// (`DEFAULT_WALK_SPEED`).
+    #[serde(default)]
+    pub move_speed: Option<u32>,
+    /// Hercules `Mode` flags set on the record (`Aggressive`, `Looter`, ...).
+    #[serde(default)]
+    pub modes: Vec<String>,
 }
 
 #[derive(Debug, Deserialize)]
@@ -144,6 +197,17 @@ pub struct ReferenceScriptedSpawn {
     pub amount: Option<u32>,
     pub source: String,
     pub availability: String,
+}
+
+/// Aggregated spawn records and level range for a map derived from static spawn
+/// directives.
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub struct MapSpawnDetails {
+    pub records: u64,
+    pub mean_level: u16,
+    pub min_level: u16,
+    pub max_level: u16,
+    pub species: usize,
 }
 
 #[derive(Debug, Deserialize)]
@@ -205,7 +269,7 @@ pub struct ReferenceMobSkill {
     pub trigger_translation_status: String,
 }
 
-#[derive(Debug, Deserialize)]
+#[derive(Clone, Debug, Deserialize)]
 pub struct ReferenceMonsterDrop {
     pub item_id: u32,
     pub aegis_name: String,
@@ -213,8 +277,6 @@ pub struct ReferenceMonsterDrop {
     pub name: String,
     pub rate_per_10000: u32,
     pub kind: String,
-    #[serde(default)]
-    pub source_record: String,
 }
 
 #[derive(Debug, Deserialize)]
@@ -269,9 +331,10 @@ pub struct ReferenceItem {
     pub drops_from: Vec<ReferenceItemDrop>,
 }
 
+/// A production recipe (produce_db.txt) or arrow conversion
+/// (create_arrow_db.txt)
 #[derive(Debug, Deserialize)]
 pub struct ReferenceCraftingRecipe {
-    pub kind: String,
     pub output_id: u32,
     pub output_name: String,
     pub output_amount: u32,
@@ -284,7 +347,31 @@ pub struct ReferenceCraftingRecipe {
     #[serde(default)]
     pub skill_level: Option<u8>,
     pub materials: Vec<ReferenceCraftingMaterial>,
+    #[serde(default)]
+    pub combos: Vec<String>,
     pub source: ReferenceSource,
+}
+
+/// An item combo entry from item_combo_db.conf
+#[derive(Debug, Deserialize)]
+pub struct ReferenceItemComboRecipe {
+    pub name: String,
+    pub members: Vec<String>,
+    pub script: String,
+    #[serde(default)]
+    pub source: ReferenceSource,
+}
+
+/// All crafting entry types
+#[derive(Debug, Deserialize)]
+#[serde(tag = "kind")]
+pub enum ReferenceCraftingEntry {
+    #[serde(rename = "production")]
+    Production(ReferenceCraftingRecipe),
+    #[serde(rename = "arrow_conversion")]
+    ArrowConversion(ReferenceCraftingRecipe),
+    #[serde(rename = "combo")]
+    Combo(ReferenceItemComboRecipe),
 }
 
 #[derive(Debug, Deserialize)]
@@ -497,6 +584,16 @@ pub struct ReferenceItemShop {
     pub source: String,
 }
 
+#[derive(Debug, Clone, Deserialize)]
+pub struct ReferenceSkillPrerequisite {
+    #[serde(default, rename = "SkillId")]
+    pub skill_id: Option<u16>,
+    #[serde(rename = "Name")]
+    pub name: String,
+    #[serde(rename = "Level")]
+    pub level: u16,
+}
+
 #[derive(Debug, Deserialize)]
 pub struct ReferenceSkill {
     #[serde(rename = "Id")]
@@ -507,6 +604,14 @@ pub struct ReferenceSkill {
     pub description: String,
     #[serde(default, rename = "MaxLevel")]
     pub maximum_level: u16,
+    #[serde(default, rename = "AttackType")]
+    pub attack_type: Option<String>,
+    #[serde(default, rename = "StatusChange")]
+    pub status_change: Option<String>,
+    #[serde(default, rename = "Prerequisites")]
+    pub prerequisites: Vec<ReferenceSkillPrerequisite>,
+    #[serde(default, rename = "Source")]
+    pub source: Option<ReferenceSource>,
 }
 
 #[derive(Debug, Deserialize)]
@@ -558,7 +663,19 @@ pub struct ReferenceRefinement {
     pub job_level_bonus_per_job_level_from_50_per_mille: i16,
     pub mechanic_transcendent_flat_bonus_percent: i16,
     pub on_failure: String,
+    #[serde(default)]
+    pub armor: Option<ReferenceRefinementArmor>,
     pub weapon_levels: Vec<ReferenceRefinementWeaponLevel>,
+}
+
+#[derive(Clone, Debug, Deserialize)]
+pub struct ReferenceRefinementArmor {
+    pub material: String,
+    pub cost_zeny: u32,
+    pub safe_level: u8,
+    pub on_failure: String,
+    pub base_chance_percent_by_target_level: HashMap<String, u16>,
+    pub def_bonus_by_target_level: HashMap<String, u16>,
 }
 
 #[derive(Debug, Deserialize)]
@@ -566,6 +683,16 @@ pub struct ReferenceRefinementWeaponLevel {
     pub weapon_level: u8,
     pub material: String,
     pub base_chance_percent_by_target_level: HashMap<String, u16>,
+    #[serde(default)]
+    pub cost_zeny: u32,
+    #[serde(default)]
+    pub safe_level: u8,
+    #[serde(default)]
+    pub stat_per_level: u16,
+    #[serde(default)]
+    pub random_bonus_start_level: u8,
+    #[serde(default)]
+    pub random_bonus_max_per_level: u16,
 }
 
 #[derive(Debug, Deserialize)]
@@ -574,8 +701,6 @@ pub struct ReferenceItemDrop {
     pub sprite_name: String,
     pub rate_per_10000: u32,
     pub kind: String,
-    #[serde(default)]
-    pub source_record: String,
 }
 
 impl ReferenceItem {
@@ -587,21 +712,138 @@ impl ReferenceItem {
     fn matches_lowercase_query(&self, query: &str) -> bool {
         query.is_empty()
             || self.id.to_string() == query
-            || self.name.to_lowercase().contains(&query)
-            || self.aegis_name.to_lowercase().contains(&query)
-            || self.effect_status.to_lowercase().contains(&query)
+            || self.name.to_lowercase().contains(query)
+            || self.aegis_name.to_lowercase().contains(query)
+            || self.effect_status.to_lowercase().contains(query)
             || self
                 .effect_summary
                 .as_deref()
-                .is_some_and(|effect| effect.to_lowercase().contains(&query))
-            || self.drops_from.iter().any(|drop| drop.sprite_name.to_lowercase().contains(&query))
+                .is_some_and(|effect| effect.to_lowercase().contains(query))
+            || self.drops_from.iter().any(|drop| drop.sprite_name.to_lowercase().contains(query))
     }
 }
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Default, Deserialize)]
 pub struct ReferenceSource {
     pub path: String,
     pub record: String,
+}
+
+#[derive(Debug, Clone, Deserialize)]
+pub struct ReferenceSkillFormulaTarget {
+    pub skill_id: u16,
+    pub skill_name: String,
+}
+
+#[derive(Debug, Clone, Deserialize)]
+pub struct ReferenceSourceCitation {
+    pub path: String,
+    pub lines: Vec<usize>,
+}
+
+#[derive(Debug, Clone, Deserialize)]
+pub struct ReferenceSkillFormulaReview {
+    pub id: String,
+    pub title: String,
+    pub skill_ids: Vec<ReferenceSkillFormulaTarget>,
+    pub evidence_state: EvidenceState,
+    pub reviewed_by: String,
+    pub reviewed_on: String,
+    pub review_method: String,
+    pub formula: String,
+    pub worked_example: String,
+    pub conditions: Vec<String>,
+    pub sources: Vec<ReferenceSourceCitation>,
+}
+
+#[derive(Deserialize)]
+struct VersionedSkillFormulaReviewsFile {
+    schema_version: u32,
+    source_revision: String,
+    source_worktree_dirty: bool,
+    mode: String,
+    entries: Vec<ReferenceSkillFormulaReview>,
+}
+
+#[derive(Debug, Clone, Deserialize)]
+pub struct ReferenceRumor {
+    pub id: u32,
+    pub title: String,
+    pub category: String,
+    pub text: String,
+    #[serde(default)]
+    pub map_name: Option<String>,
+    #[serde(default)]
+    pub coordinates: Option<[u16; 2]>,
+    pub source_location: String,
+    #[serde(default)]
+    pub related_monster_id: Option<u32>,
+    #[serde(default)]
+    pub related_item_id: Option<u32>,
+    pub is_story_spoiler: bool,
+    pub evidence_state: EvidenceState,
+}
+
+#[derive(Deserialize)]
+struct VersionedRumorsFile {
+    schema_version: u32,
+    source_revision: String,
+    source_worktree_dirty: bool,
+    mode: String,
+    entries: Vec<ReferenceRumor>,
+}
+
+#[derive(Debug, Clone, Deserialize)]
+pub struct ReferenceNpcServiceLocation {
+    pub internal_name: String,
+    pub map: String,
+    pub x: u16,
+    pub y: u16,
+    pub npc_id: u32,
+}
+
+#[derive(Debug, Clone, Deserialize)]
+pub struct ReferenceKafraDestination {
+    pub name: String,
+    pub fee: u32,
+}
+
+#[derive(Debug, Clone, Deserialize)]
+pub struct ReferenceKafraRouteEntry {
+    pub origin_map: String,
+    pub destinations: Vec<ReferenceKafraDestination>,
+}
+
+#[derive(Debug, Clone, Deserialize)]
+pub struct ReferenceNpcServiceReview {
+    pub id: String,
+    pub title: String,
+    pub service_kind: String,
+    pub evidence_state: EvidenceState,
+    pub reviewed_by: String,
+    pub reviewed_on: String,
+    pub review_method: String,
+    pub conditions: Vec<String>,
+    pub sources: Vec<ReferenceSourceCitation>,
+    #[serde(default)]
+    pub npc: Option<ReferenceNpcServiceLocation>,
+    #[serde(default)]
+    pub route_table: Option<Vec<ReferenceKafraRouteEntry>>,
+    #[serde(default)]
+    pub route_table_note: Option<String>,
+    #[serde(default)]
+    pub locations: Option<Vec<serde_json::Value>>,
+    #[serde(default)]
+    pub location_count: Option<usize>,
+}
+
+#[derive(Deserialize)]
+struct VersionedNpcServiceReviewsFile {
+    schema_version: u32,
+    source_revision: String,
+    source_worktree_dirty: bool,
+    mode: String,
+    entries: Vec<ReferenceNpcServiceReview>,
 }
 
 #[derive(Debug, Deserialize)]
@@ -618,8 +860,6 @@ pub struct ReferenceNpc {
     pub declared_type: String,
     #[serde(default)]
     pub sprite: String,
-    #[serde(default)]
-    pub map_known: bool,
     pub source: ReferenceNpcSource,
     #[serde(default)]
     pub offers: Vec<ReferenceNpcOffer>,
@@ -643,6 +883,20 @@ pub struct ReferenceNpcSource {
     pub line: u32,
 }
 
+impl ReferenceNpc {
+    /// A campaign story NPC: kept out of the open player Guide.
+    pub fn is_story(&self) -> bool {
+        is_campaign_source_path(&self.source.path)
+    }
+}
+
+impl ReferenceQuest {
+    /// A campaign story quest: kept out of the open player Guide.
+    pub fn is_story(&self) -> bool {
+        CAMPAIGN_QUEST_IDS.contains(&self.id)
+    }
+}
+
 #[derive(Debug, Deserialize)]
 pub struct ReferenceServerRule {
     pub id: String,
@@ -653,10 +907,188 @@ pub struct ReferenceServerRule {
     pub sources: Vec<ReferenceSource>,
 }
 
+/// One job's class tables: base HP/SP by level, base ASPD by weapon, and the
+/// class flags `status_get_base_maxhp` branches on. Read from `job_db.conf`
+/// through a port of the server's loader (inheritance and generated tails
+/// included), so these are the tables the server uses.
+#[derive(Debug, Deserialize)]
+pub struct ReferenceJobTables {
+    pub job_id: u16,
+    pub name: String,
+    pub max_level: u16,
+    pub hp_table: String,
+    pub sp_table: String,
+    pub weight_base: u32,
+    pub max_aspd: u16,
+    pub base_aspd: HashMap<String, u16>,
+    pub upper: bool,
+    pub baby: bool,
+    pub super_novice: bool,
+    pub expanded_super_novice: bool,
+}
+
+#[derive(Debug, Deserialize)]
+pub struct ReferenceJobTablesFile {
+    pub schema_version: u32,
+    pub mode: String,
+    pub hp_tables: HashMap<String, Vec<u64>>,
+    pub sp_tables: HashMap<String, Vec<u64>>,
+    pub jobs: Vec<ReferenceJobTables>,
+}
+
+impl ReferenceJobTablesFile {
+    pub fn job(&self, job_id: u16) -> Option<&ReferenceJobTables> {
+        self.jobs.iter().find(|job| job.job_id == job_id)
+    }
+
+    /// The class table value for `level`.
+    pub fn table_hp(&self, job: &ReferenceJobTables, level: usize) -> Option<u64> {
+        self.hp_tables.get(&job.hp_table)?.get(level.checked_sub(1)?).copied()
+    }
+
+    pub fn table_sp(&self, job: &ReferenceJobTables, level: usize) -> Option<u64> {
+        self.sp_tables.get(&job.sp_table)?.get(level.checked_sub(1)?).copied()
+    }
+
+    /// Base max HP at `level` and VIT: `status_get_base_maxhp`, before
+    /// equipment and status bonuses.
+    pub fn base_max_hp(&self, job_id: u16, level: usize, vit: i32) -> Option<u64> {
+        let job = self.job(job_id)?;
+        Some(crate::world::stat_formulas::base_max_hp(
+            self.table_hp(job, level)?,
+            level,
+            vit,
+            crate::world::stat_formulas::ClassFlags::from(job),
+        ))
+    }
+
+    /// Base max SP at `level` and INT: `status_get_base_maxsp`.
+    pub fn base_max_sp(&self, job_id: u16, level: usize, int: i32) -> Option<u64> {
+        let job = self.job(job_id)?;
+        Some(crate::world::stat_formulas::base_max_sp(
+            self.table_sp(job, level)?,
+            int,
+            crate::world::stat_formulas::ClassFlags::from(job),
+        ))
+    }
+}
+
+/// One job's stat rules: its stat cap and whether a stat reset grants the
+/// upper-class extra points.
+#[derive(Debug, Deserialize)]
+pub struct ReferenceStatJob {
+    pub job_id: u16,
+    pub name: String,
+    pub parameters_group: String,
+    pub max_stats: u16,
+    pub upper: bool,
+}
+
+/// Stat-point rules read from `statpoint.txt`, `unit_parameters_db.conf`,
+/// `job_db.conf` and `pc.c`. `points_at_level[n - 1]` is the cumulative total
+/// at level `n`.
+#[derive(Debug, Deserialize)]
+pub struct ReferenceStatRules {
+    pub schema_version: u32,
+    pub mode: String,
+    pub points_at_level: Vec<u32>,
+    pub upper_class_extra_points: u32,
+    pub jobs: Vec<ReferenceStatJob>,
+}
+
+impl ReferenceStatRules {
+    /// Cumulative stat points at `level` for a non-upper class.
+    pub fn points_at_level(&self, level: usize) -> Option<u32> {
+        self.points_at_level.get(level.checked_sub(1)?).copied()
+    }
+}
+
+/// One server EXP group: `exp[n - 1]` is the EXP needed to advance from level
+/// `n` to `n + 1`, and the group holds at most `max_level - 1` values.
+#[derive(Debug, Deserialize)]
+pub struct ReferenceExpGroup {
+    pub max_level: u16,
+    pub exp: Vec<u64>,
+}
+
+impl ReferenceExpGroup {
+    /// EXP needed to advance from `level` to `level + 1`.
+    pub fn exp_to_next(&self, level: u16) -> Option<u64> {
+        self.exp.get((level as usize).checked_sub(1)?).copied()
+    }
+
+    /// Total EXP needed to climb from level 1 to `level`.
+    pub fn total_to_reach(&self, level: u16) -> Option<u64> {
+        let steps = (level as usize).checked_sub(1)?;
+        (steps <= self.exp.len()).then(|| self.exp[..steps].iter().sum())
+    }
+}
+
+#[derive(Debug, Deserialize)]
+pub struct ReferenceExpJob {
+    pub job_id: u16,
+    pub name: String,
+    pub base_group: String,
+    pub job_group: String,
+}
+
+#[derive(Debug, Deserialize)]
+pub struct ReferenceExpTables {
+    pub schema_version: u32,
+    pub mode: String,
+    pub base_groups: HashMap<String, ReferenceExpGroup>,
+    pub job_groups: HashMap<String, ReferenceExpGroup>,
+    pub jobs: Vec<ReferenceExpJob>,
+}
+
+/// An authored player term that leads to an existing Guide target.
+#[derive(Debug, Deserialize)]
+pub struct ReferenceAlias {
+    pub alias: String,
+    /// `status` (target is an `SC_` constant) or `job` (target is an exact job
+    /// name).
+    pub kind: String,
+    pub target: String,
+    pub basis: String,
+}
+
+#[derive(Debug, Deserialize)]
+struct VersionedAliasesFile {
+    schema_version: u32,
+    entries: Vec<ReferenceAlias>,
+}
+
+/// Seal Cascade campaign quest ids (GDD 9.5 quest row; `CAMPAIGN.md`).
+pub const CAMPAIGN_QUEST_IDS: std::ops::RangeInclusive<u32> = 20000..=20234;
+
+/// Campaign scripts live under this tree. Everything the Seal Cascade story
+/// declares there - hub NPCs, hidden set-piece NPCs, quest givers - is plot.
+pub const CAMPAIGN_SCRIPT_PREFIX: &str = "npc/custom/dm_campaign/";
+
+/// Whether a source path belongs to the campaign story rather than the
+/// server's general content.
+pub fn is_campaign_source_path(path: &str) -> bool {
+    path.starts_with(CAMPAIGN_SCRIPT_PREFIX)
+}
+
+/// Whether a typed query reaches `alias`: exactly, or - for queries of four
+/// letters or more - as a prefix, so "petrif" finds "petrification" while a
+/// two-letter abbreviation never matches by accident.
+pub fn alias_matches(alias: &str, query: &str) -> bool {
+    let query = query.trim().to_lowercase();
+    let alias = alias.to_lowercase();
+    alias == query || (query.chars().count() >= 4 && alias.starts_with(&query))
+}
+
 #[derive(Debug, Deserialize)]
 pub struct ReferenceStatus {
     pub id: u32,
     pub name: String,
+    /// A server status with no client icon (the classic ailments). Its name
+    /// is derived from the server constant, and its id sits above every icon
+    /// id.
+    #[serde(default)]
+    pub iconless: bool,
     #[serde(default)]
     pub statuses: Vec<ReferenceStatusMechanic>,
 }
@@ -791,12 +1223,17 @@ pub struct ReferenceQuestTarget {
 
 pub struct ReferenceData {
     pub source_revision: String,
+    /// Whether the server tree had uncommitted changes when this data was
+    /// exported. The loader requires every export to agree on it.
+    pub source_worktree_dirty: bool,
     pub mode: String,
     pub coverage_report: ReferenceCoverageReport,
+    pub pilot_skill_layer: Option<ReferencePilotSkillLayer>,
     pub monsters: Vec<ReferenceMonster>,
     pub items: Vec<ReferenceItem>,
     pub cards: Vec<ReferenceItem>,
     pub skills: Vec<ReferenceSkill>,
+    pub skill_formula_reviews: Vec<ReferenceSkillFormulaReview>,
     pub job_skill_trees: Vec<ReferenceJobSkillTree>,
     pub job_bonuses: Vec<ReferenceJobBonuses>,
     pub refinement: ReferenceRefinement,
@@ -804,10 +1241,16 @@ pub struct ReferenceData {
     pub statuses: Vec<ReferenceStatus>,
     pub quests: Vec<ReferenceQuest>,
     pub npcs: Vec<ReferenceNpc>,
-    pub crafting_recipes: Vec<ReferenceCraftingRecipe>,
+    pub crafting_entries: Vec<ReferenceCraftingEntry>,
     pub item_grants: Vec<ReferenceItemGrant>,
     pub item_consumptions: Vec<ReferenceItemConsumption>,
     pub item_exchanges: Vec<ReferenceItemExchange>,
+    pub npc_services: Vec<ReferenceNpcServiceReview>,
+    pub rumors: Vec<ReferenceRumor>,
+    pub aliases: Vec<ReferenceAlias>,
+    pub exp_tables: ReferenceExpTables,
+    pub stat_rules: ReferenceStatRules,
+    pub job_tables: ReferenceJobTablesFile,
     pub map_flags: Vec<ReferenceMapFlag>,
     pub runtime_map_flag_clues: Vec<ReferenceRuntimeMapFlagClue>,
     pub runtime_map_flag_reviews: Vec<ReferenceRuntimeMapFlagReview>,
@@ -818,6 +1261,8 @@ pub struct ReferenceData {
     job_skill_trees_by_id: HashMap<u16, usize>,
     job_bonuses_by_id: HashMap<u16, usize>,
     quests_by_id: HashMap<u32, usize>,
+    npc_services_by_id: HashMap<String, usize>,
+    rumors_by_id: HashMap<u32, usize>,
 }
 
 impl ReferenceData {
@@ -844,7 +1289,7 @@ impl ReferenceData {
             serde_json::from_str(SERVER_RULES_JSON).map_err(|error| format!("embedded server-rules.v1.json is invalid: {error}"))?;
         let npcs: VersionedFile<ReferenceNpc> =
             serde_json::from_str(NPCS_JSON).map_err(|error| format!("embedded npcs.v1.json is invalid: {error}"))?;
-        let crafting: VersionedFile<ReferenceCraftingRecipe> =
+        let crafting: VersionedFile<ReferenceCraftingEntry> =
             serde_json::from_str(CRAFTING_JSON).map_err(|error| format!("embedded crafting.v1.json is invalid: {error}"))?;
         let item_grants: VersionedItemGrantFile =
             serde_json::from_str(ITEM_GRANTS_JSON).map_err(|error| format!("embedded item-script-grants.v1.json is invalid: {error}"))?;
@@ -854,6 +1299,50 @@ impl ReferenceData {
             serde_json::from_str(COVERAGE_JSON).map_err(|error| format!("embedded encyclopedia-coverage.v1.json is invalid: {error}"))?;
         let item_exchanges: VersionedItemExchangeFile =
             serde_json::from_str(ITEM_EXCHANGES_JSON).map_err(|error| format!("embedded item-exchanges.v1.json is invalid: {error}"))?;
+        let formula_reviews: VersionedSkillFormulaReviewsFile = serde_json::from_str(SKILL_FORMULA_REVIEWS_JSON)
+            .map_err(|error| format!("embedded skill-formula-reviews.v1.json is invalid: {error}"))?;
+        let npc_services: VersionedNpcServiceReviewsFile = serde_json::from_str(NPC_SERVICE_REVIEWS_JSON)
+            .map_err(|error| format!("embedded npc-service-reviews.v1.json is invalid: {error}"))?;
+        let job_tables: ReferenceJobTablesFile =
+            serde_json::from_str(JOB_TABLES_JSON).map_err(|error| format!("embedded job-tables.v1.json is invalid: {error}"))?;
+        if job_tables.schema_version != 1 || job_tables.mode != "renewal" {
+            return Err("unsupported job-tables.v1.json schema or mode".to_owned());
+        }
+        for job in &job_tables.jobs {
+            let hp_ok = job_tables
+                .hp_tables
+                .get(&job.hp_table)
+                .is_some_and(|table| table.len() == job.max_level as usize);
+            let sp_ok = job_tables
+                .sp_tables
+                .get(&job.sp_table)
+                .is_some_and(|table| table.len() == job.max_level as usize);
+            if !hp_ok || !sp_ok {
+                return Err(format!(
+                    "job table for {} is missing or not {} levels long",
+                    job.name, job.max_level
+                ));
+            }
+        }
+        let stat_rules: ReferenceStatRules =
+            serde_json::from_str(STAT_RULES_JSON).map_err(|error| format!("embedded stat-rules.v1.json is invalid: {error}"))?;
+        if stat_rules.schema_version != 1 || stat_rules.mode != "renewal" || stat_rules.points_at_level.len() != 175 {
+            return Err("unsupported stat-rules.v1.json schema, mode or level count".to_owned());
+        }
+        let exp_tables: ReferenceExpTables =
+            serde_json::from_str(EXP_TABLES_JSON).map_err(|error| format!("embedded exp-tables.v1.json is invalid: {error}"))?;
+        if exp_tables.schema_version != 1 || exp_tables.mode != "renewal" {
+            return Err("unsupported exp-tables.v1.json schema or mode".to_owned());
+        }
+        for job in &exp_tables.jobs {
+            if !exp_tables.base_groups.contains_key(&job.base_group) || !exp_tables.job_groups.contains_key(&job.job_group) {
+                return Err(format!("EXP job {} names an unknown group", job.name));
+            }
+        }
+        let aliases: VersionedAliasesFile =
+            serde_json::from_str(SEARCH_ALIASES_JSON).map_err(|error| format!("embedded search-aliases.v1.json is invalid: {error}"))?;
+        let rumors: VersionedRumorsFile =
+            serde_json::from_str(RUMORS_JSON).map_err(|error| format!("embedded rumors.v1.json is invalid: {error}"))?;
 
         if bestiary.schema_version != 1
             || items.schema_version != 1
@@ -870,6 +1359,9 @@ impl ReferenceData {
             || map_flags.schema_version != 1
             || coverage_report.schema_version != 1
             || item_exchanges.schema_version != 1
+            || formula_reviews.schema_version != 1
+            || npc_services.schema_version != 1
+            || rumors.schema_version != 1
         {
             return Err("unsupported embedded reference-data schema version".to_owned());
         }
@@ -887,6 +1379,9 @@ impl ReferenceData {
             || map_flags.source_revision != quests.source_revision
             || coverage_report.source_revision != quests.source_revision
             || item_exchanges.source_revision != quests.source_revision
+            || formula_reviews.source_revision != quests.source_revision
+            || npc_services.source_revision != quests.source_revision
+            || rumors.source_revision != quests.source_revision
         {
             return Err("embedded reference files come from different Hercules revisions".to_owned());
         }
@@ -903,6 +1398,9 @@ impl ReferenceData {
             || item_grants.source_worktree_dirty != quests.source_worktree_dirty
             || map_flags.source_worktree_dirty != quests.source_worktree_dirty
             || item_exchanges.source_worktree_dirty != quests.source_worktree_dirty
+            || formula_reviews.source_worktree_dirty != quests.source_worktree_dirty
+            || npc_services.source_worktree_dirty != quests.source_worktree_dirty
+            || rumors.source_worktree_dirty != quests.source_worktree_dirty
         {
             return Err("embedded reference files disagree about source worktree status".to_owned());
         }
@@ -920,6 +1418,9 @@ impl ReferenceData {
             || map_flags.mode != quests.mode
             || coverage_report.mode != quests.mode
             || item_exchanges.mode != quests.mode
+            || formula_reviews.mode != quests.mode
+            || npc_services.mode != quests.mode
+            || rumors.mode != quests.mode
         {
             return Err("embedded reference files use different renewal modes".to_owned());
         }
@@ -957,16 +1458,79 @@ impl ReferenceData {
         {
             return Err("embedded refine reference rows are empty or invalid".to_owned());
         }
+        if let Some(armor) = &refinement.armor
+            && (armor.safe_level == 0
+                || armor.safe_level > refinement.max_useful_refine_level
+                || armor.material.trim().is_empty()
+                || armor.base_chance_percent_by_target_level.len() != refinement.max_useful_refine_level as usize
+                || (1..=refinement.max_useful_refine_level)
+                    .any(|level| !armor.base_chance_percent_by_target_level.contains_key(&level.to_string())))
+        {
+            return Err("embedded armor refine reference rows are invalid".to_owned());
+        }
         let mut statuses = status_reference.entries;
         statuses.sort_by_key(|status| status.id);
         if statuses.is_empty() || statuses.iter().any(|status| status.name.trim().is_empty()) {
             return Err("embedded status reference rows are empty or invalid".to_owned());
         }
-        if statuses.len() != 700 {
-            return Err(format!("expected 700 status icon rows, found {}", statuses.len()));
+        let icon_rows = statuses.iter().filter(|status| !status.iconless).count();
+        if icon_rows != 700 {
+            return Err(format!("expected 700 status icon rows, found {icon_rows}"));
+        }
+        if statuses
+            .iter()
+            .any(|status| status.iconless && (status.id < 100_000 || status.statuses.len() != 1))
+        {
+            return Err("an iconless status row must have an id of 100000 or more and exactly one server status".to_owned());
+        }
+        if aliases.schema_version != 1 {
+            return Err("unsupported search-aliases.v1.json schema".to_owned());
+        }
+        for alias in &aliases.entries {
+            let resolves =
+                match alias.kind.as_str() {
+                    "status" => statuses
+                        .iter()
+                        .any(|status| status.statuses.iter().any(|mechanic| mechanic.constant == alias.target)),
+                    // Job names live in the client's job table, not in reference
+                    // data; the guide tests resolve these.
+                    "job" => !alias.target.trim().is_empty(),
+                    "item" => {
+                        items.entries.iter().any(|item| {
+                            item.aegis_name.eq_ignore_ascii_case(&alias.target) || item.name.eq_ignore_ascii_case(&alias.target)
+                        }) || cards.entries.iter().any(|card| {
+                            card.aegis_name.eq_ignore_ascii_case(&alias.target) || card.name.eq_ignore_ascii_case(&alias.target)
+                        })
+                    }
+                    "monster" => bestiary.entries.iter().any(|monster| {
+                        monster.sprite_name.eq_ignore_ascii_case(&alias.target) || monster.name.eq_ignore_ascii_case(&alias.target)
+                    }),
+                    "skill" => skills.iter().any(|skill| {
+                        skill.name.eq_ignore_ascii_case(&alias.target) || skill.description.eq_ignore_ascii_case(&alias.target)
+                    }),
+                    // Maps live in navigation graph, checked in guide tests.
+                    "map" => !alias.target.trim().is_empty(),
+                    other => return Err(format!("search alias {:?} has unknown kind {other:?}", alias.alias)),
+                };
+            if alias.alias.trim().is_empty() || alias.basis.trim().is_empty() || !resolves {
+                return Err(format!(
+                    "search alias {:?} -> {:?} ({}) is empty, has no basis, or names a target that does not exist",
+                    alias.alias, alias.target, alias.kind
+                ));
+            }
         }
         let monster_ids: HashSet<u32> = monsters_by_id.keys().copied().collect();
         let item_ids: HashSet<u32> = items_by_id.keys().copied().collect();
+        for rumor in &rumors.entries {
+            if rumor.related_monster_id.is_some_and(|id| !monster_ids.contains(&id))
+                || rumor.related_item_id.is_some_and(|id| !item_ids.contains(&id))
+            {
+                return Err(format!(
+                    "rumor {} links a monster or item that is not in the Guide data (monster {:?}, item {:?})",
+                    rumor.id, rumor.related_monster_id, rumor.related_item_id
+                ));
+            }
+        }
 
         for quest in &quests.entries {
             if quest.npc_references.iter().any(|npc| {
@@ -1108,7 +1672,7 @@ impl ReferenceData {
                 || exchange.title.trim().is_empty()
                 || exchange.source.path.trim().is_empty()
                 || exchange.source.lines.is_empty()
-                || exchange.source.lines.iter().any(|line| *line == 0)
+                || exchange.source.lines.contains(&0)
                 || exchange.source.reviewed_lines != exchange.source.lines
             {
                 return Err(format!("reviewed item exchange {} has invalid provenance", exchange.id));
@@ -1137,14 +1701,44 @@ impl ReferenceData {
             }
         }
 
+        for review in &formula_reviews.entries {
+            for target in &review.skill_ids {
+                let Some(&skill_index) = skills_by_id.get(&(target.skill_id as u32)) else {
+                    return Err(format!(
+                        "skill formula review {} links missing skill {}",
+                        review.id, target.skill_id
+                    ));
+                };
+                if skills[skill_index].name != target.skill_name {
+                    return Err(format!("skill formula review {} skill name/ID mismatch", review.id));
+                }
+            }
+        }
+
+        let npc_services_by_id = npc_services
+            .entries
+            .iter()
+            .enumerate()
+            .map(|(index, service)| (service.id.clone(), index))
+            .collect::<HashMap<_, _>>();
+        let rumors_by_id = rumors
+            .entries
+            .iter()
+            .enumerate()
+            .map(|(index, rumor)| (rumor.id, index))
+            .collect::<HashMap<_, _>>();
+
         Ok(Self {
             source_revision: bestiary.source_revision,
+            source_worktree_dirty: bestiary.source_worktree_dirty,
             mode: bestiary.mode,
             coverage_report,
+            pilot_skill_layer: bestiary.pilot_skill_layer,
             monsters: bestiary.entries,
             items: items.entries,
             cards: cards.entries,
             skills,
+            skill_formula_reviews: formula_reviews.entries,
             job_skill_trees: job_skills.entries,
             job_bonuses: job_bonuses.entries,
             refinement,
@@ -1152,10 +1746,16 @@ impl ReferenceData {
             statuses,
             quests: quests.entries,
             npcs: npcs.entries,
-            crafting_recipes: crafting.entries,
+            crafting_entries: crafting.entries,
             item_grants: item_grants.entries,
             item_consumptions: item_grants.consumptions,
             item_exchanges: item_exchanges.entries,
+            npc_services: npc_services.entries,
+            rumors: rumors.entries,
+            aliases: aliases.entries,
+            exp_tables,
+            stat_rules,
+            job_tables,
             map_flags: map_flags.entries,
             runtime_map_flag_clues: map_flags.runtime_clues,
             runtime_map_flag_reviews: map_flags.runtime_reviews,
@@ -1166,20 +1766,141 @@ impl ReferenceData {
             job_skill_trees_by_id,
             job_bonuses_by_id,
             quests_by_id,
+            npc_services_by_id,
+            rumors_by_id,
         })
+    }
+
+    #[allow(dead_code)]
+    pub fn npc_service_by_id(&self, id: &str) -> Option<&ReferenceNpcServiceReview> {
+        self.npc_services_by_id.get(id).and_then(|&index| self.npc_services.get(index))
+    }
+
+    #[allow(dead_code)]
+    pub fn rumor_by_id(&self, id: u32) -> Option<&ReferenceRumor> {
+        self.rumors_by_id.get(&id).and_then(|&index| self.rumors.get(index))
+    }
+
+    #[allow(dead_code)]
+    pub fn npc_service_by_index(&self, index: usize) -> Option<&ReferenceNpcServiceReview> {
+        self.npc_services.get(index)
+    }
+
+    #[allow(dead_code)]
+    pub fn npc_service_index_by_id(&self, id: &str) -> Option<usize> {
+        self.npc_services_by_id.get(id).copied()
+    }
+
+    #[allow(dead_code)]
+    pub fn services_for_map(&self, map_name: &str) -> Vec<&ReferenceNpcServiceReview> {
+        self.npc_services
+            .iter()
+            .filter(|service| {
+                service.npc.as_ref().is_some_and(|n| n.map.eq_ignore_ascii_case(map_name))
+                    || service
+                        .route_table
+                        .as_ref()
+                        .is_some_and(|routes| routes.iter().any(|r| r.origin_map.eq_ignore_ascii_case(map_name)))
+            })
+            .collect()
+    }
+
+    #[allow(dead_code)]
+    pub fn rumors_for_map(&self, map_name: &str) -> Vec<&ReferenceRumor> {
+        self.rumors
+            .iter()
+            .filter(|rumor| rumor.map_name.as_deref().is_some_and(|m| m.eq_ignore_ascii_case(map_name)))
+            .collect()
+    }
+
+    #[allow(dead_code)]
+    pub fn rumors_for_monster(&self, monster_id: u32) -> Vec<&ReferenceRumor> {
+        self.rumors
+            .iter()
+            .filter(|rumor| rumor.related_monster_id == Some(monster_id))
+            .collect()
+    }
+
+    #[allow(dead_code)]
+    pub fn rumors_for_item(&self, item_id: u32) -> Vec<&ReferenceRumor> {
+        self.rumors.iter().filter(|rumor| rumor.related_item_id == Some(item_id)).collect()
+    }
+
+    pub fn search_services(&self, query: &str, limit: usize) -> Vec<&ReferenceNpcServiceReview> {
+        let query = query.to_lowercase();
+        self.npc_services
+            .iter()
+            .filter(|service| {
+                query.is_empty()
+                    || service.id.to_lowercase().contains(&query)
+                    || service.title.to_lowercase().contains(&query)
+                    || service.service_kind.to_lowercase().contains(&query)
+                    || service.conditions.iter().any(|c| c.to_lowercase().contains(&query))
+                    || service.npc.as_ref().is_some_and(|n| {
+                        n.map.to_lowercase().contains(&query)
+                            || n.internal_name.to_lowercase().contains(&query)
+                            || n.npc_id.to_string() == query
+                    })
+                    || service.route_table.as_ref().is_some_and(|routes| {
+                        routes.iter().any(|r| {
+                            r.origin_map.to_lowercase().contains(&query)
+                                || r.destinations.iter().any(|d| d.name.to_lowercase().contains(&query))
+                        })
+                    })
+            })
+            .take(limit)
+            .collect()
+    }
+
+    pub fn search_rumors(&self, query: &str, limit: usize) -> Vec<&ReferenceRumor> {
+        let query = query.to_lowercase();
+        self.rumors
+            .iter()
+            .filter(|rumor| {
+                query.is_empty()
+                    || rumor.id.to_string() == query
+                    || rumor.title.to_lowercase().contains(&query)
+                    || rumor.category.to_lowercase().contains(&query)
+                    || rumor.text.to_lowercase().contains(&query)
+                    || rumor.source_location.to_lowercase().contains(&query)
+                    || rumor.map_name.as_ref().is_some_and(|m| m.to_lowercase().contains(&query))
+                    || rumor.related_monster_id.is_some_and(|id| {
+                        id.to_string() == query
+                            || self
+                                .monster_by_id(id)
+                                .is_some_and(|m| m.name.to_lowercase().contains(&query) || m.sprite_name.to_lowercase().contains(&query))
+                    })
+                    || rumor.related_item_id.is_some_and(|id| {
+                        id.to_string() == query
+                            || self
+                                .item_by_id(id)
+                                .is_some_and(|i| i.name.to_lowercase().contains(&query) || i.aegis_name.to_lowercase().contains(&query))
+                    })
+            })
+            .take(limit)
+            .collect()
     }
 
     pub fn monster_by_id(&self, id: u32) -> Option<&ReferenceMonster> {
         self.monsters_by_id.get(&id).map(|&index| &self.monsters[index])
     }
 
-    /// Summarize only exported, static spawn directives for a map. The level is
-    /// weighted by directive count and is a guide, not a recommended-level
-    /// rule.
-    pub fn map_spawn_summary(&self, map_name: &str) -> Option<(u64, u16, usize)> {
-        type Aggregate = (u64, u64, usize);
-        static SUMMARIES: OnceLock<HashMap<String, (u64, u16, usize)>> = OnceLock::new();
-        let summaries = SUMMARIES.get_or_init(|| {
+    /// Return all monsters that drop a specified item or card (GDD §11.2 /
+    /// F26).
+    pub fn monsters_dropping_item(&self, item_id: u32) -> Vec<&ReferenceMonster> {
+        self.monsters
+            .iter()
+            .filter(|monster| monster.drops.iter().any(|drop| drop.item_id == item_id))
+            .collect()
+    }
+
+    /// Summarize exported static spawn directives for a map, including total
+    /// records, record-weighted mean level, minimum and maximum monster levels,
+    /// and distinct species count.
+    pub fn map_spawn_details(&self, map_name: &str) -> Option<MapSpawnDetails> {
+        type Aggregate = (u64, u64, u16, u16, usize);
+        static DETAILS: OnceLock<HashMap<String, MapSpawnDetails>> = OnceLock::new();
+        let summaries = DETAILS.get_or_init(|| {
             let mut aggregates: HashMap<String, Aggregate> = HashMap::new();
             for monster in &self.monsters {
                 for region in &monster.spawn_regions {
@@ -1188,21 +1909,37 @@ impl ReferenceData {
                     }
                     let map = region.map.strip_suffix(".gat").unwrap_or(&region.map).to_ascii_lowercase();
                     let records = u64::from(region.spawn_records);
-                    let aggregate = aggregates.entry(map).or_default();
+                    let aggregate = aggregates.entry(map).or_insert((0, 0, u16::MAX, 0, 0));
                     aggregate.0 += records;
                     aggregate.1 += u64::from(monster.level) * records;
-                    aggregate.2 += 1;
+                    aggregate.2 = aggregate.2.min(monster.level);
+                    aggregate.3 = aggregate.3.max(monster.level);
+                    aggregate.4 += 1;
                 }
             }
             aggregates
                 .into_iter()
-                .map(|(map, (records, weighted_levels, species))| {
-                    (map, (records, ((weighted_levels + records / 2) / records) as u16, species))
+                .map(|(map, (records, weighted_levels, min_level, max_level, species))| {
+                    (map, MapSpawnDetails {
+                        records,
+                        mean_level: ((weighted_levels + records / 2) / records) as u16,
+                        min_level,
+                        max_level,
+                        species,
+                    })
                 })
                 .collect()
         });
         let map_name = map_name.strip_suffix(".gat").unwrap_or(map_name).to_ascii_lowercase();
         summaries.get(&map_name).copied()
+    }
+
+    /// Summarize only exported, static spawn directives for a map. The level is
+    /// weighted by directive count and is a guide, not a recommended-level
+    /// rule.
+    pub fn map_spawn_summary(&self, map_name: &str) -> Option<(u64, u16, usize)> {
+        self.map_spawn_details(map_name)
+            .map(|details| (details.records, details.mean_level, details.species))
     }
 
     pub fn item_by_id(&self, id: u32) -> Option<&ReferenceItem> {
@@ -1215,6 +1952,12 @@ impl ReferenceData {
 
     pub fn skill_by_id(&self, id: u32) -> Option<&ReferenceSkill> {
         self.skills_by_id.get(&id).map(|&index| &self.skills[index])
+    }
+
+    pub fn skill_formula_review_for_skill(&self, skill_id: u16) -> Option<&ReferenceSkillFormulaReview> {
+        self.skill_formula_reviews
+            .iter()
+            .find(|review| review.skill_ids.iter().any(|target| target.skill_id == skill_id))
     }
 
     pub fn job_skill_tree_by_id(&self, id: u16) -> Option<&ReferenceJobSkillTree> {
@@ -1234,6 +1977,8 @@ impl ReferenceData {
         let mut matches: Vec<_> = self
             .quests
             .iter()
+            // Campaign story quests are not part of the open player Guide.
+            .filter(|quest| !quest.is_story())
             .filter(|quest| {
                 query.is_empty()
                     || quest.name.to_lowercase().contains(&query)
@@ -1258,6 +2003,9 @@ impl ReferenceData {
         let mut matches: Vec<_> = self
             .npcs
             .iter()
+            // Campaign story NPCs (hubs, hidden set pieces) are not part of the
+            // open player Guide.
+            .filter(|npc| !npc.is_story())
             .filter(|npc| {
                 query.is_empty()
                     || npc.id.to_string() == query
@@ -1276,6 +2024,7 @@ impl ReferenceData {
 
     pub fn search_skills(&self, query: &str, limit: usize) -> Vec<&ReferenceSkill> {
         let query = query.to_lowercase();
+        let alias_targets = self.alias_targets("skill", &query);
         let mut matches: Vec<_> = self
             .skills
             .iter()
@@ -1284,6 +2033,9 @@ impl ReferenceData {
                     || skill.name.to_lowercase().contains(&query)
                     || skill.description.to_lowercase().contains(&query)
                     || skill.id.to_string() == query
+                    || alias_targets
+                        .iter()
+                        .any(|target| skill.name.eq_ignore_ascii_case(target) || skill.description.eq_ignore_ascii_case(target))
             })
             .collect();
         matches.sort_by_key(|skill| (skill.description.to_lowercase(), skill.id));
@@ -1291,8 +2043,34 @@ impl ReferenceData {
         matches
     }
 
+    /// The stat cap and upper-class flag for a job, if the server defines it.
+    pub fn stat_job(&self, job_id: u16) -> Option<&ReferenceStatJob> {
+        self.stat_rules.jobs.iter().find(|job| job.job_id == job_id)
+    }
+
+    /// The base and job EXP groups a job advances on, if the server defines
+    /// them.
+    pub fn exp_groups_for_job(&self, job_id: u16) -> Option<(&ReferenceExpJob, &ReferenceExpGroup, &ReferenceExpGroup)> {
+        let job = self.exp_tables.jobs.iter().find(|job| job.job_id == job_id)?;
+        Some((
+            job,
+            self.exp_tables.base_groups.get(&job.base_group)?,
+            self.exp_tables.job_groups.get(&job.job_group)?,
+        ))
+    }
+
+    /// Targets of every alias of `kind` that `query` reaches.
+    pub fn alias_targets(&self, kind: &str, query: &str) -> Vec<&str> {
+        self.aliases
+            .iter()
+            .filter(|alias| alias.kind == kind && alias_matches(&alias.alias, query))
+            .map(|alias| alias.target.as_str())
+            .collect()
+    }
+
     pub fn search_statuses(&self, query: &str, limit: usize) -> Vec<&ReferenceStatus> {
         let query = query.to_lowercase();
+        let alias_targets = self.alias_targets("status", &query);
         let mut matches: Vec<_> = self
             .statuses
             .iter()
@@ -1301,7 +2079,8 @@ impl ReferenceData {
                     || status.name.to_lowercase().contains(&query)
                     || status.id.to_string() == query
                     || status.statuses.iter().any(|mechanic| {
-                        mechanic.constant.to_lowercase().contains(&query)
+                        alias_targets.contains(&mechanic.constant.as_str())
+                            || mechanic.constant.to_lowercase().contains(&query)
                             || mechanic.associated_skill.as_ref().is_some_and(|skill| {
                                 skill.name.to_lowercase().contains(&query) || skill.description.to_lowercase().contains(&query)
                             })
@@ -1311,13 +2090,16 @@ impl ReferenceData {
                     })
             })
             .collect();
-        matches.sort_by_key(|status| (status.name.to_lowercase(), status.id));
+        // Statuses the client shows an icon for rank first; iconless server
+        // statuses follow, so adding them never displaces an established result.
+        matches.sort_by_key(|status| (status.iconless, status.name.to_lowercase(), status.id));
         matches.truncate(limit);
         matches
     }
 
     pub fn search_monsters(&self, query: &str, limit: usize) -> Vec<&ReferenceMonster> {
         let query = query.to_lowercase();
+        let alias_targets = self.alias_targets("monster", &query);
         let mut matches: Vec<_> = self
             .monsters
             .iter()
@@ -1326,6 +2108,9 @@ impl ReferenceData {
                     || monster.name.to_lowercase().contains(&query)
                     || monster.jname.to_lowercase().contains(&query)
                     || monster.sprite_name.to_lowercase().contains(&query)
+                    || alias_targets
+                        .iter()
+                        .any(|target| monster.sprite_name.eq_ignore_ascii_case(target) || monster.name.eq_ignore_ascii_case(target))
             })
             .collect();
         matches.sort_by_key(|monster| (monster.level, monster.id));
@@ -1350,7 +2135,11 @@ impl ReferenceData {
     }
 
     fn item_matches_query(&self, item: &ReferenceItem, query: &str) -> bool {
+        let alias_targets = self.alias_targets("item", query);
         item.matches_lowercase_query(query)
+            || alias_targets
+                .iter()
+                .any(|target| item.aegis_name.eq_ignore_ascii_case(target) || item.name.eq_ignore_ascii_case(target))
             || item.drops_from.iter().any(|drop| {
                 self.monster_by_id(drop.monster_id).is_some_and(|monster| {
                     monster.name.to_lowercase().contains(query)
@@ -1455,7 +2244,8 @@ mod tests {
     fn versioned_reference_data_loads_and_reconciles_all_links() {
         let data = reference_data();
         assert_eq!(data.mode, "renewal");
-        assert_eq!(data.monsters.len(), 1759);
+        // 1,759 stock `re/mob_db.conf` records plus the `mob_db2.conf` elite.
+        assert_eq!(data.monsters.len(), 1760);
         assert_eq!(data.items.len(), 13183);
         assert_eq!(data.cards.len(), 1012);
         assert_eq!(data.job_skill_trees.len(), 128);
@@ -1491,6 +2281,7 @@ mod tests {
         );
         assert!(data.search_cards("4001", 10).iter().any(|card| card.id == 4001));
         assert!(data.search_cards("poring", 10).iter().any(|card| card.id == 4001));
+        assert!(data.monsters_dropping_item(4001).iter().any(|monster| monster.id == 1002));
         assert!(
             data.search_cards("scripted_not_translated", data.cards.len())
                 .iter()
@@ -1527,5 +2318,402 @@ mod tests {
                 .iter()
                 .any(|bonus| bonus.job_level == 4 && bonus.stat == "STR")
         );
+
+        assert_eq!(data.skill_formula_reviews.len(), 12);
+        let heal_review = data.skill_formula_review_for_skill(28).expect("Heal formula review");
+        assert_eq!(heal_review.id, "al_heal_renewal_formula");
+        assert!(heal_review.formula.contains("BaseLevel + INT"));
+        assert_eq!(heal_review.evidence_state, EvidenceState::Conditional);
+        assert!(data.skill_formula_review_for_skill(9999).is_none());
+
+        let firewall = data.skill_by_id(18).expect("Fire Wall skill");
+        assert_eq!(firewall.name, "MG_FIREWALL");
+        assert!(firewall.source.as_ref().is_some_and(|s| s.path == "db/re/skill_db.conf"));
+        assert!(
+            firewall
+                .prerequisites
+                .iter()
+                .any(|p| p.name == "MG_FIREBALL" && p.level == 5 && p.skill_id == Some(17))
+        );
+
+        assert_eq!(data.npc_services.len(), 14);
+        let kafra = data.npc_service_by_id("kafra_employee_core_services").expect("Kafra service");
+        assert_eq!(kafra.service_kind, "kafra_suite");
+        assert!(kafra.locations.as_ref().is_some_and(|l| !l.is_empty()));
+        assert!(data.search_services("repair", 10).iter().any(|s| s.service_kind.contains("repair")));
+
+        assert_eq!(data.rumors.len(), 8);
+        let byalan_rumor = data.rumor_by_id(1).expect("Byalan rumor");
+        assert_eq!(byalan_rumor.title, "Unusual Sea Creatures of Byalan");
+        assert_eq!(byalan_rumor.is_story_spoiler, false);
+        // Authored flavour: no server script delivers it, so it is not "verified".
+        assert_eq!(byalan_rumor.evidence_state, EvidenceState::NotReviewed);
+        assert!(data.search_rumors("ant jaws", 5).iter().any(|r| r.id == 2));
+    }
+    /// Ground truth: `max_hp` and `max_sp` that a live Hercules server computed
+    /// and saved for 18 characters of the local database (observed 2026-10-01),
+    /// as (class, base level, job level, base VIT, base INT, saved max HP,
+    /// saved max SP). The server's total VIT/INT adds the job-level stat
+    /// bonuses, so the test adds them from `job-bonuses.v1.json` too. The
+    /// characters carried gear with no HP/SP bonuses (every difference was 0).
+    ///
+    /// What this covers: own tables (Novice, Swordsman, Magician, Acolyte,
+    /// Priest, Knight HP, Rune Knight), `InheritHP`/`InheritSP` (Merchant,
+    /// Thief, Archer SP, Knight SP), full `Inherit` (Assassin Cross, Stalker),
+    /// the +25% upper-class step and a third class, all at or below level 99.
+    /// It does not cover baby (x70%), Super Novice, levels above 99, or
+    /// generated table tails.
+    const OBSERVED_CHARACTERS: &[(u16, usize, u16, i32, i32, u64, u64)] = &[
+        (0, 1, 1, 1, 1, 40, 11),
+        (0, 1, 3, 1, 1, 40, 11),
+        (0, 1, 1, 5, 1, 42, 11),
+        (0, 4, 7, 1, 1, 55, 14),
+        (0, 4, 7, 5, 1, 57, 14),
+        (1, 1, 1, 1, 1, 40, 12),
+        (1, 33, 28, 22, 1, 735, 76),
+        (1, 50, 39, 1, 1, 1226, 111),
+        (2, 27, 24, 20, 25, 342, 220),
+        (3, 27, 23, 5, 1, 383, 65),
+        (4, 36, 29, 22, 41, 591, 269),
+        (5, 8, 10, 10, 11, 98, 37),
+        (6, 36, 31, 15, 12, 644, 92),
+        (7, 99, 50, 0, 0, 8775, 307),
+        (8, 50, 1, 1, 1, 1259, 414),
+        (4013, 99, 70, 0, 0, 7697, 507),
+        (4018, 99, 70, 0, 0, 6159, 649),
+        (4054, 99, 60, 1, 1, 8667, 333),
+    ];
+
+    /// Second ground truth, for what the first set could not cover: characters
+    /// made on 2026-10-01 by the `status-ground-truth` provisioning scenario
+    /// and read back from the database after the server saved them, as
+    /// (class, base level, total VIT, total INT, saved max HP, saved max
+    /// SP). The totals are the server's own (base + bonus, from its status
+    /// packets), so no job bonus is added. Covers baby (x70%), Super
+    /// Novice, Super Baby, Expanded Super Novice at level 150, third
+    /// classes at level 175 (including the level-175 SP value the loader
+    /// regenerates), an upper third class, and Baby Kagerou at 161 where
+    /// the table collapses to 1 (the database holds the raw 0; the server's
+    /// own packet shows its clamp to 1).
+    const OBSERVED_HIGH_LEVEL_CHARACTERS: &[(u16, usize, i32, i32, u64, u64)] = &[
+        (4023, 99, 31, 21, 486, 91),
+        (23, 99, 31, 21, 3314, 131),
+        (4045, 99, 31, 21, 2320, 91),
+        (4190, 150, 31, 21, 6268, 181),
+        // INT is [21, 1] in the server's packet: a total of 22.
+        (4054, 175, 31, 22, 24235, 1177),
+        (4060, 175, 31, 22, 30376, 1335),
+        (4223, 161, 31, 21, 0, 0),
+        (4229, 151, 31, 21, 36, 9),
+    ];
+
+    /// Ground truth for ASPD, measured on 2026-10-01 by the `aspd-ground-truth`
+    /// provisioning scenario: the attack motion (ms) the server itself reported
+    /// for one character as (job, right-hand weapon type, left-hand weapon
+    /// type, shield worn, total AGI, total DEX, server attack motion). 72
+    /// measurements across three stat stages cover fist/knife, one- and
+    /// two-handed melee, shield, dual wield, katar, knuckle, book, rod,
+    /// bow, instrument and five gun types (DEX counts as dex^2 / 7 for the
+    /// ranged ones), and baby, upper and third-class inheritance. Not
+    /// covered: the class cap (a bare character cannot reach it), passive
+    /// ASPD skills, equipment and status modifiers, and whips (they need a
+    /// female Dancer). The first Knight row is "fist" in the scenario but
+    /// the character still wore its starting Knife.
+    const OBSERVED_ASPD: &[(u16, &str, Option<&str>, bool, i32, i32, u32)] = &[
+        (7, "Dagger", None, false, 1, 1, 530),
+        (7, "Sword", None, false, 1, 1, 490),
+        (7, "Sword", None, true, 1, 1, 540),
+        (7, "Axe", None, false, 1, 1, 540),
+        (7, "Mace", None, false, 1, 1, 490),
+        (7, "Spear", None, false, 1, 1, 590),
+        (7, "TwoHandSword", None, false, 1, 1, 560),
+        (7, "TwoHandAxe", None, false, 1, 1, 590),
+        (12, "Dagger", None, false, 2, 1, 460),
+        (12, "Dagger", Some("Dagger"), false, 2, 1, 560),
+        (12, "Katar", None, false, 2, 1, 460),
+        (11, "Bow", None, false, 1, 2, 520),
+        (19, "Instrument", None, false, 1, 2, 490),
+        (8, "Knuckle", None, false, 1, 1, 640),
+        (8, "Book", None, false, 1, 1, 480),
+        (9, "Rod", None, false, 1, 1, 570),
+        (24, "Revolver", None, false, 1, 2, 490),
+        (24, "Rifle", None, false, 1, 2, 590),
+        (24, "GatlingGun", None, false, 1, 2, 540),
+        (24, "Shotgun", None, false, 1, 2, 940),
+        (24, "GrenadeLauncher", None, false, 1, 2, 1040),
+        (4008, "Sword", None, false, 1, 1, 490),
+        (4054, "Sword", None, false, 1, 1, 560),
+        (4024, "Sword", None, false, 1, 1, 510),
+        (7, "Fist", None, false, 40, 30, 370),
+        (7, "Sword", None, false, 40, 30, 420),
+        (7, "Sword", None, true, 40, 30, 470),
+        (7, "Axe", None, false, 40, 30, 470),
+        (7, "Mace", None, false, 40, 30, 420),
+        (7, "Spear", None, false, 40, 30, 520),
+        (7, "TwoHandSword", None, false, 40, 30, 490),
+        (7, "TwoHandAxe", None, false, 40, 30, 520),
+        (12, "Dagger", None, false, 41, 30, 390),
+        (12, "Dagger", Some("Dagger"), false, 41, 30, 490),
+        (12, "Katar", None, false, 41, 30, 390),
+        (11, "Bow", None, false, 40, 31, 450),
+        (19, "Instrument", None, false, 40, 31, 420),
+        (8, "Knuckle", None, false, 40, 30, 570),
+        (8, "Book", None, false, 40, 30, 410),
+        (9, "Rod", None, false, 40, 30, 500),
+        (24, "Revolver", None, false, 40, 31, 420),
+        (24, "Rifle", None, false, 40, 31, 520),
+        (24, "GatlingGun", None, false, 40, 31, 470),
+        (24, "Shotgun", None, false, 40, 31, 870),
+        (24, "GrenadeLauncher", None, false, 40, 31, 970),
+        (4008, "Sword", None, false, 40, 30, 420),
+        (4054, "Sword", None, false, 40, 30, 490),
+        (4024, "Sword", None, false, 40, 30, 440),
+        (7, "Fist", None, false, 80, 80, 280),
+        (7, "Sword", None, false, 80, 80, 330),
+        (7, "Sword", None, true, 80, 80, 380),
+        (7, "Axe", None, false, 80, 80, 380),
+        (7, "Mace", None, false, 80, 80, 330),
+        (7, "Spear", None, false, 80, 80, 430),
+        (7, "TwoHandSword", None, false, 80, 80, 400),
+        (7, "TwoHandAxe", None, false, 80, 80, 430),
+        (12, "Dagger", None, false, 81, 80, 300),
+        (12, "Dagger", Some("Dagger"), false, 81, 80, 400),
+        (12, "Katar", None, false, 81, 80, 300),
+        (11, "Bow", None, false, 80, 81, 360),
+        (19, "Instrument", None, false, 80, 81, 330),
+        (8, "Knuckle", None, false, 80, 80, 480),
+        (8, "Book", None, false, 80, 80, 320),
+        (9, "Rod", None, false, 80, 80, 410),
+        (24, "Revolver", None, false, 80, 81, 330),
+        (24, "Rifle", None, false, 80, 81, 430),
+        (24, "GatlingGun", None, false, 80, 81, 380),
+        (24, "Shotgun", None, false, 80, 81, 780),
+        (24, "GrenadeLauncher", None, false, 80, 81, 880),
+        (4008, "Sword", None, false, 80, 80, 330),
+        (4054, "Sword", None, false, 80, 80, 400),
+        (4024, "Sword", None, false, 80, 80, 350),
+    ];
+
+    /// Ground truth for the rest of the ASPD pipeline, measured on 2026-10-01
+    /// and 2026-10-02 by the `aspd-modifiers-ground-truth*` and
+    /// `aspd-mount-ground-truth` provisioning scenarios, as (job, right
+    /// weapon type, left weapon type, shield worn, total AGI, total DEX,
+    /// [Advanced Book, Single Action, Plagiarism, Musical Lesson] levels,
+    /// status flat bonus, rate, percent, flat ms, server attack motion,
+    /// clamped by the class cap).
+    ///
+    /// Covers the four passive ASPD skills (and that they need their weapon),
+    /// equipment `bAspdRate` and flat `bAspd`, the potions (only the strongest
+    /// counts), Two-Hand Quicken, Increase AGI, Adrenaline Rush, a mounted
+    /// Knight at every Cavalier Mastery level (the rate multiplier), both class
+    /// caps (190 and 193, reached with the +10 Spoon), and a female Dancer's
+    /// whip. A Berserk Potion (+9, saved with the character for 30 minutes) was
+    /// still active during the later steps, so those rows carry it as status
+    /// flat bonus 9. Jewel Ring (a proc), and the shoes and hat (refine 12 or
+    /// more), correctly add nothing at +0.
+    const OBSERVED_ASPD_MODIFIERS: &[(u16, &str, Option<&str>, bool, i32, i32, [i32; 4], i32, i32, i32, i32, u32, bool)] = &[
+        (16, "Book", None, false, 80, 80, [0, 0, 0, 0], 0, 1000, 0, 0, 310, false),
+        (16, "Book", None, false, 80, 80, [10, 0, 0, 0], 0, 1000, 0, 0, 290, false),
+        (24, "Revolver", None, false, 80, 81, [0, 0, 0, 0], 0, 1000, 0, 0, 330, false),
+        (24, "Revolver", None, false, 80, 81, [0, 10, 0, 0], 0, 1000, 0, 0, 310, false),
+        (17, "Dagger", None, false, 81, 80, [0, 0, 0, 0], 0, 1000, 0, 0, 330, false),
+        (17, "Dagger", None, false, 81, 80, [0, 0, 10, 0], 0, 1000, 0, 0, 290, false),
+        (19, "Instrument", None, false, 80, 81, [0, 0, 0, 0], 0, 1000, 0, 0, 330, false),
+        (19, "Instrument", None, false, 80, 91, [0, 0, 0, 10], 0, 1000, 0, 0, 290, false),
+        (19, "Fist", None, false, 80, 91, [0, 0, 0, 10], 0, 1000, 0, 0, 270, false),
+        (19, "Fist", None, false, 80, 91, [0, 0, 0, 10], 0, 1000, 0, 0, 270, false),
+        (7, "Axe", None, false, 80, 80, [0, 0, 0, 0], 0, 1000, 5, 0, 370, false),
+        (12, "Katar", None, false, 81, 80, [0, 0, 0, 0], 0, 1000, 3, 0, 300, false),
+        (7, "TwoHandSword", None, false, 80, 80, [0, 0, 0, 0], 0, 1000, 8, 0, 380, false),
+        (
+            7,
+            "TwoHandSword",
+            None,
+            false,
+            80,
+            80,
+            [0, 0, 0, 0],
+            0,
+            1000,
+            0,
+            -20,
+            380,
+            false,
+        ),
+        (7, "TwoHandAxe", None, false, 80, 80, [0, 0, 0, 0], 0, 1000, -40, 0, 580, false),
+        (7, "Sword", None, true, 80, 80, [0, 0, 0, 0], 0, 1000, 0, -30, 350, false),
+        (7, "Sword", None, false, 80, 80, [0, 0, 0, 0], 0, 1000, 0, 0, 330, false),
+        (7, "Sword", None, false, 81, 81, [0, 0, 0, 0], 0, 1000, 0, 0, 330, false),
+        (7, "Sword", None, false, 80, 80, [0, 0, 0, 0], 4, 1000, 0, 0, 310, false),
+        (7, "Sword", None, false, 80, 80, [0, 0, 0, 0], 6, 1000, 0, 0, 300, false),
+        (7, "Sword", None, false, 80, 80, [0, 0, 0, 0], 9, 1000, 0, 0, 290, false),
+        (7, "TwoHandSword", None, false, 80, 80, [0, 0, 0, 0], 9, 1000, 0, 0, 360, false),
+        (
+            7,
+            "TwoHandSword",
+            None,
+            false,
+            80,
+            80,
+            [0, 0, 0, 0],
+            16,
+            1000,
+            10,
+            0,
+            310,
+            false,
+        ),
+        (8, "Fist", None, false, 80, 80, [0, 0, 0, 0], 9, 1000, 0, 0, 240, false),
+        (8, "Fist", None, false, 92, 80, [0, 0, 0, 0], 9, 1000, 10, 0, 210, false),
+        (10, "Axe", None, false, 80, 81, [0, 0, 0, 0], 9, 1000, 0, 0, 300, false),
+        (10, "Axe", None, false, 80, 81, [0, 0, 0, 0], 16, 1000, 10, 0, 250, false),
+        (4211, "Fist", None, false, 125, 126, [0, 0, 0, 0], 9, 1000, 0, 0, 130, false),
+        (4211, "Fist", None, true, 126, 127, [0, 0, 0, 0], 9, 1000, 0, -30, 120, false),
+        (4070, "Fist", None, false, 131, 130, [0, 0, 0, 0], 9, 1000, 0, 0, 90, false),
+        (4070, "Fist", None, true, 132, 131, [0, 0, 0, 0], 9, 1000, 0, -30, 110, false),
+        (4070, "Mace", None, false, 131, 130, [0, 0, 0, 0], 9, 1000, 0, -100, 70, true),
+        (4070, "Mace", None, true, 131, 130, [0, 0, 0, 0], 9, 1000, 0, -130, 70, true),
+        (4016, "Mace", None, false, 130, 130, [0, 0, 0, 0], 9, 1000, 0, -100, 100, true),
+        (20, "Whip", None, false, 1, 1, [0, 0, 0, 0], 0, 1000, 0, 0, 490, false),
+        (7, "Fist", None, false, 130, 130, [0, 0, 0, 0], 9, 1000, 0, 0, 110, false),
+        (7, "Fist", None, false, 130, 130, [0, 0, 0, 0], 9, 500, 0, 0, 1060, false),
+        (7, "Fist", None, false, 130, 130, [0, 0, 0, 0], 9, 600, 0, 0, 870, false),
+        (7, "Fist", None, false, 130, 130, [0, 0, 0, 0], 9, 700, 0, 0, 680, false),
+        (7, "Fist", None, false, 130, 130, [0, 0, 0, 0], 9, 800, 0, 0, 490, false),
+        (7, "Fist", None, false, 130, 130, [0, 0, 0, 0], 9, 900, 0, 0, 300, false),
+        (7, "Fist", None, false, 130, 130, [0, 0, 0, 0], 9, 1000, 0, 0, 110, false),
+        (7, "Fist", None, false, 130, 130, [0, 0, 0, 0], 9, 1000, 0, 0, 110, false),
+    ];
+
+    #[test]
+    fn aspd_pipeline_reproduces_skills_gear_statuses_mounts_and_the_class_cap() {
+        use crate::world::stat_formulas::{AspdInputs, attack_motion, class_aspd_base, passive_aspd_bonus};
+        const RANGED: [&str; 8] = [
+            "Bow",
+            "Instrument",
+            "Whip",
+            "Revolver",
+            "Rifle",
+            "GatlingGun",
+            "Shotgun",
+            "GrenadeLauncher",
+        ];
+        let tables = &reference_data().job_tables;
+        assert!(OBSERVED_ASPD_MODIFIERS.len() >= 43);
+        let mut clamped_rows = 0;
+        for &(job_id, right, left, shield, agi, dex, skills, status_flat, rate, percent, flat_ms, observed, clamped) in
+            OBSERVED_ASPD_MODIFIERS
+        {
+            let job = tables.job(job_id).expect("class table");
+            let value = |weapon: &str| job.base_aspd.get(weapon).copied().unwrap_or(0);
+            let inputs = AspdInputs {
+                agi,
+                dex,
+                class_base: class_aspd_base(value(right), left.map(value), if shield { value("Shield") } else { 0 }),
+                ranged: RANGED.contains(&right),
+                passive_bonus: passive_aspd_bonus(
+                    right == "Book",
+                    right == "Instrument",
+                    skills[0],
+                    skills[1],
+                    skills[2],
+                    skills[3],
+                ),
+                status_flat_bonus: status_flat,
+                rate,
+                percent,
+                flat_ms,
+                fixed_ms: 0,
+                max_aspd: job.max_aspd,
+            };
+            let context = format!(
+                "job {job_id} {right}/{left:?} shield {shield} AGI {agi} DEX {dex} skills {skills:?} flat {status_flat} rate {rate} pct \
+                 {percent} flat_ms {flat_ms}"
+            );
+            assert_eq!(attack_motion(&inputs), observed, "{context}");
+            if clamped {
+                // The cap, not the formula, set this motion: without it the
+                // motion would have been faster than the server allows.
+                let uncapped = attack_motion(&AspdInputs { max_aspd: 199, ..inputs });
+                assert!(
+                    uncapped < observed,
+                    "{context}: uncapped {uncapped} should be below the cap {observed}"
+                );
+                clamped_rows += 1;
+            }
+        }
+        assert_eq!(clamped_rows, 3, "both caps (190 and 193) must be exercised");
+    }
+
+    #[test]
+    fn aspd_formula_reproduces_the_attack_motion_a_live_server_reported() {
+        use crate::world::stat_formulas::{AspdInputs, attack_motion, class_aspd_base};
+        const RANGED: [&str; 8] = [
+            "Bow",
+            "Instrument",
+            "Whip",
+            "Revolver",
+            "Rifle",
+            "GatlingGun",
+            "Shotgun",
+            "GrenadeLauncher",
+        ];
+        let tables = &reference_data().job_tables;
+        assert!(OBSERVED_ASPD.len() >= 72);
+        for &(job_id, right, left, shield, agi, dex, observed) in OBSERVED_ASPD {
+            let job = tables.job(job_id).expect("class table");
+            let value = |weapon: &str| job.base_aspd.get(weapon).copied().unwrap_or(0);
+            let inputs = AspdInputs {
+                agi,
+                dex,
+                class_base: class_aspd_base(value(right), left.map(value), if shield { value("Shield") } else { 0 }),
+                ranged: RANGED.contains(&right),
+                max_aspd: job.max_aspd,
+                ..AspdInputs::default()
+            };
+            assert_eq!(
+                attack_motion(&inputs),
+                observed,
+                "job {job_id} {right}/{left:?} shield {shield} AGI {agi} DEX {dex}"
+            );
+        }
+    }
+
+    #[test]
+    fn class_tables_reproduce_baby_super_novice_and_high_level_characters() {
+        let data = reference_data();
+        for &(class, level, vit, int, saved_hp, saved_sp) in OBSERVED_HIGH_LEVEL_CHARACTERS {
+            let hp = data.job_tables.base_max_hp(class, level, vit).expect("class table");
+            let sp = data.job_tables.base_max_sp(class, level, int).expect("class table");
+            assert_eq!(hp, saved_hp, "max HP for class {class} level {level}");
+            assert_eq!(sp, saved_sp, "max SP for class {class} level {level}");
+        }
+    }
+
+    #[test]
+    fn class_tables_reproduce_the_hp_and_sp_a_live_server_saved() {
+        let data = reference_data();
+        assert!(OBSERVED_CHARACTERS.len() >= 18);
+        for &(class, level, job_level, vit, int, saved_hp, saved_sp) in OBSERVED_CHARACTERS {
+            let bonus = |stat: &str| {
+                data.job_bonuses_by_id(class).map_or(0, |bonuses| {
+                    bonuses
+                        .bonus_levels
+                        .iter()
+                        .filter(|bonus| bonus.stat == stat && bonus.job_level <= job_level)
+                        .count() as i32
+                })
+            };
+            let hp = data.job_tables.base_max_hp(class, level, vit + bonus("VIT")).expect("class table");
+            let sp = data.job_tables.base_max_sp(class, level, int + bonus("INT")).expect("class table");
+            assert_eq!(
+                hp, saved_hp,
+                "max HP for class {class} level {level} (job level {job_level}, VIT {vit})"
+            );
+            assert_eq!(
+                sp, saved_sp,
+                "max SP for class {class} level {level} (job level {job_level}, INT {int})"
+            );
+        }
     }
 }

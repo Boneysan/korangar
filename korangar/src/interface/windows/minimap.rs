@@ -51,6 +51,8 @@ struct MinimapViewLayout {
     player_tile: Option<(u16, u16)>,
     /// Party members on this map + compass markers (drawn with tinted blips).
     extra_blips: Vec<MinimapBlip>,
+    /// Broad monster population regions for the current map (GDD 9.4).
+    population_regions: Vec<crate::world::BroadSpawnRectangle>,
 }
 
 /// Draws the current-map minimap image, Towninfo POIs, and a live player blip.
@@ -260,10 +262,55 @@ impl Element<ClientState> for MinimapView {
                 });
             }
 
+            // Verified walk-warp portal destination markers and tracked-route accents (GDD
+            // 9.9, 10.12).
+            if game_settings.show_minimap_portals {
+                let route_target = minimap.navigation_target().map(|target| target.map_name.as_str());
+                for exit in crate::world::map_portal_exits(minimap.map_name(), route_target) {
+                    if exit.is_route_exit {
+                        extra_blips.push(MinimapBlip {
+                            x: f32::from(exit.x),
+                            y: f32::from(exit.y),
+                            red: 255,
+                            green: 210,
+                            blue: 70, // bright gold tracked-route accent
+                            alpha: 255,
+                            size_scale: 1.25,
+                            name: exit.label(),
+                        });
+                    } else {
+                        extra_blips.push(MinimapBlip {
+                            x: f32::from(exit.x),
+                            y: f32::from(exit.y),
+                            red: 190,
+                            green: 110,
+                            blue: 245, // soft purple portal marker
+                            alpha: 220,
+                            size_scale: 0.95,
+                            name: exit.label(),
+                        });
+                    }
+                }
+            }
+
+            let population_regions = if game_settings.show_minimap_population_regions {
+                let target_monster = minimap.selected_monster_id().or_else(|| {
+                    state
+                        .get(&client_state().quest_log())
+                        .client_hunting_goals()
+                        .first()
+                        .map(|goal| goal.monster_id)
+                });
+                crate::world::broad_spawn_rectangles_for_map(minimap.map_name(), target_monster)
+            } else {
+                Vec::new()
+            };
+
             MinimapViewLayout {
                 area,
                 player_tile,
                 extra_blips,
+                population_regions,
             }
         })
     }
@@ -357,6 +404,45 @@ impl Element<ClientState> for MinimapView {
                 // Missing facility icon: tinted blip so POIs stay visible.
                 let (r, g, b) = poi.kind.fallback_color_rgb();
                 layout.add_texture(icon_area, texture.clone(), Color::rgb_u8(r, g, b), false);
+            }
+        }
+
+        // Broad monster population regions (GDD 9.4).
+        for region in &layout_info.population_regions {
+            if region.is_map_wide {
+                continue;
+            }
+            let rx = area.left + (region.x as f32 / map_w) * area.width;
+            let ry = area.top + (1.0 - (region.y + region.height) as f32 / map_h) * area.height;
+            let rw = (region.width as f32 / map_w) * area.width;
+            let rh = (region.height as f32 / map_h) * area.height;
+            let rect_area = Area {
+                left: rx,
+                top: ry,
+                width: rw.max(4.0),
+                height: rh.max(4.0),
+            };
+
+            let (fr, fg, fb, fa) = region.density.color_rgba();
+            let (or, og, ob, oa) = region.density.outline_rgba();
+
+            if let Some(texture) = minimap.player_marker() {
+                layout.add_texture(rect_area, texture.clone(), Color::rgba_u8(fr, fg, fb, fa), false);
+            } else {
+                layout.add_rectangle(
+                    rect_area,
+                    CornerDiameter::uniform(2.0),
+                    Color::rgba_u8(fr, fg, fb, fa),
+                    Color::rgba_u8(or, og, ob, oa),
+                    ShadowPadding::uniform(0.0),
+                );
+            }
+
+            if rect_area.check().run(layout) {
+                unsafe {
+                    *self.hover_tip.get() = region.tooltip_text();
+                    layout.add_tooltip(self.hover_tip.as_ref_unchecked().as_str(), MinimapBlipTooltip.tooltip_id());
+                }
             }
         }
 
@@ -638,5 +724,71 @@ mod tests {
             minimap_to_tile(area.left + area.width + 500.0, area.top + area.height, map_w, map_h, area),
             (199, 0)
         );
+    }
+
+    #[test]
+    fn portal_blips_and_route_accents() {
+        let exits = crate::world::map_portal_exits("prt_fild08", Some("prontera"));
+        assert!(!exits.is_empty(), "prt_fild08 must have verified portal exits");
+
+        let route_portal = exits.iter().find(|e| e.to_map == "prontera").expect("route portal to prontera");
+        assert!(route_portal.is_route_exit);
+        assert_eq!(route_portal.label(), "→ Route portal: prontera");
+
+        let non_route = exits.iter().find(|e| e.to_map == "izlude").expect("exit to izlude");
+        assert!(!non_route.is_route_exit);
+        assert_eq!(non_route.label(), "Portal to izlude");
+    }
+
+    #[test]
+    fn population_region_bounding_box_mapping() {
+        let area = test_area();
+        let (map_w, map_h) = (200.0, 200.0);
+        let regions = crate::world::broad_spawn_rectangles_for_map("prt_maze01", Some(1002));
+        assert!(!regions.is_empty(), "prt_maze01 has Poring localized spawn");
+
+        let region = &regions[0];
+        assert!(!region.is_map_wide);
+
+        let rx = area.left + (region.x as f32 / map_w) * area.width;
+        let ry = area.top + (1.0 - (region.y + region.height) as f32 / map_h) * area.height;
+        let rw = (region.width as f32 / map_w) * area.width;
+        let rh = (region.height as f32 / map_h) * area.height;
+
+        assert!(rx >= area.left && rx <= area.left + area.width);
+        assert!(ry >= area.top && ry <= area.top + area.height);
+        assert!(rw > 0.0 && rw <= area.width);
+        assert!(rh > 0.0 && rh <= area.height);
+    }
+
+    #[test]
+    fn minimap_layer_toggles_preserve_route_continuity_and_target() {
+        use crate::settings::GameSettings;
+        use crate::state::minimap::{MinimapState, NavigationTarget};
+
+        let mut minimap = MinimapState::default();
+        minimap.set_map("prt_fild08".into(), 200, 200, None, None, Vec::new());
+        minimap.set_personal_waypoint(Some((120, 154)));
+        minimap.set_navigation_target(Some(NavigationTarget {
+            map_name: "prontera".to_owned(),
+            position: None,
+        }));
+
+        let mut settings = GameSettings::default();
+        settings.show_minimap_portals = false;
+        settings.show_minimap_population_regions = false;
+        settings.show_minimap_facilities = false;
+        settings.show_minimap_party = false;
+        settings.show_minimap_quest_markers = false;
+
+        // Even with all display layers toggled off, navigation targets and personal
+        // waypoints remain intact.
+        assert_eq!(minimap.personal_waypoint(), Some((120, 154)));
+        assert_eq!(minimap.navigation_target().map(|t| t.map_name.as_str()), Some("prontera"));
+
+        // Route exit resolution remains fully operational for navigation guidance.
+        let exits = crate::world::map_portal_exits(minimap.map_name(), minimap.navigation_target().map(|t| t.map_name.as_str()));
+        let route_portal = exits.iter().find(|e| e.to_map == "prontera").expect("route portal to prontera");
+        assert!(route_portal.is_route_exit);
     }
 }

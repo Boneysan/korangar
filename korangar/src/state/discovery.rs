@@ -10,11 +10,17 @@ use rust_state::RustState;
 
 const PREFIX: &str = "[KORANGAR-DISCOVERY:v1:";
 const MAP_PREFIX: &str = "[KORANGAR-MAP-DISCOVERY:v1:";
+const SERVICE_PREFIX: &str = "[KORANGAR-SERVICE-DISCOVERY:v1:";
+const RUMOR_PREFIX: &str = "[KORANGAR-RUMOR-DISCOVERY:v1:";
 const MAX_DISCOVERIES: usize = 20_000;
 const MAX_CHUNKS: usize = 1_000;
 const PAIRS_PER_CHUNK: usize = 20;
 const MAX_VISITED_MAPS: usize = 2_000;
 const MAPS_PER_CHUNK: usize = 8;
+const MAX_SERVICES: usize = 2_000;
+const SERVICES_PER_CHUNK: usize = 8;
+const MAX_RUMORS: usize = 2_000;
+const RUMORS_PER_CHUNK: usize = 8;
 
 #[derive(Clone, Debug, PartialEq, RustState)]
 pub(crate) struct MapSnapshotAssembly {
@@ -23,10 +29,35 @@ pub(crate) struct MapSnapshotAssembly {
     chunks: Vec<Option<Vec<String>>>,
 }
 
-#[derive(Clone, Copy, Debug, Eq, PartialEq, RustState)]
+#[derive(Clone, Debug, PartialEq, RustState)]
+pub(crate) struct ServiceSnapshotAssembly {
+    sequence: u32,
+    expected_entries: usize,
+    chunks: Vec<Option<Vec<String>>>,
+}
+
+#[derive(Clone, Debug, PartialEq, RustState)]
+pub(crate) struct RumorSnapshotAssembly {
+    sequence: u32,
+    expected_entries: usize,
+    chunks: Vec<Option<Vec<u32>>>,
+}
+
+#[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, RustState)]
 pub struct DiscoveryMilestone {
     pub monster_id: u16,
     pub milestone: u8,
+}
+
+/// A typed account-wide discovery entry (monster encounter, visited map,
+/// visited NPC service, or unlocked non-story rumor).
+#[allow(dead_code)]
+#[derive(Clone, Debug, Eq, PartialEq, Hash, RustState)]
+pub enum TypedDiscovery {
+    Monster { monster_id: u16, milestone: u8 },
+    Map { map_name: String },
+    Service { service_id: String },
+    Rumor { rumor_id: u32 },
 }
 
 #[derive(Clone, Debug, PartialEq, RustState)]
@@ -49,6 +80,12 @@ pub struct DiscoveryState {
     visited_maps: HashSet<String>,
     map_snapshot_complete: bool,
     map_snapshot: Option<MapSnapshotAssembly>,
+    visited_services: HashSet<String>,
+    service_snapshot_complete: bool,
+    service_snapshot: Option<ServiceSnapshotAssembly>,
+    unlocked_rumors: HashSet<u32>,
+    rumor_snapshot_complete: bool,
+    rumor_snapshot: Option<RumorSnapshotAssembly>,
 }
 
 impl DiscoveryState {
@@ -57,6 +94,12 @@ impl DiscoveryState {
     pub fn receive_server_line(&mut self, text: &str, expected_account_id: Option<u32>) -> bool {
         if let Some(body) = text.strip_prefix(MAP_PREFIX).and_then(|rest| rest.strip_suffix(']')) {
             return self.receive_map_body(body, expected_account_id);
+        }
+        if let Some(body) = text.strip_prefix(SERVICE_PREFIX).and_then(|rest| rest.strip_suffix(']')) {
+            return self.receive_service_body(body, expected_account_id);
+        }
+        if let Some(body) = text.strip_prefix(RUMOR_PREFIX).and_then(|rest| rest.strip_suffix(']')) {
+            return self.receive_rumor_body(body, expected_account_id);
         }
         let Some(body) = text.strip_prefix(PREFIX).and_then(|rest| rest.strip_suffix(']')) else {
             return false;
@@ -82,6 +125,7 @@ impl DiscoveryState {
         self.discoveries.get(&monster_id).copied()
     }
 
+    #[allow(dead_code)]
     pub fn discovered_count(&self) -> usize {
         self.discoveries.len()
     }
@@ -90,6 +134,7 @@ impl DiscoveryState {
         self.visited_maps.contains(&map_name.to_ascii_lowercase())
     }
 
+    #[allow(dead_code)]
     pub fn visited_map_count(&self) -> usize {
         self.visited_maps.len()
     }
@@ -102,6 +147,54 @@ impl DiscoveryState {
         self.snapshot_complete
     }
 
+    pub fn visited_service(&self, service_id: &str) -> bool {
+        self.visited_services.contains(&service_id.to_ascii_lowercase())
+    }
+
+    #[allow(dead_code)]
+    pub fn visited_service_count(&self) -> usize {
+        self.visited_services.len()
+    }
+
+    pub fn service_snapshot_complete(&self) -> bool {
+        self.service_snapshot_complete
+    }
+
+    pub fn unlocked_rumor(&self, rumor_id: u32) -> bool {
+        self.unlocked_rumors.contains(&rumor_id)
+    }
+
+    #[allow(dead_code)]
+    pub fn unlocked_rumor_count(&self) -> usize {
+        self.unlocked_rumors.len()
+    }
+
+    pub fn rumor_snapshot_complete(&self) -> bool {
+        self.rumor_snapshot_complete
+    }
+
+    #[allow(dead_code)]
+    pub fn typed_discoveries(&self) -> Vec<TypedDiscovery> {
+        let mut entries = Vec::new();
+        for (&monster_id, &milestone) in &self.discoveries {
+            entries.push(TypedDiscovery::Monster { monster_id, milestone });
+        }
+        for map_name in &self.visited_maps {
+            entries.push(TypedDiscovery::Map {
+                map_name: map_name.clone(),
+            });
+        }
+        for service_id in &self.visited_services {
+            entries.push(TypedDiscovery::Service {
+                service_id: service_id.clone(),
+            });
+        }
+        for &rumor_id in &self.unlocked_rumors {
+            entries.push(TypedDiscovery::Rumor { rumor_id });
+        }
+        entries
+    }
+
     /// Account changes invalidate the prior ledger and any in-flight snapshot.
     pub fn set_account_id(&mut self, account_id: u32) {
         if self.account_id != Some(account_id) {
@@ -112,6 +205,12 @@ impl DiscoveryState {
             self.visited_maps.clear();
             self.map_snapshot = None;
             self.map_snapshot_complete = false;
+            self.visited_services.clear();
+            self.service_snapshot = None;
+            self.service_snapshot_complete = false;
+            self.unlocked_rumors.clear();
+            self.rumor_snapshot = None;
+            self.rumor_snapshot_complete = false;
         }
     }
 
@@ -223,6 +322,238 @@ impl DiscoveryState {
                 self.visited_maps
                     .extend(names.into_iter().take(MAX_VISITED_MAPS - self.visited_maps.len()));
                 self.map_snapshot_complete = true;
+                true
+            }
+            _ => false,
+        }
+    }
+
+    fn receive_service_body(&mut self, body: &str, expected_account_id: Option<u32>) -> bool {
+        let Some(expected_account_id) = expected_account_id else {
+            return false;
+        };
+        if self.account_id != Some(expected_account_id) {
+            return false;
+        }
+        let fields = body.split(':').collect::<Vec<_>>();
+        let Some(kind) = fields.first().copied() else { return false };
+        let Some(account) = fields.get(1).and_then(|field| field.parse::<u32>().ok()) else {
+            return false;
+        };
+        let Some(sequence_or_service) = fields.get(2).copied() else {
+            return false;
+        };
+        if account != expected_account_id {
+            return false;
+        }
+        match kind {
+            "visited" => {
+                if fields.len() != 3 {
+                    return false;
+                }
+                let Some(service_id) = valid_service_id(sequence_or_service) else {
+                    return false;
+                };
+                if self.visited_services.len() < MAX_SERVICES || self.visited_services.contains(&service_id) {
+                    self.visited_services.insert(service_id);
+                }
+                true
+            }
+            "begin" => {
+                if fields.len() != 5 {
+                    return false;
+                }
+                let Some((entries, chunks)) = parse_two_usizes(fields[3], fields[4]) else {
+                    return false;
+                };
+                if entries > MAX_SERVICES || chunks > MAX_CHUNKS || chunks != entries.div_ceil(SERVICES_PER_CHUNK) {
+                    return false;
+                }
+                let Ok(sequence) = sequence_or_service.parse::<u32>() else {
+                    return false;
+                };
+                self.service_snapshot = Some(ServiceSnapshotAssembly {
+                    sequence,
+                    expected_entries: entries,
+                    chunks: vec![None; chunks],
+                });
+                true
+            }
+            "chunk" => {
+                if fields.len() != 5 {
+                    return false;
+                }
+                let (Some(index), payload) = (fields[3].parse::<usize>().ok(), fields[4]) else {
+                    return false;
+                };
+                let Ok(sequence) = sequence_or_service.parse::<u32>() else {
+                    return false;
+                };
+                let Some(snapshot) = self.service_snapshot.as_mut().filter(|snapshot| snapshot.sequence == sequence) else {
+                    return false;
+                };
+                let Some(slot) = snapshot.chunks.get_mut(index) else {
+                    self.service_snapshot = None;
+                    return false;
+                };
+                let Some(services) = parse_service_ids(payload) else {
+                    self.service_snapshot = None;
+                    return false;
+                };
+                if services.len() > SERVICES_PER_CHUNK {
+                    self.service_snapshot = None;
+                    return false;
+                }
+                match slot {
+                    Some(previous) if *previous == services => true,
+                    Some(_) => {
+                        self.service_snapshot = None;
+                        false
+                    }
+                    None => {
+                        *slot = Some(services);
+                        true
+                    }
+                }
+            }
+            "end" => {
+                if fields.len() != 3 {
+                    return false;
+                }
+                let Ok(sequence) = sequence_or_service.parse::<u32>() else {
+                    return false;
+                };
+                let Some(snapshot) = self.service_snapshot.take().filter(|snapshot| snapshot.sequence == sequence) else {
+                    return false;
+                };
+                let Some(chunks) = snapshot.chunks.into_iter().collect::<Option<Vec<_>>>() else {
+                    return false;
+                };
+                let services = chunks.into_iter().flatten().collect::<Vec<_>>();
+                if services.len() != snapshot.expected_entries || services.iter().collect::<HashSet<_>>().len() != snapshot.expected_entries
+                {
+                    return false;
+                }
+                self.visited_services
+                    .extend(services.into_iter().take(MAX_SERVICES - self.visited_services.len()));
+                self.service_snapshot_complete = true;
+                true
+            }
+            _ => false,
+        }
+    }
+
+    fn receive_rumor_body(&mut self, body: &str, expected_account_id: Option<u32>) -> bool {
+        let Some(expected_account_id) = expected_account_id else {
+            return false;
+        };
+        if self.account_id != Some(expected_account_id) {
+            return false;
+        }
+        let fields = body.split(':').collect::<Vec<_>>();
+        let Some(kind) = fields.first().copied() else { return false };
+        let Some(account) = fields.get(1).and_then(|field| field.parse::<u32>().ok()) else {
+            return false;
+        };
+        let Some(sequence_or_rumor) = fields.get(2).copied() else {
+            return false;
+        };
+        if account != expected_account_id {
+            return false;
+        }
+        match kind {
+            "unlocked" => {
+                if fields.len() != 3 {
+                    return false;
+                }
+                let Ok(rumor_id) = sequence_or_rumor.parse::<u32>() else {
+                    return false;
+                };
+                if rumor_id == 0 {
+                    return false;
+                }
+                if self.unlocked_rumors.len() < MAX_RUMORS || self.unlocked_rumors.contains(&rumor_id) {
+                    self.unlocked_rumors.insert(rumor_id);
+                }
+                true
+            }
+            "begin" => {
+                if fields.len() != 5 {
+                    return false;
+                }
+                let Some((entries, chunks)) = parse_two_usizes(fields[3], fields[4]) else {
+                    return false;
+                };
+                if entries > MAX_RUMORS || chunks > MAX_CHUNKS || chunks != entries.div_ceil(RUMORS_PER_CHUNK) {
+                    return false;
+                }
+                let Ok(sequence) = sequence_or_rumor.parse::<u32>() else {
+                    return false;
+                };
+                self.rumor_snapshot = Some(RumorSnapshotAssembly {
+                    sequence,
+                    expected_entries: entries,
+                    chunks: vec![None; chunks],
+                });
+                true
+            }
+            "chunk" => {
+                if fields.len() != 5 {
+                    return false;
+                }
+                let (Some(index), payload) = (fields[3].parse::<usize>().ok(), fields[4]) else {
+                    return false;
+                };
+                let Ok(sequence) = sequence_or_rumor.parse::<u32>() else {
+                    return false;
+                };
+                let Some(snapshot) = self.rumor_snapshot.as_mut().filter(|snapshot| snapshot.sequence == sequence) else {
+                    return false;
+                };
+                let Some(slot) = snapshot.chunks.get_mut(index) else {
+                    self.rumor_snapshot = None;
+                    return false;
+                };
+                let Some(rumors) = parse_rumor_ids(payload) else {
+                    self.rumor_snapshot = None;
+                    return false;
+                };
+                if rumors.len() > RUMORS_PER_CHUNK {
+                    self.rumor_snapshot = None;
+                    return false;
+                }
+                match slot {
+                    Some(previous) if *previous == rumors => true,
+                    Some(_) => {
+                        self.rumor_snapshot = None;
+                        false
+                    }
+                    None => {
+                        *slot = Some(rumors);
+                        true
+                    }
+                }
+            }
+            "end" => {
+                if fields.len() != 3 {
+                    return false;
+                }
+                let Ok(sequence) = sequence_or_rumor.parse::<u32>() else {
+                    return false;
+                };
+                let Some(snapshot) = self.rumor_snapshot.take().filter(|snapshot| snapshot.sequence == sequence) else {
+                    return false;
+                };
+                let Some(chunks) = snapshot.chunks.into_iter().collect::<Option<Vec<_>>>() else {
+                    return false;
+                };
+                let rumors = chunks.into_iter().flatten().collect::<Vec<_>>();
+                if rumors.len() != snapshot.expected_entries || rumors.iter().collect::<HashSet<_>>().len() != snapshot.expected_entries {
+                    return false;
+                }
+                self.unlocked_rumors
+                    .extend(rumors.into_iter().take(MAX_RUMORS - self.unlocked_rumors.len()));
+                self.rumor_snapshot_complete = true;
                 true
             }
             _ => false,
@@ -370,7 +701,7 @@ fn parse_pairs(payload: &str) -> Option<Vec<DiscoveryMilestone>> {
     }
     let mut entries = Vec::new();
     for pair in payload.split(',') {
-        let Some((id, milestone)) = pair.split_once('=') else { return None };
+        let (id, milestone) = pair.split_once('=')?;
         entries.push(parse_pair(id, milestone)?);
     }
     Some(entries)
@@ -410,6 +741,28 @@ fn valid_map_name(map_name: &str) -> Option<String> {
                 .all(|byte| byte.is_ascii_alphanumeric() || matches!(byte, b'_' | b'@'))
         })
         .map(str::to_ascii_lowercase)
+}
+
+fn valid_service_id(id: &str) -> Option<String> {
+    (1..=64)
+        .contains(&id.len())
+        .then_some(id)
+        .filter(|id| id.bytes().all(|byte| byte.is_ascii_alphanumeric() || matches!(byte, b'_' | b'-')))
+        .map(str::to_ascii_lowercase)
+}
+
+fn parse_service_ids(payload: &str) -> Option<Vec<String>> {
+    if payload.is_empty() {
+        return None;
+    }
+    payload.split(',').map(valid_service_id).collect()
+}
+
+fn parse_rumor_ids(payload: &str) -> Option<Vec<u32>> {
+    if payload.is_empty() {
+        return None;
+    }
+    payload.split(',').map(|s| s.parse::<u32>().ok().filter(|&id| id > 0)).collect()
 }
 
 #[cfg(test)]
@@ -520,5 +873,95 @@ mod tests {
         assert!(state.receive_server_line("[KORANGAR-MAP-DISCOVERY:v1:chunk:42:9:0:prontera]", Some(ACCOUNT_ID)));
         assert!(!state.receive_server_line("[KORANGAR-MAP-DISCOVERY:v1:end:42:9]", Some(ACCOUNT_ID)));
         assert!(!state.visited_map("prontera"));
+    }
+
+    #[test]
+    fn service_visit_snapshot_is_account_scoped_and_merges_deltas() {
+        let mut state = DiscoveryState::default();
+        state.set_account_id(ACCOUNT_ID);
+        assert!(state.receive_server_line(
+            "[KORANGAR-SERVICE-DISCOVERY:v1:visited:42:kafra_employee_core_services]",
+            Some(ACCOUNT_ID)
+        ));
+        assert!(state.visited_service("kafra_employee_core_services"));
+        assert!(state.receive_server_line("[KORANGAR-SERVICE-DISCOVERY:v1:begin:42:15:2:1]", Some(ACCOUNT_ID)));
+        assert!(state.receive_server_line(
+            "[KORANGAR-SERVICE-DISCOVERY:v1:chunk:42:15:0:airship_expert_repairman,repair_man_izlude_academy]",
+            Some(ACCOUNT_ID)
+        ));
+        assert!(state.receive_server_line(
+            "[KORANGAR-SERVICE-DISCOVERY:v1:visited:42:deviruchi_divorce_niflheim]",
+            Some(ACCOUNT_ID)
+        ));
+        assert!(state.receive_server_line("[KORANGAR-SERVICE-DISCOVERY:v1:end:42:15]", Some(ACCOUNT_ID)));
+        assert!(state.service_snapshot_complete());
+        assert_eq!(state.visited_service_count(), 4);
+        assert!(state.visited_service("AIRSHIP_EXPERT_REPAIRMAN"));
+        assert!(state.visited_service("deviruchi_divorce_niflheim"));
+        assert!(!state.visited_service("nonexistent_service"));
+
+        // Old account lines rejected
+        assert!(!state.receive_server_line("[KORANGAR-SERVICE-DISCOVERY:v1:visited:43:some_service]", Some(ACCOUNT_ID)));
+
+        // Account switch clears service discovery
+        state.set_account_id(43);
+        assert_eq!(state.visited_service_count(), 0);
+        assert!(!state.service_snapshot_complete());
+    }
+
+    #[test]
+    fn rumor_unlock_snapshot_is_account_scoped_and_merges_deltas() {
+        let mut state = DiscoveryState::default();
+        state.set_account_id(ACCOUNT_ID);
+        assert!(state.receive_server_line("[KORANGAR-RUMOR-DISCOVERY:v1:unlocked:42:1]", Some(ACCOUNT_ID)));
+        assert!(state.unlocked_rumor(1));
+        assert!(state.receive_server_line("[KORANGAR-RUMOR-DISCOVERY:v1:begin:42:20:2:1]", Some(ACCOUNT_ID)));
+        assert!(state.receive_server_line("[KORANGAR-RUMOR-DISCOVERY:v1:chunk:42:20:0:2,3]", Some(ACCOUNT_ID)));
+        assert!(state.receive_server_line("[KORANGAR-RUMOR-DISCOVERY:v1:unlocked:42:4]", Some(ACCOUNT_ID)));
+        assert!(state.receive_server_line("[KORANGAR-RUMOR-DISCOVERY:v1:end:42:20]", Some(ACCOUNT_ID)));
+        assert!(state.rumor_snapshot_complete());
+        assert_eq!(state.unlocked_rumor_count(), 4);
+        assert!(state.unlocked_rumor(1));
+        assert!(state.unlocked_rumor(2));
+        assert!(state.unlocked_rumor(3));
+        assert!(state.unlocked_rumor(4));
+        assert!(!state.unlocked_rumor(5));
+
+        // Invalid or malformed lines
+        assert!(!state.receive_server_line("[KORANGAR-RUMOR-DISCOVERY:v1:unlocked:42:0]", Some(ACCOUNT_ID)));
+        assert!(!state.receive_server_line("[KORANGAR-RUMOR-DISCOVERY:v1:unlocked:42:abc]", Some(ACCOUNT_ID)));
+
+        // Account switch clears rumor discovery
+        state.set_account_id(43);
+        assert_eq!(state.unlocked_rumor_count(), 0);
+        assert!(!state.rumor_snapshot_complete());
+    }
+
+    #[test]
+    fn typed_discoveries_aggregates_all_account_discoveries() {
+        use super::TypedDiscovery;
+        let mut state = DiscoveryState::default();
+        state.set_account_id(ACCOUNT_ID);
+        assert!(state.receive_server_line("[KORANGAR-DISCOVERY:v1:delta:42:1002:1]", Some(ACCOUNT_ID)));
+        assert!(state.receive_server_line("[KORANGAR-MAP-DISCOVERY:v1:visited:42:prontera]", Some(ACCOUNT_ID)));
+        assert!(state.receive_server_line(
+            "[KORANGAR-SERVICE-DISCOVERY:v1:visited:42:kafra_employee_core_services]",
+            Some(ACCOUNT_ID)
+        ));
+        assert!(state.receive_server_line("[KORANGAR-RUMOR-DISCOVERY:v1:unlocked:42:1]", Some(ACCOUNT_ID)));
+
+        let typed = state.typed_discoveries();
+        assert_eq!(typed.len(), 4);
+        assert!(typed.contains(&TypedDiscovery::Monster {
+            monster_id: 1002,
+            milestone: 1
+        }));
+        assert!(typed.contains(&TypedDiscovery::Map {
+            map_name: "prontera".to_owned()
+        }));
+        assert!(typed.contains(&TypedDiscovery::Service {
+            service_id: "kafra_employee_core_services".to_owned()
+        }));
+        assert!(typed.contains(&TypedDiscovery::Rumor { rumor_id: 1 }));
     }
 }

@@ -23,6 +23,8 @@ STATUS_CONSTANT = re.compile(r"^\s*(SC_[A-Z0-9_]+):\s*(-?\d+)\s*,?\s*$")
 ICON_CONSTANT = re.compile(r"^\s*(SI_[A-Z0-9_]+):\s*(-?\d+)\s*,?\s*$")
 C_STATUS_CALL = re.compile(r"\bsc_start4?\s*\(")
 STATUS_NAME = re.compile(r"SC_[A-Z0-9_]+")
+# Above every client icon id, so a guide link `@guide:status:<id>` is unambiguous.
+ICONLESS_ID_BASE = 100_000
 
 
 def parse_records(text: str) -> dict[str, dict[str, Any]]:
@@ -185,6 +187,42 @@ def collect_status_call_sites() -> dict[str, list[dict[str, object]]]:
     return {status: sorted(rows, key=lambda row: (str(row["path"]), int(row["line"]))) for status, rows in references.items()}
 
 
+def status_record_for(
+    constant: str,
+    config: dict[str, Any],
+    sc_ids: dict[str, int],
+    skills_by_name: dict[str, dict[str, Any]],
+    skills_by_status: dict[str, list[dict[str, object]]],
+    code_call_sites: dict[str, list[dict[str, object]]],
+) -> dict[str, object]:
+    icon_constant = config.get("Icon")
+    flags = config.get("Flags") or {}
+    calc_flags = config.get("CalcFlags") or {}
+    skill_name = config.get("Skill")
+    skill = skills_by_name.get(skill_name) if isinstance(skill_name, str) else None
+    status_record: dict[str, object] = {
+        "constant": constant,
+        "id": sc_ids[constant],
+        "flags": sorted(name for name, enabled in flags.items() if enabled is True),
+        "calculation_flags": sorted(name for name, enabled in calc_flags.items() if enabled is True),
+        "source": {"path": "db/re/sc_config.conf", "record": constant},
+    }
+    if isinstance(icon_constant, str):
+        status_record["icon_constant"] = icon_constant
+    if skill:
+        status_record["associated_skill"] = {
+            "id": int(skill["Id"]),
+            "name": str(skill["Name"]),
+            "description": str(skill.get("Description", "")),
+            "source": {"path": "db/re/skill_db.conf", "record": str(skill["Name"])},
+        }
+    if constant in skills_by_status:
+        status_record["status_change_skills"] = skills_by_status[constant]
+    if constant in code_call_sites:
+        status_record["code_call_sites"] = code_call_sites[constant]
+    return status_record
+
+
 def build() -> dict[str, object]:
     icon_names: dict[str, str] = json.loads(STATUS_NAMES.read_text(encoding="utf-8"))
     sc_ids, si_ids = parse_constants(CONSTANTS.read_text(encoding="utf-8", errors="replace"))
@@ -203,30 +241,7 @@ def build() -> dict[str, object]:
         if icon_id is None or str(icon_id) not in icon_names:
             continue
 
-        flags = config.get("Flags") or {}
-        calc_flags = config.get("CalcFlags") or {}
-        skill_name = config.get("Skill")
-        skill = skills_by_name.get(skill_name) if isinstance(skill_name, str) else None
-        status_record: dict[str, object] = {
-            "constant": constant,
-            "id": sc_ids[constant],
-            "flags": sorted(name for name, enabled in flags.items() if enabled is True),
-            "calculation_flags": sorted(name for name, enabled in calc_flags.items() if enabled is True),
-            "source": {"path": "db/re/sc_config.conf", "record": constant},
-        }
-        if isinstance(icon_constant, str):
-            status_record["icon_constant"] = icon_constant
-        if skill:
-            status_record["associated_skill"] = {
-                "id": int(skill["Id"]),
-                "name": str(skill["Name"]),
-                "description": str(skill.get("Description", "")),
-                "source": {"path": "db/re/skill_db.conf", "record": str(skill["Name"])},
-            }
-        if constant in skills_by_status:
-            status_record["status_change_skills"] = skills_by_status[constant]
-        if constant in code_call_sites:
-            status_record["code_call_sites"] = code_call_sites[constant]
+        status_record = status_record_for(constant, config, sc_ids, skills_by_name, skills_by_status, code_call_sites)
         status_by_icon[icon_id].append(status_record)
 
     entries = [
@@ -238,6 +253,33 @@ def build() -> dict[str, object]:
         }
         for icon_id, name in sorted(icon_names.items(), key=lambda row: int(row[0]))
     ]
+    # Server statuses with no client icon (the classic ailments: Stone, Freeze,
+    # Stun, Sleep, Curse, Confusion, Blind ...) have no icon-name row, so the
+    # loop above never reached them. They are included only with evidence a
+    # player can act on (a skill that applies the status, an associated skill,
+    # or a literal source call site), and are labelled from the server
+    # constant because no client name exists. IDs sit above every icon id.
+    iconless_entries = []
+    for constant, config in sorted(status_config.items()):
+        if constant not in sc_ids:
+            continue
+        icon_constant = config.get("Icon")
+        icon_id = si_ids.get(icon_constant) if isinstance(icon_constant, str) else None
+        if icon_id is not None and str(icon_id) in icon_names:
+            continue
+        record = status_record_for(constant, config, sc_ids, skills_by_name, skills_by_status, code_call_sites)
+        if not (record.get("status_change_skills") or record.get("associated_skill") or record.get("code_call_sites")):
+            continue
+        iconless_entries.append(
+            {
+                "id": ICONLESS_ID_BASE + sc_ids[constant],
+                "name": constant.removeprefix("SC_").replace("_", " ").title(),
+                "iconless": True,
+                "name_source": "server constant; the client has no icon name for this status",
+                "statuses": [record],
+                "source": {"path": "db/re/sc_config.conf", "record": constant},
+            }
+        )
     if len(entries) != len(icon_names) or not any(entry["statuses"] for entry in entries):
         raise ValueError("status export did not reconcile the icon-name index and sc_config records")
 
@@ -248,7 +290,7 @@ def build() -> dict[str, object]:
         "source_worktree_dirty": dirty,
         "mode": "renewal",
         "source": ["db/constants.conf", "db/re/sc_config.conf", "db/re/skill_db.conf", "src/map/*.c sc_start/sc_start4 literal call sites"],
-        "entries": entries,
+        "entries": entries + iconless_entries,
     }
 
 
@@ -265,12 +307,15 @@ def main() -> int:
         if current != payload:
             print(f"stale: {OUTPUT.relative_to(ROOT)} — re-run {Path(__file__).name}", file=sys.stderr)
             return 1
-        print(f"up to date: {len(json.loads(payload)['entries'])} status icons")
+        entries = json.loads(payload)["entries"]
+        print(f"up to date: {sum(not e.get('iconless') for e in entries)} status icons, {sum(bool(e.get('iconless')) for e in entries)} iconless server statuses")
         return 0
     OUTPUT.write_text(payload, encoding="utf-8")
     data = json.loads(payload)
-    linked = sum(bool(entry["statuses"]) for entry in data["entries"])
-    print(f"wrote {OUTPUT.relative_to(ROOT)} ({linked}/{len(data['entries'])} icons linked to server statuses)")
+    icon_entries = [entry for entry in data["entries"] if not entry.get("iconless")]
+    linked = sum(bool(entry["statuses"]) for entry in icon_entries)
+    iconless = len(data["entries"]) - len(icon_entries)
+    print(f"wrote {OUTPUT.relative_to(ROOT)} ({linked}/{len(icon_entries)} icons linked to server statuses; {iconless} iconless server statuses)")
     return 0
 
 

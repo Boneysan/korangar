@@ -18,6 +18,9 @@ VERSIONED = {
     "items": ROOT / "docs" / "items.v1.json",
     "cards": ROOT / "docs" / "cards.v1.json",
     "job_skills": ROOT / "docs" / "job-skills.v1.json",
+    "exp_tables": ROOT / "docs" / "exp-tables.v1.json",
+    "stat_rules": ROOT / "docs" / "stat-rules.v1.json",
+    "job_tables": ROOT / "docs" / "job-tables.v1.json",
     "job_bonuses": ROOT / "docs" / "job-bonuses.v1.json",
     "statuses": ROOT / "docs" / "status-effects.v1.json",
     "quests": ROOT / "docs" / "quests.v1.json",
@@ -33,6 +36,8 @@ VERSIONED = {
     "boss_behavior": ROOT / "docs" / "boss-behavior.v1.json",
     "skill_formula_reviews": ROOT / "docs" / "skill-formula-reviews.v1.json",
     "scripted_spawn_reviews": ROOT / "docs" / "scripted-spawn-reviews.v1.json",
+    "dispositions": ROOT / "docs" / "encyclopedia-dispositions.v1.json",
+    "rumors": ROOT / "docs" / "rumors.v1.json",
 }
 
 class EvidenceState(str, Enum):
@@ -87,7 +92,11 @@ def build_report() -> dict:
     flags = entries(data["map_flags"])
     runtime_flags = data["map_flags"].get("runtime_clues", [])
     runtime_flag_reviews = data["map_flags"].get("runtime_reviews", [])
-    statuses = entries(data["statuses"])
+    all_status_entries = entries(data["statuses"])
+    # Icon rows and iconless server statuses are different populations: the
+    # icon ratio below must not be diluted by rows that never had an icon.
+    statuses = [entry for entry in all_status_entries if not entry.get("iconless")]
+    iconless_statuses = [entry for entry in all_status_entries if entry.get("iconless")]
     grants = data["item_grants"].get("entries", [])
     consumptions = data["item_grants"].get("consumptions", [])
     recipes = entries(data["crafting"])
@@ -95,6 +104,17 @@ def build_report() -> dict:
     status_icons = read_json(ROOT / "docs" / "status_effects.json")
     job_skills = entries(data["job_skills"])
     job_bonuses = entries(data["job_bonuses"])
+    exp_tables = data["exp_tables"]
+    guide_job_names = [
+        line for line in (ROOT / "korangar/src/world/library/hercules_job_names.tsv").read_text(encoding="utf-8").splitlines()
+        if line.strip() and not line.startswith("#")
+    ]
+    guide_job_ids = {int(line.split("\t")[0]) for line in guide_job_names}
+    exp_job_ids = {job["job_id"] for job in exp_tables["jobs"]}
+    stat_rules = data["stat_rules"]
+    stat_job_ids = {job["job_id"] for job in stat_rules["jobs"]}
+    job_tables = data["job_tables"]
+    class_table_job_ids = {job["job_id"] for job in job_tables["jobs"]}
     rules = entries(data["server_rules"])
     refine = data["refine"]
     npc_service_clues = entries(data["npc_service_clues"])
@@ -102,6 +122,7 @@ def build_report() -> dict:
     boss_behaviors = entries(data["boss_behavior"])
     skill_formula_reviews = entries(data["skill_formula_reviews"])
     scripted_spawn_reviews = entries(data["scripted_spawn_reviews"])
+    rumors = entries(data["rumors"])
 
     monster_spawn_rows = [entry for entry in monsters if entry.get("spawn_regions")]
     monster_script_rows = [entry for entry in monsters if entry.get("scripted_spawn_references")]
@@ -111,7 +132,7 @@ def build_report() -> dict:
         for entry in [*items, *cards]
         for combo in entry.get("combos", [])
     }
-    all_status_mechanics = [status for entry in statuses for status in entry.get("statuses", [])]
+    all_status_mechanics = [status for entry in all_status_entries for status in entry.get("statuses", [])]
     linked_status_icon_rows = sum(bool(entry.get("statuses")) for entry in statuses)
     quest_npc_relations = [npc for quest in quests for npc in quest.get("npc_references", [])]
     quest_reward_candidates = [candidate for quest in quests for candidate in quest.get("item_reward_candidates", [])]
@@ -176,12 +197,18 @@ def build_report() -> dict:
             "skill_records": len(skill_data) if isinstance(skill_data, list) else 0,
             "job_skill_trees": len(job_skills),
             "job_bonus_schedules": len(job_bonuses),
+            "job_exp_tables": dimension(len(guide_job_ids & exp_job_ids), len(guide_job_ids), "Guide job entries whose base and job EXP groups the server defines"),
+            "job_stat_rules": dimension(len(guide_job_ids & stat_job_ids), len(guide_job_ids), "Guide job entries with a server stat cap and upper-class flag"),
+            "job_class_tables": dimension(len(guide_job_ids & class_table_job_ids), len(guide_job_ids), "Guide job entries with server base HP/SP and ASPD class tables"),
+            "upper_class_jobs": sum(1 for job in stat_rules["jobs"] if job["upper"]),
+            "exp_groups": {"base": len(exp_tables["base_groups"]), "job": len(exp_tables["job_groups"])},
             "reviewed_formula_records": len(skill_formula_reviews),
             "skills_covered_by_reviewed_formulas": len({skill["skill_id"] for review in skill_formula_reviews for skill in review.get("skill_ids", [])}),
         },
         "statuses": {
             "icon_records": len(status_icons),
             "icon_rows_linked_to_server_status": dimension(linked_status_icon_rows, len(statuses), "status icon rows with one or more server status mechanics linked"),
+            "iconless_server_statuses": len(iconless_statuses),
             "linked_server_statuses": len(all_status_mechanics),
             "literal_call_site_clues": len(call_sites),
             "statuses_with_call_sites": len(statuses_with_call_sites),
@@ -205,6 +232,7 @@ def build_report() -> dict:
             "reviewed_exchange_records": len(exchanges),
             "reviewed_service_roles": {"count": len(reviewed_service_roles), "evidence_state": "conditional", "basis": "distinct service roles cited by source-reviewed exchange records"},
             "literal_service_call_clues": len(npc_service_clues),
+            "reviewed_service_call_clues": sum(clue.get("status") == "reviewed_service_call" for clue in npc_service_clues),
             "reviewed_service_records": {"count": len(npc_service_reviews), "of_indexed_call_clues": len(npc_service_clues), "basis": "source-reviewed service records (storage/kafra/refine-UI/repair/divorce/reset/navigation); one record may cover several indexed call-site clues, e.g. the shared Kafra function"},
         },
         "maps_and_rules": {
@@ -218,9 +246,16 @@ def build_report() -> dict:
             "element_matchup_tables": dimension(sum(str(rule.get("id", "")).startswith("element-matchup-") for rule in rules), 10, "complete defender-element tables with four defense levels and ten attacking elements"),
             "weapon_size_adjustment_tables": dimension(sum(rule.get("id") == "weapon-size-adjustments" for rule in rules), 1, "configured weapon damage size table covering three target sizes and documented weapon types"),
         },
+        "unit_dispositions": dict(data["dispositions"].get("counts", {})),
         "crafting_and_mechanics": {
             "production_and_conversion_recipes": len(recipes),
             "refinement_weapon_levels": len(refine.get("weapon_levels", [])),
+        },
+        "rumors": {
+            "non_story_rumors": len(rumors),
+            "rumors_with_map_notes": dimension(sum(bool(r.get("map_name")) for r in rumors), len(rumors), "non-story rumors with associated map locations and route coordinates"),
+            "rumors_with_monster_leads": sum(bool(r.get("related_monster_id")) for r in rumors),
+            "rumors_with_item_leads": sum(bool(r.get("related_item_id")) for r in rumors),
         },
     }
 

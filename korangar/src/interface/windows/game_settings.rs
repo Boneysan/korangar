@@ -6,7 +6,7 @@ use rust_state::{Path, State};
 
 use crate::input::InputEvent;
 use crate::interface::windows::WindowClass;
-use crate::settings::{AutolootItemType, BindableAction, GameSettings, GameSettingsPathExt};
+use crate::settings::{AutolootItemType, BindableAction, GameSettings, GameSettingsPathExt, GroundLootFilter};
 use crate::state::localization::LocalizationPathExt;
 use crate::state::skills::SkillTreePathExt;
 use crate::state::theme::InterfaceThemeType;
@@ -158,6 +158,32 @@ where
                     event: InputEvent::ToggleAutolootType { item_type },
                 }));
             }
+            self.elements.push(ErasedElement::new(text! {
+                text: format!(
+                    "Ground Loot Filter (Wishlisted items: {}):",
+                    settings.wishlist_items.len()
+                ),
+            }));
+            self.elements.push(ErasedElement::new(split! {
+                gaps: theme().window().gaps(),
+                children: (
+                    button! {
+                        text: if settings.ground_loot_filter == GroundLootFilter::All { "[x] All Items" } else { "All Items" },
+                        tooltip: "Display all dropped items on the ground.",
+                        event: InputEvent::SetGroundLootFilter { filter: GroundLootFilter::All },
+                    },
+                    button! {
+                        text: if settings.ground_loot_filter == GroundLootFilter::EquipmentAndCards { "[x] Gear & Cards" } else { "Gear & Cards" },
+                        tooltip: "Display only equipment, weapons, armor, ammo, cards, and wishlisted items.",
+                        event: InputEvent::SetGroundLootFilter { filter: GroundLootFilter::EquipmentAndCards },
+                    },
+                    button! {
+                        text: if settings.ground_loot_filter == GroundLootFilter::CardsOnly { "[x] Cards Only" } else { "Cards Only" },
+                        tooltip: "Display only monster cards and wishlisted items.",
+                        event: InputEvent::SetGroundLootFilter { filter: GroundLootFilter::CardsOnly },
+                    },
+                ),
+            }));
             for (index, element) in self.elements.iter_mut().enumerate() {
                 element.create_layout_info(state, store.child_store(index as u64), resolver);
             }
@@ -289,6 +315,12 @@ where
                     event: Toggle(self.game_settings_path.reduce_motion()),
                 },
                 state_button! {
+                    text: "Audio cues",
+                    tooltip: "Short sounds for dangerous enemy casts, interrupts, quest completion, party pings, and card drops. Each one also has a visual cue; sound is never the only warning.",
+                    state: self.game_settings_path.audio_cues(),
+                    event: Toggle(self.game_settings_path.audio_cues()),
+                },
+                state_button! {
                     text: "Reduce flashing",
                     tooltip: "Dim procedural combat bursts and their point lights. Skill timing, telegraphs, and sounds remain unchanged.",
                     state: self.game_settings_path.reduce_flashing(),
@@ -350,6 +382,8 @@ where
                     state: self.game_settings_path.show_combat_text(),
                     event: Toggle(self.game_settings_path.show_combat_text()),
                 },
+                button! { text: "Cycle effect density (full / reduced / minimal)", tooltip: "Thins other players' cosmetic skill visuals in crowded fights. Your own skills, enemy skills, ground telegraphs, cast bars, and combat text are never hidden.", event: InputEvent::CycleEffectDensity },
+                button! { text: "Cycle route preference (fewest maps / cheapest / shortest walk / avoid locked)", tooltip: "Like a GPS route option. Shortest walk is an estimate: it measures straight lines inside each map and ignores walls. Avoid locked steps prefers routes without quest, item, or marriage gates.", event: InputEvent::CycleRoutePreference },
                 button! { text: "Cycle combat text detail (all / important / status only)", tooltip: "All shows every number; Important keeps critical hits, misses, and healing; Status only hides floating numbers while leaving textual status notices visible.", event: InputEvent::CycleCombatTextFrequency },
                 button! { text: "Cycle combat text size (small / normal / large)", tooltip: "Adjusts floating combat text size independently from the overall interface scale.", event: InputEvent::CycleCombatTextSize },
                 text! { text: "Keyboard shortcuts — select an action, then press its replacement chord. Escape cancels." },
@@ -359,11 +393,32 @@ where
                 button! { text: "Export shortcuts", tooltip: "Write client/keybindings.ron", event: InputEvent::ExportKeyBindings },
                 text! { text: "HUD layout" },
                 button! { text: "Lock / unlock HUD editing", tooltip: "Locks window movement and resizing.", event: InputEvent::ToggleHudEditLock },
-                button! { text: "Classic layout", event: InputEvent::SelectHudLayout("Classic") },
-                button! { text: "Modern layout", event: InputEvent::SelectHudLayout("Modern") },
+                split! {
+                    gaps: theme().window().gaps(),
+                    children: (
+                        button! { text: "Classic layout", tooltip: "Classic Ragnarok Online layout with top-left status and top-right minimap.", event: InputEvent::SelectHudLayout("Classic") },
+                        button! { text: "Modern layout", tooltip: "Modern layout with centered hotbar and side frames.", event: InputEvent::SelectHudLayout("Modern") },
+                    ),
+                },
+                split! {
+                    gaps: theme().window().gaps(),
+                    children: (
+                        button! { text: "Exploration layout", tooltip: "Enlarged minimap and prominent quest tracker for world navigation.", event: InputEvent::SelectHudLayout("Exploration") },
+                        button! { text: "Dungeon layout", tooltip: "Enlarged party frame and clear target frame for group dungeon runs.", event: InputEvent::SelectHudLayout("Dungeon") },
+                    ),
+                },
+                split! {
+                    gaps: theme().window().gaps(),
+                    children: (
+                        button! { text: "Healer layout", tooltip: "Enlarged, accessible party frames for rapid party member targeting and healing.", event: InputEvent::SelectHudLayout("Healer") },
+                        button! { text: "Farming layout", tooltip: "Quick access to inventory drops, loot, and combat targets.", event: InputEvent::SelectHudLayout("Farming") },
+                    ),
+                },
+                button! { text: "Minimal layout", tooltip: "Compact status and hotbar for maximum world visibility.", event: InputEvent::SelectHudLayout("Minimal") },
                 button! { text: "Save current as My Layout", tooltip: "Overwrites the per-character My Layout slot.", event: InputEvent::SaveHudLayout("My Layout") },
                 button! { text: "Reset HUD layout", event: InputEvent::ResetHudLayout },
                 button! { text: "Cycle HUD snap grid (off / 8 / 16 / 32 px)", tooltip: "When enabled, dragged windows snap their positions to the selected screen-pixel grid.", event: InputEvent::CycleHudSnapGrid },
+                button! { text: "Toggle combat HUD fade", tooltip: "Outside combat, the hotbar, status bar, and monster target fade. They return for five seconds after you deal or take damage, and while the pointer is over them.", event: InputEvent::ToggleCombatHudFade },
             ),
         }
     }

@@ -29,7 +29,7 @@ use crate::world::{item_tooltip_text, skill_tooltip_text};
 fn slot_label(slot: usize) -> &'static str {
     const LABELS: [&str; HOTBAR_SLOTS] = [
         "1", "2", "3", "4", "5", "6", "7", "8", "9", "C1", "C2", "C3", "C4", "C5", "C6", "C7", "C8", "C9", "A1", "A2", "A3", "A4", "A5",
-        "A6", "A7", "A8", "A9",
+        "A6", "A7", "A8", "A9", "S1", "S2", "S3", "S4", "S5", "S6", "S7", "S8", "S9",
     ];
     LABELS.get(slot).copied().unwrap_or("?")
 }
@@ -223,6 +223,10 @@ where
                     layout.register_click_handler(MouseButton::Right, &self.pickup);
                     let level = learned.map_or(1, |learned| learned.skill_level.0);
                     let text = skill_tooltip_text(skill.skill_id.0, &skill.skill_name, level, skill.maximum_level.0);
+                    if let Some(learned) = learned {
+                        let attack_range = learned.attack_range;
+                        state.update_value_with(client_state().hovered_skill_range(), move |range| *range = Some(attack_range));
+                    }
                     unsafe {
                         *self.tooltip_text.get() = text;
                         layout.add_tooltip(self.tooltip_text.as_ref_unchecked().as_str(), HotbarSlotTooltip.tooltip_id());
@@ -326,7 +330,7 @@ where
                     event: Toggle(client_state().game_settings().hotbar_locked()),
                 },
                 text! {
-                    text: "1–9 · Ctrl+1–9 · Alt+1–9  (F1–F9 still work)",
+                    text: "1–9 · Ctrl+1–9 · Alt+1–9 · Shift+1–9  (F1–F9 still work)",
                     height: 14.0,
                     font_size: FontSize(11.0),
                     overflow_behavior: OverflowBehavior::Shrink,

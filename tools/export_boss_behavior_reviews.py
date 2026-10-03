@@ -30,7 +30,10 @@ OUTPUT = ROOT / "docs/boss-behavior.v1.json"
 def source_revision() -> tuple[str, bool]:
     try:
         revision = subprocess.check_output(["git", "-C", str(HERCULES), "rev-parse", "HEAD"], text=True, stderr=subprocess.DEVNULL).strip()
-        dirty = bool(subprocess.check_output(["git", "-C", str(HERCULES), "status", "--porcelain"], text=True).strip())
+        dirty = subprocess.run(
+            ["git", "-C", str(HERCULES), "diff-index", "--quiet", "HEAD"],
+            capture_output=True,
+        ).returncode != 0
         return revision, dirty
     except (OSError, subprocess.CalledProcessError):
         return "unknown", False
@@ -118,9 +121,9 @@ def build() -> dict[str, Any]:
             "hp_threshold_behaviors": review.get("hp_threshold_behaviors", []),
             "conditions": review.get("conditions", []),
             "sources": review["sources"],
-            "reviewed_by": review_data["reviewed_by"],
-            "reviewed_on": review_data["reviewed_on"],
-            "review_method": review_data["review_method"],
+            "reviewed_by": review.get("reviewed_by") or review_data["reviewed_by"],
+            "reviewed_on": review.get("reviewed_on") or review_data["reviewed_on"],
+            "review_method": review.get("review_method") or review_data["review_method"],
         }
         # Drop the now-redundant candidate-name list; the resolved objects above carry it.
         for summon in entry["summons"]:

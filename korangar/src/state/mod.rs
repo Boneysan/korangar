@@ -1,8 +1,14 @@
+pub mod audio_cues;
+pub mod build_planner;
 #[cfg(feature = "debug")]
 pub mod cache_statistics;
 pub mod character_creation;
 pub mod character_slots;
+pub mod commission_board;
 pub mod discovery;
+pub mod dm_journal;
+pub mod encounter_recap;
+pub mod equipment_plan;
 pub mod friends;
 pub mod hotbar;
 pub mod identify;
@@ -12,6 +18,7 @@ pub mod localization;
 pub mod minimap;
 pub mod party;
 pub mod quests;
+pub mod recovery;
 pub mod skill_cooldowns;
 pub mod skills;
 pub mod status_effects;
@@ -74,9 +81,9 @@ use crate::graphics::RenderOptions;
 use crate::graphics::{Color, CornerDiameter, ScreenClip, ScreenPosition, ScreenSize, ShadowPadding};
 use crate::input::{InputEvent, MouseInputMode};
 use crate::interface::windows::{
-    AdventureGuideWindowState, BestiaryWindowState, ChatWindowState, CommandsWindowState, DialogWindowState, DiceWindowState,
-    FriendListWindowState, LoginWindowState, LoginWindowStatePathExt, LootWindowState, PartyWindowState, SkillTreeWindowState,
-    TradeWindowState, WindowCache, WindowClass,
+    AdventureGuideWindowState, BestiaryWindowState, ChatWindowState, CommandsWindowState, CommissionBoardWindowState, DialogWindowState,
+    DiceWindowState, FriendListWindowState, LoginWindowState, LoginWindowStatePathExt, LootWindowState, PartyWindowState,
+    SkillTreeWindowState, TradeWindowState, WindowCache, WindowClass,
 };
 #[cfg(feature = "debug")]
 use crate::interface::windows::{ProfilerWindowState, ThemeInspectorWindowState};
@@ -85,9 +92,13 @@ use crate::renderer::InterfaceRenderer;
 use crate::settings::{
     GameSettings, GraphicsSettingsCapabilities, InterfaceSettings, InterfaceSettingsCapabilities, LoginSettings, ServiceSettings,
 };
+use crate::state::build_planner::BuildPlannerState;
 use crate::state::character_creation::CharacterCreation;
 use crate::state::character_slots::CharacterSlots;
+use crate::state::commission_board::CommissionBoardState;
 use crate::state::discovery::DiscoveryState;
+use crate::state::dm_journal::DmJournalState;
+use crate::state::encounter_recap::EncounterRecapState;
 use crate::state::friends::FriendEntry;
 use crate::state::hotbar::Hotbar;
 use crate::state::identify::IdentifyState;
@@ -96,6 +107,7 @@ use crate::state::inventory::Inventory;
 use crate::state::minimap::MinimapState;
 use crate::state::party::PartyState;
 use crate::state::quests::QuestLogState;
+use crate::state::recovery::RecoveryState;
 use crate::state::skill_cooldowns::SkillCooldowns;
 use crate::state::skills::SkillTree;
 use crate::state::status_effects::StatusEffects;
@@ -283,6 +295,8 @@ pub struct ClientState {
     dice_window: DiceWindowState,
     /// Internal state of the GM / DM command panel.
     commands_window: CommandsWindowState,
+    /// Internal state of the crafting commission board window.
+    commission_board_window: CommissionBoardWindowState,
     /// Internal state of the friend list window.
     friend_list_window: FriendListWindowState,
     /// Internal state of the party window.
@@ -311,6 +325,12 @@ pub struct ClientState {
     /// Account-scoped monster knowledge synchronized from Hercules.
     #[hidden_element]
     discovery: DiscoveryState,
+    /// Active boss encounter statistics and final recap.
+    #[hidden_element]
+    encounter_recap: EncounterRecapState,
+    /// Non-custodial crafting commission requests.
+    #[hidden_element]
+    commission_board: CommissionBoardState,
     /// Active quests and, for campaign hunting contracts, what they want
     /// handed in.
     quest_log: QuestLogState,
@@ -321,6 +341,12 @@ pub struct ClientState {
     targeted_monster: Option<EntityId>,
     /// Live formatted summary for the selected monster target frame.
     targeted_monster_summary: String,
+    /// Whether the currently targeted monster is an MVP / boss, opening the
+    /// larger boss target frame.
+    targeted_monster_is_boss: bool,
+    /// Range of a currently hovered skill on hotbar or skill tree, showing the
+    /// range ring.
+    hovered_skill_range: Option<AttackRange>,
     /// Ammunition each remote player has loaded, keyed by account id.
     ///
     /// Deliberately **not** stored on the [`Entity`]. The server broadcasts
@@ -395,9 +421,17 @@ pub struct ClientState {
     /// Short on-screen notices. Chat history is still the durable copy.
     #[hidden_element]
     toasts: ToastQueue,
+    /// Why the character is, or is not, regenerating (fork packet 0x0EFD).
+    #[hidden_element]
+    recovery: RecoveryState,
+    /// Campaign state the server reports as `[DMJ]` lines.
+    #[hidden_element]
+    dm_journal: DmJournalState,
     /// Current-map minimap texture and dimensions.
     #[hidden_element]
     minimap: MinimapState,
+    /// Simulated build planner (GDD F03); never sends packets.
+    build_planner: BuildPlannerState,
 
     /// List of all available character servers.
     character_servers: Vec<CharacterServerInformation>,
@@ -482,6 +516,7 @@ impl ClientState {
             let mut login_settings = LoginSettings::new();
             let audio_settings = AudioSettings::new();
             let game_settings = GameSettings::new();
+            crate::world::set_route_preference(game_settings.route_preference);
             let interface_settings = InterfaceSettings::new();
             let interface_settings_capabilities = InterfaceSettingsCapabilities::default();
         });
@@ -581,7 +616,10 @@ impl ClientState {
             let status_effects = StatusEffects::default();
             let skill_cooldowns = SkillCooldowns::default();
             let toasts = ToastQueue::default();
+            let recovery = RecoveryState::default();
+            let dm_journal = DmJournalState::default();
             let minimap = MinimapState::default();
+            let build_planner = BuildPlannerState::default();
             let skill_tree_window = SkillTreeWindowState::default();
         });
 
@@ -638,11 +676,14 @@ impl ClientState {
             chat_window,
             dice_window,
             commands_window,
+            commission_board_window: CommissionBoardWindowState::default(),
             bestiary_window,
             adventure_guide,
             loot_window,
             dm_campaign,
             discovery: DiscoveryState::default(),
+            encounter_recap: EncounterRecapState::default(),
+            commission_board: CommissionBoardState::default(),
             quest_log,
             friend_list_window,
             party_window,
@@ -654,6 +695,8 @@ impl ClientState {
             entities: Vec::new(),
             targeted_monster: None,
             targeted_monster_summary: String::new(),
+            targeted_monster_is_boss: false,
+            hovered_skill_range: None,
             remote_ammunition: HashMap::new(),
             dead_entities: Vec::new(),
             ground_items: Vec::new(),
@@ -675,7 +718,10 @@ impl ClientState {
             status_effects,
             skill_cooldowns,
             toasts,
+            recovery,
+            dm_journal,
             minimap,
+            build_planner,
             character_servers,
             server_select_status: String::new(),
             character_slots,

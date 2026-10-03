@@ -7,37 +7,45 @@ use crate::graphics::Color;
 use crate::interface::windows::WindowClass;
 use crate::loaders::OverflowBehavior;
 use crate::state::ClientState;
+use crate::state::party::PartyStatePathExt;
 use crate::state::quests::QuestLogStatePathExt;
+use crate::state::recovery::RecoveryStatePathExt;
 use crate::state::skill_cooldowns::{SkillCooldowns, SkillCooldownsPathExt};
 use crate::state::theme::InterfaceThemeType;
 use crate::state::toasts::ToastQueuePathExt;
 use crate::world::{CommonPathExt, Player, PlayerPathExt};
 
 /// Compact zeny / base-exp / job-exp / skill-cooldown readout.
-pub struct HudWindow<P, C, T, Q> {
+pub struct HudWindow<P, C, T, Q, G, R> {
     player_path: P,
     cooldowns_path: C,
     toasts_path: T,
     quests_path: Q,
+    party_path: G,
+    recovery_path: R,
 }
 
-impl<P, C, T, Q> HudWindow<P, C, T, Q> {
-    pub fn new(player_path: P, cooldowns_path: C, toasts_path: T, quests_path: Q) -> Self {
+impl<P, C, T, Q, G, R> HudWindow<P, C, T, Q, G, R> {
+    pub fn new(player_path: P, cooldowns_path: C, toasts_path: T, quests_path: Q, party_path: G, recovery_path: R) -> Self {
         Self {
             player_path,
             cooldowns_path,
             toasts_path,
             quests_path,
+            party_path,
+            recovery_path,
         }
     }
 }
 
-impl<P, C, T, Q> CustomWindow<ClientState> for HudWindow<P, C, T, Q>
+impl<P, C, T, Q, G, R> CustomWindow<ClientState> for HudWindow<P, C, T, Q, G, R>
 where
     P: Path<ClientState, Player>,
     C: Path<ClientState, SkillCooldowns>,
     T: Path<ClientState, crate::state::toasts::ToastQueue>,
     Q: Path<ClientState, crate::state::quests::QuestLogState>,
+    G: Path<ClientState, crate::state::party::PartyState>,
+    R: Path<ClientState, crate::state::recovery::RecoveryState>,
 {
     fn window_class() -> Option<WindowClass> {
         Some(WindowClass::Hud)
@@ -49,6 +57,8 @@ where
         let cooldown_text = self.cooldowns_path.display_text();
         let toast_text = self.toasts_path.display_text();
         let quest_text = self.quests_path.display_text();
+        let goals_text = self.party_path.goals_hud_text();
+        let recovery_status = self.recovery_path.display_text();
 
         window! {
             title: "HUD",
@@ -133,6 +143,11 @@ where
                             ),
                         },
                         text! {
+                            text: recovery_status,
+                            color: Color::rgb_u8(160, 230, 190),
+                            overflow_behavior: OverflowBehavior::Shrink,
+                        },
+                        text! {
                             text: cooldown_text,
                             color: Color::rgb_u8(255, 180, 120),
                             overflow_behavior: OverflowBehavior::Shrink,
@@ -140,6 +155,11 @@ where
                         text! {
                             text: quest_text,
                             color: Color::rgb_u8(140, 200, 255),
+                            overflow_behavior: OverflowBehavior::Shrink,
+                        },
+                        text! {
+                            text: goals_text,
+                            color: Color::rgb_u8(200, 255, 200),
                             overflow_behavior: OverflowBehavior::Shrink,
                         },
                         text! {

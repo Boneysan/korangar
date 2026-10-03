@@ -1,6 +1,6 @@
 {
  "schema_version": 1,
- "source_revision": "cc83ca152ff09132a047acad028a9e978bd90b89",
+ "source_revision": "cd0486c79a9a595a141ce23ff1b9f1e1b9d61caa",
  "source_worktree_dirty": false,
  "mode": "renewal",
  "source": [
@@ -18130,7 +18130,7 @@
       },
       {
        "path": "src/map/script.c",
-       "line": 25074
+       "line": 25144
       }
      ]
     }
@@ -23443,6 +23443,5451 @@
    "source": {
     "path": "db/constants.conf",
     "record": "SI icon 1150"
+   }
+  },
+  {
+   "id": 100104,
+   "name": "Armor",
+   "iconless": true,
+   "name_source": "server constant; the client has no icon name for this status",
+   "statuses": [
+    {
+     "constant": "SC_ARMOR",
+     "id": 104,
+     "flags": [],
+     "calculation_flags": [],
+     "source": {
+      "path": "db/re/sc_config.conf",
+      "record": "SC_ARMOR"
+     },
+     "associated_skill": {
+      "id": 205,
+      "name": "NPC_DEFENDER",
+      "description": "Defender",
+      "source": {
+       "path": "db/re/skill_db.conf",
+       "record": "NPC_DEFENDER"
+      }
+     },
+     "status_change_skills": [
+      {
+       "id": 205,
+       "name": "NPC_DEFENDER",
+       "description": "Defender",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "NPC_DEFENDER"
+       }
+      }
+     ]
+    }
+   ],
+   "source": {
+    "path": "db/re/sc_config.conf",
+    "record": "SC_ARMOR"
+   }
+  },
+  {
+   "id": 100087,
+   "name": "Autocounter",
+   "iconless": true,
+   "name_source": "server constant; the client has no icon name for this status",
+   "statuses": [
+    {
+     "constant": "SC_AUTOCOUNTER",
+     "id": 87,
+     "flags": [],
+     "calculation_flags": [],
+     "source": {
+      "path": "db/re/sc_config.conf",
+      "record": "SC_AUTOCOUNTER"
+     },
+     "associated_skill": {
+      "id": 61,
+      "name": "KN_AUTOCOUNTER",
+      "description": "Counter Attack",
+      "source": {
+       "path": "db/re/skill_db.conf",
+       "record": "KN_AUTOCOUNTER"
+      }
+     },
+     "status_change_skills": [
+      {
+       "id": 61,
+       "name": "KN_AUTOCOUNTER",
+       "description": "Counter Attack",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "KN_AUTOCOUNTER"
+       }
+      }
+     ],
+     "code_call_sites": [
+      {
+       "path": "src/map/skill.c",
+       "line": 1948
+      }
+     ]
+    }
+   ],
+   "source": {
+    "path": "db/re/sc_config.conf",
+    "record": "SC_AUTOCOUNTER"
+   }
+  },
+  {
+   "id": 100067,
+   "name": "Barrier",
+   "iconless": true,
+   "name_source": "server constant; the client has no icon name for this status",
+   "statuses": [
+    {
+     "constant": "SC_BARRIER",
+     "id": 67,
+     "flags": [
+      "Buff"
+     ],
+     "calculation_flags": [
+      "Def",
+      "Mdef"
+     ],
+     "source": {
+      "path": "db/re/sc_config.conf",
+      "record": "SC_BARRIER"
+     },
+     "associated_skill": {
+      "id": 204,
+      "name": "NPC_BARRIER",
+      "description": "Barrier",
+      "source": {
+       "path": "db/re/skill_db.conf",
+       "record": "NPC_BARRIER"
+      }
+     },
+     "status_change_skills": [
+      {
+       "id": 204,
+       "name": "NPC_BARRIER",
+       "description": "Barrier",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "NPC_BARRIER"
+       }
+      }
+     ]
+    }
+   ],
+   "source": {
+    "path": "db/re/sc_config.conf",
+    "record": "SC_BARRIER"
+   }
+  },
+  {
+   "id": 100116,
+   "name": "Basilica",
+   "iconless": true,
+   "name_source": "server constant; the client has no icon name for this status",
+   "statuses": [
+    {
+     "constant": "SC_BASILICA",
+     "id": 116,
+     "flags": [
+      "Buff",
+      "NoClearanceReset",
+      "NoSave"
+     ],
+     "calculation_flags": [],
+     "source": {
+      "path": "db/re/sc_config.conf",
+      "record": "SC_BASILICA"
+     },
+     "associated_skill": {
+      "id": 362,
+      "name": "HP_BASILICA",
+      "description": "Basilica",
+      "source": {
+       "path": "db/re/skill_db.conf",
+       "record": "HP_BASILICA"
+      }
+     }
+    }
+   ],
+   "source": {
+    "path": "db/re/sc_config.conf",
+    "record": "SC_BASILICA"
+   }
+  },
+  {
+   "id": 100095,
+   "name": "Bladestop",
+   "iconless": true,
+   "name_source": "server constant; the client has no icon name for this status",
+   "statuses": [
+    {
+     "constant": "SC_BLADESTOP",
+     "id": 95,
+     "flags": [
+      "Buff",
+      "NoClearanceReset",
+      "NoSave"
+     ],
+     "calculation_flags": [],
+     "source": {
+      "path": "db/re/sc_config.conf",
+      "record": "SC_BLADESTOP"
+     },
+     "associated_skill": {
+      "id": 269,
+      "name": "MO_BLADESTOP",
+      "description": "Root",
+      "source": {
+       "path": "db/re/skill_db.conf",
+       "record": "MO_BLADESTOP"
+      }
+     },
+     "code_call_sites": [
+      {
+       "path": "src/map/battle.c",
+       "line": 6891
+      },
+      {
+       "path": "src/map/battle.c",
+       "line": 6895
+      }
+     ]
+    }
+   ],
+   "source": {
+    "path": "db/re/sc_config.conf",
+    "record": "SC_BLADESTOP"
+   }
+  },
+  {
+   "id": 100094,
+   "name": "Bladestop Wait",
+   "iconless": true,
+   "name_source": "server constant; the client has no icon name for this status",
+   "statuses": [
+    {
+     "constant": "SC_BLADESTOP_WAIT",
+     "id": 94,
+     "flags": [],
+     "calculation_flags": [],
+     "source": {
+      "path": "db/re/sc_config.conf",
+      "record": "SC_BLADESTOP_WAIT"
+     },
+     "associated_skill": {
+      "id": 269,
+      "name": "MO_BLADESTOP",
+      "description": "Root",
+      "source": {
+       "path": "db/re/skill_db.conf",
+       "record": "MO_BLADESTOP"
+      }
+     },
+     "status_change_skills": [
+      {
+       "id": 269,
+       "name": "MO_BLADESTOP",
+       "description": "Root",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "MO_BLADESTOP"
+       }
+      }
+     ]
+    }
+   ],
+   "source": {
+    "path": "db/re/sc_config.conf",
+    "record": "SC_BLADESTOP_WAIT"
+   }
+  },
+  {
+   "id": 100008,
+   "name": "Blind",
+   "iconless": true,
+   "name_source": "server constant; the client has no icon name for this status",
+   "statuses": [
+    {
+     "constant": "SC_BLIND",
+     "id": 8,
+     "flags": [],
+     "calculation_flags": [
+      "Flee",
+      "Hit"
+     ],
+     "source": {
+      "path": "db/re/sc_config.conf",
+      "record": "SC_BLIND"
+     },
+     "associated_skill": {
+      "id": 177,
+      "name": "NPC_BLINDATTACK",
+      "description": "Blind Attack",
+      "source": {
+       "path": "db/re/skill_db.conf",
+       "record": "NPC_BLINDATTACK"
+      }
+     },
+     "status_change_skills": [
+      {
+       "id": 85,
+       "name": "WZ_VERMILION",
+       "description": "Lord of Vermilion",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "WZ_VERMILION"
+       }
+      },
+      {
+       "id": 120,
+       "name": "HT_FLASHER",
+       "description": "Flasher",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "HT_FLASHER"
+       }
+      },
+      {
+       "id": 149,
+       "name": "TF_SPRINKLESAND",
+       "description": "Sand Attack",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "TF_SPRINKLESAND"
+       }
+      },
+      {
+       "id": 177,
+       "name": "NPC_BLINDATTACK",
+       "description": "Blind Attack",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "NPC_BLINDATTACK"
+       }
+      },
+      {
+       "id": 253,
+       "name": "CR_HOLYCROSS",
+       "description": "Holy Cross",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "CR_HOLYCROSS"
+       }
+      },
+      {
+       "id": 254,
+       "name": "CR_GRANDCROSS",
+       "description": "Grand Cross",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "CR_GRANDCROSS"
+       }
+      },
+      {
+       "id": 338,
+       "name": "NPC_DARKCROSS",
+       "description": "Cross of Darkness",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "NPC_DARKCROSS"
+       }
+      },
+      {
+       "id": 339,
+       "name": "NPC_GRANDDARKNESS",
+       "description": "Grand cross of Darkness",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "NPC_GRANDDARKNESS"
+       }
+      },
+      {
+       "id": 670,
+       "name": "NPC_EVILLAND",
+       "description": "Evil Land",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "NPC_EVILLAND"
+       }
+      },
+      {
+       "id": 2576,
+       "name": "SJ_FULLMOONKICK",
+       "description": "Full Moon Kick",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "SJ_FULLMOONKICK"
+       }
+      },
+      {
+       "id": 8020,
+       "name": "MH_POISON_MIST",
+       "description": "Poison Mist",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "MH_POISON_MIST"
+       }
+      }
+     ],
+     "code_call_sites": [
+      {
+       "path": "src/map/skill.c",
+       "line": 1779
+      },
+      {
+       "path": "src/map/skill.c",
+       "line": 1781
+      },
+      {
+       "path": "src/map/skill.c",
+       "line": 1791
+      },
+      {
+       "path": "src/map/skill.c",
+       "line": 1809
+      },
+      {
+       "path": "src/map/skill.c",
+       "line": 1814
+      },
+      {
+       "path": "src/map/skill.c",
+       "line": 1819
+      },
+      {
+       "path": "src/map/skill.c",
+       "line": 1826
+      },
+      {
+       "path": "src/map/skill.c",
+       "line": 1853
+      },
+      {
+       "path": "src/map/skill.c",
+       "line": 1953
+      },
+      {
+       "path": "src/map/skill.c",
+       "line": 1972
+      },
+      {
+       "path": "src/map/skill.c",
+       "line": 2043
+      },
+      {
+       "path": "src/map/skill.c",
+       "line": 2190
+      },
+      {
+       "path": "src/map/skill.c",
+       "line": 2376
+      },
+      {
+       "path": "src/map/skill.c",
+       "line": 2767
+      },
+      {
+       "path": "src/map/skill.c",
+       "line": 10695
+      },
+      {
+       "path": "src/map/skill.c",
+       "line": 14696
+      },
+      {
+       "path": "src/map/skill.c",
+       "line": 18918
+      },
+      {
+       "path": "src/map/status.c",
+       "line": 7921
+      }
+     ]
+    }
+   ],
+   "source": {
+    "path": "db/re/sc_config.conf",
+    "record": "SC_BLIND"
+   }
+  },
+  {
+   "id": 100013,
+   "name": "Burning",
+   "iconless": true,
+   "name_source": "server constant; the client has no icon name for this status",
+   "statuses": [
+    {
+     "constant": "SC_BURNING",
+     "id": 13,
+     "flags": [
+      "NoBoss"
+     ],
+     "calculation_flags": [],
+     "source": {
+      "path": "db/re/sc_config.conf",
+      "record": "SC_BURNING"
+     },
+     "associated_skill": {
+      "id": 8041,
+      "name": "MH_LAVA_SLIDE",
+      "description": "Lava Slide",
+      "source": {
+       "path": "db/re/skill_db.conf",
+       "record": "MH_LAVA_SLIDE"
+      }
+     },
+     "status_change_skills": [
+      {
+       "id": 2008,
+       "name": "RK_DRAGONBREATH",
+       "description": "Dragon Breath",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "RK_DRAGONBREATH"
+       }
+      },
+      {
+       "id": 2253,
+       "name": "RA_FIRINGTRAP",
+       "description": "Firing Trap",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "RA_FIRINGTRAP"
+       }
+      },
+      {
+       "id": 8041,
+       "name": "MH_LAVA_SLIDE",
+       "description": "Lava Slide",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "MH_LAVA_SLIDE"
+       }
+      }
+     ],
+     "code_call_sites": [
+      {
+       "path": "src/map/skill.c",
+       "line": 2055
+      },
+      {
+       "path": "src/map/skill.c",
+       "line": 2068
+      },
+      {
+       "path": "src/map/skill.c",
+       "line": 2126
+      },
+      {
+       "path": "src/map/skill.c",
+       "line": 2140
+      },
+      {
+       "path": "src/map/skill.c",
+       "line": 2282
+      },
+      {
+       "path": "src/map/skill.c",
+       "line": 3790
+      },
+      {
+       "path": "src/map/skill.c",
+       "line": 6200
+      },
+      {
+       "path": "src/map/skill.c",
+       "line": 14855
+      },
+      {
+       "path": "src/map/skill.c",
+       "line": 14990
+      }
+     ]
+    }
+   ],
+   "source": {
+    "path": "db/re/sc_config.conf",
+    "record": "SC_BURNING"
+   }
+  },
+  {
+   "id": 100124,
+   "name": "Chasewalk",
+   "iconless": true,
+   "name_source": "server constant; the client has no icon name for this status",
+   "statuses": [
+    {
+     "constant": "SC_CHASEWALK",
+     "id": 124,
+     "flags": [
+      "NoBBReset",
+      "NoDispelReset"
+     ],
+     "calculation_flags": [
+      "Speed"
+     ],
+     "source": {
+      "path": "db/re/sc_config.conf",
+      "record": "SC_CHASEWALK"
+     },
+     "associated_skill": {
+      "id": 389,
+      "name": "ST_CHASEWALK",
+      "description": "Stealth",
+      "source": {
+       "path": "db/re/skill_db.conf",
+       "record": "ST_CHASEWALK"
+      }
+     },
+     "status_change_skills": [
+      {
+       "id": 389,
+       "name": "ST_CHASEWALK",
+       "description": "Stealth",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "ST_CHASEWALK"
+       }
+      }
+     ]
+    }
+   ],
+   "source": {
+    "path": "db/re/sc_config.conf",
+    "record": "SC_CHASEWALK"
+   }
+  },
+  {
+   "id": 100186,
+   "name": "Coma",
+   "iconless": true,
+   "name_source": "server constant; the client has no icon name for this status",
+   "statuses": [
+    {
+     "constant": "SC_COMA",
+     "id": 186,
+     "flags": [
+      "NoBoss",
+      "NoMagicBlocked"
+     ],
+     "calculation_flags": [],
+     "source": {
+      "path": "db/re/sc_config.conf",
+      "record": "SC_COMA"
+     },
+     "associated_skill": {
+      "id": 203,
+      "name": "NPC_DARKBLESSING",
+      "description": "Dark Blessing",
+      "source": {
+       "path": "db/re/skill_db.conf",
+       "record": "NPC_DARKBLESSING"
+      }
+     },
+     "status_change_skills": [
+      {
+       "id": 203,
+       "name": "NPC_DARKBLESSING",
+       "description": "Dark Blessing",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "NPC_DARKBLESSING"
+       }
+      },
+      {
+       "id": 303,
+       "name": "SA_COMA",
+       "description": "Coma",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "SA_COMA"
+       }
+      }
+     ],
+     "code_call_sites": [
+      {
+       "path": "src/map/skill.c",
+       "line": 9575
+      }
+     ]
+    }
+   ],
+   "source": {
+    "path": "db/re/sc_config.conf",
+    "record": "SC_COMA"
+   }
+  },
+  {
+   "id": 100007,
+   "name": "Confusion",
+   "iconless": true,
+   "name_source": "server constant; the client has no icon name for this status",
+   "statuses": [
+    {
+     "constant": "SC_CONFUSION",
+     "id": 7,
+     "flags": [],
+     "calculation_flags": [],
+     "source": {
+      "path": "db/re/sc_config.conf",
+      "record": "SC_CONFUSION"
+     },
+     "associated_skill": {
+      "id": 667,
+      "name": "NPC_WIDECONFUSE",
+      "description": "Wide Confusion",
+      "source": {
+       "path": "db/re/skill_db.conf",
+       "record": "NPC_WIDECONFUSE"
+      }
+     },
+     "status_change_skills": [
+      {
+       "id": 667,
+       "name": "NPC_WIDECONFUSE",
+       "description": "Wide Confusion",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "NPC_WIDECONFUSE"
+       }
+      }
+     ],
+     "code_call_sites": [
+      {
+       "path": "src/map/skill.c",
+       "line": 8272
+      },
+      {
+       "path": "src/map/skill.c",
+       "line": 8277
+      },
+      {
+       "path": "src/map/skill.c",
+       "line": 9580
+      },
+      {
+       "path": "src/map/skill.c",
+       "line": 11643
+      },
+      {
+       "path": "src/map/skill.c",
+       "line": 11648
+      },
+      {
+       "path": "src/map/status.c",
+       "line": 8166
+      }
+     ]
+    }
+   ],
+   "source": {
+    "path": "db/re/sc_config.conf",
+    "record": "SC_CONFUSION"
+   }
+  },
+  {
+   "id": 100005,
+   "name": "Curse",
+   "iconless": true,
+   "name_source": "server constant; the client has no icon name for this status",
+   "statuses": [
+    {
+     "constant": "SC_CURSE",
+     "id": 5,
+     "flags": [],
+     "calculation_flags": [
+      "AtkPerc",
+      "Luk",
+      "Speed"
+     ],
+     "source": {
+      "path": "db/re/sc_config.conf",
+      "record": "SC_CURSE"
+     },
+     "associated_skill": {
+      "id": 181,
+      "name": "NPC_CURSEATTACK",
+      "description": "Curse Attack",
+      "source": {
+       "path": "db/re/skill_db.conf",
+       "record": "NPC_CURSEATTACK"
+      }
+     },
+     "status_change_skills": [
+      {
+       "id": 181,
+       "name": "NPC_CURSEATTACK",
+       "description": "Curse Attack",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "NPC_CURSEATTACK"
+       }
+      },
+      {
+       "id": 400,
+       "name": "HW_NAPALMVULCAN",
+       "description": "Napalm Vulcan",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "HW_NAPALMVULCAN"
+       }
+      },
+      {
+       "id": 662,
+       "name": "NPC_HELLJUDGEMENT",
+       "description": "Hell's Judgement",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "NPC_HELLJUDGEMENT"
+       }
+      },
+      {
+       "id": 677,
+       "name": "NPC_WIDECURSE",
+       "description": "Wide Curse",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "NPC_WIDECURSE"
+       }
+      },
+      {
+       "id": 3014,
+       "name": "KO_JYUSATSU",
+       "description": "Jyusatsu",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "KO_JYUSATSU"
+       }
+      },
+      {
+       "id": 5028,
+       "name": "SU_CN_METEOR",
+       "description": "Catnip Meteor",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "SU_CN_METEOR"
+       }
+      }
+     ],
+     "code_call_sites": [
+      {
+       "path": "src/map/skill.c",
+       "line": 1983
+      },
+      {
+       "path": "src/map/skill.c",
+       "line": 2046
+      },
+      {
+       "path": "src/map/skill.c",
+       "line": 2307
+      },
+      {
+       "path": "src/map/skill.c",
+       "line": 9576
+      },
+      {
+       "path": "src/map/skill.c",
+       "line": 9587
+      },
+      {
+       "path": "src/map/skill.c",
+       "line": 14693
+      }
+     ]
+    }
+   ],
+   "source": {
+    "path": "db/re/sc_config.conf",
+    "record": "SC_CURSE"
+   }
+  },
+  {
+   "id": 100165,
+   "name": "Dancing",
+   "iconless": true,
+   "name_source": "server constant; the client has no icon name for this status",
+   "statuses": [
+    {
+     "constant": "SC_DANCING",
+     "id": 165,
+     "flags": [
+      "NoBBReset",
+      "NoClearanceReset",
+      "NoDispelReset"
+     ],
+     "calculation_flags": [
+      "Regen",
+      "Speed"
+     ],
+     "source": {
+      "path": "db/re/sc_config.conf",
+      "record": "SC_DANCING"
+     },
+     "associated_skill": {
+      "id": 305,
+      "name": "BD_ENCORE",
+      "description": "Encore",
+      "source": {
+       "path": "db/re/skill_db.conf",
+       "record": "BD_ENCORE"
+      }
+     },
+     "status_change_skills": [
+      {
+       "id": 305,
+       "name": "BD_ENCORE",
+       "description": "Encore",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "BD_ENCORE"
+       }
+      }
+     ],
+     "code_call_sites": [
+      {
+       "path": "src/map/skill.c",
+       "line": 12672
+      },
+      {
+       "path": "src/map/skill.c",
+       "line": 13795
+      },
+      {
+       "path": "src/map/skill.c",
+       "line": 15479
+      }
+     ]
+    }
+   ],
+   "source": {
+    "path": "db/re/sc_config.conf",
+    "record": "SC_DANCING"
+   }
+  },
+  {
+   "id": 100134,
+   "name": "Devotion",
+   "iconless": true,
+   "name_source": "server constant; the client has no icon name for this status",
+   "statuses": [
+    {
+     "constant": "SC_DEVOTION",
+     "id": 134,
+     "flags": [
+      "Buff",
+      "NoSave"
+     ],
+     "calculation_flags": [],
+     "source": {
+      "path": "db/re/sc_config.conf",
+      "record": "SC_DEVOTION"
+     },
+     "associated_skill": {
+      "id": 255,
+      "name": "CR_DEVOTION",
+      "description": "Sacrifice",
+      "source": {
+       "path": "db/re/skill_db.conf",
+       "record": "CR_DEVOTION"
+      }
+     },
+     "status_change_skills": [
+      {
+       "id": 255,
+       "name": "CR_DEVOTION",
+       "description": "Sacrifice",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "CR_DEVOTION"
+       }
+      },
+      {
+       "id": 8221,
+       "name": "ML_DEVOTION",
+       "description": "Sacrifice",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "ML_DEVOTION"
+       }
+      }
+     ]
+    }
+   ],
+   "source": {
+    "path": "db/re/sc_config.conf",
+    "record": "SC_DEVOTION"
+   }
+  },
+  {
+   "id": 100010,
+   "name": "Dpoison",
+   "iconless": true,
+   "name_source": "server constant; the client has no icon name for this status",
+   "statuses": [
+    {
+     "constant": "SC_DPOISON",
+     "id": 10,
+     "flags": [],
+     "calculation_flags": [
+      "DefPerc",
+      "Regen"
+     ],
+     "source": {
+      "path": "db/re/sc_config.conf",
+      "record": "SC_DPOISON"
+     },
+     "associated_skill": {
+      "id": 176,
+      "name": "NPC_POISON",
+      "description": "Poison Attack",
+      "source": {
+       "path": "db/re/skill_db.conf",
+       "record": "NPC_POISON"
+      }
+     },
+     "code_call_sites": [
+      {
+       "path": "src/map/skill.c",
+       "line": 1698
+      }
+     ]
+    }
+   ],
+   "source": {
+    "path": "db/re/sc_config.conf",
+    "record": "SC_DPOISON"
+   }
+  },
+  {
+   "id": 100251,
+   "name": "Enchantarms",
+   "iconless": true,
+   "name_source": "server constant; the client has no icon name for this status",
+   "statuses": [
+    {
+     "constant": "SC_ENCHANTARMS",
+     "id": 251,
+     "flags": [],
+     "calculation_flags": [
+      "Atk_Ele"
+     ],
+     "source": {
+      "path": "db/re/sc_config.conf",
+      "record": "SC_ENCHANTARMS"
+     },
+     "associated_skill": {
+      "id": 492,
+      "name": "ITEM_ENCHANTARMS",
+      "description": "Weapon Enchantment",
+      "source": {
+       "path": "db/re/skill_db.conf",
+       "record": "ITEM_ENCHANTARMS"
+      }
+     },
+     "status_change_skills": [
+      {
+       "id": 492,
+       "name": "ITEM_ENCHANTARMS",
+       "description": "Weapon Enchantment",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "ITEM_ENCHANTARMS"
+       }
+      }
+     ]
+    }
+   ],
+   "source": {
+    "path": "db/re/sc_config.conf",
+    "record": "SC_ENCHANTARMS"
+   }
+  },
+  {
+   "id": 100091,
+   "name": "Extremityfist",
+   "iconless": true,
+   "name_source": "server constant; the client has no icon name for this status",
+   "statuses": [
+    {
+     "constant": "SC_EXTREMITYFIST",
+     "id": 91,
+     "flags": [],
+     "calculation_flags": [
+      "Regen"
+     ],
+     "source": {
+      "path": "db/re/sc_config.conf",
+      "record": "SC_EXTREMITYFIST"
+     },
+     "associated_skill": {
+      "id": 271,
+      "name": "MO_EXTREMITYFIST",
+      "description": "Asura Strike",
+      "source": {
+       "path": "db/re/skill_db.conf",
+       "record": "MO_EXTREMITYFIST"
+      }
+     },
+     "status_change_skills": [
+      {
+       "id": 271,
+       "name": "MO_EXTREMITYFIST",
+       "description": "Asura Strike",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "MO_EXTREMITYFIST"
+       }
+      }
+     ],
+     "code_call_sites": [
+      {
+       "path": "src/map/skill.c",
+       "line": 2764
+      }
+     ]
+    }
+   ],
+   "source": {
+    "path": "db/re/sc_config.conf",
+    "record": "SC_EXTREMITYFIST"
+   }
+  },
+  {
+   "id": 100678,
+   "name": "Fallen Angel",
+   "iconless": true,
+   "name_source": "server constant; the client has no icon name for this status",
+   "statuses": [
+    {
+     "constant": "SC_FALLEN_ANGEL",
+     "id": 678,
+     "flags": [],
+     "calculation_flags": [
+      "None"
+     ],
+     "source": {
+      "path": "db/re/sc_config.conf",
+      "record": "SC_FALLEN_ANGEL"
+     },
+     "associated_skill": {
+      "id": 2564,
+      "name": "RL_FALLEN_ANGEL",
+      "description": "Fallen Angel",
+      "source": {
+       "path": "db/re/skill_db.conf",
+       "record": "RL_FALLEN_ANGEL"
+      }
+     },
+     "status_change_skills": [
+      {
+       "id": 2564,
+       "name": "RL_FALLEN_ANGEL",
+       "description": "Fallen Angel",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "RL_FALLEN_ANGEL"
+       }
+      }
+     ]
+    }
+   ],
+   "source": {
+    "path": "db/re/sc_config.conf",
+    "record": "SC_FALLEN_ANGEL"
+   }
+  },
+  {
+   "id": 100011,
+   "name": "Fear",
+   "iconless": true,
+   "name_source": "server constant; the client has no icon name for this status",
+   "statuses": [
+    {
+     "constant": "SC_FEAR",
+     "id": 11,
+     "flags": [],
+     "calculation_flags": [
+      "Flee",
+      "Hit"
+     ],
+     "source": {
+      "path": "db/re/sc_config.conf",
+      "record": "SC_FEAR"
+     },
+     "associated_skill": {
+      "id": 2009,
+      "name": "RK_DRAGONHOWLING",
+      "description": "Dragon Howling",
+      "source": {
+       "path": "db/re/skill_db.conf",
+       "record": "RK_DRAGONHOWLING"
+      }
+     },
+     "status_change_skills": [
+      {
+       "id": 2005,
+       "name": "RK_WINDCUTTER",
+       "description": "Wind Cutter",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "RK_WINDCUTTER"
+       }
+      },
+      {
+       "id": 2009,
+       "name": "RK_DRAGONHOWLING",
+       "description": "Dragon Howling",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "RK_DRAGONHOWLING"
+       }
+      }
+     ],
+     "code_call_sites": [
+      {
+       "path": "src/map/skill.c",
+       "line": 2052
+      },
+      {
+       "path": "src/map/skill.c",
+       "line": 2215
+      }
+     ]
+    }
+   ],
+   "source": {
+    "path": "db/re/sc_config.conf",
+    "record": "SC_FEAR"
+   }
+  },
+  {
+   "id": 100241,
+   "name": "Fling",
+   "iconless": true,
+   "name_source": "server constant; the client has no icon name for this status",
+   "statuses": [
+    {
+     "constant": "SC_FLING",
+     "id": 241,
+     "flags": [],
+     "calculation_flags": [
+      "DefPerc"
+     ],
+     "source": {
+      "path": "db/re/sc_config.conf",
+      "record": "SC_FLING"
+     },
+     "associated_skill": {
+      "id": 501,
+      "name": "GS_FLING",
+      "description": "Fling",
+      "source": {
+       "path": "db/re/skill_db.conf",
+       "record": "GS_FLING"
+      }
+     },
+     "status_change_skills": [
+      {
+       "id": 501,
+       "name": "GS_FLING",
+       "description": "Fling",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "GS_FLING"
+       }
+      }
+     ],
+     "code_call_sites": [
+      {
+       "path": "src/map/skill.c",
+       "line": 2033
+      }
+     ]
+    }
+   ],
+   "source": {
+    "path": "db/re/sc_config.conf",
+    "record": "SC_FLING"
+   }
+  },
+  {
+   "id": 100132,
+   "name": "Fogwall",
+   "iconless": true,
+   "name_source": "server constant; the client has no icon name for this status",
+   "statuses": [
+    {
+     "constant": "SC_FOGWALL",
+     "id": 132,
+     "flags": [
+      "Buff",
+      "NoBoss",
+      "NoClearanceReset",
+      "NoSave"
+     ],
+     "calculation_flags": [],
+     "source": {
+      "path": "db/re/sc_config.conf",
+      "record": "SC_FOGWALL"
+     },
+     "associated_skill": {
+      "id": 404,
+      "name": "PF_FOGWALL",
+      "description": "Blinding Mist",
+      "source": {
+       "path": "db/re/skill_db.conf",
+       "record": "PF_FOGWALL"
+      }
+     },
+     "status_change_skills": [
+      {
+       "id": 404,
+       "name": "PF_FOGWALL",
+       "description": "Blinding Mist",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "PF_FOGWALL"
+       }
+      }
+     ]
+    }
+   ],
+   "source": {
+    "path": "db/re/sc_config.conf",
+    "record": "SC_FOGWALL"
+   }
+  },
+  {
+   "id": 100001,
+   "name": "Freeze",
+   "iconless": true,
+   "name_source": "server constant; the client has no icon name for this status",
+   "statuses": [
+    {
+     "constant": "SC_FREEZE",
+     "id": 1,
+     "flags": [],
+     "calculation_flags": [
+      "Def",
+      "Def_Ele",
+      "Mdef"
+     ],
+     "source": {
+      "path": "db/re/sc_config.conf",
+      "record": "SC_FREEZE"
+     },
+     "associated_skill": {
+      "id": 664,
+      "name": "NPC_WIDEFREEZE",
+      "description": "Wide Freeze",
+      "source": {
+       "path": "db/re/skill_db.conf",
+       "record": "NPC_WIDEFREEZE"
+      }
+     },
+     "status_change_skills": [
+      {
+       "id": 15,
+       "name": "MG_FROSTDIVER",
+       "description": "Frost Diver",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "MG_FROSTDIVER"
+       }
+      },
+      {
+       "id": 88,
+       "name": "WZ_FROSTNOVA",
+       "description": "Frost Nova",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "WZ_FROSTNOVA"
+       }
+      },
+      {
+       "id": 89,
+       "name": "WZ_STORMGUST",
+       "description": "Storm Gust",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "WZ_STORMGUST"
+       }
+      },
+      {
+       "id": 121,
+       "name": "HT_FREEZINGTRAP",
+       "description": "Freezing Trap",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "HT_FREEZINGTRAP"
+       }
+      },
+      {
+       "id": 318,
+       "name": "BA_FROSTJOKE",
+       "description": "Unbarring Octave",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "BA_FROSTJOKE"
+       }
+      },
+      {
+       "id": 539,
+       "name": "NJ_HYOUSYOURAKU",
+       "description": "Ice Meteor",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "NJ_HYOUSYOURAKU"
+       }
+      },
+      {
+       "id": 655,
+       "name": "NPC_ICEBREATH",
+       "description": "Ice Breath",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "NPC_ICEBREATH"
+       }
+      },
+      {
+       "id": 664,
+       "name": "NPC_WIDEFREEZE",
+       "description": "Wide Freeze",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "NPC_WIDEFREEZE"
+       }
+      },
+      {
+       "id": 8212,
+       "name": "MA_FREEZINGTRAP",
+       "description": "Freezing_Trap",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "MA_FREEZINGTRAP"
+       }
+      }
+     ],
+     "code_call_sites": [
+      {
+       "path": "src/map/skill.c",
+       "line": 1738
+      },
+      {
+       "path": "src/map/skill.c",
+       "line": 1746
+      },
+      {
+       "path": "src/map/skill.c",
+       "line": 1759
+      },
+      {
+       "path": "src/map/skill.c",
+       "line": 1763
+      },
+      {
+       "path": "src/map/skill.c",
+       "line": 1787
+      },
+      {
+       "path": "src/map/skill.c",
+       "line": 1867
+      },
+      {
+       "path": "src/map/skill.c",
+       "line": 2030
+      },
+      {
+       "path": "src/map/skill.c",
+       "line": 2081
+      },
+      {
+       "path": "src/map/skill.c",
+       "line": 2129
+      },
+      {
+       "path": "src/map/skill.c",
+       "line": 14972
+      },
+      {
+       "path": "src/map/skill.c",
+       "line": 18926
+      }
+     ]
+    }
+   ],
+   "source": {
+    "path": "db/re/sc_config.conf",
+    "record": "SC_FREEZE"
+   }
+  },
+  {
+   "id": 100651,
+   "name": "Freshshrimp",
+   "iconless": true,
+   "name_source": "server constant; the client has no icon name for this status",
+   "statuses": [
+    {
+     "constant": "SC_FRESHSHRIMP",
+     "id": 651,
+     "flags": [
+      "NoBoss"
+     ],
+     "calculation_flags": [],
+     "source": {
+      "path": "db/re/sc_config.conf",
+      "record": "SC_FRESHSHRIMP"
+     },
+     "associated_skill": {
+      "id": 5041,
+      "name": "SU_FRESHSHRIMP",
+      "description": "Fresh Shrimp",
+      "source": {
+       "path": "db/re/skill_db.conf",
+       "record": "SU_FRESHSHRIMP"
+      }
+     },
+     "status_change_skills": [
+      {
+       "id": 5041,
+       "name": "SU_FRESHSHRIMP",
+       "description": "Fresh Shrimp",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "SU_FRESHSHRIMP"
+       }
+      }
+     ]
+    }
+   ],
+   "source": {
+    "path": "db/re/sc_config.conf",
+    "record": "SC_FRESHSHRIMP"
+   }
+  },
+  {
+   "id": 100221,
+   "name": "Fusion",
+   "iconless": true,
+   "name_source": "server constant; the client has no icon name for this status",
+   "statuses": [
+    {
+     "constant": "SC_FUSION",
+     "id": 221,
+     "flags": [
+      "NoBBReset",
+      "NoClearanceReset",
+      "NoDeathReset",
+      "NoDispelReset",
+      "NoMadoReset"
+     ],
+     "calculation_flags": [
+      "Speed"
+     ],
+     "source": {
+      "path": "db/re/sc_config.conf",
+      "record": "SC_FUSION"
+     },
+     "associated_skill": {
+      "id": 444,
+      "name": "SG_FUSION",
+      "description": "Union of the Sun Moon and Stars",
+      "source": {
+       "path": "db/re/skill_db.conf",
+       "record": "SG_FUSION"
+      }
+     },
+     "status_change_skills": [
+      {
+       "id": 444,
+       "name": "SG_FUSION",
+       "description": "Union of the Sun Moon and Stars",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "SG_FUSION"
+       }
+      }
+     ]
+    }
+   ],
+   "source": {
+    "path": "db/re/sc_config.conf",
+    "record": "SC_FUSION"
+   }
+  },
+  {
+   "id": 100152,
+   "name": "Gdskill Battleorder",
+   "iconless": true,
+   "name_source": "server constant; the client has no icon name for this status",
+   "statuses": [
+    {
+     "constant": "SC_GDSKILL_BATTLEORDER",
+     "id": 152,
+     "flags": [],
+     "calculation_flags": [
+      "Dex",
+      "Int",
+      "Str"
+     ],
+     "source": {
+      "path": "db/re/sc_config.conf",
+      "record": "SC_GDSKILL_BATTLEORDER"
+     },
+     "associated_skill": {
+      "id": 10010,
+      "name": "GD_BATTLEORDER",
+      "description": "Battle Orders",
+      "source": {
+       "path": "db/re/skill_db.conf",
+       "record": "GD_BATTLEORDER"
+      }
+     },
+     "status_change_skills": [
+      {
+       "id": 10010,
+       "name": "GD_BATTLEORDER",
+       "description": "Battle Orders",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "GD_BATTLEORDER"
+       }
+      }
+     ]
+    }
+   ],
+   "source": {
+    "path": "db/re/sc_config.conf",
+    "record": "SC_GDSKILL_BATTLEORDER"
+   }
+  },
+  {
+   "id": 100153,
+   "name": "Gdskill Regeneration",
+   "iconless": true,
+   "name_source": "server constant; the client has no icon name for this status",
+   "statuses": [
+    {
+     "constant": "SC_GDSKILL_REGENERATION",
+     "id": 153,
+     "flags": [
+      "NoBBReset",
+      "NoClearanceReset",
+      "NoDispelReset",
+      "NoMadoReset",
+      "NoSave"
+     ],
+     "calculation_flags": [
+      "Regen"
+     ],
+     "source": {
+      "path": "db/re/sc_config.conf",
+      "record": "SC_GDSKILL_REGENERATION"
+     },
+     "associated_skill": {
+      "id": 10011,
+      "name": "GD_REGENERATION",
+      "description": "Regeneration",
+      "source": {
+       "path": "db/re/skill_db.conf",
+       "record": "GD_REGENERATION"
+      }
+     },
+     "status_change_skills": [
+      {
+       "id": 10011,
+       "name": "GD_REGENERATION",
+       "description": "Regeneration",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "GD_REGENERATION"
+       }
+      }
+     ],
+     "code_call_sites": [
+      {
+       "path": "src/map/status.c",
+       "line": 11655
+      }
+     ]
+    }
+   ],
+   "source": {
+    "path": "db/re/sc_config.conf",
+    "record": "SC_GDSKILL_REGENERATION"
+   }
+  },
+  {
+   "id": 100509,
+   "name": "Glorywounds",
+   "iconless": true,
+   "name_source": "server constant; the client has no icon name for this status",
+   "statuses": [
+    {
+     "constant": "SC_GLORYWOUNDS",
+     "id": 509,
+     "flags": [
+      "NoAllReset",
+      "NoBBReset",
+      "NoClearanceReset",
+      "NoDispelReset",
+      "NoMadoReset",
+      "NoSave"
+     ],
+     "calculation_flags": [
+      "Vit"
+     ],
+     "source": {
+      "path": "db/re/sc_config.conf",
+      "record": "SC_GLORYWOUNDS"
+     },
+     "associated_skill": {
+      "id": 10007,
+      "name": "GD_GLORYWOUNDS",
+      "description": "Glorious Wounds",
+      "source": {
+       "path": "db/re/skill_db.conf",
+       "record": "GD_GLORYWOUNDS"
+      }
+     },
+     "status_change_skills": [
+      {
+       "id": 10007,
+       "name": "GD_GLORYWOUNDS",
+       "description": "Glorious Wounds",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "GD_GLORYWOUNDS"
+       }
+      }
+     ]
+    }
+   ],
+   "source": {
+    "path": "db/re/sc_config.conf",
+    "record": "SC_GLORYWOUNDS"
+   }
+  },
+  {
+   "id": 100114,
+   "name": "Gospel",
+   "iconless": true,
+   "name_source": "server constant; the client has no icon name for this status",
+   "statuses": [
+    {
+     "constant": "SC_GOSPEL",
+     "id": 114,
+     "flags": [
+      "Debuff",
+      "NoSave"
+     ],
+     "calculation_flags": [
+      "Aspd",
+      "Speed"
+     ],
+     "source": {
+      "path": "db/re/sc_config.conf",
+      "record": "SC_GOSPEL"
+     },
+     "associated_skill": {
+      "id": 369,
+      "name": "PA_GOSPEL",
+      "description": "Battle Chant",
+      "source": {
+       "path": "db/re/skill_db.conf",
+       "record": "PA_GOSPEL"
+      }
+     },
+     "status_change_skills": [
+      {
+       "id": 369,
+       "name": "PA_GOSPEL",
+       "description": "Battle Chant",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "PA_GOSPEL"
+       }
+      }
+     ],
+     "code_call_sites": [
+      {
+       "path": "src/map/skill.c",
+       "line": 14717
+      }
+     ]
+    }
+   ],
+   "source": {
+    "path": "db/re/sc_config.conf",
+    "record": "SC_GOSPEL"
+   }
+  },
+  {
+   "id": 100722,
+   "name": "Gospel Atk Perc",
+   "iconless": true,
+   "name_source": "server constant; the client has no icon name for this status",
+   "statuses": [
+    {
+     "constant": "SC_GOSPEL_ATK_PERC",
+     "id": 722,
+     "flags": [
+      "Debuff",
+      "NoSave"
+     ],
+     "calculation_flags": [
+      "AtkPerc"
+     ],
+     "source": {
+      "path": "db/re/sc_config.conf",
+      "record": "SC_GOSPEL_ATK_PERC"
+     },
+     "code_call_sites": [
+      {
+       "path": "src/map/skill.c",
+       "line": 14673
+      },
+      {
+       "path": "src/map/skill.c",
+       "line": 14711
+      }
+     ]
+    }
+   ],
+   "source": {
+    "path": "db/re/sc_config.conf",
+    "record": "SC_GOSPEL_ATK_PERC"
+   }
+  },
+  {
+   "id": 100155,
+   "name": "Gravitation",
+   "iconless": true,
+   "name_source": "server constant; the client has no icon name for this status",
+   "statuses": [
+    {
+     "constant": "SC_GRAVITATION",
+     "id": 155,
+     "flags": [
+      "Buff",
+      "NoBoss",
+      "NoClearanceReset",
+      "NoSave"
+     ],
+     "calculation_flags": [
+      "Aspd"
+     ],
+     "source": {
+      "path": "db/re/sc_config.conf",
+      "record": "SC_GRAVITATION"
+     },
+     "associated_skill": {
+      "id": 484,
+      "name": "HW_GRAVITATION",
+      "description": "Gravitation Field",
+      "source": {
+       "path": "db/re/skill_db.conf",
+       "record": "HW_GRAVITATION"
+      }
+     },
+     "status_change_skills": [
+      {
+       "id": 484,
+       "name": "HW_GRAVITATION",
+       "description": "Gravitation Field",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "HW_GRAVITATION"
+       }
+      }
+     ]
+    }
+   ],
+   "source": {
+    "path": "db/re/sc_config.conf",
+    "record": "SC_GRAVITATION"
+   }
+  },
+  {
+   "id": 100244,
+   "name": "Hami Bloodlust",
+   "iconless": true,
+   "name_source": "server constant; the client has no icon name for this status",
+   "statuses": [
+    {
+     "constant": "SC_HAMI_BLOODLUST",
+     "id": 244,
+     "flags": [],
+     "calculation_flags": [
+      "AtkPerc"
+     ],
+     "source": {
+      "path": "db/re/sc_config.conf",
+      "record": "SC_HAMI_BLOODLUST"
+     },
+     "associated_skill": {
+      "id": 8008,
+      "name": "HAMI_BLOODLUST",
+      "description": "Bloodlust",
+      "source": {
+       "path": "db/re/skill_db.conf",
+       "record": "HAMI_BLOODLUST"
+      }
+     },
+     "status_change_skills": [
+      {
+       "id": 8008,
+       "name": "HAMI_BLOODLUST",
+       "description": "Bloodlust",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "HAMI_BLOODLUST"
+       }
+      }
+     ]
+    }
+   ],
+   "source": {
+    "path": "db/re/sc_config.conf",
+    "record": "SC_HAMI_BLOODLUST"
+   }
+  },
+  {
+   "id": 100247,
+   "name": "Hami Defence",
+   "iconless": true,
+   "name_source": "server constant; the client has no icon name for this status",
+   "statuses": [
+    {
+     "constant": "SC_HAMI_DEFENCE",
+     "id": 247,
+     "flags": [],
+     "calculation_flags": [
+      "Def"
+     ],
+     "source": {
+      "path": "db/re/sc_config.conf",
+      "record": "SC_HAMI_DEFENCE"
+     },
+     "associated_skill": {
+      "id": 8006,
+      "name": "HAMI_DEFENCE",
+      "description": "Defense",
+      "source": {
+       "path": "db/re/skill_db.conf",
+       "record": "HAMI_DEFENCE"
+      }
+     },
+     "status_change_skills": [
+      {
+       "id": 8006,
+       "name": "HAMI_DEFENCE",
+       "description": "Defense",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "HAMI_DEFENCE"
+       }
+      }
+     ]
+    }
+   ],
+   "source": {
+    "path": "db/re/sc_config.conf",
+    "record": "SC_HAMI_DEFENCE"
+   }
+  },
+  {
+   "id": 100511,
+   "name": "Hawkeyes",
+   "iconless": true,
+   "name_source": "server constant; the client has no icon name for this status",
+   "statuses": [
+    {
+     "constant": "SC_HAWKEYES",
+     "id": 511,
+     "flags": [
+      "NoAllReset",
+      "NoBBReset",
+      "NoClearanceReset",
+      "NoDispelReset",
+      "NoMadoReset",
+      "NoSave"
+     ],
+     "calculation_flags": [
+      "Dex"
+     ],
+     "source": {
+      "path": "db/re/sc_config.conf",
+      "record": "SC_HAWKEYES"
+     },
+     "associated_skill": {
+      "id": 10009,
+      "name": "GD_HAWKEYES",
+      "description": "Sharp Gaze",
+      "source": {
+       "path": "db/re/skill_db.conf",
+       "record": "GD_HAWKEYES"
+      }
+     },
+     "status_change_skills": [
+      {
+       "id": 10009,
+       "name": "GD_HAWKEYES",
+       "description": "Sharp Gaze",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "GD_HAWKEYES"
+       }
+      }
+     ]
+    }
+   ],
+   "source": {
+    "path": "db/re/sc_config.conf",
+    "record": "SC_HAWKEYES"
+   }
+  },
+  {
+   "id": 100158,
+   "name": "Hermode",
+   "iconless": true,
+   "name_source": "server constant; the client has no icon name for this status",
+   "statuses": [
+    {
+     "constant": "SC_HERMODE",
+     "id": 158,
+     "flags": [],
+     "calculation_flags": [],
+     "source": {
+      "path": "db/re/sc_config.conf",
+      "record": "SC_HERMODE"
+     },
+     "associated_skill": {
+      "id": 488,
+      "name": "CG_HERMODE",
+      "description": "Wand of Hermode",
+      "source": {
+       "path": "db/re/skill_db.conf",
+       "record": "CG_HERMODE"
+      }
+     },
+     "status_change_skills": [
+      {
+       "id": 488,
+       "name": "CG_HERMODE",
+       "description": "Wand of Hermode",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "CG_HERMODE"
+       }
+      }
+     ]
+    }
+   ],
+   "source": {
+    "path": "db/re/sc_config.conf",
+    "record": "SC_HERMODE"
+   }
+  },
+  {
+   "id": 100242,
+   "name": "Hlif Avoid",
+   "iconless": true,
+   "name_source": "server constant; the client has no icon name for this status",
+   "statuses": [
+    {
+     "constant": "SC_HLIF_AVOID",
+     "id": 242,
+     "flags": [],
+     "calculation_flags": [
+      "Speed"
+     ],
+     "source": {
+      "path": "db/re/sc_config.conf",
+      "record": "SC_HLIF_AVOID"
+     },
+     "associated_skill": {
+      "id": 8002,
+      "name": "HLIF_AVOID",
+      "description": "Avoid",
+      "source": {
+       "path": "db/re/skill_db.conf",
+       "record": "HLIF_AVOID"
+      }
+     },
+     "status_change_skills": [
+      {
+       "id": 8002,
+       "name": "HLIF_AVOID",
+       "description": "Avoid",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "HLIF_AVOID"
+       }
+      }
+     ]
+    }
+   ],
+   "source": {
+    "path": "db/re/sc_config.conf",
+    "record": "SC_HLIF_AVOID"
+   }
+  },
+  {
+   "id": 100243,
+   "name": "Hlif Change",
+   "iconless": true,
+   "name_source": "server constant; the client has no icon name for this status",
+   "statuses": [
+    {
+     "constant": "SC_HLIF_CHANGE",
+     "id": 243,
+     "flags": [],
+     "calculation_flags": [
+      "Int",
+      "Vit"
+     ],
+     "source": {
+      "path": "db/re/sc_config.conf",
+      "record": "SC_HLIF_CHANGE"
+     },
+     "associated_skill": {
+      "id": 8004,
+      "name": "HLIF_CHANGE",
+      "description": "Change",
+      "source": {
+       "path": "db/re/skill_db.conf",
+       "record": "HLIF_CHANGE"
+      }
+     },
+     "status_change_skills": [
+      {
+       "id": 8004,
+       "name": "HLIF_CHANGE",
+       "description": "Change",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "HLIF_CHANGE"
+       }
+      }
+     ]
+    }
+   ],
+   "source": {
+    "path": "db/re/sc_config.conf",
+    "record": "SC_HLIF_CHANGE"
+   }
+  },
+  {
+   "id": 100245,
+   "name": "Hlif Fleet",
+   "iconless": true,
+   "name_source": "server constant; the client has no icon name for this status",
+   "statuses": [
+    {
+     "constant": "SC_HLIF_FLEET",
+     "id": 245,
+     "flags": [],
+     "calculation_flags": [
+      "Aspd",
+      "AtkPerc"
+     ],
+     "source": {
+      "path": "db/re/sc_config.conf",
+      "record": "SC_HLIF_FLEET"
+     },
+     "associated_skill": {
+      "id": 8010,
+      "name": "HFLI_FLEET",
+      "description": "Fleeting Move",
+      "source": {
+       "path": "db/re/skill_db.conf",
+       "record": "HFLI_FLEET"
+      }
+     },
+     "status_change_skills": [
+      {
+       "id": 8010,
+       "name": "HFLI_FLEET",
+       "description": "Fleeting Move",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "HFLI_FLEET"
+       }
+      }
+     ]
+    }
+   ],
+   "source": {
+    "path": "db/re/sc_config.conf",
+    "record": "SC_HLIF_FLEET"
+   }
+  },
+  {
+   "id": 100246,
+   "name": "Hlif Speed",
+   "iconless": true,
+   "name_source": "server constant; the client has no icon name for this status",
+   "statuses": [
+    {
+     "constant": "SC_HLIF_SPEED",
+     "id": 246,
+     "flags": [],
+     "calculation_flags": [
+      "Flee"
+     ],
+     "source": {
+      "path": "db/re/sc_config.conf",
+      "record": "SC_HLIF_SPEED"
+     },
+     "associated_skill": {
+      "id": 8011,
+      "name": "HFLI_SPEED",
+      "description": "Speed",
+      "source": {
+       "path": "db/re/skill_db.conf",
+       "record": "HFLI_SPEED"
+      }
+     },
+     "status_change_skills": [
+      {
+       "id": 8011,
+       "name": "HFLI_SPEED",
+       "description": "Speed",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "HFLI_SPEED"
+       }
+      }
+     ]
+    }
+   ],
+   "source": {
+    "path": "db/re/sc_config.conf",
+    "record": "SC_HLIF_SPEED"
+   }
+  },
+  {
+   "id": 100188,
+   "name": "Incallstatus",
+   "iconless": true,
+   "name_source": "server constant; the client has no icon name for this status",
+   "statuses": [
+    {
+     "constant": "SC_INCALLSTATUS",
+     "id": 188,
+     "flags": [],
+     "calculation_flags": [
+      "Agi",
+      "Dex",
+      "Int",
+      "Luk",
+      "Str",
+      "Vit"
+     ],
+     "source": {
+      "path": "db/re/sc_config.conf",
+      "record": "SC_INCALLSTATUS"
+     },
+     "code_call_sites": [
+      {
+       "path": "src/map/skill.c",
+       "line": 14651
+      }
+     ]
+    }
+   ],
+   "source": {
+    "path": "db/re/sc_config.conf",
+    "record": "SC_INCALLSTATUS"
+   }
+  },
+  {
+   "id": 100201,
+   "name": "Incatkrate",
+   "iconless": true,
+   "name_source": "server constant; the client has no icon name for this status",
+   "statuses": [
+    {
+     "constant": "SC_INCATKRATE",
+     "id": 201,
+     "flags": [],
+     "calculation_flags": [
+      "AtkPerc"
+     ],
+     "source": {
+      "path": "db/re/sc_config.conf",
+      "record": "SC_INCATKRATE"
+     },
+     "code_call_sites": [
+      {
+       "path": "src/map/skill.c",
+       "line": 9173
+      }
+     ]
+    }
+   ],
+   "source": {
+    "path": "db/re/sc_config.conf",
+    "record": "SC_INCATKRATE"
+   }
+  },
+  {
+   "id": 100203,
+   "name": "Incdefrate",
+   "iconless": true,
+   "name_source": "server constant; the client has no icon name for this status",
+   "statuses": [
+    {
+     "constant": "SC_INCDEFRATE",
+     "id": 203,
+     "flags": [],
+     "calculation_flags": [
+      "Def"
+     ],
+     "source": {
+      "path": "db/re/sc_config.conf",
+      "record": "SC_INCDEFRATE"
+     },
+     "code_call_sites": [
+      {
+       "path": "src/map/skill.c",
+       "line": 14669
+      },
+      {
+       "path": "src/map/skill.c",
+       "line": 14708
+      }
+     ]
+    }
+   ],
+   "source": {
+    "path": "db/re/sc_config.conf",
+    "record": "SC_INCDEFRATE"
+   }
+  },
+  {
+   "id": 100197,
+   "name": "Incflee",
+   "iconless": true,
+   "name_source": "server constant; the client has no icon name for this status",
+   "statuses": [
+    {
+     "constant": "SC_INCFLEE",
+     "id": 197,
+     "flags": [],
+     "calculation_flags": [
+      "Flee"
+     ],
+     "source": {
+      "path": "db/re/sc_config.conf",
+      "record": "SC_INCFLEE"
+     },
+     "code_call_sites": [
+      {
+       "path": "src/map/skill.c",
+       "line": 14678
+      }
+     ]
+    }
+   ],
+   "source": {
+    "path": "db/re/sc_config.conf",
+    "record": "SC_INCFLEE"
+   }
+  },
+  {
+   "id": 100198,
+   "name": "Incfleerate",
+   "iconless": true,
+   "name_source": "server constant; the client has no icon name for this status",
+   "statuses": [
+    {
+     "constant": "SC_INCFLEERATE",
+     "id": 198,
+     "flags": [],
+     "calculation_flags": [
+      "Flee"
+     ],
+     "source": {
+      "path": "db/re/sc_config.conf",
+      "record": "SC_INCFLEERATE"
+     },
+     "associated_skill": {
+      "id": 350,
+      "name": "NPC_AGIUP",
+      "description": "Agility UP",
+      "source": {
+       "path": "db/re/skill_db.conf",
+       "record": "NPC_AGIUP"
+      }
+     },
+     "status_change_skills": [
+      {
+       "id": 350,
+       "name": "NPC_AGIUP",
+       "description": "Agility UP",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "NPC_AGIUP"
+       }
+      }
+     ],
+     "code_call_sites": [
+      {
+       "path": "src/map/skill.c",
+       "line": 9600
+      },
+      {
+       "path": "src/map/skill.c",
+       "line": 14714
+      }
+     ]
+    }
+   ],
+   "source": {
+    "path": "db/re/sc_config.conf",
+    "record": "SC_INCFLEERATE"
+   }
+  },
+  {
+   "id": 100195,
+   "name": "Inchit",
+   "iconless": true,
+   "name_source": "server constant; the client has no icon name for this status",
+   "statuses": [
+    {
+     "constant": "SC_INCHIT",
+     "id": 195,
+     "flags": [
+      "NoBBReset",
+      "NoClearanceReset",
+      "NoDeathReset",
+      "NoDispelReset",
+      "NoMadoReset"
+     ],
+     "calculation_flags": [
+      "Hit"
+     ],
+     "source": {
+      "path": "db/re/sc_config.conf",
+      "record": "SC_INCHIT"
+     },
+     "code_call_sites": [
+      {
+       "path": "src/map/skill.c",
+       "line": 14677
+      }
+     ]
+    }
+   ],
+   "source": {
+    "path": "db/re/sc_config.conf",
+    "record": "SC_INCHIT"
+   }
+  },
+  {
+   "id": 100196,
+   "name": "Inchitrate",
+   "iconless": true,
+   "name_source": "server constant; the client has no icon name for this status",
+   "statuses": [
+    {
+     "constant": "SC_INCHITRATE",
+     "id": 196,
+     "flags": [],
+     "calculation_flags": [
+      "Hit"
+     ],
+     "source": {
+      "path": "db/re/sc_config.conf",
+      "record": "SC_INCHITRATE"
+     },
+     "associated_skill": {
+      "id": 349,
+      "name": "NPC_POWERUP",
+      "description": "Power Up",
+      "source": {
+       "path": "db/re/skill_db.conf",
+       "record": "NPC_POWERUP"
+      }
+     },
+     "status_change_skills": [
+      {
+       "id": 349,
+       "name": "NPC_POWERUP",
+       "description": "Power Up",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "NPC_POWERUP"
+       }
+      }
+     ],
+     "code_call_sites": [
+      {
+       "path": "src/map/skill.c",
+       "line": 9599
+      }
+     ]
+    }
+   ],
+   "source": {
+    "path": "db/re/sc_config.conf",
+    "record": "SC_INCHITRATE"
+   }
+  },
+  {
+   "id": 100199,
+   "name": "Incmhprate",
+   "iconless": true,
+   "name_source": "server constant; the client has no icon name for this status",
+   "statuses": [
+    {
+     "constant": "SC_INCMHPRATE",
+     "id": 199,
+     "flags": [],
+     "calculation_flags": [
+      "Maxhp"
+     ],
+     "source": {
+      "path": "db/re/sc_config.conf",
+      "record": "SC_INCMHPRATE"
+     },
+     "code_call_sites": [
+      {
+       "path": "src/map/skill.c",
+       "line": 14643
+      }
+     ]
+    }
+   ],
+   "source": {
+    "path": "db/re/sc_config.conf",
+    "record": "SC_INCMHPRATE"
+   }
+  },
+  {
+   "id": 100200,
+   "name": "Incmsprate",
+   "iconless": true,
+   "name_source": "server constant; the client has no icon name for this status",
+   "statuses": [
+    {
+     "constant": "SC_INCMSPRATE",
+     "id": 200,
+     "flags": [],
+     "calculation_flags": [
+      "Maxsp"
+     ],
+     "source": {
+      "path": "db/re/sc_config.conf",
+      "record": "SC_INCMSPRATE"
+     },
+     "code_call_sites": [
+      {
+       "path": "src/map/skill.c",
+       "line": 14647
+      }
+     ]
+    }
+   ],
+   "source": {
+    "path": "db/re/sc_config.conf",
+    "record": "SC_INCMSPRATE"
+   }
+  },
+  {
+   "id": 100297,
+   "name": "Invincibleoff",
+   "iconless": true,
+   "name_source": "server constant; the client has no icon name for this status",
+   "statuses": [
+    {
+     "constant": "SC_INVINCIBLEOFF",
+     "id": 297,
+     "flags": [],
+     "calculation_flags": [
+      "Speed"
+     ],
+     "source": {
+      "path": "db/re/sc_config.conf",
+      "record": "SC_INVINCIBLEOFF"
+     },
+     "associated_skill": {
+      "id": 686,
+      "name": "NPC_INVINCIBLEOFF",
+      "description": "Invincible off",
+      "source": {
+       "path": "db/re/skill_db.conf",
+       "record": "NPC_INVINCIBLEOFF"
+      }
+     },
+     "status_change_skills": [
+      {
+       "id": 686,
+       "name": "NPC_INVINCIBLEOFF",
+       "description": "Invincible off",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "NPC_INVINCIBLEOFF"
+       }
+      }
+     ]
+    }
+   ],
+   "source": {
+    "path": "db/re/sc_config.conf",
+    "record": "SC_INVINCIBLEOFF"
+   }
+  },
+  {
+   "id": 100250,
+   "name": "Jailed",
+   "iconless": true,
+   "name_source": "server constant; the client has no icon name for this status",
+   "statuses": [
+    {
+     "constant": "SC_JAILED",
+     "id": 250,
+     "flags": [
+      "NoAllReset",
+      "NoBBReset",
+      "NoClearanceReset",
+      "NoDeathReset",
+      "NoDispelReset",
+      "NoMadoReset"
+     ],
+     "calculation_flags": [],
+     "source": {
+      "path": "db/re/sc_config.conf",
+      "record": "SC_JAILED"
+     },
+     "code_call_sites": [
+      {
+       "path": "src/map/atcommand.c",
+       "line": 5115
+      },
+      {
+       "path": "src/map/atcommand.c",
+       "line": 5154
+      },
+      {
+       "path": "src/map/atcommand.c",
+       "line": 5265
+      }
+     ]
+    }
+   ],
+   "source": {
+    "path": "db/re/sc_config.conf",
+    "record": "SC_JAILED"
+   }
+  },
+  {
+   "id": 100066,
+   "name": "Keeping",
+   "iconless": true,
+   "name_source": "server constant; the client has no icon name for this status",
+   "statuses": [
+    {
+     "constant": "SC_KEEPING",
+     "id": 66,
+     "flags": [],
+     "calculation_flags": [
+      "Def"
+     ],
+     "source": {
+      "path": "db/re/sc_config.conf",
+      "record": "SC_KEEPING"
+     },
+     "associated_skill": {
+      "id": 201,
+      "name": "NPC_KEEPING",
+      "description": "Keeping",
+      "source": {
+       "path": "db/re/skill_db.conf",
+       "record": "NPC_KEEPING"
+      }
+     },
+     "status_change_skills": [
+      {
+       "id": 201,
+       "name": "NPC_KEEPING",
+       "description": "Keeping",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "NPC_KEEPING"
+       }
+      }
+     ]
+    }
+   ],
+   "source": {
+    "path": "db/re/sc_config.conf",
+    "record": "SC_KEEPING"
+   }
+  },
+  {
+   "id": 100239,
+   "name": "Knowledge",
+   "iconless": true,
+   "name_source": "server constant; the client has no icon name for this status",
+   "statuses": [
+    {
+     "constant": "SC_KNOWLEDGE",
+     "id": 239,
+     "flags": [],
+     "calculation_flags": [
+      "All"
+     ],
+     "source": {
+      "path": "db/re/sc_config.conf",
+      "record": "SC_KNOWLEDGE"
+     },
+     "associated_skill": {
+      "id": 443,
+      "name": "SG_KNOWLEDGE",
+      "description": "Knowledge of the Sun Moon and Stars",
+      "source": {
+       "path": "db/re/skill_db.conf",
+       "record": "SG_KNOWLEDGE"
+      }
+     },
+     "status_change_skills": [
+      {
+       "id": 443,
+       "name": "SG_KNOWLEDGE",
+       "description": "Knowledge of the Sun Moon and Stars",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "SG_KNOWLEDGE"
+       }
+      }
+     ],
+     "code_call_sites": [
+      {
+       "path": "src/map/clif.c",
+       "line": 11627
+      }
+     ]
+    }
+   ],
+   "source": {
+    "path": "db/re/sc_config.conf",
+    "record": "SC_KNOWLEDGE"
+   }
+  },
+  {
+   "id": 100508,
+   "name": "Leadership",
+   "iconless": true,
+   "name_source": "server constant; the client has no icon name for this status",
+   "statuses": [
+    {
+     "constant": "SC_LEADERSHIP",
+     "id": 508,
+     "flags": [
+      "NoAllReset",
+      "NoBBReset",
+      "NoClearanceReset",
+      "NoDispelReset",
+      "NoMadoReset",
+      "NoSave"
+     ],
+     "calculation_flags": [
+      "Str"
+     ],
+     "source": {
+      "path": "db/re/sc_config.conf",
+      "record": "SC_LEADERSHIP"
+     },
+     "associated_skill": {
+      "id": 10006,
+      "name": "GD_LEADERSHIP",
+      "description": "Great Leadership",
+      "source": {
+       "path": "db/re/skill_db.conf",
+       "record": "GD_LEADERSHIP"
+      }
+     },
+     "status_change_skills": [
+      {
+       "id": 10006,
+       "name": "GD_LEADERSHIP",
+       "description": "Great Leadership",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "GD_LEADERSHIP"
+       }
+      }
+     ]
+    }
+   ],
+   "source": {
+    "path": "db/re/sc_config.conf",
+    "record": "SC_LEADERSHIP"
+   }
+  },
+  {
+   "id": 100157,
+   "name": "Longing",
+   "iconless": true,
+   "name_source": "server constant; the client has no icon name for this status",
+   "statuses": [
+    {
+     "constant": "SC_LONGING",
+     "id": 157,
+     "flags": [],
+     "calculation_flags": [
+      "Aspd",
+      "Speed"
+     ],
+     "source": {
+      "path": "db/re/sc_config.conf",
+      "record": "SC_LONGING"
+     },
+     "associated_skill": {
+      "id": 487,
+      "name": "CG_LONGINGFREEDOM",
+      "description": "Longing for Freedom",
+      "source": {
+       "path": "db/re/skill_db.conf",
+       "record": "CG_LONGINGFREEDOM"
+      }
+     },
+     "status_change_skills": [
+      {
+       "id": 487,
+       "name": "CG_LONGINGFREEDOM",
+       "description": "Longing for Freedom",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "CG_LONGINGFREEDOM"
+       }
+      }
+     ]
+    }
+   ],
+   "source": {
+    "path": "db/re/sc_config.conf",
+    "record": "SC_LONGING"
+   }
+  },
+  {
+   "id": 100252,
+   "name": "Magicalattack",
+   "iconless": true,
+   "name_source": "server constant; the client has no icon name for this status",
+   "statuses": [
+    {
+     "constant": "SC_MAGICALATTACK",
+     "id": 252,
+     "flags": [],
+     "calculation_flags": [],
+     "source": {
+      "path": "db/re/sc_config.conf",
+      "record": "SC_MAGICALATTACK"
+     },
+     "associated_skill": {
+      "id": 192,
+      "name": "NPC_MAGICALATTACK",
+      "description": "Demon Shock Attack",
+      "source": {
+       "path": "db/re/skill_db.conf",
+       "record": "NPC_MAGICALATTACK"
+      }
+     },
+     "status_change_skills": [
+      {
+       "id": 192,
+       "name": "NPC_MAGICALATTACK",
+       "description": "Demon Shock Attack",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "NPC_MAGICALATTACK"
+       }
+      }
+     ]
+    }
+   ],
+   "source": {
+    "path": "db/re/sc_config.conf",
+    "record": "SC_MAGICALATTACK"
+   }
+  },
+  {
+   "id": 100255,
+   "name": "Magicmirror",
+   "iconless": true,
+   "name_source": "server constant; the client has no icon name for this status",
+   "statuses": [
+    {
+     "constant": "SC_MAGICMIRROR",
+     "id": 255,
+     "flags": [],
+     "calculation_flags": [],
+     "source": {
+      "path": "db/re/sc_config.conf",
+      "record": "SC_MAGICMIRROR"
+     },
+     "associated_skill": {
+      "id": 671,
+      "name": "NPC_MAGICMIRROR",
+      "description": "Magic Mirror",
+      "source": {
+       "path": "db/re/skill_db.conf",
+       "record": "NPC_MAGICMIRROR"
+      }
+     },
+     "status_change_skills": [
+      {
+       "id": 671,
+       "name": "NPC_MAGICMIRROR",
+       "description": "Magic Mirror",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "NPC_MAGICMIRROR"
+       }
+      }
+     ]
+    }
+   ],
+   "source": {
+    "path": "db/re/sc_config.conf",
+    "record": "SC_MAGICMIRROR"
+   }
+  },
+  {
+   "id": 100081,
+   "name": "Magicrod",
+   "iconless": true,
+   "name_source": "server constant; the client has no icon name for this status",
+   "statuses": [
+    {
+     "constant": "SC_MAGICROD",
+     "id": 81,
+     "flags": [
+      "Buff",
+      "NoClearanceReset",
+      "NoMagicBlocked",
+      "NoSave"
+     ],
+     "calculation_flags": [],
+     "source": {
+      "path": "db/re/sc_config.conf",
+      "record": "SC_MAGICROD"
+     },
+     "associated_skill": {
+      "id": 276,
+      "name": "SA_MAGICROD",
+      "description": "Magic Rod",
+      "source": {
+       "path": "db/re/skill_db.conf",
+       "record": "SA_MAGICROD"
+      }
+     },
+     "status_change_skills": [
+      {
+       "id": 276,
+       "name": "SA_MAGICROD",
+       "description": "Magic Rod",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "SA_MAGICROD"
+       }
+      }
+     ]
+    }
+   ],
+   "source": {
+    "path": "db/re/sc_config.conf",
+    "record": "SC_MAGICROD"
+   }
+  },
+  {
+   "id": 100131,
+   "name": "Memorize",
+   "iconless": true,
+   "name_source": "server constant; the client has no icon name for this status",
+   "statuses": [
+    {
+     "constant": "SC_MEMORIZE",
+     "id": 131,
+     "flags": [
+      "Buff",
+      "NoSave"
+     ],
+     "calculation_flags": [],
+     "source": {
+      "path": "db/re/sc_config.conf",
+      "record": "SC_MEMORIZE"
+     },
+     "associated_skill": {
+      "id": 403,
+      "name": "PF_MEMORIZE",
+      "description": "Foresight",
+      "source": {
+       "path": "db/re/skill_db.conf",
+       "record": "PF_MEMORIZE"
+      }
+     },
+     "status_change_skills": [
+      {
+       "id": 403,
+       "name": "PF_MEMORIZE",
+       "description": "Foresight",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "PF_MEMORIZE"
+       }
+      }
+     ]
+    }
+   ],
+   "source": {
+    "path": "db/re/sc_config.conf",
+    "record": "SC_MEMORIZE"
+   }
+  },
+  {
+   "id": 100284,
+   "name": "Mer Quicken",
+   "iconless": true,
+   "name_source": "server constant; the client has no icon name for this status",
+   "statuses": [
+    {
+     "constant": "SC_MER_QUICKEN",
+     "id": 284,
+     "flags": [],
+     "calculation_flags": [
+      "Aspd"
+     ],
+     "source": {
+      "path": "db/re/sc_config.conf",
+      "record": "SC_MER_QUICKEN"
+     },
+     "associated_skill": {
+      "id": 8223,
+      "name": "MER_QUICKEN",
+      "description": "Two-Hand_Quicken",
+      "source": {
+       "path": "db/re/skill_db.conf",
+       "record": "MER_QUICKEN"
+      }
+     },
+     "status_change_skills": [
+      {
+       "id": 8223,
+       "name": "MER_QUICKEN",
+       "description": "Two-Hand_Quicken",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "MER_QUICKEN"
+       }
+      }
+     ]
+    }
+   ],
+   "source": {
+    "path": "db/re/sc_config.conf",
+    "record": "SC_MER_QUICKEN"
+   }
+  },
+  {
+   "id": 100314,
+   "name": "Millenniumshield",
+   "iconless": true,
+   "name_source": "server constant; the client has no icon name for this status",
+   "statuses": [
+    {
+     "constant": "SC_MILLENNIUMSHIELD",
+     "id": 314,
+     "flags": [],
+     "calculation_flags": [],
+     "source": {
+      "path": "db/re/sc_config.conf",
+      "record": "SC_MILLENNIUMSHIELD"
+     },
+     "associated_skill": {
+      "id": 2011,
+      "name": "RK_MILLENNIUMSHIELD",
+      "description": "Millenium Shield",
+      "source": {
+       "path": "db/re/skill_db.conf",
+       "record": "RK_MILLENNIUMSHIELD"
+      }
+     },
+     "status_change_skills": [
+      {
+       "id": 2011,
+       "name": "RK_MILLENNIUMSHIELD",
+       "description": "Millenium Shield",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "RK_MILLENNIUMSHIELD"
+       }
+      }
+     ]
+    }
+   ],
+   "source": {
+    "path": "db/re/sc_config.conf",
+    "record": "SC_MILLENNIUMSHIELD"
+   }
+  },
+  {
+   "id": 100130,
+   "name": "Mindbreaker",
+   "iconless": true,
+   "name_source": "server constant; the client has no icon name for this status",
+   "statuses": [
+    {
+     "constant": "SC_MINDBREAKER",
+     "id": 130,
+     "flags": [
+      "Buff",
+      "NoSave"
+     ],
+     "calculation_flags": [
+      "MatkPerc",
+      "MdefPerc"
+     ],
+     "source": {
+      "path": "db/re/sc_config.conf",
+      "record": "SC_MINDBREAKER"
+     },
+     "associated_skill": {
+      "id": 402,
+      "name": "PF_MINDBREAKER",
+      "description": "Mind Breaker",
+      "source": {
+       "path": "db/re/skill_db.conf",
+       "record": "PF_MINDBREAKER"
+      }
+     },
+     "status_change_skills": [
+      {
+       "id": 402,
+       "name": "PF_MINDBREAKER",
+       "description": "Mind Breaker",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "PF_MINDBREAKER"
+       }
+      }
+     ]
+    }
+   ],
+   "source": {
+    "path": "db/re/sc_config.conf",
+    "record": "SC_MINDBREAKER"
+   }
+  },
+  {
+   "id": 100178,
+   "name": "Modechange",
+   "iconless": true,
+   "name_source": "server constant; the client has no icon name for this status",
+   "statuses": [
+    {
+     "constant": "SC_MODECHANGE",
+     "id": 178,
+     "flags": [],
+     "calculation_flags": [
+      "Mode"
+     ],
+     "source": {
+      "path": "db/re/sc_config.conf",
+      "record": "SC_MODECHANGE"
+     },
+     "associated_skill": {
+      "id": 197,
+      "name": "NPC_EMOTION",
+      "description": "Emotion",
+      "source": {
+       "path": "db/re/skill_db.conf",
+       "record": "NPC_EMOTION"
+      }
+     },
+     "status_change_skills": [
+      {
+       "id": 197,
+       "name": "NPC_EMOTION",
+       "description": "Emotion",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "NPC_EMOTION"
+       }
+      },
+      {
+       "id": 474,
+       "name": "NPC_EMOTION_ON",
+       "description": "Emotion ON",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "NPC_EMOTION_ON"
+       }
+      }
+     ],
+     "code_call_sites": [
+      {
+       "path": "src/map/atcommand.c",
+       "line": 7164
+      },
+      {
+       "path": "src/map/mob.c",
+       "line": 756
+      },
+      {
+       "path": "src/map/mob.c",
+       "line": 3564
+      },
+      {
+       "path": "src/map/mob.c",
+       "line": 3569
+      },
+      {
+       "path": "src/map/mob.c",
+       "line": 3574
+      },
+      {
+       "path": "src/map/mob.c",
+       "line": 3576
+      },
+      {
+       "path": "src/map/script.c",
+       "line": 18524
+      },
+      {
+       "path": "src/map/skill.c",
+       "line": 11787
+      }
+     ]
+    }
+   ],
+   "source": {
+    "path": "db/re/sc_config.conf",
+    "record": "SC_MODECHANGE"
+   }
+  },
+  {
+   "id": 100233,
+   "name": "Nj Tatamigaeshi",
+   "iconless": true,
+   "name_source": "server constant; the client has no icon name for this status",
+   "statuses": [
+    {
+     "constant": "SC_NJ_TATAMIGAESHI",
+     "id": 233,
+     "flags": [],
+     "calculation_flags": [],
+     "source": {
+      "path": "db/re/sc_config.conf",
+      "record": "SC_NJ_TATAMIGAESHI"
+     },
+     "associated_skill": {
+      "id": 527,
+      "name": "NJ_TATAMIGAESHI",
+      "description": "Improvised Defense",
+      "source": {
+       "path": "db/re/skill_db.conf",
+       "record": "NJ_TATAMIGAESHI"
+      }
+     },
+     "status_change_skills": [
+      {
+       "id": 527,
+       "name": "NJ_TATAMIGAESHI",
+       "description": "Improvised Defense",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "NJ_TATAMIGAESHI"
+       }
+      }
+     ]
+    }
+   ],
+   "source": {
+    "path": "db/re/sc_config.conf",
+    "record": "SC_NJ_TATAMIGAESHI"
+   }
+  },
+  {
+   "id": 100106,
+   "name": "Nochat",
+   "iconless": true,
+   "name_source": "server constant; the client has no icon name for this status",
+   "statuses": [
+    {
+     "constant": "SC_NOCHAT",
+     "id": 106,
+     "flags": [
+      "NoAllReset",
+      "NoBBReset",
+      "NoClearanceReset",
+      "NoDeathReset",
+      "NoDispelReset",
+      "NoMadoReset"
+     ],
+     "calculation_flags": [],
+     "source": {
+      "path": "db/re/sc_config.conf",
+      "record": "SC_NOCHAT"
+     },
+     "code_call_sites": [
+      {
+       "path": "src/map/atcommand.c",
+       "line": 7379
+      },
+      {
+       "path": "src/map/atcommand.c",
+       "line": 8199
+      },
+      {
+       "path": "src/map/clif.c",
+       "line": 11619
+      },
+      {
+       "path": "src/map/clif.c",
+       "line": 16867
+      },
+      {
+       "path": "src/map/pc.c",
+       "line": 8293
+      },
+      {
+       "path": "src/map/pc.c",
+       "line": 8847
+      }
+     ]
+    }
+   ],
+   "source": {
+    "path": "db/re/sc_config.conf",
+    "record": "SC_NOCHAT"
+   }
+  },
+  {
+   "id": 100583,
+   "name": "No Switch Equip",
+   "iconless": true,
+   "name_source": "server constant; the client has no icon name for this status",
+   "statuses": [
+    {
+     "constant": "SC_NO_SWITCH_EQUIP",
+     "id": 583,
+     "flags": [],
+     "calculation_flags": [],
+     "source": {
+      "path": "db/re/sc_config.conf",
+      "record": "SC_NO_SWITCH_EQUIP"
+     },
+     "associated_skill": {
+      "id": 2418,
+      "name": "WM_SEVERE_RAINSTORM",
+      "description": "Severe Rainstorm",
+      "source": {
+       "path": "db/re/skill_db.conf",
+       "record": "WM_SEVERE_RAINSTORM"
+      }
+     },
+     "status_change_skills": [
+      {
+       "id": 2418,
+       "name": "WM_SEVERE_RAINSTORM",
+       "description": "Severe Rainstorm",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "WM_SEVERE_RAINSTORM"
+       }
+      }
+     ]
+    }
+   ],
+   "source": {
+    "path": "db/re/sc_config.conf",
+    "record": "SC_NO_SWITCH_EQUIP"
+   }
+  },
+  {
+   "id": 100137,
+   "name": "Orcish",
+   "iconless": true,
+   "name_source": "server constant; the client has no icon name for this status",
+   "statuses": [
+    {
+     "constant": "SC_ORCISH",
+     "id": 137,
+     "flags": [
+      "NoSave"
+     ],
+     "calculation_flags": [],
+     "source": {
+      "path": "db/re/sc_config.conf",
+      "record": "SC_ORCISH"
+     },
+     "associated_skill": {
+      "id": 294,
+      "name": "SA_REVERSEORCISH",
+      "description": "Grampus Morph",
+      "source": {
+       "path": "db/re/skill_db.conf",
+       "record": "SA_REVERSEORCISH"
+      }
+     },
+     "status_change_skills": [
+      {
+       "id": 294,
+       "name": "SA_REVERSEORCISH",
+       "description": "Grampus Morph",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "SA_REVERSEORCISH"
+       }
+      },
+      {
+       "id": 697,
+       "name": "ALL_REVERSEORCISH",
+       "description": "Reverse Orcish",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "ALL_REVERSEORCISH"
+       }
+      }
+     ]
+    }
+   ],
+   "source": {
+    "path": "db/re/sc_config.conf",
+    "record": "SC_ORCISH"
+   }
+  },
+  {
+   "id": 100269,
+   "name": "Pneuma",
+   "iconless": true,
+   "name_source": "server constant; the client has no icon name for this status",
+   "statuses": [
+    {
+     "constant": "SC_PNEUMA",
+     "id": 269,
+     "flags": [
+      "Buff",
+      "NoBBReset",
+      "NoClearanceReset",
+      "NoDispelReset"
+     ],
+     "calculation_flags": [],
+     "source": {
+      "path": "db/re/sc_config.conf",
+      "record": "SC_PNEUMA"
+     },
+     "associated_skill": {
+      "id": 25,
+      "name": "AL_PNEUMA",
+      "description": "Pneuma",
+      "source": {
+       "path": "db/re/skill_db.conf",
+       "record": "AL_PNEUMA"
+      }
+     },
+     "status_change_skills": [
+      {
+       "id": 25,
+       "name": "AL_PNEUMA",
+       "description": "Pneuma",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "AL_PNEUMA"
+       }
+      }
+     ]
+    }
+   ],
+   "source": {
+    "path": "db/re/sc_config.conf",
+    "record": "SC_PNEUMA"
+   }
+  },
+  {
+   "id": 100552,
+   "name": "Raid",
+   "iconless": true,
+   "name_source": "server constant; the client has no icon name for this status",
+   "statuses": [
+    {
+     "constant": "SC_RAID",
+     "id": 552,
+     "flags": [
+      "Buff",
+      "NoBBReset",
+      "NoClearanceReset",
+      "NoDispelReset"
+     ],
+     "calculation_flags": [],
+     "source": {
+      "path": "db/re/sc_config.conf",
+      "record": "SC_RAID"
+     },
+     "associated_skill": {
+      "id": 214,
+      "name": "RG_RAID",
+      "description": "Sightless Mind",
+      "source": {
+       "path": "db/re/skill_db.conf",
+       "record": "RG_RAID"
+      }
+     },
+     "code_call_sites": [
+      {
+       "path": "src/map/skill.c",
+       "line": 1856
+      }
+     ]
+    }
+   ],
+   "source": {
+    "path": "db/re/sc_config.conf",
+    "record": "SC_RAID"
+   }
+  },
+  {
+   "id": 100285,
+   "name": "Rebirth",
+   "iconless": true,
+   "name_source": "server constant; the client has no icon name for this status",
+   "statuses": [
+    {
+     "constant": "SC_REBIRTH",
+     "id": 285,
+     "flags": [],
+     "calculation_flags": [],
+     "source": {
+      "path": "db/re/sc_config.conf",
+      "record": "SC_REBIRTH"
+     },
+     "associated_skill": {
+      "id": 208,
+      "name": "NPC_REBIRTH",
+      "description": "Rebirth",
+      "source": {
+       "path": "db/re/skill_db.conf",
+       "record": "NPC_REBIRTH"
+      }
+     },
+     "status_change_skills": [
+      {
+       "id": 208,
+       "name": "NPC_REBIRTH",
+       "description": "Rebirth",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "NPC_REBIRTH"
+       }
+      }
+     ]
+    }
+   ],
+   "source": {
+    "path": "db/re/sc_config.conf",
+    "record": "SC_REBIRTH"
+   }
+  },
+  {
+   "id": 100090,
+   "name": "Ruwach",
+   "iconless": true,
+   "name_source": "server constant; the client has no icon name for this status",
+   "statuses": [
+    {
+     "constant": "SC_RUWACH",
+     "id": 90,
+     "flags": [],
+     "calculation_flags": [],
+     "source": {
+      "path": "db/re/sc_config.conf",
+      "record": "SC_RUWACH"
+     },
+     "associated_skill": {
+      "id": 24,
+      "name": "AL_RUWACH",
+      "description": "Ruwach",
+      "source": {
+       "path": "db/re/skill_db.conf",
+       "record": "AL_RUWACH"
+      }
+     },
+     "status_change_skills": [
+      {
+       "id": 24,
+       "name": "AL_RUWACH",
+       "description": "Ruwach",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "AL_RUWACH"
+       }
+      }
+     ]
+    }
+   ],
+   "source": {
+    "path": "db/re/sc_config.conf",
+    "record": "SC_RUWACH"
+   }
+  },
+  {
+   "id": 100135,
+   "name": "Sacrifice",
+   "iconless": true,
+   "name_source": "server constant; the client has no icon name for this status",
+   "statuses": [
+    {
+     "constant": "SC_SACRIFICE",
+     "id": 135,
+     "flags": [
+      "Buff",
+      "NoClearanceReset",
+      "NoSave"
+     ],
+     "calculation_flags": [],
+     "source": {
+      "path": "db/re/sc_config.conf",
+      "record": "SC_SACRIFICE"
+     },
+     "associated_skill": {
+      "id": 368,
+      "name": "PA_SACRIFICE",
+      "description": "Martyr's Reckoning",
+      "source": {
+       "path": "db/re/skill_db.conf",
+       "record": "PA_SACRIFICE"
+      }
+     },
+     "status_change_skills": [
+      {
+       "id": 368,
+       "name": "PA_SACRIFICE",
+       "description": "Martyr's Reckoning",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "PA_SACRIFICE"
+       }
+      }
+     ]
+    }
+   ],
+   "source": {
+    "path": "db/re/sc_config.conf",
+    "record": "SC_SACRIFICE"
+   }
+  },
+  {
+   "id": 100089,
+   "name": "Safetywall",
+   "iconless": true,
+   "name_source": "server constant; the client has no icon name for this status",
+   "statuses": [
+    {
+     "constant": "SC_SAFETYWALL",
+     "id": 89,
+     "flags": [
+      "Buff",
+      "NoBBReset",
+      "NoClearanceReset",
+      "NoDispelReset"
+     ],
+     "calculation_flags": [],
+     "source": {
+      "path": "db/re/sc_config.conf",
+      "record": "SC_SAFETYWALL"
+     },
+     "associated_skill": {
+      "id": 12,
+      "name": "MG_SAFETYWALL",
+      "description": "Safety Wall",
+      "source": {
+       "path": "db/re/skill_db.conf",
+       "record": "MG_SAFETYWALL"
+      }
+     },
+     "status_change_skills": [
+      {
+       "id": 12,
+       "name": "MG_SAFETYWALL",
+       "description": "Safety Wall",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "MG_SAFETYWALL"
+       }
+      },
+      {
+       "id": 5008,
+       "name": "SO_ELEMENTAL_SHIELD",
+       "description": "Elemental Shield",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "SO_ELEMENTAL_SHIELD"
+       }
+      },
+      {
+       "id": 8033,
+       "name": "MH_STEINWAND",
+       "description": "Stone Wall",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "MH_STEINWAND"
+       }
+      }
+     ]
+    }
+   ],
+   "source": {
+    "path": "db/re/sc_config.conf",
+    "record": "SC_SAFETYWALL"
+   }
+  },
+  {
+   "id": 100215,
+   "name": "Scresist",
+   "iconless": true,
+   "name_source": "server constant; the client has no icon name for this status",
+   "statuses": [
+    {
+     "constant": "SC_SCRESIST",
+     "id": 215,
+     "flags": [],
+     "calculation_flags": [],
+     "source": {
+      "path": "db/re/sc_config.conf",
+      "record": "SC_SCRESIST"
+     },
+     "associated_skill": {
+      "id": 369,
+      "name": "PA_GOSPEL",
+      "description": "Battle Chant",
+      "source": {
+       "path": "db/re/skill_db.conf",
+       "record": "PA_GOSPEL"
+      }
+     },
+     "code_call_sites": [
+      {
+       "path": "src/map/skill.c",
+       "line": 10846
+      },
+      {
+       "path": "src/map/skill.c",
+       "line": 14639
+      }
+     ]
+    }
+   ],
+   "source": {
+    "path": "db/re/sc_config.conf",
+    "record": "SC_SCRESIST"
+   }
+  },
+  {
+   "id": 100088,
+   "name": "Sight",
+   "iconless": true,
+   "name_source": "server constant; the client has no icon name for this status",
+   "statuses": [
+    {
+     "constant": "SC_SIGHT",
+     "id": 88,
+     "flags": [],
+     "calculation_flags": [],
+     "source": {
+      "path": "db/re/sc_config.conf",
+      "record": "SC_SIGHT"
+     },
+     "associated_skill": {
+      "id": 10,
+      "name": "MG_SIGHT",
+      "description": "Sight",
+      "source": {
+       "path": "db/re/skill_db.conf",
+       "record": "MG_SIGHT"
+      }
+     },
+     "status_change_skills": [
+      {
+       "id": 10,
+       "name": "MG_SIGHT",
+       "description": "Sight",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "MG_SIGHT"
+       }
+      },
+      {
+       "id": 669,
+       "name": "NPC_WIDESIGHT",
+       "description": "Wide Sight",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "NPC_WIDESIGHT"
+       }
+      },
+      {
+       "id": 8224,
+       "name": "MER_SIGHT",
+       "description": "Sight",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "MER_SIGHT"
+       }
+      }
+     ]
+    }
+   ],
+   "source": {
+    "path": "db/re/sc_config.conf",
+    "record": "SC_SIGHT"
+   }
+  },
+  {
+   "id": 100411,
+   "name": "Sitdown Force",
+   "iconless": true,
+   "name_source": "server constant; the client has no icon name for this status",
+   "statuses": [
+    {
+     "constant": "SC_SITDOWN_FORCE",
+     "id": 411,
+     "flags": [
+      "Buff",
+      "NoBBReset",
+      "NoClearanceReset",
+      "NoDispelReset"
+     ],
+     "calculation_flags": [],
+     "source": {
+      "path": "db/re/sc_config.conf",
+      "record": "SC_SITDOWN_FORCE"
+     },
+     "code_call_sites": [
+      {
+       "path": "src/map/status.c",
+       "line": 11657
+      }
+     ]
+    }
+   ],
+   "source": {
+    "path": "db/re/sc_config.conf",
+    "record": "SC_SITDOWN_FORCE"
+   }
+  },
+  {
+   "id": 100226,
+   "name": "Ska",
+   "iconless": true,
+   "name_source": "server constant; the client has no icon name for this status",
+   "statuses": [
+    {
+     "constant": "SC_SKA",
+     "id": 226,
+     "flags": [],
+     "calculation_flags": [
+      "Aspd",
+      "Def",
+      "Mdef"
+     ],
+     "source": {
+      "path": "db/re/sc_config.conf",
+      "record": "SC_SKA"
+     },
+     "associated_skill": {
+      "id": 472,
+      "name": "SL_SKA",
+      "description": "Eska",
+      "source": {
+       "path": "db/re/skill_db.conf",
+       "record": "SL_SKA"
+      }
+     },
+     "status_change_skills": [
+      {
+       "id": 472,
+       "name": "SL_SKA",
+       "description": "Eska",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "SL_SKA"
+       }
+      }
+     ]
+    }
+   ],
+   "source": {
+    "path": "db/re/sc_config.conf",
+    "record": "SC_SKA"
+   }
+  },
+  {
+   "id": 100222,
+   "name": "Skillrate Up",
+   "iconless": true,
+   "name_source": "server constant; the client has no icon name for this status",
+   "statuses": [
+    {
+     "constant": "SC_SKILLRATE_UP",
+     "id": 222,
+     "flags": [],
+     "calculation_flags": [],
+     "source": {
+      "path": "db/re/sc_config.conf",
+      "record": "SC_SKILLRATE_UP"
+     },
+     "associated_skill": {
+      "id": 442,
+      "name": "SG_FRIEND",
+      "description": "Friend of the Sun Moon and Stars",
+      "source": {
+       "path": "db/re/skill_db.conf",
+       "record": "SG_FRIEND"
+      }
+     },
+     "status_change_skills": [
+      {
+       "id": 442,
+       "name": "SG_FRIEND",
+       "description": "Friend of the Sun Moon and Stars",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "SG_FRIEND"
+       }
+      }
+     ],
+     "code_call_sites": [
+      {
+       "path": "src/map/party.c",
+       "line": 1067
+      },
+      {
+       "path": "src/map/party.c",
+       "line": 1076
+      }
+     ]
+    }
+   ],
+   "source": {
+    "path": "db/re/sc_config.conf",
+    "record": "SC_SKILLRATE_UP"
+   }
+  },
+  {
+   "id": 100003,
+   "name": "Sleep",
+   "iconless": true,
+   "name_source": "server constant; the client has no icon name for this status",
+   "statuses": [
+    {
+     "constant": "SC_SLEEP",
+     "id": 3,
+     "flags": [],
+     "calculation_flags": [],
+     "source": {
+      "path": "db/re/sc_config.conf",
+      "record": "SC_SLEEP"
+     },
+     "associated_skill": {
+      "id": 182,
+      "name": "NPC_SLEEPATTACK",
+      "description": "Sleep attack",
+      "source": {
+       "path": "db/re/skill_db.conf",
+       "record": "NPC_SLEEPATTACK"
+      }
+     },
+     "status_change_skills": [
+      {
+       "id": 119,
+       "name": "HT_SANDMAN",
+       "description": "Sandman",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "HT_SANDMAN"
+       }
+      },
+      {
+       "id": 182,
+       "name": "NPC_SLEEPATTACK",
+       "description": "Sleep attack",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "NPC_SLEEPATTACK"
+       }
+      },
+      {
+       "id": 306,
+       "name": "BD_LULLABY",
+       "description": "Lullaby",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "BD_LULLABY"
+       }
+      },
+      {
+       "id": 668,
+       "name": "NPC_WIDESLEEP",
+       "description": "Wide Sleep",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "NPC_WIDESLEEP"
+       }
+      },
+      {
+       "id": 8211,
+       "name": "MA_SANDMAN",
+       "description": "Sandman",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "MA_SANDMAN"
+       }
+      }
+     ],
+     "code_call_sites": [
+      {
+       "path": "src/map/skill.c",
+       "line": 1805
+      },
+      {
+       "path": "src/map/skill.c",
+       "line": 1876
+      },
+      {
+       "path": "src/map/skill.c",
+       "line": 14998
+      },
+      {
+       "path": "src/map/skill.c",
+       "line": 20949
+      }
+     ]
+    }
+   ],
+   "source": {
+    "path": "db/re/sc_config.conf",
+    "record": "SC_SLEEP"
+   }
+  },
+  {
+   "id": 100510,
+   "name": "Soulcold",
+   "iconless": true,
+   "name_source": "server constant; the client has no icon name for this status",
+   "statuses": [
+    {
+     "constant": "SC_SOULCOLD",
+     "id": 510,
+     "flags": [
+      "NoAllReset",
+      "NoBBReset",
+      "NoClearanceReset",
+      "NoDispelReset",
+      "NoMadoReset",
+      "NoSave"
+     ],
+     "calculation_flags": [
+      "Agi"
+     ],
+     "source": {
+      "path": "db/re/sc_config.conf",
+      "record": "SC_SOULCOLD"
+     },
+     "associated_skill": {
+      "id": 10008,
+      "name": "GD_SOULCOLD",
+      "description": "Cold Heart",
+      "source": {
+       "path": "db/re/skill_db.conf",
+       "record": "GD_SOULCOLD"
+      }
+     },
+     "status_change_skills": [
+      {
+       "id": 10008,
+       "name": "GD_SOULCOLD",
+       "description": "Cold Heart",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "GD_SOULCOLD"
+       }
+      }
+     ]
+    }
+   ],
+   "source": {
+    "path": "db/re/sc_config.conf",
+    "record": "SC_SOULCOLD"
+   }
+  },
+  {
+   "id": 100133,
+   "name": "Spiderweb",
+   "iconless": true,
+   "name_source": "server constant; the client has no icon name for this status",
+   "statuses": [
+    {
+     "constant": "SC_SPIDERWEB",
+     "id": 133,
+     "flags": [
+      "Debuff",
+      "NoBBReset",
+      "NoClearanceReset",
+      "NoDeathReset",
+      "NoDispelReset",
+      "NoSave"
+     ],
+     "calculation_flags": [
+      "Flee"
+     ],
+     "source": {
+      "path": "db/re/sc_config.conf",
+      "record": "SC_SPIDERWEB"
+     },
+     "associated_skill": {
+      "id": 405,
+      "name": "PF_SPIDERWEB",
+      "description": "Fiber Lock",
+      "source": {
+       "path": "db/re/skill_db.conf",
+       "record": "PF_SPIDERWEB"
+      }
+     },
+     "status_change_skills": [
+      {
+       "id": 405,
+       "name": "PF_SPIDERWEB",
+       "description": "Fiber Lock",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "PF_SPIDERWEB"
+       }
+      }
+     ]
+    }
+   ],
+   "source": {
+    "path": "db/re/sc_config.conf",
+    "record": "SC_SPIDERWEB"
+   }
+  },
+  {
+   "id": 100078,
+   "name": "Splasher",
+   "iconless": true,
+   "name_source": "server constant; the client has no icon name for this status",
+   "statuses": [
+    {
+     "constant": "SC_SPLASHER",
+     "id": 78,
+     "flags": [],
+     "calculation_flags": [],
+     "source": {
+      "path": "db/re/sc_config.conf",
+      "record": "SC_SPLASHER"
+     },
+     "associated_skill": {
+      "id": 141,
+      "name": "AS_SPLASHER",
+      "description": "Venom Splasher",
+      "source": {
+       "path": "db/re/skill_db.conf",
+       "record": "AS_SPLASHER"
+      }
+     },
+     "status_change_skills": [
+      {
+       "id": 141,
+       "name": "AS_SPLASHER",
+       "description": "Venom Splasher",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "AS_SPLASHER"
+       }
+      }
+     ]
+    }
+   ],
+   "source": {
+    "path": "db/re/sc_config.conf",
+    "record": "SC_SPLASHER"
+   }
+  },
+  {
+   "id": 100709,
+   "name": "Sp Spa",
+   "iconless": true,
+   "name_source": "server constant; the client has no icon name for this status",
+   "statuses": [
+    {
+     "constant": "SC_SP_SPA",
+     "id": 709,
+     "flags": [
+      "Buff",
+      "NoClearanceReset",
+      "NoDispelReset"
+     ],
+     "calculation_flags": [
+      "None"
+     ],
+     "source": {
+      "path": "db/re/sc_config.conf",
+      "record": "SC_SP_SPA"
+     },
+     "icon_constant": "SI_SP_SPA",
+     "associated_skill": {
+      "id": 2602,
+      "name": "SP_SPA",
+      "description": "Spa",
+      "source": {
+       "path": "db/re/skill_db.conf",
+       "record": "SP_SPA"
+      }
+     },
+     "status_change_skills": [
+      {
+       "id": 2602,
+       "name": "SP_SPA",
+       "description": "Spa",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "SP_SPA"
+       }
+      }
+     ]
+    }
+   ],
+   "source": {
+    "path": "db/re/sc_config.conf",
+    "record": "SC_SP_SPA"
+   }
+  },
+  {
+   "id": 100000,
+   "name": "Stone",
+   "iconless": true,
+   "name_source": "server constant; the client has no icon name for this status",
+   "statuses": [
+    {
+     "constant": "SC_STONE",
+     "id": 0,
+     "flags": [
+      "NoMagicBlocked"
+     ],
+     "calculation_flags": [
+      "Def",
+      "Def_Ele",
+      "Mdef"
+     ],
+     "source": {
+      "path": "db/re/sc_config.conf",
+      "record": "SC_STONE"
+     },
+     "associated_skill": {
+      "id": 180,
+      "name": "NPC_PETRIFYATTACK",
+      "description": "Petrify Attack",
+      "source": {
+       "path": "db/re/skill_db.conf",
+       "record": "NPC_PETRIFYATTACK"
+      }
+     },
+     "status_change_skills": [
+      {
+       "id": 16,
+       "name": "MG_STONECURSE",
+       "description": "Stone Curse",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "MG_STONECURSE"
+       }
+      },
+      {
+       "id": 180,
+       "name": "NPC_PETRIFYATTACK",
+       "description": "Petrify Attack",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "NPC_PETRIFYATTACK"
+       }
+      },
+      {
+       "id": 666,
+       "name": "NPC_WIDESTONE",
+       "description": "Wide Petrify",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "NPC_WIDESTONE"
+       }
+      }
+     ],
+     "code_call_sites": [
+      {
+       "path": "src/map/skill.c",
+       "line": 8331
+      },
+      {
+       "path": "src/map/skill.c",
+       "line": 14982
+      }
+     ]
+    }
+   ],
+   "source": {
+    "path": "db/re/sc_config.conf",
+    "record": "SC_STONE"
+   }
+  },
+  {
+   "id": 100253,
+   "name": "Stoneskin",
+   "iconless": true,
+   "name_source": "server constant; the client has no icon name for this status",
+   "statuses": [
+    {
+     "constant": "SC_STONESKIN",
+     "id": 253,
+     "flags": [],
+     "calculation_flags": [
+      "Def",
+      "Mdef"
+     ],
+     "source": {
+      "path": "db/re/sc_config.conf",
+      "record": "SC_STONESKIN"
+     },
+     "associated_skill": {
+      "id": 675,
+      "name": "NPC_STONESKIN",
+      "description": "Stone Skin",
+      "source": {
+       "path": "db/re/skill_db.conf",
+       "record": "NPC_STONESKIN"
+      }
+     },
+     "status_change_skills": [
+      {
+       "id": 675,
+       "name": "NPC_STONESKIN",
+       "description": "Stone Skin",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "NPC_STONESKIN"
+       }
+      },
+      {
+       "id": 676,
+       "name": "NPC_ANTIMAGIC",
+       "description": "Anti Magic",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "NPC_ANTIMAGIC"
+       }
+      }
+     ]
+    }
+   ],
+   "source": {
+    "path": "db/re/sc_config.conf",
+    "record": "SC_STONESKIN"
+   }
+  },
+  {
+   "id": 100002,
+   "name": "Stun",
+   "iconless": true,
+   "name_source": "server constant; the client has no icon name for this status",
+   "statuses": [
+    {
+     "constant": "SC_STUN",
+     "id": 2,
+     "flags": [],
+     "calculation_flags": [],
+     "source": {
+      "path": "db/re/sc_config.conf",
+      "record": "SC_STUN"
+     },
+     "associated_skill": {
+      "id": 179,
+      "name": "NPC_STUNATTACK",
+      "description": "Stun Attack",
+      "source": {
+       "path": "db/re/skill_db.conf",
+       "record": "NPC_STUNATTACK"
+      }
+     },
+     "status_change_skills": [
+      {
+       "id": 5,
+       "name": "SM_BASH",
+       "description": "Bash",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "SM_BASH"
+       }
+      },
+      {
+       "id": 83,
+       "name": "WZ_METEOR",
+       "description": "Meteor Storm",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "WZ_METEOR"
+       }
+      },
+      {
+       "id": 116,
+       "name": "HT_LANDMINE",
+       "description": "Land Mine",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "HT_LANDMINE"
+       }
+      },
+      {
+       "id": 136,
+       "name": "AS_SONICBLOW",
+       "description": "Sonic Blow",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "AS_SONICBLOW"
+       }
+      },
+      {
+       "id": 152,
+       "name": "TF_THROWSTONE",
+       "description": "Stone Fling",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "TF_THROWSTONE"
+       }
+      },
+      {
+       "id": 179,
+       "name": "NPC_STUNATTACK",
+       "description": "Stun Attack",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "NPC_STUNATTACK"
+       }
+      },
+      {
+       "id": 206,
+       "name": "NPC_LICK",
+       "description": "Lick",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "NPC_LICK"
+       }
+      },
+      {
+       "id": 212,
+       "name": "RG_BACKSTAP",
+       "description": "Back Stab",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "RG_BACKSTAP"
+       }
+      },
+      {
+       "id": 214,
+       "name": "RG_RAID",
+       "description": "Sightless Mind",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "RG_RAID"
+       }
+      },
+      {
+       "id": 250,
+       "name": "CR_SHIELDCHARGE",
+       "description": "Smite",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "CR_SHIELDCHARGE"
+       }
+      },
+      {
+       "id": 326,
+       "name": "DC_SCREAM",
+       "description": "Dazzler",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "DC_SCREAM"
+       }
+      },
+      {
+       "id": 415,
+       "name": "TK_DOWNKICK",
+       "description": "Heel Drop",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "TK_DOWNKICK"
+       }
+      },
+      {
+       "id": 468,
+       "name": "SL_STUN",
+       "description": "Estun",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "SL_STUN"
+       }
+      },
+      {
+       "id": 485,
+       "name": "WS_CARTTERMINATION",
+       "description": "Cart Termination",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "WS_CARTTERMINATION"
+       }
+      },
+      {
+       "id": 508,
+       "name": "GS_CRACKER",
+       "description": "Cracker",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "GS_CRACKER"
+       }
+      },
+      {
+       "id": 678,
+       "name": "NPC_WIDESTUN",
+       "description": "Wide Stun",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "NPC_WIDESTUN"
+       }
+      },
+      {
+       "id": 1016,
+       "name": "MO_BALKYOUNG",
+       "description": "Ki Explosion",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "MO_BALKYOUNG"
+       }
+      },
+      {
+       "id": 2326,
+       "name": "SR_DRAGONCOMBO",
+       "description": "Dragon Combo",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "SR_DRAGONCOMBO"
+       }
+      },
+      {
+       "id": 2328,
+       "name": "SR_EARTHSHAKER",
+       "description": "Earth Shaker",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "SR_EARTHSHAKER"
+       }
+      },
+      {
+       "id": 2570,
+       "name": "RL_SLUGSHOT",
+       "description": "Slug Shot",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "RL_SLUGSHOT"
+       }
+      },
+      {
+       "id": 3010,
+       "name": "KO_MAKIBISHI",
+       "description": "Makibishi",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "KO_MAKIBISHI"
+       }
+      },
+      {
+       "id": 5032,
+       "name": "SU_SCAROFTAROU",
+       "description": "Scar of Tarou",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "SU_SCAROFTAROU"
+       }
+      },
+      {
+       "id": 5036,
+       "name": "SU_LUNATICCARROTBEAT",
+       "description": "Lunatic Carrot Beat",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "SU_LUNATICCARROTBEAT"
+       }
+      },
+      {
+       "id": 8031,
+       "name": "MH_STAHL_HORN",
+       "description": "Steel Horn",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "MH_STAHL_HORN"
+       }
+      },
+      {
+       "id": 8210,
+       "name": "MA_LANDMINE",
+       "description": "Land_Mine",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "MA_LANDMINE"
+       }
+      },
+      {
+       "id": 8225,
+       "name": "MER_CRASH",
+       "description": "Crash",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "MER_CRASH"
+       }
+      }
+     ],
+     "code_call_sites": [
+      {
+       "path": "src/map/battle.c",
+       "line": 3320
+      },
+      {
+       "path": "src/map/skill.c",
+       "line": 1711
+      },
+      {
+       "path": "src/map/skill.c",
+       "line": 1727
+      },
+      {
+       "path": "src/map/skill.c",
+       "line": 1774
+      },
+      {
+       "path": "src/map/skill.c",
+       "line": 1796
+      },
+      {
+       "path": "src/map/skill.c",
+       "line": 1813
+      },
+      {
+       "path": "src/map/skill.c",
+       "line": 1842
+      },
+      {
+       "path": "src/map/skill.c",
+       "line": 1852
+      },
+      {
+       "path": "src/map/skill.c",
+       "line": 1862
+      },
+      {
+       "path": "src/map/skill.c",
+       "line": 1871
+      },
+      {
+       "path": "src/map/skill.c",
+       "line": 1890
+      },
+      {
+       "path": "src/map/skill.c",
+       "line": 1975
+      },
+      {
+       "path": "src/map/skill.c",
+       "line": 1987
+      },
+      {
+       "path": "src/map/skill.c",
+       "line": 1996
+      },
+      {
+       "path": "src/map/skill.c",
+       "line": 2020
+      },
+      {
+       "path": "src/map/skill.c",
+       "line": 2065
+      },
+      {
+       "path": "src/map/skill.c",
+       "line": 2141
+      },
+      {
+       "path": "src/map/skill.c",
+       "line": 2151
+      },
+      {
+       "path": "src/map/skill.c",
+       "line": 2197
+      },
+      {
+       "path": "src/map/skill.c",
+       "line": 2206
+      },
+      {
+       "path": "src/map/skill.c",
+       "line": 2212
+      },
+      {
+       "path": "src/map/skill.c",
+       "line": 2227
+      },
+      {
+       "path": "src/map/skill.c",
+       "line": 2234
+      },
+      {
+       "path": "src/map/skill.c",
+       "line": 2249
+      },
+      {
+       "path": "src/map/skill.c",
+       "line": 2257
+      },
+      {
+       "path": "src/map/skill.c",
+       "line": 2278
+      },
+      {
+       "path": "src/map/skill.c",
+       "line": 2285
+      },
+      {
+       "path": "src/map/skill.c",
+       "line": 2310
+      },
+      {
+       "path": "src/map/skill.c",
+       "line": 2314
+      },
+      {
+       "path": "src/map/skill.c",
+       "line": 2370
+      },
+      {
+       "path": "src/map/skill.c",
+       "line": 7903
+      },
+      {
+       "path": "src/map/skill.c",
+       "line": 9594
+      },
+      {
+       "path": "src/map/skill.c",
+       "line": 9845
+      },
+      {
+       "path": "src/map/skill.c",
+       "line": 18914
+      }
+     ]
+    }
+   ],
+   "source": {
+    "path": "db/re/sc_config.conf",
+    "record": "SC_STUN"
+   }
+  },
+  {
+   "id": 100539,
+   "name": "Style Change",
+   "iconless": true,
+   "name_source": "server constant; the client has no icon name for this status",
+   "statuses": [
+    {
+     "constant": "SC_STYLE_CHANGE",
+     "id": 539,
+     "flags": [],
+     "calculation_flags": [],
+     "source": {
+      "path": "db/re/sc_config.conf",
+      "record": "SC_STYLE_CHANGE"
+     },
+     "associated_skill": {
+      "id": 8027,
+      "name": "MH_STYLE_CHANGE",
+      "description": "Style Change",
+      "source": {
+       "path": "db/re/skill_db.conf",
+       "record": "MH_STYLE_CHANGE"
+      }
+     },
+     "status_change_skills": [
+      {
+       "id": 8027,
+       "name": "MH_STYLE_CHANGE",
+       "description": "Style Change",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "MH_STYLE_CHANGE"
+       }
+      }
+     ]
+    }
+   ],
+   "source": {
+    "path": "db/re/sc_config.conf",
+    "record": "SC_STYLE_CHANGE"
+   }
+  },
+  {
+   "id": 100103,
+   "name": "Sub Weaponproperty",
+   "iconless": true,
+   "name_source": "server constant; the client has no icon name for this status",
+   "statuses": [
+    {
+     "constant": "SC_SUB_WEAPONPROPERTY",
+     "id": 103,
+     "flags": [
+      "Buff",
+      "NoBBReset",
+      "NoDeathReset",
+      "NoDispelReset",
+      "NoSave"
+     ],
+     "calculation_flags": [],
+     "source": {
+      "path": "db/re/sc_config.conf",
+      "record": "SC_SUB_WEAPONPROPERTY"
+     },
+     "associated_skill": {
+      "id": 7,
+      "name": "SM_MAGNUM",
+      "description": "Magnum Break",
+      "source": {
+       "path": "db/re/skill_db.conf",
+       "record": "SM_MAGNUM"
+      }
+     },
+     "status_change_skills": [
+      {
+       "id": 7,
+       "name": "SM_MAGNUM",
+       "description": "Magnum Break",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "SM_MAGNUM"
+       }
+      },
+      {
+       "id": 8202,
+       "name": "MS_MAGNUM",
+       "description": "Magnum_Break",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "MS_MAGNUM"
+       }
+      }
+     ],
+     "code_call_sites": [
+      {
+       "path": "src/map/skill.c",
+       "line": 7422
+      }
+     ]
+    }
+   ],
+   "source": {
+    "path": "db/re/sc_config.conf",
+    "record": "SC_SUB_WEAPONPROPERTY"
+   }
+  },
+  {
+   "id": 100646,
+   "name": "Sv Roottwist",
+   "iconless": true,
+   "name_source": "server constant; the client has no icon name for this status",
+   "statuses": [
+    {
+     "constant": "SC_SV_ROOTTWIST",
+     "id": 646,
+     "flags": [
+      "NoBoss"
+     ],
+     "calculation_flags": [],
+     "source": {
+      "path": "db/re/sc_config.conf",
+      "record": "SC_SV_ROOTTWIST"
+     },
+     "associated_skill": {
+      "id": 5029,
+      "name": "SU_SV_ROOTTWIST",
+      "description": "Silvervine Root Twist",
+      "source": {
+       "path": "db/re/skill_db.conf",
+       "record": "SU_SV_ROOTTWIST"
+      }
+     },
+     "status_change_skills": [
+      {
+       "id": 5029,
+       "name": "SU_SV_ROOTTWIST",
+       "description": "Silvervine Root Twist",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "SU_SV_ROOTTWIST"
+       }
+      }
+     ]
+    }
+   ],
+   "source": {
+    "path": "db/re/sc_config.conf",
+    "record": "SC_SV_ROOTTWIST"
+   }
+  },
+  {
+   "id": 100225,
+   "name": "Swoo",
+   "iconless": true,
+   "name_source": "server constant; the client has no icon name for this status",
+   "statuses": [
+    {
+     "constant": "SC_SWOO",
+     "id": 225,
+     "flags": [],
+     "calculation_flags": [
+      "Speed"
+     ],
+     "source": {
+      "path": "db/re/sc_config.conf",
+      "record": "SC_SWOO"
+     },
+     "associated_skill": {
+      "id": 470,
+      "name": "SL_SWOO",
+      "description": "Eswoo",
+      "source": {
+       "path": "db/re/skill_db.conf",
+       "record": "SL_SWOO"
+      }
+     },
+     "status_change_skills": [
+      {
+       "id": 470,
+       "name": "SL_SWOO",
+       "description": "Eswoo",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "SL_SWOO"
+       }
+      }
+     ]
+    }
+   ],
+   "source": {
+    "path": "db/re/sc_config.conf",
+    "record": "SC_SWOO"
+   }
+  },
+  {
+   "id": 100719,
+   "name": "Tarotcard Atk Perc",
+   "iconless": true,
+   "name_source": "server constant; the client has no icon name for this status",
+   "statuses": [
+    {
+     "constant": "SC_TAROTCARD_ATK_PERC",
+     "id": 719,
+     "flags": [
+      "Debuff",
+      "NoClearanceReset",
+      "NoSave"
+     ],
+     "calculation_flags": [
+      "AtkPerc"
+     ],
+     "source": {
+      "path": "db/re/sc_config.conf",
+      "record": "SC_TAROTCARD_ATK_PERC"
+     },
+     "code_call_sites": [
+      {
+       "path": "src/map/skill.c",
+       "line": 9555
+      },
+      {
+       "path": "src/map/skill.c",
+       "line": 9585
+      },
+      {
+       "path": "src/map/skill.c",
+       "line": 9597
+      }
+     ]
+    }
+   ],
+   "source": {
+    "path": "db/re/sc_config.conf",
+    "record": "SC_TAROTCARD_ATK_PERC"
+   }
+  },
+  {
+   "id": 100721,
+   "name": "Tarotcard Def Perc",
+   "iconless": true,
+   "name_source": "server constant; the client has no icon name for this status",
+   "statuses": [
+    {
+     "constant": "SC_TAROTCARD_DEF_PERC",
+     "id": 721,
+     "flags": [
+      "Debuff",
+      "NoClearanceReset",
+      "NoSave"
+     ],
+     "calculation_flags": [
+      "DefPerc"
+     ],
+     "source": {
+      "path": "db/re/sc_config.conf",
+      "record": "SC_TAROTCARD_DEF_PERC"
+     },
+     "code_call_sites": [
+      {
+       "path": "src/map/skill.c",
+       "line": 9601
+      }
+     ]
+    }
+   ],
+   "source": {
+    "path": "db/re/sc_config.conf",
+    "record": "SC_TAROTCARD_DEF_PERC"
+   }
+  },
+  {
+   "id": 100720,
+   "name": "Tarotcard Matk Perc",
+   "iconless": true,
+   "name_source": "server constant; the client has no icon name for this status",
+   "statuses": [
+    {
+     "constant": "SC_TAROTCARD_MATK_PERC",
+     "id": 720,
+     "flags": [
+      "Debuff",
+      "NoClearanceReset",
+      "NoSave"
+     ],
+     "calculation_flags": [
+      "MatkPerc"
+     ],
+     "source": {
+      "path": "db/re/sc_config.conf",
+      "record": "SC_TAROTCARD_MATK_PERC"
+     },
+     "code_call_sites": [
+      {
+       "path": "src/map/skill.c",
+       "line": 9539
+      },
+      {
+       "path": "src/map/skill.c",
+       "line": 9586
+      },
+      {
+       "path": "src/map/skill.c",
+       "line": 9598
+      }
+     ]
+    }
+   ],
+   "source": {
+    "path": "db/re/sc_config.conf",
+    "record": "SC_TAROTCARD_MATK_PERC"
+   }
+  },
+  {
+   "id": 100275,
+   "name": "Tk Sevenwind",
+   "iconless": true,
+   "name_source": "server constant; the client has no icon name for this status",
+   "statuses": [
+    {
+     "constant": "SC_TK_SEVENWIND",
+     "id": 275,
+     "flags": [],
+     "calculation_flags": [],
+     "source": {
+      "path": "db/re/sc_config.conf",
+      "record": "SC_TK_SEVENWIND"
+     },
+     "associated_skill": {
+      "id": 425,
+      "name": "TK_SEVENWIND",
+      "description": "Mild Wind",
+      "source": {
+       "path": "db/re/skill_db.conf",
+       "record": "TK_SEVENWIND"
+      }
+     },
+     "status_change_skills": [
+      {
+       "id": 425,
+       "name": "TK_SEVENWIND",
+       "description": "Mild Wind",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "TK_SEVENWIND"
+       }
+      }
+     ]
+    }
+   ],
+   "source": {
+    "path": "db/re/sc_config.conf",
+    "record": "SC_TK_SEVENWIND"
+   }
+  },
+  {
+   "id": 100391,
+   "name": "Vacuum Extreme",
+   "iconless": true,
+   "name_source": "server constant; the client has no icon name for this status",
+   "statuses": [
+    {
+     "constant": "SC_VACUUM_EXTREME",
+     "id": 391,
+     "flags": [
+      "NoBoss"
+     ],
+     "calculation_flags": [],
+     "source": {
+      "path": "db/re/sc_config.conf",
+      "record": "SC_VACUUM_EXTREME"
+     },
+     "associated_skill": {
+      "id": 2453,
+      "name": "SO_VACUUM_EXTREME",
+      "description": "Vacuum Extreme",
+      "source": {
+       "path": "db/re/skill_db.conf",
+       "record": "SO_VACUUM_EXTREME"
+      }
+     },
+     "status_change_skills": [
+      {
+       "id": 2453,
+       "name": "SO_VACUUM_EXTREME",
+       "description": "Vacuum Extreme",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "SO_VACUUM_EXTREME"
+       }
+      }
+     ],
+     "code_call_sites": [
+      {
+       "path": "src/map/skill.c",
+       "line": 14944
+      }
+     ]
+    }
+   ],
+   "source": {
+    "path": "db/re/sc_config.conf",
+    "record": "SC_VACUUM_EXTREME"
+   }
+  },
+  {
+   "id": 100390,
+   "name": "Warmer",
+   "iconless": true,
+   "name_source": "server constant; the client has no icon name for this status",
+   "statuses": [
+    {
+     "constant": "SC_WARMER",
+     "id": 390,
+     "flags": [
+      "NoSave"
+     ],
+     "calculation_flags": [],
+     "source": {
+      "path": "db/re/sc_config.conf",
+      "record": "SC_WARMER"
+     },
+     "associated_skill": {
+      "id": 2452,
+      "name": "SO_WARMER",
+      "description": "Warmer",
+      "source": {
+       "path": "db/re/skill_db.conf",
+       "record": "SO_WARMER"
+      }
+     },
+     "status_change_skills": [
+      {
+       "id": 2452,
+       "name": "SO_WARMER",
+       "description": "Warmer",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "SO_WARMER"
+       }
+      }
+     ]
+    }
+   ],
+   "source": {
+    "path": "db/re/sc_config.conf",
+    "record": "SC_WARMER"
+   }
+  },
+  {
+   "id": 100333,
+   "name": "Whiteimprison",
+   "iconless": true,
+   "name_source": "server constant; the client has no icon name for this status",
+   "statuses": [
+    {
+     "constant": "SC_WHITEIMPRISON",
+     "id": 333,
+     "flags": [],
+     "calculation_flags": [],
+     "source": {
+      "path": "db/re/sc_config.conf",
+      "record": "SC_WHITEIMPRISON"
+     },
+     "associated_skill": {
+      "id": 2201,
+      "name": "WL_WHITEIMPRISON",
+      "description": "White Imprison",
+      "source": {
+       "path": "db/re/skill_db.conf",
+       "record": "WL_WHITEIMPRISON"
+      }
+     },
+     "status_change_skills": [
+      {
+       "id": 2201,
+       "name": "WL_WHITEIMPRISON",
+       "description": "White Imprison",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "WL_WHITEIMPRISON"
+       }
+      }
+     ]
+    }
+   ],
+   "source": {
+    "path": "db/re/sc_config.conf",
+    "record": "SC_WHITEIMPRISON"
+   }
+  },
+  {
+   "id": 100347,
+   "name": "Wugbite",
+   "iconless": true,
+   "name_source": "server constant; the client has no icon name for this status",
+   "statuses": [
+    {
+     "constant": "SC_WUGBITE",
+     "id": 347,
+     "flags": [
+      "Buff",
+      "NoBBReset",
+      "NoBoss",
+      "NoClearanceReset",
+      "NoDispelReset",
+      "NoSave"
+     ],
+     "calculation_flags": [],
+     "source": {
+      "path": "db/re/sc_config.conf",
+      "record": "SC_WUGBITE"
+     },
+     "associated_skill": {
+      "id": 2244,
+      "name": "RA_WUGBITE",
+      "description": "Warg Bite",
+      "source": {
+       "path": "db/re/skill_db.conf",
+       "record": "RA_WUGBITE"
+      }
+     },
+     "code_call_sites": [
+      {
+       "path": "src/map/skill.c",
+       "line": 2090
+      }
+     ]
+    }
+   ],
+   "source": {
+    "path": "db/re/sc_config.conf",
+    "record": "SC_WUGBITE"
+   }
+  },
+  {
+   "id": 100460,
+   "name": " Bloodylust",
+   "iconless": true,
+   "name_source": "server constant; the client has no icon name for this status",
+   "statuses": [
+    {
+     "constant": "SC__BLOODYLUST",
+     "id": 460,
+     "flags": [
+      "Debuff"
+     ],
+     "calculation_flags": [],
+     "source": {
+      "path": "db/re/sc_config.conf",
+      "record": "SC__BLOODYLUST"
+     },
+     "code_call_sites": [
+      {
+       "path": "src/map/skill.c",
+       "line": 13992
+      }
+     ]
+    }
+   ],
+   "source": {
+    "path": "db/re/sc_config.conf",
+    "record": "SC__BLOODYLUST"
+   }
+  },
+  {
+   "id": 100577,
+   "name": " Chaos",
+   "iconless": true,
+   "name_source": "server constant; the client has no icon name for this status",
+   "statuses": [
+    {
+     "constant": "SC__CHAOS",
+     "id": 577,
+     "flags": [],
+     "calculation_flags": [],
+     "source": {
+      "path": "db/re/sc_config.conf",
+      "record": "SC__CHAOS"
+     },
+     "associated_skill": {
+      "id": 2301,
+      "name": "SC_CHAOSPANIC",
+      "description": "Chaos Panic",
+      "source": {
+       "path": "db/re/skill_db.conf",
+       "record": "SC_CHAOSPANIC"
+      }
+     },
+     "status_change_skills": [
+      {
+       "id": 2301,
+       "name": "SC_CHAOSPANIC",
+       "description": "Chaos Panic",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "SC_CHAOSPANIC"
+       }
+      }
+     ]
+    }
+   ],
+   "source": {
+    "path": "db/re/sc_config.conf",
+    "record": "SC__CHAOS"
+   }
+  },
+  {
+   "id": 100578,
+   "name": " Feintbomb Master",
+   "iconless": true,
+   "name_source": "server constant; the client has no icon name for this status",
+   "statuses": [
+    {
+     "constant": "SC__FEINTBOMB_MASTER",
+     "id": 578,
+     "flags": [],
+     "calculation_flags": [],
+     "source": {
+      "path": "db/re/sc_config.conf",
+      "record": "SC__FEINTBOMB_MASTER"
+     },
+     "associated_skill": {
+      "id": 2304,
+      "name": "SC_FEINTBOMB",
+      "description": "Feint Bomb",
+      "source": {
+       "path": "db/re/skill_db.conf",
+       "record": "SC_FEINTBOMB"
+      }
+     },
+     "code_call_sites": [
+      {
+       "path": "src/map/skill.c",
+       "line": 13071
+      }
+     ]
+    }
+   ],
+   "source": {
+    "path": "db/re/sc_config.conf",
+    "record": "SC__FEINTBOMB_MASTER"
+   }
+  },
+  {
+   "id": 100576,
+   "name": " Maelstrom",
+   "iconless": true,
+   "name_source": "server constant; the client has no icon name for this status",
+   "statuses": [
+    {
+     "constant": "SC__MAELSTROM",
+     "id": 576,
+     "flags": [],
+     "calculation_flags": [],
+     "source": {
+      "path": "db/re/sc_config.conf",
+      "record": "SC__MAELSTROM"
+     },
+     "associated_skill": {
+      "id": 2302,
+      "name": "SC_MAELSTROM",
+      "description": "Maelstrom",
+      "source": {
+       "path": "db/re/skill_db.conf",
+       "record": "SC_MAELSTROM"
+      }
+     },
+     "status_change_skills": [
+      {
+       "id": 2302,
+       "name": "SC_MAELSTROM",
+       "description": "Maelstrom",
+       "source": {
+        "path": "db/re/skill_db.conf",
+        "record": "SC_MAELSTROM"
+       }
+      }
+     ]
+    }
+   ],
+   "source": {
+    "path": "db/re/sc_config.conf",
+    "record": "SC__MAELSTROM"
    }
   }
  ]

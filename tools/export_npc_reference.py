@@ -26,7 +26,10 @@ KINDS = {"script", "warp", "shop", "cashshop", "trader"}
 def source_revision() -> tuple[str, bool]:
     try:
         revision = subprocess.check_output(["git", "-C", str(HERCULES), "rev-parse", "HEAD"], text=True, stderr=subprocess.DEVNULL).strip()
-        dirty = bool(subprocess.check_output(["git", "-C", str(HERCULES), "status", "--porcelain"], text=True).strip())
+        dirty = subprocess.run(
+            ["git", "-C", str(HERCULES), "diff-index", "--quiet", "HEAD"],
+            capture_output=True,
+        ).returncode != 0
         return revision, dirty
     except (OSError, subprocess.CalledProcessError):
         return "unknown", False

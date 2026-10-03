@@ -29,6 +29,8 @@ ROOT = Path(__file__).resolve().parent.parent
 HERCULES = ROOT.parent / "Hercules"
 ITEM_SOURCES = (HERCULES / "db/re/item_db.conf", HERCULES / "db/item_db2.conf")
 MOB_SOURCE = HERCULES / "db/re/mob_db.conf"
+# Loaded after MOB_SOURCE; a same-Id record replaces the stock one.
+MOB_OVERRIDE_SOURCE = HERCULES / "db/mob_db2.conf"
 COMBO_SOURCE = HERCULES / "db/re/item_combo_db.conf"
 ITEM_GROUP_SOURCE = HERCULES / "db/re/item_group.conf"
 SKILL_DB_SOURCE = HERCULES / "db/re/skill_db.conf"
@@ -113,27 +115,85 @@ def _parse_refine_scaled_value(expr: str) -> tuple[int, int, str] | None:
     coefficients) returns None so the caller leaves the script untranslated.
     """
     compact = expr.strip()
+
+    # Handle patterns like: 20+getrefine()/2, getrefine()*2, 3*getrefine(), (getrefine()-5)
+    # Note: getrefine() is shorthand for getequiprefinerycnt(EQI_HAND_R) in many contexts
+
+    # Pattern: base + refine_expression (e.g., "20+getrefine()/2")
     match = re.fullmatch(
-        r"(-?\d+)\s*\+\s*\(\s*getequiprefinerycnt\(\s*(EQI_[A-Za-z0-9_]+)\s*\)\s*\*\s*(-?\d+)\s*\)",
-        compact, re.I,
+        r"(-?\d+)\s*\+\s*(.+)", compact, re.I
     )
     if match:
-        base, slot, coef = match.groups()
-        slot_key = slot.upper()
-        return (int(base), int(coef), slot_key) if slot_key in _REFINE_SLOT_LABELS else None
+        base = int(match.group(1))
+        refine_expr = match.group(2).strip()
+        parsed = _parse_refine_expression(refine_expr)
+        if parsed:
+            return (base, parsed[0], parsed[1])
+        return None
+
+    # Direct refine expression without base
+    parsed = _parse_refine_expression(compact)
+    if parsed:
+        return (0, parsed[0], parsed[1])
+
+    return None
+
+
+def _parse_refine_expression(expr: str) -> tuple[int, str] | None:
+    """Parse a refine-scaled expression like getrefine()*2 or (getrefine()-5)*2."""
+    compact = expr.strip()
+
+    # Pattern with parentheses: (getrefine()-5)*2 or ((getrefine()-5)*2)
     match = re.fullmatch(
-        r"\(?\s*getequiprefinerycnt\(\s*(EQI_[A-Za-z0-9_]+)\s*\)\s*\*\s*(-?\d+)\s*\)?",
-        compact, re.I,
+        r"\(\s*getrefine\(\)\s*([+-])\s*(-?\d+)\s*\)\s*\*\s*(-?\d+)",
+        compact, re.I
     )
     if match:
-        slot, coef = match.groups()
-        slot_key = slot.upper()
-        return (0, int(coef), slot_key) if slot_key in _REFINE_SLOT_LABELS else None
-    match = re.fullmatch(r"(-)?\s*getequiprefinerycnt\(\s*(EQI_[A-Za-z0-9_]+)\s*\)", compact, re.I)
+        op, subtracted, coef = match.groups()
+        # (getrefine() - 5) * 2 becomes base_offset = -10, coef = 2
+        subtracted_val = int(subtracted)
+        coef_val = int(coef)
+        base_offset = -subtracted_val * coef_val if op == "-" else subtracted_val * coef_val
+        return (coef_val, "EQI_HAND_R")  # getrefine() defaults to weapon slot
+
+    # Pattern: getrefine() * coef or getrefine()*coef
+    match = re.fullmatch(
+        r"getrefine\(\)\s*\*\s*(-?\d+)",
+        compact, re.I
+    )
     if match:
-        neg, slot = match.groups()
-        slot_key = slot.upper()
-        return (0, -1 if neg else 1, slot_key) if slot_key in _REFINE_SLOT_LABELS else None
+        coef = int(match.group(1))
+        return (coef, "EQI_HAND_R")
+
+    # Pattern: coef * getrefine()
+    match = re.fullmatch(
+        r"(-?\d+)\s*\*\s*getrefine\(\)",
+        compact, re.I
+    )
+    if match:
+        coef = int(match.group(1))
+        return (coef, "EQI_HAND_R")
+
+    # Pattern: getrefine() with optional division: getrefine()/2 or getrefine() / 2
+    match = re.fullmatch(
+        r"getrefine\(\)\s*/\s*(-?\d+)",
+        compact, re.I
+    )
+    if match:
+        divisor = int(match.group(1))
+        # Division makes it non-integer for many refine levels; skip for safety
+        return None
+
+    # Pattern: (getrefine()-5) without multiplier - returns getrefine()-5 which can be negative
+    match = re.fullmatch(
+        r"\(\s*getrefine\(\)\s*([+-])\s*(-?\d+)\s*\)",
+        compact, re.I
+    )
+    if match:
+        op, subtracted = match.groups()
+        # This form is ambiguous for direction (can flip sign across refine range)
+        return None
+
     return None
 
 
@@ -143,12 +203,18 @@ def _refine_scaled_phrase(base: int, coef: int, slot_key: str) -> str | None:
     single unambiguous claim."""
     if coef == 0:
         return None
+    # getrefine() defaults to EQI_HAND_R (weapon) - use that slot label
+    slot_label = _REFINE_SLOT_LABELS.get(slot_key, f"refined equipment ({slot_key})")
+
+    # If base is non-zero and has opposite sign to coef, the effect direction could flip
+    # depending on refine level. This is too ambiguous for a single claim.
     if base != 0 and ((base > 0) != (coef > 0)):
         return None
-    slot_label = _REFINE_SLOT_LABELS[slot_key]
+
     if base == 0:
         direction = "increases" if coef >= 0 else "reduces"
         return f"{direction} by {abs(coef)}% per refine level of {slot_label}"
+
     direction = "increases" if base >= 0 else "reduces"
     return f"{direction} by {abs(base)}%, plus {abs(coef)}% per refine level of {slot_label}"
 
@@ -175,10 +241,10 @@ def translate_simple_effect(script: str) -> str | None:
 
     body = level_scale.sub(capture_level_scale, body)
 
-    # Preserve simple one-command branches. Nested/multi-command branches remain
-    # untranslated because their full control flow has not been interpreted.
+    # A refine or font check may hold several bonus or setfont commands.
+    # Nested branches stay untranslated.
     simple_if = re.compile(
-        r"if\s*\(\s*(?P<condition>[^{};]+?)\s*\)\s*(?:\{\s*(?P<effect>bonus(?:2|3|4)?\s+[^;]+;)\s*\}|(?P<inline>bonus(?:2|3|4)?\s+[^;]+))",
+        r"if\s*\(\s*(?P<condition>[^{};]+?)\s*\)\s*(?:\{\s*(?P<effect>(?:(?:bonus(?:2|3|4|5)?\s+[^;{]+|setfont\s*\([^)]+\))\s*;\s*)+)\s*\}|(?P<inline>(?:bonus(?:2|3|4|5)?\s+[^;{]+|setfont\s*\([^)]+\))\s*;?))",
         re.I | re.S,
     )
 
@@ -217,8 +283,13 @@ def translate_simple_effect(script: str) -> str | None:
         "SC_ASPDPOTION3": "Speed Potion", "SC_STRFOOD": "STR Food", "SC_AGIFOOD": "AGI Food",
         "SC_VITFOOD": "VIT Food", "SC_INTFOOD": "INT Food", "SC_DEXFOOD": "DEX Food",
         "SC_LUKFOOD": "LUK Food", "SC_ATKPOTION": "ATK Potion", "SC_MATKPOTION": "MATK Potion",
+        "SC_FOOD_STR": "STR food", "SC_FOOD_AGI": "AGI food", "SC_FOOD_VIT": "VIT food",
+        "SC_FOOD_INT": "INT food", "SC_FOOD_DEX": "DEX food", "SC_FOOD_LUK": "LUK food",
     }
     for statement in statements:
+        parenthesized = re.fullmatch(r"bonus\((b[A-Za-z0-9_]+)\s*,\s*(-?\d+)\)", statement, re.I)
+        if parenthesized:
+            statement = f"bonus {parenthesized.group(1)},{parenthesized.group(2)}"
         if statement in conditional_effects:
             condition, nested_effect = conditional_effects[statement]
             condition_label = describe_item_condition(condition)
@@ -255,6 +326,49 @@ def translate_simple_effect(script: str) -> str | None:
             } else ""
             direction = "increases" if value >= 0 else "reduces"
             effects.append(f"{direction} {labels[key]} by {abs(value)}{unit}")
+            continue
+        match = re.fullmatch(
+            r"bonus\s+(bBaseAtk|bAspd|bSpeedRate|bSpeedAddRate|bVariableCastrate)\s*,\s*(-?\d+)",
+            statement,
+            re.I,
+        )
+        if match:
+            key, value = match.group(1).lower(), int(match.group(2))
+            labels = {
+                "bbaseatk": ("basic attack power", ""),
+                "baspd": ("attack speed", ""),
+                "bspeedrate": ("movement speed", "%"),
+                "bspeedaddrate": ("movement speed", "%"),
+                "bvariablecastrate": ("variable cast time of all skills", "%"),
+            }
+            label, unit = labels[key]
+            direction = "increases" if value >= 0 else "reduces"
+            note = ""
+            if key == "bspeedrate":
+                note = " (only the highest bonus applies)"
+            effects.append(f"{direction} {label} by {abs(value)}{unit}{note}")
+            continue
+        match = re.fullmatch(
+            r"bonus\s+(bUnbreakableWeapon|bUnbreakableArmor|bUnbreakableHelm|bUnbreakableShield|bUnbreakableGarment|bUnbreakableShoes)\s*,\s*-?\d+",
+            statement,
+            re.I,
+        )
+        if match:
+            slot = {
+                "bunbreakableweapon": "weapon",
+                "bunbreakablearmor": "armor",
+                "bunbreakablehelm": "helm",
+                "bunbreakableshield": "shield",
+                "bunbreakablegarment": "garment",
+                "bunbreakableshoes": "shoes",
+            }[match.group(1).lower()]
+            effects.append(f"the equipped {slot} cannot be broken")
+            continue
+        match = re.fullmatch(r"bonus\s+bUnbreakable\s*,\s*(-?\d+)", statement, re.I)
+        if match:
+            value = int(match.group(1))
+            direction = "reduces" if value >= 0 else "increases"
+            effects.append(f"{direction} the chance equipped items break by {abs(value)}%")
             continue
         match = re.fullmatch(r"bonus\s+(bBreakWeaponRate|bBreakArmorRate)\s*,\s*(-?\d+)", statement, re.I)
         if match:
@@ -294,6 +408,28 @@ def translate_simple_effect(script: str) -> str | None:
             direction = "reduces" if value >= 0 else "increases"
             effects.append(f"{direction} the SP cost of {_skill_display_name(skill)} by {abs(value)}")
             continue
+        match = re.fullmatch(r"bonus2\s+bSkillCooldown\s*,\s*([A-Za-z0-9_]+)\s*,\s*(-?\d+)", statement, re.I)
+        if match:
+            skill, raw_value = match.groups()
+            value = int(raw_value)
+            # Negative cooldown values mean "increases duration" in seconds
+            direction = "increases" if value >= 0 else "reduces"
+            effects.append(f"{direction} the cooldown of {_skill_display_name(skill)} by {abs(value)} ms")
+            continue
+        bare_itemskill = re.fullmatch(r"itemskill\s+([A-Za-z0-9_]+)\s*,\s*(\d+)", statement, re.I)
+        called_itemskill = re.fullmatch(
+            r"itemskill\(\s*([A-Za-z0-9_]+)\s*,\s*(\d+)(?:\s*,\s*([A-Za-z0-9_]+(?:\s*\|\s*[A-Za-z0-9_]+)*))?\s*\)",
+            statement,
+            re.I,
+        )
+        match = bare_itemskill or called_itemskill
+        if match:
+            skill, level, *flags = match.groups()
+            phrase = _itemskill_phrase(skill, level, flags[0] if flags else None)
+            if phrase is None:
+                return None
+            effects.append(phrase)
+            continue
         match = re.fullmatch(r"bonus2\s+bSkillAtk\s*,\s*([A-Za-z0-9_]+)\s*,\s*(.+)", statement, re.I)
         if match:
             skill, raw_expr = match.groups()
@@ -308,15 +444,14 @@ def translate_simple_effect(script: str) -> str | None:
             bonus_name, raw_expr = match.groups()
             parsed = _parse_refine_scaled_value(raw_expr)
             phrase = _refine_scaled_phrase(*parsed) if parsed else None
-            if phrase is None:
-                return None
-            labels = {
-                "batk": "ATK", "bmatk": "MATK", "baspdrate": "attack speed", "batkrate": "physical damage",
-                "bmatkrate": "magic damage", "bcritatkrate": "critical damage",
-                "blongatkrate": "ranged (long-range) physical damage",
-            }
-            effects.append(f"{labels[bonus_name.lower()]} {phrase}")
-            continue
+            if phrase is not None:
+                labels = {
+                    "batk": "ATK", "bmatk": "MATK", "baspdrate": "attack speed", "batkrate": "physical damage",
+                    "bmatkrate": "magic damage", "bcritatkrate": "critical damage",
+                    "blongatkrate": "ranged (long-range) physical damage",
+                }
+                effects.append(f"{labels[bonus_name.lower()]} {phrase}")
+                continue
         match = re.fullmatch(r"bonus2\s+(bAddSize|bMagicAddSize|bSubSize)\s*,\s*(Size_[A-Za-z0-9_]+)\s*,\s*(-?\d+)", statement, re.I)
         if match:
             bonus, size_constant, raw_value = match.groups()
@@ -456,15 +591,25 @@ def translate_simple_effect(script: str) -> str | None:
             direction = "increases" if value >= 0 else "reduces"
             effects.append(f"{direction} tolerance to {_effect_display_name(effect)} by {abs(value):g}%")
             continue
-        match = re.fullmatch(r"itemheal\s+([^,]+)\s*,\s*([^,]+)", statement, re.I)
+        # Match itemheal with literal values or rand(X,Y) expressions.
+        # The simple [^,]+ pattern doesn't work because rand() contains commas.
+        match = re.fullmatch(
+            r"itemheal\s+(rand\(\s*-?\d+\s*,\s*-?\d+\)|-?\d+)\s*,\s*(rand\(\s*-?\d+\s*,\s*-?\d+\)|-?\d+)",
+            statement,
+            re.I,
+        )
         if match:
             hp, sp = (_number(value) for value in match.groups())
             if hp is None or sp is None:
                 return None
-            if hp != "0": effects.append(f"Restores {hp} HP")
-            if sp != "0": effects.append(f"restores {sp} SP")
+            if hp != "0":
+                effects.append(f"Restores {hp} HP")
+            if sp != "0":
+                effects.append(f"restores {sp} SP")
             continue
-        match = re.fullmatch(r"percentheal\s+(-?\d+)\s*,\s*(-?\d+)", statement, re.I)
+        match = re.fullmatch(r"percentheal\s+(-?\d+)\s*,\s*(-?\d+)", statement, re.I) or re.fullmatch(
+            r"percentheal\(\s*(-?\d+)\s*,\s*(-?\d+)\s*\)", statement, re.I
+        )
         if match:
             hp, sp = map(int, match.groups())
             if hp: effects.append(f"restores {hp}% HP" if hp > 0 else f"reduces HP by {abs(hp)}%")
@@ -474,18 +619,296 @@ def translate_simple_effect(script: str) -> str | None:
         if match and match.group(1).upper() in cures:
             effects.append(f"Cures {cures[match.group(1).upper()]}")
             continue
-        match = re.fullmatch(r"sc_start\s+(SC_[A-Z0-9_]+)\s*,\s*(\d+)\s*,\s*(-?\d+)(?:\s*,\s*(\d+))?", statement, re.I)
+        match = re.fullmatch(
+            r"sc_start\s+(SC_[A-Z0-9_]+)\s*,\s*(\d+)\s*,\s*(-?\d+)(?:\s*,\s*(\d+))?(?:\s*,\s*(SCFLAG_[A-Z0-9_]+))?",
+            statement,
+            re.I,
+        ) or re.fullmatch(
+            r"sc_start\(\s*(SC_[A-Z0-9_]+)\s*,\s*(\d+)\s*,\s*(-?\d+)(?:\s*,\s*(\d+))?(?:\s*,\s*(SCFLAG_[A-Z0-9_]+))?\s*\)",
+            statement,
+            re.I,
+        )
         if match:
-            status, duration_ms, value1, raw_rate = match.groups()
+            status, duration_ms, value1, raw_rate, flag = match.groups()
             status = status.upper()
-            label = status_names.get(status)
-            if label is None:
-                return None
+            # script_commands.txt names the constant and the tick unit, not every status title.
+            label = status_names.get(status) or f"status {status}"
             duration_ms = int(duration_ms)
             duration = f"{duration_ms / 1000:g} seconds" if duration_ms % 1000 else f"{duration_ms // 1000} seconds"
             rate_note = f" at {int(raw_rate) / 100:g}% chance" if raw_rate is not None else " (no explicit chance limit)"
             value_note = f", value {value1}" if int(value1) != 0 else ""
-            effects.append(f"Applies {label} for {duration}{value_note}{rate_note}")
+            flag_note = ""
+            if flag and flag.upper() != "SCFLAG_NONE":
+                flag_note = f", flag {flag.upper()}"
+            effects.append(f"Applies {label} for {duration}{value_note}{rate_note}{flag_note}")
+            continue
+        match = re.fullmatch(r"getitem\s+(-?\d+)\s*,\s*(\d+)", statement, re.I)
+        if match:
+            item_id, amount = int(match.group(1)), int(match.group(2))
+            effects.append(f"grants {amount} {_item_display_name(item_id)}")
+            continue
+        match = re.fullmatch(
+            r"getitem(?:\(\s*|\s+)([A-Za-z_][A-Za-z0-9_]*)\s*,\s*(\d+)\s*\)?",
+            statement,
+            re.I,
+        )
+        if match:
+            token, amount = match.group(1), int(match.group(2))
+            label = _item_names_by_aegis().get(token)
+            if label is None:
+                return None
+            effects.append(f"grants {amount} {label}")
+            continue
+        match = re.fullmatch(r"rentitem(?:\(\s*|\s+)(-?\d+|[A-Za-z_][A-Za-z0-9_]*)\s*,\s*(\d+)\s*\)?", statement, re.I)
+        if match:
+            token, seconds = match.group(1), int(match.group(2))
+            if token.lstrip("-").isdigit():
+                label = _item_display_name(int(token))
+            else:
+                label = _item_names_by_aegis().get(token)
+                if label is None:
+                    return None
+            effects.append(f"rents {label} for {seconds} seconds")
+            continue
+        match = re.fullmatch(r"getrandgroupitem(?:\(\s*|\s+)(-?\d+|[A-Za-z_][A-Za-z0-9_]*)\s*,\s*(\d+)\s*\)?", statement, re.I)
+        if match:
+            token, amount = match.group(1), int(match.group(2))
+            if token.lstrip("-").isdigit():
+                label = _item_display_name(int(token))
+            else:
+                label = _item_names_by_aegis().get(token)
+                if label is None:
+                    return None
+            effects.append(f"grants {amount} random item from {label}")
+            continue
+        match = re.fullmatch(r"packageitem(?:\(\s*(\d+)?\s*\))?", statement, re.I)
+        if match:
+            item_id = match.group(1)
+            if item_id is None:
+                effects.append("grants this item's package contents")
+            else:
+                effects.append(f"grants the package contents of {_item_display_name(int(item_id))}")
+            continue
+        match = re.fullmatch(r"skill\s+\"?([A-Za-z0-9_]+)\"?\s*,\s*(\d+)", statement, re.I)
+        if match:
+            skill, level = match.groups()
+            effects.append(f"grants {_skill_display_name(skill)} at level {level}")
+            continue
+        match = re.fullmatch(
+            r"specialeffect\(\s*(EF_[A-Z0-9_]+)\s*,\s*AREA\s*,\s*playerattached\(\)\s*\)",
+            statement,
+            re.I,
+        )
+        if match:
+            # script_commands.txt: the number is the effect, AREA shows it to everyone,
+            # and a unit id displays it on that unit. The effect list is not in this file.
+            effects.append(
+                f"displays special effect {match.group(1).upper()} to everyone on the unit from playerattached()"
+            )
+            continue
+        match = re.fullmatch(r"pet\s+([A-Za-z_][A-Za-z0-9_]*)", statement, re.I) or re.fullmatch(
+            r"pet\(\s*([A-Za-z_][A-Za-z0-9_]*)\s*\)", statement, re.I
+        )
+        if match:
+            # script_commands.txt: pet id numbers live in pet_db.conf, which is not this excerpt.
+            effects.append(f"makes the pet catching cursor appear for pet ID {match.group(1).upper()}")
+            continue
+        bonus_phrase = _documented_bonus_phrase(statement)
+        if bonus_phrase is not None:
+            effects.append(bonus_phrase)
+            continue
+        match = re.fullmatch(r"sc_end(?:\(\s*|\s+)([A-Za-z0-9_\-]+)\s*\)?", statement, re.I)
+        if match:
+            # script_commands.txt:6442 — sc_end removes the named status.
+            status = match.group(1).upper()
+            label = status_names.get(status) or f"status {status}"
+            effects.append(f"removes {label}")
+            continue
+        match = re.fullmatch(r"mercenary_create\s+([A-Za-z0-9_]+)\s*,\s*(\d+)", statement, re.I)
+        if match:
+            merc_class, ticks = match.group(1), int(match.group(2))
+            duration = f"{ticks / 1000:g} seconds" if ticks % 1000 else f"{ticks // 1000} seconds"
+            effects.append(f"summons mercenary {merc_class} for {duration}")
+            continue
+        match = re.fullmatch(
+            r"sc_start2(?:\(\s*|\s+)(SC_[A-Z0-9_]+)\s*,\s*(\d+)\s*,\s*(-?\d+)\s*,\s*(-?\d+)\s*\)?",
+            statement,
+            re.I,
+        )
+        if match:
+            status, duration_ms, value1, value2 = match.groups()
+            status = status.upper()
+            label = status_names.get(status) or f"status {status}"
+            duration = f"{int(duration_ms) / 1000:g} seconds" if int(duration_ms) % 1000 else f"{int(duration_ms) // 1000} seconds"
+            effects.append(f"Applies {label} for {duration}, value {value1}, value {value2} (no explicit chance limit)")
+            continue
+        match = re.fullmatch(
+            r"sc_start4(?:\(\s*|\s+)(SC_[A-Z0-9_]+)\s*,\s*(\d+)\s*,\s*(-?\d+)\s*,\s*(-?\d+)\s*,\s*(-?\d+)\s*,\s*(-?\d+)\s*\)?",
+            statement,
+            re.I,
+        )
+        if match:
+            status, duration_ms, value1, value2, value3, value4 = match.groups()
+            status = status.upper()
+            label = status_names.get(status) or f"status {status}"
+            duration = f"{int(duration_ms) / 1000:g} seconds" if int(duration_ms) % 1000 else f"{int(duration_ms) // 1000} seconds"
+            effects.append(
+                f"Applies {label} for {duration}, values {value1}, {value2}, {value3}, {value4} (no explicit chance limit)"
+            )
+            continue
+        match = re.fullmatch(r"setfont\(\s*(\d+)\s*\)", statement, re.I)
+        if match:
+            font_id = int(match.group(1))
+            font_name = {
+                0: "the default font", 1: "RixLoveangel", 2: "RixSquirrel", 3: "NHCgogo",
+                4: "RixDiary", 5: "RixMiniHeart", 6: "RixFreshman", 7: "RixKid",
+                8: "RixMagic", 9: "RixJJangu",
+            }.get(font_id)
+            label = f"{font_name} (id {font_id})" if font_name else f"id {font_id}"
+            effects.append(f"sets the client interface font to {label}")
+            continue
+        match = re.fullmatch(
+            r"bonus\s+(bAtkRate|bHit|bCritical)\s*,\s*\(?\s*getrefine\(\)\s*(?:/\s*(\d+))?\s*\)?",
+            statement,
+            re.I,
+        )
+        if match:
+            bonus_name, divisor = match.group(1).lower(), match.group(2)
+            label = {
+                "batkrate": "Attack Power + (refine / {div})%",
+                "bhit": "Hit + (refine / {div})",
+                "bcritical": "Critical + (refine / {div})",
+            }[bonus_name]
+            if divisor:
+                effects.append(label.format(div=int(divisor)))
+            else:
+                effects.append(label.format(div="1").replace(" / 1", ""))
+            continue
+        match = re.fullmatch(r"itemheal\(\s*rand\(\s*(-?\d+)\s*,\s*(-?\d+)\s*\)\s*,\s*(-?\d+)\s*\)", statement, re.I)
+        if match:
+            low, high, sp = (int(part) for part in match.groups())
+            effects.append(f"heals a random {low} to {high} HP and {sp} SP, then applies potion bonuses")
+            continue
+        match = re.fullmatch(r"percentheal(?:\(\s*|\s+)rand\(\s*(-?\d+)\s*,\s*(-?\d+)\s*\)\s*,\s*(-?\d+)\s*\)?", statement, re.I)
+        if match:
+            low, high, sp = (int(part) for part in match.groups())
+            effects.append(f"heals a random {low}% to {high}% of max HP and {sp}% of max SP")
+            continue
+        match = re.fullmatch(r"guildgetexp\s+rand\(\s*(-?\d+)\s*,\s*(-?\d+)\s*\)", statement, re.I)
+        if match:
+            low, high = int(match.group(1)), int(match.group(2))
+            effects.append(
+                f"grants the character's guild a random {low} to {high} guild experience, and does nothing when the character has no guild"
+            )
+            continue
+        match = re.fullmatch(r"input\s+(@[A-Za-z0-9_]+\$?)", statement, re.I)
+        if match:
+            effects.append(f"opens an input box and stores the text in {match.group(1)}")
+            continue
+        match = re.fullmatch(r"loudhailer\(\s*(@[A-Za-z0-9_]+\$?)\s*\)", statement, re.I)
+        if match:
+            effects.append(f"announces the text in {match.group(1)} as a shout")
+            continue
+        match = re.fullmatch(
+            r"itemskill\s+([A-Za-z0-9_]+)\s*,\s*\(getskilllv\(\1\)\s*<\s*(\d+)\s*\?\s*\2\s*:\s*getskilllv\(\1\)\)",
+            statement,
+            re.I,
+        )
+        if match:
+            skill, floor = match.group(1), int(match.group(2))
+            effects.append(
+                f"uses {_skill_display_name(skill)} at level {floor}, or at the character's own level of that skill when it is already {floor} or higher"
+            )
+            continue
+        match = re.fullmatch(r"bonus3\s+bHPDrainRate\s*,\s*(-?\d+)\s*,\s*(-?\d+)\s*,\s*(-?\d+)", statement, re.I)
+        if match:
+            effects.append(
+                "does not apply bonus3 bHPDrainRate"
+                f",{match.group(1)},{match.group(2)},{match.group(3)}"
+                " because item_bonus.md documents bonus2 bHPDrainRate with two arguments, and the server reports this three-argument form as an unknown bonus"
+            )
+            continue
+        match = re.fullmatch(r"heal(?:\(\s*|\s+)(-?\d+)\s*,\s*(-?\d+)\s*\)?", statement, re.I)
+        if match:
+            effects.append(f"heals {int(match.group(1))} HP and {int(match.group(2))} SP")
+            continue
+        match = re.fullmatch(r"warp\s+\"([^\"]+)\"\s*,\s*(-?\d+)\s*,\s*(-?\d+)", statement, re.I)
+        if match:
+            effects.append(f"warps the user to {match.group(1)} at {int(match.group(2))},{int(match.group(3))}")
+            continue
+        match = re.fullmatch(r"cooking\s+(\d+)", statement, re.I)
+        if match:
+            effects.append(f"opens the cooking window for dish level {int(match.group(1))}")
+            continue
+        match = re.fullmatch(r"makerune\s+(\d+)", statement, re.I)
+        if match:
+            effects.append(f"opens the rune crafting window with success bonus {int(match.group(1))}")
+            continue
+        match = re.fullmatch(r"produce\s+(\d+)", statement, re.I)
+        if match:
+            effects.append(f"opens the crafting window for item level {int(match.group(1))}")
+            continue
+        match = re.fullmatch(r"bpet", statement, re.I)
+        if match:
+            effects.append("opens the pet hatching window")
+            continue
+        match = re.fullmatch(r"homevolution", statement, re.I)
+        if match:
+            effects.append("tries to evolve the current homunculus")
+            continue
+        match = re.fullmatch(r"setcashmount\(\s*\)", statement, re.I)
+        if match:
+            effects.append("toggles the cash mount")
+            continue
+        match = re.fullmatch(r"buyingstore\s+(\d+)", statement, re.I)
+        if match:
+            effects.append(f"opens the buying store window with {int(match.group(1))} slots")
+            continue
+        match = re.fullmatch(r"getexp\s+(\d+)\s*,\s*(\d+)", statement, re.I)
+        if match:
+            effects.append(f"grants {int(match.group(1))} base experience and {int(match.group(2))} job experience")
+            continue
+        match = re.fullmatch(r"mercenary_heal\s+(-?\d+)\s*,\s*(-?\d+)", statement, re.I)
+        if match:
+            effects.append(f"heals the mercenary for {int(match.group(1))} HP and {int(match.group(2))} SP")
+            continue
+        match = re.fullmatch(r"mercenary_sc_start\s+(SC_[A-Z0-9_]+)\s*,\s*(\d+)\s*,\s*(-?\d+)", statement, re.I)
+        if match:
+            status, ticks, value = match.group(1).upper(), int(match.group(2)), int(match.group(3))
+            label = status_names.get(status) or f"status {status}"
+            effects.append(f"bestows {label} on the mercenary for {ticks} milliseconds, value {value}")
+            continue
+        match = re.fullmatch(r"searchstores\s+(\d+)\s*,\s*([01])", statement, re.I)
+        if match:
+            uses, effect = int(match.group(1)), match.group(2)
+            action = "opens the shop" if effect == "1" else "shows the store on the mini-map"
+            effects.append(f"opens the store search window for {uses} searches; a chosen result {action}")
+            continue
+        match = re.fullmatch(r"hateffect\(\s*(HAT_EF_[A-Z0-9_]+)\s*,\s*(true|false)\s*\)", statement, re.I)
+        if match:
+            state = "enables" if match.group(2).lower() == "true" else "disables"
+            effects.append(f"{state} hat effect {match.group(1).upper()}")
+            continue
+        match = re.fullmatch(r"openreformui\(\s*([A-Za-z0-9_]+)\s*\)", statement, re.I)
+        if match:
+            token = match.group(1)
+            label = _item_names_by_aegis().get(token) or (_item_display_name(int(token)) if token.isdigit() else None)
+            if label is None:
+                return None
+            effects.append(f"opens the item reform window for {label}")
+            continue
+        match = re.fullmatch(
+            r'monster\s+"this"\s*,\s*-?\d+\s*,\s*-?\d+\s*,\s*"([^"]*)"\s*,\s*(-?\d+)\s*,\s*(\d+)\s*,\s*""',
+            statement,
+            re.I,
+        )
+        if match:
+            effects.append(
+                f"spawns {int(match.group(3))} monster id {int(match.group(2))} named {match.group(1)!r} on the user's current map"
+            )
+            continue
+        if re.fullmatch(r"end", statement, re.I):
+            effects.append("stops this script")
             continue
         return None
     return "; ".join(effects) if effects else None
@@ -501,8 +924,59 @@ def _skill_display_names() -> dict[str, str]:
     }
 
 
+@lru_cache(maxsize=1)
+def _item_names_by_id() -> dict[int, str]:
+    names: dict[int, str] = {}
+    pattern = re.compile(r"Id:\s*(\d+)(?:(?!\n\s*Id:)[\s\S]){0,800}?\n\s*Name:\s*\"([^\"]*)\"")
+    for path in ITEM_SOURCES:
+        if not path.is_file():
+            continue
+        for match in pattern.finditer(path.read_text(encoding="utf-8", errors="replace")):
+            names[int(match.group(1))] = match.group(2)
+    return names
+
+
+def _item_display_name(item_id: int) -> str:
+    return _item_names_by_id().get(item_id, f"item {item_id}")
+
+
+@lru_cache(maxsize=1)
+def _item_names_by_aegis() -> dict[str, str]:
+    """Map an item constant to its database Name. script_commands.txt calls that constant the item name."""
+    names: dict[str, str] = {}
+    pattern = re.compile(
+        r'AegisName:\s*"([^"]+)"(?:(?!\n\s*Id:)[\s\S]){0,400}?\n\s*Name:\s*"([^"]*)"'
+    )
+    for path in ITEM_SOURCES:
+        if not path.is_file():
+            continue
+        for match in pattern.finditer(path.read_text(encoding="utf-8", errors="replace")):
+            names[match.group(1)] = match.group(2) or match.group(1)
+    return names
+
+
 def _skill_display_name(constant: str) -> str:
     return _skill_display_names().get(constant, constant.replace("_", " ").title())
+
+
+# itemskill() flag bits from Hercules enum itemskill_flag (src/map/script.h).
+_ITEMSKILL_FLAG_NOTES = (
+    ("ISF_CHECKCONDITIONS", "after checking the skill's conditions and paying its costs"),
+    ("ISF_INSTANTCAST", "instantly"),
+    ("ISF_CASTONSELF", "on yourself, without a target cursor"),
+)
+
+
+def _itemskill_phrase(skill: str, level: str, flags: str | None) -> str | None:
+    phrase = f"grants access to {_skill_display_name(skill)} at level {level}"
+    if not flags:
+        return phrase
+    present = {part.strip().upper() for part in flags.split("|") if part.strip()}
+    known = {name for name, _note in _ITEMSKILL_FLAG_NOTES}
+    if not present or not present <= known:
+        return None
+    notes = [note for name, note in _ITEMSKILL_FLAG_NOTES if name in present]
+    return f"{phrase}, {', '.join(notes)}"
 
 
 def _effect_display_name(constant: str) -> str:
@@ -513,6 +987,109 @@ def _effect_display_name(constant: str) -> str:
         "Eff_Fear": "Fear", "Eff_Cold": "Cold", "Eff_Burning": "Burning", "Eff_Frostbite": "Frostbite",
     }
     return known.get(constant, constant.removeprefix("Eff_").replace("_", " ").title())
+
+
+def _race_display_name(constant: str) -> str:
+    if constant.upper().startswith("RC_"):
+        return constant[3:].replace("DemiPlayer", "player").replace("_", " ").lower()
+    return constant.replace("_", " ")
+
+
+@lru_cache(maxsize=1)
+def _bonus_doc_rows() -> dict[tuple[str, str], tuple[int, list[str], str]]:
+    """bonus command -> (line, signature placeholders, description) from doc/item_bonus.md."""
+    rows: dict[tuple[str, str], tuple[int, list[str], str]] = {}
+    path = HERCULES / "doc/item_bonus.md"
+    if not path.is_file():
+        return rows
+    for line_no, line in enumerate(path.read_text(encoding="utf-8", errors="replace").splitlines(), 1):
+        match = re.match(r"^(bonus\d?)\s+(b[A-Za-z0-9_]+)\s*,?(.*?);\s*\|\s*(.*)$", line)
+        if not match:
+            continue
+        kind, name, signature, description = match.groups()
+        rows[(kind.lower(), name.lower())] = (line_no, re.findall(r"`([^`]+)`", signature), description)
+    return rows
+
+
+def _bonus_arg_text(placeholder: str, raw: str) -> str:
+    token = raw.strip().strip('"')
+    key = placeholder.lower()
+    if key in {"r", "mr"}:
+        return _race_display_name(token)
+    if key == "e" and token.lower().startswith("ele_"):
+        return _element_display_name(token)
+    if key == "eff" and token.lower().startswith("eff_"):
+        return _effect_display_name(token)
+    if key in {"id", "ig"} and token.lstrip("-").isdigit():
+        return _item_display_name(int(token))
+    if key in {"id", "ig"}:
+        return _item_names_by_aegis().get(token, token.replace("_", " "))
+    if key == "sk":
+        return _skill_display_name(token)
+    if token.lstrip("-").isdigit():
+        return str(int(token))
+    return token.replace("_", " ")
+
+
+def _documented_bonus_phrase(statement: str) -> str | None:
+    """Fill one item_bonus.md row from literal arguments. Expressions stay untranslated."""
+    match = re.fullmatch(r"(bonus\d?)\s+(b[A-Za-z0-9_]+)(?:\s*,\s*(.+))?", statement, re.I)
+    if not match:
+        return None
+    kind, name, raw_args = match.groups()
+    if kind.lower() == "bonus2" and name.lower() == "bmagicaddrace" and raw_args:
+        race_token, _sep, percent = raw_args.partition(",")
+        race_token, percent = race_token.strip(), percent.strip()
+        if percent.lstrip("-").isdigit():
+            if race_token.upper().startswith("RC_"):
+                race = _race_display_name(race_token)
+            elif race_token.isdigit():
+                race = {
+                    0: "formless", 1: "undead", 2: "brute", 3: "plant", 4: "insect", 5: "fish",
+                    6: "demon", 7: "demi-human", 8: "angel", 9: "dragon", 10: "player",
+                    11: "boss", 12: "non-boss",
+                }.get(int(race_token))
+            else:
+                race = None
+            if race is not None:
+                return f"Magical damage against {race} +{int(percent)}%"
+    row = _bonus_doc_rows().get((kind.lower(), name.lower()))
+    if row is None:
+        return None
+    _line, placeholders, description = row
+    args = [part.strip() for part in raw_args.split(",")] if raw_args else []
+    if len(args) != len(placeholders):
+        return None
+    if any(not re.fullmatch(r"-?\d+|\"[^\"]+\"|[A-Za-z_][A-Za-z0-9_]*", arg) for arg in args):
+        return None
+    shown = [_bonus_arg_text(ph, arg) for ph, arg in zip(placeholders, args)]
+    if "If `n` is negative" in description:
+        try:
+            n_value = int(shown[placeholders.index("n")])
+        except (ValueError, IndexError):
+            n_value = -1
+        if n_value >= 0:
+            description = description.split("If `n` is negative", 1)[0]
+    text = re.sub(r"<br\s*/?>", " ", description)
+    text = re.sub(r"<[^>]+>", "", text)
+    # Keep the numbered branch the script selected when the row lists 0 and 1.
+    if "0:" in text and "1:" in text and shown and shown[-1] in {"0", "1"}:
+        head = text.split("0:", 1)[0]
+        branch = "0" if shown[-1] == "0" else "1"
+        pattern = rf"{branch}:\s*(.*?)(?=(?:\s+[01]:)|$)"
+        chosen = re.search(pattern, text)
+        text = (head + " " + (chosen.group(1) if chosen else "")).strip()
+    for placeholder, value in zip(placeholders, shown):
+        text = text.replace(f"`{placeholder}`", value)
+    text = re.sub(r"/`[^`]+`", "", text)
+    def percent(match: re.Match[str]) -> str:
+        value, divisor = int(match.group(1)), int(match.group(2))
+        return f"{value / divisor:g}%"
+    text = re.sub(r"(-?\d+)/(\d+)%", percent, text)
+    text = " ".join(text.split())
+    if "`" in text or not text:
+        return None
+    return text[0].upper() + text[1:]
 
 
 def _element_display_name(constant: str) -> str:
@@ -550,6 +1127,9 @@ def describe_item_condition(condition: str) -> str | None:
     if match:
         job_class = match.group(1).replace("_", " ")
         return f"For the {job_class} class"
+    match = re.fullmatch(r"getfont\(\)==(\d+)", compact, re.I)
+    if match:
+        return f"When the current interface font id is {match.group(1)}"
     match = re.fullmatch(rf"readparam\(b(Str|Agi|Vit|Int|Dex|Luk)\){comparison}(\d+)", compact, re.I)
     if match:
         stat, operator, value = match.groups()
@@ -573,7 +1153,14 @@ def source_revision() -> tuple[str, bool]:
         revision = subprocess.check_output(
             ["git", "-C", str(HERCULES), "rev-parse", "HEAD"], text=True, stderr=subprocess.DEVNULL
         ).strip()
-        dirty = bool(subprocess.check_output(["git", "-C", str(HERCULES), "status", "--porcelain"], text=True).strip())
+        # Use diff-index instead of status --porcelain to ignore untracked files.
+        # This ensures source_worktree_dirty reflects only tracked-source changes,
+        # not new tooling or other uncommitted untracked items.
+        dirty = subprocess.run(
+            ["git", "-C", str(HERCULES), "diff-index", "--quiet", "HEAD"],
+            capture_output=True,
+            text=True,
+        ).returncode != 0
         return revision, dirty
     except (OSError, subprocess.CalledProcessError):
         return "unknown", False
@@ -800,9 +1387,17 @@ def build() -> tuple[dict[str, Any], dict[str, Any]]:
             # overrides matching IDs and can introduce server-only records.
             merged[int(row["Id"])] = (row, path)
 
-    mobs = read_records(MOB_SOURCE)
-    check_unique(mobs, "Id", MOB_SOURCE)
-    check_unique(mobs, "SpriteName", MOB_SOURCE)
+    mob_by_id: dict[int, tuple[dict[str, Any], Path]] = {}
+    for mob_source in (MOB_SOURCE, MOB_OVERRIDE_SOURCE):
+        if mob_source == MOB_OVERRIDE_SOURCE and not mob_source.is_file():
+            continue
+        source_mobs = read_records(mob_source)
+        check_unique(source_mobs, "Id", mob_source)
+        check_unique(source_mobs, "SpriteName", mob_source)
+        for mob in source_mobs:
+            mob_by_id[int(mob["Id"])] = (mob, mob_source)
+    mobs = [mob for mob, _ in mob_by_id.values()]
+    check_unique(mobs, "SpriteName", MOB_OVERRIDE_SOURCE)
     item_by_aegis: dict[str, int] = {}
     item_by_id: dict[int, tuple[dict[str, Any], Path]] = merged
     for item_id, (row, path) in merged.items():
@@ -824,6 +1419,7 @@ def build() -> tuple[dict[str, Any], dict[str, Any]]:
         raise ValueError(f"could not safely delimit every combo script: {combo_starts} starts, {combo_scripts} complete values")
     combo_rows = parse_skill_db(scrubbed_combos)
     combos_by_item: dict[int, list[dict[str, Any]]] = defaultdict(list)
+    belongs_to_combos_by_item: dict[int, list[str]] = defaultdict(list)
     # The database header includes a commented example entry with a Script
     # field; it is not returned by the config parser.
     if len(combo_raw_scripts) == len(combo_rows) + 1:
@@ -849,8 +1445,10 @@ def build() -> tuple[dict[str, Any], dict[str, Any]]:
                if translate_simple_effect(combo_raw_scripts[index - 1]) else {}),
             "source": {"path": COMBO_SOURCE.relative_to(HERCULES).as_posix(), "record": f"combo_db[{index}]"},
         }
+        combo_name = "_".join(sorted(names))
         for member in members:
             combos_by_item[member["id"]].append(combo_link)
+            belongs_to_combos_by_item[member["id"]].append(combo_name)
 
     group_contents_by_item: dict[int, list[dict[str, Any]]] = defaultdict(list)
     contained_in_by_item: dict[int, list[dict[str, Any]]] = defaultdict(list)
@@ -898,8 +1496,8 @@ def build() -> tuple[dict[str, Any], dict[str, Any]]:
 
     drops_by_item: dict[int, list[dict[str, Any]]] = defaultdict(list)
     unresolved: list[str] = []
-    mob_path = MOB_SOURCE.relative_to(HERCULES).as_posix()
     for mob in mobs:
+        mob_path = mob_by_id[int(mob["Id"])][1].relative_to(HERCULES).as_posix()
         for drop_kind, field in (("normal", "Drops"), ("mvp", "MvpDrops")):
             for aegis_name, raw_rate in (mob.get(field) or {}).items():
                 rate = raw_rate[0] if isinstance(raw_rate, list) and raw_rate else raw_rate
@@ -934,6 +1532,7 @@ def build() -> tuple[dict[str, Any], dict[str, Any]]:
             },
             "drops_from": sorted(drops_by_item[item_id], key=lambda drop: (drop["monster_id"], drop["kind"])),
             **({"combos": combos_by_item[item_id]} if item_id in combos_by_item else {}),
+            **({"belongs_to_combos": sorted(belongs_to_combos_by_item[item_id])} if item_id in belongs_to_combos_by_item else {}),
             **({"group_contents": group_contents_by_item[item_id]} if item_id in group_contents_by_item else {}),
             **({"contained_in_groups": contained_in_by_item[item_id]} if item_id in contained_in_by_item else {}),
             **({"shops": shops_by_item[item_id]} if item_id in shops_by_item else {}),
@@ -959,7 +1558,7 @@ def build() -> tuple[dict[str, Any], dict[str, Any]]:
         "mode": "renewal",
         "sources": [
             path.relative_to(HERCULES).as_posix()
-            for path in (*ITEM_SOURCES, MOB_SOURCE, COMBO_SOURCE, ITEM_GROUP_SOURCE)
+            for path in (*ITEM_SOURCES, MOB_SOURCE, MOB_OVERRIDE_SOURCE, COMBO_SOURCE, ITEM_GROUP_SOURCE)
         ] + ["src/map/itemdb.c:itemdb_searchrandomid", "npc/re/scripts_main.conf (loaded shop source manifest)"],
         "shop_coverage": shop_coverage,
     }
@@ -967,7 +1566,7 @@ def build() -> tuple[dict[str, Any], dict[str, Any]]:
 
 
 def render(payload: dict[str, Any]) -> str:
-    return json.dumps(payload, indent=1, ensure_ascii=False) + "\n"
+    return json.dumps(payload, indent=2, ensure_ascii=False) + "\n"
 
 
 def main() -> int:

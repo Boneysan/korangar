@@ -150,6 +150,10 @@ pub struct MinimapState {
     /// the route graph, so it works on any clicked tile.
     #[hidden_element]
     personal_waypoint: Option<(u16, u16)>,
+    /// Selected monster ID to highlight on the minimap with broad population
+    /// regions (GDD 9.4).
+    #[hidden_element]
+    selected_monster_id: Option<u32>,
 }
 
 impl Default for MinimapState {
@@ -169,6 +173,7 @@ impl Default for MinimapState {
             party_ping: None,
             party_ping_sent_at: None,
             personal_waypoint: None,
+            selected_monster_id: None,
         }
     }
 }
@@ -187,6 +192,7 @@ impl MinimapState {
         self.navigation_marker = None;
         self.navigation_breadcrumbs.clear();
         self.personal_waypoint = None;
+        self.selected_monster_id = None;
     }
 
     pub fn set_map(
@@ -265,6 +271,15 @@ impl MinimapState {
 
     pub fn navigation_marker(&self) -> Option<(u16, u16)> {
         self.navigation_marker
+    }
+
+    pub fn selected_monster_id(&self) -> Option<u32> {
+        self.selected_monster_id
+    }
+
+    #[allow(dead_code)]
+    pub fn set_selected_monster_id(&mut self, monster_id: Option<u32>) {
+        self.selected_monster_id = monster_id;
     }
 
     pub fn set_navigation_breadcrumbs(&mut self, breadcrumbs: Vec<(u16, u16)>) {

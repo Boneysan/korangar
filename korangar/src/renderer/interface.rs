@@ -1,4 +1,4 @@
-use std::cell::{Ref, RefCell};
+use std::cell::{Cell, Ref, RefCell};
 use std::sync::Arc;
 
 use cgmath::EuclideanSpace;
@@ -32,6 +32,7 @@ pub struct InterfaceRenderer {
     trash_can_texture: Arc<Texture>,
     window_size: ScreenSize,
     interface_size: ScreenSize,
+    content_alpha: Cell<f32>,
     high_quality_interface: bool,
     #[cfg(feature = "debug")]
     show_rectangle_instructions: bool,
@@ -44,6 +45,11 @@ pub struct InterfaceRenderer {
 }
 
 impl InterfaceRenderer {
+    fn fade(&self, color: Color) -> Color {
+        let alpha = self.content_alpha.get();
+        if alpha >= 0.999 { color } else { color.multiply_alpha(alpha) }
+    }
+
     /// Create a new interface renderer.
     ///
     /// This include loading the textures icons for rendering components.
@@ -67,6 +73,7 @@ impl InterfaceRenderer {
         let trash_can_texture = texture_loader.get_or_load("trash_can.png", ImageType::Sdf).unwrap();
 
         let interface_size = if high_quality_interface { window_size * 2.0 } else { window_size };
+        let content_alpha = Cell::new(1.0);
 
         #[cfg(feature = "debug")]
         let show_rectangle_instructions = false;
@@ -92,6 +99,7 @@ impl InterfaceRenderer {
             trash_can_texture,
             window_size,
             interface_size,
+            content_alpha,
             high_quality_interface,
             #[cfg(feature = "debug")]
             show_rectangle_instructions,
@@ -195,6 +203,8 @@ impl InterfaceRenderer {
         shadow_color: Color,
         mut shadow_padding: ShadowPadding,
     ) {
+        let color = self.fade(color);
+        let shadow_color = self.fade(shadow_color);
         // If the rectangle is not even within the bounds of the clip, discard it early
         // saving GPU resources.
         if position.left > screen_clip.right
@@ -270,6 +280,8 @@ impl InterfaceRenderer {
         highlight_color: Color,
         mut font_size: FontSize,
     ) -> f32 {
+        let color = self.fade(color);
+        let highlight_color = self.fade(highlight_color);
         // TODO: Can't we scale after laying out the text? Would cut down on
         // multiplications.
         if self.high_quality_interface {
@@ -439,6 +451,7 @@ impl SpriteRenderer for InterfaceRenderer {
         smooth: bool,
         mirror: bool,
     ) {
+        let color = self.fade(color);
         // If the sprite is not even within the bounds of the clip, discard it early
         // saving GPU resources.
         if position.left > screen_clip.right
@@ -503,6 +516,7 @@ impl SpriteRenderer for InterfaceRenderer {
     }
 
     fn render_sdf(&self, texture: Arc<Texture>, position: ScreenPosition, size: ScreenSize, mut screen_clip: ScreenClip, color: Color) {
+        let color = self.fade(color);
         // If the SDF is not even within the bounds of the clip, discard it early
         // saving GPU resources.
         if position.left > screen_clip.right
@@ -660,6 +674,10 @@ pub enum CustomInstruction<'a> {
 impl RenderLayer<ClientState> for InterfaceRenderer {
     type CustomIcon = ();
     type CustomInstruction<'a> = CustomInstruction<'a>;
+
+    fn set_content_alpha(&self, alpha: f32) {
+        self.content_alpha.set(alpha.clamp(0.0, 1.0));
+    }
 
     fn render_rectangle(
         &self,

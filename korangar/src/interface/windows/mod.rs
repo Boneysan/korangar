@@ -1,6 +1,7 @@
 mod adventure_guide;
 mod audio_settings;
 mod auto_spell;
+mod build_planner;
 mod buy;
 mod buy_cart;
 mod buy_or_sell;
@@ -10,6 +11,7 @@ mod character_overview;
 mod character_selection;
 mod chat;
 mod commands;
+mod commission_board;
 mod dialog;
 mod dice;
 mod disconnect_notice;
@@ -66,6 +68,7 @@ use serde::{Deserialize, Serialize};
 pub use self::adventure_guide::{AdventureGuideWindow, AdventureGuideWindowState, open_item_entry};
 pub use self::audio_settings::AudioSettingsWindow;
 pub use self::auto_spell::AutoSpellWindow;
+pub use self::build_planner::BuildPlannerWindow;
 pub use self::buy::BuyWindow;
 pub use self::buy_cart::BuyCartWindow;
 pub use self::buy_or_sell::BuyOrSellWindow;
@@ -75,6 +78,7 @@ pub use self::character_overview::CharacterOverviewWindow;
 pub use self::character_selection::CharacterSelectionWindow;
 pub use self::chat::{ChatTextBox, ChatWindow, ChatWindowState};
 pub use self::commands::{CommandsWindow, CommandsWindowState};
+pub use self::commission_board::{CommissionBoardWindow, CommissionBoardWindowState};
 pub use self::dialog::{DialogWindow, DialogWindowState};
 pub use self::dice::{DiceWindow, DiceWindowState};
 pub use self::disconnect_notice::DisconnectNoticeWindow;
@@ -99,7 +103,7 @@ pub use self::login::{LoginWindow, LoginWindowState, LoginWindowStatePathExt};
 pub use self::maps::MapsWindow;
 pub use self::menu::MenuWindow;
 pub use self::minimap::MinimapWindow;
-pub use self::monster_target::MonsterTargetWindow;
+pub use self::monster_target::{BossTargetWindow, MonsterTargetWindow};
 #[cfg(feature = "debug")]
 pub use self::packet_inspector::PacketInspectorWindow;
 pub use self::party::{PartyWindow, PartyWindowState};
@@ -151,6 +155,7 @@ pub enum WindowClass {
     StatusBar,
     SkillTree,
     Stats,
+    BuildPlanner,
     FriendList,
     FriendRequest,
     Login,
@@ -169,6 +174,8 @@ pub enum WindowClass {
     PlayerTarget,
     /// Reactive HUD frame for the selected monster.
     MonsterTarget,
+    /// Larger reactive HUD frame for MVP and story boss monsters.
+    BossTarget,
     Storage,
     Trade,
     TradeRequest,
@@ -185,6 +192,8 @@ pub enum WindowClass {
     Commands,
     /// Dice roller (sends `@roll`). Available to all players in all builds.
     Dice,
+    /// Crafting commission bulletin board (F31).
+    CommissionBoard,
     /// Bestiary journal (Seal Cascade campaign, unlock-on-kill).
     Bestiary,
     /// Open-search player reference guide, separate from DM campaign tools.

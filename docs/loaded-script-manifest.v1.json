@@ -1,0 +1,2801 @@
+{
+  "schema_version": 1,
+  "source_revision": {
+    "korangar": "af45e4abe08a6a3fcfa834131dcc3e762d225bc8",
+    "hercules": "f6974e0ad9a8d77f0dca4ebf8fda965273f91726"
+  },
+  "source_worktree_dirty": true,
+  "mode": "renewal",
+  "loaded_scripts": [
+    {
+      "path": "npc/MOTD.txt",
+      "sha256": "726dafeeb64494fcef616cf44bd582a2d6acfaf40f9d1761a36c33f17f913f06"
+    },
+    {
+      "path": "npc/airports/airships.txt",
+      "sha256": "a00828c7535b420804822e98451b36639152cb0e55332bfb588581842f60f5f8"
+    },
+    {
+      "path": "npc/airports/einbroch.txt",
+      "sha256": "affab9b9ccf6f79d498841c0f91b0fcdac9e100653d4be7ec41640ed246dbf43"
+    },
+    {
+      "path": "npc/airports/hugel.txt",
+      "sha256": "3064fb83d208444a960c73c8cc2a7dc5e5e5aa9ed6a3c3a69ce3ce5f7e56736c"
+    },
+    {
+      "path": "npc/airports/izlude.txt",
+      "sha256": "6c9b5740351aaf2066791f4cad4eae6fbc050a64cc736a54e668f5278afb0880"
+    },
+    {
+      "path": "npc/airports/lighthalzen.txt",
+      "sha256": "2d24ff1da70cfbcaf1769261774162048b86b4d937c3c4d2c0ec11a0f00bc3bf"
+    },
+    {
+      "path": "npc/airports/rachel.txt",
+      "sha256": "d2a390fad59aa7687722c55007b35a0d3c79ce17179dd7923ae63da71f7c497a"
+    },
+    {
+      "path": "npc/airports/yuno.txt",
+      "sha256": "9890b0c102d282b31776f5ebdb57ff72146d1dccc07a1384c7e567d9b0725cf8"
+    },
+    {
+      "path": "npc/battleground/bg_common.txt",
+      "sha256": "091b4e90faaf896ac7c531394b42c747e4f2d612b90ec3224d2c1b6bf9112fd2"
+    },
+    {
+      "path": "npc/battleground/flavius/flavius01.txt",
+      "sha256": "f2584c1cd4782b87105a050b59bd8fca7706fe415e35e805e360f70b86c3e625"
+    },
+    {
+      "path": "npc/battleground/flavius/flavius02.txt",
+      "sha256": "bf6e24465dd0c296eaa268f93105bc23b7246e2ab813b39d748943ba44aa7772"
+    },
+    {
+      "path": "npc/battleground/flavius/flavius_enter.txt",
+      "sha256": "61909e180ce4e06e0a6bfb0f61826ebc16a959fbdc9155755adb27a450f64b38"
+    },
+    {
+      "path": "npc/battleground/kvm/kvm01.txt",
+      "sha256": "7b610d1b823066959d4599076a716fbcdabbb27bf23216328364ba36f9c50140"
+    },
+    {
+      "path": "npc/battleground/kvm/kvm02.txt",
+      "sha256": "e1bb892a6d08550bfd33dffc54493f2f86bcbf7698f97d93fbf9049ea4247527"
+    },
+    {
+      "path": "npc/battleground/kvm/kvm03.txt",
+      "sha256": "47e442d214ad4340069adb8a8c6e1c3efaf7f39b5064821a7b8eebecbb96a72b"
+    },
+    {
+      "path": "npc/battleground/kvm/kvm_enter.txt",
+      "sha256": "502b6320f58842afbac4595a7a0c2d39ada28813758c9336188eb7d1df74cb20"
+    },
+    {
+      "path": "npc/battleground/kvm/kvm_item_pay.txt",
+      "sha256": "a3a1912dbfed280dc0365dbd7b94e425ae7ef7a33ab35b29c8365c8321660efe"
+    },
+    {
+      "path": "npc/battleground/tierra/tierra01.txt",
+      "sha256": "4c9ad70c118bf7bb4c5ff3fb12d4840372b8cedba0a816a73cd1a4f34a88d95a"
+    },
+    {
+      "path": "npc/battleground/tierra/tierra02.txt",
+      "sha256": "f87e2cc2a6b711c3a89decf2e17159a30791352832dcf2cc41deb14fe4968c00"
+    },
+    {
+      "path": "npc/battleground/tierra/tierra_enter.txt",
+      "sha256": "f9e929219be4c12aaa49ad047190522895558f931dd8f82cf169e8a8d1fdf9ff"
+    },
+    {
+      "path": "npc/cities/alberta.txt",
+      "sha256": "32d69dd241fb67f50a0c644d71f5f49ba91155c86f6d23a9f7bd7d02176b9f36"
+    },
+    {
+      "path": "npc/cities/aldebaran.txt",
+      "sha256": "7d6260d3e7be16eccb599cf73ee82e9571d7f9c945de9920b67e86b81e029aec"
+    },
+    {
+      "path": "npc/cities/amatsu.txt",
+      "sha256": "489aad946434c6ace99e3bd0b2ab747248b4c7ceccbc4bfab190a2637bb9c8c3"
+    },
+    {
+      "path": "npc/cities/ayothaya.txt",
+      "sha256": "0e7faf8c66e36a21aa358e1acece2befe67ee15579908956113b326efa3851fd"
+    },
+    {
+      "path": "npc/cities/comodo.txt",
+      "sha256": "c4bc5a4ddd5a781eaa9383897f731e9963fd06374d44a3fdca8578dc4a4e9d8c"
+    },
+    {
+      "path": "npc/cities/einbech.txt",
+      "sha256": "2648a96b03a15130f23012b754549e7971a5daaffb39464238d7a97a7f3bf2f5"
+    },
+    {
+      "path": "npc/cities/einbroch.txt",
+      "sha256": "6f0679b6a3e19afeeeaef70397dc9d7e817c91b15a1ddadd7749ce3387e0b4a7"
+    },
+    {
+      "path": "npc/cities/geffen.txt",
+      "sha256": "ddd8560d0d5b7eedcda0243a4dd532ec92e5cb02953af826deade0e11d8f0fa1"
+    },
+    {
+      "path": "npc/cities/gonryun.txt",
+      "sha256": "4048b7befae22339d1ae4a04aebfe374d794d5259ab6e6de07333ea26ca0820e"
+    },
+    {
+      "path": "npc/cities/hugel.txt",
+      "sha256": "54fd1aa373c2066ced6edf965bc03ff6b6b4c8bc6677f315d2c854dc57c102f1"
+    },
+    {
+      "path": "npc/cities/izlude.txt",
+      "sha256": "3497e1a4a2ca90fc0e7cb90aa629966bb5062dd8357f8e2ebc8f0edf06a1d80a"
+    },
+    {
+      "path": "npc/cities/jawaii.txt",
+      "sha256": "a31470d1084aeb172cdbb09e916138ac58d5a4e70d4d23a3d5e3d8c6abf89aa4"
+    },
+    {
+      "path": "npc/cities/lighthalzen.txt",
+      "sha256": "caa6a246b6f3dc7ec4daf7c0294f88ae839cc1715238f2ae9e312f06d7a86a1f"
+    },
+    {
+      "path": "npc/cities/louyang.txt",
+      "sha256": "1fb762592139ad87fac77742e2646cbc044b54170a3ed674a8d89431361a2a2d"
+    },
+    {
+      "path": "npc/cities/lutie.txt",
+      "sha256": "8935c302a807daa0883d1d45e3f9ca8a5824703f7cfbd212aad6ca80300afe49"
+    },
+    {
+      "path": "npc/cities/manuk.txt",
+      "sha256": "cfcc37fade16f1c4f74cb814d5e9e8c47fd2722eba8a3fe1ca21357d2c2515d4"
+    },
+    {
+      "path": "npc/cities/morocc.txt",
+      "sha256": "112e76db26566bf427f970a1b90300af9c43e0004f803f533e324120648f53a5"
+    },
+    {
+      "path": "npc/cities/moscovia.txt",
+      "sha256": "23126145a6da051ec7a7edcb1c41bf0320335a2a133b5908965c71ab8e886f9d"
+    },
+    {
+      "path": "npc/cities/niflheim.txt",
+      "sha256": "3694bea056df90d62b825a37a001da01bcdf9a28b08f419b6f1d1eec7ad7551f"
+    },
+    {
+      "path": "npc/cities/payon.txt",
+      "sha256": "5ee8da1528e482c208551a6fcbc55cb96d6a5079380b1a400837164da052183c"
+    },
+    {
+      "path": "npc/cities/prontera.txt",
+      "sha256": "660e420da1db7fc86a4af25360b71a751e8bc8299000aa3715e9e138a831e828"
+    },
+    {
+      "path": "npc/cities/rachel.txt",
+      "sha256": "c916e1744548e5506ae800485b81314cc15c774415eb797d65660f55bb69f285"
+    },
+    {
+      "path": "npc/cities/splendide.txt",
+      "sha256": "2eee5b0ce03620ebc539ba3233ed42f06bf6a0188712cc39cc7d9aebaacdb46c"
+    },
+    {
+      "path": "npc/cities/umbala.txt",
+      "sha256": "8d3a4531ff046ef184932ec336f65129427192a1ecd5f68cb35bbc7dec024f48"
+    },
+    {
+      "path": "npc/cities/veins.txt",
+      "sha256": "9372799dd535257faffb7740e8cbafaf67e3d05ff4ad9e57d6f03ffabe1cfd19"
+    },
+    {
+      "path": "npc/cities/yuno.txt",
+      "sha256": "9d40a8430e6a51bb6f88a46622eddcdf13e638e92bdbbcce7a06b7a5dbc6c546"
+    },
+    {
+      "path": "npc/custom/dm_campaign/act_01/arc_01_prontera.txt",
+      "sha256": "8d366075bb663744e6f498038d35c9daf301117829ee3343900d201578404d94"
+    },
+    {
+      "path": "npc/custom/dm_campaign/act_01/arc_02_payon.txt",
+      "sha256": "f39b7c442e007c8f10b9cb7e15c2207afcdd019b507971065fd2bb4ef2ef961f"
+    },
+    {
+      "path": "npc/custom/dm_campaign/act_01/arc_03_morroc.txt",
+      "sha256": "dbab636b60995291207835d716f0ce60339d1bb1f2e6bf0eec0f0c5d0dc5fd58"
+    },
+    {
+      "path": "npc/custom/dm_campaign/act_01/arc_04_geffen.txt",
+      "sha256": "b676949d867a9cc4efe0ecb0d72f1b9e77456edb1e0778d23d095bdc7087cded"
+    },
+    {
+      "path": "npc/custom/dm_campaign/act_01/arc_05_alberta_izlude.txt",
+      "sha256": "c51ff18a783368eddb0fc9a9557bb337d5bee86467e1dfcd61db2ccce5cc6f26"
+    },
+    {
+      "path": "npc/custom/dm_campaign/act_02/arc_06_yuno.txt",
+      "sha256": "4d6deb2c1e85c6d9148f7fb7eff68737ef30c4e9f30e0b154350cbee1137adb6"
+    },
+    {
+      "path": "npc/custom/dm_campaign/act_02/arc_07_einbroch.txt",
+      "sha256": "c8d5a81c85ff4ee2e90e718816c4292c8284b78afc7c1e7ccc6e3bc466c3747f"
+    },
+    {
+      "path": "npc/custom/dm_campaign/act_02/arc_08_glast_heim.txt",
+      "sha256": "29c0e26e89928d8cebea4b34d700afe6c75e4de5d98fcde4393171716683458a"
+    },
+    {
+      "path": "npc/custom/dm_campaign/act_02/arc_09_rachel.txt",
+      "sha256": "98af3b14b2ddd52fb35c07bc714189e725794952c90ba14d4bbeb0817e97ee85"
+    },
+    {
+      "path": "npc/custom/dm_campaign/act_02/arc_10_lighthalzen.txt",
+      "sha256": "8ccd54d546c34bc2e269afce6e4932c6cae82eae47cb1c95919c550bff96f075"
+    },
+    {
+      "path": "npc/custom/dm_campaign/act_03/arc_11_hugel.txt",
+      "sha256": "ef3e00328ccc95159f5c1598c3c3e76158cdcf7e004460194992085483d28eba"
+    },
+    {
+      "path": "npc/custom/dm_campaign/act_03/arc_12_new_world.txt",
+      "sha256": "cc99ce996d24373186bcb90ad7c716a46de455fdda0c57618ce31e9e7a610f12"
+    },
+    {
+      "path": "npc/custom/dm_campaign/act_03/arc_13_nameless_island.txt",
+      "sha256": "2d13164e02fd789c091c7082bbbae5778877389cd722896a6955d8c42112eaca"
+    },
+    {
+      "path": "npc/custom/dm_campaign/act_03/arc_14_veins.txt",
+      "sha256": "e07485ec071ed8a5d51ba402d4eca649c83452950af025bcc0a44e84789509f9"
+    },
+    {
+      "path": "npc/custom/dm_campaign/act_04/arc_15_thanatos.txt",
+      "sha256": "5403ea00250396c01eddb85b94a7e6a44559ab2e3dab747c2206aa3aa79887bd"
+    },
+    {
+      "path": "npc/custom/dm_campaign/act_04/arc_16_prontera_banquet.txt",
+      "sha256": "ea3abb4ec7eae2c4d055ac4d4b47f8d7ec4aa4c0c71bea4fc07b9e9d273a199b"
+    },
+    {
+      "path": "npc/custom/dm_campaign/act_04/arc_17_varmundt.txt",
+      "sha256": "46b805980e2d76afe3c648ee7c0570be3c21bee24a8828efedbce56871efd325"
+    },
+    {
+      "path": "npc/custom/dm_campaign/act_04/arc_18_niflheim.txt",
+      "sha256": "1ff8dbc7eb39fbb0917195555975c21a6ec6c530bc8ca25d4b29a0d632a476a7"
+    },
+    {
+      "path": "npc/custom/dm_campaign/act_04/arc_19_finale.txt",
+      "sha256": "fe906f9dca9c9a8a0c6aa4760b404784bd1922279d2e46d65c204185d018f637"
+    },
+    {
+      "path": "npc/custom/dm_campaign/shared/dm_beats.txt",
+      "sha256": "e2f5e7d38493d1ccf32fddcfb451db4bb299477df4c6650e7cfd1b4d6defa670"
+    },
+    {
+      "path": "npc/custom/dm_campaign/shared/dm_checkpoint.txt",
+      "sha256": "199761dc5a92f5ac7b13c7d3b7d73a348a73d6cefe1431260e35510e1475d556"
+    },
+    {
+      "path": "npc/custom/dm_campaign/shared/dm_checkpoint_events.txt",
+      "sha256": "fedb6e9e096b2db90ce4f69e509e75432ff0423c356ff84614a62d0d0bce86ca"
+    },
+    {
+      "path": "npc/custom/dm_campaign/shared/dm_checks.txt",
+      "sha256": "b8873c0598ce8fec6fd68effbfc273d7f386a7c6eb86ab65ea83c74039f95226"
+    },
+    {
+      "path": "npc/custom/dm_campaign/shared/dm_client_flags.txt",
+      "sha256": "b5df9279c5febe0d27229b28a0c16c96f5af4f52471fc0a77c26fafa555874c9"
+    },
+    {
+      "path": "npc/custom/dm_campaign/shared/dm_common.txt",
+      "sha256": "965b1cdf0918782013bb7c0513971d3f432e33f4c52a809e09d67101998cb7b2"
+    },
+    {
+      "path": "npc/custom/dm_campaign/shared/dm_console.txt",
+      "sha256": "97e52fb941399a360c09250f5449c33df914fb4b8c66120302564585161643cc"
+    },
+    {
+      "path": "npc/custom/dm_campaign/shared/dm_dmj.txt",
+      "sha256": "756d0d4167755bbdc003235ae0563cd3e06f15aece20896bd1ae26253ab7b8aa"
+    },
+    {
+      "path": "npc/custom/dm_campaign/shared/dm_encounters.txt",
+      "sha256": "c298d7cb4ce9fab39d03b6d376a265143ecfefff4d4632fd25b835d7901fffd2"
+    },
+    {
+      "path": "npc/custom/dm_campaign/shared/dm_finale_presets.txt",
+      "sha256": "97f91cef8fe04e6432f831277fdc819619d4cea091ece64e516776af4477abd7"
+    },
+    {
+      "path": "npc/custom/dm_campaign/shared/dm_flags.txt",
+      "sha256": "0101001b090ec36317b72f20e5db73dd15ed414ffbd709f4632588b2b2d2b3a5"
+    },
+    {
+      "path": "npc/custom/dm_campaign/shared/dm_handbook.txt",
+      "sha256": "39af36f02a097499447e5c631f6b7652d62bdabb377ffc56ac7594b87e1ab57d"
+    },
+    {
+      "path": "npc/custom/dm_campaign/shared/dm_hunts.txt",
+      "sha256": "9cf898e3944593b6215c17e2c955668321f6e80acdf0554e53e4ff105cb57f23"
+    },
+    {
+      "path": "npc/custom/dm_campaign/shared/dm_instances.txt",
+      "sha256": "cfa6e2f31644ebab49b01ad6aa8ae2a6a0a4355da3f0959db4f0ac8e5721ecf6"
+    },
+    {
+      "path": "npc/custom/dm_campaign/shared/dm_mapflags.txt",
+      "sha256": "3cd6f360f310e5a4f388d3c0f7114e687b689502e6bfb4d6dcd7a542201a13d8"
+    },
+    {
+      "path": "npc/custom/dm_campaign/shared/dm_mobstats.txt",
+      "sha256": "cce38c3e46230da15739e5957f71fa77665046787047003e601d0b64fe91725e"
+    },
+    {
+      "path": "npc/custom/dm_campaign/shared/dm_quests.txt",
+      "sha256": "89b61f6445a6135958e734b592886798c7eb4069d867291f2de04d58342bb2ca"
+    },
+    {
+      "path": "npc/custom/dm_campaign/shared/dm_rewards.txt",
+      "sha256": "981426b6816823e091f3aa13ffc18a0b0a6ac32afb1365e8ef99411c11f0b800"
+    },
+    {
+      "path": "npc/custom/dm_campaign/shared/dm_savepoint.txt",
+      "sha256": "c90430fce12152a1064e9bf0616682b26d00ce5427b10e20ccb034f4898cf6c1"
+    },
+    {
+      "path": "npc/custom/dm_campaign/shared/dm_session.txt",
+      "sha256": "8f1ff56c94f8c4d1634105adbe52232036288993499165eafc753a212eecd394"
+    },
+    {
+      "path": "npc/custom/dm_campaign/shared/dm_storyteller.txt",
+      "sha256": "56a32b9c51719507205e47da54aa73068e5af10c90287c793756e50d54f64a26"
+    },
+    {
+      "path": "npc/custom/dm_campaign/shared/dm_traps.txt",
+      "sha256": "bfa812dc5db158920021f94ec80b4e31997d9ae518e478f3c8130ed5ea743350"
+    },
+    {
+      "path": "npc/custom/dm_campaign/shared/dm_treasures.txt",
+      "sha256": "ed1b46ca843dd2249af692f297c8572c624d3c9c5f02547510105426ad26b15a"
+    },
+    {
+      "path": "npc/custom/f15_elites.txt",
+      "sha256": "511b5b82546bdc6ae4d8d4ff9bcb87b0baf20eefbd482b5083850c5af1a1fd70"
+    },
+    {
+      "path": "npc/custom/korangar_death_recovery.txt",
+      "sha256": "02c415469c0b31e3e453192814b333bf9c0194a1553581acadcaa2c16da49a1d"
+    },
+    {
+      "path": "npc/custom/korangar_discovery.txt",
+      "sha256": "3bc3a72cca7235de47e1fa19fa372c449669e31aab8a91e4fb7bfbbb3e98528d"
+    },
+    {
+      "path": "npc/custom/korangar_metrics.txt",
+      "sha256": "a7422e8ff026c7b5bb9f815111130406c86f1f0d434d6515da5919bb5633bc32"
+    },
+    {
+      "path": "npc/events/gdevent_aru.txt",
+      "sha256": "68ec2a9f760df3d5d7173376fd47f7dff1b59458bb27ac084765c74ea9e147fd"
+    },
+    {
+      "path": "npc/events/gdevent_sch.txt",
+      "sha256": "37e4b21853a7f5427028e17bd3f8ed1e0642e9166efad3481843390a15c1f5bc"
+    },
+    {
+      "path": "npc/events/god_se_festival.txt",
+      "sha256": "e8da3db452527536939e4cf7bc3c5279733c55f232d61e27e40d6c570db7b969"
+    },
+    {
+      "path": "npc/instances/EndlessTower.txt",
+      "sha256": "fbf0e0d27fca8b39ea5a580f33505a5243bf703764ec76c1d7aefd9aa61c109d"
+    },
+    {
+      "path": "npc/instances/NydhoggsNest.txt",
+      "sha256": "21e6a6daa4245d5bb4efb77b62bc2a2bcc6d36829c75b8933c0c007c0fb5cde3"
+    },
+    {
+      "path": "npc/instances/OrcsMemory.txt",
+      "sha256": "97456c3f07678d9df80ebf93527155067381ff00126495ae6f5abbc503f89b3c"
+    },
+    {
+      "path": "npc/instances/SealedShrine.txt",
+      "sha256": "e03590765a01b38f4fea5cbde5638c7aea6d3a0ab63f6111aaba54fb4aa9f769"
+    },
+    {
+      "path": "npc/jobs/1-1e/gunslinger.txt",
+      "sha256": "d54b8ecfdf7a41c07d078b403c67d0b4bccd0f6913924854960a25b2586d1046"
+    },
+    {
+      "path": "npc/jobs/1-1e/ninja.txt",
+      "sha256": "0e059606883700542889320fab64f94717e99f9aa5d2195fc6ff1f58af450d78"
+    },
+    {
+      "path": "npc/jobs/1-1e/taekwon.txt",
+      "sha256": "8987c4e5bdff469c286a0b4af8b622341eab0b568aa542e0a4e08f7a8f52547c"
+    },
+    {
+      "path": "npc/jobs/2-1/assassin.txt",
+      "sha256": "ca71c059fe18d2d0d5a9aae3b634f61d3ddacfc08f57cc3bb8814f1eed26dc7e"
+    },
+    {
+      "path": "npc/jobs/2-1/blacksmith.txt",
+      "sha256": "28c5623b94629ab2ac56b357df5706591496e7b7d0fcf2eaf30d5a0cd49ff7df"
+    },
+    {
+      "path": "npc/jobs/2-1/hunter.txt",
+      "sha256": "87c37b55bcaeef789dc49a9d0373a5d4688b06e2352f540dbd8379cbe480c6dc"
+    },
+    {
+      "path": "npc/jobs/2-1/knight.txt",
+      "sha256": "a33469077f954fa277dcee91964309e46e5c664d2ef555c115ceb40eb069aa52"
+    },
+    {
+      "path": "npc/jobs/2-1/priest.txt",
+      "sha256": "b248f95f8c67bb3152088b2b8d1a34d49d270cce62bf4a35c596213accf90dc7"
+    },
+    {
+      "path": "npc/jobs/2-1/wizard.txt",
+      "sha256": "306fb24c7ffbdb2a672df259f5c849fe5ec58ce6c3dc5e54af3aa56b70b3c770"
+    },
+    {
+      "path": "npc/jobs/2-1a/AssassinCross.txt",
+      "sha256": "c5e1ceda759041d1a394f2aecb655784751a978cb0d1f8e0eb2eee4081fa1951"
+    },
+    {
+      "path": "npc/jobs/2-1a/HighPriest.txt",
+      "sha256": "405b4015b61cefc734f26480f95c4750722868872e914d816b016a9125368b32"
+    },
+    {
+      "path": "npc/jobs/2-1a/HighWizard.txt",
+      "sha256": "a5e6188f30154b6bdfd6ef95bdb47219b5bcc56f74473f4608b1d4459f5bb499"
+    },
+    {
+      "path": "npc/jobs/2-1a/LordKnight.txt",
+      "sha256": "efe71a87152350d77aee4a8fe1f083f58c80a4ce36ec30a96cefa81ba7608207"
+    },
+    {
+      "path": "npc/jobs/2-1a/Sniper.txt",
+      "sha256": "a172bdbc1656891e7d6ab0a4217733befb73b4949bd6f6677e5aafc6cf0e276b"
+    },
+    {
+      "path": "npc/jobs/2-1a/WhiteSmith.txt",
+      "sha256": "82ec20a54de946faacf7d45e0a08e6508cf9f6477c3870665b2bf1dc016a3be1"
+    },
+    {
+      "path": "npc/jobs/2-1e/StarGladiator.txt",
+      "sha256": "6aa658bfec79f6258a98c003e98e247952150fcff3409e7f0b069d75b3811e52"
+    },
+    {
+      "path": "npc/jobs/2-2/alchemist.txt",
+      "sha256": "5740179626e4ad8b46d92c3d219a3f6df9bcfbb7bba13061bc87723a68ac14a5"
+    },
+    {
+      "path": "npc/jobs/2-2/bard.txt",
+      "sha256": "c66215f7f086c32d595653936dc007342f8f8f46c4e5bb15d01590f5a8358353"
+    },
+    {
+      "path": "npc/jobs/2-2/crusader.txt",
+      "sha256": "c4e926860e9e9251debf14ae6c75820e465e7ac3465425a29150350f1dd17efc"
+    },
+    {
+      "path": "npc/jobs/2-2/dancer.txt",
+      "sha256": "f4f3c682b8a3f66b3acee4dda4d5999725f6bed4693e1aa5d2775a1817ce6854"
+    },
+    {
+      "path": "npc/jobs/2-2/monk.txt",
+      "sha256": "db264236f9573c6d034a74eac2965fe80db8089918fff84b81d2c42f64e9170e"
+    },
+    {
+      "path": "npc/jobs/2-2/rogue.txt",
+      "sha256": "0b1c323adb1bef38d8d8158f472df4701e128ae3b09e59fa37cef0b875b4d78e"
+    },
+    {
+      "path": "npc/jobs/2-2/sage.txt",
+      "sha256": "289757962508a72d1cbc2c0371fbe6e471ea422a40db07f999d31160b84cf580"
+    },
+    {
+      "path": "npc/jobs/2-2a/Champion.txt",
+      "sha256": "7da0b3e3d47d2070108ca91522d218b789bfbba1c2521220dcd81791d91a91ea"
+    },
+    {
+      "path": "npc/jobs/2-2a/Clown.txt",
+      "sha256": "4400bf50e9074f65d732b05a01c72ea542d8978327536803a9e5246c19a4f6a5"
+    },
+    {
+      "path": "npc/jobs/2-2a/Creator.txt",
+      "sha256": "3a9083a736f3dd3d36c02140fbbd0bc120b62a3162e1cf422f6021d4d674efb6"
+    },
+    {
+      "path": "npc/jobs/2-2a/Gypsy.txt",
+      "sha256": "d218af5473016b97fc95447a619a800f9da6a6e39961c108c9815bfa2178427f"
+    },
+    {
+      "path": "npc/jobs/2-2a/Paladin.txt",
+      "sha256": "a00d96fa46cfc8a762319c8b4f0184c3f2ceb9df2bda460e6492c2d9268a6d24"
+    },
+    {
+      "path": "npc/jobs/2-2a/Professor.txt",
+      "sha256": "39fc58e359b0737cafa4cd330fc4bb3118699708577224eb2534135e814f5911"
+    },
+    {
+      "path": "npc/jobs/2-2a/Stalker.txt",
+      "sha256": "d4a41987371ca16590617f1782983f6066d6c45e49549d67c1068135a0e993da"
+    },
+    {
+      "path": "npc/jobs/2-2e/SoulLinker.txt",
+      "sha256": "6d278f9a240d2be9f5ad67ef4e7ff394f3ca3c15550738269641f92d446e1ea7"
+    },
+    {
+      "path": "npc/jobs/novice/supernovice.txt",
+      "sha256": "5ff7ae89e32e4230d53d4d62446e19b0b12c34cd130823900983c3a248459e5f"
+    },
+    {
+      "path": "npc/jobs/valkyrie.txt",
+      "sha256": "a75e869ea24faa1ba6d0946b51375b8f5b9efb8b17417a1663a1320e6a6805fb"
+    },
+    {
+      "path": "npc/kafras/cool_event_corp.txt",
+      "sha256": "2613258044216d8275a2257d6aac8386e2c3fb2f6d854bf664649e34d0f0d178"
+    },
+    {
+      "path": "npc/kafras/dts_warper.txt",
+      "sha256": "177dd84aae8482620168009e6846380b9af783eba2e2a7c3cedf8a03f1d0baaf"
+    },
+    {
+      "path": "npc/kafras/functions_kafras.txt",
+      "sha256": "d48797a63fad244bd34dfb165516e0c183d6b095e40bfddb822d0b1f4e8c83f0"
+    },
+    {
+      "path": "npc/kafras/kafras.txt",
+      "sha256": "2f5959b49d86b1e9b6fc45f4f8e7cdfe7a115494e44f16feb5f8becd8fa466df"
+    },
+    {
+      "path": "npc/mapflag/battleground.txt",
+      "sha256": "f8ad92eb3f1500229a7870d095183d2001d9b4de4c150ac9d09f1326a02bd437"
+    },
+    {
+      "path": "npc/mapflag/gvg.txt",
+      "sha256": "98d85c38d0fe4fec8d51416c8036812913b211cce73184c45c45970324e42d18"
+    },
+    {
+      "path": "npc/mapflag/jail.txt",
+      "sha256": "e5348a9ef331020ce41cc6daaa09e4ce4e212ae2c7b5479df6e73d6a38542dca"
+    },
+    {
+      "path": "npc/mapflag/night.txt",
+      "sha256": "c1b83e71c2b52082aa386242973c67f4eaf48e70c369d0c44e94be914834f1e9"
+    },
+    {
+      "path": "npc/mapflag/nightmare.txt",
+      "sha256": "f19545450ec7202bf2b0ce366f75de0ace17705b2f5482094e3f27af8ec834ad"
+    },
+    {
+      "path": "npc/mapflag/nobranch.txt",
+      "sha256": "b0bbea02148d19d80d3a0d83dd44ea448009a326ee785112cc5dba728073668b"
+    },
+    {
+      "path": "npc/mapflag/noexp.txt",
+      "sha256": "443d64d7bb66613e089afd7aa14f86dcfb8ae720734db57033928498e4927fac"
+    },
+    {
+      "path": "npc/mapflag/noicewall.txt",
+      "sha256": "1bdd57e1aa0c159510809b4fe4b20cd708b3c20436ccc1cf3f14fa3f4ed8a128"
+    },
+    {
+      "path": "npc/mapflag/noloot.txt",
+      "sha256": "0abbe20dbe30cee6721e1c0a6dea2cedf30d4c9165e2585f0c0beb225180d878"
+    },
+    {
+      "path": "npc/mapflag/nomemo.txt",
+      "sha256": "98764572a550957968f4b01f71fce49e3ab4fe549b663a8e3ceba85ddbb88ef7"
+    },
+    {
+      "path": "npc/mapflag/nopenalty.txt",
+      "sha256": "a234767000790845242e03b7bea53ac0ff8d9f765b76ac6d859e117613748e76"
+    },
+    {
+      "path": "npc/mapflag/nopet.txt",
+      "sha256": "34398e376cc9c9cd3976dc898ef3b05b8894fcbae344682b39eaf2f9172178ba"
+    },
+    {
+      "path": "npc/mapflag/nopvp.txt",
+      "sha256": "f612ed6c855780f5ea69a1e0880b4a581a9384109b826ef090874db4716eda4d"
+    },
+    {
+      "path": "npc/mapflag/noreturn.txt",
+      "sha256": "77dba27f227fb723f4ad2f2651a8d84988d33ade3a037207058ac6efeea676b2"
+    },
+    {
+      "path": "npc/mapflag/nosave.txt",
+      "sha256": "18a0bfbedf072bfc0835dc3265af22a1a44de2938811c14377076810cc4c5dfa"
+    },
+    {
+      "path": "npc/mapflag/noskill.txt",
+      "sha256": "2cb8cb3d0362734b2cd8bbec49428bbec1bda348264ec9e3e9785e7f0c23fe0a"
+    },
+    {
+      "path": "npc/mapflag/noteleport.txt",
+      "sha256": "cbab632987eaf15f30dc7598dcfb61ee498950d77b59da552b7068926bc7899f"
+    },
+    {
+      "path": "npc/mapflag/notomb.txt",
+      "sha256": "8858a2c980893437f822d58ec9b4931c42c3d4ab3c464599e1446fc65d41b7fc"
+    },
+    {
+      "path": "npc/mapflag/novending.txt",
+      "sha256": "df27949cded1e0ace633f8b215d72f2b352ca1b7e86ae098d1170e4f17cfa268"
+    },
+    {
+      "path": "npc/mapflag/nowarp.txt",
+      "sha256": "7480afdf1367291781c55131bca276d2e8794175040b8e11dcfe96b30fd9a5fa"
+    },
+    {
+      "path": "npc/mapflag/nowarpto.txt",
+      "sha256": "47a45489571d8827559f40daaf45371fb2224ee5ad4d0015fa2ceaefc5215253"
+    },
+    {
+      "path": "npc/mapflag/partylock.txt",
+      "sha256": "96dfe9a15047eed65228860a63f579af900c904bcaa19b2ae4e68c38dfad3a84"
+    },
+    {
+      "path": "npc/mapflag/private_airship.txt",
+      "sha256": "a5e9868b40053091bb9d603b2716bef0069aae675baf4eb3a05ac483ecee622e"
+    },
+    {
+      "path": "npc/mapflag/pvp.txt",
+      "sha256": "db8855c8456d647e4f27f5259c0caf734deed13beb26d4aa86e1958d32a9d34d"
+    },
+    {
+      "path": "npc/mapflag/pvp_noguild.txt",
+      "sha256": "9cc072bfad8c773322846e2d3a4325d86dc0a049fc5906a5a9e8bfa75b490d0d"
+    },
+    {
+      "path": "npc/mapflag/pvp_noparty.txt",
+      "sha256": "3554530af4ecdcbea88a4bf2d7849afec99fe44adf8731925d8a439899796407"
+    },
+    {
+      "path": "npc/mapflag/reset.txt",
+      "sha256": "1c05321017230ecd0aab025e80f6fd4f414883f7e20a5770b885e231878c85ee"
+    },
+    {
+      "path": "npc/mapflag/skillduration.txt",
+      "sha256": "316dd24c5c89ab224b39ad3e47e5dda7bb3be05371cbf7b0993e306046bcf488"
+    },
+    {
+      "path": "npc/mapflag/skillmodifier.txt",
+      "sha256": "ea064c50e57648f053c29dc7593016fd82e52f6fb8515b10c728f7abeafe2a03"
+    },
+    {
+      "path": "npc/mapflag/town.txt",
+      "sha256": "5cca57a9add92b9d73ac29a55ceac66796ee8f2b7343921b7584f0b0e7f2ff85"
+    },
+    {
+      "path": "npc/mapflag/zone.txt",
+      "sha256": "b0d6936281472d86d9e79ad982046087403d245eacbcf423578535d0b8797838"
+    },
+    {
+      "path": "npc/merchants/advanced_refiner.txt",
+      "sha256": "cec09796014ec29ec805a17409aed9f23a80f177a73b88317e407f33c4438988"
+    },
+    {
+      "path": "npc/merchants/alchemist.txt",
+      "sha256": "b1cd804ec070e34086bb1529e3fa8dbb3cea0e2e2ac1001e892b32a66ecea279"
+    },
+    {
+      "path": "npc/merchants/ammo_boxes.txt",
+      "sha256": "67e7cee753070268af7ec4b5db9c7843f492da3c843cbe9a3faafe249f93c0ad"
+    },
+    {
+      "path": "npc/merchants/ammo_dealer.txt",
+      "sha256": "3124f6f5aeac984e2e627ed939998469e7933f1e5e2dbcc3c351c6586a49b86a"
+    },
+    {
+      "path": "npc/merchants/buying_shops.txt",
+      "sha256": "3724a8a42560a74aebf35c97c8154ba354512ae9d08e7aac6625b1dab56f4ef7"
+    },
+    {
+      "path": "npc/merchants/cashheadgear_dye.txt",
+      "sha256": "f543695fdf50813e124e6103eb7847378b61ce52fa66120c8265ae54eb96e605"
+    },
+    {
+      "path": "npc/merchants/coin_exchange.txt",
+      "sha256": "91098eae26c79f48832df6500516cce293bd381b46b426c683147d526d367f69"
+    },
+    {
+      "path": "npc/merchants/dye_maker.txt",
+      "sha256": "9a5c08dd061ae8f260dade8d9714167e30ae70059e08d6bf13cc2152ef9b7c58"
+    },
+    {
+      "path": "npc/merchants/elemental_trader.txt",
+      "sha256": "918b2865fe2af69ab3994ff24d9397a3341fa634f8c9c9f55400748073421d45"
+    },
+    {
+      "path": "npc/merchants/enchan_arm.txt",
+      "sha256": "3f1a2a01356d42777c974271277d69ffcae8d6a1c8dcdfbf9ad0058fea7d050c"
+    },
+    {
+      "path": "npc/merchants/gemstone.txt",
+      "sha256": "97ae2c9f5ddcce933e415398e37b5ff2e147b8fa74b57461275d7ef578dec8b9"
+    },
+    {
+      "path": "npc/merchants/hair_dyer.txt",
+      "sha256": "26363acd76d04f649c9b3fea77e07d3edc0285e591870165474cc6fc3e715ca1"
+    },
+    {
+      "path": "npc/merchants/hair_style.txt",
+      "sha256": "efbe15437ada3853ee99f544ba3a6df2217fbf837829193100a212d949225ae5"
+    },
+    {
+      "path": "npc/merchants/inn.txt",
+      "sha256": "70803ed9d35a323304fe45417d528c41e1803744947d91633d8fc44b3df25187"
+    },
+    {
+      "path": "npc/merchants/kunai_maker.txt",
+      "sha256": "c17ddd7abf16e864811e5a3d3b67571edbbcbf9cf109a7516f960e3d3bf31990"
+    },
+    {
+      "path": "npc/merchants/milk_trader.txt",
+      "sha256": "2c3c89f6890b88c96fe8fa4bfdd6fc3fccbd5db4cf10e739f8b7a140535da7b9"
+    },
+    {
+      "path": "npc/merchants/novice_exchange.txt",
+      "sha256": "a6ed4b491d74fabba1fa2701783bda07a2a368b5acdda602ab0036c6f0403f66"
+    },
+    {
+      "path": "npc/merchants/old_pharmacist.txt",
+      "sha256": "f57c6074b456d56c5dd727fcc195b23fde501a529d23715537ca21ef1b899690"
+    },
+    {
+      "path": "npc/merchants/quivers.txt",
+      "sha256": "8cbae6b06c57b20cff8b06ca15ad7dc8631e90772a59fbb160de86ee969134cd"
+    },
+    {
+      "path": "npc/merchants/refine.txt",
+      "sha256": "cd6d799ec2ba60ffc4912c512a6daa62d421690275ac1bde9b6bc5d9f943f4c3"
+    },
+    {
+      "path": "npc/merchants/renters.txt",
+      "sha256": "277d82b30d2338292b282444142887145afe414bc6921217b2ba5a2b81aab757"
+    },
+    {
+      "path": "npc/merchants/shops.txt",
+      "sha256": "bd17def42a78fbd580b3e984582697431765fbff775f56d553628e068ac448ef"
+    },
+    {
+      "path": "npc/merchants/socket_enchant.txt",
+      "sha256": "1996bec6b6936205ec9bfc9035758d6777e2e2a7396f22b4a463e2f67e06d774"
+    },
+    {
+      "path": "npc/merchants/socket_enchant2.txt",
+      "sha256": "edf959ac2af58c6387dbbe5e340db9bc2fd41d4fa7ac1a6891fe1dbf3a02f9ab"
+    },
+    {
+      "path": "npc/merchants/wander_pet_food.txt",
+      "sha256": "aa112cfbb76ce3e4cec4998bcecf6fba543b8251953c99ac897b12047baf0d59"
+    },
+    {
+      "path": "npc/mobs/citycleaners.txt",
+      "sha256": "542d21a60b17a6acb5c651e857703b6620d614218d9a834428b97ae7f93018cd"
+    },
+    {
+      "path": "npc/mobs/jail.txt",
+      "sha256": "e3568bc890398bd1805204e9c8272e208b0318f507f7fe6378bd9d53b66cf0e2"
+    },
+    {
+      "path": "npc/mobs/pvp.txt",
+      "sha256": "75944ce0d9da1bd9227e2c50c268a7f325fc4e0ff468692dd7eeabb52511a2bb"
+    },
+    {
+      "path": "npc/mobs/towns.txt",
+      "sha256": "c739d92bc664964cd491b5dd18638811560e831d8c8c01e7af222833a97a1b57"
+    },
+    {
+      "path": "npc/other/CashShop_Functions.txt",
+      "sha256": "1ee0b1884afe7e8856b78ee5dbbe0ad568d02c37fe071595a041c36e82198c8a"
+    },
+    {
+      "path": "npc/other/Global_Functions.txt",
+      "sha256": "b34544885832157033ff6599a7dfb96d5e5eb9f2624086e2e786c75248d30bce"
+    },
+    {
+      "path": "npc/other/arena/arena_aco.txt",
+      "sha256": "f80c9139277a51a437b761cdaa351869731178ba24f2b5de7b359ebab0a5a52b"
+    },
+    {
+      "path": "npc/other/arena/arena_lvl50.txt",
+      "sha256": "872143a6610fbc65a951ace66c31e965d5248c6e025eb01cc15326a4ce70758d"
+    },
+    {
+      "path": "npc/other/arena/arena_lvl60.txt",
+      "sha256": "a6d7e9977d70509fecf0d0692cea9d72240386540f343abbb10d47e5b27aa2ca"
+    },
+    {
+      "path": "npc/other/arena/arena_lvl70.txt",
+      "sha256": "eaee8edb157b68c1e15bbdb811b85202b001c268048d7aec438c43cc3854c86a"
+    },
+    {
+      "path": "npc/other/arena/arena_lvl80.txt",
+      "sha256": "f7d441e8f5766723f9c41f524acb4f057cc703a666f94a42761e784f8a695983"
+    },
+    {
+      "path": "npc/other/arena/arena_party.txt",
+      "sha256": "ad4a1ea68c1856007e3d0ebb2403d61416afa50e37ae95234cb3e9825bf2b124"
+    },
+    {
+      "path": "npc/other/arena/arena_point.txt",
+      "sha256": "31cf8e529cc07c70ccf0e1a455d4444fd07e8261777910a2a333c01b417788fa"
+    },
+    {
+      "path": "npc/other/arena/arena_room.txt",
+      "sha256": "f54cc7fc5fbe6672e060fb78dae39009fc5164292ea0ffef21b21a1f48d83ebb"
+    },
+    {
+      "path": "npc/other/auction.txt",
+      "sha256": "36d8c8b5087eda46ff19c688c4f14d2cfaea835cd86d535ed643d6ac84b3e5cf"
+    },
+    {
+      "path": "npc/other/books.txt",
+      "sha256": "2ccf3812601ac20ef928bc3731126b83caa343d53a05564fd6d9277ddc716353"
+    },
+    {
+      "path": "npc/other/bulletin_boards.txt",
+      "sha256": "257f3462eb88e3e4753d1d58f41ffeb3dc217d47eb8b5fd3b1a1839d0735f9ad"
+    },
+    {
+      "path": "npc/other/comodo_gambling.txt",
+      "sha256": "958749a8f237434bf01328a70d64e34efdbac7442625cdd1b55acd653ca7aca6"
+    },
+    {
+      "path": "npc/other/divorce.txt",
+      "sha256": "433bf1dc2a228d0056174e5f4ff497d3811a306b1377324de3ba5b8ad56a11d6"
+    },
+    {
+      "path": "npc/other/dynamicnpc_create.txt",
+      "sha256": "2c754959d014670618d119cd7f1e90b14902ccff48648004f98eee89302f441b"
+    },
+    {
+      "path": "npc/other/fortune.txt",
+      "sha256": "5441c8e5a305e77e4450c612a268295ab63f30232d5be2e7801bae49b4ff4ab4"
+    },
+    {
+      "path": "npc/other/gm_npcs.txt",
+      "sha256": "b7c3d76c7561b8dcefaa79778bf61c41315ac4e4fe893869b790fc3dc16a09ff"
+    },
+    {
+      "path": "npc/other/goldpc.txt",
+      "sha256": "edbda77e859bfb2913c1ab00843473d50e14994353607ad9b1007aed3bebbbc2"
+    },
+    {
+      "path": "npc/other/guildpvp.txt",
+      "sha256": "78eeef4e645270e7af78f016dd4eadf68beb0437c2a1483e2a946842a8d097fd"
+    },
+    {
+      "path": "npc/other/gympass.txt",
+      "sha256": "1624b0e4c0d0f856616ae1f235b2408067bac62eb75cff7c758d07bdfe8ad4e2"
+    },
+    {
+      "path": "npc/other/hugel_bingo.txt",
+      "sha256": "8e053908c245d76f8e6ebff90a3eeb40ab26210086eb4c717b8e377de5d3324b"
+    },
+    {
+      "path": "npc/other/inventory_expansion.txt",
+      "sha256": "aae19feb20c85271744e472f048e5b1657d5addac3c8d2e8740470629d869d86"
+    },
+    {
+      "path": "npc/other/item_merge.txt",
+      "sha256": "b68942db89d44045484b5ab5ba2f853ebb85208790002005368164668b23ef82"
+    },
+    {
+      "path": "npc/other/mail.txt",
+      "sha256": "8cd2f2a730852e182f9e4ba0daab75a8d0b1b34fdd0f6d3793de65053c5bbc07"
+    },
+    {
+      "path": "npc/other/marriage.txt",
+      "sha256": "cfc7b86fe134adfb9a74c24e505cda8b1cf32132e9dcda3027abfefd47223e12"
+    },
+    {
+      "path": "npc/other/mercenary_rent.txt",
+      "sha256": "4594a2ea0ef19c2c583efc37743599b4f801d1b0e0924574b1435e593c826e6a"
+    },
+    {
+      "path": "npc/other/monster_museum.txt",
+      "sha256": "4de46c351228c0a5b36086f2fabc10f9c7ce4c2a67146ece64fe780445bbecfa"
+    },
+    {
+      "path": "npc/other/monster_race.txt",
+      "sha256": "19344693bd8c56b5c14da13c538d34ed4ff9eed394006af083cd1892830d411c"
+    },
+    {
+      "path": "npc/other/poring_war.txt",
+      "sha256": "486442c88964ec01f979ad24e78d324c3e1d2c6bd6c4001b4f55ef5d55cfeb93"
+    },
+    {
+      "path": "npc/other/powernpc.txt",
+      "sha256": "8c06856eb860336d1af22c48b5cb87ee9648228dbecc65badf86e963e597a9ab"
+    },
+    {
+      "path": "npc/other/private_airship.txt",
+      "sha256": "8396e70905b523fc614aee55cd55d625bee2b3954398ec4d87c68b49b783a582"
+    },
+    {
+      "path": "npc/other/pvp.txt",
+      "sha256": "b6a1c6402bdda5811aad67c5934ae3bf3ec04404d0325a3d407e5a55e99159db"
+    },
+    {
+      "path": "npc/other/turbo_track.txt",
+      "sha256": "a249ce059f477326c025b8bd932cc1ac185fe3df297ad846b2e9e941a89840ad"
+    },
+    {
+      "path": "npc/quests/bard_quest.txt",
+      "sha256": "d99656ca5a72300512b8ac0f89be48a9f0443dc52e9d9cd59e98e1aae024eb49"
+    },
+    {
+      "path": "npc/quests/bunnyband.txt",
+      "sha256": "bda8b1f0fa7d6658d86cf821e44cfbf402514b897dce82134d2bedb8bf7d475d"
+    },
+    {
+      "path": "npc/quests/cooking_quest.txt",
+      "sha256": "fe1e28a346fd88a2f5e7937630e490243e334bc99795ef115b890ee8b6f989cc"
+    },
+    {
+      "path": "npc/quests/counteragent_mixture.txt",
+      "sha256": "02d251a767306b87c60a5ea425114fb9553e968d6845e2063ba72eb316923e3e"
+    },
+    {
+      "path": "npc/quests/doomed_swords.txt",
+      "sha256": "81f9e37175987398db66608e6d7b2e7f0da3dc1d2caee507160f63b2f210a03c"
+    },
+    {
+      "path": "npc/quests/doomed_swords_quest.txt",
+      "sha256": "5add97e576bac1b4b2baaf2e3415a6a1c5659769917ac3563d9de4324091ea7d"
+    },
+    {
+      "path": "npc/quests/eye_of_hellion.txt",
+      "sha256": "883614d54e388d9544e5bb20e72eabb0f7ef47bd3e64e4b1f7caf2f64b73dd82"
+    },
+    {
+      "path": "npc/quests/first_class/tu_acolyte.txt",
+      "sha256": "1e76b2b5d7e49475a0f205347fed5a2ddc23ac25eb30fc648a9ab8c6b2249cbf"
+    },
+    {
+      "path": "npc/quests/first_class/tu_archer.txt",
+      "sha256": "1d1412a2a5be85e707df854c4965a317b3b0da09939d88a1b3023270e5e22f5f"
+    },
+    {
+      "path": "npc/quests/first_class/tu_ma_th01.txt",
+      "sha256": "e6b2d70fe48b0dbe4acdaf0fe531477ea9e87556a1c7b8dec35203615d9e88a4"
+    },
+    {
+      "path": "npc/quests/first_class/tu_magician01.txt",
+      "sha256": "25977098d019049fafb8a6ca004c347f3e620a78f7892051b6501073c5003659"
+    },
+    {
+      "path": "npc/quests/first_class/tu_merchant.txt",
+      "sha256": "62e6991ed479170adb2286efd700215e0fcb05e2dc1784b2f944c691e46fb718"
+    },
+    {
+      "path": "npc/quests/first_class/tu_sword.txt",
+      "sha256": "41ee38c3b2f9618fac21f16e94f4a9686e17188517633d510f03b6158540dced"
+    },
+    {
+      "path": "npc/quests/first_class/tu_thief01.txt",
+      "sha256": "a0f40370eb8875506ea41f56ee3052d9db7dd08a620fa9c312a8435f4c781e88"
+    },
+    {
+      "path": "npc/quests/guildrelay.txt",
+      "sha256": "b586ca106abb7d34fea496742d14f18347fb6e686a97b87877bd3777d6454756"
+    },
+    {
+      "path": "npc/quests/gunslinger_quests.txt",
+      "sha256": "f10c12ba1c00654dfdd90a7838d7ad5edba07aab8fb330af9f9868132a157e09"
+    },
+    {
+      "path": "npc/quests/juice_maker.txt",
+      "sha256": "4bfe6f3c3c5dd2af380f910663ee7be3f4d8b28809cdc9c9442923bee3f8a000"
+    },
+    {
+      "path": "npc/quests/kiel_hyre_quest.txt",
+      "sha256": "ad48bea46e3787c2e5a8c9e2665e615e833ceec376e8e6b3dfcf4d4e0051b599"
+    },
+    {
+      "path": "npc/quests/lvl4_weapon_quest.txt",
+      "sha256": "26b7b82684dc799503bfe023ef2dc09fd70a68551c0ff2dcb2f8f2318c4686c1"
+    },
+    {
+      "path": "npc/quests/mage_solution.txt",
+      "sha256": "29022856bcb31c26a08586306a684514ffa3fb65745796416824bf29072cfda1"
+    },
+    {
+      "path": "npc/quests/monstertamers.txt",
+      "sha256": "62be9977bcc12cbe5307249e59b37a128f63b497a25fa025d6cd38cc340a7dce"
+    },
+    {
+      "path": "npc/quests/mrsmile.txt",
+      "sha256": "ddd77a921df57d532ad1f0af2b8735304f154a29c0112b4b4c5e6dcef5d325ff"
+    },
+    {
+      "path": "npc/quests/newgears/2004_headgears.txt",
+      "sha256": "4a686f65bb87b542b1b539282b226f96d7c88f256dedb70b02478404bac81f7e"
+    },
+    {
+      "path": "npc/quests/newgears/2005_headgears.txt",
+      "sha256": "1b790f866e3d1a4e5bb8f722a433a8f29df88ae1d4866ef290b8603aa472b4e2"
+    },
+    {
+      "path": "npc/quests/newgears/2006_headgears.txt",
+      "sha256": "af63dbf5f355cc405655cce4b3ee415cc68394d5b8040457344b75957b1c4db7"
+    },
+    {
+      "path": "npc/quests/newgears/2008_headgears.txt",
+      "sha256": "dbe1bfb7f7e2f5a292542bfc8a2ddfc3de1fdd90b8131365f113028f4c9b2b90"
+    },
+    {
+      "path": "npc/quests/newgears/2010_headgears.txt",
+      "sha256": "0e1e812b9b70f54c9d27eb8035633c6e223d75e1f340aac49c3b29dc79c292fb"
+    },
+    {
+      "path": "npc/quests/ninja_quests.txt",
+      "sha256": "7e64e6f93db9471be6718b4af96cb7961998d722278fdb64d032a61468dbfd37"
+    },
+    {
+      "path": "npc/quests/obb_quest.txt",
+      "sha256": "1df006eaf4bf3687a83d0b3fc4c95843d9ad97dc278e8af39655a469cf8f6e80"
+    },
+    {
+      "path": "npc/quests/okolnir.txt",
+      "sha256": "3ed4c05fbfd14a1e3ce6cff4b008de71d2e89aa8b6b4e30925a739572e05998d"
+    },
+    {
+      "path": "npc/quests/partyrelay.txt",
+      "sha256": "37dbcee24d10dfa4e71b4d06bf3c78524a8bc15b12a48bae24c6a50e24096565"
+    },
+    {
+      "path": "npc/quests/quests_13_1.txt",
+      "sha256": "e63096f87f99affddc00bbbfeb6650e5f744b9e71178d93704965592c913aa55"
+    },
+    {
+      "path": "npc/quests/quests_13_2.txt",
+      "sha256": "dcb94dd9bc21e801acf914bb862a904da5b5b0c7377d7917b5aaec9e8ef9bf38"
+    },
+    {
+      "path": "npc/quests/quests_airship.txt",
+      "sha256": "5aa5c8d7e02c6470e5e6d8151daca984986af2d8e413357cf682026f22eacc95"
+    },
+    {
+      "path": "npc/quests/quests_alberta.txt",
+      "sha256": "3dd5bef5a56e50346f0dcf56d11959862c7acc47161e5d9172191153655007c7"
+    },
+    {
+      "path": "npc/quests/quests_aldebaran.txt",
+      "sha256": "ed74137867ae75dbaca06d9f2977bb50823c96bcd8d29959c4b9aa6191f4dae5"
+    },
+    {
+      "path": "npc/quests/quests_amatsu.txt",
+      "sha256": "3226d0c6fdcf1a34d2e59b93d189cd2695d4b7178f9b1a4f3cf19d2bc4a65fe9"
+    },
+    {
+      "path": "npc/quests/quests_ayothaya.txt",
+      "sha256": "cd1c984b91c0b8a02e8dd845d1d224e9254e9cfd9585c6eb8f251a05176e4211"
+    },
+    {
+      "path": "npc/quests/quests_comodo.txt",
+      "sha256": "ec7c90a7312526a2d0eec3bf0ecb1a3ffabee037beeb292a03ffb36033484193"
+    },
+    {
+      "path": "npc/quests/quests_ein.txt",
+      "sha256": "2d606e43dd9908878da1945ab180d37e6f540b735c49c1de5fdc90b306aa4dad"
+    },
+    {
+      "path": "npc/quests/quests_geffen.txt",
+      "sha256": "499cb7fa7d52c0a144ff42c10c041b9873787c6661d4e4a5bb11da81032c4f5e"
+    },
+    {
+      "path": "npc/quests/quests_gonryun.txt",
+      "sha256": "9c922a716643dcdcf808cd7e1e817a11bb5f101fbdf52a480734266d86c5ae15"
+    },
+    {
+      "path": "npc/quests/quests_hugel.txt",
+      "sha256": "b83be178a63dcd987224c3f81f742d007be51b2dfced239ff2081e84fe21a13d"
+    },
+    {
+      "path": "npc/quests/quests_izlude.txt",
+      "sha256": "177a4b7363a73d669162765f005ff7676c0b9f3ac590f7846a07c2955c05bdc1"
+    },
+    {
+      "path": "npc/quests/quests_juperos.txt",
+      "sha256": "e7b5f7900bac5d08a0c3349bec9b8f9c2959791315c293f5cddd5ccd447b0c47"
+    },
+    {
+      "path": "npc/quests/quests_lighthalzen.txt",
+      "sha256": "158d042fbbc5e134dd526af8b9d4b7e539af4957267b6ab1e4211b8122c82983"
+    },
+    {
+      "path": "npc/quests/quests_louyang.txt",
+      "sha256": "e4d63610907571f081bf367cc78c691698920769355acd92c3e7c0af0b8b9b0b"
+    },
+    {
+      "path": "npc/quests/quests_lutie.txt",
+      "sha256": "a11467e88f958742cabb839b3a45916072c3e36388d9919119bb0be4cb2fa20b"
+    },
+    {
+      "path": "npc/quests/quests_morocc.txt",
+      "sha256": "40fb031c2afe834732fd968db74508c4ae7eb5048db70562eb3c73ea7a8b75c5"
+    },
+    {
+      "path": "npc/quests/quests_moscovia.txt",
+      "sha256": "063f660766ff5d9ecce075f500d11eb688629e12eca085af02cb6513d6f46b69"
+    },
+    {
+      "path": "npc/quests/quests_nameless.txt",
+      "sha256": "a67dba37feaf8684bc17f0a0c2d69edf15d2d913c5761ce89c101b06b9b4768e"
+    },
+    {
+      "path": "npc/quests/quests_niflheim.txt",
+      "sha256": "fd5a7599ae90095cc9058ce3cd7b4df648dd092181fcbb1ea3db527dfb3a4211"
+    },
+    {
+      "path": "npc/quests/quests_payon.txt",
+      "sha256": "65aa7b9161dc6a7a725c82fe8c8642f90fc3673ed0eb28aeea481999b7c5b33a"
+    },
+    {
+      "path": "npc/quests/quests_prontera.txt",
+      "sha256": "f5e5eca9a62db70c66152645d1f45214f819755fbdc003a92227c6c7f75c66ad"
+    },
+    {
+      "path": "npc/quests/quests_rachel.txt",
+      "sha256": "64bff52bfca64abbaa3b4c01370dfd01360401bd342d7421d70c968cee759a36"
+    },
+    {
+      "path": "npc/quests/quests_umbala.txt",
+      "sha256": "c0e6d432ac1b11e25e470349e64a8f4dec35826eb345d971b4358c3d7e421803"
+    },
+    {
+      "path": "npc/quests/quests_veins.txt",
+      "sha256": "aef68aafdd0d247bbb1103e78ca85ccf51a767d3f2285cb5a8ea495b6f8aa57c"
+    },
+    {
+      "path": "npc/quests/quests_yuno.txt",
+      "sha256": "cef6bcfbc28179c9ced2a5d6ac71928852402d1592f99c35f6aac6e7c57678d5"
+    },
+    {
+      "path": "npc/quests/seals/brisingamen_seal.txt",
+      "sha256": "a714b2fe9a2353a54a47e4393932d4afb686fc6ef4cb8244bea18d922ebdaef7"
+    },
+    {
+      "path": "npc/quests/seals/god_global.txt",
+      "sha256": "838829ae7fada498a5d7449f14d445805ef07cfd9a46245715258183dfdc03eb"
+    },
+    {
+      "path": "npc/quests/seals/god_weapon_creation.txt",
+      "sha256": "784d08d75271995c1f4837c676df1c5d85a01ff352ac2a12b3d5b852cf553de1"
+    },
+    {
+      "path": "npc/quests/seals/megingard_seal.txt",
+      "sha256": "bd837c59cf7f62b7f66e3d686213f92ffe7608841620cc323808b78d73f68789"
+    },
+    {
+      "path": "npc/quests/seals/mjolnir_seal.txt",
+      "sha256": "f9055248816c0a8cf87f0570e56e8ef15f6f8eff32dad0b84d1ba9a1088f7dc0"
+    },
+    {
+      "path": "npc/quests/seals/seal_status.txt",
+      "sha256": "0acfba60fdb5ae7a9c45e3070d02b0e70a89f3d687018ec3c24319af7c1a1f1b"
+    },
+    {
+      "path": "npc/quests/seals/sleipnir_seal.txt",
+      "sha256": "f4bec9dc3bfb7c4edb073fc4e883f108dc56284a61dda3e5b72e161f46d64773"
+    },
+    {
+      "path": "npc/quests/skills/acolyte_skills.txt",
+      "sha256": "a023f7b8c4fb2de13afbbde038bf5cd1de66110a7f6137fd049f4af9aeb905f7"
+    },
+    {
+      "path": "npc/quests/skills/alchemist_skills.txt",
+      "sha256": "a61cd245147ea3c1947e5b5e32b04c5e0faadd0891c702335c8be7daa3c50a25"
+    },
+    {
+      "path": "npc/quests/skills/archer_skills.txt",
+      "sha256": "378a857ab94eb139fbad14b02a9d03fbefb4887117400d2a49d0a481c000369a"
+    },
+    {
+      "path": "npc/quests/skills/assassin_skills.txt",
+      "sha256": "d908197246df10e2ebbef35d670f21786cb0893e98434c2ae9ab82db68d43879"
+    },
+    {
+      "path": "npc/quests/skills/bard_skills.txt",
+      "sha256": "144ac00c4221becb37adedaa70e83720441a6c49bf13066361254b0ad65e70e2"
+    },
+    {
+      "path": "npc/quests/skills/blacksmith_skills.txt",
+      "sha256": "1a1e1ae45e97c7ca4c61a4dd52d607d92092315b794f42d7c0eca85527c41c09"
+    },
+    {
+      "path": "npc/quests/skills/crusader_skills.txt",
+      "sha256": "d421557bce6af4aaaf39bb080c291df09b91ad4bf752ff6104e77cd13beb3f26"
+    },
+    {
+      "path": "npc/quests/skills/dancer_skills.txt",
+      "sha256": "3dde90cae2cd99eda2ccad044a7ff230324d8492f25a2d7350f91dba8ec84e8e"
+    },
+    {
+      "path": "npc/quests/skills/hunter_skills.txt",
+      "sha256": "938204accb2734720f0d8650c8358085092597988ba7d449a4c30277d69dbb45"
+    },
+    {
+      "path": "npc/quests/skills/knight_skills.txt",
+      "sha256": "e66aa2c8733d55e0e6a7036c30af5ba0f91e45f4fa9e82f6454334dca4843f60"
+    },
+    {
+      "path": "npc/quests/skills/mage_skills.txt",
+      "sha256": "2bd3ce79a0b9145c4ae37b31df4a5e8787901493a95a8cb259e074098cf72124"
+    },
+    {
+      "path": "npc/quests/skills/merchant_skills.txt",
+      "sha256": "b1d21ab1b999d48d4767e15ca4ee94d2379d6c5cbefcf185f61970fdce1b55ae"
+    },
+    {
+      "path": "npc/quests/skills/monk_skills.txt",
+      "sha256": "57f4d41281ecceda7b84cebb3a5539e9007e89ace11ac55c98af9bd83af042f5"
+    },
+    {
+      "path": "npc/quests/skills/priest_skills.txt",
+      "sha256": "9cfbe684b4d2af788ca72ab24eb0a5a3af0f8fcc2e7e04fcc20ee8f210fc80b0"
+    },
+    {
+      "path": "npc/quests/skills/rogue_skills.txt",
+      "sha256": "66ae4c99c507832a5a52efa3f18b9fdf908620e76a3fc0993adaf70aa54be015"
+    },
+    {
+      "path": "npc/quests/skills/sage_skills.txt",
+      "sha256": "d220f0c8f66420ad59d303eab6e4f1f80a54cd7246919a4cff1c0bb7016d97ad"
+    },
+    {
+      "path": "npc/quests/skills/swordman_skills.txt",
+      "sha256": "dab40897f0b671e97b49c537f56f0fa535ddf82b2e0ca3e84bfb3ae14d140bb7"
+    },
+    {
+      "path": "npc/quests/skills/thief_skills.txt",
+      "sha256": "c03eb95e27605a359c93bf254d88ca0fa57fd18539a6792f501f64b7f1ad80e2"
+    },
+    {
+      "path": "npc/quests/skills/wizard_skills.txt",
+      "sha256": "8fb4aa2ce6b81635aaaba67813f7836f710769faffad8735956a93a719ea0e20"
+    },
+    {
+      "path": "npc/quests/thana_quest.txt",
+      "sha256": "a11a032423d41b8992c33d9015106e4f08cf349edee5cf24748eb8caa528a182"
+    },
+    {
+      "path": "npc/quests/the_sign_quest.txt",
+      "sha256": "d47b8e87d8351c1b700040290ea0a336957f59dceff88344790b8a6665318a87"
+    },
+    {
+      "path": "npc/re/airports/izlude.txt",
+      "sha256": "98975a7a4eadfd203be6557659f8c3d9c29a8495abb4a6f40e0d3c465714da86"
+    },
+    {
+      "path": "npc/re/battleground/bg_common.txt",
+      "sha256": "1a0cfadc52f014350f6b562df89e8ea3cad13b371b56e18e202292810a158709"
+    },
+    {
+      "path": "npc/re/cities/alberta.txt",
+      "sha256": "92217b24545b01b45fff98d3806547344919c5ae6e0ef08c9c917d63ebec757c"
+    },
+    {
+      "path": "npc/re/cities/brasilis.txt",
+      "sha256": "adb5ad90a117d8794cfb932e3c6a9783a3a3d87a1db2af18e24b4bb6bcb65668"
+    },
+    {
+      "path": "npc/re/cities/dewata.txt",
+      "sha256": "126b2672b4b54526ae8f84285febfd6a9ff9033d58b71aa4ac7b7eeb7c7ebb7a"
+    },
+    {
+      "path": "npc/re/cities/dicastes.txt",
+      "sha256": "d7db1045d893e6acf085c236d7bc62fb5fe75c057e3ae8d34e4e808646faa97a"
+    },
+    {
+      "path": "npc/re/cities/eclage.txt",
+      "sha256": "148b6a9690e225842380ec4a373e7431d79f502e0f6cf624dcb34018c6196f17"
+    },
+    {
+      "path": "npc/re/cities/izlude.txt",
+      "sha256": "64d0aa044e3241e6c86ee841a9f1e3665c923dfe94291badcadadd795355e343"
+    },
+    {
+      "path": "npc/re/cities/jawaii.txt",
+      "sha256": "eedaad3efea0efbcecb186eb4a950d1ebe4ffd1b1fad1ea97431860f2ab6a98d"
+    },
+    {
+      "path": "npc/re/cities/malangdo.txt",
+      "sha256": "92a34545e940f0663d55615c8a22b700360148bd1438d7f96d18199f4af1170a"
+    },
+    {
+      "path": "npc/re/cities/malaya.txt",
+      "sha256": "41bd2658f081df657f44598f307bd2b6819a9ce5f06d97d86e9d596b79ede3d1"
+    },
+    {
+      "path": "npc/re/cities/mora.txt",
+      "sha256": "b1600f06238067051d4a878d220dd18f2148cfc9cfa8eef88ea6e0448ecf058e"
+    },
+    {
+      "path": "npc/re/cities/yuno.txt",
+      "sha256": "29097b2f5b7623a7dbd350f8db08e4915899f62da08c8533116145323013c421"
+    },
+    {
+      "path": "npc/re/guides/guides_alberta.txt",
+      "sha256": "c59c40292944b00ce05eda83b17e6688ad87d8d4bfeca5f650350cb428c4b1b2"
+    },
+    {
+      "path": "npc/re/guides/guides_aldebaran.txt",
+      "sha256": "f2bc054512acc226dcb020b9d49416f9046ce9fabcc2ff6b8ec51e1e641c7201"
+    },
+    {
+      "path": "npc/re/guides/guides_amatsu.txt",
+      "sha256": "01fb7bf35516ef00452646b024299f828a2bb013e97d3bd099e540e2fe03d129"
+    },
+    {
+      "path": "npc/re/guides/guides_ayothaya.txt",
+      "sha256": "7f497046ad5269ad088e1abb9fd73198bcef993ce81af18b20bf92b0805d91db"
+    },
+    {
+      "path": "npc/re/guides/guides_brasilis.txt",
+      "sha256": "49f52cd2347af4647c811f31ada22f76ff8120803db72facff360b980f97fb39"
+    },
+    {
+      "path": "npc/re/guides/guides_comodo.txt",
+      "sha256": "e8281f59b6d55ab6f6e8fd78e01c70601f04994dce02833f198ebde976e20144"
+    },
+    {
+      "path": "npc/re/guides/guides_dewata.txt",
+      "sha256": "bec7df935f5a14223f50255c5e34ff51b91f77468b99739ccbc779778c9eb09f"
+    },
+    {
+      "path": "npc/re/guides/guides_dicastes.txt",
+      "sha256": "8f63f504e4b5087a6b0621ec4b5abe64cb99e9ac93d8e4f9944a2077ac27e245"
+    },
+    {
+      "path": "npc/re/guides/guides_eclage.txt",
+      "sha256": "ed1bfb81189bba299022b493cf1a262147c8c9ab9165843c8b24999533433a44"
+    },
+    {
+      "path": "npc/re/guides/guides_einbroch.txt",
+      "sha256": "edb277f1d198b1eda0083714d9ee976707cd123baa9378f61bef7b259e3339c9"
+    },
+    {
+      "path": "npc/re/guides/guides_geffen.txt",
+      "sha256": "7e705430c5ddb7ffae73466b1c72828c3198330b8e2786d19814dba32609eec1"
+    },
+    {
+      "path": "npc/re/guides/guides_gonryun.txt",
+      "sha256": "a8107efa1a71a97a569bc64d62a40f0af0c51f2995fda196f11dc23a5e0ed217"
+    },
+    {
+      "path": "npc/re/guides/guides_hugel.txt",
+      "sha256": "14ba6cd4b6bfcd3d0b51cf0fc2b3eb1ffb24dddba15b97e58a70f1eefcd3a8d1"
+    },
+    {
+      "path": "npc/re/guides/guides_izlude.txt",
+      "sha256": "6923d5c281ec557c7c03ead16222b30897e415f094aaaf0d336c4a950ab712a8"
+    },
+    {
+      "path": "npc/re/guides/guides_juno.txt",
+      "sha256": "a8ee19305ec0558c26394c544c7f03d6f23b5f855d8f1d8b9208714dedc52a47"
+    },
+    {
+      "path": "npc/re/guides/guides_lighthalzen.txt",
+      "sha256": "8a151de5902f13580a810149e18a3f0a115bf8b55b6f2bf1a54b13c93c084672"
+    },
+    {
+      "path": "npc/re/guides/guides_louyang.txt",
+      "sha256": "3f156dd7eee4814bc781709257795dee6122de93027a1097d6893e726e0022f5"
+    },
+    {
+      "path": "npc/re/guides/guides_lutie.txt",
+      "sha256": "229d9826a3b63ae2b6d8bfae1648a27fb5099579a87fd499795dd32449207c76"
+    },
+    {
+      "path": "npc/re/guides/guides_malaya.txt",
+      "sha256": "b372f7f44d74a0ab6aaa2a6b891d889c14fd2ebe59c8230035c9bf4f2f795526"
+    },
+    {
+      "path": "npc/re/guides/guides_mora.txt",
+      "sha256": "47fec669d29dd5a319bdad501d6b53c77c7d1a4d265d69ab1fc75b35a72dea6e"
+    },
+    {
+      "path": "npc/re/guides/guides_morroc.txt",
+      "sha256": "a8fcc40a35a58ecbe37c59cd67b2f8efe8ad5e61c27d7949bb2cf9761856b9d1"
+    },
+    {
+      "path": "npc/re/guides/guides_moscovia.txt",
+      "sha256": "02b32d4571d71638ce67890579fa954b01b40897c52639e1ef0abe19fdea4262"
+    },
+    {
+      "path": "npc/re/guides/guides_niflheim.txt",
+      "sha256": "eeac70d5596ef1a15833fa3357baaf53f7c1db385ff89b288a7c471d5169a42a"
+    },
+    {
+      "path": "npc/re/guides/guides_payon.txt",
+      "sha256": "2a2a2bfe185bfc7843ce9317a1a49ea1078d1c9066c468160e8cd30f2398cad7"
+    },
+    {
+      "path": "npc/re/guides/guides_prontera.txt",
+      "sha256": "0d56d4f621bb21248bf36d5c717b5db990b4bc79eba7d37701ef2eaf013a4fab"
+    },
+    {
+      "path": "npc/re/guides/guides_rachel.txt",
+      "sha256": "c21e663f5881bedfc9736b224bede1a03521849e0601d87535f9423a182916a3"
+    },
+    {
+      "path": "npc/re/guides/guides_umbala.txt",
+      "sha256": "f6a4f9acf78bb342b2432f23408a41c1e6c64487dc947ef6596c8bb918e2b11f"
+    },
+    {
+      "path": "npc/re/guides/guides_veins.txt",
+      "sha256": "546137051a126dad1df06eec40480a26b831f0faa57e61aff9db301a72d47583"
+    },
+    {
+      "path": "npc/re/guides/navigation.txt",
+      "sha256": "955d8b5bddae950a7ea3d4817c20bf87f7e19416310f25753531c5c16ba2d133"
+    },
+    {
+      "path": "npc/re/instances/BakonawaLake.txt",
+      "sha256": "a7a9f2a9b42adf6bc69abab107af299fa18b1ea35f81a2328de96f8236efe2c7"
+    },
+    {
+      "path": "npc/re/instances/BangungotHospital.txt",
+      "sha256": "866503b6c33fd9c4fe54be017c286723d88f173026995d5abb8c2ee2bd0ef804"
+    },
+    {
+      "path": "npc/re/instances/BuwayaCave.txt",
+      "sha256": "9ef269c4b579b9b0c2122029895ba2112f533c3d9c10906a6a7a913514635312"
+    },
+    {
+      "path": "npc/re/instances/EclageInterior.txt",
+      "sha256": "35f154b3116a69b313001b76d0e92a1459c1c86f5bd5ddb274ac75ff164f14d7"
+    },
+    {
+      "path": "npc/re/instances/HazyForest.txt",
+      "sha256": "355551ef3adafacb82f6ab9858e15895cb259feea9f821051df4449e919fd5e2"
+    },
+    {
+      "path": "npc/re/instances/MalangdoCulvert.txt",
+      "sha256": "a38a8d6be39e8dde64c7c6557f8cedc8bcccc50aac1aac3213c8631f7af07204"
+    },
+    {
+      "path": "npc/re/instances/OldGlastHeim.txt",
+      "sha256": "5ae369c5d3153ec15560d932ca561b04af142020d2aafd39ec6011e352a8b58f"
+    },
+    {
+      "path": "npc/re/instances/WolfchevLaboratory.txt",
+      "sha256": "a1a9834140138b3d870565784ab16d8fbebc1d3b80fd209ce6e2f84aee263d40"
+    },
+    {
+      "path": "npc/re/instances/ghost_palace.txt",
+      "sha256": "d7ccd824d8e92426c5e1b8835e98698cb79e5e299311443147b4fc297d213887"
+    },
+    {
+      "path": "npc/re/instances/octopus_cave.txt",
+      "sha256": "58ddf44134685262a99e5d16579c2a85435c10494298b71fb93f13f8e94e61d6"
+    },
+    {
+      "path": "npc/re/instances/saras_memory.txt",
+      "sha256": "86f6dde201f46f0f3ba3be7853aba44b41458e9c5de258412411c17b010e02dc"
+    },
+    {
+      "path": "npc/re/jobs/1-1/acolyte.txt",
+      "sha256": "916652afbae00e1e1a666a96c3906f0ad4a6582ab3f159cb17fcf4e49aa51d80"
+    },
+    {
+      "path": "npc/re/jobs/1-1/archer.txt",
+      "sha256": "313bf3a1949424c42abf6d5bf4020675d0942bf6658707ce73e3264f1602598b"
+    },
+    {
+      "path": "npc/re/jobs/1-1/mage.txt",
+      "sha256": "800c55332f96b3816b0153bc9f723e0a1d144c9d230b51c0c2021fb8018b6d0e"
+    },
+    {
+      "path": "npc/re/jobs/1-1/merchant.txt",
+      "sha256": "36ba94bae1be1ad635dfd3717f474bff1f47fbd130595b80434e7f2e6a04708f"
+    },
+    {
+      "path": "npc/re/jobs/1-1/swordman.txt",
+      "sha256": "2f75d258c3626fb2b0b0063bea73ac3542ab560e4689daa474ce03f832903514"
+    },
+    {
+      "path": "npc/re/jobs/1-1/thief.txt",
+      "sha256": "5645f4332f4a49771e7507d9902f265e187aad61443ae8d38f29e3f01d526706"
+    },
+    {
+      "path": "npc/re/jobs/1-1e/taekwon.txt",
+      "sha256": "96975707198e63a28076855e5e1e99eb7c6e550aba8d0dca7232bfa50e00f583"
+    },
+    {
+      "path": "npc/re/jobs/2e/kagerou_oboro.txt",
+      "sha256": "3fca833a4e21efc25c0a54619d69fa061d2328317be393b1c53ae9c27a39578c"
+    },
+    {
+      "path": "npc/re/jobs/2e/rebellion.txt",
+      "sha256": "77e99d67c28809fcb76d209ef1f2a3c8d337c27cf57f013e6dd58fc3c4481750"
+    },
+    {
+      "path": "npc/re/jobs/3-1/archbishop.txt",
+      "sha256": "574d3109cabfec3abd19c94f6806e0adf0f59d1fd7f26faf495e05ccb30a105d"
+    },
+    {
+      "path": "npc/re/jobs/3-1/guillotine_cross.txt",
+      "sha256": "27078a9bb10250d157da19f7358d6e49a9717270436f5ccb0470b95a693fa1d3"
+    },
+    {
+      "path": "npc/re/jobs/3-1/mechanic.txt",
+      "sha256": "3e20f6f9ad4ac343ac5693eecddf8b2dd1c7324134c63a049b5af9ff95603728"
+    },
+    {
+      "path": "npc/re/jobs/3-1/ranger.txt",
+      "sha256": "026a19abd479f7d4c6376bf0bd92bd445dd74cac7810f311f28bf9182ca280db"
+    },
+    {
+      "path": "npc/re/jobs/3-1/rune_knight.txt",
+      "sha256": "0b18c3904046ab9e7357abb489db0c22b26ee0ba8e92c3ded253fb29a689b5f7"
+    },
+    {
+      "path": "npc/re/jobs/3-1/warlock.txt",
+      "sha256": "0f796283117e9e10ca4c479a481fe408c2f192a66f6152875d2055789e461f9e"
+    },
+    {
+      "path": "npc/re/jobs/3-2/genetic.txt",
+      "sha256": "ee355aa0c5b1db4c81b1881334dc2f08b648cad0c506c134fae196e4c8e09503"
+    },
+    {
+      "path": "npc/re/jobs/3-2/minstrel.txt",
+      "sha256": "10d3091926facfbc55f1873b9920a77105eda661071e8d0c4cea6dd12b6e9874"
+    },
+    {
+      "path": "npc/re/jobs/3-2/royal_guard.txt",
+      "sha256": "cfc441d61551ed447f7c2632ba4ddfa6967f5ca8e0aac8c599bbadb02806662f"
+    },
+    {
+      "path": "npc/re/jobs/3-2/shadow_chaser.txt",
+      "sha256": "832180b5224ba121c5006200c4a73256ff636a3bab50089b6d21e81cb9fad90e"
+    },
+    {
+      "path": "npc/re/jobs/3-2/sorcerer.txt",
+      "sha256": "fef7c3d46dbd6b5e47cc2e4292c5a8f77563156cc82cd070bd103d8d310ab6fc"
+    },
+    {
+      "path": "npc/re/jobs/3-2/sura.txt",
+      "sha256": "dcf27340c1d81bf31c53a4c71b3f2fc276b3acb040e42fce9450f29e601ff2e3"
+    },
+    {
+      "path": "npc/re/jobs/3-2/wanderer.txt",
+      "sha256": "eceb78149e2e5eb37c8a10e50ee53868a95f7eee0daa95c89ac114f9bbac02c5"
+    },
+    {
+      "path": "npc/re/jobs/novice/academy.txt",
+      "sha256": "7bc4a66a361f3114c6769a28b567e67b02ed0a7bfd007df93cb1917f91abcef9"
+    },
+    {
+      "path": "npc/re/jobs/novice/supernovice_ex.txt",
+      "sha256": "35042b92d0ee6b8a8a1cb80bda3911eda240004b39dcd0561e29e4ee9bc36117"
+    },
+    {
+      "path": "npc/re/jobs/repair.txt",
+      "sha256": "b195e2648e9820c7d1f74099f8e66da13f91e04a66502973357550b6c57fe2e8"
+    },
+    {
+      "path": "npc/re/kafras/kafras.txt",
+      "sha256": "90ed3da3300df900a555bca77128ec03e508e81ea5b132eac055531269314b4e"
+    },
+    {
+      "path": "npc/re/mapflag/gvg.txt",
+      "sha256": "d518def75fc9ed7a680e15eb51e9a72fe8fffec9cd6379eb3efcc3637d4f60ad"
+    },
+    {
+      "path": "npc/re/mapflag/zone.txt",
+      "sha256": "e552b8fdfbff0db613cd820961d60a5a560b5fe3e34baf4a92c1c65d51360a66"
+    },
+    {
+      "path": "npc/re/merchants/3rd_trader.txt",
+      "sha256": "1d43267f8e959c7c080d6f7c845e93bfc105b5126c0bc56fc06c05c8af1f1b67"
+    },
+    {
+      "path": "npc/re/merchants/advanced_refiner.txt",
+      "sha256": "69a0dda4abb75dfbfe4ce9944bb10f084e96d27730ad4d1cddc3bed7c18b8b42"
+    },
+    {
+      "path": "npc/re/merchants/alchemist.txt",
+      "sha256": "d4153511136e558721f0f06e8263c2e6c30c84501f5c08941467451fa6081bef"
+    },
+    {
+      "path": "npc/re/merchants/ammo_boxes.txt",
+      "sha256": "784d6a7a73062cad413bfd4e9e916b0a5e3bc7ef387a169239a5d9fb4d9bcf33"
+    },
+    {
+      "path": "npc/re/merchants/ammo_dealer.txt",
+      "sha256": "52757f71fadea467c9740c42bc869c64be45c9e894e9462eb19ffb196f705367"
+    },
+    {
+      "path": "npc/re/merchants/card_separation.txt",
+      "sha256": "a0ce840ded8c5a25361bd3aabaec60320eede31cbe6ebb5dc019ebacbbd42be6"
+    },
+    {
+      "path": "npc/re/merchants/catalog.txt",
+      "sha256": "5f57b45e6fbb4123899b6b37b43960ef9f98b739672bc51005180e1a8189ca92"
+    },
+    {
+      "path": "npc/re/merchants/coin_exchange.txt",
+      "sha256": "34ba15cb8c3214b0fd504d8c2e490272e928d87d1e7da176545172e18d87d96a"
+    },
+    {
+      "path": "npc/re/merchants/diamond.txt",
+      "sha256": "11d868eddfe3866b142e38df721f2588322ffb77d35b9c680fb164a6a2b83c2b"
+    },
+    {
+      "path": "npc/re/merchants/enchan_ko.txt",
+      "sha256": "f551f26d15bc538a62455872c421cf393e611df84a9e25f4d060ab5ae853e430"
+    },
+    {
+      "path": "npc/re/merchants/enchan_mal.txt",
+      "sha256": "9029269318933d25faa0a7e44f663f2f6000878331fec7c936aff67a7b472062"
+    },
+    {
+      "path": "npc/re/merchants/enchan_mora.txt",
+      "sha256": "6942282cc699ab76d246993a6141935433b232027608684b3ec2592fe27e4644"
+    },
+    {
+      "path": "npc/re/merchants/flute.txt",
+      "sha256": "263afe2642b5d274eb8d666041089b6a31a34cb625da9b1def9dd0366633b7e6"
+    },
+    {
+      "path": "npc/re/merchants/hd_refiner.txt",
+      "sha256": "960126144d35bb609047532ee0f3070b2cf1760f3a50f57e75942f2f59008aa9"
+    },
+    {
+      "path": "npc/re/merchants/inn.txt",
+      "sha256": "e653db3791baa0ad7f2e240f7493b040569fa995d89354573eec364c62de4a33"
+    },
+    {
+      "path": "npc/re/merchants/ninja_craftsman.txt",
+      "sha256": "35b59cd679a9d7b274657870a45135309600e1d33c98a6ba2573a310b8eefc96"
+    },
+    {
+      "path": "npc/re/merchants/quivers.txt",
+      "sha256": "5aa8967e3efbb5b83f99f6bc402a6e136905de5c5d42557282d5659e3163c598"
+    },
+    {
+      "path": "npc/re/merchants/refine.txt",
+      "sha256": "3317568a4cb85da2c1c2af0ed400cc066594e75c3d09871afc5be4c1d5ccf335"
+    },
+    {
+      "path": "npc/re/merchants/renters.txt",
+      "sha256": "6a5da8aa995ac525110e63208f8dee50d565c34afa78492c78f3a639712f3805"
+    },
+    {
+      "path": "npc/re/merchants/shadow_refiner.txt",
+      "sha256": "00985496b28f13a453463a4cef596598bd5e237f122542ac99804cca9b1d5693"
+    },
+    {
+      "path": "npc/re/merchants/shops.txt",
+      "sha256": "033857e6cc678881fe13228daadaf26d4570dae5403f727d5be0c8e1b410b2e2"
+    },
+    {
+      "path": "npc/re/mobs/champion.txt",
+      "sha256": "dedbe023be9a4639cb09112116451827c1c678b74f1ceae9979907ca796a0c2a"
+    },
+    {
+      "path": "npc/re/mobs/citycleaners.txt",
+      "sha256": "32ce205d0c7bef02bbe191924ec5feeac52eb2559fd586cd5278d68b48f903df"
+    },
+    {
+      "path": "npc/re/mobs/dungeons/abbey.txt",
+      "sha256": "67268f5d16e0f5f767751a4ae3898d27464f0c35081e5574278c1add805063ec"
+    },
+    {
+      "path": "npc/re/mobs/dungeons/abyss.txt",
+      "sha256": "7162021ad0773975a255e23e65442aae8c684d0063d332f1fe286aaa55d79af6"
+    },
+    {
+      "path": "npc/re/mobs/dungeons/alde_dun.txt",
+      "sha256": "0b963bc7e0e1c4e6e056f18ba7d1ebf44a74ab30336a261aa0b41746ef3663ec"
+    },
+    {
+      "path": "npc/re/mobs/dungeons/ama_dun.txt",
+      "sha256": "398053b8d0a3ec98b92a209e4fe064cc499e8dc026292fb9b928dc3fe4c9fcd1"
+    },
+    {
+      "path": "npc/re/mobs/dungeons/anthell.txt",
+      "sha256": "cdae5f8db0394337f6a0f937d017abf6449a86d92e063475364129398f74d000"
+    },
+    {
+      "path": "npc/re/mobs/dungeons/ayo_dun.txt",
+      "sha256": "fef8fc0c95c88d70b8744d4f5a4ec8a1203e17d21521b0cc7c01694692df5b6b"
+    },
+    {
+      "path": "npc/re/mobs/dungeons/beach_dun.txt",
+      "sha256": "3f8f8b8d048db2dc65a15a1a5560d28fe10f156d81235e5c02f3d18a1fb7e91e"
+    },
+    {
+      "path": "npc/re/mobs/dungeons/bra_dun.txt",
+      "sha256": "623c7b298ff37c0eb43602e0b4acfeffc36023d0787b812e59b3a3dff96fb5fe"
+    },
+    {
+      "path": "npc/re/mobs/dungeons/c_tower.txt",
+      "sha256": "4b36b2a00ea4d67825d6d136e3547ba17f3b1e3b607b412281d4d75331113020"
+    },
+    {
+      "path": "npc/re/mobs/dungeons/dew_dun.txt",
+      "sha256": "78c3d4bf7229c9651cb7cb1f6f14185957e194ff958ae473ab5c56b811aad258"
+    },
+    {
+      "path": "npc/re/mobs/dungeons/dic_dun.txt",
+      "sha256": "20aa6b8fc1338a012448b83ba62f70936cc9fcce0ba51debc0e3a04cb899646e"
+    },
+    {
+      "path": "npc/re/mobs/dungeons/ecl_tdun.txt",
+      "sha256": "49ba6413bdc30bb0605b1d3bdd8677d8e3518b9d8e452e332ce1e03a11121921"
+    },
+    {
+      "path": "npc/re/mobs/dungeons/ein_dun.txt",
+      "sha256": "08af9866a42d26dac5cab9a42639bb26ba273cf468afc854c83e9fe5f280171e"
+    },
+    {
+      "path": "npc/re/mobs/dungeons/gef_dun.txt",
+      "sha256": "dd656be4ac167bf400938b00bd8806cf458433b45259bcb08a5fe9c3d93f682a"
+    },
+    {
+      "path": "npc/re/mobs/dungeons/gefenia.txt",
+      "sha256": "fbf3be715838ccfb22b63bf5eda8b74ba1cbe82f098841fa464b5fec5ba57427"
+    },
+    {
+      "path": "npc/re/mobs/dungeons/glastheim.txt",
+      "sha256": "ac5fd492be6a3eeaaf93fc791029d489bd050e18f32574221151b8b7f76074b3"
+    },
+    {
+      "path": "npc/re/mobs/dungeons/gld_dunSE.txt",
+      "sha256": "bcc9998cb056897d6b868cc04ca0cadbd0538b09e413f2bd54b904f7ab9bd906"
+    },
+    {
+      "path": "npc/re/mobs/dungeons/gld_re.txt",
+      "sha256": "c72401d6f2efeb75c2a278ccb92f64d0d06524dd5d47e08a7b3520f87962501b"
+    },
+    {
+      "path": "npc/re/mobs/dungeons/gon_dun.txt",
+      "sha256": "2fc9d9ed00d266edc2e536afa5df0cddbeb483f65831bead61dc0bfc62780582"
+    },
+    {
+      "path": "npc/re/mobs/dungeons/ice_dun.txt",
+      "sha256": "025846f3545a8b1f231956bfce1fb294e1817b0dbf7322df34053bb0eaee7ae0"
+    },
+    {
+      "path": "npc/re/mobs/dungeons/in_sphinx.txt",
+      "sha256": "3e13d8effe088c481a03d216f160eedc2c638206f0b09a5aef6647bae9c37a1f"
+    },
+    {
+      "path": "npc/re/mobs/dungeons/iz_dun.txt",
+      "sha256": "9442ef3ded0f4a69a23cf194de0901efbfc820637bd3ce1e875867ab88b0a7bf"
+    },
+    {
+      "path": "npc/re/mobs/dungeons/juperos.txt",
+      "sha256": "04a7cfcd073b119126cc01f3b7c80d6bab818dcba894e0b49dd4f874e2e33d3d"
+    },
+    {
+      "path": "npc/re/mobs/dungeons/kh_dun.txt",
+      "sha256": "ee2ca1c9a2d74c88f91e4ee8ebc828d500840b3a7cdf03b7d40c101aa00c718b"
+    },
+    {
+      "path": "npc/re/mobs/dungeons/lhz_dun.txt",
+      "sha256": "3fac144992c3480f44fb257fadf1895e761eeabb47e3c9f5536dbc01896fed33"
+    },
+    {
+      "path": "npc/re/mobs/dungeons/lou_dun.txt",
+      "sha256": "1bcef0c115e1bcc3f7208b1e6e177b4ac27ad54030e1747745fca0c769ade180"
+    },
+    {
+      "path": "npc/re/mobs/dungeons/ma_dun.txt",
+      "sha256": "45d3980e5981679a88fe820eecce14dbaf9c4a68d8121164860dd047d6fe10d9"
+    },
+    {
+      "path": "npc/re/mobs/dungeons/mag_dun.txt",
+      "sha256": "7578ed8e1009fed0d86ff46fab4bb519be01088382297ee60ad49fa67c95a0ac"
+    },
+    {
+      "path": "npc/re/mobs/dungeons/mal_dun.txt",
+      "sha256": "f834498349c4a6274cee16ce1a55cf5e0fb1a51af3c0f5dd7600cf3f5354a786"
+    },
+    {
+      "path": "npc/re/mobs/dungeons/mjo_dun.txt",
+      "sha256": "f03f41f713b205d5b270d84df056c143c47107f5c352a01937b0076c51cf5799"
+    },
+    {
+      "path": "npc/re/mobs/dungeons/moc_pryd.txt",
+      "sha256": "65a9f959872dd1d1c76204542fff4ce1428a7c5820bb3bf9a26cad01b30607be"
+    },
+    {
+      "path": "npc/re/mobs/dungeons/mosk_dun.txt",
+      "sha256": "0713005f759d98661567dd3262ca99f0d4e0279740e4f83ba680a00bb78ea7fd"
+    },
+    {
+      "path": "npc/re/mobs/dungeons/nyd_dun.txt",
+      "sha256": "1c06766dce560e506aa142578fc924fc0748fa5a5a99ff55d9c4e7e3a78636e5"
+    },
+    {
+      "path": "npc/re/mobs/dungeons/odin.txt",
+      "sha256": "79a455bca985c9c16fd6d3eb36e765bbc5662cfaa2d3ff642d12a3e6b084abc5"
+    },
+    {
+      "path": "npc/re/mobs/dungeons/orcsdun.txt",
+      "sha256": "6b939b29c262285184725acad7bc9ba3911022801ec7e86419218f3b36530694"
+    },
+    {
+      "path": "npc/re/mobs/dungeons/pay_dun.txt",
+      "sha256": "521e80e57e18a789a63a27267ddce68c76815273bb12141fe4c7e75452a9a077"
+    },
+    {
+      "path": "npc/re/mobs/dungeons/prt_maze.txt",
+      "sha256": "2f6e20d36c451416a072bed1f4e901a45d18beb54ed17762a17c8f27c8491997"
+    },
+    {
+      "path": "npc/re/mobs/dungeons/prt_sew.txt",
+      "sha256": "b4edbd53c46d969c71a3f46a5901f4fa748c59e76802e90df78467f9c0daee74"
+    },
+    {
+      "path": "npc/re/mobs/dungeons/ra_san.txt",
+      "sha256": "13ae4eef61e30410ce76b54aeca3ef6249501ccfc3b5f7494150962385ae09f6"
+    },
+    {
+      "path": "npc/re/mobs/dungeons/tha_t.txt",
+      "sha256": "423badc30d48e10f8b6740061b44ca7bbd919f5daa5ffcd5b2878186c7bae141"
+    },
+    {
+      "path": "npc/re/mobs/dungeons/thor_v.txt",
+      "sha256": "5aa1a6a9bda7ce0e8dd4e5160cd0ca7ed87f66fcaca3ab2ace5d4f7d31e2ae9b"
+    },
+    {
+      "path": "npc/re/mobs/dungeons/treasure.txt",
+      "sha256": "08e89ac9f7a6f8547317a1463ad077b2a4157864c6f93118bbe592482c4b8724"
+    },
+    {
+      "path": "npc/re/mobs/dungeons/tur_dun.txt",
+      "sha256": "7c6fc1b142c3cecbf373c29fc96e80c55171867a6de6782afb5dabecd4cae7eb"
+    },
+    {
+      "path": "npc/re/mobs/dungeons/xmas_dun.txt",
+      "sha256": "b3c5d70fcc2a53413d209709f634cccc6cfb3aba30e1b5f427f5f9fe3d187c73"
+    },
+    {
+      "path": "npc/re/mobs/dungeons/yggdrasil.txt",
+      "sha256": "89266f896e535981bd259975c57d45d5661a963afb66441bd2f8870ab2669443"
+    },
+    {
+      "path": "npc/re/mobs/fields/amatsu.txt",
+      "sha256": "09cfb4d1b3fb7611ccd0f46e579aefce225b8d69f38a552b68f2bcbc1e700fb6"
+    },
+    {
+      "path": "npc/re/mobs/fields/ayothaya.txt",
+      "sha256": "5c9ec5f6e75d157c50f4a487948b947b5666d7f725339cee4d2e34300f84a9b4"
+    },
+    {
+      "path": "npc/re/mobs/fields/bifrost.txt",
+      "sha256": "301e79e2a0ab62d4111de31001dfe47fbfff2470f4515df444eb5de4c8fd486a"
+    },
+    {
+      "path": "npc/re/mobs/fields/brasilis.txt",
+      "sha256": "d33487567d0d3d47a97b6ff800de7be06bb8fc8b1f6aeabc5262d29a18626ec8"
+    },
+    {
+      "path": "npc/re/mobs/fields/comodo.txt",
+      "sha256": "ec67797745dc34bd28132a2ddfb1be66a6c8b6794335cf2b4fa3bd56bb0b129c"
+    },
+    {
+      "path": "npc/re/mobs/fields/dewata.txt",
+      "sha256": "e7f0c7f923b209ec461d3c1fb512427475b25343975deda64871813a7648491d"
+    },
+    {
+      "path": "npc/re/mobs/fields/dicastes.txt",
+      "sha256": "700fe49d92ae99ff15e89a4132a91708bc7f44406e3aa820e54f8762381b2b68"
+    },
+    {
+      "path": "npc/re/mobs/fields/eclage.txt",
+      "sha256": "fb650660c8370ffaf849d55678d7e951006b7d03e31cecac531851a582e75992"
+    },
+    {
+      "path": "npc/re/mobs/fields/einbroch.txt",
+      "sha256": "bab2e040027f0010cbaffe3275fdce693575d3d036023f98210cb5cec74cbd9c"
+    },
+    {
+      "path": "npc/re/mobs/fields/geffen.txt",
+      "sha256": "292c4868a69d4c4ac5a35edbcb9c06e556114957f597f9f7fa4a7ed033da531e"
+    },
+    {
+      "path": "npc/re/mobs/fields/gonryun.txt",
+      "sha256": "359a7f20c0f7b9ef4e6f5cd2ad5da12f52db6691865a3af1ad34ad8cb3ec6649"
+    },
+    {
+      "path": "npc/re/mobs/fields/hugel.txt",
+      "sha256": "9d300fec9fbdcd0840ad622c28e1ec197d6146aabec9fd02b63a87d41804ba45"
+    },
+    {
+      "path": "npc/re/mobs/fields/lighthalzen.txt",
+      "sha256": "4fa2513b2ad96b19327542d35facf860c11a5f3f0f8e1137dea147e291ee0c61"
+    },
+    {
+      "path": "npc/re/mobs/fields/louyang.txt",
+      "sha256": "0636795ecc5a97e53f0936627a5245d0a2f5242e21bd05cc031ce5e8c60af01c"
+    },
+    {
+      "path": "npc/re/mobs/fields/lutie.txt",
+      "sha256": "71edb31532a17f99edaac3686053a94eb3a05b997c0527730e39ed5cec07d114"
+    },
+    {
+      "path": "npc/re/mobs/fields/malaya.txt",
+      "sha256": "30d6551ffbf020e2d3f748c2711fad8e51ef8714f3ca27b5ca3d50586beba7f4"
+    },
+    {
+      "path": "npc/re/mobs/fields/manuk.txt",
+      "sha256": "c7191f91ed1f759aa913012e820299e2b068bc46621bde7639aa60f7db916cda"
+    },
+    {
+      "path": "npc/re/mobs/fields/mjolnir.txt",
+      "sha256": "b3805d0962ad751ad96c20b14cd983ac116e4bd44aec7649e6b9e2a76d061c43"
+    },
+    {
+      "path": "npc/re/mobs/fields/morocc.txt",
+      "sha256": "7e7cabc9628cce8b291f19c8e10a555c3e02639d1f4c027b462b4c91b1561198"
+    },
+    {
+      "path": "npc/re/mobs/fields/moscovia.txt",
+      "sha256": "6ea858b70249d2ae3ebe92ae70ce9a25b9bf8961ee8a2221d13f81922b0db71a"
+    },
+    {
+      "path": "npc/re/mobs/fields/niflheim.txt",
+      "sha256": "df2cd75e940e7e3f3fac85e189dac7d88cbc3e29c8319a29eeae194b1b1c8273"
+    },
+    {
+      "path": "npc/re/mobs/fields/payon.txt",
+      "sha256": "2ec6959c57e5e8a010b49feba6ee8494a163e28ab18573b16df77ddec3fa395f"
+    },
+    {
+      "path": "npc/re/mobs/fields/prontera.txt",
+      "sha256": "0a8e1d2d39bd905e733386dba533f4aa6bcb8351b984475992384f08de48908c"
+    },
+    {
+      "path": "npc/re/mobs/fields/rachel.txt",
+      "sha256": "14ddc390482b1ac0576377a25049417d3ab7da306235af18a9cf6f8cae7b287a"
+    },
+    {
+      "path": "npc/re/mobs/fields/splendide.txt",
+      "sha256": "d41c740d3fd63944f739aaeefb7e68562818bf8f0d98a75178c37bbde5a407cf"
+    },
+    {
+      "path": "npc/re/mobs/fields/umbala.txt",
+      "sha256": "8ab23cb204398e9099b2d56b66eaeafb5f797193cf788ddee88fd696d25ae603"
+    },
+    {
+      "path": "npc/re/mobs/fields/veins.txt",
+      "sha256": "059811db40cea18a4b3b962f4a402409c120faa003ed62d092b742e4d81c8b7a"
+    },
+    {
+      "path": "npc/re/mobs/fields/yuno.txt",
+      "sha256": "0cb90deb4a5c1ed9648a8ea906e59975a283e0c905b53d2881930c32b8804b12"
+    },
+    {
+      "path": "npc/re/mobs/int_land.txt",
+      "sha256": "0296ad4b3285120ee7c24037bbd5a423448de878666818b738b02e9e8630a576"
+    },
+    {
+      "path": "npc/re/mobs/towns.txt",
+      "sha256": "5ba8d2c3244302d0fc7672a8f007d06dc40d91953e7359f1d04a61e37d06fe2f"
+    },
+    {
+      "path": "npc/re/other/achievement_treasures.txt",
+      "sha256": "1c3b6977d4dc01c48a5c6878c6904f99845519dfcb82d41c74df72ca6c7e9d3f"
+    },
+    {
+      "path": "npc/re/other/bulletin_boards.txt",
+      "sha256": "1bee0db6f6e04308e47919a39cbe1914d6cac2af13e210cf5c1390470bf2d4c2"
+    },
+    {
+      "path": "npc/re/other/clans.txt",
+      "sha256": "f755825c180d404f0dd7cc3a1dd8f0d1c86e2a54def8a1e5cd6f32c69f8aedfa"
+    },
+    {
+      "path": "npc/re/other/dimensional_gap.txt",
+      "sha256": "0199a794219db39e31cd660b9d151aafe8095b2fc005135d8e28f4d33b70418b"
+    },
+    {
+      "path": "npc/re/other/grader.txt",
+      "sha256": "ad478652a8041a4d965ec3210c5e4e4d6e85a7d7f9fcefbf4e32764ea9afb350"
+    },
+    {
+      "path": "npc/re/other/mail.txt",
+      "sha256": "f7b30927df783bc2fc873599aebf10afd4d4ad3f796697cfe8b82078bb64d54d"
+    },
+    {
+      "path": "npc/re/other/mercenary_rent.txt",
+      "sha256": "34be338c94e51b241779054f860014f5806663ccbbf9c0a9d210d15bef1253fd"
+    },
+    {
+      "path": "npc/re/other/pvp.txt",
+      "sha256": "2f013c4c60963ff3890113532b4f38151606e0d83070285882cb32823ba68d69"
+    },
+    {
+      "path": "npc/re/other/resetskill.txt",
+      "sha256": "7e58b5c9212d18d0dfba1b3b002c6098b5f5fb61691afdce5288a899131b0f34"
+    },
+    {
+      "path": "npc/re/other/stone_change.txt",
+      "sha256": "e6131af8d2ef561d71ab2d781fe968be5891aa284d5eac28fd2c7ed175eacfae"
+    },
+    {
+      "path": "npc/re/other/turbo_track.txt",
+      "sha256": "85c3e8e0587a0adc3f509e30ef02d43d4a854c127a022278698a36f4103e35f8"
+    },
+    {
+      "path": "npc/re/quests/eden/100-110.txt",
+      "sha256": "5bd2dfb33df726115a15db7f30b95ef2c59fc7e94ff81405bf2c15de3054d37f"
+    },
+    {
+      "path": "npc/re/quests/eden/11-25.txt",
+      "sha256": "200c95980adf4b4a8792a3e847f3d2dbc20efd90d8f8a7901e0589f2d1a0bf46"
+    },
+    {
+      "path": "npc/re/quests/eden/111-120.txt",
+      "sha256": "18873395c6b8242ce56c21f509d5405ecb145e112e32cf581ffc256e0cbd6b3f"
+    },
+    {
+      "path": "npc/re/quests/eden/121-130.txt",
+      "sha256": "8d42c990fd47cd41256d72c69304c4f8bbde333d45cc14f7b592956d0275d09a"
+    },
+    {
+      "path": "npc/re/quests/eden/131-140.txt",
+      "sha256": "e89658e92607fdd13f91d1a0f20d3f1c5639f59d729125533fc2d864459630bb"
+    },
+    {
+      "path": "npc/re/quests/eden/26-40.txt",
+      "sha256": "4d3fed71b6b67cac0488d50202f2598cbbef6d0e5fff7f1ad8b349676a926de7"
+    },
+    {
+      "path": "npc/re/quests/eden/41-55.txt",
+      "sha256": "80c8d1286f76378e517a342ff159edfe61025cecf99e0138a31dad8b1f429ad2"
+    },
+    {
+      "path": "npc/re/quests/eden/56-70.txt",
+      "sha256": "78b7a34bac1552b2a0e0900b9c4f3ad56e6db735a1eadfe9d463318f1c27bbe5"
+    },
+    {
+      "path": "npc/re/quests/eden/71-85.txt",
+      "sha256": "5c7750ba8e14a9c284e291e8a03526c206299514783c724237b5f0afa4049714"
+    },
+    {
+      "path": "npc/re/quests/eden/86-90.txt",
+      "sha256": "3cfb2400207782892241c3c3189b3b9fd8aa04cb34df922e83ea75858cc6751b"
+    },
+    {
+      "path": "npc/re/quests/eden/91-99.txt",
+      "sha256": "bc9c64388b058ff4cab8b52a1f9757fa60295a3becebd8b1c53bc0547945782c"
+    },
+    {
+      "path": "npc/re/quests/eden/eden_common.txt",
+      "sha256": "7e52cad0716afecc508aaedf38fa856cdb9d851ecc682fbfe804e00872443201"
+    },
+    {
+      "path": "npc/re/quests/eden/eden_quests.txt",
+      "sha256": "f58183de5d5f42fe07572511928891ebd60d5886f81a6219d0805f14358952bb"
+    },
+    {
+      "path": "npc/re/quests/eden/eden_service.txt",
+      "sha256": "65a6f30f7e4c52867b85c5a83850decbc2239836740baa2ebdbe819c8b238dd9"
+    },
+    {
+      "path": "npc/re/quests/eden/eden_tutorial.txt",
+      "sha256": "59dbc740037ad24ae353d7183ec52330c29fa9c47d3dde31767c14b45e3c72e1"
+    },
+    {
+      "path": "npc/re/quests/first_class/tu_archer.txt",
+      "sha256": "d10c89c2ee1cd051a06849f856179d0aa0b8ebdd71c919aa2c5918c343b1d235"
+    },
+    {
+      "path": "npc/re/quests/homun_s.txt",
+      "sha256": "264921817ebd6500d02842c65601b2264faabdeed1bd1838c33241922f87dc94"
+    },
+    {
+      "path": "npc/re/quests/magic_books.txt",
+      "sha256": "9b56caf44efb1d4a69f9831dc6106275013e96ae2dd98d6018aa12a5f30f3de5"
+    },
+    {
+      "path": "npc/re/quests/monstertamers.txt",
+      "sha256": "370a8e9fb6a2a43145d66be0d4dcb28ac48e7081be15247d97277db6ccd0c83d"
+    },
+    {
+      "path": "npc/re/quests/mrsmile.txt",
+      "sha256": "140defbcb022a521c5ae2f68fd54cd9e464134984bc84faf351db73a7981aa7a"
+    },
+    {
+      "path": "npc/re/quests/newgears/2012_headgears.txt",
+      "sha256": "f425bd230bbeb5c8177f32f6bb783c311d0d1264e0545276c05f36d9179d0d8a"
+    },
+    {
+      "path": "npc/re/quests/pile_bunker.txt",
+      "sha256": "058e6fe94cbc26bb8e41db7f5a9cca86c998020d13b5c62b1b0d0b9a04397007"
+    },
+    {
+      "path": "npc/re/quests/quests_13_1.txt",
+      "sha256": "4c6d8aba8de518fe3e669989dcf7ba368a1be28cf283b2e7cef66c3ae3cf572b"
+    },
+    {
+      "path": "npc/re/quests/quests_aldebaran.txt",
+      "sha256": "066782afff81cc6ba5aeca866d315a86536771bf176857348a098605856e813f"
+    },
+    {
+      "path": "npc/re/quests/quests_brasilis.txt",
+      "sha256": "cae5f30796ec43ebd87d7a5d9e9d8d3e52567b171e407c303d2dc7b24c47871c"
+    },
+    {
+      "path": "npc/re/quests/quests_dewata.txt",
+      "sha256": "a35a644680d5228d96e8bbb1f42c728364383329caa8f69d730f5d2ef8933c75"
+    },
+    {
+      "path": "npc/re/quests/quests_dicastes.txt",
+      "sha256": "5d14ff7fd5e5c4f113102ff66f3d2fbaef756dca5f619c6451b06386817256c5"
+    },
+    {
+      "path": "npc/re/quests/quests_eclage.txt",
+      "sha256": "cc5c15d34af945ff06c958786db6c3b772be29351c0a0869c468b1d52e61d98a"
+    },
+    {
+      "path": "npc/re/quests/quests_glastheim.txt",
+      "sha256": "034137173957aa67a4ddd22591b4d7923e20c3f1a9c6715be5bb874211c3358e"
+    },
+    {
+      "path": "npc/re/quests/quests_izlude.txt",
+      "sha256": "881551487130ee4f52194a5b61b82f04ca46eb4380a4de1eaf83d5dc272d1bff"
+    },
+    {
+      "path": "npc/re/quests/quests_lighthalzen.txt",
+      "sha256": "7a3b2738cb0a2081a7481dfe544e5d896e91d91be88df79ea8acd3a4a988ae98"
+    },
+    {
+      "path": "npc/re/quests/quests_malangdo.txt",
+      "sha256": "421586791107a250c97f2e248719648271d16b4313ba0031ca226117a11cc62f"
+    },
+    {
+      "path": "npc/re/quests/quests_malaya.txt",
+      "sha256": "a9c43be6dfa57b776e55b43159da62a46afd0ed88be969838eeea6b294e7418d"
+    },
+    {
+      "path": "npc/re/quests/quests_mora.txt",
+      "sha256": "6f51d4ee3c42a7f0c0d937a5dce6260e0e39229fe8f69a7a281e4457d46a145a"
+    },
+    {
+      "path": "npc/re/quests/quests_morocc.txt",
+      "sha256": "fb60807df944acbcc06317323d1bd8ff4daf22c9e8d7562dfdc2f9b9bd9228af"
+    },
+    {
+      "path": "npc/re/quests/quests_nameless.txt",
+      "sha256": "ffd75f9b88364ec4fcbe5a00993ae25d70b2c9e57c33ac769f5c10460768b21c"
+    },
+    {
+      "path": "npc/re/quests/quests_payon.txt",
+      "sha256": "3a098e9f5618bb90e4ecd71e86798f65db84fa7602dd47abf4f3df415125bd75"
+    },
+    {
+      "path": "npc/re/quests/quests_veins.txt",
+      "sha256": "bc32a13290d5d42bd18b268cd7608377a1639023862f05470a3be5cc88f38e15"
+    },
+    {
+      "path": "npc/re/quests/rebuilding_morroc_rewards.txt",
+      "sha256": "d4be8e060b9d228ad16bfd11a9e862a9f0be482ee4e04c52db1f46f633e80ab2"
+    },
+    {
+      "path": "npc/re/quests/skills/merchant_skills.txt",
+      "sha256": "3401a622d278a974a8d09e83c3d13c3aac2677380182c4ce9eca9e00918ac32b"
+    },
+    {
+      "path": "npc/re/warps/cities/brasilis.txt",
+      "sha256": "aaf53cb862be8533c29a15f53b4f7e1a2cc94d91f31b7a3151bd0b64dc602042"
+    },
+    {
+      "path": "npc/re/warps/cities/dewata.txt",
+      "sha256": "2277a15c909c921906caee4bd363deeb64091b443e3eee276d10739415103a17"
+    },
+    {
+      "path": "npc/re/warps/cities/dicastes.txt",
+      "sha256": "3be464f699b631877aac8f58961eb3edd65c7bb5ed08d2157cf2504ba2a4f96c"
+    },
+    {
+      "path": "npc/re/warps/cities/eclage.txt",
+      "sha256": "d3d448ffaccf181c440ccca14605395c078467a10e588f5c3ebfd3551c3a8020"
+    },
+    {
+      "path": "npc/re/warps/cities/izlude.txt",
+      "sha256": "1c505e93c874715dfcb5920816b159029c8b955f1fb4613eb3c763d976f52a77"
+    },
+    {
+      "path": "npc/re/warps/cities/malangdo.txt",
+      "sha256": "a9a2651a5e921b91aee5bf68636b40a723ea54d2400bd0a0ed726ab202f3e49f"
+    },
+    {
+      "path": "npc/re/warps/cities/malaya.txt",
+      "sha256": "152a94c7e7b779d0916711d56c231331c6127dc027ea7f7f98f752ea36030753"
+    },
+    {
+      "path": "npc/re/warps/cities/rachel.txt",
+      "sha256": "692811216a171afcc187278ad8e1176f8c00a8dcbb5818d4deae6b5dd0d465e8"
+    },
+    {
+      "path": "npc/re/warps/cities/yggdrasil.txt",
+      "sha256": "10bac4b4931190c6e0fe1250ef6f01e481dc9eff82c956080d7a2cc54e87ff63"
+    },
+    {
+      "path": "npc/re/warps/dungeons/bra_dun.txt",
+      "sha256": "db30e2d52c0a729c4687c48e729aaa15150230a9cd664917793fe4cb9c78aec5"
+    },
+    {
+      "path": "npc/re/warps/dungeons/dic_dun.txt",
+      "sha256": "c4cdcb8eb8bb8bff3f50fe51086e92f7628e189bcbeb73c0cbe3b2c8b9c25277"
+    },
+    {
+      "path": "npc/re/warps/dungeons/ecl_dun.txt",
+      "sha256": "f55dc05802c643951d44cd8ceb99e43af500180871f5ab005a9519284e631b83"
+    },
+    {
+      "path": "npc/re/warps/dungeons/iz_dun.txt",
+      "sha256": "2ebe2f011e979e65e9cc908a29515dba7b2dfb14cc18ef0272215f5f4fb6e0f4"
+    },
+    {
+      "path": "npc/re/warps/dungeons/moc_pryd.txt",
+      "sha256": "559d0a2bb65de2f4bca9776f6741be2bbb02311f0b1fc09fdd56bf1726694460"
+    },
+    {
+      "path": "npc/re/warps/fields/bif_fild.txt",
+      "sha256": "9b375ebb25f4ce8d8d2f82719c340de24f882c7b1940f92a17d5d301466307e0"
+    },
+    {
+      "path": "npc/re/warps/fields/bra_fild.txt",
+      "sha256": "49483ce7bc4ec26a8cc775678ab7be5a53e562ea2620c49a1c724c944a299e19"
+    },
+    {
+      "path": "npc/re/warps/fields/com_fild.txt",
+      "sha256": "c7d1616dd7395da5ee25a618acff2f48e152ed73a05a26cf330d039d79a174f5"
+    },
+    {
+      "path": "npc/re/warps/fields/dic_fild.txt",
+      "sha256": "e07da5d0bae83cf45dedd57133e75aa62163b61b618bcc24e1cf0ad602c519de"
+    },
+    {
+      "path": "npc/re/warps/fields/geffen_fild.txt",
+      "sha256": "bf1d75b998525f58069ef8d5d60ecba4c2303591d02b8ce71f154411c6e5c595"
+    },
+    {
+      "path": "npc/re/warps/fields/hugel_fild.txt",
+      "sha256": "291aeb4d55bd12b98da73e2d7f488c344f19d0fd8b82d5a27e7a1dc353077782"
+    },
+    {
+      "path": "npc/re/warps/fields/morroc_fild.txt",
+      "sha256": "b58c206299ce0489b3f2fe786ca96357f9d3f3161faef867fee387864beafc9b"
+    },
+    {
+      "path": "npc/re/warps/fields/payon_fild.txt",
+      "sha256": "60fadb2944fea57874eb28d00472cb286cbfdf1c7f5ccdf76cd53cdc7d7e156d"
+    },
+    {
+      "path": "npc/re/warps/fields/prontera_fild.txt",
+      "sha256": "c6d07686a4e7417e2512c7b0dd613a73c9101bb0eb5a0ee77eff0b8263f41f2f"
+    },
+    {
+      "path": "npc/re/warps/fields/rachel_fild.txt",
+      "sha256": "7bf345d33aab2918d55b0e5336ab89d30c990b213f2ab2a37428f8564a6a9a91"
+    },
+    {
+      "path": "npc/re/warps/fields/veins_fild.txt",
+      "sha256": "179299af8a7bf8ccd707416e4a41767bde5917a2218c1631e96d4f6967dc2157"
+    },
+    {
+      "path": "npc/re/warps/fields/yuno_fild.txt",
+      "sha256": "912622dfe1ccff97b6edf7abbed4f9f538b806e14a4bf3f0609f1e2f88b13532"
+    },
+    {
+      "path": "npc/re/warps/guildcastles.txt",
+      "sha256": "42eb3a5f01265e1522a3dd0cb5b399938b460a4a20dd1495240c20df63179e25"
+    },
+    {
+      "path": "npc/re/warps/other/arena.txt",
+      "sha256": "bda0b3a9b20d9ceae3914e49e1aea0e4ede7ad60988e73c37d8d0b1b6f302496"
+    },
+    {
+      "path": "npc/re/warps/other/dimensional_gap.txt",
+      "sha256": "ca063cfa37a3feb9e5fc8646ad1e86113a640e3eec0ffedae7b17a95f1cb5cdd"
+    },
+    {
+      "path": "npc/re/warps/other/jobquests.txt",
+      "sha256": "6776d2e2c0dc9e8ff61a4964627f685a5306b1e3677014cdcaed38c8c253fd88"
+    },
+    {
+      "path": "npc/re/warps/other/paradise.txt",
+      "sha256": "ca3de20696fd6825229d4ac0d59181c09d6bdf37d42b46188ef3d497dc3fce72"
+    },
+    {
+      "path": "npc/re/warps/other/s_workshop.txt",
+      "sha256": "2142f1b931a93c9cf5827b925750ef11eb842d66b5f4f1568af54213d886d33c"
+    },
+    {
+      "path": "npc/re/warps/other/sign.txt",
+      "sha256": "4d7f81f60b516122642aeafa5d746104ddcb41614fd5b96d841b105c15195175"
+    },
+    {
+      "path": "npc/warps/cities/alberta.txt",
+      "sha256": "e2fd2b14cf5f77d684b42582112138ea3a8a97146bf8f532b9d8e355d6800020"
+    },
+    {
+      "path": "npc/warps/cities/aldebaran.txt",
+      "sha256": "cefeda22156c31fc0bff70a5bd62f29411552d4106d2b342787a627d967fc6d0"
+    },
+    {
+      "path": "npc/warps/cities/amatsu.txt",
+      "sha256": "99271dee2ba2a8f924bd8858926896e80101350778b9fbcfe018f7d3bb4751c8"
+    },
+    {
+      "path": "npc/warps/cities/ayothaya.txt",
+      "sha256": "7ed9bf9fff54cd274f914bb5fab7c0faaeeb87881691218b45acfebe03d67d30"
+    },
+    {
+      "path": "npc/warps/cities/comodo.txt",
+      "sha256": "a6b50204313730ebcd7bcf015ee1dfdfe2ea2463068bcaa6010905e178cbf395"
+    },
+    {
+      "path": "npc/warps/cities/einbech.txt",
+      "sha256": "9305eee94e7104fdb914ad3a157bcdbeb811ab702849ceb5d5227e025dcc6165"
+    },
+    {
+      "path": "npc/warps/cities/einbroch.txt",
+      "sha256": "71072cbf5c104c4842c850e6679c749f0a5df3d89f40f0827872baf73ec8393d"
+    },
+    {
+      "path": "npc/warps/cities/geffen.txt",
+      "sha256": "3f8a994901d3514ecaee709750d70f34f762e5b3299001625cc2e40557ea6341"
+    },
+    {
+      "path": "npc/warps/cities/gonryun.txt",
+      "sha256": "5c2568116f718cfc101119ca562ae8b025b6e4c26e2c0bdf403230329e48c9d4"
+    },
+    {
+      "path": "npc/warps/cities/hugel.txt",
+      "sha256": "ddb2b97a082b18a6521a0222bf9e192b9955c54bf8b6b7fb6b3134637c2d74af"
+    },
+    {
+      "path": "npc/warps/cities/lighthalzen.txt",
+      "sha256": "744895624d449d9ea662bf0185c5485941ebf41161e23cb1283fab7a7d9314b4"
+    },
+    {
+      "path": "npc/warps/cities/louyang.txt",
+      "sha256": "c97572b00098ae7715e5b2cf2deec8a192af42c0b3de050c5fd1f2776748b288"
+    },
+    {
+      "path": "npc/warps/cities/lutie.txt",
+      "sha256": "c536ff7e28fc38198b8eadcf8feb997f8627e81a87091bb146d43143f71f6122"
+    },
+    {
+      "path": "npc/warps/cities/manuk.txt",
+      "sha256": "5a230feb6b3f42bf3d2c0ad241f813884ebdcbe91edf574d183f38ce1b37e178"
+    },
+    {
+      "path": "npc/warps/cities/mid_camp.txt",
+      "sha256": "7f127da9591953026e086cae71ae1eed5aa70f92063ecf29569d62f20fb972a1"
+    },
+    {
+      "path": "npc/warps/cities/morroc.txt",
+      "sha256": "d80969e98ca786d86a79ca1c2627a8c40e41a8fe4ef3e88f77d452037c21b0ab"
+    },
+    {
+      "path": "npc/warps/cities/moscovia.txt",
+      "sha256": "99f3ff0bc74b3d8e0836aa046e03629c428c4f6c4c606077614ad3c70f22e28b"
+    },
+    {
+      "path": "npc/warps/cities/nameless.txt",
+      "sha256": "d9e228a4effe40c97783cb6f2997c7901ce8332410d123af61c8266a614df0cf"
+    },
+    {
+      "path": "npc/warps/cities/niflheim.txt",
+      "sha256": "80722bcf3dc7f4bf56d37d0fd4c5b25fb6ec531921d7e7174ec4b34492d103cd"
+    },
+    {
+      "path": "npc/warps/cities/payon.txt",
+      "sha256": "18c32d3d50aec2628d8b3331ac46f6b9288bd9ca1f42650800f4c189e6b8d7db"
+    },
+    {
+      "path": "npc/warps/cities/prontera.txt",
+      "sha256": "65238d94358f462c7c37a77e8ef7ccfc894499b0a92de729f1c7d6b0c461519d"
+    },
+    {
+      "path": "npc/warps/cities/splendide.txt",
+      "sha256": "0f4490796242e367eb6e593d985389b6bb5930bdfb90df600ca004d94f8904c6"
+    },
+    {
+      "path": "npc/warps/cities/umbala.txt",
+      "sha256": "bd3cb271052c4515fbb3322b1685f08a32d63ff3dab49b76393d5b0f6324c30b"
+    },
+    {
+      "path": "npc/warps/cities/veins.txt",
+      "sha256": "e670d54c413f635d5bb219efbdda5c72c8ae30e2ef3338fcbefa9cf27af4a30d"
+    },
+    {
+      "path": "npc/warps/cities/yuno.txt",
+      "sha256": "4078b549043b3f80a0b42c0949c8781fc1725406a40d121125af1b91c35305e9"
+    },
+    {
+      "path": "npc/warps/dungeons/abbey.txt",
+      "sha256": "d254453bb6eb2353ea92a5798c8f3f7cd0594f4f5cd98bb1b7f065bf4e062ef4"
+    },
+    {
+      "path": "npc/warps/dungeons/abyss.txt",
+      "sha256": "36f96c8e9f301f4a1fdf6cf6302fb6d379e8d424007e0f780388fb37c7e7a837"
+    },
+    {
+      "path": "npc/warps/dungeons/alde_dun.txt",
+      "sha256": "ffaad793ef3e5a91188606f09bfe667388eb6adaed0bef8a7a45bc5583b255d5"
+    },
+    {
+      "path": "npc/warps/dungeons/ama_dun.txt",
+      "sha256": "8a6c258f9b91f8a862dc0a9da0aac4d3cd623f0ef287413ae06c2ca131c833cb"
+    },
+    {
+      "path": "npc/warps/dungeons/anthell.txt",
+      "sha256": "9f8e77db77552cd5dba8355732cedc8542103a14f229543a1e31e47bc43f90cd"
+    },
+    {
+      "path": "npc/warps/dungeons/ayo_dun.txt",
+      "sha256": "12c13fcf3d178ee93e38dc4fe7e9e95f96c98366edb146faef4651f2ea5f5c96"
+    },
+    {
+      "path": "npc/warps/dungeons/beach_dun.txt",
+      "sha256": "234947ba883df8ecfbadf42ddd8797acc6db4269c750be5d1cca8d55b61d2397"
+    },
+    {
+      "path": "npc/warps/dungeons/c_tower.txt",
+      "sha256": "470cf04026544f96321db641459851c7065832e7e6aa0bd3f0712582844f393c"
+    },
+    {
+      "path": "npc/warps/dungeons/ein_dun.txt",
+      "sha256": "9ce0e7c4c90738be99af45cdb2718f17ff16a662d73091742cd8c136d3482499"
+    },
+    {
+      "path": "npc/warps/dungeons/gef_dun.txt",
+      "sha256": "c90d1a44e8a1930ba1b1514d81ff0ee59ff9d4d8028abb8cda2e982bf95fa3d4"
+    },
+    {
+      "path": "npc/warps/dungeons/gon_dun.txt",
+      "sha256": "3b53410e5e3506593bc8fd97e874a82fe234e8f8288418fe43e3c2af6f475126"
+    },
+    {
+      "path": "npc/warps/dungeons/ice_dun.txt",
+      "sha256": "533ae20127711427f35277d65fff97a1c54a6d829363a7e5dd3b4e4a6531c7e8"
+    },
+    {
+      "path": "npc/warps/dungeons/in_sphinx.txt",
+      "sha256": "0480b24dc7a0e326cbe03356ef4352c6416adffcfd42788e67b1c663f19b878f"
+    },
+    {
+      "path": "npc/warps/dungeons/iz_dun.txt",
+      "sha256": "b1d4598e0ef3b02598694a76c4659d3fd3a5e7e9ffce9f58dccd051637514dfd"
+    },
+    {
+      "path": "npc/warps/dungeons/juperos.txt",
+      "sha256": "9a8d29dca179aa327b517a0dda01c03c79c4af327d0bdebce8d4b87fa6c3167e"
+    },
+    {
+      "path": "npc/warps/dungeons/kh_dun.txt",
+      "sha256": "07cd3dfa388b42d228dc51ceeb2b290b53add0c072c783ed3f09d938dd50501d"
+    },
+    {
+      "path": "npc/warps/dungeons/lhz_dun.txt",
+      "sha256": "6a3d4ee8bdf562935b927afb742399c79f23d262f5917e297999518d06220839"
+    },
+    {
+      "path": "npc/warps/dungeons/lou_dun.txt",
+      "sha256": "1d6c6d517ce620fd98f6bbad70448e33eeb6547c0d7a4df7ea76248866c8fa50"
+    },
+    {
+      "path": "npc/warps/dungeons/mag_dun.txt",
+      "sha256": "d3689424545d50ada9bbf8fc48cb237292747a5bbae62dfcf1648a03aa4da30f"
+    },
+    {
+      "path": "npc/warps/dungeons/mjo_dun.txt",
+      "sha256": "534ea96beef6828c1247513c055def79ab1a0e32144d05a0c68d8730dfae824f"
+    },
+    {
+      "path": "npc/warps/dungeons/moc_pryd.txt",
+      "sha256": "08e01f0a232a1f935b20ae8be27f0b2c4890860c8e8548eb24d8c3b68cc6418a"
+    },
+    {
+      "path": "npc/warps/dungeons/mosk_dun.txt",
+      "sha256": "1762b1e32f2dd3638ca94e7bbd60605ced8a578c1ce68d9be456e5a292d851cc"
+    },
+    {
+      "path": "npc/warps/dungeons/odin.txt",
+      "sha256": "999134626ae0af37a2c1a4a14262f8f50d551d5336417615be7738f13468f541"
+    },
+    {
+      "path": "npc/warps/dungeons/orcsdun.txt",
+      "sha256": "c0d31a46c1808c6aa2856ca662b745de7cbbbf43faf3ebe17d9d4f797ba47993"
+    },
+    {
+      "path": "npc/warps/dungeons/pay_dun.txt",
+      "sha256": "b3e3c6e0f696d7ffb85da374354ea3795fff91a541f2d23aa072f9338af8b7c4"
+    },
+    {
+      "path": "npc/warps/dungeons/prt_maze.txt",
+      "sha256": "3d784701bedc5ed673feaef0672e60e07ecb0f985b126de7ae4340a5682dc727"
+    },
+    {
+      "path": "npc/warps/dungeons/ra_san.txt",
+      "sha256": "156b667b995d50f7036ae349a844c2ebc9627c8a6b4499fc0fdc1982b297b306"
+    },
+    {
+      "path": "npc/warps/dungeons/tha_t.txt",
+      "sha256": "cbad896f71e3be5997f385845d0d40086f239866b0ce702132df7c95ccb5fc59"
+    },
+    {
+      "path": "npc/warps/dungeons/thor_v.txt",
+      "sha256": "9218d67c37aefc644eeaad80d778bd6db1959776ec0e3759b46022a06b2eb48d"
+    },
+    {
+      "path": "npc/warps/dungeons/treasure.txt",
+      "sha256": "308140543cbe3dd8f732d36a794faa40c85829ab5e6f5abe42d305785162bd5c"
+    },
+    {
+      "path": "npc/warps/dungeons/tur_dun.txt",
+      "sha256": "fb0d5a72e794fefc4e4f632a259e436327bb1ba8cb337e33ee83a265fc95b47d"
+    },
+    {
+      "path": "npc/warps/dungeons/um_dun.txt",
+      "sha256": "c1f44128a6e4e32888515c196400e14c4588663f5d9f549d56a39edcd07a3310"
+    },
+    {
+      "path": "npc/warps/dungeons/xmas_dun.txt",
+      "sha256": "c784e43fa5b1f6f2c65bb9029b305de4e04a9e5aa3107a77d8b19b4c75298241"
+    },
+    {
+      "path": "npc/warps/fields/abyss_warper.txt",
+      "sha256": "967650e88c19163965973edb0deef3b370007657319fb5d822c8b6c6648d1e01"
+    },
+    {
+      "path": "npc/warps/fields/amatsu_fild.txt",
+      "sha256": "39c62a6b7eeb17432c543dfd825210f026e161a917f2e6d6830511e03bf6af6f"
+    },
+    {
+      "path": "npc/warps/fields/ein_fild.txt",
+      "sha256": "75344612c475a0deada4ac5c24a717b1f7bf7b22ceb86650c3e0eade9d51effb"
+    },
+    {
+      "path": "npc/warps/fields/gefenia.txt",
+      "sha256": "3f87019c489a0538c14300ca9ab302fed82fdd8c3a8d22e09cce806f3dbec1d4"
+    },
+    {
+      "path": "npc/warps/fields/glastheim.txt",
+      "sha256": "1814ec6c9bf65e1ff0ebd4774860f01937ece9d763c90390b54fc1b69a53abff"
+    },
+    {
+      "path": "npc/warps/fields/jawaii.txt",
+      "sha256": "5f0932adadcbfae43bdfc27abdce0d94c6ba1fa57e944b2e2541c544b0f78aad"
+    },
+    {
+      "path": "npc/warps/fields/lhalzen_fild.txt",
+      "sha256": "4fb993fdabe6b2b63eb8871da4d00c4ebaa3b91e202939514cce598a5bd2e060"
+    },
+    {
+      "path": "npc/warps/fields/lutie_fild.txt",
+      "sha256": "82a3a6f753a466de77d205a41a411c9b9270a2ec0f8747e4d51529ea98f8dff4"
+    },
+    {
+      "path": "npc/warps/fields/man_fild.txt",
+      "sha256": "d3868fe9a51bc35d994385dd76b307bde8733c7a936864123567eccd4306817b"
+    },
+    {
+      "path": "npc/warps/fields/mtmjolnir.txt",
+      "sha256": "a5211a6705ab1b79003b55ee29615b00bef539c2ee90b4cabd46bfa8f04ce089"
+    },
+    {
+      "path": "npc/warps/fields/spl_fild.txt",
+      "sha256": "7b84dd552ac3822a40b1826bf68e70f13f25a69d1d13cc86518ab8fac6c8bd03"
+    },
+    {
+      "path": "npc/warps/fields/umbala_fild.txt",
+      "sha256": "829d3b0f826355ccd398a28487ce3dd740189364d65152333da8812f703e4971"
+    },
+    {
+      "path": "npc/warps/guildcastles.txt",
+      "sha256": "e5b1e1c0c87a15b6afcc44f872729c0115b193bf71ce2d80f31b7d3a03791054"
+    },
+    {
+      "path": "npc/warps/other/airplane.txt",
+      "sha256": "ca5bc1416bd9c39565b18f8588a5730441b34af702d3e25dd6d3412ac1525f94"
+    },
+    {
+      "path": "npc/warps/other/arena.txt",
+      "sha256": "8c787204bf624f293546f345e11d7539d1473b08d80914028c927afbce592e6b"
+    },
+    {
+      "path": "npc/warps/other/god.txt",
+      "sha256": "db8f4704ef700eabd38585761173b0b1c2483846db23771345a0f181cc3c68a6"
+    },
+    {
+      "path": "npc/warps/other/jobquests.txt",
+      "sha256": "bdb3ccc161ea57053bf47d58d389efd58f3b428aa01e9d0f033859149d47f90d"
+    },
+    {
+      "path": "npc/warps/other/kiel.txt",
+      "sha256": "c008cf077ed32037224ad05b27f25f43517f68f5825321ae7c106e8ba3b17436"
+    },
+    {
+      "path": "npc/warps/other/other.txt",
+      "sha256": "b183fcdae3dacc28c69ff740d6bb85978acca4e5a5d20580cbf8398d72015616"
+    },
+    {
+      "path": "npc/warps/pvp.txt",
+      "sha256": "84b380a60bf58e93d6ef9aba77a23f7d46a6dd390a541d84d024bc976947e397"
+    }
+  ],
+  "dirty_files": [
+    {
+      "repo": "korangar",
+      "path": "docs/bestiary.v1.json",
+      "sha256": "e47714170d31bf22fcb64370bfbf750ae349692bd0455f0af02f33e4285d28d9"
+    },
+    {
+      "repo": "korangar",
+      "path": "docs/boss-behavior.v1.json",
+      "sha256": "654a278b9fbddd4569f121fc655dae3dd8b106c48b551c890422e61453f3271a"
+    },
+    {
+      "repo": "korangar",
+      "path": "docs/cards.v1.json",
+      "sha256": "90b7e9b50a59918c6ce32b8918c3e84fb9b33a43c29a37ef91742e1d42cdc335"
+    },
+    {
+      "repo": "korangar",
+      "path": "docs/crafting.v1.json",
+      "sha256": "b427ca0519b2c678749b1c94d9361fe97fbaab737022156c6dea2c6aa7f6bdef"
+    },
+    {
+      "repo": "korangar",
+      "path": "docs/encyclopedia-coverage.v1.json",
+      "sha256": "5a90b937a5013dafd614943f30614ee33c9bd3089a361bd8f384f32fa409b936"
+    },
+    {
+      "repo": "korangar",
+      "path": "docs/encyclopedia-dispositions.v1.json",
+      "sha256": "ebc3aba296c2379e2f0ba86e8f52e342b06a0f179231cbd4f3a7a1c5723a827d"
+    },
+    {
+      "repo": "korangar",
+      "path": "docs/exp-tables.v1.json",
+      "sha256": "0da3695000028e892aa039a80d638f67904ca97b5479dc5dcd69436e3457af54"
+    },
+    {
+      "repo": "korangar",
+      "path": "docs/item-exchanges.v1.json",
+      "sha256": "566fb3921e1c0cf3aa2ad4ebaa97be23a10621a5cd3b8820ee16e65113f96a31"
+    },
+    {
+      "repo": "korangar",
+      "path": "docs/item-script-grants.v1.json",
+      "sha256": "d6e85bdaa3f47e294c898ddee62347dad05f9cc987502e988a7d398ee3b29047"
+    },
+    {
+      "repo": "korangar",
+      "path": "docs/items.v1.json",
+      "sha256": "f1df8ce3e4fb2185102bc37ac77cd1602d6657ee15d21de0c848bd6bf9461aec"
+    },
+    {
+      "repo": "korangar",
+      "path": "docs/job-bonuses.v1.json",
+      "sha256": "6ce95588097c945c226fee7bde84b56c8198add8f5be1b6546278f1f0343e025"
+    },
+    {
+      "repo": "korangar",
+      "path": "docs/job-skills.v1.json",
+      "sha256": "17ce3106e61cc7d5f1c7addc782683743111f26ce3092c4643fbd246a1d64d8e"
+    },
+    {
+      "repo": "korangar",
+      "path": "docs/job-tables.v1.json",
+      "sha256": "e1f86969f90075ae56747f25ddc2dbccd5cf492addcb700c061527f1412d1f7f"
+    },
+    {
+      "repo": "korangar",
+      "path": "docs/map-flags.v1.json",
+      "sha256": "9a5d3bd06a33febd1a4e9cf02a32680c69059189f317f623b393d6b925811b17"
+    },
+    {
+      "repo": "korangar",
+      "path": "docs/npc-service-clues.v1.json",
+      "sha256": "a858e1e08e33b80b7f70b2eb4350b7b8a290d0614ecba9ef708c971e831c3fa5"
+    },
+    {
+      "repo": "korangar",
+      "path": "docs/npc-service-reviews.v1.json",
+      "sha256": "781c6ae5ff4994ad6aa4e4e7b9059c819072fe8d0506ffa9ef4db492c312a551"
+    },
+    {
+      "repo": "korangar",
+      "path": "docs/npcs.v1.json",
+      "sha256": "f6c6ddafa7accda14c662c8cd278cc550ea33c91d1a2fd95c5522b576650e6ed"
+    },
+    {
+      "repo": "korangar",
+      "path": "docs/quests.v1.json",
+      "sha256": "c2cc23872abd2d0e95059d9fde594c42e34c079f5fdb195e66e7e1d46191bb21"
+    },
+    {
+      "repo": "korangar",
+      "path": "docs/refine.v1.json",
+      "sha256": "a858e35f9e23f57c0733a77c2077a2a7a5009de19685551c2877f4e930cbd185"
+    },
+    {
+      "repo": "korangar",
+      "path": "docs/rumors.v1.json",
+      "sha256": "307ba2354d0ff224be0c047ad6d81ba583b418cc9f8671fad7a28e8dd783f7be"
+    },
+    {
+      "repo": "korangar",
+      "path": "docs/scripted-spawn-reviews.v1.json",
+      "sha256": "67131484b740afd7ed0bc0a0d9eba187aa56e7993bf76cd308bb6771b4598007"
+    },
+    {
+      "repo": "korangar",
+      "path": "docs/server-rules.v1.json",
+      "sha256": "80082d82358e2841c655417a08c88076080fcbf17f1ca34d0d939c85c0321fad"
+    },
+    {
+      "repo": "korangar",
+      "path": "docs/skill-formula-reviews.v1.json",
+      "sha256": "bad97be0adaf9ee6a505fbbb1b9d4b256c53dd7454ad85f4ad498ad7b50661e3"
+    },
+    {
+      "repo": "korangar",
+      "path": "docs/stat-rules.v1.json",
+      "sha256": "abb5fb436a270ea3f9057453b6b00e3eec512c8ec0663f7ae7239bdef5439f29"
+    },
+    {
+      "repo": "korangar",
+      "path": "docs/status-effects.v1.json",
+      "sha256": "8fbb4ba080ab6b44f25962248e8b3c5e36b496acb7dfc4ae6549ceb43f3ed140"
+    },
+    {
+      "repo": "korangar",
+      "path": "korangar-networking/examples/headless-tester/scenarios/session.rs",
+      "sha256": "58df7ded499816099a43775a258a0a3a3328452b947a47e149d92d2529e22fc0"
+    },
+    {
+      "repo": "korangar",
+      "path": "korangar/data/navigation_graph.json",
+      "sha256": "94be885dadfe7dbb5715491890e356ef5cf3354b2756131d25f14989ad3e4582"
+    },
+    {
+      "repo": "korangar",
+      "path": "korangar/src/settings/game.rs",
+      "sha256": "92e8c9e9a75ffa336160f19db4e859d15089fa497c1afbdc4d58edb5e6ea2801"
+    },
+    {
+      "repo": "korangar",
+      "path": "tools/encyclopedia_unit.py",
+      "sha256": "897d2b5f1df6eb5137ac034a322d47443f4713d859a075584712f169ab6b3886"
+    },
+    {
+      "repo": "korangar",
+      "path": "tools/tests/test_encyclopedia_unit.py",
+      "sha256": "80f30add5a7ce08f56f0b640c39e31b92eb55a90113927b1ba03f61937fa054c"
+    },
+    {
+      "repo": "korangar",
+      "path": "tools/tests/test_export_quest_reference.py",
+      "sha256": "528ad9ee9492477e19ad29bd3ce9bae7046359e45c721c32b4d45723e083d543"
+    },
+    {
+      "repo": "korangar",
+      "path": "tools/tests/test_server_rules_permissions.py",
+      "sha256": "c8f81d3e0936d368d08d9e2f4b11b8df3cd1b8c939b9d513417301b91aec84b7"
+    }
+  ]
+}

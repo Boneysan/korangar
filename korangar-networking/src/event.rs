@@ -612,6 +612,13 @@ pub enum NetworkEvent {
         previous_leader_account_id: AccountId,
         new_leader_account_id: AccountId,
     },
+    /// Fork packet 0x0EFD: why the character is, or is not, regenerating.
+    /// Both bytes are carried raw: Hercules may add a mode or block reason
+    /// before this client knows it, and that must not fail the packet.
+    RecoveryState {
+        mode: u8,
+        block: u8,
+    },
     /// Fork packet 0x0EFF: names the sender of the `PartyInvite` that follows.
     /// Arrives first; pair the two by `party_id`.
     PartyInviteSender {

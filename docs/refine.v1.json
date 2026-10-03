@@ -1,18 +1,53 @@
 {
  "schema_version": 1,
- "source_revision": "cc83ca152ff09132a047acad028a9e978bd90b89",
+ "source_revision": "cd0486c79a9a595a141ce23ff1b9f1e1b9d61caa",
  "source_worktree_dirty": false,
  "mode": "renewal",
- "source": "db/re/refine_db.conf (WeaponLevel1-4.Rates), src/map/skill.c (skill_weaponrefine material list and formula)",
- "scope": "WS_WEAPONREFINE self-refine only (packet 0x0222); the NPC-driven Refinery UI in the same file is disabled on this server",
+ "source": "db/re/refine_db.conf (Armors and WeaponLevel1-4.Rates), npc/merchants/refine.txt (NPC costs/safe limits), src/map/skill.c (skill_weaponrefine formula)",
+ "scope": "Weapon (WS_WEAPONREFINE & NPC Blacksmith) and Armor refinement; the NPC-driven Refinery UI in the same file is disabled on this server",
  "max_useful_refine_level": 10,
  "job_level_bonus_per_job_level_from_50_per_mille": 5,
  "mechanic_transcendent_flat_bonus_percent": 10,
  "on_failure": "weapon is unequipped and destroyed",
+ "armor": {
+  "material": "Elunium",
+  "cost_zeny": 2000,
+  "safe_level": 4,
+  "on_failure": "armor is destroyed",
+  "base_chance_percent_by_target_level": {
+   "1": 100,
+   "2": 100,
+   "3": 100,
+   "4": 100,
+   "5": 60,
+   "6": 40,
+   "7": 40,
+   "8": 20,
+   "9": 20,
+   "10": 9
+  },
+  "def_bonus_by_target_level": {
+   "1": 1,
+   "2": 1,
+   "3": 1,
+   "4": 1,
+   "5": 2,
+   "6": 2,
+   "7": 2,
+   "8": 2,
+   "9": 3,
+   "10": 3
+  }
+ },
  "weapon_levels": [
   {
    "weapon_level": 1,
    "material": "Phracon",
+   "cost_zeny": 50,
+   "safe_level": 7,
+   "stat_per_level": 2,
+   "random_bonus_start_level": 8,
+   "random_bonus_max_per_level": 3,
    "base_chance_percent_by_target_level": {
     "1": 100,
     "2": 100,
@@ -29,6 +64,11 @@
   {
    "weapon_level": 2,
    "material": "Emveretarcon",
+   "cost_zeny": 200,
+   "safe_level": 6,
+   "stat_per_level": 3,
+   "random_bonus_start_level": 7,
+   "random_bonus_max_per_level": 5,
    "base_chance_percent_by_target_level": {
     "1": 100,
     "2": 100,
@@ -45,6 +85,11 @@
   {
    "weapon_level": 3,
    "material": "Oridecon",
+   "cost_zeny": 5000,
+   "safe_level": 5,
+   "stat_per_level": 5,
+   "random_bonus_start_level": 6,
+   "random_bonus_max_per_level": 8,
    "base_chance_percent_by_target_level": {
     "1": 100,
     "2": 100,
@@ -61,6 +106,11 @@
   {
    "weapon_level": 4,
    "material": "Oridecon",
+   "cost_zeny": 20000,
+   "safe_level": 4,
+   "stat_per_level": 7,
+   "random_bonus_start_level": 5,
+   "random_bonus_max_per_level": 14,
    "base_chance_percent_by_target_level": {
     "1": 100,
     "2": 100,

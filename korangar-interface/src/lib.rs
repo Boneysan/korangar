@@ -311,15 +311,19 @@ where
             MouseMode::Default => {}
             MouseMode::MovingWindow { window_id } => {
                 if let Some(wrapper) = self.windows.iter_mut().find(|window| window.data.id == window_id) {
-                    let new_position = App::Position::new(
-                        wrapper.display_information.real_area.left + delta.width(),
-                        wrapper.display_information.real_area.top + delta.height(),
-                    );
-
                     let scaled_size = App::Size::new(
                         wrapper.display_information.real_area.width * interface_scaling,
                         wrapper.display_information.display_height * interface_scaling,
                     );
+
+                    let min_visible = 32.0;
+                    let clamped_left = (wrapper.display_information.real_area.left + delta.width()).clamp(
+                        min_visible - scaled_size.width(),
+                        (self.window_size.width() - min_visible).max(0.0),
+                    );
+                    let clamped_top = (wrapper.display_information.real_area.top + delta.height())
+                        .clamp(0.0, (self.window_size.height() - min_visible).max(0.0));
+                    let new_position = App::Position::new(clamped_left, clamped_top);
 
                     wrapper.data.anchor.update(self.window_size, new_position, scaled_size);
                     if let Some(grid_size) = snap_grid_size {
@@ -406,6 +410,7 @@ where
                 anchor,
                 size,
                 movement_locked: self.window_cache.movement_locked(),
+                draw_alpha: 1.0,
             },
             display_information: DisplayInformation {
                 real_area: Area {
@@ -431,6 +436,14 @@ where
 
     pub fn window_movement_locked(&self) -> bool {
         self.window_cache.movement_locked()
+    }
+
+    pub fn note_player_combat(&mut self) {
+        self.window_cache.note_combat();
+    }
+
+    pub fn toggle_combat_fade(&mut self) -> bool {
+        self.window_cache.toggle_combat_fade()
     }
 
     /// Cycle window-position snapping and return its new grid size.
@@ -462,18 +475,24 @@ where
 
     fn apply_cached_layouts(&mut self) {
         for wrapper in &mut self.windows {
-            if let Some(window_class) = wrapper.window.get_class()
+            let window_class = wrapper.window.get_class();
+            if let Some(window_class) = window_class
                 && let Some((anchor, size)) = self.window_cache.get_window_state(window_class)
             {
                 wrapper.data.anchor = anchor;
                 wrapper.data.size = size;
             }
             wrapper.data.movement_locked = self.window_cache.movement_locked();
+            wrapper.data.draw_alpha = window_class.map(|class| self.window_cache.window_alpha(class)).unwrap_or(1.0);
         }
     }
 
     pub fn has_focus(&self) -> bool {
         self.focused_element.is_some()
+    }
+
+    pub fn unfocus(&mut self) {
+        self.focused_element = None;
     }
 
     #[cfg_attr(feature = "debug", korangar_debug::profile)]
@@ -652,6 +671,11 @@ where
             korangar_debug::profile_block!("create window layout info");
 
             wrapper.data.movement_locked = this.window_cache.movement_locked();
+            wrapper.data.draw_alpha = wrapper
+                .window
+                .get_class()
+                .map(|class| this.window_cache.window_alpha(class))
+                .unwrap_or(1.0);
             wrapper.display_information = wrapper.window.create_layout_info(
                 state,
                 &mut this.window_store,
@@ -797,9 +821,13 @@ impl<App: Application> InterfaceFrame<'_, App> {
         let mut tooltips = Vec::new();
 
         self.windows.iter().for_each(|wrapper| {
+            let hovered = self.hovered_window == Some(wrapper.data.id);
+            let alpha = if hovered { 1.0 } else { wrapper.data.draw_alpha };
+            renderer.set_content_alpha(alpha);
             let layout = self.window_layouts.get_mut(&wrapper.data.id).unwrap();
             layout.render(renderer, self.text_layouter);
             layout.update_tooltips(&mut tooltips);
+            renderer.set_content_alpha(1.0);
         });
 
         if let Some(layout) = &mut self.overlay_layout {
@@ -916,11 +944,17 @@ impl<App: Application> InterfaceFrame<'_, App> {
 
             vertical_offset += text_dimensions.height() + border * 2.0 + gap;
 
-            // TODO: Actually get the text dimensions and scale the tooltip size.
+            let tooltip_width = text_dimensions.width() + border * 2.0;
+            let tooltip_height = text_dimensions.height() + border * 2.0;
+
+            let max_left = (self.window_size.width() - tooltip_width).max(0.0);
+            let max_top = (self.window_size.height() - tooltip_height).max(0.0);
+            let clamped_left = tooltip_left.clamp(0.0, max_left);
+            let clamped_top = tooltip_top.clamp(0.0, max_top);
 
             renderer.render_rectangle(
-                App::Position::new(tooltip_left, tooltip_top),
-                App::Size::new(text_dimensions.width() + border * 2.0, text_dimensions.height() + border * 2.0),
+                App::Position::new(clamped_left, clamped_top),
+                App::Size::new(tooltip_width, tooltip_height),
                 App::Clip::unbound(),
                 corner_diameter,
                 background_color,
@@ -930,7 +964,7 @@ impl<App: Application> InterfaceFrame<'_, App> {
 
             renderer.render_text(
                 tooltip,
-                App::Position::new(tooltip_left + border, tooltip_top + border),
+                App::Position::new(clamped_left + border, clamped_top + border),
                 available_width,
                 App::Clip::unbound(),
                 foreground_color,

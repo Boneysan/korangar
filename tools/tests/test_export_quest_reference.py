@@ -19,10 +19,10 @@ setquest(1001);
 
         self.assertEqual(len(refs[1001]), 1)
         first = refs[1001][0]
-        self.assertEqual((first["name"], first["map_name"], first["x"], first["y"]), ("First", "prontera", 100, 200))
+        self.assertEqual((first["name"], first["map_name"], first["x"], first["y"]), ("First NPC", "prontera", 100, 200))
         self.assertEqual(first["source_line"], 2)
         self.assertEqual(first["uses"], ["setquest", "questprogress", "completequest"])
-        self.assertEqual((refs[1002][0]["name"], refs[1002][0]["source_line"]), ("Second", 6))
+        self.assertEqual((refs[1002][0]["name"], refs[1002][0]["source_line"]), ("Second NPC", 6))
 
     def test_does_not_assign_calls_outside_npc_blocks(self):
         script = """prontera,10,20,4\tscript\tFirst NPC\t4_F_KAFRA,{
@@ -41,7 +41,7 @@ function\tscript\tSomeFunction\t{
         references = extract_npc_quest_references(source, "npc/re/quests/test.txt", {1001})
         route = {
             "quest_id": 1001,
-            "npc_name": "First",
+            "npc_name": "First NPC",
             "map_name": "prontera",
             "x": 10,
             "y": 20,

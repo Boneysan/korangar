@@ -181,6 +181,18 @@ impl From<JobId> for EntityType {
     }
 }
 
+/// Soft overweight: at or above the server's critical-weight percent (usually
+/// 50%), natural HP/SP recovery stops. An unknown maximum is never overweight.
+pub fn is_soft_overweight(weight: u32, maximum_weight: u32, critical_weight_percent: u32) -> bool {
+    maximum_weight > 0 && weight * 100 >= maximum_weight * critical_weight_percent
+}
+
+/// Hard overweight: at or above 90% of the maximum, attacking and using skills
+/// is refused. An unknown maximum is never overweight.
+pub fn is_hard_overweight(weight: u32, maximum_weight: u32) -> bool {
+    maximum_weight > 0 && weight * 10 >= maximum_weight * 9
+}
+
 #[cfg(test)]
 mod entity_type_tests {
     use ragnarok_packets::{JobId, SkillId};
@@ -285,6 +297,8 @@ pub struct Common {
     su_stoop: bool,
     #[hidden_element]
     active_cast: Option<ActorCast>,
+    #[hidden_element]
+    last_target: Option<EntityId>,
     stopped_moving: bool,
     #[hidden_element]
     fade_state: FadeState,
@@ -1236,6 +1250,7 @@ impl Common {
             su_hide: false,
             su_stoop: false,
             active_cast: None,
+            last_target: None,
             stopped_moving: false,
             fade_state: FadeState::new(FADE_IN_DURATION_MS, client_tick),
             scale,
@@ -2059,12 +2074,12 @@ impl Player {
     /// Soft overweight starts at the server's critical-weight percent (usually
     /// 50%).
     pub fn is_overweight(&self) -> bool {
-        self.maximum_weight > 0 && self.weight * 100 >= self.maximum_weight * self.critical_weight_percent
+        is_soft_overweight(self.weight, self.maximum_weight, self.critical_weight_percent)
     }
 
     /// Hard overweight at 90% of max weight (cannot attack / use skills in RO).
     pub fn is_hard_overweight(&self) -> bool {
-        self.maximum_weight > 0 && self.weight * 10 >= self.maximum_weight * 9
+        is_hard_overweight(self.weight, self.maximum_weight)
     }
 
     pub fn render_status(
@@ -2801,6 +2816,27 @@ impl Entity {
         (cast.ends_at.0 > client_tick.0).then_some((cast.skill_id, cast.target_entity_id, cast.target_position))
     }
 
+    /// Remaining cast time progress as `(remaining, total)` for the cast bar.
+    pub fn cast_bar(&self, now: ClientTick) -> Option<(f32, f32)> {
+        self.get_common().cast_bar(now)
+    }
+
+    pub fn body_state(&self) -> u16 {
+        self.get_common().body_state
+    }
+
+    pub fn health_state(&self) -> u16 {
+        self.get_common().health_state
+    }
+
+    pub fn last_target(&self) -> Option<EntityId> {
+        self.get_common().last_target
+    }
+
+    pub fn set_last_target(&mut self, target: Option<EntityId>) {
+        self.get_common_mut().last_target = target;
+    }
+
     pub fn update(&mut self, audio_engine: &AudioEngine<GameFileLoader>, map: &Map, camera: &dyn Camera, client_tick: ClientTick) {
         self.get_common_mut().update(audio_engine, map, camera, client_tick);
     }
@@ -2865,6 +2901,30 @@ impl Entity {
 
     /// Draw a persistent bracket around the selected entity's projected status
     /// stack so it remains identifiable when the pointer moves away.
+    /// Text label above a monster's status bars for a party target marker.
+    /// Text, not color, carries the marker kind (GDD 13.3).
+    pub fn render_party_marker_label(&self, renderer: &GameInterfaceRenderer, camera: &dyn Camera, window_size: ScreenSize, label: &str) {
+        let common = self.get_common();
+        if common.entity_type != EntityType::Monster {
+            return;
+        }
+        let clip = camera.view_projection_matrix() * common.world_position.to_homogeneous();
+        if clip.w <= 0.0 {
+            return;
+        }
+        let screen = camera.clip_to_screen_space(clip);
+        renderer.render_text(
+            label,
+            ScreenPosition {
+                left: screen.x * window_size.width,
+                top: screen.y * window_size.height - 14.0,
+            },
+            Color::rgb_u8(255, 220, 64),
+            crate::loaders::FontSize(14.0),
+            crate::renderer::AlignHorizontal::Center,
+        );
+    }
+
     pub fn render_target_outline(
         &self,
         renderer: &GameInterfaceRenderer,
@@ -3398,5 +3458,47 @@ mod headgear_tests {
         let path = headgear_sprite_path("남", "_고글");
         assert!(!is_weapon_part_path(&path));
         assert!(!is_shield_part_path(&path));
+    }
+}
+
+#[cfg(test)]
+mod weight_threshold_tests {
+    use super::{is_hard_overweight, is_soft_overweight};
+
+    /// Weight is stored in 0.1 units; the maximum here is 2000 (200 displayed).
+    const MAX: u32 = 2000;
+
+    #[test]
+    fn soft_overweight_starts_exactly_at_the_servers_critical_percent() {
+        assert!(!is_soft_overweight(999, MAX, 50), "49.95% is not yet overweight");
+        assert!(is_soft_overweight(1000, MAX, 50), "50% is");
+        // The threshold is the server's setting, not a constant of the client.
+        assert!(!is_soft_overweight(1000, MAX, 70));
+        assert!(is_soft_overweight(1400, MAX, 70));
+    }
+
+    #[test]
+    fn hard_overweight_starts_exactly_at_ninety_percent() {
+        assert!(!is_hard_overweight(1799, MAX), "89.95% can still fight");
+        assert!(is_hard_overweight(1800, MAX), "90% cannot attack or cast");
+        assert!(is_hard_overweight(MAX, MAX));
+    }
+
+    /// Hard overweight implies soft overweight, so the two warnings never
+    /// contradict.
+    #[test]
+    fn the_hard_band_sits_inside_the_soft_band() {
+        for weight in (0..=MAX).step_by(50) {
+            if is_hard_overweight(weight, MAX) {
+                assert!(is_soft_overweight(weight, MAX, 50), "weight {weight}");
+            }
+        }
+    }
+
+    /// Before the server has sent a maximum, nobody is overweight.
+    #[test]
+    fn an_unknown_maximum_is_never_overweight() {
+        assert!(!is_soft_overweight(500, 0, 50));
+        assert!(!is_hard_overweight(500, 0));
     }
 }

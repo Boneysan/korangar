@@ -1,4 +1,6 @@
+use std::cell::Cell;
 use std::collections::HashMap;
+use std::time::{Duration, Instant};
 
 #[cfg(feature = "debug")]
 use korangar_debug::logging::{Colorize, print_debug};
@@ -16,11 +18,19 @@ const MARGIN: f32 = 12.0;
 pub struct WindowState {
     pub anchor: Anchor<ClientState>,
     pub size: ScreenSize,
+    /// `None` uses the class default. Saved caches from before combat fade
+    /// omit the field and keep that default.
+    #[serde(default)]
+    pub combat_only: Option<bool>,
 }
 
 impl WindowState {
     pub fn new(anchor: Anchor<ClientState>, size: ScreenSize) -> Self {
-        Self { anchor, size }
+        Self {
+            anchor,
+            size,
+            combat_only: None,
+        }
     }
 
     /// Is this a real, usable window size, as opposed to the placeholder
@@ -76,6 +86,29 @@ pub struct WindowCache {
     character_profiles: HashMap<u32, HashMap<String, HashMap<WindowClass, WindowState>>>,
     #[serde(default)]
     character_active_profiles: HashMap<u32, String>,
+    /// When false, combat windows stay fully visible out of combat.
+    #[serde(default = "combat_fade_defaults_on")]
+    combat_fade_enabled: bool,
+    #[serde(skip, default = "no_recent_combat")]
+    last_combat: Cell<Option<Instant>>,
+}
+
+const COMBAT_HOLD: Duration = Duration::from_secs(5);
+const NONCOMBAT_OPACITY: f32 = 0.35;
+
+fn combat_fade_defaults_on() -> bool {
+    true
+}
+
+fn no_recent_combat() -> Cell<Option<Instant>> {
+    Cell::new(None)
+}
+
+fn combat_only_by_default(class: WindowClass) -> bool {
+    matches!(
+        class,
+        WindowClass::Hotbar | WindowClass::StatusBar | WindowClass::MonsterTarget | WindowClass::BossTarget
+    )
 }
 
 const fn current_version() -> u16 {
@@ -94,6 +127,8 @@ impl Default for WindowCache {
             active_character_id: None,
             character_profiles: HashMap::new(),
             character_active_profiles: HashMap::new(),
+            combat_fade_enabled: true,
+            last_combat: Cell::new(None),
         }
     }
 }
@@ -174,6 +209,7 @@ impl WindowCache {
             WindowClass::Inventory => state(AnchorPoint::TopRight, -(380.0 + MARGIN), MARGIN, 380.0, 320.0),
             WindowClass::Equipment => state(AnchorPoint::TopRight, -(280.0 + MARGIN), 340.0, 280.0, 420.0),
             WindowClass::Stats => state(AnchorPoint::CenterRight, -(280.0 + MARGIN), -120.0, 280.0, 360.0),
+            WindowClass::BuildPlanner => state(AnchorPoint::CenterRight, -(280.0 + MARGIN * 2.0 + 420.0), -120.0, 420.0, 700.0),
             WindowClass::SkillTree => state(AnchorPoint::CenterLeft, MARGIN, -200.0, 420.0, 400.0),
             WindowClass::FriendList => state(AnchorPoint::CenterLeft, MARGIN, 80.0, 280.0, 360.0),
             // Quest log sits in the same left column as the skill tree.
@@ -216,6 +252,7 @@ impl WindowCache {
             WindowClass::Instance => state(AnchorPoint::TopRight, -MARGIN, MARGIN + 60.0, 280.0, 120.0),
             WindowClass::PlayerTarget => state(AnchorPoint::TopLeft, MARGIN, MARGIN + 120.0, 260.0, 200.0),
             WindowClass::MonsterTarget => state(AnchorPoint::TopLeft, MARGIN, MARGIN + 320.0, 280.0, 150.0),
+            WindowClass::BossTarget => state(AnchorPoint::TopLeft, MARGIN, MARGIN + 320.0, 360.0, 200.0),
             // Centered error popup — wrong password / disconnect (must be visible
             // over the login form; class-less windows could open with no size).
             WindowClass::Error => state(AnchorPoint::Center, 0.0, -40.0, 360.0, 140.0),
@@ -226,6 +263,7 @@ impl WindowCache {
             WindowClass::AdventureGuide => state(AnchorPoint::CenterRight, -(420.0 + MARGIN), -260.0, 400.0, 520.0),
             WindowClass::DmLoot => state(AnchorPoint::Center, -190.0, -180.0, 380.0, 360.0),
             WindowClass::Dice => state(AnchorPoint::CenterRight, -(300.0 + MARGIN), -180.0, 300.0, 360.0),
+            WindowClass::CommissionBoard => state(AnchorPoint::Center, -210.0, -190.0, 420.0, 380.0),
             WindowClass::Emotes => state(AnchorPoint::CenterRight, -(540.0 + MARGIN), -240.0, 520.0, 480.0),
             WindowClass::Maps => state(AnchorPoint::Center, 0.0, -40.0, 900.0, 650.0),
             // Login / char select stay centered (menu flow).
@@ -255,6 +293,7 @@ impl WindowCache {
             WindowClass::Inventory,
             WindowClass::Equipment,
             WindowClass::Stats,
+            WindowClass::BuildPlanner,
             WindowClass::SkillTree,
             WindowClass::FriendList,
             WindowClass::Minimap,
@@ -277,6 +316,7 @@ impl WindowCache {
             WindowClass::Maps,
             WindowClass::Emotes,
             WindowClass::AdventureGuide,
+            WindowClass::CommissionBoard,
             // Centered error popup (wrong password / disconnect).
             WindowClass::Error,
             WindowClass::DisconnectNotice,
@@ -318,66 +358,324 @@ impl WindowCache {
     }
 
     fn built_in_layout(name: &str) -> Option<HashMap<WindowClass, WindowState>> {
-        if !matches!(name, "Classic" | "Modern") {
+        if !matches!(
+            name,
+            "Classic" | "Modern" | "Exploration" | "Dungeon" | "Healer" | "Farming" | "Minimal"
+        ) {
             return None;
         }
         let mut layout = Self::default();
         layout.seed_default_entries();
-        if name == "Modern" {
-            let set = |entries: &mut HashMap<WindowClass, WindowState>, class, point, left, top, width, height| {
-                entries.insert(
-                    class,
-                    WindowState::new(Anchor::with_point(point, ScreenPosition { left, top }), ScreenSize {
-                        width,
-                        height,
-                    }),
+        let set = |entries: &mut HashMap<WindowClass, WindowState>, class, point, left, top, width, height| {
+            entries.insert(
+                class,
+                WindowState::new(Anchor::with_point(point, ScreenPosition { left, top }), ScreenSize {
+                    width,
+                    height,
+                }),
+            );
+        };
+        match name {
+            "Classic" => {
+                // Default layout already seeded.
+            }
+            "Modern" => {
+                set(
+                    &mut layout.entries,
+                    WindowClass::Hotbar,
+                    AnchorPoint::BottomCenter,
+                    -270.0,
+                    -100.0,
+                    540.0,
+                    88.0,
                 );
-            };
-            set(
-                &mut layout.entries,
-                WindowClass::Hotbar,
-                AnchorPoint::BottomCenter,
-                -270.0,
-                -100.0,
-                540.0,
-                88.0,
-            );
-            set(
-                &mut layout.entries,
-                WindowClass::StatusBar,
-                AnchorPoint::TopLeft,
-                MARGIN,
-                MARGIN,
-                300.0,
-                160.0,
-            );
-            set(
-                &mut layout.entries,
-                WindowClass::Minimap,
-                AnchorPoint::TopRight,
-                -210.0,
-                MARGIN,
-                198.0,
-                220.0,
-            );
-            set(
-                &mut layout.entries,
-                WindowClass::Party,
-                AnchorPoint::BottomRight,
-                -332.0,
-                -212.0,
-                320.0,
-                240.0,
-            );
-            set(
-                &mut layout.entries,
-                WindowClass::QuestLog,
-                AnchorPoint::CenterRight,
-                -360.0,
-                -190.0,
-                340.0,
-                380.0,
-            );
+                set(
+                    &mut layout.entries,
+                    WindowClass::StatusBar,
+                    AnchorPoint::TopLeft,
+                    MARGIN,
+                    MARGIN,
+                    300.0,
+                    160.0,
+                );
+                set(
+                    &mut layout.entries,
+                    WindowClass::Minimap,
+                    AnchorPoint::TopRight,
+                    -210.0,
+                    MARGIN,
+                    198.0,
+                    220.0,
+                );
+                set(
+                    &mut layout.entries,
+                    WindowClass::Party,
+                    AnchorPoint::BottomRight,
+                    -332.0,
+                    -212.0,
+                    320.0,
+                    240.0,
+                );
+                set(
+                    &mut layout.entries,
+                    WindowClass::QuestLog,
+                    AnchorPoint::CenterRight,
+                    -360.0,
+                    -190.0,
+                    340.0,
+                    380.0,
+                );
+            }
+            "Exploration" => {
+                // Maximizes navigation awareness and quest progression.
+                set(
+                    &mut layout.entries,
+                    WindowClass::Minimap,
+                    AnchorPoint::TopRight,
+                    -280.0,
+                    MARGIN,
+                    268.0,
+                    300.0,
+                );
+                set(
+                    &mut layout.entries,
+                    WindowClass::QuestLog,
+                    AnchorPoint::TopRight,
+                    -360.0,
+                    320.0,
+                    340.0,
+                    420.0,
+                );
+                set(
+                    &mut layout.entries,
+                    WindowClass::StatusBar,
+                    AnchorPoint::TopLeft,
+                    MARGIN,
+                    MARGIN,
+                    280.0,
+                    140.0,
+                );
+                set(
+                    &mut layout.entries,
+                    WindowClass::Hotbar,
+                    AnchorPoint::BottomCenter,
+                    -220.0,
+                    -(80.0 + MARGIN),
+                    440.0,
+                    80.0,
+                );
+                set(
+                    &mut layout.entries,
+                    WindowClass::Party,
+                    AnchorPoint::CenterLeft,
+                    MARGIN,
+                    -40.0,
+                    280.0,
+                    220.0,
+                );
+            }
+            "Dungeon" => {
+                // Group survival and boss focus.
+                set(
+                    &mut layout.entries,
+                    WindowClass::Party,
+                    AnchorPoint::CenterLeft,
+                    MARGIN,
+                    -100.0,
+                    340.0,
+                    300.0,
+                );
+                set(
+                    &mut layout.entries,
+                    WindowClass::BossTarget,
+                    AnchorPoint::TopCenter,
+                    -180.0,
+                    MARGIN + 40.0,
+                    360.0,
+                    200.0,
+                );
+                set(
+                    &mut layout.entries,
+                    WindowClass::MonsterTarget,
+                    AnchorPoint::TopCenter,
+                    -140.0,
+                    MARGIN + 40.0,
+                    280.0,
+                    150.0,
+                );
+                set(
+                    &mut layout.entries,
+                    WindowClass::StatusBar,
+                    AnchorPoint::TopLeft,
+                    MARGIN,
+                    MARGIN,
+                    320.0,
+                    160.0,
+                );
+                set(
+                    &mut layout.entries,
+                    WindowClass::Hotbar,
+                    AnchorPoint::BottomCenter,
+                    -270.0,
+                    -100.0,
+                    540.0,
+                    88.0,
+                );
+                set(
+                    &mut layout.entries,
+                    WindowClass::Minimap,
+                    AnchorPoint::TopRight,
+                    -176.0,
+                    MARGIN,
+                    176.0,
+                    200.0,
+                );
+                set(
+                    &mut layout.entries,
+                    WindowClass::QuestLog,
+                    AnchorPoint::BottomRight,
+                    -320.0,
+                    -260.0,
+                    300.0,
+                    240.0,
+                );
+            }
+            "Healer" => {
+                // Prominent party frame for rapid click-targeting and triage.
+                set(
+                    &mut layout.entries,
+                    WindowClass::Party,
+                    AnchorPoint::CenterLeft,
+                    MARGIN + 40.0,
+                    -120.0,
+                    380.0,
+                    340.0,
+                );
+                set(
+                    &mut layout.entries,
+                    WindowClass::PlayerTarget,
+                    AnchorPoint::TopLeft,
+                    MARGIN,
+                    MARGIN + 120.0,
+                    280.0,
+                    200.0,
+                );
+                set(
+                    &mut layout.entries,
+                    WindowClass::StatusBar,
+                    AnchorPoint::TopLeft,
+                    MARGIN,
+                    MARGIN,
+                    320.0,
+                    160.0,
+                );
+                set(
+                    &mut layout.entries,
+                    WindowClass::Hotbar,
+                    AnchorPoint::BottomCenter,
+                    -270.0,
+                    -100.0,
+                    540.0,
+                    88.0,
+                );
+                set(
+                    &mut layout.entries,
+                    WindowClass::Minimap,
+                    AnchorPoint::TopRight,
+                    -160.0,
+                    MARGIN,
+                    150.0,
+                    180.0,
+                );
+            }
+            "Farming" => {
+                // Inventory, loot, and monster target clarity.
+                set(
+                    &mut layout.entries,
+                    WindowClass::Inventory,
+                    AnchorPoint::TopRight,
+                    -(380.0 + MARGIN),
+                    MARGIN,
+                    380.0,
+                    340.0,
+                );
+                set(
+                    &mut layout.entries,
+                    WindowClass::Minimap,
+                    AnchorPoint::TopRight,
+                    -(160.0 + MARGIN),
+                    360.0,
+                    160.0,
+                    180.0,
+                );
+                set(
+                    &mut layout.entries,
+                    WindowClass::MonsterTarget,
+                    AnchorPoint::TopLeft,
+                    MARGIN,
+                    MARGIN + 140.0,
+                    280.0,
+                    150.0,
+                );
+                set(
+                    &mut layout.entries,
+                    WindowClass::StatusBar,
+                    AnchorPoint::TopLeft,
+                    MARGIN,
+                    MARGIN,
+                    280.0,
+                    140.0,
+                );
+                set(
+                    &mut layout.entries,
+                    WindowClass::Hotbar,
+                    AnchorPoint::BottomCenter,
+                    -220.0,
+                    -(80.0 + MARGIN),
+                    440.0,
+                    80.0,
+                );
+            }
+            "Minimal" => {
+                // Cleanest view of the world.
+                set(
+                    &mut layout.entries,
+                    WindowClass::Hotbar,
+                    AnchorPoint::BottomCenter,
+                    -180.0,
+                    -(50.0 + MARGIN),
+                    360.0,
+                    50.0,
+                );
+                set(
+                    &mut layout.entries,
+                    WindowClass::StatusBar,
+                    AnchorPoint::TopLeft,
+                    MARGIN,
+                    MARGIN,
+                    240.0,
+                    90.0,
+                );
+                set(
+                    &mut layout.entries,
+                    WindowClass::Minimap,
+                    AnchorPoint::TopRight,
+                    -(140.0 + MARGIN),
+                    MARGIN,
+                    140.0,
+                    160.0,
+                );
+                set(
+                    &mut layout.entries,
+                    WindowClass::Chat,
+                    AnchorPoint::BottomLeft,
+                    MARGIN,
+                    -(120.0 + MARGIN),
+                    380.0,
+                    120.0,
+                );
+            }
+            _ => return None,
         }
         Some(layout.entries.clone())
     }
@@ -616,6 +914,30 @@ impl korangar_interface::application::WindowCache<ClientState> for WindowCache {
     fn activate_character_layout(&mut self, character_id: u32) {
         self.activate_character(character_id);
     }
+
+    fn note_combat(&self) {
+        self.last_combat.set(Some(Instant::now()));
+    }
+
+    fn toggle_combat_fade(&mut self) -> bool {
+        self.combat_fade_enabled = !self.combat_fade_enabled;
+        self.save();
+        self.combat_fade_enabled
+    }
+
+    fn window_alpha(&self, class: WindowClass) -> f32 {
+        let combat_only = self
+            .entries
+            .get(&class)
+            .and_then(|state| state.combat_only)
+            .unwrap_or_else(|| combat_only_by_default(class));
+        let in_combat = self.last_combat.get().is_some_and(|at| at.elapsed() < COMBAT_HOLD);
+        if !combat_only || !self.combat_fade_enabled || in_combat {
+            1.0
+        } else {
+            NONCOMBAT_OPACITY
+        }
+    }
 }
 
 impl Drop for WindowCache {
@@ -774,5 +1096,34 @@ mod tests {
         anchor.snap_to_grid(screen, size(100.0, 50.0), f32::NAN);
         assert_eq!(anchor.to_position(screen).left, original.left);
         assert_eq!(anchor.to_position(screen).top, original.top);
+    }
+
+    #[test]
+    fn combat_windows_fade_until_the_player_is_hit() {
+        let cache = WindowCache::default();
+        assert!((cache.window_alpha(WindowClass::Hotbar) - 0.35).abs() < f32::EPSILON);
+        assert!((cache.window_alpha(WindowClass::StatusBar) - 0.35).abs() < f32::EPSILON);
+        assert!((cache.window_alpha(WindowClass::MonsterTarget) - 0.35).abs() < f32::EPSILON);
+        assert!((cache.window_alpha(WindowClass::BossTarget) - 0.35).abs() < f32::EPSILON);
+        assert_eq!(cache.window_alpha(WindowClass::Chat), 1.0);
+        assert_eq!(cache.window_alpha(WindowClass::Minimap), 1.0);
+
+        cache.note_combat();
+        assert_eq!(cache.window_alpha(WindowClass::Hotbar), 1.0);
+    }
+
+    #[test]
+    fn built_in_hud_profiles_all_produce_valid_layouts() {
+        let profiles = ["Classic", "Modern", "Exploration", "Dungeon", "Healer", "Farming", "Minimal"];
+        for profile in profiles {
+            let layout = WindowCache::built_in_layout(profile).unwrap_or_else(|| panic!("profile '{profile}' must exist"));
+            assert!(layout.contains_key(&WindowClass::Hotbar), "{profile} must contain Hotbar");
+            assert!(layout.contains_key(&WindowClass::StatusBar), "{profile} must contain StatusBar");
+            assert!(layout.contains_key(&WindowClass::Minimap), "{profile} must contain Minimap");
+            for (class, state) in &layout {
+                assert!(state.has_valid_size(), "{profile} {class:?} must have a valid size");
+            }
+        }
+        assert!(WindowCache::built_in_layout("UnknownProfile").is_none());
     }
 }

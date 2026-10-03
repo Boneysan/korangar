@@ -16,6 +16,7 @@ use crate::loaders::{FontSize, OverflowBehavior};
 use crate::state::localization::LocalizationPathExt;
 use crate::state::theme::{ChatThemePathExt, InterfaceThemePathExt, InterfaceThemeType};
 use crate::state::{ChatMessage, ClientState, ClientStatePathExt, client_state, client_theme};
+use crate::world::item_stats;
 
 const MAXIMUM_CHAT_MESSAGE_LENGTH: usize = 80;
 /// Ragnarok character names cap at 24.
@@ -27,6 +28,192 @@ pub struct ChatTextBox;
 
 /// ZST for the whisper-target field's focus id.
 pub struct WhisperTargetTextBox;
+
+/// Which viewing tab filters the chat feed (GDD §10.15).
+pub type ChatTabIndex = u8;
+
+pub const CHAT_TAB_ALL: ChatTabIndex = 0;
+pub const CHAT_TAB_PARTY: ChatTabIndex = 1;
+pub const CHAT_TAB_WHISPER: ChatTabIndex = 2;
+pub const CHAT_TAB_SYSTEM: ChatTabIndex = 3;
+pub const CHAT_TAB_LOOT: ChatTabIndex = 4;
+
+/// Validated item link data from server reference state (GDD §10.15).
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct ValidatedItemLink {
+    pub item_id: u32,
+    pub name: String,
+    pub refine: u8,
+    pub slots: u8,
+    pub cards: [u32; 4],
+}
+
+/// Parse and validate an item link against authoritative item data.
+/// Untrusted text cannot forge an actionable item link with fabricated stats or
+/// IDs.
+pub fn parse_and_validate_item_link(item_body: &str) -> Option<ValidatedItemLink> {
+    let (label_part, info_part) = if let Some((before, after)) = item_body.split_once("<INFO>") {
+        let info = after.strip_suffix("</INFO>").unwrap_or(after);
+        (before.trim(), info.trim())
+    } else {
+        ("", item_body.trim())
+    };
+
+    let mut parts = info_part.split(',');
+    let item_id_str = parts.next()?.trim();
+    let item_id: u32 = item_id_str.parse().ok()?;
+
+    // Server-state verification: item must exist in the authoritative database.
+    let stats = item_stats(item_id)?;
+
+    let refine: u8 = parts.next().and_then(|s| s.trim().parse().ok()).unwrap_or(0);
+    // Refine sanity check: official RO refinement is at most 20.
+    if refine > 20 {
+        return None;
+    }
+
+    let slots: u8 = parts.next().and_then(|s| s.trim().parse().ok()).unwrap_or(0);
+    let max_slots = stats.slots.unwrap_or(0);
+    if slots > max_slots {
+        return None;
+    }
+
+    let mut cards = [0u32; 4];
+    for slot in cards.iter_mut() {
+        if let Some(card_str) = parts.next() {
+            let card_id: u32 = card_str.trim().parse().unwrap_or(0);
+            if card_id != 0 {
+                let card_stat = item_stats(card_id)?;
+                if !card_stat.item_type.contains("CARD") {
+                    return None;
+                }
+                *slot = card_id;
+            }
+        }
+    }
+
+    let name = if !label_part.is_empty() {
+        label_part.trim_matches(|c| c == '[' || c == ']').to_string()
+    } else {
+        stats.name.clone()
+    };
+
+    Some(ValidatedItemLink {
+        item_id,
+        name,
+        refine,
+        slots,
+        cards,
+    })
+}
+
+/// Sanitize untrusted chat messages containing `<ITEM>` or `<NAVI>` tags.
+/// Valid item links are verified against server reference state; forged or
+/// invalid links have their actionable markup defanged, preserving safe text
+/// without exploits.
+pub fn sanitize_chat_item_links(text: &str) -> String {
+    let mut result = String::with_capacity(text.len());
+    let mut remaining = text;
+
+    while let Some(start) = remaining.find("<ITEM>") {
+        result.push_str(&remaining[..start]);
+        let after_open = &remaining[start + "<ITEM>".len()..];
+        if let Some(end) = after_open.find("</ITEM>") {
+            let item_body = &after_open[..end];
+            if let Some(valid_link) = parse_and_validate_item_link(item_body) {
+                if valid_link.refine > 0 && valid_link.slots > 0 {
+                    result.push_str(&format!("+{}{} [{}]", valid_link.refine, valid_link.name, valid_link.slots));
+                } else if valid_link.refine > 0 {
+                    result.push_str(&format!("+{} {}", valid_link.refine, valid_link.name));
+                } else if valid_link.slots > 0 {
+                    result.push_str(&format!("{} [{}]", valid_link.name, valid_link.slots));
+                } else {
+                    result.push_str(&format!("[{}]", valid_link.name));
+                }
+            } else {
+                let label = if let Some((before, _)) = item_body.split_once("<INFO>") {
+                    before.trim()
+                } else {
+                    item_body.trim()
+                };
+                if !label.is_empty() {
+                    result.push_str(label);
+                }
+            }
+            remaining = &after_open[end + "</ITEM>".len()..];
+        } else {
+            result.push_str("<ITEM>");
+            remaining = after_open;
+        }
+    }
+    result.push_str(remaining);
+
+    if result.contains("<NAVI>") {
+        let mut navi_cleaned = String::with_capacity(result.len());
+        let mut navi_remaining = result.as_str();
+        while let Some(start) = navi_remaining.find("<NAVI>") {
+            navi_cleaned.push_str(&navi_remaining[..start]);
+            let after_open = &navi_remaining[start + "<NAVI>".len()..];
+            if let Some(end) = after_open.find("</NAVI>") {
+                let navi_body = &after_open[..end];
+                let label = if let Some((before, _)) = navi_body.split_once("<INFO>") {
+                    before.trim()
+                } else {
+                    navi_body.trim()
+                };
+                if !label.is_empty() {
+                    navi_cleaned.push_str(label);
+                }
+                navi_remaining = &after_open[end + "</NAVI>".len()..];
+            } else {
+                navi_cleaned.push_str("<NAVI>");
+                navi_remaining = after_open;
+            }
+        }
+        navi_cleaned.push_str(navi_remaining);
+        return navi_cleaned;
+    }
+
+    result
+}
+
+/// Determine whether a chat message belongs in the given viewing tab filter.
+pub fn chat_message_matches_tab(chat_message: &ChatMessage, tab: ChatTabIndex) -> bool {
+    match tab {
+        CHAT_TAB_ALL => true,
+        CHAT_TAB_PARTY => {
+            chat_message.text.starts_with("[Party]")
+                || matches!(chat_message.color, MessageColor::Rgb {
+                    red: 120,
+                    green: 205,
+                    blue: 255
+                })
+        }
+        CHAT_TAB_WHISPER => {
+            chat_message.text.starts_with("[Whisper]")
+                || matches!(chat_message.color, MessageColor::Rgb {
+                    red: 255,
+                    green: 140,
+                    blue: 225
+                })
+        }
+        CHAT_TAB_LOOT => {
+            chat_message.text.starts_with("You got ") || chat_message.text.starts_with("Got ") || chat_message.text.starts_with("[Loot]")
+        }
+        CHAT_TAB_SYSTEM => {
+            matches!(
+                chat_message.color,
+                MessageColor::Server | MessageColor::Broadcast | MessageColor::Error
+            ) || (matches!(chat_message.color, MessageColor::Information)
+                && !chat_message.text.starts_with("[Party]")
+                && !chat_message.text.starts_with("[Whisper]")
+                && !chat_message.text.starts_with("You got ")
+                && !chat_message.text.starts_with("Got ")
+                && !chat_message.text.starts_with("[Loot]"))
+        }
+        _ => true,
+    }
+}
 
 struct ChatLayoutInfo {
     area: Area,
@@ -46,22 +233,28 @@ struct ChatLayoutInfo {
 /// it separately in each pass risks the two silently drifting apart and
 /// wrapping/clipping the last line.
 fn display_text(chat_message: &ChatMessage) -> String {
-    format!("[{}] {}", chat_message.sent_at.format("%H:%M:%S"), chat_message.text)
+    let sanitized = sanitize_chat_item_links(&chat_message.text);
+    format!("[{}] {}", chat_message.sent_at.format("%H:%M:%S"), sanitized)
 }
 
-struct ChatElement<A> {
+struct ChatElement<A, B> {
     chat_messages_path: A,
+    active_tab_path: B,
 }
 
-impl<A> ChatElement<A> {
-    fn new(chat_messages_path: A) -> Self {
-        Self { chat_messages_path }
+impl<A, B> ChatElement<A, B> {
+    fn new(chat_messages_path: A, active_tab_path: B) -> Self {
+        Self {
+            chat_messages_path,
+            active_tab_path,
+        }
     }
 }
 
-impl<A> Element<ClientState> for ChatElement<A>
+impl<A, B> Element<ClientState> for ChatElement<A, B>
 where
     A: Path<ClientState, crate::state::ChatHistory>,
+    B: Path<ClientState, ChatTabIndex>,
 {
     type LayoutInfo = ChatLayoutInfo;
 
@@ -72,6 +265,7 @@ where
         resolvers: &mut dyn Resolvers<ClientState>,
     ) -> Self::LayoutInfo {
         with_single_resolver(resolvers, |resolver| {
+            let active_tab = *state.get(&self.active_tab_path);
             let chat_messages = state.get(&self.chat_messages_path);
             // TODO: Theme this.
             let message_spacing = 5.0;
@@ -79,6 +273,7 @@ where
             let mut total_height = 0.0;
             let (message_heights, display_texts): (Vec<f32>, Vec<String>) = chat_messages
                 .iter()
+                .filter(|chat_message| chat_message_matches_tab(chat_message, active_tab))
                 .map(|chat_message| {
                     let color = match chat_message.color {
                         MessageColor::Rgb { red, green, blue } => Color::rgb_u8(red, green, blue),
@@ -130,6 +325,7 @@ where
         layout_info: &'a Self::LayoutInfo,
         layout: &mut WindowLayout<'a, ClientState>,
     ) {
+        let active_tab = *state.get(&self.active_tab_path);
         let chat_messages = state.get(&self.chat_messages_path);
         // TODO: Theme this.
         let message_spacing = 5.0;
@@ -137,6 +333,7 @@ where
         let mut offset = 0.0;
         chat_messages
             .iter()
+            .filter(|chat_message| chat_message_matches_tab(chat_message, active_tab))
             .zip(layout_info.message_heights.iter())
             .zip(layout_info.display_texts.iter())
             .for_each(|((chat_message, message_height), display_text)| {
@@ -201,9 +398,21 @@ pub struct ChatWindowState {
     /// `whisper_target` on purpose: an incoming whisper must not silently
     /// redirect a message you are part-way through typing to someone else.
     last_whisper_sender: String,
+    /// Active viewing tab filter for the message feed (GDD §10.15).
+    active_tab: ChatTabIndex,
 }
 
 impl ChatWindowState {
+    #[allow(dead_code)]
+    pub fn active_tab(&self) -> ChatTabIndex {
+        self.active_tab
+    }
+
+    #[allow(dead_code)]
+    pub fn set_active_tab(&mut self, active_tab: ChatTabIndex) {
+        self.active_tab = active_tab;
+    }
+
     /// Aim the chat at a character. Used by the Whisper buttons in the friend
     /// list and party roster, so a whisper does not require typing `/w <name>`.
     ///
@@ -269,6 +478,7 @@ where
         let current_text_path = self.chat_window_state.current_text();
         let channel_path = self.chat_window_state.channel();
         let whisper_target_path = self.chat_window_state.whisper_target();
+        let active_tab_path = self.chat_window_state.active_tab();
 
         let send_action = move |state: &State<ClientState>, queue: &mut EventQueue<ClientState>| {
             let text = state.get(&current_text_path);
@@ -308,6 +518,13 @@ where
             move |index: ChannelIndex| ComputedSelector::new_default(move |state: &ClientState| *channel_path.follow_safe(state) == index);
         let select_channel = move |index: ChannelIndex| {
             move |state: &State<ClientState>, _: &mut EventQueue<ClientState>| state.update_value(channel_path, index)
+        };
+
+        let is_tab = move |index: ChatTabIndex| {
+            ComputedSelector::new_default(move |state: &ClientState| *active_tab_path.follow_safe(state) == index)
+        };
+        let select_tab = move |index: ChatTabIndex| {
+            move |state: &State<ClientState>, _: &mut EventQueue<ClientState>| state.update_value(active_tab_path, index)
         };
 
         let last_sender_path = self.chat_window_state.last_whisper_sender();
@@ -383,9 +600,44 @@ where
                     focused_background_color: Color::rgba(0.0, 0.0, 0.0, 0.8),
                     focus_id: ChatTextBox,
                 },
+                split! {
+                    gaps: theme().window().gaps(),
+                    children: (
+                        button! {
+                            text: "All",
+                            tooltip: "Show all chat messages",
+                            disabled: is_tab(CHAT_TAB_ALL),
+                            event: select_tab(CHAT_TAB_ALL),
+                        },
+                        button! {
+                            text: "Party",
+                            tooltip: "Show party messages only",
+                            disabled: is_tab(CHAT_TAB_PARTY),
+                            event: select_tab(CHAT_TAB_PARTY),
+                        },
+                        button! {
+                            text: "Whisper",
+                            tooltip: "Show private whispers only",
+                            disabled: is_tab(CHAT_TAB_WHISPER),
+                            event: select_tab(CHAT_TAB_WHISPER),
+                        },
+                        button! {
+                            text: "System",
+                            tooltip: "Show system notices, server messages, and errors",
+                            disabled: is_tab(CHAT_TAB_SYSTEM),
+                            event: select_tab(CHAT_TAB_SYSTEM),
+                        },
+                        button! {
+                            text: "Loot",
+                            tooltip: "Show item pickup and drop logs",
+                            disabled: is_tab(CHAT_TAB_LOOT),
+                            event: select_tab(CHAT_TAB_LOOT),
+                        },
+                    ),
+                },
                 scroll_view! {
                     follow: true,
-                    children: ChatElement::new(self.chat_messages_path),
+                    children: ChatElement::new(self.chat_messages_path, self.chat_window_state.active_tab()),
                 },
             ),
         }
@@ -397,7 +649,10 @@ mod tests {
     use chrono::TimeZone;
     use korangar_networking::MessageColor;
 
-    use super::{CHANNEL_PUBLIC, CHANNEL_WHISPER, ChatWindowState, display_text};
+    use super::{
+        CHANNEL_PUBLIC, CHANNEL_WHISPER, CHAT_TAB_ALL, CHAT_TAB_LOOT, CHAT_TAB_PARTY, CHAT_TAB_SYSTEM, CHAT_TAB_WHISPER, ChatWindowState,
+        chat_message_matches_tab, display_text, parse_and_validate_item_link, sanitize_chat_item_links,
+    };
     use crate::state::ChatMessage;
 
     /// GDD 10.15's chat timestamp is display-only: `ChatMessage::text` must
@@ -450,5 +705,94 @@ mod tests {
 
         assert!(state.whisper_target.is_empty());
         assert_eq!(state.last_whisper_sender(), "Bob");
+    }
+
+    #[test]
+    fn chat_tab_filters_match_appropriate_messages() {
+        let public_msg = ChatMessage::new("Alice: Hello all".to_owned(), MessageColor::Rgb {
+            red: 255,
+            green: 255,
+            blue: 255,
+        });
+        let party_msg = ChatMessage::new("[Party] Bob: Ready to enter".to_owned(), MessageColor::Rgb {
+            red: 120,
+            green: 205,
+            blue: 255,
+        });
+        let whisper_msg = ChatMessage::new("[Whisper] Carol: Secret info".to_owned(), MessageColor::Rgb {
+            red: 255,
+            green: 140,
+            blue: 225,
+        });
+        let server_msg = ChatMessage::new("Map server connection established.".to_owned(), MessageColor::Server);
+        let error_msg = ChatMessage::new("Skill failed: not enough SP.".to_owned(), MessageColor::Error);
+        let loot_msg = ChatMessage::new("You got Jellopy (1).".to_owned(), MessageColor::Information);
+        let alt_loot_msg = ChatMessage::new("Got Poring Card ×1".to_owned(), MessageColor::Information);
+
+        // CHAT_TAB_ALL matches everything
+        assert!(chat_message_matches_tab(&public_msg, CHAT_TAB_ALL));
+        assert!(chat_message_matches_tab(&party_msg, CHAT_TAB_ALL));
+        assert!(chat_message_matches_tab(&whisper_msg, CHAT_TAB_ALL));
+        assert!(chat_message_matches_tab(&server_msg, CHAT_TAB_ALL));
+        assert!(chat_message_matches_tab(&error_msg, CHAT_TAB_ALL));
+        assert!(chat_message_matches_tab(&loot_msg, CHAT_TAB_ALL));
+
+        // CHAT_TAB_PARTY
+        assert!(!chat_message_matches_tab(&public_msg, CHAT_TAB_PARTY));
+        assert!(chat_message_matches_tab(&party_msg, CHAT_TAB_PARTY));
+        assert!(!chat_message_matches_tab(&whisper_msg, CHAT_TAB_PARTY));
+        assert!(!chat_message_matches_tab(&loot_msg, CHAT_TAB_PARTY));
+
+        // CHAT_TAB_WHISPER
+        assert!(!chat_message_matches_tab(&public_msg, CHAT_TAB_WHISPER));
+        assert!(!chat_message_matches_tab(&party_msg, CHAT_TAB_WHISPER));
+        assert!(chat_message_matches_tab(&whisper_msg, CHAT_TAB_WHISPER));
+
+        // CHAT_TAB_SYSTEM
+        assert!(chat_message_matches_tab(&server_msg, CHAT_TAB_SYSTEM));
+        assert!(chat_message_matches_tab(&error_msg, CHAT_TAB_SYSTEM));
+        assert!(!chat_message_matches_tab(&party_msg, CHAT_TAB_SYSTEM));
+        assert!(!chat_message_matches_tab(&whisper_msg, CHAT_TAB_SYSTEM));
+        assert!(!chat_message_matches_tab(&loot_msg, CHAT_TAB_SYSTEM));
+
+        // CHAT_TAB_LOOT
+        assert!(chat_message_matches_tab(&loot_msg, CHAT_TAB_LOOT));
+        assert!(chat_message_matches_tab(&alt_loot_msg, CHAT_TAB_LOOT));
+        assert!(!chat_message_matches_tab(&public_msg, CHAT_TAB_LOOT));
+        assert!(!chat_message_matches_tab(&party_msg, CHAT_TAB_LOOT));
+    }
+
+    #[test]
+    fn safe_item_links_validate_against_item_database_and_defang_forgeries() {
+        // Valid item link: ID 1101 (Sword in items.json)
+        let valid_link_raw = "<ITEM>[Sword]<INFO>1101,0,0,0,0,0,0</INFO></ITEM>";
+        let validated = parse_and_validate_item_link("[Sword]<INFO>1101,0,0,0,0,0,0</INFO>");
+        assert!(validated.is_some());
+        let val = validated.unwrap();
+        assert_eq!(val.item_id, 1101);
+        assert_eq!(sanitize_chat_item_links(valid_link_raw), "[Sword]");
+
+        // Valid item link with refine and slots: +7 Sword [3]
+        let refined_link = "<ITEM>[Sword]<INFO>1101,7,3,0,0,0,0</INFO></ITEM>";
+        assert_eq!(sanitize_chat_item_links(refined_link), "+7Sword [3]");
+
+        // Forged item link: fake item ID 999999
+        let fake_link = "<ITEM>[Godly Blade]<INFO>999999,0,0,0,0,0,0</INFO></ITEM>";
+        assert!(parse_and_validate_item_link("[Godly Blade]<INFO>999999,0,0,0,0,0,0</INFO>").is_none());
+        assert_eq!(sanitize_chat_item_links(fake_link), "[Godly Blade]");
+
+        // Forged refine > 20
+        let fake_refine = "<ITEM>[Sword]<INFO>1101,99,0,0,0,0,0</INFO></ITEM>";
+        assert!(parse_and_validate_item_link("[Sword]<INFO>1101,99,0,0,0,0,0</INFO>").is_none());
+        assert_eq!(sanitize_chat_item_links(fake_refine), "[Sword]");
+
+        // Forged slots exceeding base item max slots (Sword has 3 slots max)
+        let fake_slots = "<ITEM>[Sword]<INFO>1101,0,9,0,0,0,0</INFO></ITEM>";
+        assert!(parse_and_validate_item_link("[Sword]<INFO>1101,0,9,0,0,0,0</INFO>").is_none());
+        assert_eq!(sanitize_chat_item_links(fake_slots), "[Sword]");
+
+        // Navigation tags in chat are defanged to plain label
+        let navi_in_chat = "Meet at <NAVI>[Kafra]<INFO>prontera,150,150</INFO></NAVI> now";
+        assert_eq!(sanitize_chat_item_links(navi_in_chat), "Meet at [Kafra] now");
     }
 }

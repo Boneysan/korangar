@@ -219,6 +219,20 @@ where
         None
     }
 
+    /// Remember that the player just dealt or took damage.
+    fn note_combat(&self) {}
+
+    /// Toggle out-of-combat fading. Returns whether fading is now enabled.
+    fn toggle_combat_fade(&mut self) -> bool {
+        false
+    }
+
+    /// Draw opacity for a window. Combat-only windows fade after the combat
+    /// hold expires.
+    fn window_alpha(&self, _class: App::WindowClass) -> f32 {
+        1.0
+    }
+
     /// Activate a saved window layout by name.
     fn select_layout(&mut self, _name: &str) -> bool {
         false
@@ -246,6 +260,9 @@ pub trait RenderLayer<App: Application> {
 
     /// Application specific icons.
     type CustomIcon: Clone + Copy;
+
+    /// Multiply later draw colors by this alpha. `1.0` leaves them unchanged.
+    fn set_content_alpha(&self, _alpha: f32) {}
 
     /// Render a rectangle.
     #[allow(clippy::too_many_arguments)]

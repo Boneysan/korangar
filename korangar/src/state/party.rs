@@ -36,8 +36,90 @@ impl SharedDestination {
     }
 }
 
+/// Temporary party target icons (GDD 13.3). The token is the wire spelling.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum TargetMarkerKind {
+    Focus,
+    Attack,
+    Crowd,
+    Assist,
+}
+
+impl TargetMarkerKind {
+    pub fn token(self) -> &'static str {
+        match self {
+            Self::Focus => "focus",
+            Self::Attack => "attack",
+            Self::Crowd => "cc",
+            Self::Assist => "assist",
+        }
+    }
+
+    /// Text glyph so the marker never relies on color alone.
+    pub fn label(self) -> &'static str {
+        match self {
+            Self::Focus => "[Focus]",
+            Self::Attack => "[Attack]",
+            Self::Crowd => "[CC]",
+            Self::Assist => "[Assist]",
+        }
+    }
+
+    fn from_token(token: &str) -> Option<Self> {
+        Some(match token {
+            "focus" => Self::Focus,
+            "attack" => Self::Attack,
+            "cc" => Self::Crowd,
+            "assist" => Self::Assist,
+            _ => return None,
+        })
+    }
+}
+
+pub const TARGET_MARKER_LIFETIME_MS: u32 = 30_000;
+pub const MAX_TARGET_MARKERS: usize = 8;
+pub const MAX_PARTY_GOALS: usize = 5;
+pub const MAX_PARTY_GOAL_CHARS: usize = 40;
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct TargetMarker {
+    pub sender: String,
+    pub kind: TargetMarkerKind,
+    pub entity_id: u32,
+    pub expires_at: u32,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct PartyGoal {
+    pub sender: String,
+    pub nonce: u32,
+    pub text: String,
+    pub done: bool,
+}
+
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum PartySessionMessage {
+    MarkSet {
+        sender: String,
+        kind: TargetMarkerKind,
+        entity_id: u32,
+    },
+    MarkClear {
+        sender: String,
+        entity_id: u32,
+    },
+    GoalAdd {
+        sender: String,
+        nonce: u32,
+        text: String,
+    },
+    GoalDone {
+        sender: String,
+        nonce: u32,
+    },
+    GoalClear {
+        sender: String,
+    },
     DestinationSet {
         sender: String,
         nonce: u32,
@@ -125,8 +207,83 @@ pub fn parse_party_session_message(text: &str) -> Option<PartySessionMessage> {
                 ready,
             })
         }
+        "mark-set" => {
+            let kind = TargetMarkerKind::from_token(fields.next()?)?;
+            let entity_id = fields.next()?.parse::<u32>().ok().filter(|id| *id != 0)?;
+            if fields.next().is_some() {
+                return None;
+            }
+            Some(PartySessionMessage::MarkSet {
+                sender: sender.to_owned(),
+                kind,
+                entity_id,
+            })
+        }
+        "mark-clear" => {
+            let entity_id = fields.next()?.parse::<u32>().ok()?;
+            if fields.next().is_some() {
+                return None;
+            }
+            Some(PartySessionMessage::MarkClear {
+                sender: sender.to_owned(),
+                entity_id,
+            })
+        }
+        "goal-add" => {
+            let nonce = fields.next()?.parse::<u32>().ok()?;
+            let text = fields.collect::<Vec<_>>().join(" ");
+            if !is_valid_goal_text(&text) {
+                return None;
+            }
+            Some(PartySessionMessage::GoalAdd {
+                sender: sender.to_owned(),
+                nonce,
+                text,
+            })
+        }
+        "goal-done" => {
+            let nonce = fields.next()?.parse::<u32>().ok()?;
+            if fields.next().is_some() {
+                return None;
+            }
+            Some(PartySessionMessage::GoalDone {
+                sender: sender.to_owned(),
+                nonce,
+            })
+        }
+        "goal-clear" => {
+            if fields.next().is_some() {
+                return None;
+            }
+            Some(PartySessionMessage::GoalClear { sender: sender.to_owned() })
+        }
         _ => None,
     }
+}
+
+impl PartySessionMessage {
+    pub fn sender(&self) -> &str {
+        match self {
+            Self::MarkSet { sender, .. }
+            | Self::MarkClear { sender, .. }
+            | Self::GoalAdd { sender, .. }
+            | Self::GoalDone { sender, .. }
+            | Self::GoalClear { sender }
+            | Self::DestinationSet { sender, .. }
+            | Self::DestinationAccepted { sender, .. }
+            | Self::ReadyStart { sender, .. }
+            | Self::ReadyResponse { sender, .. } => sender,
+        }
+    }
+}
+
+/// Goal text is player-authored and arrives over party chat: printable ASCII
+/// only, bounded, no markup-looking brackets.
+pub fn is_valid_goal_text(text: &str) -> bool {
+    !text.is_empty()
+        && text.len() <= MAX_PARTY_GOAL_CHARS
+        && text.bytes().all(|byte| byte.is_ascii_graphic() || byte == b' ')
+        && !text.contains(['[', ']'])
 }
 
 #[derive(Clone, Debug, RustState, StateElement)]
@@ -341,7 +498,7 @@ impl PartyMemberState {
     }
 
     /// One-line roster summary for the party window.
-    fn summary_line(&self, local_map: &str, local_position: Option<TilePosition>) -> String {
+    fn summary_line(&self, local_map: &str, local_position: Option<TilePosition>, healer_layout: bool) -> String {
         // Match the friend-list blue/neutral/orange status palette while
         // retaining explicit words for color-independent status reading.
         let reset = crate::state::COLOR_RESET;
@@ -363,13 +520,34 @@ impl PartyMemberState {
             true => String::new(),
             false => format!(" {}", self.class_name),
         };
-        let hp = match self.health() {
-            Some((hp, max)) => format!("  {hp}/{max} HP"),
-            None => String::new(),
-        };
-        let sp = match self.spell() {
-            Some((sp, max)) => format!("  {sp}/{max} SP"),
-            None => String::new(),
+        let (hp, sp) = if healer_layout {
+            let hp_str = match self.health() {
+                Some((hp, max)) => {
+                    let pct = ((hp as f32 / max as f32) * 100.0).round() as usize;
+                    let bar_len = (pct / 10).min(10);
+                    let bar = "█".repeat(bar_len) + &"░".repeat(10 - bar_len);
+                    format!("  [^00FF66HP: {bar} {hp}/{max} ({pct}%)]^000000")
+                }
+                None => "  [^777777HP: ?/??^000000]".to_owned(),
+            };
+            let sp_str = match self.spell() {
+                Some((sp, max)) => {
+                    let pct = ((sp as f32 / max as f32) * 100.0).round() as usize;
+                    format!("  [^66CCFFSP: {sp}/{max} ({pct}%)]^000000")
+                }
+                None => String::new(),
+            };
+            (hp_str, sp_str)
+        } else {
+            let hp_str = match self.health() {
+                Some((hp, max)) => format!("  {hp}/{max} HP"),
+                None => String::new(),
+            };
+            let sp_str = match self.spell() {
+                Some((sp, max)) => format!("  {sp}/{max} SP"),
+                None => String::new(),
+            };
+            (hp_str, sp_str)
         };
         let location = self.location_summary(local_map, local_position);
         format!("{}{leader}{level}{class}  ({online}){hp}{sp}{location}", self.name)
@@ -456,9 +634,18 @@ pub struct PartyState {
     status_text: String,
     shared_destination: Option<SharedDestination>,
     shared_destination_text: String,
+    healer_layout: bool,
     #[hidden_element]
     ready_check: Option<ReadyCheck>,
     ready_check_text: String,
+    #[hidden_element]
+    target_markers: Vec<TargetMarker>,
+    #[hidden_element]
+    goals: Vec<PartyGoal>,
+    goals_text: String,
+    markers_text: String,
+    /// Empty when there are no goals, so the HUD shows nothing.
+    goals_hud_text: String,
 }
 
 impl Default for PartyState {
@@ -476,15 +663,23 @@ impl Default for PartyState {
             members: Vec::new(),
             share_pickup: false,
             share_loot: false,
+            healer_layout: false,
             display_text: String::new(),
             status_text: "Not in a party.".to_owned(),
             shared_destination: None,
             shared_destination_text: "No shared destination.".to_owned(),
             ready_check: None,
             ready_check_text: "No active ready check.".to_owned(),
+            target_markers: Vec::new(),
+            goals: Vec::new(),
+            goals_text: NO_GOALS_TEXT.to_owned(),
+            markers_text: String::new(),
+            goals_hud_text: String::new(),
         }
     }
 }
+
+const NO_GOALS_TEXT: &str = "No goals set for tonight.";
 
 #[allow(dead_code)]
 impl PartyState {
@@ -537,10 +732,10 @@ impl PartyState {
     }
 
     pub fn clear_shared_destination(&mut self, nonce: u32) -> bool {
-        if !self
+        if self
             .shared_destination
             .as_ref()
-            .is_some_and(|destination| destination.nonce == nonce)
+            .is_none_or(|destination| destination.nonce != nonce)
         {
             return false;
         }
@@ -549,9 +744,137 @@ impl PartyState {
         true
     }
 
+    pub fn target_markers(&self) -> &[TargetMarker] {
+        &self.target_markers
+    }
+
+    pub fn marker_for(&self, entity_id: u32) -> Option<&TargetMarker> {
+        self.target_markers.iter().rev().find(|marker| marker.entity_id == entity_id)
+    }
+
+    /// One marker per sender: placing a new one moves the old one. The list is
+    /// bounded; the oldest entry is dropped first.
+    pub fn set_target_marker(&mut self, sender: &str, kind: TargetMarkerKind, entity_id: u32, now: ClientTick) {
+        self.target_markers.retain(|marker| !marker.sender.eq_ignore_ascii_case(sender));
+        if self.target_markers.len() >= MAX_TARGET_MARKERS {
+            self.target_markers.remove(0);
+        }
+        self.target_markers.push(TargetMarker {
+            sender: sender.to_owned(),
+            kind,
+            entity_id,
+            expires_at: now.0.wrapping_add(TARGET_MARKER_LIFETIME_MS),
+        });
+        self.rebuild_markers_text();
+    }
+
+    /// Only the member who placed a marker can clear it.
+    pub fn clear_target_marker(&mut self, sender: &str, entity_id: u32) -> bool {
+        let before = self.target_markers.len();
+        self.target_markers
+            .retain(|marker| !(marker.entity_id == entity_id && marker.sender.eq_ignore_ascii_case(sender)));
+        let removed = before != self.target_markers.len();
+        if removed {
+            self.rebuild_markers_text();
+        }
+        removed
+    }
+
+    pub fn tick_target_markers(&mut self, now: ClientTick) {
+        let before = self.target_markers.len();
+        self.target_markers.retain(|marker| !client_tick_reached(now.0, marker.expires_at));
+        if before != self.target_markers.len() {
+            self.rebuild_markers_text();
+        }
+    }
+
+    /// Map change: entity ids belong to the old map.
+    pub fn clear_target_markers(&mut self) {
+        self.target_markers.clear();
+        self.rebuild_markers_text();
+    }
+
+    /// One line per active marker for the party window; empty when none.
+    pub fn markers_text(&self) -> &str {
+        &self.markers_text
+    }
+
+    fn rebuild_markers_text(&mut self) {
+        self.markers_text = self
+            .target_markers
+            .iter()
+            .map(|marker| format!("{} set by {}", marker.kind.label(), marker.sender))
+            .collect::<Vec<_>>()
+            .join("\n");
+    }
+
+    pub fn goals(&self) -> &[PartyGoal] {
+        &self.goals
+    }
+
+    pub fn goals_text(&self) -> &str {
+        &self.goals_text
+    }
+
+    pub fn goals_hud_text(&self) -> &str {
+        &self.goals_hud_text
+    }
+
+    pub fn add_goal(&mut self, sender: &str, nonce: u32, text: &str) -> bool {
+        if self.goals.len() >= MAX_PARTY_GOALS || !is_valid_goal_text(text) || self.goals.iter().any(|goal| goal.nonce == nonce) {
+            return false;
+        }
+        self.goals.push(PartyGoal {
+            sender: sender.to_owned(),
+            nonce,
+            text: text.to_owned(),
+            done: false,
+        });
+        self.rebuild_goals_text();
+        true
+    }
+
+    pub fn complete_goal(&mut self, nonce: u32) -> bool {
+        let Some(goal) = self.goals.iter_mut().find(|goal| goal.nonce == nonce && !goal.done) else {
+            return false;
+        };
+        goal.done = true;
+        self.rebuild_goals_text();
+        true
+    }
+
+    pub fn clear_goals(&mut self) {
+        self.goals.clear();
+        self.rebuild_goals_text();
+    }
+
+    fn rebuild_goals_text(&mut self) {
+        if self.goals.is_empty() {
+            self.goals_text = NO_GOALS_TEXT.to_owned();
+            self.goals_hud_text.clear();
+            return;
+        }
+        self.goals_text = self
+            .goals
+            .iter()
+            .map(|goal| format!("{} {}", if goal.done { "[x]" } else { "[ ]" }, goal.text))
+            .collect::<Vec<_>>()
+            .join("\n");
+        self.goals_hud_text = format!("Tonight:\n{}", self.goals_text);
+    }
+
     pub fn clear_shared_destination_all(&mut self) {
         self.shared_destination = None;
         self.shared_destination_text = "No shared destination.".to_owned();
+    }
+
+    pub fn healer_layout(&self) -> bool {
+        self.healer_layout
+    }
+
+    pub fn set_healer_layout(&mut self, enabled: bool) {
+        self.healer_layout = enabled;
+        self.rebuild_display_text();
     }
 
     pub fn ready_check_text(&self) -> &str {
@@ -763,6 +1086,8 @@ impl PartyState {
         self.members.clear();
         self.clear_shared_destination_all();
         self.clear_ready_check();
+        self.clear_target_markers();
+        self.clear_goals();
         self.share_pickup = false;
         self.share_loot = false;
         self.rebuild_display_text();
@@ -848,10 +1173,18 @@ impl PartyState {
         // then stayed true, and every later invite was sent to a server that
         // refuses it silently (`party.c:382`), reporting "waiting for an answer"
         // for an answer that could never come.
-        if let Some(member) = self.members.iter().find(|member| member.account_id == account_id)
-            && let Some(check) = self.ready_check.as_mut()
-        {
-            check.remove_participant(member.name());
+        if let Some(member) = self.members.iter().find(|member| member.account_id == account_id) {
+            let name = member.name().to_owned();
+            if let Some(check) = self.ready_check.as_mut() {
+                check.remove_participant(&name);
+            }
+            // A departed member's markers go with them; their goals stay,
+            // because the list belongs to the party for the night.
+            let before = self.target_markers.len();
+            self.target_markers.retain(|marker| !marker.sender.eq_ignore_ascii_case(&name));
+            if before != self.target_markers.len() {
+                self.rebuild_markers_text();
+            }
         }
         match self.is_local(account_id) {
             true => self.members.clear(),
@@ -910,9 +1243,10 @@ impl PartyState {
             .map(|member| (member.map_name.clone(), member.position));
         let (local_map, local_position) = local.unwrap_or_default();
 
+        let healer_layout = self.healer_layout;
         // Members render as their own elements, so each caches its own line.
         for member in &mut self.members {
-            member.display_label = member.summary_line(&local_map, local_position);
+            member.display_label = member.summary_line(&local_map, local_position, healer_layout);
         }
 
         if self.members.is_empty() {
@@ -1269,5 +1603,140 @@ mod tests {
         // Standing on the same tile reads as "here", not "0 tiles away".
         state.update_position(AccountId(2), TilePosition::new(150, 150));
         assert!(find(&state, 2).display_label().contains("(here)"));
+    }
+
+    #[test]
+    fn healer_layout_enlarges_health_and_sp_readability() {
+        let mut state = PartyState::default();
+        let member = PartyMember {
+            account_id: AccountId(2),
+            character_id: CharacterId(2),
+            player_name: "Tank".to_owned(),
+            map_name: "prontera.gat".to_owned(),
+            offline: 0,
+            leader: 0,
+            job_id: JobId(1),
+            base_level: 50,
+        };
+        state.set_roster("P".to_owned(), vec![member], |_| "Knight".to_owned());
+        state.update_health(AccountId(2), 800, 1000, Some((150, 200)));
+
+        let find_label = |state: &PartyState| state.members()[0].display_label().to_owned();
+
+        // Standard layout shows plain numbers
+        assert!(!state.healer_layout());
+        assert!(find_label(&state).contains("800/1000 HP"));
+        assert!(find_label(&state).contains("150/200 SP"));
+
+        // Healer layout enabled: shows high-visibility bar and percentage
+        state.set_healer_layout(true);
+        assert!(state.healer_layout());
+        assert!(find_label(&state).contains("HP: ████████░░ 800/1000 (80%)"));
+        assert!(find_label(&state).contains("SP: 150/200 (75%)"));
+    }
+
+    #[test]
+    fn party_session_marker_and_goal_messages_are_bounded_and_strict() {
+        use super::PartySessionMessage::*;
+        let parse = |body: &str| parse_party_session_message(&format!("Ada : [KORANGAR-SESSION:v1] {body}"));
+        assert_eq!(
+            parse("mark-set cc 150001"),
+            Some(MarkSet {
+                sender: "Ada".to_owned(),
+                kind: super::TargetMarkerKind::Crowd,
+                entity_id: 150001
+            })
+        );
+        assert_eq!(parse("mark-set skull 150001"), None);
+        assert_eq!(parse("mark-set focus 0"), None);
+        assert_eq!(parse("mark-set focus 5 extra"), None);
+        assert_eq!(
+            parse("goal-add 9 Raydric Card"),
+            Some(GoalAdd {
+                sender: "Ada".to_owned(),
+                nonce: 9,
+                text: "Raydric Card".to_owned()
+            })
+        );
+        assert_eq!(parse("goal-add 9"), None);
+        assert_eq!(parse("goal-add 9 [b]bold[/b]"), None);
+        assert_eq!(parse(&format!("goal-add 9 {}", "x".repeat(41))), None);
+        assert_eq!(parse("goal-add 9 caf\u{e9}"), None);
+        assert_eq!(parse("goal-clear now"), None);
+        assert_eq!(parse("goal-clear"), Some(GoalClear { sender: "Ada".to_owned() }));
+    }
+
+    #[test]
+    fn target_markers_move_per_sender_expire_and_only_owner_clears() {
+        let mut state = PartyState::default();
+        state.set_target_marker("Ada", super::TargetMarkerKind::Attack, 11, ClientTick(1_000));
+        state.set_target_marker("Ada", super::TargetMarkerKind::Focus, 12, ClientTick(1_000));
+        assert!(state.marker_for(11).is_none(), "a sender's new marker moves the old one");
+        assert_eq!(
+            state.marker_for(12).map(|marker| marker.kind),
+            Some(super::TargetMarkerKind::Focus)
+        );
+        assert_eq!(state.markers_text(), "[Focus] set by Ada");
+        assert!(!state.clear_target_marker("Mallory", 12));
+        assert!(state.marker_for(12).is_some());
+        state.tick_target_markers(ClientTick(1_000 + super::TARGET_MARKER_LIFETIME_MS - 1));
+        assert!(state.marker_for(12).is_some());
+        state.tick_target_markers(ClientTick(1_000 + super::TARGET_MARKER_LIFETIME_MS));
+        assert!(state.marker_for(12).is_none());
+        assert!(state.markers_text().is_empty());
+        state.set_target_marker("Ada", super::TargetMarkerKind::Attack, 13, ClientTick(0));
+        state.clear_target_markers();
+        assert!(
+            state.target_markers().is_empty() && state.markers_text().is_empty(),
+            "map change drops markers"
+        );
+        for id in 0..20u32 {
+            state.set_target_marker(&format!("M{id}"), super::TargetMarkerKind::Assist, 100 + id, ClientTick(0));
+        }
+        assert_eq!(state.target_markers().len(), super::MAX_TARGET_MARKERS);
+        assert!(state.marker_for(100).is_none(), "oldest marker is dropped first");
+    }
+
+    #[test]
+    fn goals_are_capped_deduplicated_ephemeral_and_leave_no_quest_state() {
+        let mut state = PartyState::default();
+        assert_eq!(state.goals_text(), "No goals set for tonight.");
+        assert!(state.add_goal("Ada", 1, "Raydric Card"));
+        assert!(!state.add_goal("Bob", 1, "replayed nonce"));
+        assert!(!state.add_goal("Bob", 2, "bad [markup]"));
+        for nonce in 2..=5 {
+            assert!(state.add_goal("Ada", nonce, "Oridecon"));
+        }
+        assert!(!state.add_goal("Ada", 6, "over the cap"));
+        assert!(state.complete_goal(1));
+        assert!(!state.complete_goal(1), "completion is not repeatable");
+        assert!(state.goals_text().starts_with("[x] Raydric Card\n[ ] Oridecon"));
+        assert!(state.goals_hud_text().starts_with("Tonight:\n[x] Raydric Card"));
+        state.clear();
+        assert!(state.goals().is_empty());
+        assert_eq!(state.goals_text(), "No goals set for tonight.");
+        assert!(state.goals_hud_text().is_empty());
+    }
+
+    #[test]
+    fn a_departed_members_markers_go_with_them_but_party_goals_stay() {
+        let mut state = PartyState::default();
+        state.set_local_account_id(AccountId(11));
+        let member = |id: u32, name: &str| PartyMember {
+            account_id: AccountId(id),
+            player_name: name.to_owned(),
+            ..sample_member(name, true)
+        };
+        state.set_roster("Testing".to_owned(), vec![member(11, "test"), member(22, "Ada")], |_| {
+            String::new()
+        });
+        state.set_target_marker("Ada", super::TargetMarkerKind::Attack, 40, ClientTick(0));
+        state.set_target_marker("test", super::TargetMarkerKind::Focus, 41, ClientTick(0));
+        assert!(state.add_goal("Ada", 1, "Raydric Card"));
+        state.remove_member(AccountId(22));
+        assert!(state.marker_for(40).is_none());
+        assert!(state.marker_for(41).is_some(), "other members' markers survive");
+        assert_eq!(state.markers_text(), "[Focus] set by test");
+        assert_eq!(state.goals().len(), 1);
     }
 }

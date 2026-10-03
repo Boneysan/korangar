@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "source_revision": "cc83ca152ff09132a047acad028a9e978bd90b89",
+  "source_revision": "cd0486c79a9a595a141ce23ff1b9f1e1b9d61caa",
   "mode": "renewal",
   "evidence_states": {
     "verified": "Source or reviewed control flow establishes this claim for the exported server revision.",
@@ -13,7 +13,7 @@
   "counting_policy": "Counts describe exported records or explicitly named subsets, not completeness of player-facing explanations. Clues, reviewed facts, configured values, and runtime observations are separate states.",
   "categories": {
     "monsters": {
-      "records": 1759,
+      "records": 1760,
       "configured_skill_records": 10021,
       "skill_trigger_translations": {
         "observed": 10021,
@@ -22,18 +22,18 @@
       },
       "skill_trigger_partial_records": 0,
       "configured_drop_coverage": {
-        "observed": 1287,
-        "total": 1759,
+        "observed": 1288,
+        "total": 1760,
         "basis": "monster records with at least one configured drop row"
       },
       "static_spawn_coverage": {
         "observed": 965,
-        "total": 1759,
+        "total": 1760,
         "basis": "monster records with at least one loaded static spawn placement"
       },
       "script_spawn_coverage": {
         "observed": 420,
-        "total": 1759,
+        "total": 1760,
         "basis": "monster records with at least one indexed script-spawn clue"
       },
       "script_spawn_clues": 1217,
@@ -44,13 +44,13 @@
     "items": {
       "records": 13183,
       "translated_effects": {
-        "observed": 2230,
+        "observed": 5380,
         "total": 13183,
         "basis": "records with a supported natural-language effect summary"
       },
       "noncard_records": 12171,
       "noncard_translated_effects": {
-        "observed": 1692,
+        "observed": 4563,
         "total": 12171,
         "basis": "non-card item records with a supported natural-language effect summary"
       },
@@ -72,12 +72,12 @@
       "verified_quest_reward_sources": 40,
       "script_grant_clues": 1956,
       "script_consumption_clues": 2186,
-      "items_linked_to_reviewed_exchange": 285
+      "items_linked_to_reviewed_exchange": 302
     },
     "cards": {
       "records": 1012,
       "translated_effects": {
-        "observed": 538,
+        "observed": 817,
         "total": 1012,
         "basis": "card records with a supported natural-language effect summary"
       },
@@ -91,7 +91,7 @@
     "combos_and_groups": {
       "combos": 436,
       "translated_combo_effects": {
-        "observed": 249,
+        "observed": 296,
         "total": 436,
         "basis": "distinct combo records with translated script summaries"
       },
@@ -101,6 +101,26 @@
       "skill_records": 1170,
       "job_skill_trees": 128,
       "job_bonus_schedules": 147,
+      "job_exp_tables": {
+        "observed": 128,
+        "total": 151,
+        "basis": "Guide job entries whose base and job EXP groups the server defines"
+      },
+      "job_stat_rules": {
+        "observed": 128,
+        "total": 151,
+        "basis": "Guide job entries with a server stat cap and upper-class flag"
+      },
+      "job_class_tables": {
+        "observed": 128,
+        "total": 151,
+        "basis": "Guide job entries with server base HP/SP and ASPD class tables"
+      },
+      "upper_class_jobs": 33,
+      "exp_groups": {
+        "base": 7,
+        "job": 13
+      },
       "reviewed_formula_records": 12,
       "skills_covered_by_reviewed_formulas": 50
     },
@@ -111,9 +131,10 @@
         "total": 700,
         "basis": "status icon rows with one or more server status mechanics linked"
       },
-      "linked_server_statuses": 545,
-      "literal_call_site_clues": 114,
-      "statuses_with_call_sites": 75
+      "iconless_server_statuses": 100,
+      "linked_server_statuses": 645,
+      "literal_call_site_clues": 267,
+      "statuses_with_call_sites": 119
     },
     "quests": {
       "records": 3172,
@@ -123,7 +144,7 @@
         "basis": "quest records with at least one exported hunt target"
       },
       "hunt_target_rows": 462,
-      "npc_stage_relations": 1345,
+      "npc_stage_relations": 1329,
       "quests_with_reviewed_flow": {
         "observed": 124,
         "total": 3172,
@@ -131,7 +152,7 @@
       },
       "reviewed_npc_stage_relations": {
         "observed": 14,
-        "total": 1345,
+        "total": 1329,
         "basis": "NPC-stage relations with an authored reviewed role"
       },
       "verified_npc_rewards": 6,
@@ -148,20 +169,21 @@
       "nearby_item_reward_clues": 41
     },
     "npcs_and_services": {
-      "declarations": 8348,
+      "declarations": 8413,
       "map_known_declarations": {
-        "observed": 8348,
-        "total": 8348,
+        "observed": 8413,
+        "total": 8413,
         "basis": "declarations whose map identifier resolves in the static map index"
       },
       "literal_shop_offers": 1854,
-      "reviewed_exchange_records": 74,
+      "reviewed_exchange_records": 87,
       "reviewed_service_roles": {
-        "count": 68,
+        "count": 81,
         "evidence_state": "conditional",
         "basis": "distinct service roles cited by source-reviewed exchange records"
       },
       "literal_service_call_clues": 107,
+      "reviewed_service_call_clues": 107,
       "reviewed_service_records": {
         "count": 14,
         "of_indexed_call_clues": 107,
@@ -191,7 +213,7 @@
         "total": 1,
         "basis": "runtime map-flag call groups whose loaded-script control flow and conditions were reviewed; live map state is not observed"
       },
-      "server_rule_entries": 15,
+      "server_rule_entries": 32,
       "element_matchup_tables": {
         "observed": 10,
         "total": 10,
@@ -203,9 +225,35 @@
         "basis": "configured weapon damage size table covering three target sizes and documented weapon types"
       }
     },
+    "unit_dispositions": {
+      "E1_conditional": 283,
+      "E1_not_applicable": 1,
+      "E1_unknown": 3172,
+      "E1_verified": 23,
+      "E2_conditional": 1,
+      "E2_verified": 236,
+      "E3_unknown": 973,
+      "E4_unknown": 213,
+      "E5_absent": 644,
+      "E5_conditional": 273,
+      "E5_unknown": 3099,
+      "E5_verified": 11,
+      "E6_configured_estimate": 22,
+      "E6_unknown": 76
+    },
     "crafting_and_mechanics": {
-      "production_and_conversion_recipes": 483,
+      "production_and_conversion_recipes": 919,
       "refinement_weapon_levels": 4
+    },
+    "rumors": {
+      "non_story_rumors": 8,
+      "rumors_with_map_notes": {
+        "observed": 8,
+        "total": 8,
+        "basis": "non-story rumors with associated map locations and route coordinates"
+      },
+      "rumors_with_monster_leads": 4,
+      "rumors_with_item_leads": 2
     }
   }
 }

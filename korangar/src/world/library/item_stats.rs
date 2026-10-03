@@ -9,6 +9,8 @@ use std::sync::OnceLock;
 
 use serde::Deserialize;
 
+use crate::world::item_bonus::{ItemScriptBonus, MonsterTargetFacts, compare_items_against_monster, parse_item_script};
+
 const ITEMS_JSON: &str = include_str!("../../../../docs/items.json");
 
 #[derive(Debug, Clone, Deserialize)]
@@ -33,6 +35,8 @@ struct ItemStatsRow {
     equip_lv: Option<serde_json::Value>,
     #[serde(default)]
     loc: Option<serde_json::Value>,
+    #[serde(default)]
+    script: Option<String>,
 }
 
 /// Combat / equip stats for tooltip display.
@@ -49,12 +53,21 @@ pub struct ItemStats {
     pub equip_lv: Option<u16>,
     /// Raw equip location string from the export (e.g. `EQP_SHIELD`).
     pub loc: Option<String>,
+    /// Raw script string from Hercules export.
+    pub script: Option<String>,
+    /// Parsed plain-language script bonuses (GDD §10.10).
+    pub bonuses: Vec<ItemScriptBonus>,
 }
 
 impl ItemStats {
     /// True if this row has any combat/equip fields worth showing.
     pub fn has_combat_stats(&self) -> bool {
-        self.atk.is_some() || self.matk.is_some() || self.def.is_some() || self.slots.is_some() || self.equip_lv.is_some()
+        self.atk.is_some()
+            || self.matk.is_some()
+            || self.def.is_some()
+            || self.slots.is_some()
+            || self.equip_lv.is_some()
+            || !self.bonuses.is_empty()
     }
 
     fn format_lines(&self, refinement: Option<u8>) -> Vec<String> {
@@ -88,6 +101,13 @@ impl ItemStats {
         }
         if !self.item_type.is_empty() && self.item_type != "IT_ETC" {
             lines.push(type_label(&self.item_type).to_owned());
+        }
+        if !self.bonuses.is_empty() {
+            lines.push(String::new());
+            lines.push("— Special Effects —".to_owned());
+            for bonus in &self.bonuses {
+                lines.push(format!("• {}", bonus.plain_text()));
+            }
         }
         lines
     }
@@ -151,6 +171,7 @@ fn table() -> &'static HashMap<u32, ItemStats> {
         let rows: Vec<ItemStatsRow> = serde_json::from_str(ITEMS_JSON).expect("embedded items.json is valid");
         rows.into_iter()
             .map(|row| {
+                let bonuses = row.script.as_deref().map(parse_item_script).unwrap_or_default();
                 let stats = ItemStats {
                     item_id: row.id,
                     name: row.name,
@@ -162,6 +183,8 @@ fn table() -> &'static HashMap<u32, ItemStats> {
                     slots: row.slots,
                     equip_lv: parse_equip_lv(&row.equip_lv),
                     loc: parse_loc(&row.loc),
+                    script: row.script,
+                    bonuses,
                 };
                 (row.id, stats)
             })
@@ -174,16 +197,15 @@ pub fn item_stats(item_id: u32) -> Option<&'static ItemStats> {
     table().get(&item_id)
 }
 
-/// Build a multi-line hover tooltip: name, stats, optional compare vs equipped.
-///
-/// `display_name` is the already-localized inventory name (preferred over the
-/// export's Aegis-style name when non-empty).
-pub fn item_tooltip_text(
+/// Build a multi-line hover tooltip: name, stats, optional compare vs equipped
+/// and monster target.
+pub fn item_tooltip_text_with_target(
     item_id: u32,
     display_name: &str,
     refinement: Option<u8>,
     equipped: Option<&ItemStats>,
     equipped_refinement: Option<u8>,
+    target_monster: Option<&MonsterTargetFacts>,
 ) -> String {
     let Some(stats) = item_stats(item_id) else {
         return if display_name.is_empty() {
@@ -227,7 +249,49 @@ pub fn item_tooltip_text(
         }
     }
 
+    if let Some(target) = target_monster {
+        let eq_bonuses = equipped.map(|e| e.bonuses.as_slice()).unwrap_or(&[]);
+        let comparison = compare_items_against_monster(&stats.bonuses, eq_bonuses, target);
+
+        lines.push(String::new());
+        lines.push(format!(
+            "— vs selected monster: {} ({}, {}, {}) —",
+            comparison.target_name, comparison.target_race, comparison.target_size, comparison.target_element
+        ));
+        for matched in &comparison.matched_bonuses {
+            lines.push(format!("• {matched}"));
+        }
+        if comparison.elemental_rate_pct != 100 {
+            lines.push(format!("Elemental Match: {}% damage (exact)", comparison.elemental_rate_pct));
+        }
+        if comparison.hovered_physical_pct != 100 || comparison.equipped_physical_pct != 100 {
+            let sign = if comparison.delta_physical_pct > 0 { "+" } else { "" };
+            lines.push(format!(
+                "Target Damage Modifier: {}% vs equipped ({sign}{}% advantage) (estimate)",
+                comparison.hovered_physical_pct, comparison.delta_physical_pct
+            ));
+        }
+        if comparison.hovered_magic_pct != 100 || comparison.equipped_magic_pct != 100 {
+            let sign = if comparison.delta_magic_pct > 0 { "+" } else { "" };
+            lines.push(format!(
+                "Target Magic Modifier: {}% vs equipped ({sign}{}% advantage) (estimate)",
+                comparison.hovered_magic_pct, comparison.delta_magic_pct
+            ));
+        }
+    }
+
     lines.join("\n")
+}
+
+/// Build a multi-line hover tooltip: name, stats, optional compare vs equipped.
+pub fn item_tooltip_text(
+    item_id: u32,
+    display_name: &str,
+    refinement: Option<u8>,
+    equipped: Option<&ItemStats>,
+    equipped_refinement: Option<u8>,
+) -> String {
+    item_tooltip_text_with_target(item_id, display_name, refinement, equipped, equipped_refinement, None)
 }
 
 fn push_delta(lines: &mut Vec<String>, label: &str, mine: Option<i32>, theirs: Option<i32>) {
@@ -278,5 +342,42 @@ mod tests {
     #[test]
     fn unknown_item_falls_back_to_name() {
         assert_eq!(item_tooltip_text(u32::MAX, "Mystery", None, None, None), "Mystery");
+    }
+
+    #[test]
+    fn card_displays_plain_language_bonuses() {
+        // Poring Card (ID 4001): bonus bLuk,2; bonus bFlee2,1;
+        let card = item_stats(4001).expect("Poring Card in items.json");
+        assert!(!card.bonuses.is_empty());
+        let text = item_tooltip_text(4001, "Poring Card", None, None, None);
+        assert!(text.contains("Special Effects"), "{text}");
+        assert!(text.contains("LUK +2"), "{text}");
+        assert!(text.contains("Perfect Dodge +1"), "{text}");
+    }
+
+    #[test]
+    fn weapon_displays_versus_monster_contextual_comparison() {
+        // Balmung (ID 1161): Holy weapon
+        let balmung = item_stats(1161).expect("Balmung in items.json");
+        assert!(
+            balmung
+                .bonuses
+                .iter()
+                .any(|b| matches!(b, ItemScriptBonus::WeaponElement(ele) if ele == "Holy"))
+        );
+
+        let target = MonsterTargetFacts {
+            name: "Zombie".to_owned(),
+            race: "Undead".to_owned(),
+            size: "Medium".to_owned(),
+            element: "Undead 1".to_owned(),
+            level: 15,
+            def: Some(10),
+            mdef: Some(0),
+        };
+
+        let text = item_tooltip_text_with_target(1161, "Balmung", Some(0), None, None, Some(&target));
+        assert!(text.contains("vs selected monster: Zombie"), "{text}");
+        assert!(text.contains("Elemental Match: 150% damage (exact)"), "{text}");
     }
 }

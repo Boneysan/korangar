@@ -20,12 +20,21 @@ from typing import Any
 
 from export_item_reference import HERCULES, ROOT, build as build_items
 from export_skill_info import _strip_comments, parse_skill_db
-from extend_bestiary_export import parse_mob_skill_db
+from extend_bestiary_export import apply_skill_layers, parse_mob_skill_db
 from generate_navigation_graph import loaded_script_files, map_names
 
 
 MOB_SOURCE = HERCULES / "db/re/mob_db.conf"
+# Loaded after MOB_SOURCE; a record with the same Id replaces the stock one
+# (Hercules `mob_readdb` order), so the server's own monsters are exported too.
+MOB_OVERRIDE_SOURCE = HERCULES / "db/mob_db2.conf"
 MOB_SKILL_SOURCE = HERCULES / "db/re/mob_skill_db.conf"
+# Loaded after MOB_SKILL_SOURCE, in this order (`mob_readskilldb`).
+MOB_SKILL_OVERRIDE_SOURCE = HERCULES / "db/mob_skill_db2.conf"
+# Loaded last, and only when battle config `mob_pilot_version` >= 1.
+MOB_PILOT_SKILL_SOURCE = HERCULES / "db/re/mob_pilot_skill_db.conf"
+PILOT_SWITCH_SOURCES = (HERCULES / "conf/import/battle.conf", HERCULES / "conf/map/battle/monster.conf")
+PILOT_SWITCH = re.compile(r"^\s*mob_pilot_version:\s*(\d+)", re.M)
 SPAWN_MANIFEST = HERCULES / "npc/re/scripts_main.conf"
 MAP_INDEX = HERCULES / "db/map_index.txt"
 OUTPUT = ROOT / "docs/bestiary.v1.json"
@@ -71,7 +80,10 @@ def source_revision() -> tuple[str, bool]:
         revision = subprocess.check_output(
             ["git", "-C", str(HERCULES), "rev-parse", "HEAD"], text=True, stderr=subprocess.DEVNULL
         ).strip()
-        dirty = bool(subprocess.check_output(["git", "-C", str(HERCULES), "status", "--porcelain"], text=True).strip())
+        dirty = subprocess.run(
+            ["git", "-C", str(HERCULES), "diff-index", "--quiet", "HEAD"],
+            capture_output=True,
+        ).returncode != 0
         return revision, dirty
     except (OSError, subprocess.CalledProcessError):
         return "unknown", False
@@ -387,25 +399,80 @@ def parse_scripted_spawn_references(mobs: list[dict[str, Any]]) -> tuple[dict[in
     }
 
 
+def explained_skills(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    return [
+        explain_monster_skill({
+            "skill_name": skill["Skill"],
+            "level": skill["Level"],
+            "rate": skill["Rate"],
+            "delay_ms": skill["Delay"],
+            "skill_state": skill["SkillState"],
+            "skill_target": skill["SkillTarget"],
+            "cast_condition": skill["CastCondition"],
+            "condition_data": skill["ConditionData"],
+            "value0": skill["Value0"],
+            "cast_time_ms": skill["CastTime"],
+            "cancelable": skill["Cancelable"],
+        })
+        for skill in rows
+    ]
+
+
+def pilot_switch() -> dict[str, Any]:
+    """The configured ``mob_pilot_version``; an import file overrides the default."""
+    for path in PILOT_SWITCH_SOURCES:
+        if path.is_file() and (match := PILOT_SWITCH.search(path.read_text(encoding="utf-8", errors="replace"))):
+            value = int(match.group(1))
+            return {
+                "setting": "mob_pilot_version",
+                "configured_value": value,
+                "active": value >= 1,
+                "config_source": path.relative_to(HERCULES).as_posix(),
+                "skill_source": MOB_PILOT_SKILL_SOURCE.relative_to(HERCULES).as_posix(),
+            }
+    raise ValueError("mob_pilot_version is not set in any battle config")
+
+
 def build() -> dict[str, Any]:
-    mobs = parse_skill_db(MOB_SOURCE.read_text(encoding="utf-8", errors="replace"))
-    if not mobs:
-        raise ValueError(f"no monster records parsed from {MOB_SOURCE}")
     by_id: dict[int, dict[str, Any]] = {}
     by_sprite: dict[str, dict[str, Any]] = {}
-    for mob in mobs:
-        if "Id" not in mob or "SpriteName" not in mob:
-            raise ValueError("monster record missing Id or SpriteName")
-        mob_id = int(mob["Id"])
-        sprite = mob["SpriteName"]
-        if mob_id in by_id:
-            raise ValueError(f"duplicate monster ID {mob_id} in {MOB_SOURCE}")
-        if sprite in by_sprite:
-            raise ValueError(f"duplicate monster SpriteName {sprite!r} in {MOB_SOURCE}")
-        by_id[mob_id] = mob
-        by_sprite[sprite] = mob
+    source_by_id: dict[int, Path] = {}
+    for source in (MOB_SOURCE, MOB_OVERRIDE_SOURCE):
+        if source == MOB_OVERRIDE_SOURCE and not source.is_file():
+            continue
+        records = parse_skill_db(source.read_text(encoding="utf-8", errors="replace"))
+        if source == MOB_SOURCE and not records:
+            raise ValueError(f"no monster records parsed from {source}")
+        seen_in_source: set[int] = set()
+        for mob in records:
+            if "Id" not in mob or "SpriteName" not in mob:
+                raise ValueError(f"monster record missing Id or SpriteName in {source}")
+            mob_id = int(mob["Id"])
+            sprite = mob["SpriteName"]
+            if mob_id in seen_in_source:
+                raise ValueError(f"duplicate monster ID {mob_id} in {source}")
+            seen_in_source.add(mob_id)
+            replaced = by_id.get(mob_id)
+            if replaced is not None:
+                del by_sprite[replaced["SpriteName"]]
+            if sprite in by_sprite:
+                raise ValueError(f"duplicate monster SpriteName {sprite!r} in {source}")
+            by_id[mob_id] = mob
+            by_sprite[sprite] = mob
+            source_by_id[mob_id] = source
+    mobs = [by_id[mob_id] for mob_id in sorted(by_id)]
 
-    skills = parse_mob_skill_db(include_triggers=True)
+    stock_layers = [parse_mob_skill_db(include_triggers=True, path=MOB_SKILL_SOURCE)]
+    if MOB_SKILL_OVERRIDE_SOURCE.is_file():
+        stock_layers.append(parse_mob_skill_db(include_triggers=True, path=MOB_SKILL_OVERRIDE_SOURCE))
+    skills = apply_skill_layers(stock_layers)
+    pilot_layer = (
+        parse_mob_skill_db(include_triggers=True, path=MOB_PILOT_SKILL_SOURCE) if MOB_PILOT_SKILL_SOURCE.is_file() else {}
+    )
+    unknown_pilot_sprites = sorted(set(pilot_layer) - set(by_sprite))
+    if unknown_pilot_sprites:
+        raise ValueError(f"pilot mob skills reference unknown sprites: {unknown_pilot_sprites[:10]}")
+    pilot_skills = apply_skill_layers([*stock_layers, pilot_layer])
     spawn_regions_by_mob, spawn_coverage = parse_static_spawns()
     scripted_spawns_by_mob, scripted_spawn_coverage = parse_scripted_spawn_references(mobs)
     unknown_skill_sprites = sorted(set(skills) - set(by_sprite))
@@ -438,7 +505,6 @@ def build() -> dict[str, Any]:
                 "source_record": drop["source_record"],
             })
 
-    mob_path = MOB_SOURCE.relative_to(HERCULES).as_posix()
     skill_path = MOB_SKILL_SOURCE.relative_to(HERCULES).as_posix()
     entries: list[dict[str, Any]] = []
     for mob_id in sorted(by_id):
@@ -447,24 +513,9 @@ def build() -> dict[str, Any]:
         entry: dict[str, Any] = {
             "id": mob_id,
             "sprite_name": sprite,
-            "source": {"path": mob_path, "record": f"Id={mob_id}"},
+            "source": {"path": source_by_id[mob_id].relative_to(HERCULES).as_posix(), "record": f"Id={mob_id}"},
             "skills_source": {"path": skill_path, "record": f"SpriteName={sprite}"} if skills.get(sprite) else None,
-            "skills": [
-                explain_monster_skill({
-                    "skill_name": skill["Skill"],
-                    "level": skill["Level"],
-                    "rate": skill["Rate"],
-                    "delay_ms": skill["Delay"],
-                    "skill_state": skill["SkillState"],
-                    "skill_target": skill["SkillTarget"],
-                    "cast_condition": skill["CastCondition"],
-                    "condition_data": skill["ConditionData"],
-                    "value0": skill["Value0"],
-                    "cast_time_ms": skill["CastTime"],
-                    "cancelable": skill["Cancelable"],
-                })
-                for skill in skills.get(sprite, [])
-            ],
+            "skills": explained_skills(skills.get(sprite, [])),
             "drops": sorted(drops_by_mob[mob_id], key=lambda drop: (drop["item_id"], drop["kind"])),
             "spawn_regions": spawn_regions_by_mob.get(mob_id, []),
             "scripted_spawn_references": scripted_spawns_by_mob.get(mob_id, []),
@@ -475,6 +526,12 @@ def build() -> dict[str, Any]:
                 if field in ("Size", "Race") and isinstance(value, str):
                     value = value.removeprefix("Size_").removeprefix("RC_")
                 entry[FIELD_NAMES[field]] = value
+        if sprite in pilot_layer:
+            entry["pilot_skills"] = explained_skills(pilot_skills.get(sprite, []))
+            entry["pilot_skills_source"] = {
+                "path": MOB_PILOT_SKILL_SOURCE.relative_to(HERCULES).as_posix(),
+                "record": f"SpriteName={sprite}",
+            }
         mode = mob.get("Mode") or {}
         if isinstance(mode, dict):
             entry["modes"] = sorted(key for key, enabled in mode.items() if enabled is True)
@@ -488,10 +545,17 @@ def build() -> dict[str, Any]:
         "source_revision": revision,
         "source_worktree_dirty": dirty,
         "mode": "renewal",
-        "sources": [mob_path, skill_path, SPAWN_MANIFEST.relative_to(HERCULES).as_posix(), *item_payload["sources"]],
+        "sources": list(dict.fromkeys([
+            *sorted({path.relative_to(HERCULES).as_posix() for path in source_by_id.values()}),
+            skill_path,
+            *[path.relative_to(HERCULES).as_posix() for path in (MOB_SKILL_OVERRIDE_SOURCE, MOB_PILOT_SKILL_SOURCE) if path.is_file()],
+            SPAWN_MANIFEST.relative_to(HERCULES).as_posix(), *item_payload["sources"],
+        ])),
+        "pilot_skill_layer": pilot_switch(),
         "coverage": {
             "monsters": len(entries),
             "with_skills": skill_count,
+            "with_pilot_skills": sum("pilot_skills" in entry for entry in entries),
             "with_drops": drop_count,
             "spawn_regions": spawn_coverage,
             "scripted_spawn_references": scripted_spawn_coverage,

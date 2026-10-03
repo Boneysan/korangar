@@ -10,7 +10,7 @@ use crate::loaders::OverflowBehavior;
 use crate::state::localization::LocalizationPathExt;
 use crate::state::theme::InterfaceThemeType;
 use crate::state::{ClientState, ClientStatePathExt, client_state};
-use crate::world::{Player, PlayerPathExt};
+use crate::world::{Player, PlayerPathExt, StatKind, StatPreviewInput, stat_preview_tooltip};
 
 struct StatTextSelector<A> {
     bonus_path: A,
@@ -88,6 +88,114 @@ where
     }
 }
 
+#[derive(Clone, Copy, PartialEq, Eq)]
+struct StatSnapshot {
+    base_level: usize,
+    stat_points: u32,
+    stat_cost: u8,
+    strength: i32,
+    bonus_strength: i32,
+    agility: i32,
+    bonus_agility: i32,
+    vitality: i32,
+    bonus_vitality: i32,
+    intelligence: i32,
+    bonus_intelligence: i32,
+    dexterity: i32,
+    bonus_dexterity: i32,
+    luck: i32,
+    bonus_luck: i32,
+    max_hp: usize,
+    max_sp: usize,
+    job_id: u16,
+}
+
+struct StatPreviewSelector<A> {
+    player_path: A,
+    stat: StatKind,
+    last_snapshot: Cell<Option<StatSnapshot>>,
+    text: UnsafeCell<String>,
+}
+
+impl<A> StatPreviewSelector<A> {
+    pub fn new(player_path: A, stat: StatKind) -> Self {
+        Self {
+            player_path,
+            stat,
+            last_snapshot: Cell::default(),
+            text: UnsafeCell::default(),
+        }
+    }
+}
+
+impl<A> Selector<ClientState, String> for StatPreviewSelector<A>
+where
+    A: Path<ClientState, Player>,
+{
+    fn select<'a>(&'a self, state: &'a ClientState) -> Option<&'a String> {
+        let player = self.player_path.follow_safe(state);
+        let stat_cost = match self.stat {
+            StatKind::Strength => player.strength_stat_points_cost,
+            StatKind::Agility => player.agility_stat_points_cost,
+            StatKind::Vitality => player.vitality_stat_points_cost,
+            StatKind::Intelligence => player.intelligence_stat_points_cost,
+            StatKind::Dexterity => player.dexterity_stat_points_cost,
+            StatKind::Luck => player.luck_stat_points_cost,
+        };
+
+        let snapshot = StatSnapshot {
+            base_level: player.base_level,
+            stat_points: player.stat_points,
+            stat_cost,
+            strength: player.strength,
+            bonus_strength: player.bonus_strength,
+            agility: player.agility,
+            bonus_agility: player.bonus_agility,
+            vitality: player.vitality,
+            bonus_vitality: player.bonus_vitality,
+            intelligence: player.intelligence,
+            bonus_intelligence: player.bonus_intelligence,
+            dexterity: player.dexterity,
+            bonus_dexterity: player.bonus_dexterity,
+            luck: player.luck,
+            bonus_luck: player.bonus_luck,
+            max_hp: player.get_common().maximum_health_points,
+            max_sp: player.maximum_spell_points,
+            job_id: player.get_common().job_id.0,
+        };
+
+        unsafe {
+            let last_snapshot = self.last_snapshot.get();
+
+            if last_snapshot.is_none() || last_snapshot.as_ref().is_some_and(|last| *last != snapshot) {
+                let input = StatPreviewInput {
+                    base_level: snapshot.base_level,
+                    strength: snapshot.strength,
+                    bonus_strength: snapshot.bonus_strength,
+                    agility: snapshot.agility,
+                    bonus_agility: snapshot.bonus_agility,
+                    vitality: snapshot.vitality,
+                    bonus_vitality: snapshot.bonus_vitality,
+                    intelligence: snapshot.intelligence,
+                    bonus_intelligence: snapshot.bonus_intelligence,
+                    dexterity: snapshot.dexterity,
+                    bonus_dexterity: snapshot.bonus_dexterity,
+                    luck: snapshot.luck,
+                    bonus_luck: snapshot.bonus_luck,
+                    max_hp: snapshot.max_hp,
+                    max_sp: snapshot.max_sp,
+                    job_id: Some(snapshot.job_id),
+                };
+
+                *self.text.get() = stat_preview_tooltip(self.stat, &input, stat_cost, player.stat_points);
+                self.last_snapshot.set(Some(snapshot));
+            }
+
+            Some(self.text.as_ref_unchecked())
+        }
+    }
+}
+
 #[derive(Default)]
 pub struct StatsWindow<A> {
     player_path: A,
@@ -101,7 +209,7 @@ impl<A> StatsWindow<A> {
 
 impl<A> CustomWindow<ClientState> for StatsWindow<A>
 where
-    A: Path<ClientState, Player>,
+    A: Path<ClientState, Player> + Copy,
 {
     fn window_class() -> Option<WindowClass> {
         Some(WindowClass::Stats)
@@ -148,7 +256,9 @@ where
                         },
                         button! {
                             text: CostTextSelector::new(self.player_path.$cost_name()),
+                            tooltip: StatPreviewSelector::new(self.player_path, StatKind::$variant_name),
                             disabled: disabled_cutoff(self.player_path.stat_points(), self.player_path.$cost_name()),
+                            disabled_tooltip: StatPreviewSelector::new(self.player_path, StatKind::$variant_name),
                             event: InputEvent::StatUp { stat_type: StatUpType::$variant_name { amount: 1 } },
                         },
                     ),
@@ -181,6 +291,11 @@ where
                 stat_row!(intelligence_text, intelligence, bonus_intelligence, intelligence_stat_points_cost, Intelligence),
                 stat_row!(dexterity_text, dexterity, bonus_dexterity, dexterity_stat_points_cost, Dexterity),
                 stat_row!(luck_text, luck, bonus_luck, luck_stat_points_cost, Luck),
+                button! {
+                    text: "Build planner",
+                    tooltip: "Simulate future levels and stat allocations. Nothing is sent to the server.",
+                    event: InputEvent::ToggleBuildPlannerWindow,
+                },
             ),
         }
     }

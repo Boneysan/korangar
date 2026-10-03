@@ -30,3 +30,29 @@ impl CustomWindow<ClientState> for MonsterTargetWindow {
         }
     }
 }
+
+/// Larger target frame for MVP and story boss monsters.
+pub struct BossTargetWindow;
+
+impl CustomWindow<ClientState> for BossTargetWindow {
+    fn window_class() -> Option<WindowClass> {
+        Some(WindowClass::BossTarget)
+    }
+
+    fn to_window<'a>(self) -> impl Window<ClientState> + 'a {
+        use korangar_interface::prelude::*;
+
+        window! {
+            title: "MVP Boss Target",
+            class: Self::window_class(),
+            theme: InterfaceThemeType::InGame,
+            closable: true,
+            elements: (
+                text! {
+                    text: client_state().targeted_monster_summary(),
+                    color: client_state().world_theme().status_bar().enemy_health_color(),
+                },
+            ),
+        }
+    }
+}

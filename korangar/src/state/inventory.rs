@@ -182,11 +182,9 @@ impl Inventory {
     }
 
     pub fn reorder_display_in_tab(&mut self, from_index: InventoryIndex, to_slot: usize, tab: InventoryTab, query: &str) {
-        if tab == InventoryTab::All {
-            if query.is_empty() {
-                self.reorder_display(from_index, to_slot);
-                return;
-            }
+        if tab == InventoryTab::All && query.is_empty() {
+            self.reorder_display(from_index, to_slot);
+            return;
         }
         let Some(from) = self.items.iter().position(|item| item.index == from_index) else {
             return;

@@ -29,7 +29,7 @@ pub struct Toast {
     pub remaining_ms: u64,
 }
 
-#[derive(Clone, Debug, RustState, StateElement)]
+#[derive(Clone, Debug, RustState, StateElement, Default)]
 pub struct ToastQueue {
     #[hidden_element]
     visible: Vec<Toast>,
@@ -38,17 +38,6 @@ pub struct ToastQueue {
     display_text: String,
     #[hidden_element]
     last_now_ms: u64,
-}
-
-impl Default for ToastQueue {
-    fn default() -> Self {
-        Self {
-            visible: Vec::new(),
-            waiting: Vec::new(),
-            display_text: String::new(),
-            last_now_ms: 0,
-        }
-    }
 }
 
 impl ToastQueue {
@@ -89,10 +78,9 @@ impl ToastQueue {
             .enumerate()
             .min_by_key(|(_, toast)| toast.priority)
             .map(|(index, _)| index)
+            && priority > self.waiting[lowest].priority
         {
-            if priority > self.waiting[lowest].priority {
-                self.waiting[lowest] = toast;
-            }
+            self.waiting[lowest] = toast;
         }
         self.rebuild_display();
     }
@@ -129,12 +117,13 @@ impl ToastQueue {
         self.rebuild_display();
     }
 
+    #[allow(dead_code)]
     pub fn visible(&self) -> &[Toast] {
         &self.visible
     }
 
     fn sort_visible(&mut self) {
-        self.visible.sort_by(|left, right| right.priority.cmp(&left.priority));
+        self.visible.sort_by_key(|toast| std::cmp::Reverse(toast.priority));
     }
 
     fn rebuild_display(&mut self) {

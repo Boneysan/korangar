@@ -55,6 +55,12 @@ const POLL_INTERVAL: Duration = Duration::from_millis(30);
 /// How many recent events are kept for timeout diagnostics.
 const EVENT_LOG_CAPACITY: usize = 40;
 
+/// When set, a character the harness has to create is created female (needed
+/// for jobs and weapons that only exist for women, such as Dancer and the
+/// whip). A module-level switch so `connect_as` keeps its signature for its
+/// many callers.
+pub static CREATE_AS_FEMALE: std::sync::atomic::AtomicBool = std::sync::atomic::AtomicBool::new(false);
+
 #[derive(Clone)]
 pub struct Config {
     pub server: SocketAddr,
@@ -94,6 +100,20 @@ pub struct TestContext {
     pub job_id: JobId,
     pub zeny: u32,
     pub health_points: u32,
+    /// What the server last reported for the character's own derived stats.
+    /// `Vitality`/`Intelligence` are (base, bonus): their sum is the server's
+    /// total, the value its HP/SP formulas use. Recorded for the
+    /// status-ground-truth provisioning scenario.
+    pub job_level: u32,
+    pub max_health_points: u32,
+    pub max_spell_points: u32,
+    pub vitality: (i32, i32),
+    pub intelligence: (i32, i32),
+    pub agility: (i32, i32),
+    pub dexterity: (i32, i32),
+    /// The server's attack motion in milliseconds (`SP_ASPD` carries
+    /// `amotion`); the displayed ASPD is `200 - attack_speed / 10`.
+    pub attack_speed: u32,
     pub map_name: String,
     pub position: TilePosition,
     pub entities: HashMap<EntityId, EntityData>,
@@ -288,6 +308,14 @@ impl TestContext {
             job_id: JobId(0),
             zeny: 0,
             health_points: 0,
+            job_level: 0,
+            max_health_points: 0,
+            max_spell_points: 0,
+            vitality: (0, 0),
+            intelligence: (0, 0),
+            agility: (0, 0),
+            dexterity: (0, 0),
+            attack_speed: 0,
             map_name: String::new(),
             position: TilePosition { x: 0, y: 0 },
             entities: HashMap::new(),
@@ -349,7 +377,16 @@ impl TestContext {
                     .ok_or("no free character slot for auto-create")?;
                 context
                     .net
-                    .create_character(free_slot, new_name.to_owned(), Sex::Male, DEFAULT_HAIR_STYLE)
+                    .create_character(
+                        free_slot,
+                        new_name.to_owned(),
+                        if CREATE_AS_FEMALE.load(std::sync::atomic::Ordering::SeqCst) {
+                            Sex::Female
+                        } else {
+                            Sex::Male
+                        },
+                        DEFAULT_HAIR_STYLE,
+                    )
                     .map_err(|_| "disconnected")?;
                 let info = context.wait_for("CharacterCreated", |event| match event {
                     NetworkEvent::CharacterCreated { character_information } => Some(Ok(character_information.clone())),
@@ -650,6 +687,14 @@ impl TestContext {
                 StatType::BaseLevel(value) => self.base_level = *value,
                 StatType::Zeny(value) => self.zeny = *value,
                 StatType::HealthPoints(value) => self.health_points = *value,
+                StatType::JobLevel(value) => self.job_level = *value,
+                StatType::MaximumHealthPoints(value) => self.max_health_points = *value,
+                StatType::MaximumSpellPoints(value) => self.max_spell_points = *value,
+                StatType::Vitality(base, bonus) => self.vitality = (*base, *bonus),
+                StatType::Intelligence(base, bonus) => self.intelligence = (*base, *bonus),
+                StatType::Agility(base, bonus) => self.agility = (*base, *bonus),
+                StatType::Dexterity(base, bonus) => self.dexterity = (*base, *bonus),
+                StatType::AttackSpeed(value) => self.attack_speed = *value,
                 _ => {}
             },
             NetworkEvent::ChangeJob { account_id, job_id } if account_id.0 == self.account_id.0 => {

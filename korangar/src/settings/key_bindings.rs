@@ -92,7 +92,7 @@ impl BindableAction {
             Self::DebugCameraLookRight,
             Self::DebugCameraAccelerate,
         ];
-        actions.extend((0..27).map(Self::HotbarSlot));
+        actions.extend((0..crate::state::hotbar::HOTBAR_SLOTS as u8).map(Self::HotbarSlot));
         actions
     }
 
@@ -152,9 +152,9 @@ impl BindableAction {
             let slot = slot % 9;
             return KeyChord::new(
                 format!("Digit{}", slot + 1),
-                self.hotbar_row() == 1,
+                self.hotbar_row() == 1 || self.hotbar_row() == 3,
                 self.hotbar_row() == 2,
-                false,
+                self.hotbar_row() == 3,
             );
         }
         let (key, control, alt, shift) = match self {
@@ -247,11 +247,16 @@ impl KeyChord {
         if self.shift {
             parts.push("Shift");
         }
-        let key_label = self
-            .key
-            .strip_prefix("Key")
-            .or_else(|| self.key.strip_prefix("Digit"))
-            .unwrap_or(self.key.as_str());
+        let key_label = match self.key.as_str() {
+            "MouseMiddle" => "MiddleClick",
+            "MouseBack" => "Mouse4",
+            "MouseForward" => "Mouse5",
+            _ => self
+                .key
+                .strip_prefix("Key")
+                .or_else(|| self.key.strip_prefix("Digit"))
+                .unwrap_or(self.key.as_str()),
+        };
         parts.push(key_label);
         parts.join("+")
     }
@@ -297,6 +302,9 @@ impl KeyChord {
                     | "NumpadDivide"
                     | "NumpadDecimal"
                     | "NumpadEnter"
+                    | "MouseMiddle"
+                    | "MouseBack"
+                    | "MouseForward"
             )
     }
 
@@ -353,7 +361,7 @@ impl KeyBindings {
         if !chord.is_valid_key() {
             return Err(BindingError::InvalidKey);
         }
-        if matches!(action, BindableAction::HotbarSlot(slot) if slot >= 27) {
+        if matches!(action, BindableAction::HotbarSlot(slot) if slot >= crate::state::hotbar::HOTBAR_SLOTS as u8) {
             return Err(BindingError::InvalidKey);
         }
         for other_action in BindableAction::all() {
@@ -516,12 +524,23 @@ mod tests {
     fn hotbar_slot_bindings_round_trip_and_reject_out_of_range_slots() {
         let mut bindings = KeyBindings::default();
         let remapped = KeyChord::new("KeyJ", false, false, false);
-        bindings.assign(BindableAction::HotbarSlot(26), remapped.clone()).unwrap();
+        bindings.assign(BindableAction::HotbarSlot(35), remapped.clone()).unwrap();
         let mut loaded = KeyBindings::import_ron(&bindings.export_ron().unwrap()).unwrap();
-        assert_eq!(loaded.chord(BindableAction::HotbarSlot(26)), remapped);
+        assert_eq!(loaded.chord(BindableAction::HotbarSlot(35)), remapped);
         assert_eq!(
-            loaded.assign(BindableAction::HotbarSlot(27), KeyChord::new("KeyK", false, false, false)),
+            loaded.assign(BindableAction::HotbarSlot(36), KeyChord::new("KeyK", false, false, false)),
             Err(BindingError::InvalidKey),
         );
+    }
+
+    #[test]
+    fn mouse_chords_format_cleanly() {
+        let middle_chord = KeyChord::new("MouseMiddle", true, false, false);
+        assert_eq!(middle_chord.display(), "Ctrl+MiddleClick");
+        assert!(middle_chord.is_valid_key());
+
+        let shift_mouse4 = KeyChord::new("MouseBack", false, false, true);
+        assert_eq!(shift_mouse4.display(), "Shift+Mouse4");
+        assert!(shift_mouse4.is_valid_key());
     }
 }

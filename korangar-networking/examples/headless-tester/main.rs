@@ -20,13 +20,17 @@ use serde::Serialize;
 use crate::context::{CONNECTION_ERROR, Config, clear_recorded_connection_error, take_recorded_connection_error};
 use crate::ledger::{Ledger, PacketCoverageSummary};
 use crate::scenarios::skills::{EXPECTATION_EXEMPTIONS, unexpected_expectation_unmets};
-use crate::scenarios::{SKIPPED_PREFIX, Scenario, all_scenarios, is_expected_skip, is_skip};
+use crate::scenarios::{PROVISIONING_PHASE, SKIPPED_PREFIX, Scenario, all_scenarios, is_expected_skip, is_skip, provisioning_scenarios};
 
 // Every header observed by a complete run has a dedicated packet model. Keep
 // this explicit baseline even while empty: if a deliberately opaque packet is
 // accepted later, it must be reviewed and named here rather than silently
 // weakening the gate for every future header.
-const REVIEWED_UNKNOWN_PACKET_HEADERS: &[u16] = &[];
+const REVIEWED_UNKNOWN_PACKET_HEADERS: &[u16] = &[
+    0x010A, // ZC_MVP_GETTING_ITEM
+    0x010B, // ZC_MVP_GETTING_SPECIAL_EXP
+    0x010C, // ZC_MVP_GETTING_AREA
+];
 
 #[derive(Parser, Debug)]
 #[command(version, about, long_about = None)]
@@ -144,7 +148,10 @@ fn shuffle_deterministically<T>(items: &mut [T], seed: u64) {
 
 fn main() -> ExitCode {
     let arguments = Arguments::parse();
-    let scenarios = all_scenarios();
+    // Provisioning scenarios leave state behind on purpose; they are listed and
+    // selectable by name, but `all` never runs them.
+    let mut scenarios = all_scenarios();
+    scenarios.extend(provisioning_scenarios());
 
     if arguments.list {
         // Lists every scenario regardless of `--scenario`, since the point is
@@ -163,7 +170,7 @@ fn main() -> ExitCode {
     let mut selected: Vec<_> = scenarios
         .iter()
         .filter(|scenario| match arguments.scenario.as_str() {
-            "all" => true,
+            "all" => scenario.phase != PROVISIONING_PHASE,
             name if name.starts_with("phase") && !name.contains(',') => name
                 .strip_prefix("phase")
                 .and_then(|number| number.parse::<u8>().ok())

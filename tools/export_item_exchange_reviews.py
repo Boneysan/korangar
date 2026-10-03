@@ -79,8 +79,8 @@ def build() -> dict[str, Any]:
             outcome["items"] = [{"item_id": item_id, "item_name": item_names[item_id]} for item_id in outcome["item_ids"]]
 
         entry = {key: value for key, value in review.items() if key != "required_source_literals"}
-        entry["reviewed_by"] = review_data["reviewed_by"]
-        entry["reviewed_on"] = review_data["reviewed_on"]
+        entry["reviewed_by"] = review.get("reviewed_by") or review_data["reviewed_by"]
+        entry["reviewed_on"] = review.get("reviewed_on") or review_data["reviewed_on"]
         entry["evidence_state"] = "conditional" if entry.get("conditions") else "verified"
         entry["source"]["reviewed_lines"] = list(entry["source"]["lines"])
         entries.append(entry)

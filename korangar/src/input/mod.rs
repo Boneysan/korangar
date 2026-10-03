@@ -49,6 +49,7 @@ pub struct InputSystem {
     scroll_delta: f32,
     left_mouse_button: Key,
     right_mouse_button: Key,
+    middle_mouse_button: Key,
     keys: [Key; KEY_COUNT],
     known_key_codes: Vec<KeyCode>,
     input_buffer: Vec<char>,
@@ -68,6 +69,7 @@ impl InputSystem {
 
         let left_mouse_button = Key::default();
         let right_mouse_button = Key::default();
+        let middle_mouse_button = Key::default();
         let keys = [Key::default(); KEY_COUNT];
         let known_key_codes = Vec::new();
 
@@ -83,6 +85,7 @@ impl InputSystem {
             scroll_delta,
             left_mouse_button,
             right_mouse_button,
+            middle_mouse_button,
             keys,
             known_key_codes,
             input_buffer,
@@ -94,6 +97,7 @@ impl InputSystem {
     pub fn reset(&mut self) {
         self.left_mouse_button.reset();
         self.right_mouse_button.reset();
+        self.middle_mouse_button.reset();
         self.keys.iter_mut().for_each(|key| key.reset());
     }
 
@@ -110,6 +114,7 @@ impl InputSystem {
         match button {
             MouseButton::Left => self.left_mouse_button.set_down(pressed),
             MouseButton::Right => self.right_mouse_button.set_down(pressed),
+            MouseButton::Middle => self.middle_mouse_button.set_down(pressed),
             _ignored => {}
         }
     }
@@ -135,9 +140,11 @@ impl InputSystem {
 
         self.left_mouse_button.update();
         self.right_mouse_button.update();
+        self.middle_mouse_button.update();
         self.keys.iter_mut().for_each(|key| key.update());
 
-        let mouse_button_released = self.left_mouse_button.released() || self.right_mouse_button.released();
+        let mouse_button_released =
+            self.left_mouse_button.released() || self.right_mouse_button.released() || self.middle_mouse_button.released();
 
         let last_pixel_value = self.picker_value.load(Ordering::Acquire);
         let mouse_target = PickerTarget::from(last_pixel_value);
@@ -215,18 +222,24 @@ impl InputSystem {
 
     fn binding_released(&self, bindings: &KeyBindings, action: BindableAction) -> bool {
         let chord = bindings.chord(action);
-        let Some(key_code) = self
-            .known_key_codes
-            .iter()
-            .copied()
-            .find(|key_code| format!("{key_code:?}") == chord.key)
-        else {
-            return false;
-        };
         let control_down = self.get_key(KeyCode::ControlLeft).down() || self.get_key(KeyCode::ControlRight).down();
         let alt_down = self.get_key(KeyCode::AltLeft).down() || self.get_key(KeyCode::AltRight).down();
         let shift_down = self.get_key(KeyCode::ShiftLeft).down() || self.get_key(KeyCode::ShiftRight).down();
-        self.get_key(key_code).released() && control_down == chord.control && alt_down == chord.alt && shift_down == chord.shift
+
+        let key_released = if chord.key == "MouseMiddle" {
+            self.middle_mouse_button.released()
+        } else {
+            let Some(key_code) = self
+                .known_key_codes
+                .iter()
+                .copied()
+                .find(|key_code| format!("{key_code:?}") == chord.key)
+            else {
+                return false;
+            };
+            self.get_key(key_code).released()
+        };
+        key_released && control_down == chord.control && alt_down == chord.alt && shift_down == chord.shift
     }
 
     fn binding_down(&self, bindings: &KeyBindings, action: BindableAction) -> bool {
@@ -235,14 +248,6 @@ impl InputSystem {
 
     fn binding_key_down(&self, bindings: &KeyBindings, action: BindableAction, allow_shift: bool, pressed: bool) -> bool {
         let chord = bindings.chord(action);
-        let Some(key_code) = self
-            .known_key_codes
-            .iter()
-            .copied()
-            .find(|key_code| format!("{key_code:?}") == chord.key)
-        else {
-            return false;
-        };
         let control_down = self.get_key(KeyCode::ControlLeft).down() || self.get_key(KeyCode::ControlRight).down();
         let alt_down = self.get_key(KeyCode::AltLeft).down() || self.get_key(KeyCode::AltRight).down();
         let shift_down = self.get_key(KeyCode::ShiftLeft).down() || self.get_key(KeyCode::ShiftRight).down();
@@ -251,10 +256,27 @@ impl InputSystem {
         } else {
             shift_down == chord.shift
         };
-        let key_active = if pressed {
-            self.get_key(key_code).pressed()
+
+        let key_active = if chord.key == "MouseMiddle" {
+            if pressed {
+                self.middle_mouse_button.pressed()
+            } else {
+                self.middle_mouse_button.down()
+            }
         } else {
-            self.get_key(key_code).down()
+            let Some(key_code) = self
+                .known_key_codes
+                .iter()
+                .copied()
+                .find(|key_code| format!("{key_code:?}") == chord.key)
+            else {
+                return false;
+            };
+            if pressed {
+                self.get_key(key_code).pressed()
+            } else {
+                self.get_key(key_code).down()
+            }
         };
         key_active && control_down == chord.control && alt_down == chord.alt && shift_matches
     }
@@ -267,6 +289,16 @@ impl InputSystem {
         };
         if self.get_key(KeyCode::Escape).pressed() {
             events.push(InputEvent::CancelKeyBindingCapture);
+            return true;
+        }
+        if self.middle_mouse_button.pressed() {
+            let control = self.get_key(KeyCode::ControlLeft).down() || self.get_key(KeyCode::ControlRight).down();
+            let alt = self.get_key(KeyCode::AltLeft).down() || self.get_key(KeyCode::AltRight).down();
+            let shift = self.get_key(KeyCode::ShiftLeft).down() || self.get_key(KeyCode::ShiftRight).down();
+            events.push(InputEvent::CapturedKeyBinding {
+                action,
+                chord: crate::settings::KeyChord::new("MouseMiddle", control, alt, shift),
+            });
             return true;
         }
         let modifier_keys = [
@@ -355,8 +387,11 @@ impl InputSystem {
             KeyCode::F8,
             KeyCode::F9,
         ];
+        let shift_down = self.get_key(KeyCode::ShiftLeft).down() || self.get_key(KeyCode::ShiftRight).down();
         let alt_down = self.get_key(KeyCode::AltLeft).down() || self.get_key(KeyCode::AltRight).down();
-        let row_offset = if alt_down {
+        let row_offset = if shift_down {
+            27
+        } else if alt_down {
             18
         } else if control_down {
             9
@@ -506,7 +541,7 @@ impl InputSystem {
 
         // Number-row hotbar. Only here, not in push_game_action_keys: while
         // chat is focused these keys must type digits rather than fire skills.
-        for slot_index in 0..27 {
+        for slot_index in 0..crate::state::hotbar::HOTBAR_SLOTS {
             let slot = HotbarSlot(slot_index as u16);
             let action = BindableAction::HotbarSlot(slot_index as u8);
             if self.binding_pressed(bindings, action, false) {

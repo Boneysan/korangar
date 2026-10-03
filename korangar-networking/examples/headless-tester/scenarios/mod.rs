@@ -1,10 +1,13 @@
 mod combat;
 mod dialogue;
 mod dm;
+mod finale;
 mod gm;
 mod items;
+mod mobs;
 mod movement;
 mod observer;
+mod provisioning;
 mod session;
 /// Generated from Hercules' own `skill_db.conf` — see
 /// `tools/generate_skill_expectations.py`. Regenerate after any skill_db
@@ -78,6 +81,16 @@ impl Scenario {
     }
 }
 
+/// Phase of scenarios that *provision* state (create characters) rather than
+/// test behaviour. `--scenario all` skips them; name one explicitly to run it.
+pub const PROVISIONING_PHASE: u8 = 250;
+
+/// Scenarios that leave persistent state behind on purpose. They are
+/// selectable by name but never part of `all` or a numbered phase.
+pub fn provisioning_scenarios() -> Vec<Scenario> {
+    provisioning::scenarios()
+}
+
 pub fn all_scenarios() -> Vec<Scenario> {
     let mut scenarios = Vec::new();
     scenarios.extend(session::scenarios());
@@ -89,6 +102,8 @@ pub fn all_scenarios() -> Vec<Scenario> {
     scenarios.extend(dialogue::scenarios());
     scenarios.extend(social::scenarios());
     scenarios.extend(dm::scenarios());
+    scenarios.extend(finale::scenarios());
+    scenarios.extend(mobs::scenarios());
     scenarios.extend(observer::scenarios());
     scenarios.push(items::split_stack_scenario());
     scenarios.push(session::death_recovery_threshold_scenario());

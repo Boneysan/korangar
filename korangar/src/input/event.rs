@@ -12,7 +12,7 @@ use rust_state::State;
 
 use crate::interface::resource::{ItemSource, SkillSource};
 use crate::loaders::ServiceId;
-use crate::settings::{AutolootItemType, BindableAction, KeyChord};
+use crate::settings::{AutolootItemType, BindableAction, GroundLootFilter, KeyChord};
 use crate::state::ClientState;
 use crate::state::character_creation::{CharacterSex, CreationStat, HairStyle};
 use crate::state::inventory::InventoryTab;
@@ -101,10 +101,19 @@ pub enum InputEvent {
     ResetHudLayout,
     /// Cycle the persisted HUD positioning grid between off, 8, 16, and 32 px.
     CycleHudSnapGrid,
+    /// Fade the hotbar, status bar, and monster target frame five seconds after
+    /// combat.
+    ToggleCombatHudFade,
     /// Cycle one learned ground/trap skill's target-mode override.
     CycleGroundSkillTargetMode(u16),
     /// Cycle between all combat text and important-only combat text.
     CycleCombatTextFrequency,
+    /// Cycle how many other-player skill visuals are drawn (full / reduced /
+    /// minimal).
+    CycleEffectDensity,
+    /// Cycle the route preference (fewest maps / cheapest / shortest walk /
+    /// avoid locked steps).
+    CycleRoutePreference,
     /// Cycle combat text font size through small, normal, and large.
     CycleCombatTextSize,
     /// Open or close the interface settings window.
@@ -222,6 +231,36 @@ pub enum InputEvent {
     ToggleSit,
     /// Toggle the in-game minimap window (official-style map corner).
     ToggleMinimapWindow,
+    /// Open or close the simulated build planner (GDD F03).
+    ToggleBuildPlannerWindow,
+    /// Adjust one planned stat by one point; never sent to the server.
+    BuildPlannerStat {
+        stat: crate::world::StatKind,
+        change: i8,
+    },
+    /// Adjust one planned skill by one level; never sent to the server.
+    BuildPlannerSkill {
+        skill_id: u16,
+        change: i8,
+    },
+    /// Write the planner's plan to a numbered slot under `client/build_plans`.
+    BuildPlannerSave {
+        slot: u8,
+    },
+    /// Load a numbered slot, re-fitted to the character as it is now.
+    BuildPlannerLoad {
+        slot: u8,
+    },
+    /// Move the planner's target Base Level.
+    BuildPlannerBaseLevel {
+        change: i16,
+    },
+    /// Move the planner's target Job Level.
+    BuildPlannerJobLevel {
+        change: i16,
+    },
+    /// Return the planner to the live character's current point.
+    BuildPlannerReset,
     /// Grow the minimap square (button / scroll).
     MinimapZoomIn,
     /// Shrink the minimap square (button / scroll).
@@ -246,6 +285,18 @@ pub enum InputEvent {
     /// Remove a character-local hunt target.
     RemoveClientHuntingGoal {
         monster_id: u32,
+    },
+    /// Save currently equipped items as a named set (GDD §10.7).
+    SaveEquipmentSet {
+        name: String,
+    },
+    /// Equip items in a named set one by one from inventory (GDD §10.7).
+    EquipNamedSet {
+        name: String,
+    },
+    /// Delete a named equipment set (GDD §10.7).
+    DeleteEquipmentSet {
+        name: String,
     },
     DropItem {
         inventory_index: ragnarok_packets::InventoryIndex,
@@ -376,6 +427,13 @@ pub enum InputEvent {
     JumpToPartyMember {
         character_name: String,
     },
+    /// Plot a route to an online party member's map and coordinates (GDD
+    /// 10.14).
+    NavigateToPartyMember {
+        character_name: String,
+        map_name: String,
+        position: Option<(u16, u16)>,
+    },
     /// GDD 11.2's Loot tab: set the `@autoloot` drop-rate threshold. Clamped
     /// to 0-100 by the handler; Hercules itself clamps too, so an
     /// out-of-range value is not a wire hazard, just wasted intent.
@@ -387,6 +445,14 @@ pub enum InputEvent {
     /// read-then-flip shape as `ToggleMinimapWindow`.
     ToggleAutolootType {
         item_type: AutolootItemType,
+    },
+    /// Set the ground loot filter level (GDD §11.2 / F26).
+    SetGroundLootFilter {
+        filter: GroundLootFilter,
+    },
+    /// Toggle an item in the client ground loot wishlist (GDD §11.2 / F26).
+    ToggleWishlistItem {
+        item_id: u32,
     },
     /// Cast a skill.
     CastSkill {
@@ -595,6 +661,8 @@ pub enum InputEvent {
     SharePartyDestination,
     /// Route to the party's current shared destination and acknowledge it.
     AcceptPartyDestination,
+    /// Dismiss the shared destination for this client only; nothing is sent.
+    DeclinePartyDestination,
     /// Start a bounded party-wide ready check.
     StartPartyReadyCheck,
     /// Respond once to the active party ready check.
@@ -604,6 +672,9 @@ pub enum InputEvent {
     /// Open or close the GM/DM commands window. Only works while playing.
     ToggleCommandsWindow,
     ToggleDiceWindow,
+    /// Open or close the crafting commission board window. Only works while
+    /// playing.
+    ToggleCommissionBoardWindow,
     /// Open or close the player emote palette. Only works while playing.
     ToggleEmoteWindow,
     /// Open or close the quest log. Only works while playing.

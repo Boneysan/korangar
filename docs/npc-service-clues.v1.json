@@ -1,9 +1,9 @@
 {
   "schema_version": 1,
-  "source_revision": "cc83ca152ff09132a047acad028a9e978bd90b89",
+  "source_revision": "cd0486c79a9a595a141ce23ff1b9f1e1b9d61caa",
   "source_worktree_dirty": false,
   "mode": "renewal",
-  "loaded_script_files": 653,
+  "loaded_script_files": 657,
   "service_kinds_indexed": [
     "cart_rental",
     "divorce",
@@ -55,7 +55,9 @@
         "path": "npc/jobs/novice/supernovice.txt",
         "line": 456
       },
-      "status": "unreviewed_service_call_clue"
+      "status": "reviewed_service_call",
+      "review_id": "supernovice_kafra_cart_rental",
+      "evidence_state": "conditional"
     },
     {
       "service_kind": "cart_rental",
@@ -65,7 +67,9 @@
         "path": "npc/kafras/functions_kafras.txt",
         "line": 415
       },
-      "status": "unreviewed_service_call_clue"
+      "status": "reviewed_service_call",
+      "review_id": "kafra_employee_core_services",
+      "evidence_state": "conditional"
     },
     {
       "service_kind": "cart_rental",
@@ -83,7 +87,9 @@
         "path": "npc/re/merchants/renters.txt",
         "line": 185
       },
-      "status": "unreviewed_service_call_clue"
+      "status": "reviewed_service_call",
+      "review_id": "mado_gear_armorer_cart_rental",
+      "evidence_state": "conditional"
     },
     {
       "service_kind": "divorce",
@@ -101,7 +107,9 @@
         "path": "npc/other/divorce.txt",
         "line": 41
       },
-      "status": "unreviewed_service_call_clue"
+      "status": "reviewed_service_call",
+      "review_id": "deviruchi_divorce_niflheim",
+      "evidence_state": "conditional"
     },
     {
       "service_kind": "divorce",
@@ -119,7 +127,9 @@
         "path": "npc/other/divorce.txt",
         "line": 184
       },
-      "status": "unreviewed_service_call_clue"
+      "status": "reviewed_service_call",
+      "review_id": "deviruchi_divorce_niflheim",
+      "evidence_state": "conditional"
     },
     {
       "service_kind": "divorce",
@@ -137,7 +147,9 @@
         "path": "npc/other/divorce.txt",
         "line": 216
       },
-      "status": "unreviewed_service_call_clue"
+      "status": "reviewed_service_call",
+      "review_id": "deviruchi_divorce_niflheim",
+      "evidence_state": "conditional"
     },
     {
       "service_kind": "guild_storage",
@@ -147,7 +159,9 @@
         "path": "npc/kafras/functions_kafras.txt",
         "line": 202
       },
-      "status": "unreviewed_service_call_clue"
+      "status": "reviewed_service_call",
+      "review_id": "kafra_employee_core_services",
+      "evidence_state": "conditional"
     },
     {
       "service_kind": "kafra_cart_helper",
@@ -157,7 +171,9 @@
         "path": "npc/kafras/cool_event_corp.txt",
         "line": 83
       },
-      "status": "unreviewed_service_call_clue"
+      "status": "reviewed_service_call",
+      "review_id": "cool_event_corp_zonda_staff",
+      "evidence_state": "conditional"
     },
     {
       "service_kind": "kafra_cart_helper",
@@ -167,7 +183,9 @@
         "path": "npc/kafras/functions_kafras.txt",
         "line": 172
       },
-      "status": "unreviewed_service_call_clue"
+      "status": "reviewed_service_call",
+      "review_id": "kafra_employee_core_services",
+      "evidence_state": "conditional"
     },
     {
       "service_kind": "kafra_menu",
@@ -185,7 +203,9 @@
         "path": "npc/battleground/bg_common.txt",
         "line": 330
       },
-      "status": "unreviewed_service_call_clue"
+      "status": "reviewed_service_call",
+      "review_id": "kafra_employee_core_services",
+      "evidence_state": "conditional"
     },
     {
       "service_kind": "kafra_menu",
@@ -203,7 +223,9 @@
         "path": "npc/kafras/kafras.txt",
         "line": 137
       },
-      "status": "unreviewed_service_call_clue"
+      "status": "reviewed_service_call",
+      "review_id": "kafra_employee_core_services",
+      "evidence_state": "conditional"
     },
     {
       "service_kind": "kafra_menu",
@@ -221,7 +243,9 @@
         "path": "npc/kafras/kafras.txt",
         "line": 151
       },
-      "status": "unreviewed_service_call_clue"
+      "status": "reviewed_service_call",
+      "review_id": "kafra_employee_core_services",
+      "evidence_state": "conditional"
     },
     {
       "service_kind": "kafra_menu",
@@ -239,7 +263,9 @@
         "path": "npc/kafras/kafras.txt",
         "line": 166
       },
-      "status": "unreviewed_service_call_clue"
+      "status": "reviewed_service_call",
+      "review_id": "kafra_employee_core_services",
+      "evidence_state": "conditional"
     },
     {
       "service_kind": "kafra_menu",
@@ -257,7 +283,9 @@
         "path": "npc/kafras/kafras.txt",
         "line": 180
       },
-      "status": "unreviewed_service_call_clue"
+      "status": "reviewed_service_call",
+      "review_id": "kafra_employee_core_services",
+      "evidence_state": "conditional"
     },
     {
       "service_kind": "kafra_menu",
@@ -275,7 +303,9 @@
         "path": "npc/kafras/kafras.txt",
         "line": 195
       },
-      "status": "unreviewed_service_call_clue"
+      "status": "reviewed_service_call",
+      "review_id": "kafra_employee_core_services",
+      "evidence_state": "conditional"
     },
     {
       "service_kind": "kafra_menu",
@@ -293,7 +323,9 @@
         "path": "npc/kafras/kafras.txt",
         "line": 209
       },
-      "status": "unreviewed_service_call_clue"
+      "status": "reviewed_service_call",
+      "review_id": "kafra_employee_core_services",
+      "evidence_state": "conditional"
     },
     {
       "service_kind": "kafra_menu",
@@ -311,7 +343,9 @@
         "path": "npc/kafras/kafras.txt",
         "line": 223
       },
-      "status": "unreviewed_service_call_clue"
+      "status": "reviewed_service_call",
+      "review_id": "kafra_employee_core_services",
+      "evidence_state": "conditional"
     },
     {
       "service_kind": "kafra_menu",
@@ -329,7 +363,9 @@
         "path": "npc/kafras/kafras.txt",
         "line": 237
       },
-      "status": "unreviewed_service_call_clue"
+      "status": "reviewed_service_call",
+      "review_id": "kafra_employee_core_services",
+      "evidence_state": "conditional"
     },
     {
       "service_kind": "kafra_menu",
@@ -347,7 +383,9 @@
         "path": "npc/kafras/kafras.txt",
         "line": 253
       },
-      "status": "unreviewed_service_call_clue"
+      "status": "reviewed_service_call",
+      "review_id": "kafra_employee_core_services",
+      "evidence_state": "conditional"
     },
     {
       "service_kind": "kafra_menu",
@@ -365,7 +403,9 @@
         "path": "npc/kafras/kafras.txt",
         "line": 266
       },
-      "status": "unreviewed_service_call_clue"
+      "status": "reviewed_service_call",
+      "review_id": "kafra_employee_core_services",
+      "evidence_state": "conditional"
     },
     {
       "service_kind": "kafra_menu",
@@ -383,7 +423,9 @@
         "path": "npc/kafras/kafras.txt",
         "line": 279
       },
-      "status": "unreviewed_service_call_clue"
+      "status": "reviewed_service_call",
+      "review_id": "kafra_employee_core_services",
+      "evidence_state": "conditional"
     },
     {
       "service_kind": "kafra_menu",
@@ -401,7 +443,9 @@
         "path": "npc/kafras/kafras.txt",
         "line": 294
       },
-      "status": "unreviewed_service_call_clue"
+      "status": "reviewed_service_call",
+      "review_id": "kafra_employee_core_services",
+      "evidence_state": "conditional"
     },
     {
       "service_kind": "kafra_menu",
@@ -419,7 +463,9 @@
         "path": "npc/kafras/kafras.txt",
         "line": 308
       },
-      "status": "unreviewed_service_call_clue"
+      "status": "reviewed_service_call",
+      "review_id": "kafra_employee_core_services",
+      "evidence_state": "conditional"
     },
     {
       "service_kind": "kafra_menu",
@@ -437,7 +483,9 @@
         "path": "npc/kafras/kafras.txt",
         "line": 322
       },
-      "status": "unreviewed_service_call_clue"
+      "status": "reviewed_service_call",
+      "review_id": "kafra_employee_core_services",
+      "evidence_state": "conditional"
     },
     {
       "service_kind": "kafra_menu",
@@ -455,7 +503,9 @@
         "path": "npc/kafras/kafras.txt",
         "line": 335
       },
-      "status": "unreviewed_service_call_clue"
+      "status": "reviewed_service_call",
+      "review_id": "kafra_employee_core_services",
+      "evidence_state": "conditional"
     },
     {
       "service_kind": "kafra_menu",
@@ -473,7 +523,9 @@
         "path": "npc/kafras/kafras.txt",
         "line": 348
       },
-      "status": "unreviewed_service_call_clue"
+      "status": "reviewed_service_call",
+      "review_id": "kafra_employee_core_services",
+      "evidence_state": "conditional"
     },
     {
       "service_kind": "kafra_menu",
@@ -491,7 +543,9 @@
         "path": "npc/kafras/kafras.txt",
         "line": 363
       },
-      "status": "unreviewed_service_call_clue"
+      "status": "reviewed_service_call",
+      "review_id": "kafra_employee_core_services",
+      "evidence_state": "conditional"
     },
     {
       "service_kind": "kafra_menu",
@@ -509,7 +563,9 @@
         "path": "npc/kafras/kafras.txt",
         "line": 378
       },
-      "status": "unreviewed_service_call_clue"
+      "status": "reviewed_service_call",
+      "review_id": "kafra_employee_core_services",
+      "evidence_state": "conditional"
     },
     {
       "service_kind": "kafra_menu",
@@ -527,7 +583,9 @@
         "path": "npc/kafras/kafras.txt",
         "line": 393
       },
-      "status": "unreviewed_service_call_clue"
+      "status": "reviewed_service_call",
+      "review_id": "kafra_employee_core_services",
+      "evidence_state": "conditional"
     },
     {
       "service_kind": "kafra_menu",
@@ -545,7 +603,9 @@
         "path": "npc/kafras/kafras.txt",
         "line": 407
       },
-      "status": "unreviewed_service_call_clue"
+      "status": "reviewed_service_call",
+      "review_id": "kafra_employee_core_services",
+      "evidence_state": "conditional"
     },
     {
       "service_kind": "kafra_menu",
@@ -563,7 +623,9 @@
         "path": "npc/kafras/kafras.txt",
         "line": 422
       },
-      "status": "unreviewed_service_call_clue"
+      "status": "reviewed_service_call",
+      "review_id": "kafra_employee_core_services",
+      "evidence_state": "conditional"
     },
     {
       "service_kind": "kafra_menu",
@@ -581,7 +643,9 @@
         "path": "npc/kafras/kafras.txt",
         "line": 433
       },
-      "status": "unreviewed_service_call_clue"
+      "status": "reviewed_service_call",
+      "review_id": "kafra_employee_core_services",
+      "evidence_state": "conditional"
     },
     {
       "service_kind": "kafra_menu",
@@ -599,7 +663,9 @@
         "path": "npc/kafras/kafras.txt",
         "line": 447
       },
-      "status": "unreviewed_service_call_clue"
+      "status": "reviewed_service_call",
+      "review_id": "kafra_employee_core_services",
+      "evidence_state": "conditional"
     },
     {
       "service_kind": "kafra_menu",
@@ -617,7 +683,9 @@
         "path": "npc/kafras/kafras.txt",
         "line": 461
       },
-      "status": "unreviewed_service_call_clue"
+      "status": "reviewed_service_call",
+      "review_id": "kafra_employee_core_services",
+      "evidence_state": "conditional"
     },
     {
       "service_kind": "kafra_menu",
@@ -635,7 +703,9 @@
         "path": "npc/kafras/kafras.txt",
         "line": 474
       },
-      "status": "unreviewed_service_call_clue"
+      "status": "reviewed_service_call",
+      "review_id": "kafra_employee_core_services",
+      "evidence_state": "conditional"
     },
     {
       "service_kind": "kafra_menu",
@@ -653,7 +723,9 @@
         "path": "npc/kafras/kafras.txt",
         "line": 488
       },
-      "status": "unreviewed_service_call_clue"
+      "status": "reviewed_service_call",
+      "review_id": "kafra_employee_core_services",
+      "evidence_state": "conditional"
     },
     {
       "service_kind": "kafra_menu",
@@ -671,7 +743,9 @@
         "path": "npc/kafras/kafras.txt",
         "line": 501
       },
-      "status": "unreviewed_service_call_clue"
+      "status": "reviewed_service_call",
+      "review_id": "kafra_employee_core_services",
+      "evidence_state": "conditional"
     },
     {
       "service_kind": "kafra_menu",
@@ -689,7 +763,9 @@
         "path": "npc/kafras/kafras.txt",
         "line": 515
       },
-      "status": "unreviewed_service_call_clue"
+      "status": "reviewed_service_call",
+      "review_id": "kafra_employee_core_services",
+      "evidence_state": "conditional"
     },
     {
       "service_kind": "kafra_menu",
@@ -707,7 +783,9 @@
         "path": "npc/kafras/kafras.txt",
         "line": 529
       },
-      "status": "unreviewed_service_call_clue"
+      "status": "reviewed_service_call",
+      "review_id": "kafra_employee_core_services",
+      "evidence_state": "conditional"
     },
     {
       "service_kind": "kafra_menu",
@@ -725,7 +803,9 @@
         "path": "npc/kafras/kafras.txt",
         "line": 541
       },
-      "status": "unreviewed_service_call_clue"
+      "status": "reviewed_service_call",
+      "review_id": "kafra_employee_core_services",
+      "evidence_state": "conditional"
     },
     {
       "service_kind": "kafra_menu",
@@ -743,7 +823,9 @@
         "path": "npc/kafras/kafras.txt",
         "line": 553
       },
-      "status": "unreviewed_service_call_clue"
+      "status": "reviewed_service_call",
+      "review_id": "kafra_employee_core_services",
+      "evidence_state": "conditional"
     },
     {
       "service_kind": "kafra_menu",
@@ -761,7 +843,9 @@
         "path": "npc/kafras/kafras.txt",
         "line": 567
       },
-      "status": "unreviewed_service_call_clue"
+      "status": "reviewed_service_call",
+      "review_id": "kafra_employee_core_services",
+      "evidence_state": "conditional"
     },
     {
       "service_kind": "kafra_menu",
@@ -779,7 +863,9 @@
         "path": "npc/kafras/kafras.txt",
         "line": 582
       },
-      "status": "unreviewed_service_call_clue"
+      "status": "reviewed_service_call",
+      "review_id": "kafra_employee_core_services",
+      "evidence_state": "conditional"
     },
     {
       "service_kind": "kafra_menu",
@@ -797,7 +883,9 @@
         "path": "npc/kafras/kafras.txt",
         "line": 589
       },
-      "status": "unreviewed_service_call_clue"
+      "status": "reviewed_service_call",
+      "review_id": "kafra_employee_core_services",
+      "evidence_state": "conditional"
     },
     {
       "service_kind": "kafra_menu",
@@ -815,7 +903,9 @@
         "path": "npc/kafras/kafras.txt",
         "line": 609
       },
-      "status": "unreviewed_service_call_clue"
+      "status": "reviewed_service_call",
+      "review_id": "kafra_employee_core_services",
+      "evidence_state": "conditional"
     },
     {
       "service_kind": "kafra_menu",
@@ -833,7 +923,9 @@
         "path": "npc/kafras/kafras.txt",
         "line": 624
       },
-      "status": "unreviewed_service_call_clue"
+      "status": "reviewed_service_call",
+      "review_id": "kafra_employee_core_services",
+      "evidence_state": "conditional"
     },
     {
       "service_kind": "kafra_menu",
@@ -851,7 +943,9 @@
         "path": "npc/kafras/kafras.txt",
         "line": 638
       },
-      "status": "unreviewed_service_call_clue"
+      "status": "reviewed_service_call",
+      "review_id": "kafra_employee_core_services",
+      "evidence_state": "conditional"
     },
     {
       "service_kind": "kafra_menu",
@@ -869,7 +963,9 @@
         "path": "npc/kafras/kafras.txt",
         "line": 653
       },
-      "status": "unreviewed_service_call_clue"
+      "status": "reviewed_service_call",
+      "review_id": "kafra_employee_core_services",
+      "evidence_state": "conditional"
     },
     {
       "service_kind": "kafra_menu",
@@ -887,7 +983,9 @@
         "path": "npc/kafras/kafras.txt",
         "line": 667
       },
-      "status": "unreviewed_service_call_clue"
+      "status": "reviewed_service_call",
+      "review_id": "kafra_employee_core_services",
+      "evidence_state": "conditional"
     },
     {
       "service_kind": "kafra_menu",
@@ -905,7 +1003,9 @@
         "path": "npc/kafras/kafras.txt",
         "line": 681
       },
-      "status": "unreviewed_service_call_clue"
+      "status": "reviewed_service_call",
+      "review_id": "kafra_employee_core_services",
+      "evidence_state": "conditional"
     },
     {
       "service_kind": "kafra_menu",
@@ -923,7 +1023,9 @@
         "path": "npc/other/turbo_track.txt",
         "line": 3696
       },
-      "status": "unreviewed_service_call_clue"
+      "status": "reviewed_service_call",
+      "review_id": "kafra_employee_core_services",
+      "evidence_state": "conditional"
     },
     {
       "service_kind": "kafra_menu",
@@ -941,7 +1043,9 @@
         "path": "npc/re/kafras/kafras.txt",
         "line": 42
       },
-      "status": "unreviewed_service_call_clue"
+      "status": "reviewed_service_call",
+      "review_id": "kafra_employee_core_services",
+      "evidence_state": "conditional"
     },
     {
       "service_kind": "kafra_menu",
@@ -959,7 +1063,9 @@
         "path": "npc/re/kafras/kafras.txt",
         "line": 50
       },
-      "status": "unreviewed_service_call_clue"
+      "status": "reviewed_service_call",
+      "review_id": "kafra_employee_core_services",
+      "evidence_state": "conditional"
     },
     {
       "service_kind": "kafra_menu",
@@ -977,7 +1083,9 @@
         "path": "npc/re/kafras/kafras.txt",
         "line": 62
       },
-      "status": "unreviewed_service_call_clue"
+      "status": "reviewed_service_call",
+      "review_id": "kafra_employee_core_services",
+      "evidence_state": "conditional"
     },
     {
       "service_kind": "kafra_menu",
@@ -995,7 +1103,9 @@
         "path": "npc/re/kafras/kafras.txt",
         "line": 68
       },
-      "status": "unreviewed_service_call_clue"
+      "status": "reviewed_service_call",
+      "review_id": "kafra_employee_core_services",
+      "evidence_state": "conditional"
     },
     {
       "service_kind": "kafra_menu",
@@ -1013,7 +1123,9 @@
         "path": "npc/re/kafras/kafras.txt",
         "line": 82
       },
-      "status": "unreviewed_service_call_clue"
+      "status": "reviewed_service_call",
+      "review_id": "kafra_employee_core_services",
+      "evidence_state": "conditional"
     },
     {
       "service_kind": "kafra_menu",
@@ -1031,7 +1143,9 @@
         "path": "npc/re/kafras/kafras.txt",
         "line": 88
       },
-      "status": "unreviewed_service_call_clue"
+      "status": "reviewed_service_call",
+      "review_id": "kafra_employee_core_services",
+      "evidence_state": "conditional"
     },
     {
       "service_kind": "kafra_menu",
@@ -1049,7 +1163,9 @@
         "path": "npc/re/kafras/kafras.txt",
         "line": 97
       },
-      "status": "unreviewed_service_call_clue"
+      "status": "reviewed_service_call",
+      "review_id": "kafra_employee_core_services",
+      "evidence_state": "conditional"
     },
     {
       "service_kind": "kafra_storage_helper",
@@ -1059,7 +1175,9 @@
         "path": "npc/kafras/cool_event_corp.txt",
         "line": 73
       },
-      "status": "unreviewed_service_call_clue"
+      "status": "reviewed_service_call",
+      "review_id": "cool_event_corp_zonda_staff",
+      "evidence_state": "conditional"
     },
     {
       "service_kind": "kafra_storage_helper",
@@ -1069,7 +1187,9 @@
         "path": "npc/kafras/functions_kafras.txt",
         "line": 148
       },
-      "status": "unreviewed_service_call_clue"
+      "status": "reviewed_service_call",
+      "review_id": "kafra_employee_core_services",
+      "evidence_state": "conditional"
     },
     {
       "service_kind": "kafra_storage_helper",
@@ -1079,7 +1199,9 @@
         "path": "npc/kafras/functions_kafras.txt",
         "line": 150
       },
-      "status": "unreviewed_service_call_clue"
+      "status": "reviewed_service_call",
+      "review_id": "kafra_employee_core_services",
+      "evidence_state": "conditional"
     },
     {
       "service_kind": "kafra_storage_helper",
@@ -1089,7 +1211,9 @@
         "path": "npc/kafras/functions_kafras.txt",
         "line": 181
       },
-      "status": "unreviewed_service_call_clue"
+      "status": "reviewed_service_call",
+      "review_id": "kafra_employee_core_services",
+      "evidence_state": "conditional"
     },
     {
       "service_kind": "kafra_teleport_helper",
@@ -1099,7 +1223,9 @@
         "path": "npc/kafras/cool_event_corp.txt",
         "line": 78
       },
-      "status": "unreviewed_service_call_clue"
+      "status": "reviewed_service_call",
+      "review_id": "cool_event_corp_zonda_staff",
+      "evidence_state": "conditional"
     },
     {
       "service_kind": "kafra_teleport_helper",
@@ -1109,7 +1235,9 @@
         "path": "npc/kafras/functions_kafras.txt",
         "line": 155
       },
-      "status": "unreviewed_service_call_clue"
+      "status": "reviewed_service_call",
+      "review_id": "kafra_employee_core_services",
+      "evidence_state": "conditional"
     },
     {
       "service_kind": "navigation_trigger",
@@ -1127,7 +1255,9 @@
         "path": "npc/re/jobs/novice/academy.txt",
         "line": 47
       },
-      "status": "unreviewed_service_call_clue"
+      "status": "reviewed_service_call",
+      "review_id": "iz_int_startpoint_navigation_trigger",
+      "evidence_state": "conditional"
     },
     {
       "service_kind": "refine_ui_access",
@@ -1145,7 +1275,9 @@
         "path": "npc/merchants/advanced_refiner.txt",
         "line": 54
       },
-      "status": "unreviewed_service_call_clue"
+      "status": "reviewed_service_call",
+      "review_id": "refiner_ui_access_points",
+      "evidence_state": "conditional"
     },
     {
       "service_kind": "refine_ui_access",
@@ -1163,7 +1295,9 @@
         "path": "npc/merchants/refine.txt",
         "line": 593
       },
-      "status": "unreviewed_service_call_clue"
+      "status": "reviewed_service_call",
+      "review_id": "refiner_ui_access_points",
+      "evidence_state": "conditional"
     },
     {
       "service_kind": "refine_ui_access",
@@ -1173,7 +1307,9 @@
         "path": "npc/re/merchants/hd_refiner.txt",
         "line": 48
       },
-      "status": "unreviewed_service_call_clue"
+      "status": "reviewed_service_call",
+      "review_id": "refiner_ui_access_points",
+      "evidence_state": "conditional"
     },
     {
       "service_kind": "refine_ui_access",
@@ -1191,7 +1327,9 @@
         "path": "npc/re/merchants/refine.txt",
         "line": 65
       },
-      "status": "unreviewed_service_call_clue"
+      "status": "reviewed_service_call",
+      "review_id": "refiner_ui_access_points",
+      "evidence_state": "conditional"
     },
     {
       "service_kind": "refine_ui_access",
@@ -1209,7 +1347,9 @@
         "path": "npc/re/merchants/shadow_refiner.txt",
         "line": 47
       },
-      "status": "unreviewed_service_call_clue"
+      "status": "reviewed_service_call",
+      "review_id": "refiner_ui_access_points",
+      "evidence_state": "conditional"
     },
     {
       "service_kind": "repair_all",
@@ -1227,7 +1367,9 @@
         "path": "npc/re/jobs/novice/academy.txt",
         "line": 14258
       },
-      "status": "unreviewed_service_call_clue"
+      "status": "reviewed_service_call",
+      "review_id": "repair_man_izlude_academy",
+      "evidence_state": "conditional"
     },
     {
       "service_kind": "repair_shared_function",
@@ -1245,7 +1387,9 @@
         "path": "npc/battleground/bg_common.txt",
         "line": 335
       },
-      "status": "unreviewed_service_call_clue"
+      "status": "reviewed_service_call",
+      "review_id": "repairmain_shared_function",
+      "evidence_state": "conditional"
     },
     {
       "service_kind": "repair_shared_function",
@@ -1263,7 +1407,9 @@
         "path": "npc/merchants/refine.txt",
         "line": 1094
       },
-      "status": "unreviewed_service_call_clue"
+      "status": "reviewed_service_call",
+      "review_id": "repairmain_shared_function",
+      "evidence_state": "conditional"
     },
     {
       "service_kind": "repair_shared_function",
@@ -1281,7 +1427,9 @@
         "path": "npc/merchants/refine.txt",
         "line": 1099
       },
-      "status": "unreviewed_service_call_clue"
+      "status": "reviewed_service_call",
+      "review_id": "repairmain_shared_function",
+      "evidence_state": "conditional"
     },
     {
       "service_kind": "repair_shared_function",
@@ -1299,7 +1447,9 @@
         "path": "npc/merchants/refine.txt",
         "line": 1104
       },
-      "status": "unreviewed_service_call_clue"
+      "status": "reviewed_service_call",
+      "review_id": "repairmain_shared_function",
+      "evidence_state": "conditional"
     },
     {
       "service_kind": "repair_shared_function",
@@ -1317,7 +1467,9 @@
         "path": "npc/merchants/refine.txt",
         "line": 1109
       },
-      "status": "unreviewed_service_call_clue"
+      "status": "reviewed_service_call",
+      "review_id": "repairmain_shared_function",
+      "evidence_state": "conditional"
     },
     {
       "service_kind": "repair_shared_function",
@@ -1335,7 +1487,9 @@
         "path": "npc/merchants/refine.txt",
         "line": 1114
       },
-      "status": "unreviewed_service_call_clue"
+      "status": "reviewed_service_call",
+      "review_id": "repairmain_shared_function",
+      "evidence_state": "conditional"
     },
     {
       "service_kind": "repair_shared_function",
@@ -1353,7 +1507,9 @@
         "path": "npc/merchants/refine.txt",
         "line": 1119
       },
-      "status": "unreviewed_service_call_clue"
+      "status": "reviewed_service_call",
+      "review_id": "repairmain_shared_function",
+      "evidence_state": "conditional"
     },
     {
       "service_kind": "repair_shared_function",
@@ -1371,7 +1527,9 @@
         "path": "npc/merchants/refine.txt",
         "line": 1124
       },
-      "status": "unreviewed_service_call_clue"
+      "status": "reviewed_service_call",
+      "review_id": "repairmain_shared_function",
+      "evidence_state": "conditional"
     },
     {
       "service_kind": "repair_shared_function",
@@ -1389,7 +1547,9 @@
         "path": "npc/merchants/refine.txt",
         "line": 1129
       },
-      "status": "unreviewed_service_call_clue"
+      "status": "reviewed_service_call",
+      "review_id": "repairmain_shared_function",
+      "evidence_state": "conditional"
     },
     {
       "service_kind": "repair_shared_function",
@@ -1407,7 +1567,9 @@
         "path": "npc/merchants/refine.txt",
         "line": 1134
       },
-      "status": "unreviewed_service_call_clue"
+      "status": "reviewed_service_call",
+      "review_id": "repairmain_shared_function",
+      "evidence_state": "conditional"
     },
     {
       "service_kind": "repair_shared_function",
@@ -1425,7 +1587,9 @@
         "path": "npc/merchants/refine.txt",
         "line": 1139
       },
-      "status": "unreviewed_service_call_clue"
+      "status": "reviewed_service_call",
+      "review_id": "repairmain_shared_function",
+      "evidence_state": "conditional"
     },
     {
       "service_kind": "repair_shared_function",
@@ -1443,7 +1607,9 @@
         "path": "npc/merchants/refine.txt",
         "line": 1144
       },
-      "status": "unreviewed_service_call_clue"
+      "status": "reviewed_service_call",
+      "review_id": "repairmain_shared_function",
+      "evidence_state": "conditional"
     },
     {
       "service_kind": "repair_shared_function",
@@ -1461,7 +1627,9 @@
         "path": "npc/merchants/refine.txt",
         "line": 1149
       },
-      "status": "unreviewed_service_call_clue"
+      "status": "reviewed_service_call",
+      "review_id": "repairmain_shared_function",
+      "evidence_state": "conditional"
     },
     {
       "service_kind": "repair_shared_function",
@@ -1479,7 +1647,9 @@
         "path": "npc/merchants/refine.txt",
         "line": 1154
       },
-      "status": "unreviewed_service_call_clue"
+      "status": "reviewed_service_call",
+      "review_id": "repairmain_shared_function",
+      "evidence_state": "conditional"
     },
     {
       "service_kind": "repair_shared_function",
@@ -1497,7 +1667,9 @@
         "path": "npc/merchants/refine.txt",
         "line": 1159
       },
-      "status": "unreviewed_service_call_clue"
+      "status": "reviewed_service_call",
+      "review_id": "repairmain_shared_function",
+      "evidence_state": "conditional"
     },
     {
       "service_kind": "repair_single",
@@ -1515,7 +1687,9 @@
         "path": "npc/merchants/refine.txt",
         "line": 1222
       },
-      "status": "unreviewed_service_call_clue"
+      "status": "reviewed_service_call",
+      "review_id": "repairmain_shared_function",
+      "evidence_state": "conditional"
     },
     {
       "service_kind": "repair_single",
@@ -1533,7 +1707,9 @@
         "path": "npc/quests/quests_airship.txt",
         "line": 1546
       },
-      "status": "unreviewed_service_call_clue"
+      "status": "reviewed_service_call",
+      "review_id": "airship_expert_repairman",
+      "evidence_state": "conditional"
     },
     {
       "service_kind": "skill_reset",
@@ -1543,7 +1719,9 @@
         "path": "npc/other/CashShop_Functions.txt",
         "line": 76
       },
-      "status": "unreviewed_service_call_clue"
+      "status": "reviewed_service_call",
+      "review_id": "cashshop_item_triggered_functions",
+      "evidence_state": "conditional"
     },
     {
       "service_kind": "skill_reset",
@@ -1561,7 +1739,9 @@
         "path": "npc/re/other/resetskill.txt",
         "line": 144
       },
-      "status": "unreviewed_service_call_clue"
+      "status": "reviewed_service_call",
+      "review_id": "hypnotist_stat_skill_reset_izlude",
+      "evidence_state": "conditional"
     },
     {
       "service_kind": "stat_reset",
@@ -1579,7 +1759,9 @@
         "path": "npc/re/other/resetskill.txt",
         "line": 142
       },
-      "status": "unreviewed_service_call_clue"
+      "status": "reviewed_service_call",
+      "review_id": "hypnotist_stat_skill_reset_izlude",
+      "evidence_state": "conditional"
     },
     {
       "service_kind": "storage",
@@ -1589,7 +1771,9 @@
         "path": "npc/kafras/functions_kafras.txt",
         "line": 296
       },
-      "status": "unreviewed_service_call_clue"
+      "status": "reviewed_service_call",
+      "review_id": "kafra_employee_core_services",
+      "evidence_state": "conditional"
     },
     {
       "service_kind": "storage",
@@ -1607,7 +1791,9 @@
         "path": "npc/kafras/kafras.txt",
         "line": 95
       },
-      "status": "unreviewed_service_call_clue"
+      "status": "reviewed_service_call",
+      "review_id": "kafra_hq_leilah_standalone",
+      "evidence_state": "conditional"
     },
     {
       "service_kind": "storage",
@@ -1617,7 +1803,9 @@
         "path": "npc/other/CashShop_Functions.txt",
         "line": 49
       },
-      "status": "unreviewed_service_call_clue"
+      "status": "reviewed_service_call",
+      "review_id": "cashshop_item_triggered_functions",
+      "evidence_state": "conditional"
     },
     {
       "service_kind": "storage",
@@ -1635,7 +1823,9 @@
         "path": "npc/quests/quests_13_1.txt",
         "line": 7689
       },
-      "status": "unreviewed_service_call_clue"
+      "status": "reviewed_service_call",
+      "review_id": "standalone_storage_access_points",
+      "evidence_state": "conditional"
     },
     {
       "service_kind": "storage",
@@ -1653,7 +1843,9 @@
         "path": "npc/quests/quests_13_1.txt",
         "line": 7736
       },
-      "status": "unreviewed_service_call_clue"
+      "status": "reviewed_service_call",
+      "review_id": "standalone_storage_access_points",
+      "evidence_state": "conditional"
     },
     {
       "service_kind": "storage",
@@ -1671,7 +1863,9 @@
         "path": "npc/quests/quests_13_1.txt",
         "line": 7858
       },
-      "status": "unreviewed_service_call_clue"
+      "status": "reviewed_service_call",
+      "review_id": "standalone_storage_access_points",
+      "evidence_state": "conditional"
     },
     {
       "service_kind": "storage",
@@ -1689,7 +1883,9 @@
         "path": "npc/quests/quests_13_2.txt",
         "line": 112
       },
-      "status": "unreviewed_service_call_clue"
+      "status": "reviewed_service_call",
+      "review_id": "standalone_storage_access_points",
+      "evidence_state": "conditional"
     },
     {
       "service_kind": "storage",
@@ -1707,7 +1903,9 @@
         "path": "npc/quests/quests_13_2.txt",
         "line": 159
       },
-      "status": "unreviewed_service_call_clue"
+      "status": "reviewed_service_call",
+      "review_id": "standalone_storage_access_points",
+      "evidence_state": "conditional"
     },
     {
       "service_kind": "storage",
@@ -1725,7 +1923,9 @@
         "path": "npc/quests/quests_13_2.txt",
         "line": 280
       },
-      "status": "unreviewed_service_call_clue"
+      "status": "reviewed_service_call",
+      "review_id": "standalone_storage_access_points",
+      "evidence_state": "conditional"
     },
     {
       "service_kind": "storage",
@@ -1743,7 +1943,9 @@
         "path": "npc/re/cities/mora.txt",
         "line": 1197
       },
-      "status": "unreviewed_service_call_clue"
+      "status": "reviewed_service_call",
+      "review_id": "standalone_storage_access_points",
+      "evidence_state": "conditional"
     },
     {
       "service_kind": "storage",
@@ -1761,7 +1963,9 @@
         "path": "npc/re/jobs/2e/rebellion.txt",
         "line": 990
       },
-      "status": "unreviewed_service_call_clue"
+      "status": "reviewed_service_call",
+      "review_id": "standalone_storage_access_points",
+      "evidence_state": "conditional"
     },
     {
       "service_kind": "storage",
@@ -1779,7 +1983,9 @@
         "path": "npc/re/jobs/novice/academy.txt",
         "line": 5425
       },
-      "status": "unreviewed_service_call_clue"
+      "status": "reviewed_service_call",
+      "review_id": "standalone_storage_access_points",
+      "evidence_state": "conditional"
     },
     {
       "service_kind": "storage",
@@ -1797,7 +2003,9 @@
         "path": "npc/re/other/dimensional_gap.txt",
         "line": 140
       },
-      "status": "unreviewed_service_call_clue"
+      "status": "reviewed_service_call",
+      "review_id": "standalone_storage_access_points",
+      "evidence_state": "conditional"
     },
     {
       "service_kind": "storage",
@@ -1807,7 +2015,9 @@
         "path": "npc/re/quests/eden/eden_service.txt",
         "line": 68
       },
-      "status": "unreviewed_service_call_clue"
+      "status": "reviewed_service_call",
+      "review_id": "standalone_storage_access_points",
+      "evidence_state": "conditional"
     },
     {
       "service_kind": "storage",
@@ -1825,7 +2035,9 @@
         "path": "npc/re/quests/quests_dicastes.txt",
         "line": 452
       },
-      "status": "unreviewed_service_call_clue"
+      "status": "reviewed_service_call",
+      "review_id": "standalone_storage_access_points",
+      "evidence_state": "conditional"
     },
     {
       "service_kind": "storage",
@@ -1843,7 +2055,9 @@
         "path": "npc/re/quests/quests_malangdo.txt",
         "line": 374
       },
-      "status": "unreviewed_service_call_clue"
+      "status": "reviewed_service_call",
+      "review_id": "standalone_storage_access_points",
+      "evidence_state": "conditional"
     }
   ]
 }

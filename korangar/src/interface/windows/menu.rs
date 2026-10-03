@@ -63,6 +63,11 @@ impl CustomWindow<ClientState> for MenuWindow {
                     event: InputEvent::ToggleDiceWindow,
                 },
                 button! {
+                    text: "Commission Board",
+                    tooltip: "Post or view peer crafting requests (/commission)",
+                    event: InputEvent::ToggleCommissionBoardWindow,
+                },
+                button! {
                     text: "Emotes",
                     tooltip: "Choose an animated emote to display over your character (^000001Alt+L^000000)",
                     event: InputEvent::ToggleEmoteWindow,

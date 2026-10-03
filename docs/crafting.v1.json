@@ -1,9 +1,5868 @@
 {
   "schema_version": 1,
-  "source_revision": "cc83ca152ff09132a047acad028a9e978bd90b89",
+  "source_revision": "cd0486c79a9a595a141ce23ff1b9f1e1b9d61caa",
   "source_worktree_dirty": false,
   "mode": "renewal",
   "entries": [
+    {
+      "kind": "combo",
+      "name": "Dragon_Breath_Dragon_Slayer",
+      "members": [
+        "Dragon_Slayer",
+        "Dragon_Breath"
+      ],
+      "script": "bonus2 bAddRace, RC_Dragon, 5;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Gladius_Hoplite_Helmet",
+      "members": [
+        "Gladius",
+        "Hoplite_Helmet"
+      ],
+      "script": "bonus bAtkRate, 3;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Gladius__Hoplite_Helmet",
+      "members": [
+        "Gladius_",
+        "Hoplite_Helmet"
+      ],
+      "script": "bonus bAtkRate, 3;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Gladius___Hoplite_Helmet",
+      "members": [
+        "Gladius__",
+        "Hoplite_Helmet"
+      ],
+      "script": "bonus bAtkRate, 3;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Assassin_Handcuffs_Krishna",
+      "members": [
+        "Krishna",
+        "Assassin_Handcuffs"
+      ],
+      "script": "bonus bBaseAtk, 50;\n\t\tbonus2 bSkillAtk, AS_SONICBLOW, 50;\n\t\tbonus bFlee, -30;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Assassin_Handcuffs_Cakram",
+      "members": [
+        "Cakram",
+        "Assassin_Handcuffs"
+      ],
+      "script": "bonus bCritAtkRate, 40;\n\t\tbonus bCritical, 4;\n\t\tbonus bMaxHPrate, -10;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Durga_Whikebain_Suit",
+      "members": [
+        "Durga",
+        "Whikebain_Suit"
+      ],
+      "script": "if (getequiprefinerycnt(EQI_HAND_R)",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Mobster_Card_Shiver_Katar",
+      "members": [
+        "Shiver_Katar",
+        "Mobster_Card"
+      ],
+      "script": "bonus bCritAtkRate, 5;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Sedora_Card_Shiver_Katar",
+      "members": [
+        "Shiver_Katar",
+        "Sedora_Card"
+      ],
+      "script": "bonus bCritAtkRate, 5;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Giant_Axe_Gigant_Helm",
+      "members": [
+        "Giant_Axe",
+        "Gigant_Helm"
+      ],
+      "script": "bonus2 bSkillAtk, WS_CARTTERMINATION, 15 + (getequiprefinerycnt(EQI_HAND_R) * 5);",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Hoplite_Helmet_Pike",
+      "members": [
+        "Pike",
+        "Hoplite_Helmet"
+      ],
+      "script": "bonus bAtkRate, 3;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Hoplite_Helmet_Pike_",
+      "members": [
+        "Pike_",
+        "Hoplite_Helmet"
+      ],
+      "script": "bonus bAtkRate, 3;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Hoplite_Helmet_Pike__",
+      "members": [
+        "Pike__",
+        "Hoplite_Helmet"
+      ],
+      "script": "bonus bAtkRate, 3;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Long_Horn_Valkyrjas_Shield",
+      "members": [
+        "Long_Horn",
+        "Valkyrjas_Shield"
+      ],
+      "script": "bonus3 bAutoSpellWhenHit, HP_ASSUMPTIO, 2, 5;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Long_Horn_Tournament_Shield",
+      "members": [
+        "Long_Horn",
+        "Tournament_Shield"
+      ],
+      "script": "bonus2 bAddRace, RC_All, 4;\n\t\tbonus bDef, 2;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Battle_Hook_Tournament_Shield",
+      "members": [
+        "Battle_Hook",
+        "Tournament_Shield"
+      ],
+      "script": "bonus2 bAddRace, RC_All, 4;\n\t\tbonus bDef, 2;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Hunting_Spear_Tournament_Shield",
+      "members": [
+        "Hunting_Spear",
+        "Tournament_Shield"
+      ],
+      "script": "bonus2 bAddRace, RC_All, 4;\n\t\tbonus bDef, 2;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Long_Horn_M_Valkyrjas_Shield",
+      "members": [
+        "Long_Horn_M",
+        "Valkyrjas_Shield"
+      ],
+      "script": "bonus3 bAutoSpellWhenHit, HP_ASSUMPTIO, 2, 5;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Imperial_Guard_Imperial_Spear",
+      "members": [
+        "Imperial_Spear",
+        "Imperial_Guard"
+      ],
+      "script": "bonus2 bSkillAtk, CR_GRANDCROSS, 10;\n\t\tbonus2 bSkillAtk, LG_RAYOFGENESIS, 10;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Imperial_Feather_Imperial_Guard_Imperial_Ring_Imperial_Spear",
+      "members": [
+        "Imperial_Spear",
+        "Imperial_Guard",
+        "Imperial_Feather",
+        "Imperial_Ring"
+      ],
+      "script": "bonus2 bSkillUseSP, CR_GRANDCROSS, 30;\n\t\tbonus2 bSkillUseSP, LG_SHIELDPRESS, 5;\n\t\tbonus2 bSkillUseSP, LG_BANISHINGPOINT, 15;\n\t\tbonus2 bSkillUseSP, LG_CANNONSPEAR, 10;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Imperial_Ring_Imperial_Spear",
+      "members": [
+        "Imperial_Spear",
+        "Imperial_Ring"
+      ],
+      "script": "bonus2 bSkillAtk, LG_CANNONSPEAR, 7 * (getequiprefinerycnt(EQI_HAND_L) / 2);",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Spiritual_Ring_Staff_Of_Soul",
+      "members": [
+        "Staff_Of_Soul",
+        "Spiritual_Ring"
+      ],
+      "script": "bonus bMatkRate, 6;\n\t\tbonus bDex, 2;\n\t\tbonus bVariableCastrate, -getequiprefinerycnt(EQI_HAND_R);",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Spiritual_Ring_C_Staff_Of_Soul",
+      "members": [
+        "Staff_Of_Soul",
+        "Spiritual_Ring_C"
+      ],
+      "script": "bonus bMatkRate, 6;\n\t\tbonus bDex, 2;\n\t\tbonus bVariableCastrate, -getequiprefinerycnt(EQI_HAND_R);",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Spiritual_Ring_Wizardy_Staff",
+      "members": [
+        "Wizardy_Staff",
+        "Spiritual_Ring"
+      ],
+      "script": "bonus bMatkRate, 6;\n\t\tbonus bDex, 2;\n\t\tbonus bVariableCastrate, -getequiprefinerycnt(EQI_HAND_R);",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Spiritual_Ring_C_Wizardy_Staff",
+      "members": [
+        "Wizardy_Staff",
+        "Spiritual_Ring_C"
+      ],
+      "script": "bonus bMatkRate, 6;\n\t\tbonus bDex, 2;\n\t\tbonus bVariableCastrate, -getequiprefinerycnt(EQI_HAND_R);",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Dragon_Breath_Gae_Bolg",
+      "members": [
+        "Gae_Bolg",
+        "Dragon_Breath"
+      ],
+      "script": "bonus2 bAddRace, RC_Dragon, 5;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Red_Silk_Seal_Spectral_Spear",
+      "members": [
+        "Spectral_Spear",
+        "Red_Silk_Seal"
+      ],
+      "script": "bonus2 bResEff, Eff_Confusion, 9500;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Red_Silk_Seal_Spectral_Spear_",
+      "members": [
+        "Spectral_Spear_",
+        "Red_Silk_Seal"
+      ],
+      "script": "bonus2 bResEff, Eff_Confusion, 9500;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Encyclopedia_Encyclopedia_Revision",
+      "members": [
+        "Encyclopedia",
+        "Encyclopedia_Revision"
+      ],
+      "script": "bonus bAspdRate, getequiprefinerycnt(EQI_HAND_R);",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "B_Harword_Card_Hollgrehenn_Hammer",
+      "members": [
+        "Hollgrehenn_Hammer",
+        "B_Harword_Card"
+      ],
+      "script": "bonus bBreakArmorRate, 900;\n\t\tbonus bBreakWeaponRate, 900;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Librarian_Glove_Pocket_Watch__Principles_Of_Magic",
+      "members": [
+        "Principles_Of_Magic",
+        "Librarian_Glove",
+        "Pocket_Watch_"
+      ],
+      "script": "bonus bInt, 5;\n\t\tbonus bMaxHP, 700;\n\t\tbonus bAspdRate, 5;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Ancient_Magic_Mage_Coat",
+      "members": [
+        "Ancient_Magic",
+        "Mage_Coat"
+      ],
+      "script": "bonus bMdef, 8;\n\t\tbonus bMaxSPrate, 10;\n\t\tbonus bInt, 4;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Ancient_Magic_Mage_Coat_",
+      "members": [
+        "Ancient_Magic",
+        "Mage_Coat_"
+      ],
+      "script": "bonus bMdef, 8;\n\t\tbonus bMaxSPrate, 10;\n\t\tbonus bInt, 4;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Ancient_Magic_Librarian_Glove_Pocket_Watch_",
+      "members": [
+        "Ancient_Magic",
+        "Librarian_Glove",
+        "Pocket_Watch_"
+      ],
+      "script": "bonus bInt, 5;\n\t\tbonus bMaxHP, 700;\n\t\tbonus bAspdRate, 5;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Snake_Card_Snake_Encyclopedia",
+      "members": [
+        "Snake_Encyclopedia",
+        "Snake_Card"
+      ],
+      "script": "bonus bAspdRate, 5;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Side_Winder_Card_Snake_Encyclopedia",
+      "members": [
+        "Snake_Encyclopedia",
+        "Side_Winder_Card"
+      ],
+      "script": "bonus bAspdRate, 5;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Side_Winder_Card_Snake_Card_Snake_Encyclopedia",
+      "members": [
+        "Snake_Encyclopedia",
+        "Snake_Card",
+        "Side_Winder_Card"
+      ],
+      "script": "bonus bAspd, 1;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Snake_Card_Snake_Encyclopedia_",
+      "members": [
+        "Snake_Encyclopedia_",
+        "Snake_Card"
+      ],
+      "script": "bonus bAspdRate, 5;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Side_Winder_Card_Snake_Encyclopedia_",
+      "members": [
+        "Snake_Encyclopedia_",
+        "Side_Winder_Card"
+      ],
+      "script": "bonus bAspdRate, 5;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Side_Winder_Card_Snake_Card_Snake_Encyclopedia_",
+      "members": [
+        "Snake_Encyclopedia_",
+        "Snake_Card",
+        "Side_Winder_Card"
+      ],
+      "script": "bonus bAspd, 1;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Bone_Wand_Skull_Cap",
+      "members": [
+        "Bone_Wand",
+        "Skull_Cap"
+      ],
+      "script": "bonus bMatk, 10 * getequiprefinerycnt(EQI_HAND_R);\n\t\tbonus bVariableCastrate, -10;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Staff_Of_Wing_Wing_Of_Eagle",
+      "members": [
+        "Staff_Of_Wing",
+        "Wing_Of_Eagle"
+      ],
+      "script": "bonus bSpeedRate, 25;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Clack_Of_Servival_Survival_Rod_",
+      "members": [
+        "Survival_Rod_",
+        "Clack_Of_Servival"
+      ],
+      "script": "bonus bMaxHP, 300;\n\t\tbonus bMatkRate, getequiprefinerycnt(EQI_HAND_R) - 5;\n\t\tif (getequiprefinerycnt(EQI_GARMENT)",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Cloak_Of_Survival_C_Survival_Rod_",
+      "members": [
+        "Survival_Rod_",
+        "Cloak_Of_Survival_C"
+      ],
+      "script": "bonus bMatkRate, 5;\n\t\tbonus2 bSubEle, Ele_Neutral, 25;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Survival_Rod__Survive_Circlet",
+      "members": [
+        "Survival_Rod_",
+        "Survive_Circlet"
+      ],
+      "script": "bonus bMatk, getequiprefinerycnt(EQI_HAND_R) * 10;\n\t\tif (getequiprefinerycnt(EQI_HAND_R)",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Clack_Of_Servival_Survival_Rod2_",
+      "members": [
+        "Survival_Rod2_",
+        "Clack_Of_Servival"
+      ],
+      "script": "bonus bMaxHP, 300;\n\t\tbonus bMatkRate, getequiprefinerycnt(EQI_HAND_R) - 5;\n\t\tif (getequiprefinerycnt(EQI_GARMENT)",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Cloak_Of_Survival_C_Survival_Rod2_",
+      "members": [
+        "Survival_Rod2_",
+        "Cloak_Of_Survival_C"
+      ],
+      "script": "bonus bMatkRate, 5;\n\t\tbonus2 bSubEle, Ele_Neutral, 25;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "All_Love_Guard_Healing_Staff",
+      "members": [
+        "Healing_Staff",
+        "All_Love_Guard"
+      ],
+      "script": "bonus bHealPower, getequiprefinerycnt(EQI_HAND_R);",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Magician_Hat_Walking_Stick",
+      "members": [
+        "Walking_Stick",
+        "Magician_Hat"
+      ],
+      "script": "bonus bDex, 2;\n\t\tbonus bInt, 2;\n\t\tbonus bSPrecovRate, 5;\n\t\tbonus bMatkRate, getequiprefinerycnt(EQI_HAND_R);",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Exorcism_Bible_Holy_Stick",
+      "members": [
+        "Holy_Stick",
+        "Exorcism_Bible"
+      ],
+      "script": "bonus2 bSkillAtk, PR_MAGNUS, 20;\n\t\tbonus3 bAutoSpellWhenHit, PR_TURNUNDEAD, 1, 20;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "All_Love_Guard_Holy_Stick",
+      "members": [
+        "Holy_Stick",
+        "All_Love_Guard"
+      ],
+      "script": "bonus bHealPower, getequiprefinerycnt(EQI_HAND_R) * 3;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Skull_Cap_Thorn_Staff",
+      "members": [
+        "Thorn_Staff",
+        "Skull_Cap"
+      ],
+      "script": "bonus bMatk, 10 * getequiprefinerycnt(EQI_HAND_R);\n\t\tbonus bVariableCastrate, -10;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Thorn_Staff_Thornwood_Band",
+      "members": [
+        "Thorn_Staff",
+        "Thornwood_Band"
+      ],
+      "script": "bonus bMatk, getequiprefinerycnt(EQI_HAND_R) * 10;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Lapine_Shield_Rafini_Staff",
+      "members": [
+        "Rafini_Staff",
+        "Lapine_Shield"
+      ],
+      "script": "if (getequiprefinerycnt(EQI_HAND_L)",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Robe_Of_Affection_Shawl_Of_Affection_Shoes_Of_Affection_Wand_Of_Affection",
+      "members": [
+        "Wand_Of_Affection",
+        "Shoes_Of_Affection",
+        "Shawl_Of_Affection",
+        "Robe_Of_Affection"
+      ],
+      "script": "bonus bHealPower, 25;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Robe_Of_Affection_Shawl_Of_Affection_Shoes_Of_Affection_Wand_Of_Affection2",
+      "members": [
+        "Wand_Of_Affection2",
+        "Shoes_Of_Affection",
+        "Shawl_Of_Affection",
+        "Robe_Of_Affection"
+      ],
+      "script": "bonus bHealPower, 45;\n\t\tbonus3 bAutoSpellWhenHit, AB_SILENTIUM, 1, 10;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Bone_Wand__Skull_Cap",
+      "members": [
+        "Bone_Wand_",
+        "Skull_Cap"
+      ],
+      "script": "bonus bMatk, 10 * getequiprefinerycnt(EQI_HAND_R);\n\t\tbonus bVariableCastrate, -10;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Hunter_Bow_Hunting_Arrow",
+      "members": [
+        "Hunter_Bow",
+        "Hunting_Arrow"
+      ],
+      "script": "bonus bLongAtkRate, 50;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Luna_Bow_Lunatic_Brooch",
+      "members": [
+        "Luna_Bow",
+        "Lunatic_Brooch"
+      ],
+      "script": "bonus bDex, 1;\n\t\tbonus bMaxSP, 50;\n\t\tbonus bSPrecovRate, 10;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Hunter_Bow__Hunting_Arrow",
+      "members": [
+        "Hunter_Bow_",
+        "Hunting_Arrow"
+      ],
+      "script": "bonus bLongAtkRate, 50;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Burning_Bow_Fire_Arrow",
+      "members": [
+        "Burning_Bow",
+        "Fire_Arrow"
+      ],
+      "script": "bonus bLongAtkRate, 25;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Crystal_Arrow_Frozen_Bow",
+      "members": [
+        "Frozen_Bow",
+        "Crystal_Arrow"
+      ],
+      "script": "bonus bLongAtkRate, 25;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Earth_Bow_Stone_Arrow",
+      "members": [
+        "Earth_Bow",
+        "Stone_Arrow"
+      ],
+      "script": "bonus bLongAtkRate, 25;\n\t\tbonus2 bAddEff, Eff_Stone, 1000;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Arrow_Of_Wind_Gust_Bow",
+      "members": [
+        "Gust_Bow",
+        "Arrow_Of_Wind"
+      ],
+      "script": "bonus bLongAtkRate, 25;\n\t\tbonus3 bAutoSpell, NJ_HUUJIN, 5, 100;\n\t\tif (readparam(bInt) > 39)\n\t\t\tbonus3 bAutoSpell, NJ_HUUJIN, 5, 200;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Orc_Archer_Bow_Steel_Arrow",
+      "members": [
+        "Orc_Archer_Bow",
+        "Steel_Arrow"
+      ],
+      "script": "bonus bLongAtkRate, 50;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Cursed_Lyre_Cursed_Star",
+      "members": [
+        "Cursed_Lyre",
+        "Cursed_Star"
+      ],
+      "script": "bonus bAtk, 25;\n\t\tbonus3 bAddEff, Eff_Curse, 200, ATF_WEAPON | ATF_LONG | ATF_TARGET;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Arrow_Of_Elf_Elven_Bow",
+      "members": [
+        "Elven_Bow",
+        "Arrow_Of_Elf"
+      ],
+      "script": "bonus bLongAtkRate, 50;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Incisive_Arrow_Little_Fhat",
+      "members": [
+        "Incisive_Arrow",
+        "Little_Fhat"
+      ],
+      "script": "bonus bCritAtkRate, 5;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Siege_Arrow_S_Velum_CrossBow",
+      "members": [
+        "Siege_Arrow_S",
+        "Velum_CrossBow"
+      ],
+      "script": "bonus bLongAtkRate, 70;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Siege_Arrow_A_Velum_CrossBow",
+      "members": [
+        "Siege_Arrow_A",
+        "Velum_CrossBow"
+      ],
+      "script": "bonus bLongAtkRate, 40;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Ukulele_Of_Newoz_Winged_Ring_Of_Newoz",
+      "members": [
+        "Ukulele_Of_Newoz",
+        "Winged_Ring_Of_Newoz"
+      ],
+      "script": "bonus2 bSkillAtk, CG_ARROWVULCAN, 200;\n\t\tbonus2 bSkillUseSP, CG_ARROWVULCAN, 20;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Floral_Bracelet_Of_Igu_Floral_Mic_Of_Igu",
+      "members": [
+        "Floral_Mic_Of_Igu",
+        "Floral_Bracelet_Of_Igu"
+      ],
+      "script": "bonus2 bSkillAtk, CG_ARROWVULCAN, 200;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Divine_Cross_Spiritual_Ring",
+      "members": [
+        "Divine_Cross",
+        "Spiritual_Ring"
+      ],
+      "script": "bonus bMatkRate, 10;\n\t\tbonus bDex, 2;\n\t\tbonus2 bSubRace, RC_Demon, 10;\n\t\tbonus2 bSubRace, RC_Undead, 10;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Divine_Cross_Spiritual_Ring_C",
+      "members": [
+        "Divine_Cross",
+        "Spiritual_Ring_C"
+      ],
+      "script": "bonus bMatkRate, 10;\n\t\tbonus bDex, 2;\n\t\tbonus2 bSubRace, RC_Demon, 10;\n\t\tbonus2 bSubRace, RC_Undead, 10;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Golden_Rod_Orb_Golden_Rod_Robe_Golden_Rod_Shoes_Golden_Rod_Staff",
+      "members": [
+        "Golden_Rod_Staff",
+        "Golden_Rod_Shoes",
+        "Golden_Rod_Orb",
+        "Golden_Rod_Robe"
+      ],
+      "script": "bonus2 bMagicAtkEle, Ele_Wind, 40;\n\t\tbonus2 bMagicAtkEle, Ele_Earth, -30;\n\t\tbonus2 bSubEle, Ele_Earth, -50;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Aqua_Orb_Aqua_Robe_Aqua_Shoes_Aqua_Staff",
+      "members": [
+        "Aqua_Staff",
+        "Aqua_Shoes",
+        "Aqua_Orb",
+        "Aqua_Robe"
+      ],
+      "script": "bonus2 bMagicAtkEle, Ele_Water, 40;\n\t\tbonus2 bMagicAtkEle, Ele_Wind, -30;\n\t\tbonus2 bSubEle, Ele_Wind, -50;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Crimson_Orb_Crimson_Robe_Crimson_Shoes_Crimson_Staff",
+      "members": [
+        "Crimson_Staff",
+        "Crimson_Shoes",
+        "Crimson_Orb",
+        "Crimson_Robe"
+      ],
+      "script": "bonus2 bMagicAtkEle, Ele_Fire, 40;\n\t\tbonus2 bMagicAtkEle, Ele_Water, -30;\n\t\tbonus2 bSubEle, Ele_Water, -50;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Forest_Orb_Forest_Robe_Forest_Shoes_Forest_Staff",
+      "members": [
+        "Forest_Staff",
+        "Forest_Shoes",
+        "Forest_Orb",
+        "Forest_Robe"
+      ],
+      "script": "bonus2 bMagicAtkEle, Ele_Earth, 40;\n\t\tbonus2 bMagicAtkEle, Ele_Fire, -30;\n\t\tbonus2 bSubEle, Ele_Fire, -50;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Golden_Rod_Orb_Golden_Rod_Robe_Golden_Rod_Shoes_Golden_Rod_Staff2",
+      "members": [
+        "Golden_Rod_Staff2",
+        "Golden_Rod_Shoes",
+        "Golden_Rod_Orb",
+        "Golden_Rod_Robe"
+      ],
+      "script": "bonus2 bMagicAtkEle, Ele_Wind, 60;\n\t\tbonus2 bMagicAtkEle, Ele_Earth, -60;\n\t\tbonus2 bSubEle, Ele_Earth, -50;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Aqua_Orb_Aqua_Robe_Aqua_Shoes_Aqua_Staff2",
+      "members": [
+        "Aqua_Staff2",
+        "Aqua_Shoes",
+        "Aqua_Orb",
+        "Aqua_Robe"
+      ],
+      "script": "bonus2 bMagicAtkEle, Ele_Water, 60;\n\t\tbonus2 bMagicAtkEle, Ele_Wind, -60;\n\t\tbonus2 bSubEle, Ele_Wind, -50;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Crimson_Orb_Crimson_Robe_Crimson_Shoes_Crimson_Staff2",
+      "members": [
+        "Crimson_Staff2",
+        "Crimson_Shoes",
+        "Crimson_Orb",
+        "Crimson_Robe"
+      ],
+      "script": "bonus2 bMagicAtkEle, Ele_Fire, 60;\n\t\tbonus2 bMagicAtkEle, Ele_Water, -60;\n\t\tbonus2 bSubEle, Ele_Water, -50;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Forest_Orb_Forest_Robe_Forest_Shoes_Forest_Staff2",
+      "members": [
+        "Forest_Staff2",
+        "Forest_Shoes",
+        "Forest_Orb",
+        "Forest_Robe"
+      ],
+      "script": "bonus2 bMagicAtkEle, Ele_Earth, 60;\n\t\tbonus2 bMagicAtkEle, Ele_Fire, -60;\n\t\tbonus2 bSubEle, Ele_Fire, -50;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Memorize_Book_One_Eyed_Glass_Pocket_Watch_",
+      "members": [
+        "Memorize_Book",
+        "Pocket_Watch_",
+        "One_Eyed_Glass"
+      ],
+      "script": "bonus bHPrecovRate, 15;\n\t\tbonus bSPrecovRate, 15;\n\t\tbonus bMatkRate, 7;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Magni_Cap_Odins_Blessing_Stone_Buckler",
+      "members": [
+        "Stone_Buckler",
+        "Odins_Blessing",
+        "Magni_Cap"
+      ],
+      "script": "bonus bStr, 2;\n\t\tbonus bDef, 5;\n\t\tbonus bMdef, 5;\n\t\tif (BaseClass == Job_Swordman) bonus bDef, 6;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Fricca_Circlet_Odins_Blessing_Valkyrjas_Shield",
+      "members": [
+        "Valkyrjas_Shield",
+        "Odins_Blessing",
+        "Fricca_Circlet"
+      ],
+      "script": "bonus bDef, 2 - getequiprefinerycnt(EQI_HAND_L, EQI_HEAD_TOP);\n\t\tbonus bMdef, 5 + getequiprefinerycnt(EQI_HAND_L, EQI_HEAD_TOP);",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Angels_Arrival_Angels_Protection_Angels_Safeguard_Angels_Warmth_Kiss_Of_Angel",
+      "members": [
+        "Angels_Safeguard",
+        "Angels_Protection",
+        "Angels_Arrival",
+        "Angels_Warmth",
+        "Kiss_Of_Angel"
+      ],
+      "script": "bonus bMaxHP, 900;\n\t\tbonus bMaxSP, 100;\n\t\tbonus3 bAutoSpellWhenHit, HP_ASSUMPTIO, 1, 30;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Memorize_Book__One_Eyed_Glass_Pocket_Watch_",
+      "members": [
+        "Memorize_Book_",
+        "Pocket_Watch_",
+        "One_Eyed_Glass"
+      ],
+      "script": "bonus bHPrecovRate, 15;\n\t\tbonus bSPrecovRate, 15;\n\t\tbonus bMatkRate, 7;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Orleans_Glove_Orleans_Server",
+      "members": [
+        "Orleans_Server",
+        "Orleans_Glove"
+      ],
+      "script": "bonus bVariableCastrate, -10;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Orleans_Necklace_Orleans_Server",
+      "members": [
+        "Orleans_Server",
+        "Orleans_Necklace"
+      ],
+      "script": "bonus bMatk, getrefine() * 2;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Bison_Horn_Thorny_Buckler",
+      "members": [
+        "Thorny_Buckler",
+        "Bison_Horn"
+      ],
+      "script": "bonus bAspdRate, 10;\n\t\tbonus bShortWeaponDamageReturn, 5;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Hoplite_Helmet_Strong_Shield",
+      "members": [
+        "Strong_Shield",
+        "Hoplite_Helmet"
+      ],
+      "script": "bonus bDef, 2;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Shadow_Guard_Shadow_Walk",
+      "members": [
+        "Shadow_Guard",
+        "Shadow_Walk"
+      ],
+      "script": "",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Fricca_Circlet_Odins_Blessing_Valkyrjas_Shield_C",
+      "members": [
+        "Valkyrjas_Shield_C",
+        "Odins_Blessing",
+        "Fricca_Circlet"
+      ],
+      "script": "bonus bDef, 2 - getequiprefinerycnt(EQI_HAND_L, EQI_HEAD_TOP);\n\t\tbonus bMdef, 5 + getequiprefinerycnt(EQI_HAND_L, EQI_HEAD_TOP);",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Imperial_Guard_Imperial_Ring",
+      "members": [
+        "Imperial_Guard",
+        "Imperial_Ring"
+      ],
+      "script": "if (getequiprefinerycnt(EQI_HAND_L)",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Insecticide_Super_Ora_Ora",
+      "members": [
+        "Insecticide",
+        "Super_Ora_Ora"
+      ],
+      "script": "bonus2 bAddRaceTolerance, RC_Insect, 10;\n\t\tif (getequiprefinerycnt(EQI_HAND_L)",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Giant_Shield_Gigant_Helm",
+      "members": [
+        "Giant_Shield",
+        "Gigant_Helm"
+      ],
+      "script": "bonus2 bSkillAtk, WS_CARTTERMINATION, 15 + (getequiprefinerycnt(EQI_HAND_R) * 5);",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Bakonawa_Armor_Bangungot_Boots_Buwaya_Cloth_Kalasak",
+      "members": [
+        "Kalasak",
+        "Bangungot_Boots",
+        "Buwaya_Cloth",
+        "Bakonawa_Armor"
+      ],
+      "script": "bonus bMaxHPrate, 20;\n\t\tbonus bMaxSPrate, 10;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Fox_Armguard_Special_Ninja_Suit",
+      "members": [
+        "Fox_Armguard",
+        "Special_Ninja_Suit"
+      ],
+      "script": "bonus bAgi, 2;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Fox_Armguard_Special_Ninja_Suit_",
+      "members": [
+        "Fox_Armguard",
+        "Special_Ninja_Suit_"
+      ],
+      "script": "bonus bAgi, 2;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Crescent_Armguard_Tenebris_Latitantes",
+      "members": [
+        "Crescent_Armguard",
+        "Tenebris_Latitantes"
+      ],
+      "script": "bonus bFlee, 10;\n\t\tbonus bFlee2, 10;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Im_Angels_Protection_Impr_Angels_Arrival_Impr_Angels_Safeguard_Impr_Angels_Warmth_Improved_Kiss_Of_Angel",
+      "members": [
+        "Impr_Angels_Safeguard",
+        "Im_Angels_Protection",
+        "Improved_Kiss_Of_Angel",
+        "Impr_Angels_Warmth",
+        "Impr_Angels_Arrival"
+      ],
+      "script": "bonus(bMaxHP, 900);\n\t\tbonus(bMaxSP, 100);\n\t\tbonus3(bAutoSpellWhenHit, HP_ASSUMPTIO, 1, 30);",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "KarduiEar_Lapine_Shield",
+      "members": [
+        "Lapine_Shield",
+        "KarduiEar"
+      ],
+      "script": "if (!isequipped(Fallen_Bishop_Card)) {\n\t\t\tif (getequiprefinerycnt(EQI_HAND_L)",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Angelic_Chain_Bell_Pigeon",
+      "members": [
+        "Angelic_Chain",
+        "Bell_Pigeon"
+      ],
+      "script": "bonus2 bExpAddRace, RC_All, 5;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Centimental_Flower_Persika",
+      "members": [
+        "Centimental_Flower",
+        "Persika"
+      ],
+      "script": "bonus bMaxSP, 30;\n\t\tbonus bInt, 1;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Ancient_Elven_Ear_Centimental_Flower",
+      "members": [
+        "Centimental_Flower",
+        "Ancient_Elven_Ear"
+      ],
+      "script": "bonus bMatkRate, 1;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Black_Cat_Hat_Centimental_Flower",
+      "members": [
+        "Centimental_Flower",
+        "Black_Cat_Hat"
+      ],
+      "script": "bonus bAllStats, 1;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Centimental_Leaf_Persika",
+      "members": [
+        "Centimental_Leaf",
+        "Persika"
+      ],
+      "script": "bonus bLuk, 1;\n\t\tbonus bFlee, 2;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Ancient_Elven_Ear_Centimental_Leaf",
+      "members": [
+        "Centimental_Leaf",
+        "Ancient_Elven_Ear"
+      ],
+      "script": "bonus bAtkRate, 1;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Black_Cat_Hat_Centimental_Leaf",
+      "members": [
+        "Centimental_Leaf",
+        "Black_Cat_Hat"
+      ],
+      "script": "bonus bAllStats, 1;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Gloomy_Pumpkin_Hat_Mr_Smile",
+      "members": [
+        "Mr_Smile",
+        "Gloomy_Pumpkin_Hat"
+      ],
+      "script": "bonus2 bAddMonsterDropItem, 12192, 20;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Gloomy_Pumpkin_Hat_Phantom_Of_Opera",
+      "members": [
+        "Phantom_Of_Opera",
+        "Gloomy_Pumpkin_Hat"
+      ],
+      "script": "bonus bFlee, 10;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Im_Angels_Protection_Impr_Angels_Safeguard",
+      "members": [
+        "Impr_Angels_Safeguard",
+        "Im_Angels_Protection"
+      ],
+      "script": "bonus bAllStats, 2;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Elven_Ears_Skull_Cap",
+      "members": [
+        "Elven_Ears",
+        "Skull_Cap"
+      ],
+      "script": "bonus bUseSPrate, -3;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Hyper_Changer_Padded_Armor",
+      "members": [
+        "Padded_Armor",
+        "Hyper_Changer"
+      ],
+      "script": "bonus bDef, 5;\n\t\tbonus bMaxHP, 150;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Hyper_Changer_Padded_Armor_",
+      "members": [
+        "Padded_Armor_",
+        "Hyper_Changer"
+      ],
+      "script": "bonus bDef, 5;\n\t\tbonus bMaxHP, 150;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Ninja_Suit_Shinobis_Sash",
+      "members": [
+        "Ninja_Suit",
+        "Shinobis_Sash"
+      ],
+      "script": "bonus bUseSPrate, -20;\n\t\tbonus bMaxHP, 300;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "G_Strings_Undershirt",
+      "members": [
+        "G_Strings",
+        "Undershirt"
+      ],
+      "script": "bonus bAgi, 5;\n\t\tbonus bFlee, 10;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "G_Strings_Undershirt_",
+      "members": [
+        "G_Strings",
+        "Undershirt_"
+      ],
+      "script": "bonus bAgi, 5;\n\t\tbonus bFlee, 10;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Falcon_Robe_Fricco_Shoes_Odins_Blessing",
+      "members": [
+        "Odins_Blessing",
+        "Fricco_Shoes",
+        "Falcon_Robe"
+      ],
+      "script": "bonus bAgi, 3;\n\t\tbonus bMaxHPrate, 5;\n\t\tbonus bMaxSPrate, 5;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Odins_Blessing_Valis_Manteau_Vidars_Boots",
+      "members": [
+        "Odins_Blessing",
+        "Vidars_Boots",
+        "Valis_Manteau"
+      ],
+      "script": "bonus bVit, 5;\n\t\tbonus bHPrecovRate, 10;\n\t\tbonus bSPrecovRate, 10;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Odins_Blessing_Ulle_Cap",
+      "members": [
+        "Odins_Blessing",
+        "Ulle_Cap"
+      ],
+      "script": "if (readparam(bDex) > 69)\n\t\t\tbonus bUseSPrate, -10;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Odins_Blessing_Ulle_Cap_I",
+      "members": [
+        "Odins_Blessing",
+        "Ulle_Cap_I"
+      ],
+      "script": "if (readparam(bDex) > 69)\n\t\t\tbonus bUseSPrate, -10;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Odins_Blessing_Priest_Sword",
+      "members": [
+        "Odins_Blessing",
+        "Priest_Sword"
+      ],
+      "script": "bonus bMaxSP, 50;\n\t\tbonus2 bSkillAtk, KN_BOWLINGBASH, 5;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Goibnes_Armor_Goibnes_Combat_Boots_Goibnes_Helmet_Goibnes_Shoulder_Arms",
+      "members": [
+        "Goibnes_Armor",
+        "Goibnes_Combat_Boots",
+        "Goibnes_Shoulder_Arms",
+        "Goibnes_Helmet"
+      ],
+      "script": "bonus bVit, 5;\n\t\tbonus bMaxHPrate, 15;\n\t\tbonus bMaxSPrate, 5;\n\t\tbonus bDef, 5;\n\t\tbonus bMdef, 15;\n\t\tbonus2 bSubEle, Ele_Water, 10;\n\t\tbonus2 bSubEle, Ele_Earth, 10;\n\t\tbonus2 bSubEle, Ele_Fire, 10;\n\t\tbonus2 bSubEle, Ele_Wind, 10;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Goibnes_Armor_Goibnes_Combat_Boots__Goibnes_Helmet__Goibnes_Shoulder_Arms_",
+      "members": [
+        "Goibnes_Armor",
+        "Goibnes_Combat_Boots_",
+        "Goibnes_Shoulder_Arms_",
+        "Goibnes_Helmet_"
+      ],
+      "script": "bonus bVit, 5;\n\t\tbonus bMaxHPrate, 15;\n\t\tbonus bMaxSPrate, 5;\n\t\tbonus bDef, 5;\n\t\tbonus bMdef, 15;\n\t\tbonus2 bSubEle, Ele_Water, 10;\n\t\tbonus2 bSubEle, Ele_Earth, 10;\n\t\tbonus2 bSubEle, Ele_Fire, 10;\n\t\tbonus2 bSubEle, Ele_Wind, 10;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Valkyrie_Armor_Valkyrie_Helm_Valkyrie_Manteau_Valkyrie_Shoes",
+      "members": [
+        "Valkyrie_Armor",
+        "Valkyrie_Shoes",
+        "Valkyrie_Manteau",
+        "Valkyrie_Helm"
+      ],
+      "script": "bonus bAllStats, 1;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Angeling_Hairpin_Dress_Of_Angel",
+      "members": [
+        "Dress_Of_Angel",
+        "Angeling_Hairpin"
+      ],
+      "script": "bonus bLuk, 6;\n\t\tbonus bFlee, 5;\n\t\tbonus bInt, 2;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Ninja_Suit__Shinobis_Sash",
+      "members": [
+        "Ninja_Suit_",
+        "Shinobis_Sash"
+      ],
+      "script": "bonus bUseSPrate, -20;\n\t\tbonus bMaxHP, 300;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Orleans_Gown_Orleans_Necklace",
+      "members": [
+        "Orleans_Gown",
+        "Orleans_Necklace"
+      ],
+      "script": "bonus bVariableCastrate, 15;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Freyja_Boots_Freyja_Cape_Freyja_Crown_Freyja_Overcoat",
+      "members": [
+        "Freyja_Overcoat",
+        "Freyja_Boots",
+        "Freyja_Cape",
+        "Freyja_Crown"
+      ],
+      "script": "bonus2 bSubRace, RC_DemiPlayer, 10;\n\t\tbonus bMaxHPrate, 20;\n\t\tbonus2 bResEff, Eff_Freeze, 10000;\n\t\tskill WZ_FIREPILLAR, 10;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "G_Strings__Undershirt",
+      "members": [
+        "G_Strings_",
+        "Undershirt"
+      ],
+      "script": "bonus bAgi, 5;\n\t\tbonus bFlee, 10;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "G_Strings__Undershirt_",
+      "members": [
+        "G_Strings_",
+        "Undershirt_"
+      ],
+      "script": "bonus bAgi, 5;\n\t\tbonus bFlee, 10;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Diabolus_Ring_Diabolus_Robe",
+      "members": [
+        "Diabolus_Robe",
+        "Diabolus_Ring"
+      ],
+      "script": "bonus2 bAddRace, RC_All, 3;\n\t\tbonus bMatkRate, 3;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Diabolus_Armor_Diabolus_Ring",
+      "members": [
+        "Diabolus_Armor",
+        "Diabolus_Ring"
+      ],
+      "script": "bonus2 bAddRace, RC_All, 3;\n\t\tbonus bMatkRate, 3;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Assaulter_Plate_Battle_Greave_Commander_Manteau",
+      "members": [
+        "Assaulter_Plate",
+        "Battle_Greave",
+        "Commander_Manteau"
+      ],
+      "script": "",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Battle_Greave_Commander_Manteau_Elite_Engineer_Armor",
+      "members": [
+        "Elite_Engineer_Armor",
+        "Battle_Greave",
+        "Commander_Manteau"
+      ],
+      "script": "bonus2 bSubRace, RC_NonDemiPlayer, -300;\n\t\tbonus bStr, 3;\n\t\tbonus bMaxHPrate, 12;\n\t\tbonus2 bSkillAtk, MC_MAMMONITE, 20;\n\t\tbonus2 bSkillHeal, AM_POTIONPITCHER, 10;\n\t\tbonus2 bSkillHeal2, AM_POTIONPITCHER, 10;\n\t\tbonus2 bSkillHeal2, AL_HEAL, 10;\n\t\tbonus bUnbreakableArmor, 0;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Assassin_Robe_Battle_Greave_Commander_Manteau",
+      "members": [
+        "Assassin_Robe",
+        "Battle_Greave",
+        "Commander_Manteau"
+      ],
+      "script": "",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Combat_Boots_Commander_Manteau__Warlock_Battle_Robe",
+      "members": [
+        "Warlock_Battle_Robe",
+        "Combat_Boots",
+        "Commander_Manteau_"
+      ],
+      "script": "",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Combat_Boots_Commander_Manteau__Medic_Robe",
+      "members": [
+        "Medic_Robe",
+        "Combat_Boots",
+        "Commander_Manteau_"
+      ],
+      "script": "",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Combat_Boots_Commander_Manteau__Elite_Archer_Suit",
+      "members": [
+        "Elite_Archer_Suit",
+        "Combat_Boots",
+        "Commander_Manteau_"
+      ],
+      "script": "bonus2 bSubRace, RC_NonDemiPlayer, -300;\n\t\tbonus bDex, 3;\n\t\tbonus bMaxHPrate, 12;\n\t\tbonus bLongAtkDef, 10;\n\t\tbonus bDelayrate, -25;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Battle_Boots_Elite_Shooter_Suit_Sheriff_Manteau",
+      "members": [
+        "Elite_Shooter_Suit",
+        "Battle_Boots",
+        "Sheriff_Manteau"
+      ],
+      "script": "bonus2 bSubRace, RC_NonDemiPlayer, -300;\n\t\tbonus bDex, 3;\n\t\tbonus bMaxHPrate, 12;\n\t\tbonus bLongAtkDef, 10;\n\t\tbonus bDelayrate, -25;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Sprint_Mail_Sprint_Ring_Sprint_Shoes",
+      "members": [
+        "Sprint_Mail",
+        "Sprint_Shoes",
+        "Sprint_Ring"
+      ],
+      "script": "bonus bMaxHPrate, 7;\n\t\tbonus bMaxSPrate, 7;\n\t\tbonus bVariableCastrate, -3;\n\t\tbonus bDelayrate, -15;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Improved_Tights_Linen_Glove",
+      "members": [
+        "Improved_Tights",
+        "Linen_Glove"
+      ],
+      "script": "bonus bFlee2, 5;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Krieger_Muffler1_Krieger_Shoes1_Krieger_Suit1",
+      "members": [
+        "Krieger_Suit1",
+        "Krieger_Shoes1",
+        "Krieger_Muffler1"
+      ],
+      "script": "bonus2 bAddRace, RC_All, 5;\n\t\tbonus bMatkRate, 5;\n\t\tbonus2 bResEff, Eff_Freeze, 10000;\n\t\tbonus2 bSkillHeal2, AM_POTIONPITCHER, 3;\n\t\tbonus2 bSkillHeal2, AL_HEAL, 3;\n\t\tbonus2 bSkillHeal2, PR_SANCTUARY, 3;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Dragon_Manteau_Dragon_Vest",
+      "members": [
+        "Dragon_Vest",
+        "Dragon_Manteau"
+      ],
+      "script": "bonus bAgi, 5;\n\t\tbonus bFlee, 15;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Bloody_Iron_Ball_Cuffs",
+      "members": [
+        "Cuffs",
+        "Bloody_Iron_Ball"
+      ],
+      "script": "bonus bBaseAtk, 50;\n\t\tbonus2 bAddDefClass, 1196, 20;\n\t\tbonus2 bAddDefClass, 1197, 20;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Tidal_Shoes_Wool_Scarf",
+      "members": [
+        "Tidal_Shoes",
+        "Wool_Scarf"
+      ],
+      "script": "bonus bHPrecovRate, 5;\n\t\tbonus bMaxHPrate, 10;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Black_Leather_Boots_Rider_Insignia",
+      "members": [
+        "Black_Leather_Boots",
+        "Rider_Insignia"
+      ],
+      "script": "bonus bFlee, 10;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Black_Leather_Boots_Rider_Insignia_",
+      "members": [
+        "Black_Leather_Boots",
+        "Rider_Insignia_"
+      ],
+      "script": "bonus bFlee, 10;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Black_Leather_Boots_Rider_Insignia_M",
+      "members": [
+        "Black_Leather_Boots",
+        "Rider_Insignia_M"
+      ],
+      "script": "bonus bFlee, 10;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Diabolus_Boots_Diabolus_Manteau",
+      "members": [
+        "Diabolus_Boots",
+        "Diabolus_Manteau"
+      ],
+      "script": "bonus bMaxHPrate, 6;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Black_Leather_Boots__Rider_Insignia",
+      "members": [
+        "Black_Leather_Boots_",
+        "Rider_Insignia"
+      ],
+      "script": "bonus bFlee, 10;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Black_Leather_Boots__Rider_Insignia_",
+      "members": [
+        "Black_Leather_Boots_",
+        "Rider_Insignia_"
+      ],
+      "script": "bonus bFlee, 10;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Black_Leather_Boots__Rider_Insignia_M",
+      "members": [
+        "Black_Leather_Boots_",
+        "Rider_Insignia_M"
+      ],
+      "script": "bonus bFlee, 10;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Beach_Manteau_Beach_Sandal",
+      "members": [
+        "Beach_Sandal",
+        "Beach_Manteau"
+      ],
+      "script": "bonus bFlee, 5;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Mace_Of_Judgement_Robe_Of_Judgement_Shawl_Of_Judgement_Shoes_Of_Judgement",
+      "members": [
+        "Shoes_Of_Judgement",
+        "Shawl_Of_Judgement",
+        "Robe_Of_Judgement",
+        "Mace_Of_Judgement"
+      ],
+      "script": "bonus2 bAddRace, RC_Undead, 15;\n\t\tbonus2 bMagicAddRace, RC_Undead, 15;\n\t\tbonus2 bSkillAtk, AB_ADORAMUS, 100;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Mace_Of_Judgement2_Robe_Of_Judgement_Shawl_Of_Judgement_Shoes_Of_Judgement",
+      "members": [
+        "Shoes_Of_Judgement",
+        "Shawl_Of_Judgement",
+        "Robe_Of_Judgement",
+        "Mace_Of_Judgement2"
+      ],
+      "script": "bonus2 bAddRace, RC_Undead, 30;\n\t\tbonus2 bMagicAddRace, RC_Undead, 30;\n\t\tbonus2 bSkillAtk, AB_ADORAMUS, 200;\n\t\tbonus bVariableCastrate, -50;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Ur_Greave_Ur_Manteau_Ur_Plate_Ur_Seal",
+      "members": [
+        "Ur_Greave",
+        "Ur_Manteau",
+        "Ur_Seal",
+        "Ur_Plate"
+      ],
+      "script": "bonus bMaxHPrate, 14;\n\t\tbonus2 bSkillAtk, RK_HUNDREDSPEAR, 50;\n\t\tskill CR_AUTOGUARD, 1;\n\t\tbonus bUseSPrate, 10;\n\t\tbonus2 bSubEle, Ele_Neutral, 10;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Peuz_Greave_Peuz_Manteau_Peuz_Plate_Peuz_Seal",
+      "members": [
+        "Peuz_Greave",
+        "Peuz_Manteau",
+        "Peuz_Seal",
+        "Peuz_Plate"
+      ],
+      "script": "",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Sabah_Cloth_Sabah_Hood_Sabah_Ring_Sabah_Shoes",
+      "members": [
+        "Sabah_Shoes",
+        "Sabah_Hood",
+        "Sabah_Ring",
+        "Sabah_Cloth"
+      ],
+      "script": "bonus bCritical, 15;\n\t\tbonus bFlee, 10;\n\t\tbonus bCritAtkRate, 40;\n\t\tbonus2 bSkillAtk, GC_CROSSIMPACT, 20;\n\t\tbonus bUseSPrate, 10;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Nab_Cloth_Nab_Hood_Nab_Ring_Nab_Shoes",
+      "members": [
+        "Nab_Shoes",
+        "Nab_Hood",
+        "Nab_Ring",
+        "Nab_Cloth"
+      ],
+      "script": "bonus2 bAddRace, RC_All, 10;\n\t\tbonus bMatkRate, 10;\n\t\tif (readparam(bStr)",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "White_Wing_Boots_White_Wing_Brooch_White_Wing_Manteau_White_Wing_Suits",
+      "members": [
+        "White_Wing_Boots",
+        "White_Wing_Manteau",
+        "White_Wing_Brooch",
+        "White_Wing_Suits"
+      ],
+      "script": "bonus bAspd, 2;\n\t\tbonus bLongAtkRate, 30;\n\t\tbonus3 bAutoSpell, AC_DOUBLE, 3, 10;\n\t\tbonus2 bSkillAtk, RA_ARROWSTORM, 50;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Black_Wing_Boots_Black_Wing_Manteau_Black_Wing_Suits_Black_wing_Brooch",
+      "members": [
+        "Black_Wing_Boots",
+        "Black_Wing_Manteau",
+        "Black_wing_Brooch",
+        "Black_Wing_Suits"
+      ],
+      "script": "bonus bMaxHPrate, 15;\n\t\tbonus2 bSkillAtk, RA_CLUSTERBOMB, 20;\n\t\tbonus bFlee2, 20;\n\t\tbonus bLongAtkRate, -30;\n\t\tbonus bAspd, -7;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Siege_Greave_Siege_Manteau_Siege_Plate",
+      "members": [
+        "Siege_Greave",
+        "Siege_Manteau",
+        "Siege_Plate"
+      ],
+      "script": "bonus bVit, 5;\n\t\tbonus2 bSubRace, RC_DemiPlayer, 15;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Siege_Boots_Siege_Manteau_Siege_Suits",
+      "members": [
+        "Siege_Boots",
+        "Siege_Manteau",
+        "Siege_Suits"
+      ],
+      "script": "bonus bDex, 5;\n\t\tbonus2 bSubRace, RC_DemiPlayer, 15;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Siege_Muffler_Siege_Robe_Siege_Shoes",
+      "members": [
+        "Siege_Shoes",
+        "Siege_Muffler",
+        "Siege_Robe"
+      ],
+      "script": "bonus bInt, 5;\n\t\tbonus bMdef, 10;\n\t\tbonus2 bSubRace, RC_DemiPlayer, 15;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Morpheuss_Armlet_Morpheuss_Hood_Morpheuss_Ring_Morpheuss_Shawl",
+      "members": [
+        "Morpheuss_Shawl",
+        "Morpheuss_Ring",
+        "Morpheuss_Armlet",
+        "Morpheuss_Hood"
+      ],
+      "script": "bonus bInt, 5;\n\t\tbonus bMdef, 11;\n\t\tbonus bMaxSPrate, 20;\n\t\tbonus bNoCastCancel, 0;\n\t\tbonus bVariableCastrate, 25;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Morriganes_Belt_Morriganes_Helm_Morriganes_Manteau_Morriganes_Pendant",
+      "members": [
+        "Morriganes_Manteau",
+        "Morriganes_Belt",
+        "Morriganes_Pendant",
+        "Morriganes_Helm"
+      ],
+      "script": "bonus bStr, 2;\n\t\tbonus bLuk, 9;\n\t\tbonus bCritical, 13;\n\t\tbonus bBaseAtk, 18;\n\t\tbonus bFlee2, 13;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Morriganes_Belt__Morriganes_Helm__Morriganes_Manteau_Morriganes_Pendant_",
+      "members": [
+        "Morriganes_Manteau",
+        "Morriganes_Belt_",
+        "Morriganes_Pendant_",
+        "Morriganes_Helm_"
+      ],
+      "script": "bonus bStr, 2;\n\t\tbonus bLuk, 9;\n\t\tbonus bCritical, 13;\n\t\tbonus bBaseAtk, 18;\n\t\tbonus bFlee2, 13;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Dragon_Breath_Dragon_Killer",
+      "members": [
+        "Dragon_Breath",
+        "Dragon_Killer"
+      ],
+      "script": "bonus2 bAddRace, RC_Dragon, 5;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Critical_Ring_Scarlet_Poncho",
+      "members": [
+        "Scarlet_Poncho",
+        "Critical_Ring"
+      ],
+      "script": "bonus bCritAtkRate, 5;\n\t\tbonus bCritical, 10;\n\t\tif (getequiprefinerycnt(EQI_GARMENT)",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Rose_Cascade_Scarlet_Poncho",
+      "members": [
+        "Scarlet_Poncho",
+        "Rose_Cascade"
+      ],
+      "script": "bonus bUseSPrate, -5;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Clip_Spiritual_Ring",
+      "members": [
+        "Clip",
+        "Spiritual_Ring"
+      ],
+      "script": "bonus2 bSkillAtk, AL_HEAL, 50;\n\t\tbonus2 bSkillAtk, PR_MAGNUS, 30;\n\t\tbonus bSPrecovRate, 9;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Clip_Spiritual_Ring_C",
+      "members": [
+        "Clip",
+        "Spiritual_Ring_C"
+      ],
+      "script": "bonus2 bSkillAtk, AL_HEAL, 50;\n\t\tbonus2 bSkillAtk, PR_MAGNUS, 30;\n\t\tbonus bSPrecovRate, 9;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Clip_Spiritual_Ring_M",
+      "members": [
+        "Clip",
+        "Spiritual_Ring_M"
+      ],
+      "script": "bonus2 bSkillAtk, AL_HEAL, 50;\n\t\tbonus2 bSkillAtk, PR_MAGNUS, 30;\n\t\tbonus bSPrecovRate, 9;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Rosary_Spiritual_Ring",
+      "members": [
+        "Rosary",
+        "Spiritual_Ring"
+      ],
+      "script": "bonus2 bSkillAtk, AL_HEAL, 50;\n\t\tbonus2 bSkillAtk, PR_MAGNUS, 30;\n\t\tbonus bSPrecovRate, 9;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Rosary_Spiritual_Ring_C",
+      "members": [
+        "Rosary",
+        "Spiritual_Ring_C"
+      ],
+      "script": "bonus2 bSkillAtk, AL_HEAL, 50;\n\t\tbonus2 bSkillAtk, PR_MAGNUS, 30;\n\t\tbonus bSPrecovRate, 9;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Rosary_Spiritual_Ring_M",
+      "members": [
+        "Rosary",
+        "Spiritual_Ring_M"
+      ],
+      "script": "bonus2 bSkillAtk, AL_HEAL, 50;\n\t\tbonus2 bSkillAtk, PR_MAGNUS, 30;\n\t\tbonus bSPrecovRate, 9;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Angel_Earing_Safety_Ring",
+      "members": [
+        "Safety_Ring",
+        "Angel_Earing"
+      ],
+      "script": "bonus bMdef, 7;\n\t\tbonus bDef, 7;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Angel_Earing_Critical_Ring",
+      "members": [
+        "Critical_Ring",
+        "Angel_Earing"
+      ],
+      "script": "bonus bCritical, 7;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Cold_Heart_Ring_Of_Rogue",
+      "members": [
+        "Ring_Of_Rogue",
+        "Cold_Heart"
+      ],
+      "script": "bonus2 bAddSize, Size_Medium, 8;\n\t\tbonus bAspdRate, 3;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Black_Cat_Ring_Of_Rogue",
+      "members": [
+        "Ring_Of_Rogue",
+        "Black_Cat"
+      ],
+      "script": "bonus2 bAddSize, Size_Large, 8;\n\t\tbonus bHit, 3;\n\t\tbonus bVariableCastrate, -3;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Rosary__Spiritual_Ring",
+      "members": [
+        "Rosary_",
+        "Spiritual_Ring"
+      ],
+      "script": "bonus2 bSkillAtk, AL_HEAL, 50;\n\t\tbonus2 bSkillAtk, PR_MAGNUS, 30;\n\t\tbonus bSPrecovRate, 9;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Rosary__Spiritual_Ring_C",
+      "members": [
+        "Rosary_",
+        "Spiritual_Ring_C"
+      ],
+      "script": "bonus2 bSkillAtk, AL_HEAL, 50;\n\t\tbonus2 bSkillAtk, PR_MAGNUS, 30;\n\t\tbonus bSPrecovRate, 9;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Rosary__Spiritual_Ring_M",
+      "members": [
+        "Rosary_",
+        "Spiritual_Ring_M"
+      ],
+      "script": "bonus2 bSkillAtk, AL_HEAL, 50;\n\t\tbonus2 bSkillAtk, PR_MAGNUS, 30;\n\t\tbonus bSPrecovRate, 9;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Ring_Of_Flame_Lord_Ring_Of_Resonance",
+      "members": [
+        "Ring_Of_Flame_Lord",
+        "Ring_Of_Resonance"
+      ],
+      "script": "bonus4 bAutoSpell, MO_EXTREMITYFIST, 1, 3, 1;\n\t\tbonus3 bAutoSpell, PR_LEXAETERNA, 1, 20;\n\t\tbonus3 bAutoSpell, AS_SONICBLOW, 5, 50;\n\t\tbonus3 bAutoSpell, MO_INVESTIGATE, 5, 20;\n\t\tbonus3 bAutoSpell, ASC_METEORASSAULT, 2, 50;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Ring_Of_Flame_Lord_I_Ring_Of_Resonance",
+      "members": [
+        "Ring_Of_Resonance",
+        "Ring_Of_Flame_Lord_I"
+      ],
+      "script": "bonus4 bAutoSpell, MO_EXTREMITYFIST, 1, 3, 1;\n\t\tbonus3 bAutoSpell, PR_LEXAETERNA, 1, 20;\n\t\tbonus3 bAutoSpell, AS_SONICBLOW, 5, 50;\n\t\tbonus3 bAutoSpell, MO_INVESTIGATE, 5, 20;\n\t\tbonus3 bAutoSpell, ASC_METEORASSAULT, 2, 50;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Orleans_Glove_Orleans_Necklace",
+      "members": [
+        "Orleans_Glove",
+        "Orleans_Necklace"
+      ],
+      "script": "bonus bMatk, 20;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Krieger_Ring1_Medal_Swordman",
+      "members": [
+        "Medal_Swordman",
+        "Krieger_Ring1"
+      ],
+      "script": "bonus2 bAddRace, RC_All, 5;\n\t\tbonus bMatkRate, 3;\n\t\tbonus bHealPower, 5;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Krieger_Ring1_Medal_Thief",
+      "members": [
+        "Medal_Thief",
+        "Krieger_Ring1"
+      ],
+      "script": "bonus2 bAddRace, RC_All, 5;\n\t\tbonus bMatkRate, 3;\n\t\tbonus bHealPower, 5;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Krieger_Ring1_Medal_Acolyte",
+      "members": [
+        "Medal_Acolyte",
+        "Krieger_Ring1"
+      ],
+      "script": "bonus2 bAddRace, RC_All, 5;\n\t\tbonus bMatkRate, 3;\n\t\tbonus bHealPower, 5;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Krieger_Ring1_Medal_Mage",
+      "members": [
+        "Medal_Mage",
+        "Krieger_Ring1"
+      ],
+      "script": "bonus2 bAddRace, RC_All, 5;\n\t\tbonus bMatkRate, 3;\n\t\tbonus bHealPower, 5;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Krieger_Ring1_Medal_Archer",
+      "members": [
+        "Medal_Archer",
+        "Krieger_Ring1"
+      ],
+      "script": "bonus2 bAddRace, RC_All, 5;\n\t\tbonus bMatkRate, 3;\n\t\tbonus bHealPower, 5;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Krieger_Ring1_Medal_Merchant",
+      "members": [
+        "Medal_Merchant",
+        "Krieger_Ring1"
+      ],
+      "script": "bonus2 bAddRace, RC_All, 5;\n\t\tbonus bMatkRate, 3;\n\t\tbonus bHealPower, 5;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Bowman_Scarf_Icarus_Wing",
+      "members": [
+        "Icarus_Wing",
+        "Bowman_Scarf"
+      ],
+      "script": "bonus bUseSPrate, -25;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Krieger_Ring1_Medal_Gunner",
+      "members": [
+        "Medal_Gunner",
+        "Krieger_Ring1"
+      ],
+      "script": "bonus2 bAddRace, RC_All, 5;\n\t\tbonus bMatkRate, 3;\n\t\tbonus bHealPower, 5;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Black_Cat_Black_Wing",
+      "members": [
+        "Black_Cat",
+        "Black_Wing"
+      ],
+      "script": "bonus bHit, 5;\n\t\tbonus bMatk, 5;\n\t\tbonus2 bSkillUseSP, SC_ENERVATION, 20;\n\t\tbonus2 bSkillUseSP, SC_GROOMY, 20;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Shaman_Earing_Shaman_Ring_Shamans_Hair_Ornament",
+      "members": [
+        "Shaman_Ring",
+        "Shaman_Earing",
+        "Shamans_Hair_Ornament"
+      ],
+      "script": "bonus bMaxHP, 300;\n\t\tbonus bMatkRate, 5;\n\t\tbonus2 bSubEle, Ele_Neutral, 5;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Dark_Knight_Belt_Dark_Knight_Glove_Dark_Knight_Mask",
+      "members": [
+        "Dark_Knight_Belt",
+        "Dark_Knight_Glove",
+        "Dark_Knight_Mask"
+      ],
+      "script": "bonus bMatkRate, 10;\n\t\tbonus bInt, 5;\n\t\tbonus2 bSubRace, RC_Angel, 10;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Dark_Knight_Belt_Dark_Knight_Glove_Dark_Knight_MaskB",
+      "members": [
+        "Dark_Knight_Belt",
+        "Dark_Knight_Glove",
+        "Dark_Knight_MaskB"
+      ],
+      "script": "bonus bMatkRate, 10;\n\t\tbonus bInt, 5;\n\t\tbonus2 bSubRace, RC_Angel, 10;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Mana_Boots_Mana_Manteau_Rune_Ring_Rune_Suit",
+      "members": [
+        "Rune_Ring",
+        "Rune_Suit",
+        "Mana_Manteau",
+        "Mana_Boots"
+      ],
+      "script": "bonus2 bExpAddRace, RC_All, 10;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Anti_Magic_Suit_Body_Power_Up_Ring",
+      "members": [
+        "Body_Power_Up_Ring",
+        "Anti_Magic_Suit"
+      ],
+      "script": "bonus bAspdRate, 5;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Body_Power_Up_Ring_Geffen_Mage_Robe",
+      "members": [
+        "Body_Power_Up_Ring",
+        "Geffen_Mage_Robe"
+      ],
+      "script": "bonus bDelayrate, -5;\n\t\tbonus2 bAddRaceTolerance, RC_DemiPlayer, 5;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Anti_Magic_Suit_Ring_Of_Spell_Explosion",
+      "members": [
+        "Ring_Of_Spell_Explosion",
+        "Anti_Magic_Suit"
+      ],
+      "script": "bonus bDelayrate, -5;\n\t\tbonus2 bAddRaceTolerance, RC_DemiPlayer, 5;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Geffen_Mage_Robe_Ring_Of_Spell_Explosion",
+      "members": [
+        "Ring_Of_Spell_Explosion",
+        "Geffen_Mage_Robe"
+      ],
+      "script": "bonus bVariableCastrate, -5;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "RWC_Gold_Brooch_RWC_Silver_Brooch",
+      "members": [
+        "RWC_Gold_Brooch",
+        "RWC_Silver_Brooch"
+      ],
+      "script": "bonus bMatkRate, 10;\n\t\tbonus bAtkRate, 10;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Mastering_Card_Poring_Card",
+      "members": [
+        "Poring_Card",
+        "Mastering_Card"
+      ],
+      "script": "bonus bFlee, 18;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Eclipse_Card_Lunatic_Card",
+      "members": [
+        "Lunatic_Card",
+        "Eclipse_Card"
+      ],
+      "script": "bonus bFlee, 18;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Chonchon_Card_Dragon_Fly_Card",
+      "members": [
+        "Chonchon_Card",
+        "Dragon_Fly_Card"
+      ],
+      "script": "bonus bFlee, 18;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Roda_Frog_Card_Toad_Card",
+      "members": [
+        "Roda_Frog_Card",
+        "Toad_Card"
+      ],
+      "script": "bonus bFlee, 18;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Condor_Card_FlyingGalapago",
+      "members": [
+        "Condor_Card",
+        "FlyingGalapago"
+      ],
+      "script": "bonus2 bSubEle, Ele_All, 5;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Rocker_Card_Vocal_Card",
+      "members": [
+        "Rocker_Card",
+        "Vocal_Card"
+      ],
+      "script": "bonus bFlee, 18;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Skel_Prisoner_Card_Skeleton_Card",
+      "members": [
+        "Skeleton_Card",
+        "Skel_Prisoner_Card"
+      ],
+      "script": "bonus2 bAddEffWhenHit, Eff_Sleep, 600;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Cramp_Card_Tarou_Card",
+      "members": [
+        "Tarou_Card",
+        "Cramp_Card"
+      ],
+      "script": "bonus bStr, 3;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Vagabond_Wolf_Card_Wolf_Card",
+      "members": [
+        "Wolf_Card",
+        "Vagabond_Wolf_Card"
+      ],
+      "script": "bonus bFlee, 18;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Grand_Peco_Card_Pecopeco_Card",
+      "members": [
+        "Pecopeco_Card",
+        "Grand_Peco_Card"
+      ],
+      "script": "bonus bDef, 3;\n\t\tbonus bVit, 3;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Baby_Leopard_Card_Mole_Card_Muka_Card_Raggler_Card_Zipper_Bear_Card",
+      "members": [
+        "Muka_Card",
+        "Raggler_Card",
+        "Baby_Leopard_Card",
+        "Zipper_Bear_Card",
+        "Mole_Card"
+      ],
+      "script": "",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Shinobi_Card_Stainer_Card_Wander_Man_Card_Whikebain_Card_Wild_Rose_Card",
+      "members": [
+        "Stainer_Card",
+        "Wander_Man_Card",
+        "Shinobi_Card",
+        "Wild_Rose_Card",
+        "Whikebain_Card"
+      ],
+      "script": "",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Companion_Cavalry_Sword_Golem_Card",
+      "members": [
+        "Golem_Card",
+        "Companion_Cavalry_Sword"
+      ],
+      "script": "bonus2 bSubSize, Size_Large, 15;\n\t\tbonus2 bSubSize, Size_Small, 15;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "BigFoot_Card_Grizzly_Card",
+      "members": [
+        "BigFoot_Card",
+        "Grizzly_Card"
+      ],
+      "script": "bonus2 bAddEffWhenHit, Eff_Blind, 600;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Bon_Gun_Card_Hyegun_Card_Munak_Card",
+      "members": [
+        "Munak_Card",
+        "Bon_Gun_Card",
+        "Hyegun_Card"
+      ],
+      "script": "bonus bAllStats, 1;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Ancient_Mummy_Card_Mummy_Card",
+      "members": [
+        "Mummy_Card",
+        "Ancient_Mummy_Card"
+      ],
+      "script": "bonus bPerfectHitAddRate, 20;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Nightmare_Card_Nightmare_Terror_Card",
+      "members": [
+        "Nightmare_Card",
+        "Nightmare_Terror_Card"
+      ],
+      "script": "bonus2 bAddEffWhenHit, Eff_Curse, 600;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Knight_Of_Abyss_Card_Lord_of_Death",
+      "members": [
+        "Knight_Of_Abyss_Card",
+        "Lord_of_Death"
+      ],
+      "script": "bonus2 bAddRace, RC_Boss, 5;\n\t\tif (getequiprefinerycnt(EQI_HEAD_TOP) >= 11)\n\t\t\tbonus2 bSubRace, RC_NonBoss, 5;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "FlyingGalapago_Galapago_Card",
+      "members": [
+        "Galapago_Card",
+        "FlyingGalapago"
+      ],
+      "script": "bonus2 bAddItemHealRate, Apple_Juice, 1000;\n\t\tbonus2 bAddItemHealRate, Banana_Juice, 1000;\n\t\tbonus2 bAddItemHealRate, Carrot_Juice, 1000;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Aster_Card_Crab_Card_Shellfish_Card",
+      "members": [
+        "Crab_Card",
+        "Aster_Card",
+        "Shellfish_Card"
+      ],
+      "script": "bonus3 bAddMonsterDropItem, 544, RC_Fish, 3000;\n\t\tbonus2 bAddEle, Ele_Water, 30;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Grand_Peco_Card_Heaven_Cage",
+      "members": [
+        "Grand_Peco_Card",
+        "Heaven_Cage"
+      ],
+      "script": "bonus4 bAutoSpell, PR_GLORIA, 5, 10, 0;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "FlyingGalapago_Gryphon_Card",
+      "members": [
+        "Gryphon_Card",
+        "FlyingGalapago"
+      ],
+      "script": "bonus bAspdRate, 3;\n\t\tbonus bAspd, 1;\n\t\tbonus bAtkRate, -5;\n\t\tif (getiteminfo(getequipid(EQI_HAND_R), ITEMINFO_SUBTYPE) == W_BOW) {\n\t\t\tif (getequiprefinerycnt(EQI_HAND_R)",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Dark_Illusion_Card_Dark_Lord_Card",
+      "members": [
+        "Dark_Lord_Card",
+        "Dark_Illusion_Card"
+      ],
+      "script": "bonus bMaxHPrate, 20;\n\t\tbonus bMaxSPrate, 20;\n\t\tbonus bVariableCastrate, -10;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Dancing_Dragon_Card_Shinobi_Card_The_Paper_Card_Wander_Man_Card_Wild_Rose_Card",
+      "members": [
+        "The_Paper_Card",
+        "Wander_Man_Card",
+        "Shinobi_Card",
+        "Wild_Rose_Card",
+        "Dancing_Dragon_Card"
+      ],
+      "script": "bonus bAgi, 5;\n\t\tbonus bStr, 5;\n\t\tbonus bAspdRate, 5;\n\t\tbonus bSpeedRate, 25;\n\t\tbonus2 bSPDrainValue, 1, 0;\n\t\tif (BaseClass == Job_Thief)\n\t\t\tbonus bNoGemStone, 0;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Alligator_Card_Anolian_Card_Cruiser_Card_Dragon_Tail_Card_Merman_Card",
+      "members": [
+        "Dragon_Tail_Card",
+        "Merman_Card",
+        "Anolian_Card",
+        "Alligator_Card",
+        "Cruiser_Card"
+      ],
+      "script": "",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Alligator_Card_Anolian_Card_Cruiser_Card_Dragon_Tail_Card_Ferus__Card",
+      "members": [
+        "Dragon_Tail_Card",
+        "Anolian_Card",
+        "Alligator_Card",
+        "Cruiser_Card",
+        "Ferus__Card"
+      ],
+      "script": "bonus bDex, 5;\n\t\tbonus2 bSkillAtk, CG_ARROWVULCAN, 5;\n\t\tbonus2 bSkillAtk, DC_THROWARROW, 10;\n\t\tbonus2 bSkillAtk, BA_MUSICALSTRIKE, 10;\n\t\tif (BaseJob == Job_Bard || BaseJob == Job_Dancer)\n\t\t\tbonus3 bAutoSpellWhenHit, CG_TAROTCARD, 2, 50;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Cookie_Card_Fur_Seal_Card_Geographer_Card_Live_Peach_Tree_Card_Rideword_Card",
+      "members": [
+        "Rideword_Card",
+        "Live_Peach_Tree_Card",
+        "Geographer_Card",
+        "Cookie_Card",
+        "Fur_Seal_Card"
+      ],
+      "script": "",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Cookie_Card_Fur_Seal_Card_Rideword_Card_Waste_Stove_Card",
+      "members": [
+        "Rideword_Card",
+        "Cookie_Card",
+        "Fur_Seal_Card",
+        "Waste_Stove_Card"
+      ],
+      "script": "",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Baby_Leopard_Card_Hylozoist_Card_Mystcase_Card_Raggler_Card_Zipper_Bear_Card",
+      "members": [
+        "Raggler_Card",
+        "Mystcase_Card",
+        "Baby_Leopard_Card",
+        "Zipper_Bear_Card",
+        "Hylozoist_Card"
+      ],
+      "script": "",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Blood_Butterfly_Card_Harpy_Card_Loli_Ruri_Card_Miyabi_Ningyo_Card_Parasite_Card_Wicked_Nymph_Card",
+      "members": [
+        "Loli_Ruri_Card",
+        "Miyabi_Ningyo_Card",
+        "Wicked_Nymph_Card",
+        "Parasite_Card",
+        "Harpy_Card",
+        "Blood_Butterfly_Card"
+      ],
+      "script": "",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Lude_Card_Quve_Card",
+      "members": [
+        "Lude_Card",
+        "Quve_Card"
+      ],
+      "script": "bonus bMaxHP, 300;\n\t\tbonus bMaxSP, 60;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Blood_Butterfly_Card_Harpy_Card_Miyabi_Ningyo_Card_Novus__Card_Wicked_Nymph_Card",
+      "members": [
+        "Miyabi_Ningyo_Card",
+        "Wicked_Nymph_Card",
+        "Harpy_Card",
+        "Blood_Butterfly_Card",
+        "Novus__Card"
+      ],
+      "script": "",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Incubus_Card_Succubus_Card",
+      "members": [
+        "Succubus_Card",
+        "Incubus_Card"
+      ],
+      "script": "bonus bHPrecovRate, 30;\n\t\tbonus bSPrecovRate, 30;\n\t\tbonus bVit, 4;\n\t\tbonus bInt, 4;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Assulter_Card_Freezer_Card_Heater_Card_Permeter_Card_Solider_Card",
+      "members": [
+        "Solider_Card",
+        "Assulter_Card",
+        "Permeter_Card",
+        "Freezer_Card",
+        "Heater_Card"
+      ],
+      "script": "",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Alarm_Card_C_Tower_Manager_Card_Clock_Card_Punk_Card",
+      "members": [
+        "C_Tower_Manager_Card",
+        "Alarm_Card",
+        "Clock_Card",
+        "Punk_Card"
+      ],
+      "script": "bonus bDef, 3;\n\t\tbonus bMdef, 3;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Owl_Baron_Card_Owl_Duke_Card",
+      "members": [
+        "Owl_Duke_Card",
+        "Owl_Baron_Card"
+      ],
+      "script": "bonus3 bAutoSpell, MG_LIGHTNINGBOLT, 5, 20;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Injustice_Card_Zherlthsh_Card",
+      "members": [
+        "Injustice_Card",
+        "Zherlthsh_Card"
+      ],
+      "script": "bonus bBaseAtk, 20;\n\t\tbonus bLuk, 3;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Archdam_Card_Freezer_Card_Heater_Card_Permeter_Card",
+      "members": [
+        "Permeter_Card",
+        "Freezer_Card",
+        "Heater_Card",
+        "Archdam_Card"
+      ],
+      "script": "bonus bInt, 1;\n\t\tbonus bStr, 1;\n\t\tbonus bDef, 2;\n\t\tbonus bSPrecovRate, 10;\n\t\tbonus2 bSkillAtk, PA_SHIELDCHAIN, 10;\n\t\tbonus2 bSkillAtk, PA_SACRIFICE, 10;\n\t\tbonus bVariableCastrate, -10;\n\t\tif (BaseJob == Job_Crusader)\n\t\t\tbonus bDefEle, Ele_Holy;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Garm_Baby_Card_Garm_Card",
+      "members": [
+        "Garm_Baby_Card",
+        "Garm_Card"
+      ],
+      "script": "bonus3 bAutoSpell, MG_FROSTDIVER, 3, 250;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Mashirubeken_Pitman_Card",
+      "members": [
+        "Pitman_Card",
+        "Mashirubeken"
+      ],
+      "script": "bonus3 bAutoSpell, WZ_EARTHSPIKE, 5, 20 + (getequiprefinerycnt(EQI_HAND_R));",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Hill_Wind_Card_Mashirubeken",
+      "members": [
+        "Hill_Wind_Card",
+        "Mashirubeken"
+      ],
+      "script": "bonus3 bAutoSpell, MG_LIGHTNINGBOLT, 5, 20 + (getequiprefinerycnt(EQI_HAND_R));",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Mashirubeken_Rawrel_Card",
+      "members": [
+        "Rawrel_Card",
+        "Mashirubeken"
+      ],
+      "script": "bonus3 bAutoSpell, MG_COLDBOLT, 5, 20 + (getequiprefinerycnt(EQI_HAND_R));",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Ferus_Card_Mashirubeken",
+      "members": [
+        "Ferus_Card",
+        "Mashirubeken"
+      ],
+      "script": "bonus3 bAutoSpell, MG_FIREBOLT, 5, 20 + (getequiprefinerycnt(EQI_HAND_R));",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Deathword_Card_Mashirubeken",
+      "members": [
+        "Deathword_Card",
+        "Mashirubeken"
+      ],
+      "script": "bonus3 bAutoSpell, MG_SOULSTRIKE, 5, 20 + (getequiprefinerycnt(EQI_HAND_R));",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Ragged_Zombie_Card_Zombie_Slaughter_Card",
+      "members": [
+        "Zombie_Slaughter_Card",
+        "Ragged_Zombie_Card"
+      ],
+      "script": "bonus2 bSPGainRace, RC_DemiPlayer, 2;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "KarduiEar_Tendrilion_Card",
+      "members": [
+        "Tendrilion_Card",
+        "KarduiEar"
+      ],
+      "script": "",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Gold_Scaraba_Card_Scaraba_Card",
+      "members": [
+        "Scaraba_Card",
+        "Gold_Scaraba_Card"
+      ],
+      "script": "bonus3 bAutoSpell, NPC_DRAGONFEAR, 2, 100 + (getrefine() * 10);",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Q_Scaraba_Card_Queen_Scaraba_Crown",
+      "members": [
+        "Q_Scaraba_Card",
+        "Queen_Scaraba_Crown"
+      ],
+      "script": "bonus2 bAddRace2, 7, 30;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Gold_Q_Scaraba_Card_Queen_Scaraba_Crown",
+      "members": [
+        "Gold_Q_Scaraba_Card",
+        "Queen_Scaraba_Crown"
+      ],
+      "script": "bonus2 bSubRace, RC_Insect, 10;\n\t\tbonus2 bResEff, Eff_Confusion, 10000;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Cendrawasih_Card_FlyingGalapago",
+      "members": [
+        "Cendrawasih_Card",
+        "FlyingGalapago"
+      ],
+      "script": "",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Crimson_Stole_UndeadKnightF_Card",
+      "members": [
+        "UndeadKnightF_Card",
+        "Crimson_Stole"
+      ],
+      "script": "bonus bMaxSPrate, 44;\n\t\tbonus bSPGainValue, -(20 + (getequiprefinerycnt(EQI_GARMENT) / 2));",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Khali_Knightage_Card_White_Knightage_Card",
+      "members": [
+        "White_Knightage_Card",
+        "Khali_Knightage_Card"
+      ],
+      "script": "bonus2 bAddSize, Size_Medium, 15;\n\t\tbonus2 bAddSize, Size_Large, 15;\n\t\tbonus2 bSubSize, Size_Medium, 5;\n\t\tbonus2 bSubSize, Size_Large, 5;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Bijou_Card_P_Amdarais_Card",
+      "members": [
+        "P_Amdarais_Card",
+        "Bijou_Card"
+      ],
+      "script": "bonus2 bResEff, Eff_Burning, 10000;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Min_Chimera_Card_Min_Toad_Card",
+      "members": [
+        "Min_Toad_Card",
+        "Min_Chimera_Card"
+      ],
+      "script": "bonus bAtkRate, 10;\n\t\tbonus bMatkRate, 10;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Min_Chimera_Card_Min_Vagabond_Wolf_Card",
+      "members": [
+        "Min_Vagabond_Wolf_Card",
+        "Min_Chimera_Card"
+      ],
+      "script": "bonus bAtkRate, 10;\n\t\tbonus bMatkRate, 10;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Min_Chimera_Card_Min_Vocal_Card",
+      "members": [
+        "Min_Vocal_Card",
+        "Min_Chimera_Card"
+      ],
+      "script": "bonus bAtkRate, 10;\n\t\tbonus bMatkRate, 10;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Min_Chimera_Card_Min_Eclipse_Card",
+      "members": [
+        "Min_Eclipse_Card",
+        "Min_Chimera_Card"
+      ],
+      "script": "bonus bAtkRate, 10;\n\t\tbonus bMatkRate, 10;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "N_Arclouse_Card_N_Mimic_Card",
+      "members": [
+        "N_Arclouse_Card",
+        "N_Mimic_Card"
+      ],
+      "script": "bonus2 bSubRace, RC_Brute, 5;\n\t\tbonus2 bSubRace, RC_Undead, 5;\n\t\tbonus2 bIgnoreMdefRate, 50, RC_Brute;\n\t\tbonus2 bIgnoreMdefRate, 50, RC_Undead;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "N_Arclouse_Card_N_Minorous_Card",
+      "members": [
+        "N_Arclouse_Card",
+        "N_Minorous_Card"
+      ],
+      "script": "bonus2 bSubRace, RC_Brute, 5;\n\t\tbonus2 bSubRace, RC_Undead, 5;\n\t\tbonus2 bIgnoreDefRate, 50, RC_Brute;\n\t\tbonus2 bIgnoreDefRate, 50, RC_Undead;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Gossip_Raven_Loard_Circlet",
+      "members": [
+        "Loard_Circlet",
+        "Gossip_Raven"
+      ],
+      "script": "bonus2 bExpAddRace, RC_All, 5;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Bankruptcy_Of_Heart_Mask_Of_Bankrupt",
+      "members": [
+        "Bankruptcy_Of_Heart",
+        "Mask_Of_Bankrupt"
+      ],
+      "script": "bonus bMaxHP, 100;\n\t\tbonus2 bSubEle, Ele_Neutral, getequiprefinerycnt(EQI_HEAD_TOP);",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Blush_Necktie",
+      "members": [
+        "Blush",
+        "Necktie"
+      ],
+      "script": "bonus bAspdRate, 3;\n\t\tbonus bVariableCastrate, 3;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Blush_Tare_Pope",
+      "members": [
+        "Blush",
+        "Tare_Pope"
+      ],
+      "script": "bonus bSPrecovRate, 3;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Blush_Tare_Pope_",
+      "members": [
+        "Blush",
+        "Tare_Pope_"
+      ],
+      "script": "bonus bHealPower, 10;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Darkness_Helm_J_Ear_Of_Devils_Wing",
+      "members": [
+        "Ear_Of_Devils_Wing",
+        "Darkness_Helm_J"
+      ],
+      "script": "bonus bStr, 1;\n\t\tbonus bAtkRate, 5;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Darkness_Helm_J_Ear_Of_Angels_Wing",
+      "members": [
+        "Ear_Of_Angels_Wing",
+        "Darkness_Helm_J"
+      ],
+      "script": "bonus bStr, 1;\n\t\tbonus bAspdRate, 2;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Alarm_Mask_Gloomy_Pumpkin_Hat",
+      "members": [
+        "Alarm_Mask",
+        "Gloomy_Pumpkin_Hat"
+      ],
+      "script": "bonus2 bAddItemHealRate, 12192, 200;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Feather_Beret_Protect_Feathers",
+      "members": [
+        "Feather_Beret",
+        "Protect_Feathers"
+      ],
+      "script": "bonus bAspdRate, 5;\n\t\tif (getequiprefinerycnt(EQI_HEAD_TOP) > 6)\n\t\t\tbonus bAspdRate, 5;\n\t\tif (getequiprefinerycnt(EQI_HEAD_TOP) > 8)\n\t\t\tbonus bMaxHPrate, 5;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Gloomy_Pumpkin_Hat_Hahoe_Mask",
+      "members": [
+        "Hahoe_Mask",
+        "Gloomy_Pumpkin_Hat"
+      ],
+      "script": "bonus bAspdRate, 5;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Antique_Pipe_J_Captain_Hat",
+      "members": [
+        "Captain_Hat",
+        "Antique_Pipe_J"
+      ],
+      "script": "bonus bLongAtkRate, getequiprefinerycnt(EQI_HEAD_TOP);",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Darkness_Helm_J_Pecopeco_Wing_Ears",
+      "members": [
+        "Pecopeco_Wing_Ears",
+        "Darkness_Helm_J"
+      ],
+      "script": "bonus bAgi, 1;\n\t\tbonus bFlee, 3;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Cap_Of_Concentration_Pencil_In_Mouth",
+      "members": [
+        "Pencil_In_Mouth",
+        "Cap_Of_Concentration"
+      ],
+      "script": "bonus bDex, 2;\n\t\tbonus bDef, 2;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Black_Glasses_Darkness_Helm_J",
+      "members": [
+        "Black_Glasses",
+        "Darkness_Helm_J"
+      ],
+      "script": "bonus bInt, 1;\n\t\tbonus bMatkRate, 2;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Darkness_Helm_J_Eyes_Of_Darkness",
+      "members": [
+        "Eyes_Of_Darkness",
+        "Darkness_Helm_J"
+      ],
+      "script": "bonus bDex, 1;\n\t\tbonus bLongAtkRate, 3;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Priest_Sword_Red_Wing_Hat",
+      "members": [
+        "Red_Wing_Hat",
+        "Priest_Sword"
+      ],
+      "script": "bonus2 bAddRace, RC_DemiPlayer, 10;\n\t\tbonus bHit, 10;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Angel_Earing_Bless_Of_Moon",
+      "members": [
+        "Angel_Earing",
+        "Bless_Of_Moon"
+      ],
+      "script": "bonus2 bAddRace, RC_All, 3;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Heaven_Cage_Ixion_Wing",
+      "members": [
+        "Heaven_Cage",
+        "Ixion_Wing"
+      ],
+      "script": "if (Class == Job_Ranger || Class == Job_Ranger_T)\n\t\t\tskill HT_BLITZBEAT, 5 * getequiprefinerycnt(EQI_HAND_R);",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Green_Operation_Coat_Scalpel",
+      "members": [
+        "Scalpel",
+        "Green_Operation_Coat"
+      ],
+      "script": "bonus3 bAddMonsterDropItem, 929, RC_Brute, 100 + (getequiprefinerycnt(EQI_HAND_R) * 10);\n\t\tbonus3 bAddMonsterDropItem, 929, RC_DemiPlayer, 100 + (getequiprefinerycnt(EQI_HAND_R) * 10);\n\t\tbonus3 bAddMonsterDropItem, 970, RC_Brute, 20 + (getequiprefinerycnt(EQI_HAND_R) * 2);\n\t\tbonus3 bAddMonsterDropItem, 970, RC_DemiPlayer, 20 + (getequiprefinerycnt(EQI_HAND_R) * 2);",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Sandstorm_Twilight_Desert",
+      "members": [
+        "Twilight_Desert",
+        "Sandstorm"
+      ],
+      "script": "",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Sandstorm_Twilight_Desert_",
+      "members": [
+        "Sandstorm",
+        "Twilight_Desert_"
+      ],
+      "script": "",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Boitata_Armor_Boitata_Hat",
+      "members": [
+        "Boitata_Armor",
+        "Boitata_Hat"
+      ],
+      "script": "bonus2 bAddEle, Ele_Earth, 10;\n\t\tbonus bDefEle, Ele_Fire;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Aegir_Helm_Egir_Armor",
+      "members": [
+        "Egir_Armor",
+        "Aegir_Helm"
+      ],
+      "script": "bonus2 bAddRaceTolerance, RC_Fish, 10 + getequiprefinerycnt(EQI_ARMOR);",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Im_Angels_Protection_Impr_Angels_Warmth",
+      "members": [
+        "Im_Angels_Protection",
+        "Impr_Angels_Warmth"
+      ],
+      "script": "bonus(bAgi, 5);\n\t\tbonus(bFlee, 10);",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Excellion_Wing_Female_Poring_Egg",
+      "members": [
+        "Female_Poring_Egg",
+        "Excellion_Wing"
+      ],
+      "script": "bonus bDelayrate, -10;\n\t\tbonus bFlee2, 6;\n\t\tif (BaseLevel",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Elven_Ears__Skull_Cap",
+      "members": [
+        "Elven_Ears_",
+        "Skull_Cap"
+      ],
+      "script": "bonus bUseSPrate, -3;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Blush__Tare_Pope",
+      "members": [
+        "Blush_",
+        "Tare_Pope"
+      ],
+      "script": "bonus bSPrecovRate, 3;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Blush__Tare_Pope_",
+      "members": [
+        "Blush_",
+        "Tare_Pope_"
+      ],
+      "script": "bonus bHealPower, 10;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Imperial_Feather_Imperial_Ring",
+      "members": [
+        "Imperial_Feather",
+        "Imperial_Ring"
+      ],
+      "script": "bonus2 bSkillVariableCast, CR_GRANDCROSS, -2000;\n\t\tbonus2 bSkillUseSP, LG_RAYOFGENESIS, 10;\n\t\tbonus2 bSkillAtk, CR_GRANDCROSS, BaseLevel;\n\t\tbonus2 bSkillAtk, LG_RAYOFGENESIS, BaseLevel / 30;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Imperial_Feather_Imperial_Guard_Imperial_Spear",
+      "members": [
+        "Imperial_Feather",
+        "Imperial_Guard",
+        "Imperial_Spear"
+      ],
+      "script": "bonus2 bSkillAtk, LG_CANNONSPEAR, 20;\n\t\tbonus2 bSkillAtk, LG_BANISHINGPOINT, 20;\n\t\tbonus2 bSkillAtk, LG_SHIELDPRESS, 20;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Armor_Of_Gray_Boots_Of_Gray_Cloak_Of_Gray_Gray_Helmet",
+      "members": [
+        "Armor_Of_Gray",
+        "Gray_Helmet",
+        "Cloak_Of_Gray",
+        "Boots_Of_Gray"
+      ],
+      "script": "bonus2 bSubEle, Ele_Neutral, 15;\n\t\tbonus3 bAutoSpellWhenHit, WL_DRAINLIFE, 3, 100;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Boots_Of_Gray_Cloak_Of_Gray_Gray_Helmet_Gray_Robe",
+      "members": [
+        "Gray_Robe",
+        "Gray_Helmet",
+        "Cloak_Of_Gray",
+        "Boots_Of_Gray"
+      ],
+      "script": "bonus2 bSubEle, Ele_Neutral, 15;\n\t\tbonus bMaxHPrate, 25;\n\t\tbonus bMaxSPrate, 25;\n\t\tbonus bMatkRate, 10;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Felock_Armor_Felock_Boots_Felock_Cape",
+      "members": [
+        "Felock_Armor",
+        "Felock_Cape",
+        "Felock_Boots"
+      ],
+      "script": "bonus bMaxHP, 25;\n\t\tbonus bMaxSP, 25;\n\t\tbonus bSpeedRate, 25;\n\t\tif (getequiprefinerycnt(EQI_GARMENT, EQI_SHOES, EQI_ARMOR)",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Blood_Angel_Hair_Band_Blood_Angel_Wing_Ear",
+      "members": [
+        "Blood_Angel_Hair_Band",
+        "Blood_Angel_Wing_Ear"
+      ],
+      "script": "bonus2 bAddRace, RC_Angel, 3;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Egir_Armor_Egir_Helm_Egir_Manteau_Egir_Shoes",
+      "members": [
+        "Egir_Helm",
+        "Egir_Armor",
+        "Egir_Shoes",
+        "Egir_Manteau"
+      ],
+      "script": "bonus bAllStats, 1;\n\t\tbonus2 bSubEle, Ele_Water, 50;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Impr_Angels_Warmth_Improved_Kiss_Of_Angel",
+      "members": [
+        "Improved_Kiss_Of_Angel",
+        "Impr_Angels_Warmth"
+      ],
+      "script": "bonus(bBaseAtk, 10);",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Impr_Angels_Arrival_Improved_Kiss_Of_Angel",
+      "members": [
+        "Improved_Kiss_Of_Angel",
+        "Impr_Angels_Arrival"
+      ],
+      "script": "bonus(bMatk, 20);",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Bankruptcy_Of_Heart__Mask_Of_Bankrupt",
+      "members": [
+        "Mask_Of_Bankrupt",
+        "Bankruptcy_Of_Heart_"
+      ],
+      "script": "bonus bMaxHP, 100;\n\t\tbonus2 bSubEle, Ele_Neutral, getequiprefinerycnt(EQI_HEAD_TOP);",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Memorize_Book_One_Eyed_Glass__Pocket_Watch__",
+      "members": [
+        "One_Eyed_Glass_",
+        "Memorize_Book",
+        "Pocket_Watch__"
+      ],
+      "script": "bonus bHPrecovRate, 15;\n\t\tbonus bSPrecovRate, 15;\n\t\tbonus bMatkRate, 7;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Broken_Chip_1_Broken_Chip_2_Riot_Chip",
+      "members": [
+        "Riot_Chip",
+        "Broken_Chip_1",
+        "Broken_Chip_2"
+      ],
+      "script": "bonus bSpeedRate, 10;\n\t\tbonus bBaseAtk, 50;\n\t\tbonus bMatk, 50;\n\t\tif (getequiprefinerycnt(EQI_HEAD_TOP)",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Aegir_Armor_Aegir_Helm",
+      "members": [
+        "Aegir_Helm",
+        "Aegir_Armor"
+      ],
+      "script": "bonus2 bAddRaceTolerance, RC_Fish, 10 + getequiprefinerycnt(EQI_ARMOR);",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Aegir_Cloak_Aegir_Helm",
+      "members": [
+        "Aegir_Helm",
+        "Aegir_Cloak"
+      ],
+      "script": ".@r = getequiprefinerycnt(EQI_GARMENT);\n\t\tbonus2 bSPGainRace, RC_Fish, 10;\n\t\tbonus3 bAddMonsterDropItem, Shusi, RC_Fish, (5 + .@r);\n\t\tbonus3 bAddMonsterDropItem, Fish_Slice, RC_Fish, (5 + .@r);\n\t\tbonus2 bAddItemHealRate, Shusi, 5;\n\t\tbonus2 bAddItemHealRate, Fish_Slice, 5;\n\t\tbonus bHPrecovRate, (5 + .@r);",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Aegir_Helm_Aegir_Shoes",
+      "members": [
+        "Aegir_Helm",
+        "Aegir_Shoes"
+      ],
+      "script": "bonus2 bCriticalAddRace, RC_Fish, 10 + getequiprefinerycnt(EQI_SHOES);",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Aegir_Armor_Aegir_Cloak_Aegir_Helm_Aegir_Shoes",
+      "members": [
+        "Aegir_Helm",
+        "Aegir_Armor",
+        "Aegir_Shoes",
+        "Aegir_Cloak"
+      ],
+      "script": "bonus bMaxHP, 1000;\n\t\tbonus bMaxSP, 100;\n\t\tbonus2 bExpAddRace, RC_Fish, 20;\n\t\tbonus2 bAddRace, RC_Fish, 50;\n\t\tbonus2 bMagicAddRace, RC_Fish, 50;\n\t\tbonus2 bSubEle, Ele_Water, 50;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "C_Amistr_Bag_C_Amistr_Cap",
+      "members": [
+        "C_Amistr_Cap",
+        "C_Amistr_Bag"
+      ],
+      "script": "bonus2 bAddRaceTolerance, RC_Player, 4;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "FaceWorm_Skin_Temporal_Str_Boots",
+      "members": [
+        "FaceWorm_Skin",
+        "Temporal_Str_Boots"
+      ],
+      "script": "bonus bMaxHPrate, 15;\n\t\tbonus bMaxSPrate, 5;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "FaceWorm_Skin_Temporal_Int_Boots",
+      "members": [
+        "FaceWorm_Skin",
+        "Temporal_Int_Boots"
+      ],
+      "script": "bonus bMaxHPrate, 15;\n\t\tbonus bMaxSPrate, 5;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "FaceWorm_Skin_Temporal_Agi_Boots",
+      "members": [
+        "FaceWorm_Skin",
+        "Temporal_Agi_Boots"
+      ],
+      "script": "bonus bMaxHPrate, 15;\n\t\tbonus bMaxSPrate, 5;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "FaceWorm_Skin_Temporal_Vit_Boots",
+      "members": [
+        "FaceWorm_Skin",
+        "Temporal_Vit_Boots"
+      ],
+      "script": "bonus bMaxHPrate, 15;\n\t\tbonus bMaxSPrate, 5;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "FaceWorm_Skin_Temporal_Dex_Boots",
+      "members": [
+        "FaceWorm_Skin",
+        "Temporal_Dex_Boots"
+      ],
+      "script": "bonus bMaxHPrate, 15;\n\t\tbonus bMaxSPrate, 5;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "FaceWorm_Skin_Temporal_Luk_Boots",
+      "members": [
+        "FaceWorm_Skin",
+        "Temporal_Luk_Boots"
+      ],
+      "script": "bonus bMaxHPrate, 15;\n\t\tbonus bMaxSPrate, 5;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "FaceWorm_Skin_Temporal_Str_Boots_",
+      "members": [
+        "FaceWorm_Skin",
+        "Temporal_Str_Boots_"
+      ],
+      "script": "bonus bMaxHPrate, 15;\n\t\tbonus bMaxSPrate, 5;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "FaceWorm_Skin_Temporal_Vit_Boots_",
+      "members": [
+        "FaceWorm_Skin",
+        "Temporal_Vit_Boots_"
+      ],
+      "script": "bonus bMaxHPrate, 15;\n\t\tbonus bMaxSPrate, 5;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "FaceWorm_Skin_Temporal_Dex_Boots_",
+      "members": [
+        "FaceWorm_Skin",
+        "Temporal_Dex_Boots_"
+      ],
+      "script": "bonus bMaxHPrate, 15;\n\t\tbonus bMaxSPrate, 5;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "FaceWorm_Skin_Temporal_Int_Boots_",
+      "members": [
+        "FaceWorm_Skin",
+        "Temporal_Int_Boots_"
+      ],
+      "script": "bonus bMaxHPrate, 15;\n\t\tbonus bMaxSPrate, 5;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "FaceWorm_Skin_Temporal_Agi_Boots_",
+      "members": [
+        "FaceWorm_Skin",
+        "Temporal_Agi_Boots_"
+      ],
+      "script": "bonus bMaxHPrate, 15;\n\t\tbonus bMaxSPrate, 5;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "FaceWorm_Skin_Temporal_Luk_Boots_",
+      "members": [
+        "FaceWorm_Skin",
+        "Temporal_Luk_Boots_"
+      ],
+      "script": "bonus bMaxHPrate, 15;\n\t\tbonus bMaxSPrate, 5;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "FaceWorm_Skin__Temporal_Str_Boots",
+      "members": [
+        "FaceWorm_Skin_",
+        "Temporal_Str_Boots"
+      ],
+      "script": "bonus bMaxHPrate, 15;\n\t\tbonus bMaxSPrate, 5;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "FaceWorm_Skin__Temporal_Int_Boots",
+      "members": [
+        "FaceWorm_Skin_",
+        "Temporal_Int_Boots"
+      ],
+      "script": "bonus bMaxHPrate, 15;\n\t\tbonus bMaxSPrate, 5;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "FaceWorm_Skin__Temporal_Agi_Boots",
+      "members": [
+        "FaceWorm_Skin_",
+        "Temporal_Agi_Boots"
+      ],
+      "script": "bonus bMaxHPrate, 15;\n\t\tbonus bMaxSPrate, 5;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "FaceWorm_Skin__Temporal_Vit_Boots",
+      "members": [
+        "FaceWorm_Skin_",
+        "Temporal_Vit_Boots"
+      ],
+      "script": "bonus bMaxHPrate, 15;\n\t\tbonus bMaxSPrate, 5;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "FaceWorm_Skin__Temporal_Dex_Boots",
+      "members": [
+        "FaceWorm_Skin_",
+        "Temporal_Dex_Boots"
+      ],
+      "script": "bonus bMaxHPrate, 15;\n\t\tbonus bMaxSPrate, 5;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "FaceWorm_Skin__Temporal_Luk_Boots",
+      "members": [
+        "FaceWorm_Skin_",
+        "Temporal_Luk_Boots"
+      ],
+      "script": "bonus bMaxHPrate, 15;\n\t\tbonus bMaxSPrate, 5;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "FaceWorm_Skin__Temporal_Str_Boots_",
+      "members": [
+        "FaceWorm_Skin_",
+        "Temporal_Str_Boots_"
+      ],
+      "script": "bonus bMaxHPrate, 15;\n\t\tbonus bMaxSPrate, 5;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "FaceWorm_Skin__Temporal_Vit_Boots_",
+      "members": [
+        "FaceWorm_Skin_",
+        "Temporal_Vit_Boots_"
+      ],
+      "script": "bonus bMaxHPrate, 15;\n\t\tbonus bMaxSPrate, 5;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "FaceWorm_Skin__Temporal_Dex_Boots_",
+      "members": [
+        "FaceWorm_Skin_",
+        "Temporal_Dex_Boots_"
+      ],
+      "script": "bonus bMaxHPrate, 15;\n\t\tbonus bMaxSPrate, 5;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "FaceWorm_Skin__Temporal_Int_Boots_",
+      "members": [
+        "FaceWorm_Skin_",
+        "Temporal_Int_Boots_"
+      ],
+      "script": "bonus bMaxHPrate, 15;\n\t\tbonus bMaxSPrate, 5;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "FaceWorm_Skin__Temporal_Agi_Boots_",
+      "members": [
+        "FaceWorm_Skin_",
+        "Temporal_Agi_Boots_"
+      ],
+      "script": "bonus bMaxHPrate, 15;\n\t\tbonus bMaxSPrate, 5;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "FaceWorm_Skin__Temporal_Luk_Boots_",
+      "members": [
+        "FaceWorm_Skin_",
+        "Temporal_Luk_Boots_"
+      ],
+      "script": "bonus bMaxHPrate, 15;\n\t\tbonus bMaxSPrate, 5;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Supplement_Part_Con_Tornado_Axe",
+      "members": [
+        "Supplement_Part_Con",
+        "Tornado_Axe"
+      ],
+      "script": "bonus2 bAddRace, RC_All, 25;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Assassin_Shoes_Desperation_of_Assassin",
+      "members": [
+        "Assassin_Shoes",
+        "Desperation_of_Assassin"
+      ],
+      "script": "bonus2 bAddRace, RC_DemiPlayer, getequiprefinerycnt(EQI_SHOES);\n\t\tbonus2 bAddRace, RC_Player, getequiprefinerycnt(EQI_SHOES);",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Broken_Chip_1_Broken_Chip_2",
+      "members": [
+        "Broken_Chip_1",
+        "Broken_Chip_2"
+      ],
+      "script": "bonus bInt, 8;\n\t\tbonus bStr, 8;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "S_Promotion_Armor_S_Promotion_Earring_S_Promotion_Pendant_S_Promotion_Shield_S_Promotion_Shoes_S_Promotion_Weapon",
+      "members": [
+        "S_Promotion_Weapon",
+        "S_Promotion_Armor",
+        "S_Promotion_Shoes",
+        "S_Promotion_Shield",
+        "S_Promotion_Earring",
+        "S_Promotion_Pendant"
+      ],
+      "script": "bonus bAllStats, 9;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "S_Physical_Earring_S_Physical_Pendant_S_Physical_Weapon",
+      "members": [
+        "S_Physical_Earring",
+        "S_Physical_Weapon",
+        "S_Physical_Pendant"
+      ],
+      "script": "if (getequiprefinerycnt(EQI_SHADOW_ACC_R, EQI_SHADOW_ACC_L, EQI_SHADOW_WEAPON)",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "S_Magical_Earring_S_Magical_Pendant_S_Magical_Weapon",
+      "members": [
+        "S_Magical_Earring",
+        "S_Magical_Weapon",
+        "S_Magical_Pendant"
+      ],
+      "script": "if (getequiprefinerycnt(EQI_SHADOW_ACC_R, EQI_SHADOW_ACC_L, EQI_SHADOW_WEAPON)",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "S_Champion_Shoes_S_Hard_Armor",
+      "members": [
+        "S_Champion_Shoes",
+        "S_Hard_Armor"
+      ],
+      "script": ".@r = getequiprefinerycnt(EQI_SHADOW_ARMOR, EQI_SHADOW_SHOES);\n\t\tbonus bMaxHP, .@r;\n\t\tbonus bMaxSP, .@r;\n\t\tif (.@r",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "S_Athena_Shield_S_Immune_Armor",
+      "members": [
+        "S_Athena_Shield",
+        "S_Immune_Armor"
+      ],
+      "script": ".@r = getequiprefinerycnt(EQI_SHADOW_ARMOR, EQI_SHADOW_SHIELD);\n\t\tbonus bDef, .@r;\n\t\tif (.@r",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "S_Ancient_Armor_S_Kingbird_Weapon",
+      "members": [
+        "S_Ancient_Armor",
+        "S_Kingbird_Weapon"
+      ],
+      "script": ".@r = getequiprefinerycnt(EQI_SHADOW_ARMOR, EQI_SHADOW_WEAPON);\n\t\tbonus bBaseAtk, .@r;\n\t\tif (.@r",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "S_Cri_Hit_Weapon_S_Critical_Armor",
+      "members": [
+        "S_Critical_Armor",
+        "S_Cri_Hit_Weapon"
+      ],
+      "script": ".@r = getequiprefinerycnt(EQI_SHADOW_ARMOR, EQI_SHADOW_WEAPON);\n\t\tbonus bCritical, .@r;\n\t\tbonus bBaseAtk, .@r;\n\t\tif (.@r",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "S_Lucky_Armor_S_Lucky_Weapon",
+      "members": [
+        "S_Lucky_Weapon",
+        "S_Lucky_Armor"
+      ],
+      "script": "bonus bLuk, 1;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "S_Power_Earring_S_Power_Pendant",
+      "members": [
+        "S_Power_Earring",
+        "S_Power_Pendant"
+      ],
+      "script": "bonus bStr, 1;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "S_Int_Earring_S_Int_Pendant",
+      "members": [
+        "S_Int_Pendant",
+        "S_Int_Earring"
+      ],
+      "script": "bonus bInt, 1;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "S_Dexterous_Armor_S_Dexterous_Weapon",
+      "members": [
+        "S_Dexterous_Armor",
+        "S_Dexterous_Weapon"
+      ],
+      "script": "bonus bDex, 1;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "S_Vital_Shield_S_Vital_Shoes",
+      "members": [
+        "S_Vital_Shoes",
+        "S_Vital_Shield"
+      ],
+      "script": "bonus bVit, 1;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "S_Athletic_Shield_S_Athletic_Shoes",
+      "members": [
+        "S_Athletic_Shield",
+        "S_Athletic_Shoes"
+      ],
+      "script": "bonus bAgi, 1;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "S_Athena_Earring_S_Resist_Spell_Pendant",
+      "members": [
+        "S_Resist_Spell_Pendant",
+        "S_Athena_Earring"
+      ],
+      "script": "bonus2 bSubEle, Ele_Neutral, 1;\n\t\tif (getequiprefinerycnt(EQI_SHADOW_ACC_R, EQI_SHADOW_ACC_L)",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "S_Bloody_Shoes_S_Cranial_Shield",
+      "members": [
+        "S_Cranial_Shield",
+        "S_Bloody_Shoes"
+      ],
+      "script": "bonus2 bExpAddRace, RC_DemiPlayer, 3;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "S_Liberation_Shoes_S_Safeguard_Shield",
+      "members": [
+        "S_Safeguard_Shield",
+        "S_Liberation_Shoes"
+      ],
+      "script": "bonus2 bAddRace, RC_Boss, 5;\n\t\tbonus2 bMagicAddRace, RC_Boss, 5;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "S_Brutal_Shield_S_Clamorous_Shoes",
+      "members": [
+        "S_Brutal_Shield",
+        "S_Clamorous_Shoes"
+      ],
+      "script": "bonus2 bExpAddRace, RC_Brute, 3;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "S_Gargantua_Shield_S_Insecticide_Shoes",
+      "members": [
+        "S_Gargantua_Shield",
+        "S_Insecticide_Shoes"
+      ],
+      "script": "bonus2 bExpAddRace, RC_Insect, 3;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "S_Fisher_Shoes_S_Homers_Shield",
+      "members": [
+        "S_Homers_Shield",
+        "S_Fisher_Shoes"
+      ],
+      "script": "bonus2 bExpAddRace, RC_Fish, 3;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "S_Dragoon_Shield_S_Dragoon_Shoes",
+      "members": [
+        "S_Dragoon_Shield",
+        "S_Dragoon_Shoes"
+      ],
+      "script": "bonus2 bExpAddRace, RC_Dragon, 3;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "S_Satanic_Shield_S_Seraphim_Shoes",
+      "members": [
+        "S_Satanic_Shield",
+        "S_Seraphim_Shoes"
+      ],
+      "script": "bonus2 bExpAddRace, RC_Angel, 3;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "S_Beholder_Shoes_S_Flameguard_Shield",
+      "members": [
+        "S_Flameguard_Shield",
+        "S_Beholder_Shoes"
+      ],
+      "script": "bonus2 bExpAddRace, RC_Formless, 3;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "S_Divine_Shoes_S_Requiem_Shield",
+      "members": [
+        "S_Requiem_Shield",
+        "S_Divine_Shoes"
+      ],
+      "script": "bonus2 bExpAddRace, RC_Undead, 3;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "S_Cadi_Shield_S_Chemical_Shoes",
+      "members": [
+        "S_Cadi_Shield",
+        "S_Chemical_Shoes"
+      ],
+      "script": "bonus2 bExpAddRace, RC_Plant, 3;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "S_Big_Armor_S_Big_Weapon",
+      "members": [
+        "S_Big_Armor",
+        "S_Big_Weapon"
+      ],
+      "script": "bonus bMaxHPrate, 1;\n\t\tbonus bMaxSPrate, 1;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "S_Medium_Armor_S_Medium_Weapon",
+      "members": [
+        "S_Medium_Armor",
+        "S_Medium_Weapon"
+      ],
+      "script": "bonus bMaxHPrate, 1;\n\t\tbonus bMaxSPrate, 1;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "S_Small_Armor_S_Small_Weapon",
+      "members": [
+        "S_Small_Armor",
+        "S_Small_Weapon"
+      ],
+      "script": "bonus bMaxHPrate, 1;\n\t\tbonus bMaxSPrate, 1;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "S_Spiritual_Earring_S_Spiritual_Pendent_S_Spiritual_Weapon",
+      "members": [
+        "S_Spiritual_Weapon",
+        "S_Spiritual_Earring",
+        "S_Spiritual_Pendent"
+      ],
+      "script": "bonus3 bSPDrainRate, 10, 1 + (getequiprefinerycnt(EQI_SHADOW_WEAPON, EQI_SHADOW_ACC_R, EQI_SHADOW_ACC_L) / 10), 0;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "S_Malicious_Armor_S_Malicious_Shield_S_Malicious_Shoes",
+      "members": [
+        "S_Malicious_Armor",
+        "S_Malicious_Shoes",
+        "S_Malicious_Shield"
+      ],
+      "script": "bonus3 bHPDrainRateRace, 11, 40, 2 + (getequiprefinerycnt(EQI_SHADOW_ARMOR, EQI_SHADOW_SHIELD, EQI_SHADOW_SHOES) / 5);",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "S_Gemstone_Armor_S_Gemstone_Earring_S_Gemstone_Pendent_S_Gemstone_Shield_S_Gemstone_Shoes_S_Gemstone_Weapon",
+      "members": [
+        "S_Gemstone_Armor",
+        "S_Gemstone_Shoes",
+        "S_Gemstone_Shield",
+        "S_Gemstone_Weapon",
+        "S_Gemstone_Earring",
+        "S_Gemstone_Pendent"
+      ],
+      "script": "bonus bAllStats, 1;\n\t\t.@r = getequiprefinerycnt(EQI_SHADOW_ARMOR, EQI_SHADOW_WEAPON, EQI_SHADOW_SHIELD, EQI_SHADOW_SHOES, EQI_SHADOW_ACC_R, EQI_SHADOW_ACC_L);\n\t\tif (.@r",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "S_Plasterers_Armor_S_Plasterers_Shoes_S_Stability_Shield",
+      "members": [
+        "S_Stability_Shield",
+        "S_Plasterers_Armor",
+        "S_Plasterers_Shoes"
+      ],
+      "script": "bonus bDef, 5;\n\t\tif (getequiprefinerycnt(EQI_SHADOW_SHIELD, EQI_SHADOW_ARMOR, EQI_SHADOW_SHOES) >= 20)\n\t\t\tbonus2 bResEff, Eff_Stone, 100;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "S_Insomniac_Armor_S_Insomniac_Shoes_S_Stability_Shield",
+      "members": [
+        "S_Stability_Shield",
+        "S_Insomniac_Armor",
+        "S_Insomniac_Shoes"
+      ],
+      "script": "bonus bDef, 5;\n\t\tif (getequiprefinerycnt(EQI_SHADOW_SHIELD, EQI_SHADOW_ARMOR, EQI_SHADOW_SHOES) >= 20)\n\t\t\tbonus2 bResEff, Eff_Sleep, 100;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "S_Peerless_Armor_S_Peerless_Shoes_S_Stability_Shield",
+      "members": [
+        "S_Stability_Shield",
+        "S_Peerless_Armor",
+        "S_Peerless_Shoes"
+      ],
+      "script": "bonus bDef, 5;\n\t\tif (getequiprefinerycnt(EQI_SHADOW_SHIELD, EQI_SHADOW_ARMOR, EQI_SHADOW_SHOES) >= 20)\n\t\t\tbonus2 bResEff, Eff_Silence, 100;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "S_Adurate_Armor_S_Adurate_Shoes_S_Stability_Shield",
+      "members": [
+        "S_Stability_Shield",
+        "S_Adurate_Armor",
+        "S_Adurate_Shoes"
+      ],
+      "script": "bonus bDef, 5;\n\t\tif (getequiprefinerycnt(EQI_SHADOW_SHIELD, EQI_SHADOW_ARMOR, EQI_SHADOW_SHOES) >= 20)\n\t\t\tbonus2 bResEff, Eff_Blind, 100;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "S_Stability_Shield_Unfreez_Weapon_S_Unfreeze_Earing_S_Unfreeze_Pendent_S",
+      "members": [
+        "S_Stability_Shield",
+        "Unfreez_Weapon_S",
+        "Unfreeze_Earing_S",
+        "Unfreeze_Pendent_S"
+      ],
+      "script": "bonus bDef, 4;\n\t\tif (getequiprefinerycnt(EQI_SHADOW_SHIELD, EQI_SHADOW_WEAPON, EQI_SHADOW_ACC_L, EQI_SHADOW_ACC_R) >= 30)\n\t\t\tbonus2 bResEff, Eff_Freeze, 100;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "S_Stability_Shield_Vitality_Earing_S_Vitality_Pendant_S",
+      "members": [
+        "S_Stability_Shield",
+        "Vitality_Earing_S",
+        "Vitality_Pendant_S"
+      ],
+      "script": "bonus bDef, 5;\n\t\tif (getequiprefinerycnt(EQI_SHADOW_SHIELD, EQI_SHADOW_ACC_L, EQI_SHADOW_ACC_R) >= 20)\n\t\t\tbonus2 bResEff, Eff_Bleeding, 100;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "S_Neutral_Earring_S_Neutral_Pendent_S_Neutral_Weapon_S_Stability_Shield",
+      "members": [
+        "S_Stability_Shield",
+        "S_Neutral_Weapon",
+        "S_Neutral_Earring",
+        "S_Neutral_Pendent"
+      ],
+      "script": "bonus bDef, 4;\n\t\tif (getequiprefinerycnt(EQI_SHADOW_SHIELD, EQI_SHADOW_WEAPON, EQI_SHADOW_ACC_L, EQI_SHADOW_ACC_R) >= 30)\n\t\t\tbonus2 bResEff, Eff_Stun, 100;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "S_Curse_Lift_Earring_S_Curse_Lift_Pendent_S_Stability_Shield",
+      "members": [
+        "S_Stability_Shield",
+        "S_Curse_Lift_Earring",
+        "S_Curse_Lift_Pendent"
+      ],
+      "script": "bonus bDef, 5;\n\t\tif (getequiprefinerycnt(EQI_SHADOW_SHIELD, EQI_SHADOW_ACC_L, EQI_SHADOW_ACC_R) >= 20)\n\t\t\tbonus2 bResEff, Eff_Curse, 100;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "S_Caster_Pendant_S_Caster_Weapon_S_Caster_earring",
+      "members": [
+        "S_Caster_earring",
+        "S_Caster_Weapon",
+        "S_Caster_Pendant"
+      ],
+      "script": "bonus bNoCastCancel, 1;\n\t\tbonus bVariableCastrate, 40 - (getequiprefinerycnt(EQI_SHADOW_WEAPON, EQI_SHADOW_ACC_R, EQI_SHADOW_ACC_L));",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "S_Spell_Flow_Armor_S_Spell_Flow_Shield_S_Spell_Flow_Shoes",
+      "members": [
+        "S_Spell_Flow_Shoes",
+        "S_Spell_Flow_Armor",
+        "S_Spell_Flow_Shield"
+      ],
+      "script": "bonus bNoCastCancel, 1;\n\t\tbonus bUseSPrate, 40 - getequiprefinerycnt(EQI_SHADOW_SHIELD) - getequiprefinerycnt(EQI_SHADOW_ARMOR) - getequiprefinerycnt(EQI_SHADOW_SHOES);",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "S_Infinity_Earring_S_Infinity_Pendant",
+      "members": [
+        "S_Infinity_Earring",
+        "S_Infinity_Pendant"
+      ],
+      "script": "bonus bAtkRate, 1;\n\t\tif (getequiprefinerycnt(EQI_SHADOW_ACC_R, EQI_SHADOW_ACC_L) >= 15)\n\t\t\tbonus bNoSizeFix, 1;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "S_Solid_Earring_S_Solid_Weapon",
+      "members": [
+        "S_Solid_Weapon",
+        "S_Solid_Earring"
+      ],
+      "script": "bonus bAtk, getequiprefinerycnt(EQI_SHADOW_WEAPON);\n\t\tif (getequiprefinerycnt(EQI_SHADOW_WEAPON, EQI_SHADOW_ACC_R) >= 15)\n\t\t\tbonus bUnbreakableWeapon, 1;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "S_Immortal_Armor_S_Immortal_Pendant",
+      "members": [
+        "S_Immortal_Armor",
+        "S_Immortal_Pendant"
+      ],
+      "script": "bonus bDef, getequiprefinerycnt(EQI_SHADOW_ARMOR);\n\t\tif (getequiprefinerycnt(EQI_SHADOW_ARMOR, EQI_SHADOW_ACC_L) >= 15)\n\t\t\tbonus bUnbreakableArmor, 1;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "S_Executioner_Weapon_S_Penetration_Earring_S_Penetration_Pendent",
+      "members": [
+        "S_Executioner_Weapon",
+        "S_Penetration_Earring",
+        "S_Penetration_Pendent"
+      ],
+      "script": "bonus bBaseAtk, 5;\n\t\tif (getequiprefinerycnt(EQI_SHADOW_WEAPON, EQI_SHADOW_ACC_R, EQI_SHADOW_ACC_L) >= 25)\n\t\t\tbonus bIgnoreDefRace, RC_DemiPlayer;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "S_Exorcist_Weapon_S_Penetration_Earring_S_Penetration_Pendent",
+      "members": [
+        "S_Exorcist_Weapon",
+        "S_Penetration_Earring",
+        "S_Penetration_Pendent"
+      ],
+      "script": "bonus bBaseAtk, 5;\n\t\tif (getequiprefinerycnt(EQI_SHADOW_WEAPON, EQI_SHADOW_ACC_R, EQI_SHADOW_ACC_L) >= 25)\n\t\t\tbonus bIgnoreDefRace, RC_Demon;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "S_Hunting_Weapon_S_Penetration_Earring_S_Penetration_Pendent",
+      "members": [
+        "S_Hunting_Weapon",
+        "S_Penetration_Earring",
+        "S_Penetration_Pendent"
+      ],
+      "script": "bonus bBaseAtk, 5;\n\t\tif (getequiprefinerycnt(EQI_SHADOW_WEAPON, EQI_SHADOW_ACC_R, EQI_SHADOW_ACC_L) >= 25)\n\t\t\tbonus bIgnoreDefRace, RC_Brute;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "S_Insect_Net_Weapon_S_Penetration_Earring_S_Penetration_Pendent",
+      "members": [
+        "S_Insect_Net_Weapon",
+        "S_Penetration_Earring",
+        "S_Penetration_Pendent"
+      ],
+      "script": "bonus bBaseAtk, 5;\n\t\tif (getequiprefinerycnt(EQI_SHADOW_WEAPON, EQI_SHADOW_ACC_R, EQI_SHADOW_ACC_L) >= 25)\n\t\t\tbonus bIgnoreDefRace, RC_Insect;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "S_Fishing_Weapon_S_Penetration_Earring_S_Penetration_Pendent",
+      "members": [
+        "S_Fishing_Weapon",
+        "S_Penetration_Earring",
+        "S_Penetration_Pendent"
+      ],
+      "script": "bonus bBaseAtk, 5;\n\t\tif (getequiprefinerycnt(EQI_SHADOW_WEAPON, EQI_SHADOW_ACC_R, EQI_SHADOW_ACC_L) >= 25)\n\t\t\tbonus bIgnoreDefRace, RC_Fish;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "S_Dragon_Killer_Weapon_S_Penetration_Earring_S_Penetration_Pendent",
+      "members": [
+        "S_Dragon_Killer_Weapon",
+        "S_Penetration_Earring",
+        "S_Penetration_Pendent"
+      ],
+      "script": "bonus bBaseAtk, 5;\n\t\tif (getequiprefinerycnt(EQI_SHADOW_WEAPON, EQI_SHADOW_ACC_R, EQI_SHADOW_ACC_L) >= 25)\n\t\t\tbonus bIgnoreDefRace, RC_Dragon;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "S_Corrupt_Weapon_S_Penetration_Earring_S_Penetration_Pendent",
+      "members": [
+        "S_Corrupt_Weapon",
+        "S_Penetration_Earring",
+        "S_Penetration_Pendent"
+      ],
+      "script": "bonus bBaseAtk, 5;\n\t\tif (getequiprefinerycnt(EQI_SHADOW_WEAPON, EQI_SHADOW_ACC_R, EQI_SHADOW_ACC_L) >= 25)\n\t\t\tbonus bIgnoreDefRace, RC_Angel;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "S_Penetration_Earring_S_Penetration_Pendent_S_Vibration_Weapon",
+      "members": [
+        "S_Vibration_Weapon",
+        "S_Penetration_Earring",
+        "S_Penetration_Pendent"
+      ],
+      "script": "bonus bBaseAtk, 5;\n\t\tif (getequiprefinerycnt(EQI_SHADOW_WEAPON, EQI_SHADOW_ACC_R, EQI_SHADOW_ACC_L) >= 25)\n\t\t\tbonus bIgnoreDefRace, RC_Formless;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "S_Holy_Water_Weapon_S_Penetration_Earring_S_Penetration_Pendent",
+      "members": [
+        "S_Holy_Water_Weapon",
+        "S_Penetration_Earring",
+        "S_Penetration_Pendent"
+      ],
+      "script": "bonus bBaseAtk, 5;\n\t\tif (getequiprefinerycnt(EQI_SHADOW_WEAPON, EQI_SHADOW_ACC_R, EQI_SHADOW_ACC_L) >= 25)\n\t\t\tbonus bIgnoreDefRace, RC_Undead;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "S_Penetration_Earring_S_Penetration_Pendent_S_Scissors_Weapon",
+      "members": [
+        "S_Scissors_Weapon",
+        "S_Penetration_Earring",
+        "S_Penetration_Pendent"
+      ],
+      "script": "bonus bBaseAtk, 5;\n\t\tif (getequiprefinerycnt(EQI_SHADOW_WEAPON, EQI_SHADOW_ACC_R, EQI_SHADOW_ACC_L) >= 25)\n\t\t\tbonus bIgnoreDefRace, RC_Plant;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "S_M_Executioner_Weapon_S_Tempest_Earring_S_Tempest_Pendent",
+      "members": [
+        "S_Tempest_Earring",
+        "S_Tempest_Pendent",
+        "S_M_Executioner_Weapon"
+      ],
+      "script": "bonus bMatk, 5;\n\t\tif (getequiprefinerycnt(EQI_SHADOW_WEAPON, EQI_SHADOW_ACC_R, EQI_SHADOW_ACC_L) >= 25)\n\t\t\tbonus bIgnoreMdefRace, RC_DemiPlayer;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "S_M_Exorcist_Weapon_S_Tempest_Earring_S_Tempest_Pendent",
+      "members": [
+        "S_Tempest_Earring",
+        "S_Tempest_Pendent",
+        "S_M_Exorcist_Weapon"
+      ],
+      "script": "bonus bMatk, 5;\n\t\tif (getequiprefinerycnt(EQI_SHADOW_WEAPON, EQI_SHADOW_ACC_R, EQI_SHADOW_ACC_L) >= 25)\n\t\t\tbonus bIgnoreMdefRace, RC_Demon;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "S_M_Hunting_Weapon_S_Tempest_Earring_S_Tempest_Pendent",
+      "members": [
+        "S_Tempest_Earring",
+        "S_Tempest_Pendent",
+        "S_M_Hunting_Weapon"
+      ],
+      "script": "bonus bMatk, 5;\n\t\tif (getequiprefinerycnt(EQI_SHADOW_WEAPON, EQI_SHADOW_ACC_R, EQI_SHADOW_ACC_L) >= 25)\n\t\t\tbonus bIgnoreMdefRace, RC_Brute;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "S_M_Insect_Net_Weapon_S_Tempest_Earring_S_Tempest_Pendent",
+      "members": [
+        "S_Tempest_Earring",
+        "S_Tempest_Pendent",
+        "S_M_Insect_Net_Weapon"
+      ],
+      "script": "bonus bMatk, 5;\n\t\tif (getequiprefinerycnt(EQI_SHADOW_WEAPON, EQI_SHADOW_ACC_R, EQI_SHADOW_ACC_L) >= 25)\n\t\t\tbonus bIgnoreMdefRace, RC_Insect;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "S_M_Fishing_Weapon_S_Tempest_Earring_S_Tempest_Pendent",
+      "members": [
+        "S_Tempest_Earring",
+        "S_Tempest_Pendent",
+        "S_M_Fishing_Weapon"
+      ],
+      "script": "bonus bMatk, 5;\n\t\tif (getequiprefinerycnt(EQI_SHADOW_WEAPON, EQI_SHADOW_ACC_R, EQI_SHADOW_ACC_L) >= 25)\n\t\t\tbonus bIgnoreMdefRace, RC_Fish;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "S_M_Dragon_K_Weapon_S_Tempest_Earring_S_Tempest_Pendent",
+      "members": [
+        "S_Tempest_Earring",
+        "S_Tempest_Pendent",
+        "S_M_Dragon_K_Weapon"
+      ],
+      "script": "bonus bMatk, 5;\n\t\tif (getequiprefinerycnt(EQI_SHADOW_WEAPON, EQI_SHADOW_ACC_R, EQI_SHADOW_ACC_L) >= 25)\n\t\t\tbonus bIgnoreMdefRace, RC_Dragon;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "S_M_Corrupt_Weapon_S_Tempest_Earring_S_Tempest_Pendent",
+      "members": [
+        "S_Tempest_Earring",
+        "S_Tempest_Pendent",
+        "S_M_Corrupt_Weapon"
+      ],
+      "script": "bonus bMatk, 5;\n\t\tif (getequiprefinerycnt(EQI_SHADOW_WEAPON, EQI_SHADOW_ACC_R, EQI_SHADOW_ACC_L) >= 25)\n\t\t\tbonus bIgnoreMdefRace, RC_Angel;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "S_M_Vibration_Weapon_S_Tempest_Earring_S_Tempest_Pendent",
+      "members": [
+        "S_Tempest_Earring",
+        "S_Tempest_Pendent",
+        "S_M_Vibration_Weapon"
+      ],
+      "script": "bonus bMatk, 5;\n\t\tif (getequiprefinerycnt(EQI_SHADOW_WEAPON, EQI_SHADOW_ACC_R, EQI_SHADOW_ACC_L) >= 25)\n\t\t\tbonus bIgnoreMdefRace, RC_Formless;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "S_M_Holy_Water_Weapon_S_Tempest_Earring_S_Tempest_Pendent",
+      "members": [
+        "S_Tempest_Earring",
+        "S_Tempest_Pendent",
+        "S_M_Holy_Water_Weapon"
+      ],
+      "script": "bonus bMatk, 5;\n\t\tif (getequiprefinerycnt(EQI_SHADOW_WEAPON, EQI_SHADOW_ACC_R, EQI_SHADOW_ACC_L) >= 25)\n\t\t\tbonus bIgnoreMdefRace, RC_Undead;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "S_M_Scissors_Weapon_S_Tempest_Earring_S_Tempest_Pendent",
+      "members": [
+        "S_Tempest_Earring",
+        "S_Tempest_Pendent",
+        "S_M_Scissors_Weapon"
+      ],
+      "script": "bonus bMatk, 5;\n\t\tif (getequiprefinerycnt(EQI_SHADOW_WEAPON, EQI_SHADOW_ACC_R, EQI_SHADOW_ACC_L) >= 25)\n\t\t\tbonus bIgnoreMdefRace, RC_Plant;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "S_Bearers_Armor_S_Bearers_Earring_S_Bearers_Pendent_S_Bearers_Shield_S_Bearers_Shoes_S_Bearers_Weapon",
+      "members": [
+        "S_Bearers_Armor",
+        "S_Bearers_Shoes",
+        "S_Bearers_Shield",
+        "S_Bearers_Weapon",
+        "S_Bearers_Earring",
+        "S_Bearers_Pendent"
+      ],
+      "script": ".@refine = getequiprefinerycnt(EQI_SHADOW_ARMOR, EQI_SHADOW_WEAPON, EQI_SHADOW_SHIELD, EQI_SHADOW_SHOES, EQI_SHADOW_ACC_R, EQI_SHADOW_ACC_L);\n\t\tbonus bAllStats, 1;\n\t\tif (.@refine",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "S_Hasty_Armor_S_Hasty_Shoes",
+      "members": [
+        "S_Hasty_Shoes",
+        "S_Hasty_Armor"
+      ],
+      "script": "bonus bFlee, 5;\n\t\tif (getequiprefinerycnt(EQI_SHADOW_SHOES, EQI_SHADOW_ARMOR) >= 15)\n\t\t\tbonus bSpeedAddRate, 3;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "S_Expert_Shield_S_Expert_Shoes",
+      "members": [
+        "S_Expert_Shoes",
+        "S_Expert_Shield"
+      ],
+      "script": "bonus2 bExpAddRace, RC_All, ((getequiprefinerycnt(EQI_SHADOW_SHOES, EQI_SHADOW_SHIELD)) >= 15 ? 10 : 1);",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "S_Beginner_Shield_S_Beginner_Shoes",
+      "members": [
+        "S_Beginner_Shoes",
+        "S_Beginner_Shield"
+      ],
+      "script": "bonus2 bExpAddRace, RC_All, ((getequiprefinerycnt(EQI_SHADOW_SHOES, EQI_SHADOW_SHIELD)) >= 15 ? 20 : 10);",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "S_Rookie_Shield_S_Rookie_Shoes",
+      "members": [
+        "S_Rookie_Shoes",
+        "S_Rookie_Shield"
+      ],
+      "script": "bonus2 bExpAddRace, RC_All, ((getequiprefinerycnt(EQI_SHADOW_SHOES, EQI_SHADOW_SHIELD)) >= 15 ? 10 : 5);",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "S_Advanced_Shield_S_Advanced_Shoes",
+      "members": [
+        "S_Advanced_Shoes",
+        "S_Advanced_Shield"
+      ],
+      "script": "bonus2 bExpAddRace, RC_All, ((getequiprefinerycnt(EQI_SHADOW_SHOES, EQI_SHADOW_SHIELD)) >= 15 ? 4 : 2);",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "S_Blitz_Earring_S_Blitz_Pendent",
+      "members": [
+        "S_Blitz_Earring",
+        "S_Blitz_Pendent"
+      ],
+      "script": "if (getequiprefinerycnt(EQI_SHADOW_ACC_R, EQI_SHADOW_ACC_L) >= 15)\n\t\t\tbonus bAspd, 1;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "S_Force_Earring_S_Force_Pendant_S_Force_Weapon",
+      "members": [
+        "S_Force_Weapon",
+        "S_Force_Earring",
+        "S_Force_Pendant"
+      ],
+      "script": ".@refine = getequiprefinerycnt(EQI_SHADOW_WEAPON, EQI_SHADOW_ACC_R, EQI_SHADOW_ACC_L);\n\t\tif (.@refine",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "S_Spirit_Earring_S_Spirit_Pendant_S_Spirit_Weapon",
+      "members": [
+        "S_Spirit_Weapon",
+        "S_Spirit_Earring",
+        "S_Spirit_Pendant"
+      ],
+      "script": ".@refine = getequiprefinerycnt(EQI_SHADOW_WEAPON, EQI_SHADOW_ACC_R, EQI_SHADOW_ACC_L);\n\t\tif (.@refine",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "S_Blitz_Shield_S_Blitz_Shoes",
+      "members": [
+        "S_Blitz_Shoes",
+        "S_Blitz_Shield"
+      ],
+      "script": "bonus bFlee, 5;\n\t\tif (getequiprefinerycnt(EQI_SHADOW_SHOES, EQI_SHADOW_SHIELD)",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "S_Titan_Earring_S_Titan_Pendant",
+      "members": [
+        "S_Titan_Earring",
+        "S_Titan_Pendant"
+      ],
+      "script": "bonus bAtk, 5;\n\t\tif (getequiprefinerycnt(EQI_SHADOW_ACC_R, EQI_SHADOW_ACC_L)",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "S_Boned_Earring_S_Boned_Pendant",
+      "members": [
+        "S_Boned_Earring",
+        "S_Boned_Pendant"
+      ],
+      "script": "bonus bAtk, 5;\n\t\tif (getequiprefinerycnt(EQI_SHADOW_ACC_R, EQI_SHADOW_ACC_L)",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "S_Gigantic_Earring_S_Gigantic_Pendant",
+      "members": [
+        "S_Gigantic_Earring",
+        "S_Gigantic_Pendant"
+      ],
+      "script": "bonus bAtk, 5;\n\t\tif (getequiprefinerycnt(EQI_SHADOW_ACC_R, EQI_SHADOW_ACC_L)",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "S_Caster_Armor_S_Caster_Shield_S_Caster_Shoes",
+      "members": [
+        "S_Caster_Shoes",
+        "S_Caster_Shield",
+        "S_Caster_Armor"
+      ],
+      "script": "bonus bUseSPrate, -1;\n\t\t.@refine = getequiprefinerycnt(EQI_SHADOW_SHIELD, EQI_SHADOW_ARMOR, EQI_SHADOW_SHOES);\n\t\tbonus bVariableCastrate, (.@refine) / 5;\n\t\tif (.@refine",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "S_Reload_Armor_S_Reload_Shield_S_Reload_Shoes",
+      "members": [
+        "S_Reload_Shoes",
+        "S_Reload_Shield",
+        "S_Reload_Armor"
+      ],
+      "script": "bonus bDelayrate, -1;\n\t\tif (getequiprefinerycnt(EQI_SHADOW_SHIELD, EQI_SHADOW_ARMOR, EQI_SHADOW_SHOES) >= 25)\n\t\t\tbonus bDelayrate, -5;",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Geffenia_Book_Water_Lacryma_Stick",
+      "members": [
+        "Geffenia_Book_Water",
+        "Lacryma_Stick"
+      ],
+      "script": "",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Nightmare_Terror_Card_Rigid_Nightmare_Terror_Card",
+      "members": [
+        "Rigid_Nightmare_Terror_Card",
+        "Nightmare_Terror_Card"
+      ],
+      "script": "bonus(bAtkRate, 10);",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Nightmare_Card_Rigid_Nightmare_Terror_Card",
+      "members": [
+        "Rigid_Nightmare_Terror_Card",
+        "Nightmare_Card"
+      ],
+      "script": "bonus(bMaxSPrate, 10);",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Rouban_Shield_Rouban_Shoes",
+      "members": [
+        "Rouban_Shoes",
+        "Rouban_Shield"
+      ],
+      "script": "bonus3(bSubDefEle, Ele_Wind, 5, 3);\n\t\tbonus3(bMagicSubDefEle, Ele_Wind, 5, 3);\n\t\tbonus2(bSubEle, Ele_Wind, getequiprefinerycnt(EQI_HAND_L) * 2);",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Lumiere_Shield_Lumiere_Shoes",
+      "members": [
+        "Lumiere_Shoes",
+        "Lumiere_Shield"
+      ],
+      "script": "bonus3(bSubDefEle, Ele_Holy, 5, 3);\n\t\tbonus3(bMagicSubDefEle, Ele_Holy, 5, 3);\n\t\tbonus2(bSubEle, Ele_Holy, getequiprefinerycnt(EQI_HAND_L) * 2);",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Lian_Shield_Lian_Shoes",
+      "members": [
+        "Lian_Shoes",
+        "Lian_Shield"
+      ],
+      "script": "bonus3(bSubDefEle, Ele_Neutral, 5, 3);\n\t\tbonus3(bMagicSubDefEle, Ele_Neutral, 5, 3);\n\t\tbonus2(bSubEle, Ele_Neutral, getequiprefinerycnt(EQI_HAND_L));",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Sharel_Shield_Sharel_Shoes",
+      "members": [
+        "Sharel_Shoes",
+        "Sharel_Shield"
+      ],
+      "script": "bonus3(bSubDefEle, Ele_Fire, 5, 3);\n\t\tbonus3(bMagicSubDefEle, Ele_Fire, 5, 3);\n\t\tbonus2(bSubEle, Ele_Fire, getequiprefinerycnt(EQI_HAND_L) * 2);",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Sombre_Shield_Sombre_Shoes",
+      "members": [
+        "Sombre_Shoes",
+        "Sombre_Shield"
+      ],
+      "script": "bonus3(bSubDefEle, Ele_Dark, 5, 3);\n\t\tbonus3(bMagicSubDefEle, Ele_Dark, 5, 3);\n\t\tbonus2(bSubEle, Ele_Dark, getequiprefinerycnt(EQI_HAND_L) * 2);",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Sol_Shield_Sol_Shoes",
+      "members": [
+        "Sol_Shoes",
+        "Sol_Shield"
+      ],
+      "script": "bonus3(bSubDefEle, Ele_Earth, 5, 3);\n\t\tbonus3(bMagicSubDefEle, Ele_Earth, 5, 3);\n\t\tbonus2(bSubEle, Ele_Earth, getequiprefinerycnt(EQI_HAND_L) * 2);",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Poison_Shield_Poison_Shoes",
+      "members": [
+        "Poison_Shoes",
+        "Poison_Shield"
+      ],
+      "script": "bonus3(bSubDefEle, Ele_Poison, 5, 3);\n\t\tbonus3(bMagicSubDefEle, Ele_Poison, 5, 3);\n\t\tbonus2(bSubEle, Ele_Poison, getequiprefinerycnt(EQI_HAND_L) * 2);",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "Flow_Shield_Flow_Shoes",
+      "members": [
+        "Flow_Shoes",
+        "Flow_Shield"
+      ],
+      "script": "bonus3(bSubDefEle, Ele_Water, 5, 3);\n\t\tbonus3(bMagicSubDefEle, Ele_Water, 5, 3);\n\t\tbonus2(bSubEle, Ele_Water, getequiprefinerycnt(EQI_HAND_L) * 2);",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "S_Basis_Armor_S_Basis_Shield",
+      "members": [
+        "S_Basis_Armor",
+        "S_Basis_Shield"
+      ],
+      "script": "bonus3(bSubDefEle, Ele_Neutral, 2, 3);\n\t\tbonus3(bMagicSubDefEle, Ele_Neutral, 2, 3);",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "S_Hallowed_Armor_S_Hallowed_Shield",
+      "members": [
+        "S_Hallowed_Armor",
+        "S_Hallowed_Shield"
+      ],
+      "script": "bonus3(bSubDefEle, Ele_Dark, 2, 3);\n\t\tbonus3(bMagicSubDefEle, Ele_Dark, 2, 3);",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "S_Saharic_Armor_S_Saharic_Shield",
+      "members": [
+        "S_Saharic_Armor",
+        "S_Saharic_Shield"
+      ],
+      "script": "bonus3(bSubDefEle, Ele_Dark, 2, 3);\n\t\tbonus3(bMagicSubDefEle, Ele_Dark, 2, 3);",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "S_Underneath_Armor_S_Underneath_Shield",
+      "members": [
+        "S_Underneath_Armor",
+        "S_Underneath_Shield"
+      ],
+      "script": "bonus3(bSubDefEle, Ele_Earth, 2, 3);\n\t\tbonus3(bMagicSubDefEle, Ele_Earth, 2, 3);",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "S_Flam_Armor_S_Flam_Shield",
+      "members": [
+        "S_Flam_Armor",
+        "S_Flam_Shield"
+      ],
+      "script": "bonus3(bSubDefEle, Ele_Fire, 2, 3);\n\t\tbonus3(bMagicSubDefEle, Ele_Fire, 2, 3);",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "S_Windy_Armor_S_Windy_Shield",
+      "members": [
+        "S_Windy_Armor",
+        "S_Windy_Shield"
+      ],
+      "script": "bonus3(bSubDefEle, Ele_Wind, 2, 3);\n\t\tbonus3(bMagicSubDefEle, Ele_Wind, 2, 3);",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "S_Envenom_Armor_S_Envenom_Shield",
+      "members": [
+        "S_Envenom_Armor",
+        "S_Envenom_Shield"
+      ],
+      "script": "bonus3(bSubDefEle, Ele_Poison, 2, 3);\n\t\tbonus3(bMagicSubDefEle, Ele_Poison, 2, 3);",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "S_Damned_Armor_S_Damned_Shield",
+      "members": [
+        "S_Damned_Armor",
+        "S_Damned_Shield"
+      ],
+      "script": "bonus3(bSubDefEle, Ele_Holy, 2, 3);\n\t\tbonus3(bMagicSubDefEle, Ele_Holy, 2, 3);",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "S_Geist_Armor_S_Geist_Shield",
+      "members": [
+        "S_Geist_Armor",
+        "S_Geist_Shield"
+      ],
+      "script": "bonus3(bSubDefEle, Ele_Ghost, 2, 3);\n\t\tbonus3(bMagicSubDefEle, Ele_Ghost, 2, 3);",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
+    {
+      "kind": "combo",
+      "name": "S_Divine_Armor_S_Divine_Shield",
+      "members": [
+        "S_Divine_Armor",
+        "S_Divine_Shield"
+      ],
+      "script": "bonus3(bSubDefEle, Ele_Undead, 2, 3);\n\t\tbonus3(bMagicSubDefEle, Ele_Undead, 2, 3);",
+      "source": {
+        "path": "db/re/item_combo_db.conf",
+        "record": "parsed from config"
+      }
+    },
     {
       "kind": "production",
       "output_id": 1101,
@@ -448,7 +6307,10 @@
       "source": {
         "path": "db/produce_db.txt",
         "record": "line 51"
-      }
+      },
+      "combos": [
+        "Gladius_Hoplite_Helmet"
+      ]
     },
     {
       "kind": "production",
@@ -1200,7 +7062,10 @@
       "source": {
         "path": "db/produce_db.txt",
         "record": "line 124"
-      }
+      },
+      "combos": [
+        "Hoplite_Helmet_Pike"
+      ]
     },
     {
       "kind": "production",
@@ -7918,7 +13783,10 @@
       "source": {
         "path": "db/produce_db.txt",
         "record": "line 557"
-      }
+      },
+      "combos": [
+        "Bone_Wand_Skull_Cap"
+      ]
     },
     {
       "kind": "production",
@@ -9632,7 +15500,10 @@
       "source": {
         "path": "db/create_arrow_db.txt",
         "record": "line 14"
-      }
+      },
+      "combos": [
+        "Incisive_Arrow_Little_Fhat"
+      ]
     },
     {
       "kind": "arrow_conversion",
@@ -9776,7 +15647,10 @@
       "source": {
         "path": "db/create_arrow_db.txt",
         "record": "line 24"
-      }
+      },
+      "combos": [
+        "Earth_Bow_Stone_Arrow"
+      ]
     },
     {
       "kind": "arrow_conversion",
@@ -9866,7 +15740,10 @@
       "source": {
         "path": "db/create_arrow_db.txt",
         "record": "line 28"
-      }
+      },
+      "combos": [
+        "Crystal_Arrow_Frozen_Bow"
+      ]
     },
     {
       "kind": "arrow_conversion",
@@ -9938,7 +15815,10 @@
       "source": {
         "path": "db/create_arrow_db.txt",
         "record": "line 32"
-      }
+      },
+      "combos": [
+        "Incisive_Arrow_Little_Fhat"
+      ]
     },
     {
       "kind": "arrow_conversion",
@@ -9974,7 +15854,10 @@
       "source": {
         "path": "db/create_arrow_db.txt",
         "record": "line 36"
-      }
+      },
+      "combos": [
+        "Orc_Archer_Bow_Steel_Arrow"
+      ]
     },
     {
       "kind": "arrow_conversion",
@@ -10082,7 +15965,10 @@
       "source": {
         "path": "db/create_arrow_db.txt",
         "record": "line 46"
-      }
+      },
+      "combos": [
+        "Orc_Archer_Bow_Steel_Arrow"
+      ]
     },
     {
       "kind": "arrow_conversion",
@@ -10172,7 +16058,10 @@
       "source": {
         "path": "db/create_arrow_db.txt",
         "record": "line 54"
-      }
+      },
+      "combos": [
+        "Orc_Archer_Bow_Steel_Arrow"
+      ]
     },
     {
       "kind": "arrow_conversion",
@@ -10190,7 +16079,10 @@
       "source": {
         "path": "db/create_arrow_db.txt",
         "record": "line 54"
-      }
+      },
+      "combos": [
+        "Earth_Bow_Stone_Arrow"
+      ]
     },
     {
       "kind": "arrow_conversion",
@@ -10352,7 +16244,10 @@
       "source": {
         "path": "db/create_arrow_db.txt",
         "record": "line 66"
-      }
+      },
+      "combos": [
+        "Crystal_Arrow_Frozen_Bow"
+      ]
     },
     {
       "kind": "arrow_conversion",
@@ -10532,7 +16427,10 @@
       "source": {
         "path": "db/create_arrow_db.txt",
         "record": "line 80"
-      }
+      },
+      "combos": [
+        "Orc_Archer_Bow_Steel_Arrow"
+      ]
     },
     {
       "kind": "arrow_conversion",
@@ -10568,7 +16466,10 @@
       "source": {
         "path": "db/create_arrow_db.txt",
         "record": "line 82"
-      }
+      },
+      "combos": [
+        "Burning_Bow_Fire_Arrow"
+      ]
     },
     {
       "kind": "arrow_conversion",
@@ -10586,7 +16487,10 @@
       "source": {
         "path": "db/create_arrow_db.txt",
         "record": "line 84"
-      }
+      },
+      "combos": [
+        "Crystal_Arrow_Frozen_Bow"
+      ]
     },
     {
       "kind": "arrow_conversion",
@@ -10604,7 +16508,10 @@
       "source": {
         "path": "db/create_arrow_db.txt",
         "record": "line 86"
-      }
+      },
+      "combos": [
+        "Arrow_Of_Wind_Gust_Bow"
+      ]
     },
     {
       "kind": "arrow_conversion",
@@ -10622,7 +16529,10 @@
       "source": {
         "path": "db/create_arrow_db.txt",
         "record": "line 88"
-      }
+      },
+      "combos": [
+        "Earth_Bow_Stone_Arrow"
+      ]
     },
     {
       "kind": "arrow_conversion",
@@ -10640,7 +16550,10 @@
       "source": {
         "path": "db/create_arrow_db.txt",
         "record": "line 90"
-      }
+      },
+      "combos": [
+        "Burning_Bow_Fire_Arrow"
+      ]
     },
     {
       "kind": "arrow_conversion",
@@ -10676,7 +16589,10 @@
       "source": {
         "path": "db/create_arrow_db.txt",
         "record": "line 92"
-      }
+      },
+      "combos": [
+        "Crystal_Arrow_Frozen_Bow"
+      ]
     },
     {
       "kind": "arrow_conversion",
@@ -10712,7 +16628,10 @@
       "source": {
         "path": "db/create_arrow_db.txt",
         "record": "line 94"
-      }
+      },
+      "combos": [
+        "Arrow_Of_Wind_Gust_Bow"
+      ]
     },
     {
       "kind": "arrow_conversion",
@@ -10748,7 +16667,10 @@
       "source": {
         "path": "db/create_arrow_db.txt",
         "record": "line 96"
-      }
+      },
+      "combos": [
+        "Earth_Bow_Stone_Arrow"
+      ]
     },
     {
       "kind": "arrow_conversion",
@@ -10802,7 +16724,10 @@
       "source": {
         "path": "db/create_arrow_db.txt",
         "record": "line 100"
-      }
+      },
+      "combos": [
+        "Orc_Archer_Bow_Steel_Arrow"
+      ]
     },
     {
       "kind": "arrow_conversion",
@@ -10964,7 +16889,10 @@
       "source": {
         "path": "db/create_arrow_db.txt",
         "record": "line 114"
-      }
+      },
+      "combos": [
+        "Earth_Bow_Stone_Arrow"
+      ]
     },
     {
       "kind": "arrow_conversion",
@@ -11054,7 +16982,10 @@
       "source": {
         "path": "db/create_arrow_db.txt",
         "record": "line 120"
-      }
+      },
+      "combos": [
+        "Earth_Bow_Stone_Arrow"
+      ]
     },
     {
       "kind": "arrow_conversion",
@@ -11072,7 +17003,10 @@
       "source": {
         "path": "db/create_arrow_db.txt",
         "record": "line 122"
-      }
+      },
+      "combos": [
+        "Incisive_Arrow_Little_Fhat"
+      ]
     },
     {
       "kind": "arrow_conversion",
@@ -11180,7 +17114,10 @@
       "source": {
         "path": "db/create_arrow_db.txt",
         "record": "line 130"
-      }
+      },
+      "combos": [
+        "Orc_Archer_Bow_Steel_Arrow"
+      ]
     },
     {
       "kind": "arrow_conversion",
@@ -11216,7 +17153,10 @@
       "source": {
         "path": "db/create_arrow_db.txt",
         "record": "line 134"
-      }
+      },
+      "combos": [
+        "Orc_Archer_Bow_Steel_Arrow"
+      ]
     },
     {
       "kind": "arrow_conversion",
@@ -11234,7 +17174,10 @@
       "source": {
         "path": "db/create_arrow_db.txt",
         "record": "line 134"
-      }
+      },
+      "combos": [
+        "Crystal_Arrow_Frozen_Bow"
+      ]
     },
     {
       "kind": "arrow_conversion",
@@ -11252,7 +17195,10 @@
       "source": {
         "path": "db/create_arrow_db.txt",
         "record": "line 136"
-      }
+      },
+      "combos": [
+        "Incisive_Arrow_Little_Fhat"
+      ]
     },
     {
       "kind": "arrow_conversion",
@@ -11306,7 +17252,10 @@
       "source": {
         "path": "db/create_arrow_db.txt",
         "record": "line 138"
-      }
+      },
+      "combos": [
+        "Orc_Archer_Bow_Steel_Arrow"
+      ]
     },
     {
       "kind": "arrow_conversion",
@@ -11414,7 +17363,10 @@
       "source": {
         "path": "db/create_arrow_db.txt",
         "record": "line 148"
-      }
+      },
+      "combos": [
+        "Orc_Archer_Bow_Steel_Arrow"
+      ]
     },
     {
       "kind": "arrow_conversion",
@@ -11450,7 +17402,11 @@
       "source": {
         "path": "db/create_arrow_db.txt",
         "record": "line 152"
-      }
+      },
+      "combos": [
+        "Gloomy_Pumpkin_Hat_Phantom_Of_Opera",
+        "Orc_Archer_Bow_Steel_Arrow"
+      ]
     },
     {
       "kind": "arrow_conversion",
@@ -11468,7 +17424,10 @@
       "source": {
         "path": "db/create_arrow_db.txt",
         "record": "line 152"
-      }
+      },
+      "combos": [
+        "Gloomy_Pumpkin_Hat_Phantom_Of_Opera"
+      ]
     },
     {
       "kind": "arrow_conversion",
@@ -11486,7 +17445,10 @@
       "source": {
         "path": "db/create_arrow_db.txt",
         "record": "line 154"
-      }
+      },
+      "combos": [
+        "Incisive_Arrow_Little_Fhat"
+      ]
     },
     {
       "kind": "arrow_conversion",
@@ -11504,7 +17466,10 @@
       "source": {
         "path": "db/create_arrow_db.txt",
         "record": "line 154"
-      }
+      },
+      "combos": [
+        "Orc_Archer_Bow_Steel_Arrow"
+      ]
     },
     {
       "kind": "arrow_conversion",
@@ -11522,7 +17487,10 @@
       "source": {
         "path": "db/create_arrow_db.txt",
         "record": "line 156"
-      }
+      },
+      "combos": [
+        "Orc_Archer_Bow_Steel_Arrow"
+      ]
     },
     {
       "kind": "arrow_conversion",
@@ -11702,7 +17670,10 @@
       "source": {
         "path": "db/create_arrow_db.txt",
         "record": "line 168"
-      }
+      },
+      "combos": [
+        "Bloody_Iron_Ball_Cuffs"
+      ]
     },
     {
       "kind": "arrow_conversion",
@@ -11720,7 +17691,11 @@
       "source": {
         "path": "db/create_arrow_db.txt",
         "record": "line 168"
-      }
+      },
+      "combos": [
+        "Bloody_Iron_Ball_Cuffs",
+        "Orc_Archer_Bow_Steel_Arrow"
+      ]
     },
     {
       "kind": "arrow_conversion",
@@ -11738,7 +17713,10 @@
       "source": {
         "path": "db/create_arrow_db.txt",
         "record": "line 170"
-      }
+      },
+      "combos": [
+        "Arrow_Of_Wind_Gust_Bow"
+      ]
     },
     {
       "kind": "arrow_conversion",
@@ -11756,7 +17734,10 @@
       "source": {
         "path": "db/create_arrow_db.txt",
         "record": "line 170"
-      }
+      },
+      "combos": [
+        "Orc_Archer_Bow_Steel_Arrow"
+      ]
     },
     {
       "kind": "arrow_conversion",
@@ -11774,7 +17755,10 @@
       "source": {
         "path": "db/create_arrow_db.txt",
         "record": "line 170"
-      }
+      },
+      "combos": [
+        "Incisive_Arrow_Little_Fhat"
+      ]
     },
     {
       "kind": "arrow_conversion",
@@ -11792,7 +17776,10 @@
       "source": {
         "path": "db/create_arrow_db.txt",
         "record": "line 172"
-      }
+      },
+      "combos": [
+        "Crystal_Arrow_Frozen_Bow"
+      ]
     },
     {
       "kind": "arrow_conversion",
@@ -11810,7 +17797,10 @@
       "source": {
         "path": "db/create_arrow_db.txt",
         "record": "line 172"
-      }
+      },
+      "combos": [
+        "Orc_Archer_Bow_Steel_Arrow"
+      ]
     },
     {
       "kind": "arrow_conversion",
@@ -11828,7 +17818,10 @@
       "source": {
         "path": "db/create_arrow_db.txt",
         "record": "line 174"
-      }
+      },
+      "combos": [
+        "Orc_Archer_Bow_Steel_Arrow"
+      ]
     },
     {
       "kind": "arrow_conversion",
@@ -11882,7 +17875,10 @@
       "source": {
         "path": "db/create_arrow_db.txt",
         "record": "line 178"
-      }
+      },
+      "combos": [
+        "Orc_Archer_Bow_Steel_Arrow"
+      ]
     },
     {
       "kind": "arrow_conversion",
@@ -12008,7 +18004,10 @@
       "source": {
         "path": "db/create_arrow_db.txt",
         "record": "line 190"
-      }
+      },
+      "combos": [
+        "Incisive_Arrow_Little_Fhat"
+      ]
     },
     {
       "kind": "arrow_conversion",
@@ -12044,7 +18043,10 @@
       "source": {
         "path": "db/create_arrow_db.txt",
         "record": "line 192"
-      }
+      },
+      "combos": [
+        "Incisive_Arrow_Little_Fhat"
+      ]
     },
     {
       "kind": "arrow_conversion",
@@ -12170,7 +18172,10 @@
       "source": {
         "path": "db/create_arrow_db.txt",
         "record": "line 200"
-      }
+      },
+      "combos": [
+        "Burning_Bow_Fire_Arrow"
+      ]
     },
     {
       "kind": "arrow_conversion",
@@ -12188,7 +18193,10 @@
       "source": {
         "path": "db/create_arrow_db.txt",
         "record": "line 202"
-      }
+      },
+      "combos": [
+        "Crystal_Arrow_Frozen_Bow"
+      ]
     },
     {
       "kind": "arrow_conversion",
@@ -12206,7 +18214,10 @@
       "source": {
         "path": "db/create_arrow_db.txt",
         "record": "line 207"
-      }
+      },
+      "combos": [
+        "Crystal_Arrow_Frozen_Bow"
+      ]
     },
     {
       "kind": "arrow_conversion",
@@ -12224,7 +18235,10 @@
       "source": {
         "path": "db/create_arrow_db.txt",
         "record": "line 209"
-      }
+      },
+      "combos": [
+        "Earth_Bow_Stone_Arrow"
+      ]
     },
     {
       "kind": "arrow_conversion",
@@ -12260,7 +18274,10 @@
       "source": {
         "path": "db/create_arrow_db.txt",
         "record": "line 211"
-      }
+      },
+      "combos": [
+        "Burning_Bow_Fire_Arrow"
+      ]
     },
     {
       "kind": "arrow_conversion",
@@ -12278,7 +18295,10 @@
       "source": {
         "path": "db/create_arrow_db.txt",
         "record": "line 213"
-      }
+      },
+      "combos": [
+        "Orc_Archer_Bow_Steel_Arrow"
+      ]
     },
     {
       "kind": "arrow_conversion",
@@ -12296,7 +18316,10 @@
       "source": {
         "path": "db/create_arrow_db.txt",
         "record": "line 215"
-      }
+      },
+      "combos": [
+        "Burning_Bow_Fire_Arrow"
+      ]
     },
     {
       "kind": "arrow_conversion",
@@ -12314,7 +18337,10 @@
       "source": {
         "path": "db/create_arrow_db.txt",
         "record": "line 217"
-      }
+      },
+      "combos": [
+        "Burning_Bow_Fire_Arrow"
+      ]
     },
     {
       "kind": "arrow_conversion",
@@ -12332,7 +18358,10 @@
       "source": {
         "path": "db/create_arrow_db.txt",
         "record": "line 219"
-      }
+      },
+      "combos": [
+        "Incisive_Arrow_Little_Fhat"
+      ]
     },
     {
       "kind": "arrow_conversion",
@@ -12350,7 +18379,10 @@
       "source": {
         "path": "db/create_arrow_db.txt",
         "record": "line 221"
-      }
+      },
+      "combos": [
+        "Orc_Archer_Bow_Steel_Arrow"
+      ]
     },
     {
       "kind": "arrow_conversion",
@@ -12422,7 +18454,10 @@
       "source": {
         "path": "db/create_arrow_db.txt",
         "record": "line 225"
-      }
+      },
+      "combos": [
+        "Orc_Archer_Bow_Steel_Arrow"
+      ]
     },
     {
       "kind": "arrow_conversion",
@@ -12440,7 +18475,10 @@
       "source": {
         "path": "db/create_arrow_db.txt",
         "record": "line 227"
-      }
+      },
+      "combos": [
+        "Orc_Archer_Bow_Steel_Arrow"
+      ]
     },
     {
       "kind": "arrow_conversion",
@@ -12530,7 +18568,10 @@
       "source": {
         "path": "db/create_arrow_db.txt",
         "record": "line 233"
-      }
+      },
+      "combos": [
+        "Incisive_Arrow_Little_Fhat"
+      ]
     },
     {
       "kind": "arrow_conversion",
@@ -12566,7 +18607,10 @@
       "source": {
         "path": "db/create_arrow_db.txt",
         "record": "line 237"
-      }
+      },
+      "combos": [
+        "Incisive_Arrow_Little_Fhat"
+      ]
     },
     {
       "kind": "arrow_conversion",
@@ -12602,7 +18646,10 @@
       "source": {
         "path": "db/create_arrow_db.txt",
         "record": "line 241"
-      }
+      },
+      "combos": [
+        "Orc_Archer_Bow_Steel_Arrow"
+      ]
     },
     {
       "kind": "arrow_conversion",
@@ -12638,7 +18685,10 @@
       "source": {
         "path": "db/create_arrow_db.txt",
         "record": "line 243"
-      }
+      },
+      "combos": [
+        "Arrow_Of_Wind_Gust_Bow"
+      ]
     },
     {
       "kind": "arrow_conversion",
@@ -12692,7 +18742,10 @@
       "source": {
         "path": "db/create_arrow_db.txt",
         "record": "line 247"
-      }
+      },
+      "combos": [
+        "Incisive_Arrow_Little_Fhat"
+      ]
     },
     {
       "kind": "arrow_conversion",
@@ -12746,7 +18799,10 @@
       "source": {
         "path": "db/create_arrow_db.txt",
         "record": "line 249"
-      }
+      },
+      "combos": [
+        "Orc_Archer_Bow_Steel_Arrow"
+      ]
     },
     {
       "kind": "arrow_conversion",
@@ -12782,7 +18838,10 @@
       "source": {
         "path": "db/create_arrow_db.txt",
         "record": "line 251"
-      }
+      },
+      "combos": [
+        "Orc_Archer_Bow_Steel_Arrow"
+      ]
     },
     {
       "kind": "arrow_conversion",
@@ -12836,7 +18895,10 @@
       "source": {
         "path": "db/create_arrow_db.txt",
         "record": "line 255"
-      }
+      },
+      "combos": [
+        "Orc_Archer_Bow_Steel_Arrow"
+      ]
     },
     {
       "kind": "arrow_conversion",
@@ -12980,7 +19042,10 @@
       "source": {
         "path": "db/create_arrow_db.txt",
         "record": "line 263"
-      }
+      },
+      "combos": [
+        "Earth_Bow_Stone_Arrow"
+      ]
     },
     {
       "kind": "arrow_conversion",
@@ -13016,7 +19081,10 @@
       "source": {
         "path": "db/create_arrow_db.txt",
         "record": "line 265"
-      }
+      },
+      "combos": [
+        "Arrow_Of_Wind_Gust_Bow"
+      ]
     },
     {
       "kind": "arrow_conversion",
@@ -13034,7 +19102,10 @@
       "source": {
         "path": "db/create_arrow_db.txt",
         "record": "line 265"
-      }
+      },
+      "combos": [
+        "Crystal_Arrow_Frozen_Bow"
+      ]
     },
     {
       "kind": "arrow_conversion",
@@ -13070,7 +19141,10 @@
       "source": {
         "path": "db/create_arrow_db.txt",
         "record": "line 267"
-      }
+      },
+      "combos": [
+        "Burning_Bow_Fire_Arrow"
+      ]
     },
     {
       "kind": "arrow_conversion",
@@ -13214,7 +19288,10 @@
       "source": {
         "path": "db/create_arrow_db.txt",
         "record": "line 273"
-      }
+      },
+      "combos": [
+        "Burning_Bow_Fire_Arrow"
+      ]
     },
     {
       "kind": "arrow_conversion",
@@ -13286,7 +19363,10 @@
       "source": {
         "path": "db/create_arrow_db.txt",
         "record": "line 275"
-      }
+      },
+      "combos": [
+        "Incisive_Arrow_Little_Fhat"
+      ]
     },
     {
       "kind": "arrow_conversion",
@@ -13340,7 +19420,10 @@
       "source": {
         "path": "db/create_arrow_db.txt",
         "record": "line 279"
-      }
+      },
+      "combos": [
+        "Crystal_Arrow_Frozen_Bow"
+      ]
     },
     {
       "kind": "arrow_conversion",
@@ -13376,7 +19459,10 @@
       "source": {
         "path": "db/create_arrow_db.txt",
         "record": "line 281"
-      }
+      },
+      "combos": [
+        "Crystal_Arrow_Frozen_Bow"
+      ]
     },
     {
       "kind": "arrow_conversion",

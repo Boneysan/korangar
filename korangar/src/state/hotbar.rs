@@ -6,10 +6,11 @@ use rust_state::RustState;
 
 use crate::state::skills::LearnableSkill;
 
-/// Official 2022 hotkey rows are nine slots. Three rows fit in the 38-slot
-/// server table (tab 0, slots 0–26) and map to 1–9 / Ctrl+1–9 / Alt+1–9.
+/// Official 2022 hotkey rows are nine slots. Four rows fit in the 38-slot
+/// server table (tab 0, slots 0–35) and map to 1–9 / Ctrl+1–9 / Alt+1–9 /
+/// Shift+1–9.
 pub const HOTBAR_COLUMNS: usize = 9;
-pub const HOTBAR_ROWS: usize = 3;
+pub const HOTBAR_ROWS: usize = 4;
 pub const HOTBAR_SLOTS: usize = HOTBAR_COLUMNS * HOTBAR_ROWS;
 
 #[derive(Clone, Debug, RustState, StateElement)]
@@ -18,9 +19,17 @@ pub enum HotbarBinding {
     Item { item_id: ItemId },
 }
 
-#[derive(Default, RustState, StateElement)]
+#[derive(RustState, StateElement)]
 pub struct Hotbar {
     slots: [Option<HotbarBinding>; HOTBAR_SLOTS],
+}
+
+impl Default for Hotbar {
+    fn default() -> Self {
+        Self {
+            slots: [const { None }; HOTBAR_SLOTS],
+        }
+    }
 }
 
 impl Hotbar {
@@ -135,8 +144,8 @@ mod tests {
     use super::*;
 
     #[test]
-    fn three_rows_fit_the_server_table() {
-        assert_eq!(HOTBAR_SLOTS, 27);
+    fn four_rows_fit_the_server_table() {
+        assert_eq!(HOTBAR_SLOTS, 36);
         assert!(HOTBAR_SLOTS < 38);
     }
 }

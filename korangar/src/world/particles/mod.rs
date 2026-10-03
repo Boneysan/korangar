@@ -38,6 +38,7 @@ pub struct DamageNumberEvent {
     pub amount_per_hit: usize,
     pub hit_count: usize,
     pub is_critical: bool,
+    pub element_cue: Option<crate::world::ElementCue>,
 }
 
 pub struct DamageNumber {
@@ -54,6 +55,7 @@ pub struct DamageNumber {
     timer: f32,
     merge_window_remaining: f32,
     is_critical: bool,
+    element_cue: Option<crate::world::ElementCue>,
     font_scale: f32,
 }
 
@@ -74,6 +76,7 @@ impl DamageNumber {
             timer: 0.6,
             merge_window_remaining: DAMAGE_NUMBER_MERGE_WINDOW,
             is_critical: event.is_critical,
+            element_cue: event.element_cue,
             font_scale,
         }
     }
@@ -85,6 +88,7 @@ impl DamageNumber {
             || self.skill_id != event.skill_id
             || self.amount_per_hit != event.amount_per_hit
             || self.is_critical != event.is_critical
+            || self.element_cue != event.element_cue
         {
             return false;
         }
@@ -116,9 +120,15 @@ impl Particle for DamageNumber {
             top: screen_position.y * window_size.height,
         };
 
-        let color = match self.is_critical {
-            true => Color::rgb_u8(255, 180, 0),
-            false => Color::WHITE,
+        let color = if self.is_critical {
+            Color::rgb_u8(255, 180, 0)
+        } else {
+            match self.element_cue {
+                Some(crate::world::ElementCue::Advantage) => Color::rgb_u8(255, 140, 40),
+                Some(crate::world::ElementCue::Resist) => Color::rgb_u8(150, 170, 210),
+                Some(crate::world::ElementCue::Immune) => Color::rgb_u8(130, 130, 130),
+                Some(crate::world::ElementCue::Neutral) | None => Color::WHITE,
+            }
         };
 
         renderer.render_damage_text(&self.damage_amount, final_position, color, FontSize(16.0 * self.font_scale));
@@ -211,17 +221,8 @@ impl PartyPingMarker {
     }
 
     fn render(&self, renderer: &GameInterfaceRenderer, camera: &dyn Camera, window_size: ScreenSize) {
-        let clip = camera.view_projection_matrix() * self.position.to_homogeneous();
-        if clip.w <= 0.0 {
+        let Some(center) = project_on_screen(self.position, camera, window_size) else {
             return;
-        }
-        let screen = camera.clip_to_screen_space(clip);
-        if !(0.0..=1.0).contains(&screen.x) || !(0.0..=1.0).contains(&screen.y) {
-            return;
-        }
-        let center = ScreenPosition {
-            left: screen.x * window_size.width,
-            top: screen.y * window_size.height,
         };
         renderer.render_rectangle(
             ScreenPosition {
@@ -241,6 +242,68 @@ impl PartyPingMarker {
             FontSize(12.0),
             AlignHorizontal::Center,
         );
+    }
+}
+
+/// Projects a world point to window pixels, or `None` when it is behind the
+/// camera or off screen.
+fn project_on_screen(position: Point3<f32>, camera: &dyn Camera, window_size: ScreenSize) -> Option<ScreenPosition> {
+    let clip = camera.view_projection_matrix() * position.to_homogeneous();
+    if clip.w <= 0.0 {
+        return None;
+    }
+    let screen = camera.clip_to_screen_space(clip);
+    if !(0.0..=1.0).contains(&screen.x) || !(0.0..=1.0).contains(&screen.y) {
+        return None;
+    }
+    Some(ScreenPosition {
+        left: screen.x * window_size.width,
+        top: screen.y * window_size.height,
+    })
+}
+
+/// Text for an incoming cast's ground telegraph (GDD F32: a telegraph must not
+/// rely on color alone). The `!` is the shape cue; the name says what is
+/// coming.
+pub fn telegraph_label_text(skill_name: Option<&str>) -> String {
+    match skill_name {
+        Some(name) if !name.trim().is_empty() => format!("! {}", name.trim()),
+        _ => "! Area attack".to_owned(),
+    }
+}
+
+/// Label drawn over one incoming cast's ground footprint. Rebuilt every frame
+/// from the active casts, so it lives exactly as long as the footprint does.
+pub struct TelegraphLabel {
+    position: Point3<f32>,
+    label: String,
+}
+
+impl TelegraphLabel {
+    pub fn new(position: Point3<f32>, label: String) -> Self {
+        Self {
+            position: position + Vector3::new(0.0, 6.0, 0.0),
+            label,
+        }
+    }
+
+    fn render(&self, renderer: &GameInterfaceRenderer, camera: &dyn Camera, window_size: ScreenSize) {
+        let Some(center) = project_on_screen(self.position, camera, window_size) else {
+            return;
+        };
+        // A dark offset copy keeps white text readable on any palette and any
+        // ground texture, which is the point of a non-color cue.
+        renderer.render_text(
+            &self.label,
+            ScreenPosition {
+                left: center.left + 1.0,
+                top: center.top + 1.0,
+            },
+            Color::BLACK,
+            FontSize(14.0),
+            AlignHorizontal::Center,
+        );
+        renderer.render_text(&self.label, center, Color::WHITE, FontSize(14.0), AlignHorizontal::Center);
     }
 }
 
@@ -351,6 +414,7 @@ pub struct ParticleHolder {
     particles: Vec<Box<dyn Particle + Send + Sync>>,
     quest_icons: HashMap<EntityId, QuestIcon>,
     party_ping: Option<PartyPingMarker>,
+    telegraph_labels: Vec<TelegraphLabel>,
 }
 
 impl ParticleHolder {
@@ -373,6 +437,12 @@ impl ParticleHolder {
         self.party_ping = marker;
     }
 
+    /// Replaces the incoming-cast labels; called once per frame with the casts
+    /// whose footprints are drawn this frame.
+    pub fn set_telegraph_labels(&mut self, labels: Vec<TelegraphLabel>) {
+        self.telegraph_labels = labels;
+    }
+
     pub fn add_quest_icon(&mut self, texture_loader: &TextureLoader, map: &Map, quest_effect: QuestEffectPacket) {
         let entity_id = quest_effect.entity_id;
 
@@ -389,6 +459,7 @@ impl ParticleHolder {
         self.particles.clear();
         self.quest_icons.clear();
         self.party_ping = None;
+        self.telegraph_labels.clear();
     }
 
     #[cfg_attr(feature = "debug", korangar_debug::profile("update particles"))]
@@ -414,6 +485,9 @@ impl ParticleHolder {
         if let Some(marker) = &self.party_ping {
             marker.render(renderer, camera, window_size);
         }
+        self.telegraph_labels
+            .iter()
+            .for_each(|label| label.render(renderer, camera, window_size));
 
         // Render quest icons for all active effects. We use the positions from the
         // QuestEffectPacket (not requiring the base entity to be present in the
@@ -427,6 +501,22 @@ impl ParticleHolder {
                 .values()
                 .for_each(|quest_icon| quest_icon.render(renderer, camera, window_size, scaling.get_factor()));
         }
+    }
+}
+
+#[cfg(test)]
+mod telegraph_label_tests {
+    use super::telegraph_label_text;
+
+    #[test]
+    fn a_known_skill_is_named_after_a_shape_cue() {
+        assert_eq!(telegraph_label_text(Some("Meteor Storm")), "! Meteor Storm");
+    }
+
+    #[test]
+    fn an_unknown_or_blank_skill_still_gets_a_readable_label() {
+        assert_eq!(telegraph_label_text(None), "! Area attack");
+        assert_eq!(telegraph_label_text(Some("  ")), "! Area attack");
     }
 }
 
@@ -470,6 +560,7 @@ mod damage_number_merge_tests {
             amount_per_hit,
             hit_count,
             is_critical: false,
+            element_cue: None,
         }
     }
 

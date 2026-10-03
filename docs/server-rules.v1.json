@@ -1,6 +1,6 @@
 {
  "schema_version": 1,
- "source_revision": "cc83ca152ff09132a047acad028a9e978bd90b89",
+ "source_revision": "cd0486c79a9a595a141ce23ff1b9f1e1b9d61caa",
  "source_worktree_dirty": false,
  "mode": "renewal",
  "sources": [
@@ -10,7 +10,8 @@
   "conf/groups.conf",
   "conf/map/battle/drops.conf",
   "db/re/attr_fix.conf",
-  "db/re/size_fix.txt"
+  "db/re/size_fix.txt",
+  "db/re/level_penalty.conf"
  ],
  "entries": [
   {
@@ -406,6 +407,178 @@
    ]
   },
   {
+   "id": "level-difference-modifiers",
+   "category": "Mechanics",
+   "title": "Level difference EXP and drop modifiers",
+   "summary": "Monster level minus player Base Level can scale EXP and item drop rates, but this server applies a modifier only at the exact differences listed here.",
+   "details": [
+    "Difference = monster level minus the player's Base Level. EXP uses the player receiving the EXP; drop rates use the monster's top-credited attacker (MVP, else second, else third).",
+    "EXP modifier (applies to base and job EXP) at these exact differences: -31: 10%; -26: 35%; -21: 60%; -16: 85%; -11: 90%; -6: 95%; -1: 100%; +0: 100%; +3: 105%; +4: 110%; +5: 115%; +6: 120%; +7: 125%; +8: 130%; +9: 135%; +10: 140%; +11: 135%; +12: 130%; +13: 125%; +14: 120%; +15: 115%; +16: 40%.",
+    "Item drop-rate modifier at these exact differences: -16: 50%; -13: 60%; -10: 70%; -7: 80%; -4: 90%; +0: 100%; +4: 90%; +7: 80%; +10: 70%; +13: 60%; +16: 50%.",
+    "Any other difference takes 100%: the server reads each row at its exact difference and does not carry a value across the gaps or beyond the last row. A monster 17 or more levels above, or any gap such as -5, is therefore unmodified.",
+    "Bosses have no separate penalty rows (the boss row lists only difference 0 at 100%); the same non-boss rows apply to them.",
+    "This describes how the server loads and looks up the table. It was confirmed from the source, not observed in play; an @mobinfo check against a monster at a listed and an unlisted level difference in a live session would confirm it."
+   ],
+   "sources": [
+    {
+     "path": "db/re/level_penalty.conf",
+     "record": "level_penalty_db rows"
+    },
+    {
+     "path": "src/map/pc.c",
+     "record": "pc_level_penalty_mod exact-difference lookup; pc_read_level_penalty_db_sub loader"
+    },
+    {
+     "path": "src/map/mob.c",
+     "record": "drop modifier from the top-credited attacker's level"
+    },
+    {
+     "path": "src/config/renewal.h",
+     "record": "RENEWAL_EXP and RENEWAL_DROP"
+    }
+   ]
+  },
+  {
+   "id": "derived-stat-formulas",
+   "category": "Mechanics",
+   "title": "Derived stat formulas (players)",
+   "summary": "How the server turns base stats into HIT, FLEE, DEF, MDEF, CRIT, ATK, MATK and cast time on this Renewal build. Equipment, cards, skills and status effects add to or scale these afterwards.",
+   "details": [
+    "HIT = Base Level + DEX + floor(LUK / 3) + 175.",
+    "FLEE = Base Level + AGI + floor(LUK / 5) + 100.",
+    "Soft DEF = (Base Level + VIT) / 2 + AGI / 5, with the fractions added first and the total rounded down once.",
+    "Soft MDEF = INT + Base Level / 4 + (DEX + VIT) / 5, with the fractions added first and the total rounded down once.",
+    "Critical = (10 + floor(LUK x 10 / 3)) tenths of a percent, about 1% plus a third of a percent per LUK.",
+    "Perfect dodge = (LUK + 10) tenths of a percent.",
+    "Status ATK = STR + DEX / 5 + LUK / 3 + Base Level / 4, rounded down once. Bows, instruments, whips and guns swap STR and DEX.",
+    "Status MATK = INT + floor(INT / 2) + floor(DEX / 5) + floor(LUK / 3) + floor(Base Level / 4).",
+    "Variable cast time: DEX and INT remove sqrt((DEX x 2 + INT) / 530) of the variable part of a cast (a square root, not a straight line, so the first points matter most). At DEX x 2 + INT of 530 or more, no variable cast remains.",
+    "A skill with no configured fixed cast time is split 20% fixed and 80% variable; a configured fixed time is kept as the fixed part, and a negative one means no fixed part. Stats do not reduce the fixed part; equipment and status bonuses can.",
+    "Not covered here: Max HP/SP, ASPD, the equipment DEF/MDEF bonuses, and how items and statuses modify these values.",
+    "These were confirmed from the source and are unit-tested in the client, not observed on a live server."
+   ],
+   "sources": [
+    {
+     "path": "src/map/status.c",
+     "record": "status_calc_misc (HIT, FLEE, DEF2, MDEF2, CRI, FLEE2)"
+    },
+    {
+     "path": "src/map/status.c",
+     "record": "status_base_atk and status_base_matk (Renewal)"
+    },
+    {
+     "path": "src/map/skill.c",
+     "record": "skill_vfcastfix (variable and fixed cast)"
+    },
+    {
+     "path": "conf/map/battle/skill.conf",
+     "record": "line 67: vcast_stat_scale"
+    }
+   ]
+  },
+  {
+   "id": "stat-points",
+   "category": "Mechanics",
+   "title": "Stat points: totals, costs and caps",
+   "summary": "How many stat points a character has at each level, what each point costs, the extra points upper classes get, and each class's stat cap.",
+   "details": [
+    "Total stat points at a level (cumulative, before any are spent): level 1: 48; level 10: 80; level 25: 170; level 50: 420; level 75: 795; level 99: 1,273; level 130: 2,015; level 150: 2,545; level 175: 3,278.",
+    "A level-up grants the difference between two levels' totals, for example level 1 to 2: +3; level 50 to 51: +13; level 98 to 99: +22; level 150 to 151: +28.",
+    "Raising a stat from v to v + 1 costs 2 + (v - 1) / 10 points below 100 and 16 + 4 x ((v - 100) / 5) from 100 (integer division): 9 to 10 costs 2, 98 to 99 costs 11, 99 to 100 costs 11, 100 to 101 costs 16. Taking one stat from 1 to 99 costs 628 points in all.",
+    "Resetting stats gives back the level's total, plus 52 extra points for upper classes: Novice High, Swordsman High, Magician High, Archer High, Acolyte High, Merchant High, Thief High, Lord Knight, High Priest, High Wizard, Whitesmith, Sniper, Assassin Cross, Paladin, Champion, Professor, Stalker, Creator, Clown, Gypsy, Rune Knight Trans, Warlock Trans, Ranger Trans, Arch Bishop Trans, Mechanic Trans, Guillotine Cross Trans, Royal Guard Trans, Sorcerer Trans, Minstrel Trans, Wanderer Trans, Sura Trans, Genetic Trans, Shadow Chaser Trans.",
+    "Stat cap by parameter group (from unit_parameters_db.conf, each job's ParametersGroup in job_db.conf): 80: BabyFirstClasses, BabySecondClasses; 99: FirstClasses, SecondClasses; 117: BabyThirdClasses; 120: Summoner; 125: BabyExtendedClasses, ExtendedClasses, SuperNovice; 130: ThirdClasses. The battle.conf setting max_parameter is not the player cap.",
+    "A job with no job_db.conf block (mounted and cosmetic forms) has no entry here.",
+    "These were confirmed from the source and are unit-tested in the client, not observed on a live server."
+   ],
+   "sources": [
+    {
+     "path": "db/re/statpoint.txt",
+     "record": "cumulative points by level"
+    },
+    {
+     "path": "db/re/unit_parameters_db.conf",
+     "record": "MaxStats per parameter group"
+    },
+    {
+     "path": "db/re/job_db.conf",
+     "record": "ParametersGroup per job"
+    },
+    {
+     "path": "src/map/pc.c",
+     "record": "pc_readdb, pc_gets_status_point, pc_resetstate, pc_need_status_point, pc_jobid2mapid"
+    },
+    {
+     "path": "conf/map/battle/exp.conf",
+     "record": "use_statpoint_table: true"
+    }
+   ]
+  },
+  {
+   "id": "max-hp-sp",
+   "category": "Mechanics",
+   "title": "Max HP and SP: class tables",
+   "summary": "A class's base max HP and SP come from per-class tables by level, adjusted for upper and baby classes, then scaled by VIT and INT. Equipment and status effects add to the result.",
+   "details": [
+    "Base max HP = the class table value at your Base Level; plus 2000 for a Super Novice at level 99 or higher (Expanded Super Novice: another 2000 at level 150); then plus 25% for upper classes or times 70% for baby classes; then plus 1% per VIT. Each step uses whole numbers.",
+    "Base max SP = the class table value at your Base Level; plus 25% for upper classes or times 70% for baby classes; then plus 1% per INT. Super Novices get no flat SP bonus.",
+    "Example, level 99 with VIT 99: Knight 15,876 base HP; Lord Knight (upper) 19,844; Baby Swordsman (baby) 5,570. Level 99 Wizard with INT 99: 1,792 base SP.",
+    "The tables are the ones in job_db.conf, read through the server's own loader: a class with no table of its own inherits from another, and levels a table does not list are filled in from an average increment. Open a job's page for its HP and SP at several levels.",
+    "Equipment bonuses, skills and status effects (for example Increase HP, Berserk) change the final value afterwards and are not included here. A top-ranked Taekwon over level 90 gets triple HP and SP from a live ranking this client cannot see.",
+    "Confirmed from the source and compared with what this server computed for 26 characters: 18 across first, second, upper and third classes at level 99 or below, and 8 made for the purpose (baby, Super Novice, Super Baby, Expanded Super Novice at level 150, two third classes at level 175, and baby jobs at levels 151 and 161). Every value matched. Not compared: gear and status modifiers, and the ranked-Taekwon bonus.",
+    "Known data defect on this server: the Baby Kagerou and Baby Oboro tables fall to 1 from level 161 to 175, so a level-161 Baby Kagerou has 1 max HP and 1 max SP (observed)."
+   ],
+   "sources": [
+    {
+     "path": "db/re/job_db.conf",
+     "record": "HPTable, SPTable, Inherit, InheritHP, InheritSP per job"
+    },
+    {
+     "path": "src/map/status.c",
+     "record": "status_read_job_db_sub (table loader), status_get_base_maxhp, status_get_base_maxsp"
+    },
+    {
+     "path": "db/re/unit_parameters_db.conf",
+     "record": "MaxHP caps applied to table values"
+    }
+   ]
+  },
+  {
+   "id": "aspd",
+   "category": "Mechanics",
+   "title": "Attack speed (ASPD)",
+   "summary": "Attack speed starts from AGI, DEX and the class's value for the weapon, is then changed by skills, equipment, statuses and mounts, and cannot pass the class's cap.",
+   "details": [
+    "1. Base ASPD = floor(196 + sqrt(DEX x DEX / 5 + AGI x AGI / 2) / 4 + (P + S) x AGI / 200) - min(B, 200). For bows, instruments, whips and guns, DEX counts as DEX x DEX / 7 instead of DEX x DEX / 5.",
+    "B is the class's value for the weapon type, plus its Shield value when a shield is worn (a shield slows you down), plus a quarter of the second weapon's value when dual wielding. Each job's page lists its values.",
+    "P is the passive skill bonus: Advanced Book with a book gives (level - 1) / 2 + 1; Single Action gives (level + 1) / 2; Plagiarism gives its level; Musical Lesson with an instrument gives its level. They need their weapon: Musical Lesson does nothing bare-handed.",
+    "S is the status bonus: Center, Awakening and Berserk Potions give +4, +6 and +9, and only the strongest potion counts, they do not add up. Two-Hand Quicken, One-Hand Quicken, Spear Quicken and Adrenaline Rush give +7 (the largest of that family, not a sum), Berserk +15, Madness Cancel +20. S adds to P.",
+    "2. Rate: a mounted Knight's ASPD is multiplied by (500 + 100 x Cavalier Mastery level) / 1000, so riding without Cavalier Mastery halves it and level 5 removes the penalty. A Rune Knight on a Dragon uses (750 + 50 x Dragon Training level) / 1000.",
+    "3. Percentages close that share of the gap between your ASPD and 195: equipment 'ASPD +x%' (Windhawk +5, Katar of Speed +3, Muramasa +8, Doom Slayer -40), and statuses such as Two-Hand Quicken, Adrenaline Rush and Spear Quicken (+10 each), Increase AGI (+its level), or the slowing ones (Don't Forget Me, Steel Body). Whole numbers, rounded toward zero. Quagmire switches off the Quicken-family bonus in S.",
+    "4. Attack motion in milliseconds = 10 x (200 - ASPD), then flat equipment 'ASPD +n' bonuses take 10 ms off per point (Cursed Mad Bunny +3, Masamune +2, Spoon +10), and a few statuses take a fixed amount off.",
+    "5. The result cannot be faster than the class's MaxASPD: 100 ms at 190, 70 ms at 193. By parameter group: 190: BabyExtendedClasses, BabyFirstClasses, BabySecondClasses, ExtendedClasses, FirstClasses, SecondClasses, Summoner; 193: BabyThirdClasses, SuperNovice, ThirdClasses.",
+    "Equipment bonuses that are a chance on hit (Jewel Ring) or need a refine level (the Fashion Shoes and Berry Hat's +2 needs +12) add nothing otherwise.",
+    "Confirmed from the source and compared with what this server reported in 115 measurements: bare-handed and every weapon type, shield, dual wield, three stat levels, baby, upper and third classes, the four passive skills, equipment percentages and flat bonuses, the three potions, Two-Hand Quicken, Adrenaline Rush, Increase AGI, a mounted Knight at every Cavalier Mastery level, both class caps (190 and 193) and a Dancer's whip. Every value matched. Read from the source but not compared: the Dragon mount, Spear and One-Hand Quicken, the Berserk and Madness Cancel statuses, Quagmire, the slowing statuses, and the statuses that take a fixed amount off."
+   ],
+   "sources": [
+    {
+     "path": "src/map/status.c",
+     "record": "status_base_amotion_pc (Renewal ASPD) and the amotion assembly in status_calc_bl_main"
+    },
+    {
+     "path": "db/re/job_db.conf",
+     "record": "BaseASPD per weapon per job"
+    },
+    {
+     "path": "db/re/unit_parameters_db.conf",
+     "record": "MaxASPD per parameter group"
+    },
+    {
+     "path": "src/config/renewal.h",
+     "record": "RENEWAL_ASPD"
+    }
+   ]
+  },
+  {
    "id": "weapon-size-adjustments",
    "category": "Mechanics",
    "title": "Weapon damage by target size",
@@ -429,6 +602,325 @@
     {
      "path": "src/map/battle.c",
      "record": "weapon damage calculation uses target size adjustment"
+    }
+   ]
+  },
+  {
+   "id": "dm-campaign-rules",
+   "category": "Progression",
+   "title": "DM Campaign progression and recovery",
+   "summary": "Settings for combat recovery, sitting regeneration, respawn, weight capacity, and party story synchronization active during DM Session campaign play.",
+   "details": [
+    "Campaign combat timeout: 8000 ms (8 seconds) without taking or dealing damage before leaving combat state.",
+    "Rest and sit recovery: sitting out of combat recovers 25% of max HP and max SP every 10000 ms (10 seconds).",
+    "Campaign respawn: defeated characters respawn with 50% HP and SP, filling to 100% linearly over 10000 ms (10 seconds).",
+    "Exploration weight capacity: maximum weight capacity is multiplied by 5x during campaign sessions.",
+    "Party story synchronization: characters in an active campaign party (dm_campaign_checkpoint_member) catch up to the party's journaled story quests and beat flags (dm_campaign_party_event) upon joining or map change. Personal choices and past rewards are never overwritten."
+   ],
+   "sources": [
+    {
+     "path": "conf/import/battle.conf",
+     "record": "line 52: campaign_combat_timeout_ms"
+    },
+    {
+     "path": "conf/import/battle.conf",
+     "record": "line 53: campaign_sit_recovery_interval_ms"
+    },
+    {
+     "path": "conf/import/battle.conf",
+     "record": "line 54: campaign_sit_recovery_percent"
+    },
+    {
+     "path": "conf/import/battle.conf",
+     "record": "line 55: campaign_respawn_percent"
+    },
+    {
+     "path": "conf/import/battle.conf",
+     "record": "line 56: campaign_respawn_fill_ms"
+    },
+    {
+     "path": "conf/import/battle.conf",
+     "record": "line 57: campaign_max_weight_multiplier"
+    },
+    {
+     "path": "src/map/combat_state.c",
+     "record": "campaign combat timeout, sit recovery, and respawn fill"
+    },
+    {
+     "path": "src/map/party.c",
+     "record": "party_campaign_catchup_others and party_campaign_push_others"
+    }
+   ]
+  },
+  {
+   "id": "view-distance-and-aoe",
+   "category": "Mechanics",
+   "title": "View distance and area radius",
+   "summary": "Entity view radius and despawn margin configured for modern high-resolution client display.",
+   "details": [
+    "Active entity view radius (area_size): 30 cells (60-cell diameter), configured in conf/import/battle.conf to prevent pop-in on modern high-resolution displays (overriding the stock 14-cell client.conf default).",
+    "Despawn margin (dead_area_size): 48 cells, keeping snap-dodge margin and entity tracking consistent with the expanded view radius.",
+    "Shared party quest kill credit uses the same 30-cell area radius around the defeated monster."
+   ],
+   "sources": [
+    {
+     "path": "conf/import/battle.conf",
+     "record": "line 38: area_size"
+    },
+    {
+     "path": "conf/import/battle.conf",
+     "record": "line 42: dead_area_size"
+    },
+    {
+     "path": "conf/map/battle/client.conf",
+     "record": "stock area_size: 14 default"
+    },
+    {
+     "path": "src/map/mob.c",
+     "record": "party quest objective update within AREA_SIZE"
+    }
+   ]
+  },
+  {
+   "id": "natural-recovery-and-weight",
+   "category": "Mechanics",
+   "title": "Natural recovery and weight thresholds",
+   "summary": "Standing and sitting HP/SP regeneration intervals and the 50%/90% overweight capacity thresholds.",
+   "details": [
+    "Natural HP recovery interval: 6000 ms (6 seconds) while standing.",
+    "Natural SP recovery interval: 8000 ms (8 seconds) while standing.",
+    "Sitting doubles natural recovery frequency (halving the tick interval to 3 seconds for HP and 4 seconds for SP). Moving or attacking resets the interval.",
+    "Overweight 50% limit: when inventory weight reaches or exceeds 50% of maximum capacity, natural HP and SP regeneration stops completely.",
+    "Overweight 90% limit: when inventory weight reaches or exceeds 90% of maximum capacity, normal attacks and skill casting are disabled."
+   ],
+   "sources": [
+    {
+     "path": "conf/map/battle/player.conf",
+     "record": "line 83: natural_healhp_interval"
+    },
+    {
+     "path": "conf/map/battle/player.conf",
+     "record": "line 86: natural_healsp_interval"
+    },
+    {
+     "path": "src/map/status.c",
+     "record": "natural heal calculation and sitting double rate"
+    },
+    {
+     "path": "src/map/pc.h",
+     "record": "pc_isoverhealweight (50%) and pc_is90overweight (90%) macros"
+    }
+   ]
+  },
+  {
+   "id": "progression-limits",
+   "category": "Progression",
+   "title": "Multi-level-up and progression limits",
+   "summary": "Level advancement gating, baseline parameter limits, and server combat mode.",
+   "details": [
+    "Multi-level-up: disabled (multi_level_up: false). A single EXP gain from a monster or quest cannot advance a character by more than one level; excess EXP is retained toward the next level up to 99%.",
+    "Base parameter limit: 99. Player classes override this with per-job MaxStats from unit_parameters_db.conf (e.g. 130 for Third Classes, 125 for Super Novice and Extended Classes, 80 for Baby Classes).",
+    "PvP and War of Emperium: WoE guild castle battle modules are excluded from the server's battle include tree (this is a PvE and DM campaign server)."
+   ],
+   "sources": [
+    {
+     "path": "conf/map/battle/exp.conf",
+     "record": "line 48: multi_level_up"
+    },
+    {
+     "path": "conf/map/battle/player.conf",
+     "record": "line 105: max_parameter"
+    },
+    {
+     "path": "conf/map/battle.conf",
+     "record": "WoE guild battle includes commented out"
+    },
+    {
+     "path": "db/re/unit_parameters_db.conf",
+     "record": "per-job MaxStats parameter caps"
+    }
+   ]
+  },
+  {
+   "id": "equipment-refinement",
+   "category": "Mechanics",
+   "title": "Equipment refinement odds and mechanics",
+   "summary": "Safe limits, materials, Zeny costs, failure consequences, and stat bonuses for Armor and Weapons.",
+   "details": [
+    "Safe refine limits (100% success): Armor +4; Weapon Level 1 +7; Weapon Level 2 +6; Weapon Level 3 +5; Weapon Level 4 +4.",
+    "Failure consequence: refining past the safe limit carries a risk of permanent destruction — on failure, the item is destroyed outright and lost forever.",
+    "NPC Blacksmith costs: Armor uses 1 Elunium (2,000 Zeny); Weapon Lv 1 uses 1 Phracon (50 Zeny); Weapon Lv 2 uses 1 Emveretarcon (200 Zeny); Weapon Lv 3 uses 1 Oridecon (5,000 Zeny); Weapon Lv 4 uses 1 Oridecon (20,000 Zeny).",
+    "Whitesmith self-refine (WS_WEAPONREFINE): consumes 1 ore material with 0 Zeny cost; adds +0.5% success chance per job level above 50 (+10% flat for Mechanic Transcendent), but has no safe refine limit (can fail even at +1).",
+    "Stat bonuses: Armor gains +1 DEF per level (Lv 1–4), +2 DEF per level (Lv 5–8), +3 DEF per level (Lv 9–10). Weapons gain flat ATK/MATK per level (+2 for Lv1, +3 for Lv2, +5 for Lv3, +7 for Lv4), plus random ATK bonuses on unsafe levels."
+   ],
+   "sources": [
+    {
+     "path": "db/re/refine_db.conf",
+     "record": "Armors and WeaponLevel1-4 Rates and StatsPerLevel"
+    },
+    {
+     "path": "npc/merchants/refine.txt",
+     "record": "refinemain materials, fees, and failure destruction"
+    },
+    {
+     "path": "src/map/skill.c",
+     "record": "skill_weaponrefine formula and material list"
+    }
+   ]
+  },
+  {
+   "id": "card-socketing-and-binding",
+   "category": "Mechanics",
+   "title": "Card socketing and slot binding mechanics",
+   "summary": "Rules for inserting monster cards into slotted equipment, permanent binding, and bonus stacking.",
+   "details": [
+    "Slotted equipment contains between 1 and 4 card slots depending on the item definition.",
+    "Double-clicking a card opens the socketing interface to insert it into an eligible equipment piece with an open slot.",
+    "Permanent slot binding: under standard server rules, socketing a card binds it permanently into the item. Cards cannot be removed or extracted without specialized separation services.",
+    "Damage modifier stacking: identical percentage bonuses stack additively with each other (e.g. two 20% cards = +40%), while different modifier categories stack multiplicatively (Size × Element × Race × Boss).",
+    "Target validation: weapons, armors, shields, garments, shoes, and accessories only accept cards matching their specific equipment slot type."
+   ],
+   "sources": [
+    {
+     "path": "src/map/pc.c",
+     "record": "pc_insert_card and pc_can_insert_card_into"
+    },
+    {
+     "path": "src/map/battle.c",
+     "record": "battle_calc_cardfix card bonus damage calculations"
+    }
+   ]
+  },
+  {
+   "id": "first-job-progression",
+   "category": "Progression",
+   "title": "First Job combat archetypes and stat priorities",
+   "summary": "Core combat identities, stat investment guidance, and career paths for the 6 primary First Job classes.",
+   "details": [
+    "Swordsman (Melee Tank / Striker): Focuses on STR and VIT (or AGI for two-hand speed). Key skills: Bash, Magnum Break, Provoke, Endure, Increase HP Recovery. Advances to Knight or Crusader.",
+    "Mage (Elemental Ranged Artillery): Focuses on INT and DEX. Casts Fire, Cold, and Lightning bolts, Fire Wall, and Stone Curse. Relies on variable cast reduction and elemental advantage. Advances to Wizard or Sage.",
+    "Archer (Precision Physical Ranged): Focuses on DEX and AGI. Specializes in bows, elemental arrows, Owl's Eye, Vulture's Eye, Double Strafe, and Arrow Shower. Advances to Hunter, Bard, or Dancer.",
+    "Thief (Evasion & Rapid Melee): Focuses on AGI and STR with moderate DEX. Utilizes Double Attack, Improve Dodge, Steal, and Hiding. Advances to Assassin or Rogue.",
+    "Acolyte (Divine Support & Undead Purging): Focuses on INT, VIT, and DEX. Core foundation of party gameplay with Heal, Blessing, Increase AGI, Angelus, and Holy Light. Advances to Priest or Monk.",
+    "Merchant (Economy & Logistics): Focuses on STR, VIT, and DEX (or LUK for forging). Unique capabilities include Pushcart, Discount, Overcharge, Vending, Mammonite, and Item Appraisal. Advances to Blacksmith or Alchemist.",
+    "Job Advancement: Novices become eligible for First Job change upon reaching Job Level 10. Advancing to Second Job requires Job Level 40 minimum (Job Level 50 strongly recommended for complete skill points)."
+   ],
+   "sources": [
+    {
+     "path": "src/map/pc.c",
+     "record": "pc_jobchange class transition handling"
+    },
+    {
+     "path": "db/re/job_db.conf",
+     "record": "First and Second Job stat allocations and skill trees"
+    }
+   ]
+  },
+  {
+   "id": "second-job-progression",
+   "category": "Progression",
+   "title": "Second Job specializations and combat branch paths",
+   "summary": "Combat specializations, distinctive build branches, and primary stat and skill synergies for the 12 classic Second Job classes.",
+   "details": [
+    "Knight & Crusader (Swordsman branches): Knight excels in mobile burst (Bowling Bash, Pierce, Brandish Spear, Two-Hand Quicken) with STR/AGI or STR/VIT. Crusader excels in holy defense and sacrifice (Grand Cross, Shield Charge, Holy Cross, Devotion, Auto Guard) with STR/VIT/INT.",
+    "Wizard & Sage (Mage branches): Wizard specializes in devastating area denial (Storm Gust, Meteor Storm, Lord of Vermilion, Quagmire) with high INT/DEX. Sage specializes in counter-magic and combat casting (Free Cast, Cast Cancel, Dispell, Land Protector, Endow elements).",
+    "Hunter & Bard/Dancer (Archer branches): Hunter brings long-range sustained DPS and tactical zoning (Blitz Beat, Ankle Snare, Claymore Trap, Arrow Repel) with DEX/AGI/LUK. Bard & Dancer provide party area songs and ensembles (Poem of Bragi, Service for You, Dissonance, Frost Joker) scaling with DEX/INT/VIT.",
+    "Assassin & Rogue (Thief branches): Assassin deals lethal dual-wielding and katar critical burst (Sonic Blow, Grimtooth, Cloaking, Katar Mastery) with AGI/STR/LUK. Rogue provides utility, strip combat, and skill copying (Snatch, Strip Weapon/Shield/Armor, Tunnel Drive, Plagiarism) with DEX/AGI/STR.",
+    "Priest & Monk (Acolyte branches): Priest acts as the party's essential anchor (Sanctuary, Resurrection, Magnificat, Kyrie Eleison, Gloria, Lex Aeterna, Aspersio) with INT/VIT/DEX. Monk channels divine martial arts into devastating combo strikes and burst (Triple Attack, Combo Finish, Steel Body, Asura Strike / Guillotine Fist) with STR/INT/DEX.",
+    "Blacksmith & Alchemist (Merchant branches): Blacksmith masters weapon forging and melee party buffs (Adrenaline Rush, Weapon Perfection, Overthrust, Hammer Fall) with STR/AGI or DEX/LUK. Alchemist commands potion brewing, homunculus creation, and chemical warfare (Demon Demonstration, Acid Terror, Aid Potion, Pharmacy) with INT/DEX/LUK.",
+    "Career Progression: Second Job classes unlock at Job Level 40-50, granting 49 additional skill points. They represent the core combat identities for mid-to-endgame party composition and dungeon delves."
+   ],
+   "sources": [
+    {
+     "path": "src/map/pc.c",
+     "record": "pc_jobchange handles advancement from First Job to Second Job branches"
+    },
+    {
+     "path": "db/re/job_db.conf",
+     "record": "Second Job stat modifiers, weapon ASPD tables, and HP/SP pools"
+    }
+   ]
+  },
+  {
+   "id": "config-precedence",
+   "category": "Provenance",
+   "title": "Where server values come from (import precedence)",
+   "summary": "Every rate and rule in this Guide is the effective value: stock settings, then this server's overrides applied in the order Hercules loads them.",
+   "details": [
+    "Hercules reads its stock configuration first. Files in conf/import/ are read last and replace stock values, so a number you see here is the import value when one exists.",
+    "Battle settings are read in this order (later wins): conf/map/battle.conf -> conf/map/battle/battle.conf -> conf/map/battle/client.conf -> conf/map/battle/drops.conf -> conf/map/battle/exp.conf -> conf/map/battle/gm.conf -> conf/map/battle/guild.conf -> conf/map/battle/battleground.conf -> conf/map/battle/elemental.conf -> conf/map/battle/items.conf -> conf/map/battle/monster.conf -> conf/map/battle/party.conf -> conf/map/battle/pet.conf -> conf/map/battle/homunc.conf -> conf/map/battle/player.conf -> conf/map/battle/skill.conf -> conf/map/battle/status.conf -> conf/map/battle/feature.conf -> conf/map/battle/limits.conf -> conf/map/battle/mercenary.conf -> conf/map/battle/roulette.conf -> conf/map/battle/misc.conf -> conf/import/battle.conf",
+    "23 files take part; 1 of them are server overrides (conf/import/battle.conf).",
+    "The Guide does not read the live server. It shows what was exported at the Hercules revision named under Source configuration, so a server that changed afterwards can differ until the data is re-exported."
+   ],
+   "sources": [
+    {
+     "path": "conf/map/battle.conf",
+     "record": "battle settings load order"
+    },
+    {
+     "path": "conf/import/battle.conf",
+     "record": "battle settings load order"
+    }
+   ]
+  },
+  {
+   "id": "discovery-scope",
+   "category": "Provenance",
+   "title": "What discovery does and does not unlock",
+   "summary": "Reference data is open from the start; discovery only records your own encounters.",
+   "details": [
+    "Mechanical reference data (monsters, items, skills, maps) is searchable without having met the monster or visited the map.",
+    "The server keeps a discovery ledger of encounter milestones and visited maps. It is scoped to your account and is never shared with party members.",
+    "Discovery adds history and badges to Guide entries. It does not hide or reveal mechanical information.",
+    "Campaign (DM session) unlocks are separate and are not part of the account ledger."
+   ],
+   "sources": [
+    {
+     "path": "npc/custom/korangar_discovery.txt",
+     "record": "account discovery ledger and its scope comment"
+    }
+   ]
+  },
+  {
+   "id": "quest-guidance",
+   "category": "Provenance",
+   "title": "Where quest guidance comes from",
+   "summary": "Route buttons and quest outlines are client features built from exported data; the server does not decide what guidance you see.",
+   "details": [
+    "The server sends a quest's kill objectives and progress. It does not send item turn-in lists, NPC locations or routes.",
+    "Item requirements, turn-in locations and outlines for campaign contracts come from data exported from the server's own scripts and bundled with the client.",
+    "Guidance and routing are your client's settings. Nothing about them is stored on the server."
+   ],
+   "sources": [
+    {
+     "path": "src/map/quest.c",
+     "record": "quest packets carry kill objectives only"
+    }
+   ]
+  },
+  {
+   "id": "dm-mode",
+   "category": "Provenance",
+   "title": "DM mode: what it switches on",
+   "summary": "A DM turns a campaign session on for one party. Campaign content reacts only to that party.",
+   "details": [
+    "Turning DM mode on needs a party; the session is bound to that party.",
+    "Campaign NPCs and story state respond only while DM mode is on and only to members of the party the session is bound to. Everyone else sees ordinary NPCs.",
+    "While any session is on, map-spawned MVP and boss monsters are held back server-wide (re-checked every 10 seconds). This applies to the whole server, not only the DM's party.",
+    "Turning DM mode off ends the session; story progress is kept for the party."
+   ],
+   "sources": [
+    {
+     "path": "npc/custom/dm_campaign/shared/dm_console.txt",
+     "record": "@dm mode on / off"
+    },
+    {
+     "path": "npc/custom/dm_campaign/shared/dm_common.txt",
+     "record": "DM_SessionAllows"
+    },
+    {
+     "path": "src/map/mob.c",
+     "record": "mob_dm_mode_should_suppress"
     }
    ]
   }

@@ -1,0 +1,787 @@
+{
+ "schema_version": 1,
+ "authored": true,
+ "rules": "Authored, not generated. Each alias maps a player term to an existing target: a status constant (kind=status), an exact job name (kind=job), an item AegisName (kind=item), a monster sprite name (kind=monster), a skill Aegis constant (kind=skill), or a navigation map name (kind=map). Matching is case-insensitive; an alias shorter than 4 letters matches exactly, longer ones also match a typed prefix of at least 4 letters. A target that does not resolve fails the load.",
+ "entries": [
+  {
+   "alias": "petrification",
+   "kind": "status",
+   "target": "SC_STONE",
+   "basis": "Common player term for the ailment the server calls SC_STONE (Stone Curse)"
+  },
+  {
+   "alias": "petrified",
+   "kind": "status",
+   "target": "SC_STONE",
+   "basis": "Common player term for the ailment the server calls SC_STONE (Stone Curse)"
+  },
+  {
+   "alias": "petrify",
+   "kind": "status",
+   "target": "SC_STONE",
+   "basis": "Common player term for the ailment the server calls SC_STONE (Stone Curse)"
+  },
+  {
+   "alias": "stoned",
+   "kind": "status",
+   "target": "SC_STONE",
+   "basis": "Common player term for the ailment the server calls SC_STONE (Stone Curse)"
+  },
+  {
+   "alias": "petrifying",
+   "kind": "status",
+   "target": "SC_STONE",
+   "basis": "Common player term for the ailment the server calls SC_STONE (Stone Curse)"
+  },
+  {
+   "alias": "frozen",
+   "kind": "status",
+   "target": "SC_FREEZE",
+   "basis": "Common player term for the ailment the server calls SC_FREEZE"
+  },
+  {
+   "alias": "freezing",
+   "kind": "status",
+   "target": "SC_FREEZE",
+   "basis": "Common player term for the ailment the server calls SC_FREEZE"
+  },
+  {
+   "alias": "stunned",
+   "kind": "status",
+   "target": "SC_STUN",
+   "basis": "Common player term for the ailment the server calls SC_STUN"
+  },
+  {
+   "alias": "asleep",
+   "kind": "status",
+   "target": "SC_SLEEP",
+   "basis": "Common player term for the ailment the server calls SC_SLEEP"
+  },
+  {
+   "alias": "sleeping",
+   "kind": "status",
+   "target": "SC_SLEEP",
+   "basis": "Common player term for the ailment the server calls SC_SLEEP"
+  },
+  {
+   "alias": "cursed",
+   "kind": "status",
+   "target": "SC_CURSE",
+   "basis": "Common player term for the ailment the server calls SC_CURSE"
+  },
+  {
+   "alias": "confused",
+   "kind": "status",
+   "target": "SC_CONFUSION",
+   "basis": "Common player term for the ailment the server calls SC_CONFUSION"
+  },
+  {
+   "alias": "blinded",
+   "kind": "status",
+   "target": "SC_BLIND",
+   "basis": "Common player term for the ailment the server calls SC_BLIND"
+  },
+  {
+   "alias": "blindness",
+   "kind": "status",
+   "target": "SC_BLIND",
+   "basis": "Common player term for the ailment the server calls SC_BLIND"
+  },
+  {
+   "alias": "silenced",
+   "kind": "status",
+   "target": "SC_SILENCE",
+   "basis": "Common player term for the ailment the server calls SC_SILENCE"
+  },
+  {
+   "alias": "poisoned",
+   "kind": "status",
+   "target": "SC_POISON",
+   "basis": "Common player term for the ailment the server calls SC_POISON"
+  },
+  {
+   "alias": "bleeding",
+   "kind": "status",
+   "target": "SC_BLOODING",
+   "basis": "Common player term for the ailment the server calls SC_BLOODING"
+  },
+  {
+   "alias": "bleed",
+   "kind": "status",
+   "target": "SC_BLOODING",
+   "basis": "Common player term for the ailment the server calls SC_BLOODING"
+  },
+  {
+   "alias": "lk",
+   "kind": "job",
+   "target": "Lord Knight",
+   "basis": "Common player abbreviation or nickname for the job"
+  },
+  {
+   "alias": "hw",
+   "kind": "job",
+   "target": "High Wizard",
+   "basis": "Common player abbreviation or nickname for the job"
+  },
+  {
+   "alias": "ws",
+   "kind": "job",
+   "target": "Whitesmith",
+   "basis": "Common player abbreviation or nickname for the job"
+  },
+  {
+   "alias": "ac",
+   "kind": "job",
+   "target": "Assassin Cross",
+   "basis": "Common player abbreviation or nickname for the job"
+  },
+  {
+   "alias": "pally",
+   "kind": "job",
+   "target": "Paladin",
+   "basis": "Common player abbreviation or nickname for the job"
+  },
+  {
+   "alias": "champ",
+   "kind": "job",
+   "target": "Champion",
+   "basis": "Common player abbreviation or nickname for the job"
+  },
+  {
+   "alias": "prof",
+   "kind": "job",
+   "target": "Professor",
+   "basis": "Common player abbreviation or nickname for the job"
+  },
+  {
+   "alias": "bs",
+   "kind": "job",
+   "target": "Blacksmith",
+   "basis": "Common player abbreviation or nickname for the job"
+  },
+  {
+   "alias": "sg",
+   "kind": "job",
+   "target": "Star Gladiator",
+   "basis": "Common player abbreviation or nickname for the job"
+  },
+  {
+   "alias": "sl",
+   "kind": "job",
+   "target": "Soul Linker",
+   "basis": "Common player abbreviation or nickname for the job"
+  },
+  {
+   "alias": "rg",
+   "kind": "job",
+   "target": "Rogue",
+   "basis": "Common player abbreviation or nickname for the job"
+  },
+  {
+   "alias": "hp pot",
+   "kind": "item",
+   "target": "White_Potion",
+   "basis": "Common player abbreviation for HP restoring potion"
+  },
+  {
+   "alias": "white pot",
+   "kind": "item",
+   "target": "White_Potion",
+   "basis": "Common player nickname for White Potion"
+  },
+  {
+   "alias": "blue pot",
+   "kind": "item",
+   "target": "Blue_Potion",
+   "basis": "Common player nickname for Blue Potion"
+  },
+  {
+   "alias": "red pot",
+   "kind": "item",
+   "target": "Red_Potion",
+   "basis": "Common player nickname for Red Potion"
+  },
+  {
+   "alias": "yellow pot",
+   "kind": "item",
+   "target": "Yellow_Potion",
+   "basis": "Common player nickname for Yellow Potion"
+  },
+  {
+   "alias": "green pot",
+   "kind": "item",
+   "target": "Green_Potion",
+   "basis": "Common player nickname for Green Potion"
+  },
+  {
+   "alias": "fly wing",
+   "kind": "item",
+   "target": "Wing_Of_Fly",
+   "basis": "Common English player name for Wing_Of_Fly"
+  },
+  {
+   "alias": "fwing",
+   "kind": "item",
+   "target": "Wing_Of_Fly",
+   "basis": "Common player abbreviation for Fly Wing"
+  },
+  {
+   "alias": "bwing",
+   "kind": "item",
+   "target": "Wing_Of_Butterfly",
+   "basis": "Common player abbreviation for Butterfly Wing"
+  },
+  {
+   "alias": "butterfly wing",
+   "kind": "item",
+   "target": "Wing_Of_Butterfly",
+   "basis": "Common English player name for Wing_Of_Butterfly"
+  },
+  {
+   "alias": "ygg berry",
+   "kind": "item",
+   "target": "Yggdrasilberry",
+   "basis": "Common player nickname for Yggdrasilberry"
+  },
+  {
+   "alias": "ygg seed",
+   "kind": "item",
+   "target": "Seed_Of_Yggdrasil",
+   "basis": "Common player nickname for Seed_Of_Yggdrasil"
+  },
+  {
+   "alias": "berry",
+   "kind": "item",
+   "target": "Yggdrasilberry",
+   "basis": "Common player shorthand for Yggdrasilberry"
+  },
+  {
+   "alias": "seed",
+   "kind": "item",
+   "target": "Seed_Of_Yggdrasil",
+   "basis": "Common player shorthand for Seed_Of_Yggdrasil"
+  },
+  {
+   "alias": "obb",
+   "kind": "item",
+   "target": "Old_Blue_Box",
+   "basis": "Universal player abbreviation for Old Blue Box"
+  },
+  {
+   "alias": "oca",
+   "kind": "item",
+   "target": "Old_Card_Album",
+   "basis": "Universal player abbreviation for Old Card Album"
+  },
+  {
+   "alias": "opb",
+   "kind": "item",
+   "target": "Old_Violet_Box",
+   "basis": "Universal player abbreviation for Old Purple Box / Old Violet Box"
+  },
+  {
+   "alias": "ovb",
+   "kind": "item",
+   "target": "Old_Violet_Box",
+   "basis": "Aegis abbreviation for Old Violet Box"
+  },
+  {
+   "alias": "rosary",
+   "kind": "item",
+   "target": "Rosary",
+   "basis": "Common player search term for Rosary"
+  },
+  {
+   "alias": "clip",
+   "kind": "item",
+   "target": "Clip",
+   "basis": "Common player search term for Clip"
+  },
+  {
+   "alias": "gr card",
+   "kind": "item",
+   "target": "Ghostring_Card",
+   "basis": "Universal player abbreviation for Ghostring Card"
+  },
+  {
+   "alias": "ghostring card",
+   "kind": "item",
+   "target": "Ghostring_Card",
+   "basis": "Common player search term for Ghostring Card"
+  },
+  {
+   "alias": "angeling card",
+   "kind": "item",
+   "target": "Angeling_Card",
+   "basis": "Common player search term for Angeling Card"
+  },
+  {
+   "alias": "thara card",
+   "kind": "item",
+   "target": "Thara_Frog_Card",
+   "basis": "Common player abbreviation for Thara Frog Card"
+  },
+  {
+   "alias": "raydric card",
+   "kind": "item",
+   "target": "Daydric_Card",
+   "basis": "Universal English player name for Daydric_Card (Raydric Card)"
+  },
+  {
+   "alias": "sohee card",
+   "kind": "item",
+   "target": "Sohee_Card",
+   "basis": "Common player search term for Sohee Card"
+  },
+  {
+   "alias": "hydra card",
+   "kind": "item",
+   "target": "Hydra_Card",
+   "basis": "Common player search term for Hydra Card"
+  },
+  {
+   "alias": "marc card",
+   "kind": "item",
+   "target": "Marc_Card",
+   "basis": "Common player search term for Marc Card"
+  },
+  {
+   "alias": "phen card",
+   "kind": "item",
+   "target": "Phen_Card",
+   "basis": "Common player search term for Phen Card"
+  },
+  {
+   "alias": "vitata card",
+   "kind": "item",
+   "target": "Vitata_Card",
+   "basis": "Common player search term for Vitata Card"
+  },
+  {
+   "alias": "smokie card",
+   "kind": "item",
+   "target": "Smokie_Card",
+   "basis": "Common player search term for Smokie Card"
+  },
+  {
+   "alias": "marine sphere card",
+   "kind": "item",
+   "target": "Marine_Sphere_Card",
+   "basis": "Common player search term for Marine Sphere Card"
+  },
+  {
+   "alias": "bapho",
+   "kind": "monster",
+   "target": "BAPHOMET",
+   "basis": "Universal player nickname for Baphomet"
+  },
+  {
+   "alias": "eddga",
+   "kind": "monster",
+   "target": "EDDGA",
+   "basis": "Common MVP monster search term"
+  },
+  {
+   "alias": "doppel",
+   "kind": "monster",
+   "target": "DOPPELGANGER",
+   "basis": "Common player nickname for Doppelganger"
+  },
+  {
+   "alias": "dopple",
+   "kind": "monster",
+   "target": "DOPPELGANGER",
+   "basis": "Common player misspelling for Doppelganger"
+  },
+  {
+   "alias": "gtb",
+   "kind": "monster",
+   "target": "GOLDEN_BUG",
+   "basis": "Universal player abbreviation for Golden Thief Bug (GOLDEN_BUG)"
+  },
+  {
+   "alias": "orc hero",
+   "kind": "monster",
+   "target": "ORK_HERO",
+   "basis": "Common English player name for ORK_HERO"
+  },
+  {
+   "alias": "orc lord",
+   "kind": "monster",
+   "target": "ORC_LORD",
+   "basis": "Common English player name for ORC_LORD"
+  },
+  {
+   "alias": "lod",
+   "kind": "monster",
+   "target": "LORD_OF_DEATH",
+   "basis": "Universal player abbreviation for Lord of Death"
+  },
+  {
+   "alias": "moonlight",
+   "kind": "monster",
+   "target": "MOONLIGHT",
+   "basis": "Common player shorthand for Moonlight Flower"
+  },
+  {
+   "alias": "phree",
+   "kind": "monster",
+   "target": "PHREEONI",
+   "basis": "Common player nickname for Phreeoni"
+  },
+  {
+   "alias": "maya",
+   "kind": "monster",
+   "target": "MAYA",
+   "basis": "Common MVP monster search term"
+  },
+  {
+   "alias": "osiris",
+   "kind": "monster",
+   "target": "OSIRIS",
+   "basis": "Common MVP monster search term"
+  },
+  {
+   "alias": "drake",
+   "kind": "monster",
+   "target": "DRAKE",
+   "basis": "Common MVP monster search term"
+  },
+  {
+   "alias": "mistress",
+   "kind": "monster",
+   "target": "MISTRESS",
+   "basis": "Common MVP monster search term"
+  },
+  {
+   "alias": "angeling",
+   "kind": "monster",
+   "target": "ANGELING",
+   "basis": "Common mini-boss monster search term"
+  },
+  {
+   "alias": "deviling",
+   "kind": "monster",
+   "target": "DEVILING",
+   "basis": "Common mini-boss monster search term"
+  },
+  {
+   "alias": "ghostring",
+   "kind": "monster",
+   "target": "GHOSTRING",
+   "basis": "Common mini-boss monster search term"
+  },
+  {
+   "alias": "poporing",
+   "kind": "monster",
+   "target": "POPORING",
+   "basis": "Common poring family monster search term"
+  },
+  {
+   "alias": "drops",
+   "kind": "monster",
+   "target": "DROPS",
+   "basis": "Common poring family monster search term"
+  },
+  {
+   "alias": "marin",
+   "kind": "monster",
+   "target": "MARIN",
+   "basis": "Common poring family monster search term"
+  },
+  {
+   "alias": "metaling",
+   "kind": "monster",
+   "target": "METALING",
+   "basis": "Common poring family monster search term"
+  },
+  {
+   "alias": "bb",
+   "kind": "skill",
+   "target": "KN_BOWLINGBASH",
+   "basis": "Universal player abbreviation for Bowling Bash"
+  },
+  {
+   "alias": "mb",
+   "kind": "skill",
+   "target": "SM_MAGNUM",
+   "basis": "Universal player abbreviation for Magnum Break"
+  },
+  {
+   "alias": "2hq",
+   "kind": "skill",
+   "target": "KN_TWOHANDQUICKEN",
+   "basis": "Universal player abbreviation for Two-Hand Quicken"
+  },
+  {
+   "alias": "fw",
+   "kind": "skill",
+   "target": "MG_FIREWALL",
+   "basis": "Universal player abbreviation for Fire Wall"
+  },
+  {
+   "alias": "sw",
+   "kind": "skill",
+   "target": "MG_SAFETYWALL",
+   "basis": "Universal player abbreviation for Safety Wall"
+  },
+  {
+   "alias": "wb",
+   "kind": "skill",
+   "target": "WZ_WATERBALL",
+   "basis": "Universal player abbreviation for Water Ball"
+  },
+  {
+   "alias": "sg",
+   "kind": "skill",
+   "target": "WZ_STORMGUST",
+   "basis": "Universal player abbreviation for Storm Gust"
+  },
+  {
+   "alias": "ms",
+   "kind": "skill",
+   "target": "WZ_METEOR",
+   "basis": "Universal player abbreviation for Meteor Storm"
+  },
+  {
+   "alias": "lov",
+   "kind": "skill",
+   "target": "WZ_VERMILION",
+   "basis": "Universal player abbreviation for Lord of Vermilion"
+  },
+  {
+   "alias": "bless",
+   "kind": "skill",
+   "target": "AL_BLESSING",
+   "basis": "Universal player shorthand for Blessing"
+  },
+  {
+   "alias": "agi",
+   "kind": "skill",
+   "target": "AL_INCAGI",
+   "basis": "Universal player shorthand for Increase AGI"
+  },
+  {
+   "alias": "heal",
+   "kind": "skill",
+   "target": "AL_HEAL",
+   "basis": "Universal player search term for Heal"
+  },
+  {
+   "alias": "me",
+   "kind": "skill",
+   "target": "PR_MAGNUS",
+   "basis": "Universal player abbreviation for Magnus Exorcismus"
+  },
+  {
+   "alias": "tu",
+   "kind": "skill",
+   "target": "PR_TURNUNDEAD",
+   "basis": "Universal player abbreviation for Turn Undead"
+  },
+  {
+   "alias": "lex",
+   "kind": "skill",
+   "target": "PR_LEXAETERNA",
+   "basis": "Universal player shorthand for Lex Aeterna"
+  },
+  {
+   "alias": "mag",
+   "kind": "skill",
+   "target": "PR_MAGNIFICAT",
+   "basis": "Universal player shorthand for Magnificat"
+  },
+  {
+   "alias": "gloria",
+   "kind": "skill",
+   "target": "PR_GLORIA",
+   "basis": "Universal player shorthand for Gloria"
+  },
+  {
+   "alias": "resi",
+   "kind": "skill",
+   "target": "ALL_RESURRECTION",
+   "basis": "Universal player nickname for Resurrection"
+  },
+  {
+   "alias": "sb",
+   "kind": "skill",
+   "target": "AS_SONICBLOW",
+   "basis": "Universal player abbreviation for Sonic Blow"
+  },
+  {
+   "alias": "edp",
+   "kind": "skill",
+   "target": "ASC_EDP",
+   "basis": "Universal player abbreviation for Enchant Deadly Poison"
+  },
+  {
+   "alias": "mammo",
+   "kind": "skill",
+   "target": "MC_MAMMONITE",
+   "basis": "Universal player shorthand for Mammonite"
+  },
+  {
+   "alias": "ar",
+   "kind": "skill",
+   "target": "BS_ADRENALINE",
+   "basis": "Universal player abbreviation for Adrenaline Rush"
+  },
+  {
+   "alias": "otc",
+   "kind": "skill",
+   "target": "BS_OVERTHRUST",
+   "basis": "Universal player abbreviation for Overthrust / Power-Thrust"
+  },
+  {
+   "alias": "ds",
+   "kind": "skill",
+   "target": "AC_DOUBLE",
+   "basis": "Universal player abbreviation for Double Strafe"
+  },
+  {
+   "alias": "as",
+   "kind": "skill",
+   "target": "AC_SHOWER",
+   "basis": "Universal player abbreviation for Arrow Shower"
+  },
+  {
+   "alias": "tele",
+   "kind": "skill",
+   "target": "AL_TELEPORT",
+   "basis": "Universal player shorthand for Teleport"
+  },
+  {
+   "alias": "warp",
+   "kind": "skill",
+   "target": "AL_WARP",
+   "basis": "Universal player shorthand for Warp Portal"
+  },
+  {
+   "alias": "prt",
+   "kind": "map",
+   "target": "prontera",
+   "basis": "Universal player abbreviation for Prontera"
+  },
+  {
+   "alias": "pron",
+   "kind": "map",
+   "target": "prontera",
+   "basis": "Common player abbreviation for Prontera"
+  },
+  {
+   "alias": "iz",
+   "kind": "map",
+   "target": "izlude",
+   "basis": "Common player abbreviation for Izlude"
+  },
+  {
+   "alias": "geff",
+   "kind": "map",
+   "target": "geffen",
+   "basis": "Common player abbreviation for Geffen"
+  },
+  {
+   "alias": "mor",
+   "kind": "map",
+   "target": "morocc",
+   "basis": "Common player abbreviation for Morroc"
+  },
+  {
+   "alias": "pay",
+   "kind": "map",
+   "target": "payon",
+   "basis": "Common player abbreviation for Payon"
+  },
+  {
+   "alias": "alde",
+   "kind": "map",
+   "target": "aldebaran",
+   "basis": "Common player abbreviation for Aldebaran"
+  },
+  {
+   "alias": "lutie",
+   "kind": "map",
+   "target": "xmas",
+   "basis": "Common player name for Lutie / Christmas Town (xmas)"
+  },
+  {
+   "alias": "juno",
+   "kind": "map",
+   "target": "yuno",
+   "basis": "Alternate English translation for Yuno"
+  },
+  {
+   "alias": "ein",
+   "kind": "map",
+   "target": "einbroch",
+   "basis": "Common player abbreviation for Einbroch"
+  },
+  {
+   "alias": "lhz",
+   "kind": "map",
+   "target": "lighthalzen",
+   "basis": "Universal player abbreviation for Lighthalzen"
+  },
+  {
+   "alias": "gh",
+   "kind": "map",
+   "target": "glast_01",
+   "basis": "Universal player abbreviation for Glast Heim"
+  },
+  {
+   "alias": "glast heim",
+   "kind": "map",
+   "target": "glast_01",
+   "basis": "Full English name for Glast Heim entrance (glast_01)"
+  },
+  {
+   "alias": "byalan",
+   "kind": "map",
+   "target": "iz_dun00",
+   "basis": "Universal player name for Byalan Island Dungeon (iz_dun00)"
+  },
+  {
+   "alias": "pyramids",
+   "kind": "map",
+   "target": "moc_pryd01",
+   "basis": "Universal player name for Morroc Pyramids (moc_pryd01)"
+  },
+  {
+   "alias": "sphinx",
+   "kind": "map",
+   "target": "in_sphinx1",
+   "basis": "Universal player name for Morroc Sphinx (in_sphinx1)"
+  },
+  {
+   "alias": "clock tower",
+   "kind": "map",
+   "target": "c_tower1",
+   "basis": "Universal player name for Aldebaran Clock Tower (c_tower1)"
+  },
+  {
+   "alias": "toy factory",
+   "kind": "map",
+   "target": "xmas_dun01",
+   "basis": "Universal player name for Lutie Toy Factory (xmas_dun01)"
+  },
+  {
+   "alias": "orc dungeon",
+   "kind": "map",
+   "target": "orcsdun01",
+   "basis": "Universal player name for Orc Dungeon (orcsdun01)"
+  },
+  {
+   "alias": "sewer",
+   "kind": "map",
+   "target": "prt_sewb1",
+   "basis": "Common player name for Prontera Culvert / Sewer (prt_sewb1)"
+  },
+  {
+   "alias": "culvert",
+   "kind": "map",
+   "target": "prt_sewb1",
+   "basis": "Common player name for Prontera Culvert (prt_sewb1)"
+  }
+ ]
+}

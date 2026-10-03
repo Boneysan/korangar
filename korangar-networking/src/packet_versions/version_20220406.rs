@@ -1378,9 +1378,11 @@ where
         *reason_slot.borrow_mut() = SkillFailReason::from_wire(packet.reason).map(|reason| (packet.skill_id, reason));
         NoNetworkEvents
     })?;
-    // Campaign recovery state has no headless/client interaction yet, but its
-    // fixed four-byte wire packet must not fall through as an unknown header.
-    packet_handler.register_noop::<RecoveryStatePacket>()?;
+    // Campaign recovery HUD state. Raw bytes on purpose, see the event docs.
+    packet_handler.register(|packet: RecoveryStatePacket| NetworkEvent::RecoveryState {
+        mode: packet.mode,
+        block: packet.block,
+    })?;
     let reason_slot = pending_skill_fail_reason.clone();
     packet_handler.register(move |packet: ToUseSkillSuccessPacket| -> NetworkEventList {
         // Take it either way: a reason left behind by a suppressed failure must

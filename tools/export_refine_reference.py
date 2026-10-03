@@ -62,19 +62,21 @@ MATERIAL_BY_WEAPON_LEVEL = {
 # `skill_weaponrefine`), regardless of the caster's own skill level.
 MAX_USEFUL_REFINE_LEVEL = 10
 
+NPC_WEAPON_REFINE = {
+    1: {"cost_zeny": 50, "safe_level": 7, "stat_per_level": 2, "random_bonus_start_level": 8, "random_bonus_max_per_level": 3},
+    2: {"cost_zeny": 200, "safe_level": 6, "stat_per_level": 3, "random_bonus_start_level": 7, "random_bonus_max_per_level": 5},
+    3: {"cost_zeny": 5000, "safe_level": 5, "stat_per_level": 5, "random_bonus_start_level": 6, "random_bonus_max_per_level": 8},
+    4: {"cost_zeny": 20000, "safe_level": 4, "stat_per_level": 7, "random_bonus_start_level": 5, "random_bonus_max_per_level": 14},
+}
 
-def parse_weapon_level_chances(text: str) -> dict[int, dict[int, int]]:
+
+def parse_weapon_level_chances(stripped: str) -> dict[int, dict[int, int]]:
     """`{weapon_level: {target_refine_level: percent_chance}}` for levels 1-10.
 
     Any level `refine_db.conf` does not list for a given weapon level
     defaults to 100, per that file's own documented convention ("Refine
     levels that use default values need not be listed").
     """
-    # Strip `//` comments the same way every other line-based exporter in
-    # this tree does, so a rate commented out for testing is not read live.
-    lines = [line.split("//", 1)[0] for line in text.splitlines()]
-    stripped = "\n".join(lines)
-
     chances: dict[int, dict[int, int]] = {}
     for weapon_level in range(1, 5):
         block_match = re.search(rf"^WeaponLevel{weapon_level}:\s*\{{", stripped, re.MULTILINE)
@@ -100,6 +102,33 @@ def parse_weapon_level_chances(text: str) -> dict[int, dict[int, int]]:
     return chances
 
 
+def parse_armor_rates(stripped: str) -> tuple[dict[int, int], dict[int, int]]:
+    """Return `(chances, def_bonuses)` for armor refine levels 1-10."""
+    block_match = re.search(r"^Armors:\s*\{", stripped, re.MULTILINE)
+    if not block_match:
+        raise ValueError("Armors block not found")
+    block_text = _matching_brace_block(stripped, block_match.end() - 1)
+    rates_match = re.search(r"\bRates:\s*\{", block_text)
+    if not rates_match:
+        raise ValueError("Armors.Rates block not found")
+    rates_text = _matching_brace_block(block_text, rates_match.end() - 1)
+
+    chances = {level: 100 for level in range(1, MAX_USEFUL_REFINE_LEVEL + 1)}
+    bonuses = {level: 0 for level in range(1, MAX_USEFUL_REFINE_LEVEL + 1)}
+    for level_match in re.finditer(r"\bLv(\d+):\s*\{", rates_text):
+        level = int(level_match.group(1))
+        if level > MAX_USEFUL_REFINE_LEVEL:
+            continue
+        level_text = _matching_brace_block(rates_text, level_match.end() - 1)
+        normal_match = re.search(r"\bNormalChance:\s*(\d+)", level_text)
+        if normal_match:
+            chances[level] = int(normal_match.group(1))
+        bonus_match = re.search(r"\bBonus:\s*(\d+)", level_text)
+        if bonus_match:
+            bonuses[level] = int(bonus_match.group(1)) // 100
+    return chances, bonuses
+
+
 def _matching_brace_block(text: str, open_brace_index: int) -> str:
     """The text strictly between the `{` at `open_brace_index` and its match."""
     if text[open_brace_index] != "{":
@@ -116,23 +145,41 @@ def _matching_brace_block(text: str, open_brace_index: int) -> str:
 
 
 def build() -> dict[str, object]:
-    chances = parse_weapon_level_chances(REFINE_DB.read_text(encoding="utf-8", errors="replace"))
+    raw_text = REFINE_DB.read_text(encoding="utf-8", errors="replace")
+    lines = [line.split("//", 1)[0] for line in raw_text.splitlines()]
+    stripped = "\n".join(lines)
+
+    chances = parse_weapon_level_chances(stripped)
+    armor_chances, armor_bonuses = parse_armor_rates(stripped)
     revision, dirty = source_revision()
     return {
         "schema_version": 1,
         "source_revision": revision,
         "source_worktree_dirty": dirty,
         "mode": "renewal",
-        "source": "db/re/refine_db.conf (WeaponLevel1-4.Rates), src/map/skill.c (skill_weaponrefine material list and formula)",
-        "scope": "WS_WEAPONREFINE self-refine only (packet 0x0222); the NPC-driven Refinery UI in the same file is disabled on this server",
+        "source": "db/re/refine_db.conf (Armors and WeaponLevel1-4.Rates), npc/merchants/refine.txt (NPC costs/safe limits), src/map/skill.c (skill_weaponrefine formula)",
+        "scope": "Weapon (WS_WEAPONREFINE & NPC Blacksmith) and Armor refinement; the NPC-driven Refinery UI in the same file is disabled on this server",
         "max_useful_refine_level": MAX_USEFUL_REFINE_LEVEL,
         "job_level_bonus_per_job_level_from_50_per_mille": 5,
         "mechanic_transcendent_flat_bonus_percent": 10,
         "on_failure": "weapon is unequipped and destroyed",
+        "armor": {
+            "material": "Elunium",
+            "cost_zeny": 2000,
+            "safe_level": 4,
+            "on_failure": "armor is destroyed",
+            "base_chance_percent_by_target_level": armor_chances,
+            "def_bonus_by_target_level": armor_bonuses,
+        },
         "weapon_levels": [
             {
                 "weapon_level": weapon_level,
                 "material": MATERIAL_BY_WEAPON_LEVEL[weapon_level],
+                "cost_zeny": NPC_WEAPON_REFINE[weapon_level]["cost_zeny"],
+                "safe_level": NPC_WEAPON_REFINE[weapon_level]["safe_level"],
+                "stat_per_level": NPC_WEAPON_REFINE[weapon_level]["stat_per_level"],
+                "random_bonus_start_level": NPC_WEAPON_REFINE[weapon_level]["random_bonus_start_level"],
+                "random_bonus_max_per_level": NPC_WEAPON_REFINE[weapon_level]["random_bonus_max_per_level"],
                 # Percent chance to advance FROM (level - 1) TO level, using a
                 # caster with no job-level bonus (job_level 50). The client
                 # adds the job-level term itself, since that depends on the

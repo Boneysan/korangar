@@ -11,6 +11,8 @@
 //!
 //! [`item_stats`]: super::item_stats
 
+#![allow(dead_code)]
+
 use std::collections::HashMap;
 use std::sync::OnceLock;
 
@@ -64,9 +66,29 @@ impl LevelledText {
 }
 
 #[derive(Debug, Clone, Deserialize)]
+pub struct SkillPrerequisite {
+    #[serde(default, rename = "SkillId")]
+    pub skill_id: Option<u16>,
+    #[serde(rename = "Name")]
+    pub name: String,
+    #[serde(rename = "Level")]
+    pub level: u16,
+}
+
+#[derive(Debug, Clone, Deserialize)]
+pub struct SkillSource {
+    #[serde(default)]
+    pub path: String,
+    #[serde(default)]
+    pub record: String,
+}
+
+#[derive(Debug, Clone, Deserialize)]
 struct SkillRow {
     #[serde(rename = "Id")]
     id: u16,
+    #[serde(default, rename = "Name")]
+    name: String,
     #[serde(default, rename = "Description")]
     description: String,
     #[serde(default, rename = "MaxLevel")]
@@ -85,6 +107,8 @@ struct SkillRow {
     fixed_cast_time: Option<Levelled>,
     #[serde(default, rename = "AfterCastActDelay")]
     after_cast_action_delay: Option<Levelled>,
+    #[serde(default, rename = "AfterCastWalkDelay")]
+    after_cast_walk_delay: Option<Levelled>,
     #[serde(default, rename = "CoolDown")]
     cooldown: Option<Levelled>,
     #[serde(default, rename = "NumberOfHits")]
@@ -95,6 +119,12 @@ struct SkillRow {
     sp_cost: Option<Levelled>,
     #[serde(default, rename = "Layout")]
     layout: Option<Levelled>,
+    #[serde(default, rename = "StatusChange")]
+    status_change: Option<String>,
+    #[serde(default, rename = "Prerequisites")]
+    prerequisites: Vec<SkillPrerequisite>,
+    #[serde(default, rename = "Source")]
+    source: Option<SkillSource>,
     #[serde(default, rename = "Items")]
     items: Vec<String>,
 }
@@ -108,6 +138,47 @@ fn table() -> &'static HashMap<u16, SkillRow> {
             .map(|row| (row.id, row))
             .collect()
     })
+}
+
+/// The skill's display name from `skill_db` (its description), falling back to
+/// the constant name.
+pub fn skill_display_name(skill_id: u16) -> Option<&'static str> {
+    let row = table().get(&skill_id)?;
+    match row.description.is_empty() {
+        false => Some(row.description.as_str()),
+        true if !row.name.is_empty() => Some(row.name.as_str()),
+        true => None,
+    }
+}
+
+/// Look up the configured status change associated with a skill.
+pub fn skill_status_change(skill_id: u16) -> Option<&'static str> {
+    table().get(&skill_id)?.status_change.as_deref()
+}
+
+/// Look up direct skill prerequisites from the server tree.
+pub fn skill_prerequisites(skill_id: u16) -> &'static [SkillPrerequisite] {
+    table().get(&skill_id).map(|row| row.prerequisites.as_slice()).unwrap_or(&[])
+}
+
+/// Look up configured aftercast action delay in milliseconds at `level`.
+pub fn skill_after_cast_act_delay(skill_id: u16, level: u16) -> Option<i64> {
+    table().get(&skill_id)?.after_cast_action_delay.as_ref()?.at(level)
+}
+
+/// Look up configured aftercast walk delay in milliseconds at `level`.
+pub fn skill_after_cast_walk_delay(skill_id: u16, level: u16) -> Option<i64> {
+    table().get(&skill_id)?.after_cast_walk_delay.as_ref()?.at(level)
+}
+
+/// Look up configured cooldown in milliseconds at `level`.
+pub fn skill_cooldown(skill_id: u16, level: u16) -> Option<i64> {
+    table().get(&skill_id)?.cooldown.as_ref()?.at(level)
+}
+
+/// Look up source provenance for a skill record.
+pub fn skill_source(skill_id: u16) -> Option<&'static SkillSource> {
+    table().get(&skill_id)?.source.as_ref()
 }
 
 /// `Ele_Fire` → `Fire`. Neutral is the default for most skills and adds no
@@ -128,6 +199,18 @@ fn layout_cells(layout: i64) -> Option<u32> {
 /// no ground unit. `-1` is passed through unchanged so callers can tell "custom
 /// shape" apart from "no ground unit" — the aiming cursor needs that
 /// distinction, the tooltip does not.
+/// `skill_db.conf` element at `level`, such as `Ele_Fire` or `Ele_Weapon`.
+/// Levelled elements (Seven Wind) need the cast level; an unknown level returns
+/// nothing rather than guessing the first row.
+pub fn skill_element_name(skill_id: u16, level: u16) -> Option<&'static str> {
+    let element = table().get(&skill_id)?.element.as_ref()?;
+    match element {
+        LevelledText::Flat { flat } => Some(flat.as_str()),
+        LevelledText::Levels { .. } if level == 0 => None,
+        LevelledText::Levels { .. } => element.at(level),
+    }
+}
+
 pub fn skill_layout_value(skill_id: u16, level: u16) -> Option<i64> {
     table().get(&skill_id)?.layout.as_ref()?.at(level)
 }
@@ -148,6 +231,7 @@ pub fn skill_tooltip_text(skill_id: u16, display_name: &str, level: u16, maximum
 
     let title = match display_name.is_empty() {
         true if !row.description.is_empty() => row.description.clone(),
+        true if !row.name.is_empty() => row.name.clone(),
         _ => title,
     };
 
@@ -201,6 +285,14 @@ pub fn skill_tooltip_text(skill_id: u16, display_name: &str, level: u16, maximum
     {
         timing.push(format!("Configured aftercast delay {:.1}s", delay as f32 / 1000.0));
     }
+    if let Some(walk_delay) = row
+        .after_cast_walk_delay
+        .as_ref()
+        .and_then(|value| value.at(level))
+        .filter(|delay| *delay > 0)
+    {
+        timing.push(format!("Walk delay {:.1}s", walk_delay as f32 / 1000.0));
+    }
     if let Some(cooldown) = row
         .cooldown
         .as_ref()
@@ -230,6 +322,16 @@ pub fn skill_tooltip_text(skill_id: u16, display_name: &str, level: u16, maximum
 
     if !row.items.is_empty() {
         lines.push(format!("Requires: {}", row.items.join(", ")));
+    }
+
+    if level == 0 && !row.prerequisites.is_empty() {
+        let reqs = row
+            .prerequisites
+            .iter()
+            .map(|req| format!("{} Lv {}", req.name, req.level))
+            .collect::<Vec<_>>()
+            .join(", ");
+        lines.push(format!("Requires skill: {reqs}"));
     }
 
     lines.join("\n")
@@ -329,5 +431,63 @@ mod tests {
         let headline = text.lines().next().unwrap();
         assert!(headline.starts_with("Fire Bolt"), "{headline}");
         assert!(headline.contains("Lv 3/10"), "{headline}");
+    }
+
+    #[test]
+    fn timing_helpers_and_status_change_links_load() {
+        const BLESSING: u16 = 34;
+        const MAGNUM_BREAK: u16 = 7;
+
+        assert_eq!(skill_status_change(BLESSING), Some("SC_BLESSING"));
+        assert_eq!(skill_status_change(MAGNUM_BREAK), Some("SC_SUB_WEAPONPROPERTY"));
+        assert_eq!(skill_after_cast_act_delay(MAGNUM_BREAK, 1), Some(500));
+        assert_eq!(skill_cooldown(MAGNUM_BREAK, 1), Some(2000));
+
+        const GRAND_CROSS: u16 = 254;
+        assert_eq!(skill_after_cast_walk_delay(GRAND_CROSS, 1), Some(900));
+        let gx_text = skill_tooltip_text(GRAND_CROSS, "Grand Cross", 1, 10);
+        assert!(gx_text.contains("Walk delay 0.9s"), "{gx_text}");
+
+        let source = skill_source(FIRE_BOLT).expect("Fire Bolt source");
+        assert_eq!(source.path, "db/re/skill_db.conf");
+        assert_eq!(source.record, "Id=19");
+    }
+
+    #[test]
+    fn skill_prerequisites_are_linked() {
+        const FIRE_WALL: u16 = 18;
+        const MAGNUM_BREAK: u16 = 7;
+
+        let fw_prereqs = skill_prerequisites(FIRE_WALL);
+        assert_eq!(fw_prereqs.len(), 2);
+        assert!(
+            fw_prereqs
+                .iter()
+                .any(|p| p.name == "MG_FIREBALL" && p.level == 5 && p.skill_id == Some(17))
+        );
+        assert!(
+            fw_prereqs
+                .iter()
+                .any(|p| p.name == "MG_SIGHT" && p.level == 1 && p.skill_id == Some(10))
+        );
+
+        let mb_prereqs = skill_prerequisites(MAGNUM_BREAK);
+        assert_eq!(mb_prereqs.len(), 1);
+        assert_eq!(mb_prereqs[0].name, "SM_BASH");
+        assert_eq!(mb_prereqs[0].level, 5);
+        assert_eq!(mb_prereqs[0].skill_id, Some(5));
+    }
+
+    #[test]
+    fn unlearned_skills_show_prerequisites_in_tooltip() {
+        const FIRE_WALL: u16 = 18;
+        let unlearned = skill_tooltip_text(FIRE_WALL, "Fire Wall", 0, 10);
+        assert!(
+            unlearned.contains("Requires skill: MG_FIREBALL Lv 5, MG_SIGHT Lv 1"),
+            "{unlearned}"
+        );
+
+        let learned = skill_tooltip_text(FIRE_WALL, "Fire Wall", 1, 10);
+        assert!(!learned.contains("Requires skill:"), "{learned}");
     }
 }

@@ -1,0 +1,140 @@
+import unittest
+
+from export_item_reference import translate_simple_effect
+
+
+class ItemEffectPhraseTests(unittest.TestCase):
+    def test_bare_itemskill_stays_a_grant(self):
+        self.assertEqual(
+            translate_simple_effect("itemskill AL_TELEPORT,1;"),
+            "grants access to Teleport at level 1",
+        )
+
+    def test_itemskill_flags_use_the_hercules_enum_notes(self):
+        text = translate_simple_effect(
+            "itemskill(AL_BLESSING, 10, ISF_INSTANTCAST | ISF_CASTONSELF);"
+        )
+        self.assertIn("Blessing", text)
+        self.assertIn("level 10", text)
+        self.assertIn("instantly", text)
+        self.assertIn("on yourself, without a target cursor", text)
+        self.assertNotIn("checking the skill's conditions", text)
+
+    def test_blocked_clusters_use_documented_shapes(self):
+        self.assertIn(
+            "sets the client interface font to RixLoveangel (id 1)",
+            translate_simple_effect("setfont(1);"),
+        )
+        self.assertEqual(
+            translate_simple_effect("if (getfont() == 1) setfont(0);"),
+            "When the current interface font id is 1: sets the client interface font to the default font (id 0)",
+        )
+        self.assertIn("Attack Power + (refine / 2)%", translate_simple_effect("bonus bAtk2,10; bonus bAtkRate,(getrefine()/2);"))
+        self.assertIn("Magical damage against brute +2%", translate_simple_effect("bonus2 bMagicAddRace,2,2;"))
+        self.assertIn(
+            "does not apply bonus3 bHPDrainRate,10,1,0",
+            translate_simple_effect("bonus3 bHPDrainRate,10,1,0; bonus3 bSPDrainRate,10,1,0;"),
+        )
+        self.assertEqual(
+            translate_simple_effect("guildgetexp rand(600000,1200000);"),
+            "grants the character's guild a random 600000 to 1200000 guild experience, and does nothing when the character has no guild",
+        )
+        self.assertIn("opens an input box", translate_simple_effect("input @megaphone$; loudhailer(@megaphone$); end;"))
+        self.assertEqual(
+            translate_simple_effect("itemheal(rand(50, 100), 0);"),
+            "heals a random 50 to 100 HP and 0 SP, then applies potion bonuses",
+        )
+        self.assertIn(
+            "uses Improve Concentration at level 3",
+            translate_simple_effect("itemskill AC_CONCENTRATION,(getskilllv(AC_CONCENTRATION)<3?3:getskilllv(AC_CONCENTRATION));"),
+        )
+        self.assertEqual(
+            translate_simple_effect("percentheal rand(11,33), 0;"),
+            "heals a random 11% to 33% of max HP and 0% of max SP",
+        )
+
+    def test_callfunc_stays_untranslated(self):
+        self.assertIsNone(translate_simple_effect('callfunc("F_Nope");'))
+
+    def test_documented_bonus_row_fills_its_placeholders(self):
+        self.assertEqual(
+            translate_simple_effect("bonus2 bIgnoreDefRate,RC_DemiPlayer,20;"),
+            "Disregard 20% of the target's DEF if the target belongs to race player",
+        )
+        self.assertIsNone(translate_simple_effect("bonus2 bIgnoreDefRate,RC_DemiPlayer,getrefine();"))
+
+    def test_mercenary_scroll_uses_milliseconds(self):
+        self.assertEqual(
+            translate_simple_effect("mercenary_create MER_ARCHER01, 1800000;"),
+            "summons mercenary MER_ARCHER01 for 1800 seconds",
+        )
+        self.assertIsNone(translate_simple_effect("mercenary_create MER_ARCHER01, 1800000, 1;"))
+
+    def test_pet_taming_cursor_uses_the_constant(self):
+        self.assertEqual(
+            translate_simple_effect("pet PORING;"),
+            "makes the pet catching cursor appear for pet ID PORING",
+        )
+        self.assertEqual(
+            translate_simple_effect("pet(DROPS);"),
+            "makes the pet catching cursor appear for pet ID DROPS",
+        )
+        self.assertIsNone(translate_simple_effect("pet PORING, 1;"))
+
+    def test_specialeffect_area_on_attached_player(self):
+        self.assertEqual(
+            translate_simple_effect("specialeffect(EF_CLOAKING, AREA, playerattached());"),
+            "displays special effect EF_CLOAKING to everyone on the unit from playerattached()",
+        )
+        self.assertIsNone(translate_simple_effect('specialeffect(EF_HIT1, SELF, "John Doe#1");'))
+
+    def test_getitem_by_item_constant(self):
+        self.assertEqual(translate_simple_effect("getitem Arrow, 500;"), "grants 500 Arrow")
+        self.assertEqual(translate_simple_effect("getitem(Apple, 10);"), "grants 10 Apple")
+        self.assertIsNone(translate_simple_effect("getitem Arrow, 500, 2000001;"))
+
+    def test_sc_start_flag_uses_the_documented_rate(self):
+        self.assertEqual(
+            translate_simple_effect("sc_start SC_FREEZE,10000,0,2500,SCFLAG_NONE;"),
+            "Applies Freeze for 10 seconds at 25% chance",
+        )
+        self.assertEqual(
+            translate_simple_effect("sc_start SC_ATTHASTE_POTION1,1800000,4;"),
+            "Applies status SC_ATTHASTE_POTION1 for 1800 seconds, value 4 (no explicit chance limit)",
+        )
+        self.assertIsNone(translate_simple_effect("sc_start SC_FREEZE,10000,0,2500,SCFLAG_NONE,1;"))
+
+    def test_unknown_itemskill_flag_stays_untranslated(self):
+        self.assertIsNone(translate_simple_effect("itemskill(AL_BLESSING, 10, ISF_NOT_A_FLAG);"))
+
+    def test_parenthesized_percentheal_and_status_apply(self):
+        text = translate_simple_effect(
+            "percentheal(0, 5); itemskill(AL_BLESSING, 5, ISF_INSTANTCAST | ISF_CASTONSELF);"
+        )
+        self.assertIn("restores 5% SP", text)
+        self.assertIn("Blessing", text)
+
+    def test_documented_bonuses_and_item_grants(self):
+        self.assertEqual(
+            translate_simple_effect("bonus bUnbreakableHelm,1;"),
+            "the equipped helm cannot be broken",
+        )
+        self.assertEqual(
+            translate_simple_effect("bonus bBaseAtk,5; bonus bSpeedRate,10;"),
+            "increases basic attack power by 5; increases movement speed by 10% (only the highest bonus applies)",
+        )
+        self.assertEqual(translate_simple_effect("getitem 501,10;"), "grants 10 Red Potion")
+        self.assertEqual(
+            translate_simple_effect("packageitem();"),
+            "grants this item's package contents",
+        )
+        self.assertIn("Heal", translate_simple_effect("skill AL_HEAL,1;"))
+
+    def test_map_gated_itemskill_stays_untranslated(self):
+        self.assertIsNone(
+            translate_simple_effect('if(strcharinfo(PC_MAP)=="job3_war02") { itemskill WL_FROSTMISTY,5; }')
+        )
+
+
+if __name__ == "__main__":
+    unittest.main()

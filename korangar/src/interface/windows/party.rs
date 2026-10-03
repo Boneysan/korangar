@@ -114,6 +114,11 @@ where
                             let member = member_path.follow_safe(state);
                             party.is_local(member.account_id()) || !member.online()
                         });
+                        let navigate_blocked = ComputedSelector::new_default(move |state: &ClientState| {
+                            let party = party_path.follow_safe(state);
+                            let member = member_path.follow_safe(state);
+                            party.is_local(member.account_id()) || !member.online() || member.map_name().is_empty()
+                        });
                         // A target frame offering to whisper or trade with
                         // yourself is nonsense, same guard as the world click
                         // this button otherwise mirrors (EntityType::Player
@@ -137,6 +142,23 @@ where
                                         event: move |state: &State<ClientState>, queue: &mut EventQueue<ClientState>| {
                                             let character_name = state.get(&member_path).name().to_owned();
                                             queue.queue(InputEvent::JumpToPartyMember { character_name });
+                                        },
+                                    },
+                                    button! {
+                                        text: "Navigate",
+                                        tooltip: "Plot a navigation route to this party member [GDD 10.14]",
+                                        disabled: navigate_blocked,
+                                        disabled_tooltip: "Cannot navigate to offline member, empty map, or yourself",
+                                        event: move |state: &State<ClientState>, queue: &mut EventQueue<ClientState>| {
+                                            let member = state.get(&member_path);
+                                            let character_name = member.name().to_owned();
+                                            let map_name = member.map_name().trim_end_matches(".gat").to_owned();
+                                            let position = member.position().map(|p| (p.x, p.y));
+                                            queue.queue(InputEvent::NavigateToPartyMember {
+                                                character_name,
+                                                map_name,
+                                                position,
+                                            });
                                         },
                                     },
                                     button! {
@@ -416,17 +438,31 @@ where
                         },
                     ),
                 },
-                state_button! {
-                    text: "Block invites",
-                    tooltip: "Refuse all party invites server-side [^000001/party block on^000000]",
-                    state: self.party_path.deny_invites(),
-                    event: move |state: &State<ClientState>, queue: &mut EventQueue<ClientState>| {
-                        // Send the opposite of what the server last told us,
-                        // never of a locally-toggled value, so a refused
-                        // request cannot leave the button lying.
-                        let blocked = !*state.get(&party_path.deny_invites());
-                        queue.queue(InputEvent::SetPartyInvitationBlock { blocked });
-                    },
+                split! {
+                    gaps: theme().window().gaps(),
+                    children: (
+                        state_button! {
+                            text: "Block invites",
+                            tooltip: "Refuse all party invites server-side [^000001/party block on^000000]",
+                            state: self.party_path.deny_invites(),
+                            event: move |state: &State<ClientState>, queue: &mut EventQueue<ClientState>| {
+                                // Send the opposite of what the server last told us,
+                                // never of a locally-toggled value, so a refused
+                                // request cannot leave the button lying.
+                                let blocked = !*state.get(&party_path.deny_invites());
+                                queue.queue(InputEvent::SetPartyInvitationBlock { blocked });
+                            },
+                        },
+                        state_button! {
+                            text: "Healer layout",
+                            tooltip: "Enlarge health and SP bar readability for healer role [GDD 10.14]",
+                            state: self.party_path.healer_layout(),
+                            event: move |state: &State<ClientState>, _: &mut EventQueue<ClientState>| {
+                                let current = *state.get(&party_path.healer_layout());
+                                state.update_value_with(party_path, move |party| party.set_healer_layout(!current));
+                            },
+                        },
+                    ),
                 },
                 text! {
                     text: self.party_path.display_text(),
@@ -439,6 +475,13 @@ where
                     tooltip: "Set the shared route locally and acknowledge it to the party",
                     event: InputEvent::AcceptPartyDestination,
                 },
+                button! {
+                    text: "Decline shared destination",
+                    tooltip: "Dismiss the shared route on this client only; the party is not told",
+                    event: InputEvent::DeclinePartyDestination,
+                },
+                text! { text: self.party_path.markers_text(), },
+                text! { text: self.party_path.goals_text(), },
                 text! { text: self.party_path.ready_check_text(), },
                 split! { gaps: theme().window().gaps(), children: (
                     button! { text: "Start ready check", tooltip: "Ask current online party members to confirm readiness", event: InputEvent::StartPartyReadyCheck },

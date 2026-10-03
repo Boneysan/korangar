@@ -1,28 +1,29 @@
 # Korangar — agent notes
 
-**CURRENT PRIORITY (verified 2026-09-27): GDD v0.2 modernization, Phase 1.** Start with
-[docs/plans/gdd-next-slices.md](docs/plans/gdd-next-slices.md) (per-slice status and the
-2026-09-27 verification notes) and [docs/GDD.md Appendix E](docs/GDD.md). G1 data drift and
-S3's uncommitted `party_share_level` were fixed 2026-09-27; the open issue to know first is
-that the only full headless run since the newest scenario (`death-recovery-ten-kill-threshold`)
-was added **failed `skills-professor`** and never reached that scenario — re-run the full
-suite before trusting the "163 green" figure. The
-July animation/live-pass notes below are historical context for effect work, not the active queue.
+**CURRENT PRIORITY (refreshed 2026-10-03): GDD v0.2 modernization.** Per-feature status is
+in the F01–F39 rows of [docs/plans/gdd-improvement-plan.md](docs/plans/gdd-improvement-plan.md),
+summarized at the top of [docs/GDD.md Appendix E](docs/GDD.md). Almost every GUI feature is
+implemented and test-covered but **never seen on screen**; the next gate is the live GUI pass
+(`docs/plans/gui-verification-pass.md`). Latest evidence: `cargo test -p korangar --lib` 687
+passed / 17 ignored (2026-10-03); last full headless run 168 passed / 1 failed
+(`skills-professor`, two skills with no protocol response) / 1 expected skip
+(`tools/testing/runs/20261002-184210.log`). The July animation/live-pass notes below are
+historical context for effect work, not the active queue.
 
-**Encyclopedia (Adventure Guide) data work — active parallel thread, 2026-09-28.** A large
-multi-agent pass landed reviewed-data across six of the seven roadmap packages (E1–E6):
-74 item exchanges (285 items linked), including all six of Charles Orleans's randomly assigned cooking lessons, 107/107 indexed NPC service-call sites, 249/436 combo
-translations, 12 reviewed formula records covering 50 skills, 52 reviewed quest-flow entries
-covering 124/3,172 quests, 11 boss behaviors, and 43 scripted-spawn groups — all
-citation-validated against live Hercules source, full exporter pipeline and 424 Rust
-tests green. Start with [docs/plans/encyclopedia-roadmap.md](docs/plans/encyclopedia-roadmap.md)'s
-"Current baseline and immediate next slice" section for exact counts and what's open next
-(thousands of item-grant clues outside the reviewed set, quests with no anchor to review
-from, skill formulas beyond the 50 done, and — the next actual step — **E7's live
-client playtest, which has not happened yet**: none of this has been seen on screen).
-[docs/plans/encyclopedia-coverage.md](docs/plans/encyclopedia-coverage.md) has the
-field-by-field backlog. This is independent of the GDD v0.2 priority above; pick whichever
-thread the user is actively directing.
+**Encyclopedia (Adventure Guide) data work — active parallel thread, updated 2026-09-30.**
+Reviewed data so far: 87 item exchanges (302 items linked), 107/107 indexed NPC service-call
+sites, 269/436 combo translations, 12 formula records covering 50 skills, 52 quest-flow
+entries covering 124/3,172 quests, 11 boss behaviors, 43 scripted-spawn groups. The remaining
+work runs one unit at a time through `tools/encyclopedia_unit.py`: a queue of 2,341 units
+built from loaded Hercules source, one packet per unit, a strict validator, a separate
+verifier session, then accept and commit. Local models follow
+[docs/plans/encyclopedia-procedures.md](docs/plans/encyclopedia-procedures.md) and read
+nothing else; the queue order is
+[docs/plans/encyclopedia-completion-plan.md](docs/plans/encyclopedia-completion-plan.md).
+**E7's live client pass is deferred (roadmap, 2026-09-30) and has never run**: none of
+this has been seen on screen. `encyclopedia_unit.py citations` lists 29 accepted reviews
+whose quotes are not on their cited lines; they need re-anchoring. This is independent of
+the GDD v0.2 priority above; pick whichever thread the user is actively directing.
 
 Rust Ragnarok Online client (wgpu 29 + winit). This fork's goal is a usable
 custom UI for a friends group + DM campaign.
@@ -540,6 +541,20 @@ When writing code or adding features, agents must adhere to these project-specif
      by a suppressed failure cannot explain a later, unrelated one; that is
      covered by `skill_fail_reason_0x0efe_explains_the_following_failure`.
      Requires `dev.sh build` and a server restart.
+   - **`ZC_RECOVERY_STATE` = packet `0x0EFD`** — a fork-invented *server→client* packet
+     (4 bytes: header, `mode`, `block`) telling the client why the character is, or is
+     not, regenerating: `mode` 0 none / 1 standing / 2 sitting / 3 respawn fill, `block`
+     0 ok / 1 dead / 2 status / 3 weight / 4 combat (`enum recovery_mode` and
+     `recovery_block` in `src/map/combat_state.h`). Sent from
+     `status_notify_recovery_ui` only when the pair changes, so the client keeps the last
+     value. **The trap it fell into:** it was registered as `register_noop` while the server
+     sent it, so the HUD line had nothing to show and every check that read only one side
+     passed. It is now `NetworkEvent::RecoveryState`, carried as **raw `u8`s** for the same
+     reason as `0x0EFE` (a value added server-side must not fail the packet and cost the
+     read buffer), shown as a HUD line from `state/recovery.rs`. Guarded by the
+     `recovery-state-packet` scenario, which asserts the *event*, and by
+     `tools/audits/orphan_sweep.py`, which lists any fork packet the client still
+     registers as a no-op. The length lives in the hand-maintained `src/common/packets_len.h`.
    - **Realigned message glosses** (2026-08-07) — `src/map/messages_main.h`,
      `messages_re.h`, `messages_zero.h`, **15 lines each, identical in all
      three**. These files are **banner-marked "This file is autogenerated,
