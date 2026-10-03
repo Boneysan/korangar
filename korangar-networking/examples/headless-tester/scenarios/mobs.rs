@@ -26,6 +26,9 @@ const ORC_SKELETON: (&str, u16) = ("ORC_SKELETON", 1152);
 const ORC_ARCHER: (&str, u16) = ("ORC_ARCHER", 1189);
 const RAYDRIC_ARCHER: (&str, u16) = ("RAYDRIC_ARCHER", 1276);
 const ELITE_ORC_SKELETON: (&str, u16) = ("ELITE_ORC_SKELETON", 20901);
+/// The class clients see for the elite: `ViewData: { SpriteId: 1152 }` in
+/// db/mob_db2.conf gives it the stock Orc Skeleton sprite.
+const ELITE_ORC_SKELETON_VIEW: u16 = 1152;
 const EDDGA: (&str, u16) = ("EDDGA", 1115);
 
 const SKILL_MAGNUM: u16 = 7;
@@ -48,6 +51,7 @@ pub fn scenarios() -> Vec<Scenario> {
         Scenario::new("mob-raydric-archer-keeper", 10, ranged_keeper_raydric_archer),
         Scenario::new("mob-coward-poring", 10, coward_poring),
         Scenario::new("mob-eddga-pilot-skills", 10, eddga_pilot_skills),
+        Scenario::new("mob-eddga-summons-escorts", 10, eddga_summons_escorts),
         Scenario::new("mob-eddga-meteor-and-enrage", 10, eddga_meteor_and_enrage),
         Scenario::new("mob-elite-population", 10, elite_population),
         Scenario::new("mob-elite-rollback-switch", 10, elite_rollback_switch),
@@ -193,7 +197,14 @@ fn clear_map(context: &mut TestContext) {
 
 /// Hit a freshly spawned monster `swings` times, one swing every `gap`.
 fn beat_on(context: &mut TestContext, mob: (&str, u16), swings: usize, gap: Duration) -> Result<Vec<Seen>, String> {
-    let target = context.spawn_monster(mob.0, mob.1)?;
+    let target = if mob == ELITE_ORC_SKELETON {
+        // Its view class is shared with the natural Orc Skeletons on this map,
+        // so clear them first and accept only an arrival on our own cell.
+        clear_map(context);
+        context.spawn_monster_near(mob.0, ELITE_ORC_SKELETON_VIEW)?
+    } else {
+        context.spawn_monster(mob.0, mob.1)?
+    };
     let mut seen = Vec::new();
     for swing in 0..swings {
         if swing % 3 == 0 {
@@ -556,6 +567,48 @@ fn eddga_attempt(config: &Config) -> Result<(), String> {
             ));
         }
         Ok(())
+    })();
+    clear_map(&mut context);
+    result
+}
+
+/// Eddga's stock escorts (BIGFOOT, G_BIGFOOT), per re/mob_skill_db.conf.
+const EDDGA_ESCORTS: [u16; 2] = [1060, 1603];
+
+/// The pilot file starts each MVP with `ClearSkills`, which removes the stock
+/// `NPC_SUMMONSLAVE` entries; `NPC_CALLSLAVE` only recalls minions that already
+/// exist. Before the summons were copied back, no pilot MVP ever had escorts.
+/// A provoked Eddga must summon at least one Bigfoot.
+fn eddga_summons_escorts(config: &Config) -> Result<(), String> {
+    let mut context = attacker_on(config, "pay_fild10", 4008)?;
+    context.say("@agi 80")?;
+    context.say("@heal")?;
+    context.pump(Duration::from_millis(200));
+    let result: Result<(), String> = (|| {
+        let eddga = context.spawn_monster(EDDGA.0, EDDGA.1)?;
+        let mut casts: Vec<u16> = Vec::new();
+        for swing in 0..34 {
+            if swing % 2 == 0 {
+                context.say("@heal")?;
+                context.say("@alive")?;
+            }
+            context.flush();
+            context.net.player_attack(eddga).map_err(|_| "disconnected")?;
+            for event in context.collect_for(Duration::from_millis(600)) {
+                match event {
+                    NetworkEvent::AddEntity { entity_data } if EDDGA_ESCORTS.contains(&entity_data.job_id.0) => return Ok(()),
+                    NetworkEvent::SkillCast {
+                        source_entity_id,
+                        skill_id,
+                        ..
+                    } if source_entity_id == eddga => casts.push(skill_id.0),
+                    _ => {}
+                }
+            }
+        }
+        Err(format!(
+            "a provoked Eddga summoned no Bigfoot ({EDDGA_ESCORTS:?}) in 34 swings; Eddga's casts: {casts:?}"
+        ))
     })();
     clear_map(&mut context);
     result

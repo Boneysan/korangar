@@ -1034,6 +1034,27 @@ impl TestContext {
     }
 
     /// Spawn a monster next to the player and return its entity id.
+    /// Like [`Self::spawn_monster`], for a monster whose client-facing class
+    /// differs from its server id (`ViewData: { SpriteId }`, e.g. the F15 elite
+    /// that looks like a stock Orc Skeleton). The class alone could match a
+    /// natural spawn, so only an arrival within five cells of us counts:
+    /// `@monster` spawns a few cells around the caller (measured: up to 3).
+    pub fn spawn_monster_near(&mut self, name: &str, view_job_id: u16) -> Result<EntityId, String> {
+        self.flush();
+        self.say(&format!("@monster {name}"))?;
+        let here = self.position;
+        self.wait_for(&format!("AddEntity for {name} within 5 cells"), |event| match event {
+            NetworkEvent::AddEntity { entity_data }
+                if entity_data.job_id.0 == view_job_id
+                    && entity_data.position.tile_position().x.abs_diff(here.x) <= 5
+                    && entity_data.position.tile_position().y.abs_diff(here.y) <= 5 =>
+            {
+                Some(entity_data.entity_id)
+            }
+            _ => None,
+        })
+    }
+
     pub fn spawn_monster(&mut self, name: &str, mob_job_id: u16) -> Result<EntityId, String> {
         self.flush();
         self.say(&format!("@monster {name}"))?;
