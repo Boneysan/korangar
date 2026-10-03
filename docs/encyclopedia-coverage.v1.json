@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "source_revision": "e43e48d8b14f31ed21169b7328ccc03d4e4b987d",
+  "source_revision": "cd0486c79a9a595a141ce23ff1b9f1e1b9d61caa",
   "mode": "renewal",
   "evidence_states": {
     "verified": "Source or reviewed control flow establishes this claim for the exported server revision.",
