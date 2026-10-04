@@ -204,7 +204,7 @@ One list of everything the audit left open. Tick an item here when it is done an
 - [x] F11: prediction and rollback have no tests; extract them from `Client` into testable functions. **Done:** PR #16 — `predict_motion` / `rollback_motion` tested with a fake player; mutation-checked.
 - [x] F16: 10 of 11 pilot MVPs are data-checked only; add one fight scenario per MVP (or a sweep). **Done:** PR #18 — `mob-pilot-mvps-summon-escorts` fights all ten; fails naming each when escorts are stripped.
 - [ ] F16 recap: damage taken and interrupts are tracked but not shown.
-- [ ] F39: disconnect and dead-member cases untested; no quest uses `partycompletequest` yet.
+- [x] F39: dead, revived, disconnected and former members are all covered by `party-quest-interaction-credit` sections E–H, which pass (the open note predated them). Remaining: no quest uses `partycompletequest` yet (content decision).
 - [x] F22 and F24 rows cite names that do not exist (`PartyMemberLocationUpdate`, `RequestEquipItem`, `SavedEquipmentSets`); correct the text. **Done:** PR #18 — rows name the real code; `gdd_claims.py` reports 0 findings.
 
 **Live checks nobody can automate**
