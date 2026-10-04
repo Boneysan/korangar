@@ -190,6 +190,12 @@ One list of everything the audit left open. Tick an item here when it is done an
 - [ ] Optional hardening: the split handler copies the source row's `id` into the new half; set it to 0 so the char-server's matching never has to cope with a shared id.
 - [ ] Remaining Batch 4 rows: F26 autoloot settings, F27 refine odds against `refine_db`, F28 live two-client trade, F29, F30 (no window shows crafting odds), F31 (no assign/complete action).
 
+**Campaign rewards (added 2026-10-04; outside the GDD rows, so no batch covered it)**
+- [ ] Inventory every call to `DM_GivePartyItem`, `DM_GivePartyZeny`, `DM_PartyExp`, `DM_QueueGrant` and the treasure/quest grants across the 19 arcs; confirm each sits behind a once-only flag.
+- [ ] Check `DM_QueueGrant` cannot pay an offline member twice (reconnect, party replay, re-join).
+- [ ] Headless scenarios that try to claim twice: re-talk, reconnect mid-reward, party replay. The item-conservation audit cannot catch this class: a repeated reward is logged correctly every time.
+- [ ] F27 refine odds: compare the export directly against `db/re/refine_db.conf` (the drift check only proves the export matches its own generator).
+
 **Claims that are wrong or partial (decide: build, or correct the row)**
 - [ ] F04 stat view modes: no window offers them. Build the mode switch or drop `world/stat_view.rs` and rewrite the row.
 - [ ] F23: no timestamp toggle, no tab unread indicators, no `<GUIDE:id>` links (row corrected in PR #14). Scope Guide links if wanted.
