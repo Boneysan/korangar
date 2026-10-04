@@ -187,8 +187,12 @@ pub fn is_soft_overweight(weight: u32, maximum_weight: u32, critical_weight_perc
     maximum_weight > 0 && weight * 100 >= maximum_weight * critical_weight_percent
 }
 
-/// Hard overweight: at or above 90% of the maximum, attacking and using skills
-/// is refused. An unknown maximum is never overweight.
+/// Nearly full: at or above 90% of the maximum. Stock Hercules refuses attacks
+/// and skills here; this server does not (2026-09-12 playtest decision, "allow
+/// attacks while overweight": the fork's `status_encumbrance_blocks_attack`
+/// and `_skill` return false). Only pickups past 100% are refused. The band
+/// is kept as a warning that the bag is about to stop taking items. An
+/// unknown maximum is never overweight.
 pub fn is_hard_overweight(weight: u32, maximum_weight: u32) -> bool {
     maximum_weight > 0 && weight * 10 >= maximum_weight * 9
 }
@@ -3484,8 +3488,8 @@ mod weight_threshold_tests {
 
     #[test]
     fn hard_overweight_starts_exactly_at_ninety_percent() {
-        assert!(!is_hard_overweight(1799, MAX), "89.95% can still fight");
-        assert!(is_hard_overweight(1800, MAX), "90% cannot attack or cast");
+        assert!(!is_hard_overweight(1799, MAX), "89.95% is not yet nearly full");
+        assert!(is_hard_overweight(1800, MAX), "90% is nearly full");
         assert!(is_hard_overweight(MAX, MAX));
     }
 

@@ -6217,7 +6217,9 @@ impl Client {
                         let is_hard_overweight = player.is_hard_overweight();
 
                         if !was_hard_overweight && is_hard_overweight {
-                            let msg = "Warning: 90% Overweight! Cannot attack or cast skills.";
+                            // This server allows fighting overweight; at 100% the
+                            // bag stops taking items (see is_hard_overweight).
+                            let msg = "Warning: bag 90% full. You can still fight, but at 100% you cannot pick anything up.";
                             self.client_state.follow_mut(client_state().toasts()).push(
                                 "weight_hard_overweight",
                                 msg,
