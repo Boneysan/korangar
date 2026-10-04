@@ -7,6 +7,7 @@ use rust_state::{Path, PathExt, Selector};
 use crate::input::InputEvent;
 use crate::interface::windows::WindowClass;
 use crate::loaders::OverflowBehavior;
+use crate::settings::GameSettingsPathExt;
 use crate::state::localization::LocalizationPathExt;
 use crate::state::theme::InterfaceThemeType;
 use crate::state::{ClientState, ClientStatePathExt, client_state};
@@ -196,6 +197,78 @@ where
     }
 }
 
+/// The F04 mode button's label, or the explanation block for the chosen
+/// mode. A dedicated selector (like `StatPreviewSelector`) rather than a
+/// `ComputedSelector`, whose `String` output is ambiguous to the button.
+struct StatViewSelector<A> {
+    player_path: A,
+    label_only: bool,
+    text: UnsafeCell<String>,
+}
+
+impl<A> StatViewSelector<A> {
+    fn label(player_path: A) -> Self {
+        Self {
+            player_path,
+            label_only: true,
+            text: UnsafeCell::default(),
+        }
+    }
+
+    fn body(player_path: A) -> Self {
+        Self {
+            player_path,
+            label_only: false,
+            text: UnsafeCell::default(),
+        }
+    }
+}
+
+impl<A> Selector<ClientState, String> for StatViewSelector<A>
+where
+    A: Path<ClientState, Player>,
+{
+    fn select<'a>(&'a self, state: &'a ClientState) -> Option<&'a String> {
+        let mode = *client_state().game_settings().stat_view_mode().follow_safe(state);
+        let text = match self.label_only {
+            true => format!("View: {} (click to change)", mode.label()),
+            false => crate::world::stat_view_text(mode, &stats_input(self.player_path.follow_safe(state))),
+        };
+        unsafe {
+            *self.text.get() = text;
+            Some(self.text.as_ref_unchecked())
+        }
+    }
+}
+
+/// The F04 view's input, from the player as the server last reported it.
+/// `base_weight` is the job's carry weight before STR (300 per point, in
+/// tenths), taken back out of the server's total so the Advanced view's
+/// weight formula reproduces the server's number.
+fn stats_input(player: &Player) -> crate::world::CharacterStatsInput {
+    let stat = |value: i32| value.clamp(0, i32::from(u16::MAX)) as u16;
+    let bonus = |value: i32| value.clamp(i32::from(i16::MIN), i32::from(i16::MAX)) as i16;
+    crate::world::CharacterStatsInput {
+        base_level: player.base_level,
+        job_level: player.job_level,
+        strength: stat(player.strength),
+        bonus_strength: bonus(player.bonus_strength),
+        agility: stat(player.agility),
+        bonus_agility: bonus(player.bonus_agility),
+        vitality: stat(player.vitality),
+        bonus_vitality: bonus(player.bonus_vitality),
+        intelligence: stat(player.intelligence),
+        bonus_intelligence: bonus(player.bonus_intelligence),
+        dexterity: stat(player.dexterity),
+        bonus_dexterity: bonus(player.bonus_dexterity),
+        luck: stat(player.luck),
+        bonus_luck: bonus(player.bonus_luck),
+        max_hp: player.get_common().maximum_health_points,
+        max_sp: player.maximum_spell_points,
+        base_weight: player.maximum_weight.saturating_sub(u32::from(stat(player.strength)) * 300),
+    }
+}
+
 #[derive(Default)]
 pub struct StatsWindow<A> {
     player_path: A,
@@ -266,6 +339,7 @@ where
             };
         }
 
+        let player_path = self.player_path;
         window! {
             title: client_state().localization().stats_window_title(),
             class: Self::window_class(),
@@ -291,6 +365,17 @@ where
                 stat_row!(intelligence_text, intelligence, bonus_intelligence, intelligence_stat_points_cost, Intelligence),
                 stat_row!(dexterity_text, dexterity, bonus_dexterity, dexterity_stat_points_cost, Dexterity),
                 stat_row!(luck_text, luck, bonus_luck, luck_stat_points_cost, Luck),
+                button! {
+                    text: StatViewSelector::label(player_path),
+                    tooltip: "Simple explains each stat; Detailed shows what the next point changes and which skills use it; Advanced shows the exact Renewal formulas.",
+                    event: move |state: &rust_state::State<ClientState>, _: &mut EventQueue<ClientState>| {
+                        state.update_value_with(client_state().game_settings().stat_view_mode(), |mode| *mode = mode.next());
+                    },
+                },
+                text! {
+                    text: StatViewSelector::body(player_path),
+                    overflow_behavior: OverflowBehavior::Shrink,
+                },
                 button! {
                     text: "Build planner",
                     tooltip: "Simulate future levels and stat allocations. Nothing is sent to the server.",
