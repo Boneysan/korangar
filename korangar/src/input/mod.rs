@@ -1,6 +1,7 @@
 mod event;
 mod key;
 mod mode;
+mod wasd;
 
 use std::mem::variant_count;
 use std::sync::Arc;
@@ -14,6 +15,7 @@ use winit::keyboard::KeyCode;
 pub use self::event::InputEvent;
 pub use self::key::Key;
 pub use self::mode::{Grabbed, MouseInputMode, MouseModeExt};
+pub use self::wasd::{WasdDecision, WasdIntent, WasdMoveInput, WasdStopDecision, decide_keyboard_move, decide_keyboard_stop};
 use crate::graphics::{PickerTarget, ScreenPosition, ScreenSize};
 use crate::settings::{BindableAction, KeyBindings};
 
@@ -573,12 +575,33 @@ impl InputSystem {
             let left = self.binding_down(bindings, BindableAction::MoveLeft);
             let right = self.binding_down(bindings, BindableAction::MoveRight);
             if forward || back || left || right {
+                // A key that went down this frame is a tap; one already down is
+                // a hold. Known here, rather than guessed from timing.
+                let fresh = [
+                    BindableAction::MoveForward,
+                    BindableAction::MoveBackward,
+                    BindableAction::MoveLeft,
+                    BindableAction::MoveRight,
+                ]
+                .into_iter()
+                .any(|action| self.binding_pressed(bindings, action, false));
                 events.push(InputEvent::KeyboardMove {
                     forward,
                     back,
                     left,
                     right,
+                    fresh,
                 });
+            } else if [
+                BindableAction::MoveForward,
+                BindableAction::MoveBackward,
+                BindableAction::MoveLeft,
+                BindableAction::MoveRight,
+            ]
+            .into_iter()
+            .any(|action| self.binding_released(bindings, action))
+            {
+                events.push(InputEvent::KeyboardMoveStop);
             }
         }
 
@@ -847,7 +870,8 @@ mod keybinding_tests {
             forward: true,
             left: true,
             back: false,
-            right: false
+            right: false,
+            ..
         })));
 
         let mut modified = InputSystem::new(Arc::new(AtomicU64::new(0)));

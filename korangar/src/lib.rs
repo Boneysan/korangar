@@ -123,7 +123,10 @@ use winit::platform::x11::EventLoopBuilderExtX11;
 use winit::window::{Fullscreen, Icon, Window, WindowAttributes, WindowId};
 
 use crate::graphics::*;
-use crate::input::{InputEvent, InputReport, InputSystem};
+use crate::input::{
+    InputEvent, InputReport, InputSystem, WasdDecision, WasdIntent, WasdMoveInput, WasdStopDecision, decide_keyboard_move,
+    decide_keyboard_stop,
+};
 use crate::interface::cursor::{MouseCursor, MouseCursorState};
 use crate::interface::resource::{ItemSource, SkillSource};
 use crate::interface::windows::*;
@@ -2248,6 +2251,8 @@ pub struct Client {
     character_preview: Option<(CharacterSex, HairStyle)>,
     /// Last WASD destination packet, so we do not trip flood protection.
     keyboard_move_last_tick: ClientTick,
+    /// Destination and step of the path a held WASD key last sent.
+    keyboard_move_target: Option<(TilePosition, i32, i32)>,
     /// Last hold-mouse destination packet, throttled to 200 ms to avoid flood
     /// protection (F10).
     hold_mouse_move_last_tick: ClientTick,
@@ -3954,6 +3959,7 @@ impl Client {
             },
             character_preview: None,
             keyboard_move_last_tick: ClientTick(0),
+            keyboard_move_target: None,
             hold_mouse_move_last_tick: ClientTick(0),
             last_client_tick: ClientTick(0),
             pending_stat_plan: None,
@@ -8722,7 +8728,30 @@ impl Client {
         self.input_event_buffer = remaining;
     }
 
-    fn apply_keyboard_move(&mut self, client_tick: ClientTick, forward: bool, back: bool, left: bool, right: bool) {
+    /// Releasing the keys ends a held path early. The stop names one cell
+    /// ahead rather than the tile underfoot: the client trails the server
+    /// mid-walk, so the tile underfoot can mean walking backwards.
+    fn stop_keyboard_move(&mut self) {
+        let Some((target, step_x, step_y)) = self.keyboard_move_target.take() else {
+            return;
+        };
+        let Some(here) = self.client_state.try_follow(this_entity()).map(|player| player.get_tile_position()) else {
+            return;
+        };
+        let intent = Some(WasdIntent { target, step_x, step_y });
+        let decision = decide_keyboard_stop(here, intent, |tile| {
+            self.map.as_deref().is_some_and(|map| map.is_walkable(tile))
+        });
+        if let WasdStopDecision::Send { destination } = decision {
+            let _ = self.networking_system.player_move(WorldPosition {
+                x: destination.x,
+                y: destination.y,
+                direction: ragnarok_packets::Direction::North,
+            });
+        }
+    }
+
+    fn apply_keyboard_move(&mut self, client_tick: ClientTick, forward: bool, back: bool, left: bool, right: bool, fresh: bool) {
         if !*self.client_state.follow(client_state().game_settings().wasd_movement()) {
             return;
         }
@@ -8732,10 +8761,6 @@ impl Client {
         let Some(start) = self.client_state.try_follow(this_entity()).map(|player| player.get_tile_position()) else {
             return;
         };
-        if client_tick.0.wrapping_sub(self.keyboard_move_last_tick.0) < 200 {
-            return;
-        }
-
         let view = self.player_camera.view_direction();
         let mut forward_x = view.x;
         let mut forward_z = view.z;
@@ -8773,29 +8798,39 @@ impl Client {
         move_x /= move_length;
         move_z /= move_length;
 
-        // One walkable step. A farther tile jumped through walls and the
-        // server pulled the character back, which is the WASD rubber-band.
-        let step = |dx: i32, dy: i32| -> Option<TilePosition> {
-            let tile_x = start.x as i32 + dx;
-            let tile_y = start.y as i32 + dy;
-            if tile_x < 0 || tile_y < 0 {
-                return None;
-            }
-            let tile = TilePosition {
-                x: tile_x as u16,
-                y: tile_y as u16,
-            };
-            map.is_walkable(tile).then_some(tile)
-        };
-        let destination = step(move_x.round() as i32, move_z.round() as i32)
-            .or_else(|| step(move_x.signum() as i32, 0))
-            .or_else(|| step(0, move_z.signum() as i32));
-        let Some(destination) = destination else {
-            return;
-        };
-        if destination == start {
-            return;
+        // One path per held key, not a one-cell move every 200 ms: each new move
+        // restarts the server's walk, which was the stutter (PR #10, 7745a5d3).
+        // `input::wasd` checks every cell and corner on the way, so the path
+        // is one Hercules will walk as predicted (see its module docs).
+        let step_x = move_x.round() as i32;
+        let step_y = move_z.round() as i32;
+        // A recorded path the character is neither walking nor at was ended by
+        // the server (knockback, stop, stun, death, warp). Forget it, or a held
+        // key would wait for an arrival that will never come.
+        let walking = self.client_state.try_follow(this_entity()).is_some_and(Entity::is_walking);
+        if !walking && self.keyboard_move_target.is_some_and(|(target, ..)| target != start) {
+            self.keyboard_move_target = None;
         }
+        let current = self.keyboard_move_target.map(|(target, held_x, held_y)| WasdIntent {
+            target,
+            step_x: held_x,
+            step_y: held_y,
+        });
+        let WasdDecision::Send { destination, .. } = decide_keyboard_move(
+            WasdMoveInput {
+                start,
+                step_x,
+                step_y,
+                fresh,
+                client_tick: client_tick.0,
+                last_tick: self.keyboard_move_last_tick.0,
+                current,
+            },
+            |tile| map.is_walkable(tile),
+        ) else {
+            return;
+        };
+        self.keyboard_move_target = Some((destination, step_x, step_y));
 
         let _ = self.networking_system.player_move(WorldPosition {
             x: destination.x,
@@ -9825,13 +9860,15 @@ impl Client {
                     *self.client_state.follow_mut(client_state().buffered_action()) = None;
                     *self.client_state.follow_mut(client_state().timed_buffered_action()) = None;
                 }
+                InputEvent::KeyboardMoveStop => self.stop_keyboard_move(),
                 InputEvent::KeyboardMove {
                     forward,
                     back,
                     left,
                     right,
+                    fresh,
                 } => {
-                    keyboard_move = Some((forward, back, left, right));
+                    keyboard_move = Some((forward, back, left, right, fresh));
                 }
                 InputEvent::JumpToPartyMember { character_name } => {
                     let command = format!("@partyjump {character_name}");
@@ -12271,8 +12308,8 @@ impl Client {
             self.toggle_sit(client_tick);
         }
 
-        if let Some((forward, back, left, right)) = keyboard_move {
-            self.apply_keyboard_move(client_tick, forward, back, left, right);
+        if let Some((forward, back, left, right, fresh)) = keyboard_move {
+            self.apply_keyboard_move(client_tick, forward, back, left, right, fresh);
         }
 
         if sync_minimap {
