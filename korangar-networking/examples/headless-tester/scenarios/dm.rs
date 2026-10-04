@@ -35,8 +35,10 @@ pub fn scenarios() -> Vec<Scenario> {
         Scenario::new("dm-party-offline-transitions", 9, dm_party_offline_transitions),
         Scenario::new("dm-party-reward-isolation", 9, dm_party_reward_isolation),
         Scenario::new("dm-party-recreation-isolation", 9, dm_party_recreation_isolation),
-        Scenario::new("dm-party-offline-replay", 9, dm_party_offline_replay),
+        // Before dm-party-offline-replay: this scenario's @dm reset wipes the
+        // party journal, which the runner's replay SQL audit reads afterwards.
         Scenario::new("dm-reset-keeps-owed-rewards", 9, dm_reset_keeps_owed_rewards),
+        Scenario::new("dm-party-offline-replay", 9, dm_party_offline_replay),
         Scenario::new("dm-party-alternate-character", 9, dm_party_alternate_character),
         Scenario::new("dm-reward-delta", 9, dm_reward_delta),
         Scenario::new("dm-experience", 9, dm_experience),
