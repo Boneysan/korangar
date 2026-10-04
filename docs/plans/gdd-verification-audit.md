@@ -186,7 +186,7 @@ One list of everything the audit left open. Tick an item here when it is done an
 - [x] Loot fixture registered (Hercules `16222684f`); five loot scenarios added (`autopickup-respects-drop-owner` new; four ported from PR #10). All pass; the ownership test fails against a planted bug (`pc_takeitem` ignoring the owner window). `loot-pickup-multi-pile` failed once in ~6 runs (a pile granted to nobody, not lost); it now reports positions on failure. Watch it.
 - [x] Item conservation is a gate: the 2026-10-04 full run's only difference was an unlogged starting Cotton Shirt, now an explicit exception; any other difference fails the run.
 - [x] `log_zeny: 1` is tracked (`conf/import/logs.conf`, force-added; Hercules `3f1aae763`).
-- [ ] Decide a retention policy for `picklog`: monster-drop rows (`M`) alone were 2.5 million on the dev database.
+- [ ] **Decided 2026-10-04: stop logging ground drops.** Turn off picklog type `M` (monster drops to the floor) only; pickups, trades, shops, storage and zeny stay logged.
 - [x] Split hardening: the new half gets `id = 0` (Hercules, same PR); split, persistence, storage and order scenarios pass with the audit clean.
 - [ ] Remaining Batch 4 rows: F26 autoloot settings, F27 refine odds against `refine_db`, F28 live two-client trade, F29, F30 (no window shows crafting odds), F31 (no assign/complete action).
 
@@ -197,10 +197,10 @@ One list of everything the audit left open. Tick an item here when it is done an
 - [x] F27 refine odds checked independently (2026-10-04): 69 values in `docs/refine.v1.json` (every +1..+10 chance for armor and weapon levels 1-4, base costs, armor DEF bonus, weapon stats per level) match `db/re/refine_db.conf` read with Hercules' own libconf. 0 disagree.
 
 **Claims that are wrong or partial (decide: build, or correct the row)**
-- [ ] Hotbar has no per-slot cooldown overlay (found deleting `SkillBox`, PR #18); cooldowns show only as a HUD text line. Owner decision: build it?
-- [ ] `@dm reset` deletes unclaimed grants owed to offline members. Owner decision: intended?
-- [ ] F04 stat view modes: no window offers them. Build the mode switch or drop `world/stat_view.rs` and rewrite the row.
-- [ ] F23: no timestamp toggle, no tab unread indicators, no `<GUIDE:id>` links (row corrected in PR #14). Owner decision: scope Guide links if wanted.
+- [ ] **Decided 2026-10-04: build.** Hotbar per-slot cooldown overlay (dim the slot, show seconds left) from the existing cooldown state.
+- [ ] **Decided 2026-10-04: keep owed rewards.** `@dm reset` must not delete grants already earned by offline members; they are paid at the next sync.
+- [ ] **Decided 2026-10-04: build the switch.** F04: wire Simple/Detailed/Advanced into the Stats window from `world/stat_view.rs`.
+- [ ] **Decided 2026-10-04: build all three.** F23: timestamp toggle, tab unread markers, and validated `<GUIDE:id>` chat links.
 - [x] F11: prediction and rollback have no tests; extract them from `Client` into testable functions. **Done:** PR #16 — `predict_motion` / `rollback_motion` tested with a fake player; mutation-checked.
 - [x] F16: 10 of 11 pilot MVPs are data-checked only; add one fight scenario per MVP (or a sweep). **Done:** PR #18 — `mob-pilot-mvps-summon-escorts` fights all ten; fails naming each when escorts are stripped.
 - [ ] F16 recap: damage taken and interrupts are tracked but not shown.
