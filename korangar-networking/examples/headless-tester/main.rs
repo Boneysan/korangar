@@ -501,7 +501,7 @@ fn print_what_the_run_proved() {
             }
             counts.into_iter().collect()
         };
-        tally.sort_by(|a, b| b.1.cmp(&a.1));
+        tally.sort_by_key(|entry| std::cmp::Reverse(entry.1));
 
         println!("\n=== What the skill sweep observed ({} casts) ===", outcomes.len());
         for (kind, count) in &tally {
@@ -561,59 +561,59 @@ fn print_what_the_run_proved() {
     // Derived expectations are **enforced**: non-exempt `Unmet` rows fail the
     // gate after this report. Reviewed residual skills stay in
     // `EXPECTATION_EXEMPTIONS` with stated reasons rather than silently passing.
-    if let Ok(verdicts) = EXPECTATION_VERDICTS.lock() {
-        if !verdicts.is_empty() {
-            let count = |wanted: Verdict| verdicts.iter().filter(|(_, verdict, _)| *verdict == wanted).count();
-            let (met, refused, blocked, unmet) = (
-                count(Verdict::Met),
-                count(Verdict::Refused),
-                count(Verdict::Blocked),
-                count(Verdict::Unmet),
-            );
-            let exempt: Vec<_> = verdicts
-                .iter()
-                .filter(|(_, verdict, _)| *verdict == Verdict::Unmet)
-                .filter(|(name, ..)| EXPECTATION_EXEMPTIONS.iter().any(|(exempt, _)| *exempt == name.as_str()))
-                .collect();
-            let unexpected = unmet.saturating_sub(exempt.len());
+    if let Ok(verdicts) = EXPECTATION_VERDICTS.lock()
+        && !verdicts.is_empty()
+    {
+        let count = |wanted: Verdict| verdicts.iter().filter(|(_, verdict, _)| *verdict == wanted).count();
+        let (met, refused, blocked, unmet) = (
+            count(Verdict::Met),
+            count(Verdict::Refused),
+            count(Verdict::Blocked),
+            count(Verdict::Unmet),
+        );
+        let exempt: Vec<_> = verdicts
+            .iter()
+            .filter(|(_, verdict, _)| *verdict == Verdict::Unmet)
+            .filter(|(name, ..)| EXPECTATION_EXEMPTIONS.iter().any(|(exempt, _)| *exempt == name.as_str()))
+            .collect();
+        let unexpected = unmet.saturating_sub(exempt.len());
 
-            println!(
-                "\n=== Derived expectations, ENFORCED ({} casts; {} reviewed exemptions) ===",
-                verdicts.len(),
-                EXPECTATION_EXEMPTIONS.len()
-            );
-            println!("  {met:5}  met — the skill was seen doing what skill_db says it does");
-            println!("  {refused:5}  refused — the server said no; a legitimate outcome the sweep cannot avoid");
-            println!("  {blocked:5}  blocked — the skill opened a choice the sweep cannot answer");
-            println!(
-                "  {unmet:5}  unmet — {unexpected} unexpected, {} reviewed exemption(s)",
-                exempt.len()
-            );
-            if !exempt.is_empty() {
-                println!("  Reviewed residual unmet (do not expand this list casually):");
-                let mut seen = std::collections::BTreeSet::new();
-                for (name, _, detail) in &exempt {
-                    if seen.insert(name.as_str()) {
-                        let reason = EXPECTATION_EXEMPTIONS
-                            .iter()
-                            .find(|(exempt, _)| *exempt == name.as_str())
-                            .map(|(_, reason)| *reason)
-                            .unwrap_or("?");
-                        println!("    {name:22} {reason}");
-                        println!("                         e.g. {detail}");
-                    }
+        println!(
+            "\n=== Derived expectations, ENFORCED ({} casts; {} reviewed exemptions) ===",
+            verdicts.len(),
+            EXPECTATION_EXEMPTIONS.len()
+        );
+        println!("  {met:5}  met — the skill was seen doing what skill_db says it does");
+        println!("  {refused:5}  refused — the server said no; a legitimate outcome the sweep cannot avoid");
+        println!("  {blocked:5}  blocked — the skill opened a choice the sweep cannot answer");
+        println!(
+            "  {unmet:5}  unmet — {unexpected} unexpected, {} reviewed exemption(s)",
+            exempt.len()
+        );
+        if !exempt.is_empty() {
+            println!("  Reviewed residual unmet (do not expand this list casually):");
+            let mut seen = std::collections::BTreeSet::new();
+            for (name, _, detail) in &exempt {
+                if seen.insert(name.as_str()) {
+                    let reason = EXPECTATION_EXEMPTIONS
+                        .iter()
+                        .find(|(exempt, _)| *exempt == name.as_str())
+                        .map(|(_, reason)| *reason)
+                        .unwrap_or("?");
+                    println!("    {name:22} {reason}");
+                    println!("                         e.g. {detail}");
                 }
             }
-            if unexpected > 0 {
-                println!("  Unexpected unmet (these fail the gate):");
-                for (name, _, detail) in verdicts
-                    .iter()
-                    .filter(|(_, verdict, _)| *verdict == Verdict::Unmet)
-                    .filter(|(name, ..)| !EXPECTATION_EXEMPTIONS.iter().any(|(exempt, _)| *exempt == name.as_str()))
-                    .take(20)
-                {
-                    println!("    {name:22} {detail}");
-                }
+        }
+        if unexpected > 0 {
+            println!("  Unexpected unmet (these fail the gate):");
+            for (name, _, detail) in verdicts
+                .iter()
+                .filter(|(_, verdict, _)| *verdict == Verdict::Unmet)
+                .filter(|(name, ..)| !EXPECTATION_EXEMPTIONS.iter().any(|(exempt, _)| *exempt == name.as_str()))
+                .take(20)
+            {
+                println!("    {name:22} {detail}");
             }
         }
     }

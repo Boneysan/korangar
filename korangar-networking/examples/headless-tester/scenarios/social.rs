@@ -1296,11 +1296,11 @@ fn await_quest_target_attack(context: &mut TestContext, target: ragnarok_packets
             _ => None,
         },
     )?;
-    if outcome == 0 {
-        if let Some(entity) = context.entities.get(&target) {
-            let position = entity.position.tile_position();
-            context.walk_to(position.x.saturating_sub(1), position.y)?;
-        }
+    if outcome == 0
+        && let Some(entity) = context.entities.get(&target)
+    {
+        let position = entity.position.tile_position();
+        context.walk_to(position.x.saturating_sub(1), position.y)?;
     }
     Ok(outcome == 2)
 }
@@ -2182,11 +2182,19 @@ fn set_party_experience_sharing(context: &mut TestContext, enabled: bool) -> Res
     Ok(())
 }
 
+/// `((primary base, primary job), (partner base, partner job))` EXP gained.
+type PairExp = ((u64, u64), (u64, u64));
+
 fn kill_spore_and_collect_party_exp(
     primary: &mut TestContext,
     partner: &mut TestContext,
     partner_distance: Option<u16>,
-) -> Result<((u64, u64), (u64, u64)), String> {
+) -> Result<PairExp, String> {
+    // prt_fild08 Fabres are F14 Aggressors (kept by design, 2026-10-03). Several
+    // hitting a tester hold it in Hercules' walk delay, so its walk is never
+    // acknowledged; clear the field so this measures EXP sharing, not Fabres.
+    let _ = primary.say("@killmonster");
+    primary.pump(Duration::from_millis(300));
     let target = primary.spawn_monster("SPORE", 1014)?;
     let target_position = primary
         .entities
@@ -2516,9 +2524,8 @@ fn trade_invalid_offers(config: &Config) -> Result<(), String> {
     partner.pump(Duration::from_millis(300));
 
     for (label, outcome) in [("excess", excess), ("bogus", bogus), ("zeny", zeny)] {
-        match outcome {
-            Ok(0) => return Err(format!("invalid trade offer ({label}) was accepted")),
-            Ok(_) | Err(_) => {}
+        if let Ok(0) = outcome {
+            return Err(format!("invalid trade offer ({label}) was accepted"));
         }
     }
 

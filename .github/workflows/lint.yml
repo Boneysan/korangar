@@ -67,6 +67,11 @@ jobs:
       - name: Run Clippy (all features)
         run: cargo clippy --all-features -- -Dwarnings
 
+      # Examples are not linted by the two steps above. The headless tester had
+      # accumulated 38 clippy errors unseen until 2026-10-04.
+      - name: Run Clippy (headless tester)
+        run: cargo clippy -p korangar-networking --example headless-tester -- -Dwarnings
+
   flake-nix:
     name: flake.nix linting
     runs-on: ubuntu-latest
