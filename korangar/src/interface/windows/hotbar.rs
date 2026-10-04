@@ -119,6 +119,18 @@ impl DropHandler<ClientState> for SlotDrop {
     }
 }
 
+/// Time left on a hotbar cooldown: one decimal under ten seconds ("4.3"),
+/// whole seconds under a minute ("12"), minutes beyond ("2m"). `None` once
+/// nothing is left to wait for.
+fn cooldown_label(remaining_ms: u32) -> Option<String> {
+    match remaining_ms {
+        0 => None,
+        1..=9_899 => Some(format!("{:.1}", f64::from(remaining_ms) / 1000.0)),
+        9_900..=59_999 => Some(format!("{}", remaining_ms.div_ceil(1000))),
+        _ => Some(format!("{}m", remaining_ms.div_ceil(60_000))),
+    }
+}
+
 struct HotbarSlotBox<H, S> {
     hotbar_path: H,
     skills_path: S,
@@ -128,6 +140,7 @@ struct HotbarSlotBox<H, S> {
     drop: SlotDrop,
     tooltip_text: UnsafeCell<String>,
     amount_text: UnsafeCell<String>,
+    cooldown_text: UnsafeCell<String>,
 }
 
 impl<H, S> HotbarSlotBox<H, S>
@@ -148,6 +161,7 @@ where
             drop: SlotDrop { slot: hotbar_slot },
             tooltip_text: UnsafeCell::new(String::new()),
             amount_text: UnsafeCell::new(String::new()),
+            cooldown_text: UnsafeCell::new(String::new()),
         }
     }
 }
@@ -217,6 +231,30 @@ where
                     layout.with_clip(layout_info.area, |layout| {
                         layout.add_sprite(layout_info.area, actions, sprite, &skill.animation_state, 0, color, 1.0);
                     });
+                }
+                // Per-slot cooldown: dim the slot and show the time left.
+                let cooldown = state.get(&client_state().skill_cooldowns()).remaining_ms_ui(skill.skill_id);
+                if let Some(label) = cooldown.and_then(cooldown_label) {
+                    layout.add_rectangle(
+                        layout_info.area,
+                        CornerDiameter::uniform(20.0),
+                        Color::rgba_u8(0, 0, 0, 150),
+                        Color::rgba_u8(0, 0, 0, 0),
+                        ShadowPadding::uniform(0.0),
+                    );
+                    unsafe {
+                        *self.cooldown_text.get() = label;
+                    }
+                    layout.add_text(
+                        layout_info.area,
+                        unsafe { self.cooldown_text.as_ref_unchecked().as_str() },
+                        FontSize(14.0),
+                        Color::rgb_u8(255, 255, 255),
+                        Color::rgb_u8(255, 160, 60),
+                        HorizontalAlignment::Center { offset: 0.0, border: 2.0 },
+                        VerticalAlignment::Center { offset: 0.0 },
+                        OverflowBehavior::Shrink,
+                    );
                 }
                 if is_hovered {
                     layout.register_click_handler(MouseButton::Left, &self.activate);
@@ -348,5 +386,22 @@ where
                 },
             )
         }
+    }
+}
+
+#[cfg(test)]
+mod cooldown_label_tests {
+    use super::cooldown_label;
+
+    #[test]
+    fn cooldown_labels_by_range() {
+        assert_eq!(cooldown_label(0), None);
+        assert_eq!(cooldown_label(4_300).as_deref(), Some("4.3"));
+        assert_eq!(cooldown_label(9_899).as_deref(), Some("9.9"));
+        assert_eq!(cooldown_label(9_999).as_deref(), Some("10"));
+        assert_eq!(cooldown_label(10_000).as_deref(), Some("10"));
+        assert_eq!(cooldown_label(12_001).as_deref(), Some("13"));
+        assert_eq!(cooldown_label(60_000).as_deref(), Some("1m"));
+        assert_eq!(cooldown_label(61_000).as_deref(), Some("2m"));
     }
 }

@@ -12,21 +12,12 @@
 //! Formulations are traced from Hercules Renewal (`Hercules/src/map/status.c`
 //! and `pc.c`).
 
-#![cfg_attr(
-    not(test),
-    expect(
-        dead_code,
-        reason = "F04: no window offers the Simple/Detailed/Advanced stat modes; build or remove is an open owner decision"
-    )
-)]
-
 use serde::{Deserialize, Serialize};
 
 use super::stat_formulas;
 use super::stat_preview::StatKind;
 
 /// Display mode for the Character Stats interface (GDD §10.8).
-#[cfg_attr(test, expect(dead_code, reason = "F04: no window switches stat view modes, not even in tests"))]
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Default, Serialize, Deserialize)]
 pub enum StatViewMode {
     /// Plain-language description of what the stat improves plus current major
@@ -38,6 +29,90 @@ pub enum StatViewMode {
     /// Relevant formulas, breakpoints, and exact component values where
     /// available.
     Advanced,
+}
+
+impl StatViewMode {
+    /// Simple -> Detailed -> Advanced -> Simple.
+    pub fn next(self) -> Self {
+        match self {
+            Self::Simple => Self::Detailed,
+            Self::Detailed => Self::Advanced,
+            Self::Advanced => Self::Simple,
+        }
+    }
+
+    pub fn label(self) -> &'static str {
+        match self {
+            Self::Simple => "Simple",
+            Self::Detailed => "Detailed",
+            Self::Advanced => "Advanced",
+        }
+    }
+}
+
+const ALL_STATS: [StatKind; 6] = [
+    StatKind::Strength,
+    StatKind::Agility,
+    StatKind::Vitality,
+    StatKind::Intelligence,
+    StatKind::Dexterity,
+    StatKind::Luck,
+];
+
+/// The Stats window's explanation block for one mode (F04, GDD §10.8).
+pub fn stat_view_text(mode: StatViewMode, input: &CharacterStatsInput) -> String {
+    let mut out = String::new();
+    match mode {
+        StatViewMode::Simple => {
+            for stat in ALL_STATS {
+                let description = simple_stat_description(stat);
+                out.push_str(&format!("{}: {}\n", description.name, description.summary));
+                for effect in description.major_effects {
+                    out.push_str(&format!("  - {effect}\n"));
+                }
+            }
+        }
+        StatViewMode::Detailed => {
+            for stat in ALL_STATS {
+                let row = detailed_stat_row(stat, input);
+                let name = simple_stat_description(stat).name;
+                let bonus = match row.bonus_value {
+                    0 => String::new(),
+                    bonus => format!(" ({bonus:+})"),
+                };
+                out.push_str(&format!("{name} {}{bonus}\n", row.base_value));
+                out.push_str(&format!("  Next point: {}\n", row.next_point_deltas.join("; ")));
+                if !row.affected_skills.is_empty() {
+                    out.push_str(&format!("  Skills: {}\n", row.affected_skills.join(", ")));
+                }
+            }
+        }
+        StatViewMode::Advanced => {
+            let m = AdvancedStatMetrics::calculate(input);
+            for (label, value, formula) in [
+                ("Status ATK", m.status_atk.to_string(), &m.status_atk_formula),
+                ("Status MATK", m.status_matk.to_string(), &m.status_matk_formula),
+                ("HIT", m.hit.to_string(), &m.hit_formula),
+                ("FLEE", m.flee.to_string(), &m.flee_formula),
+                ("Soft DEF", m.soft_def.to_string(), &m.soft_def_formula),
+                ("Soft MDEF", m.soft_mdef.to_string(), &m.soft_mdef_formula),
+                ("Crit", format!("{:.1}%", m.crit), &m.crit_formula),
+                ("Perfect dodge", format!("{:.1}%", m.perfect_dodge), &m.perfect_dodge_formula),
+                (
+                    "Cast time cut",
+                    format!("{:.1}%", m.variable_cast_reduction_pct),
+                    &m.variable_cast_formula,
+                ),
+                ("Max weight", m.max_weight.to_string(), &m.max_weight_formula),
+            ] {
+                out.push_str(&format!("{label} {value}  = {formula}\n"));
+            }
+            for breakpoint in &m.breakpoints {
+                out.push_str(&format!("  * {breakpoint}\n"));
+            }
+        }
+    }
+    out.trim_end().to_owned()
 }
 
 /// Provenance of a calculated or displayed combat value (GDD §10.8, §10.10,
@@ -693,5 +768,19 @@ mod tests {
             "{:?}",
             metrics.breakpoints
         );
+    }
+
+    #[test]
+    fn stat_view_modes_cycle_and_render_different_content() {
+        let input = sample_level_99_knight();
+        assert_eq!(StatViewMode::Simple.next(), StatViewMode::Detailed);
+        assert_eq!(StatViewMode::Advanced.next(), StatViewMode::Simple);
+        let simple = stat_view_text(StatViewMode::Simple, &input);
+        let detailed = stat_view_text(StatViewMode::Detailed, &input);
+        let advanced = stat_view_text(StatViewMode::Advanced, &input);
+        assert!(simple.contains("Strength (STR)") && simple.contains("Luck"));
+        assert!(detailed.contains("Next point:"));
+        assert!(advanced.contains("Status ATK") && advanced.contains("= "));
+        assert!(simple != detailed && detailed != advanced);
     }
 }

@@ -352,6 +352,12 @@ where
                     state: self.game_settings_path.show_quest_markers(),
                     event: Toggle(self.game_settings_path.show_quest_markers()),
                 },
+                state_button! {
+                    text: "Show chat timestamps",
+                    tooltip: "Show or hide the [HH:MM:SS] time in front of each chat message.",
+                    state: self.game_settings_path.show_chat_timestamps(),
+                    event: Toggle(self.game_settings_path.show_chat_timestamps()),
+                },
                 text! { text: "Minimap layers" },
                 state_button! {
                     text: "Show facility markers",

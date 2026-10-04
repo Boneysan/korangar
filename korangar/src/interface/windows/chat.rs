@@ -2,8 +2,10 @@ use korangar_interface::application::Size;
 use korangar_interface::components::text_box::DefaultHandler;
 use korangar_interface::element::store::{ElementStore, ElementStoreMut};
 use korangar_interface::element::{Element, StateElement};
+use korangar_interface::event::{ClickHandler, EventQueue};
 use korangar_interface::layout::area::Area;
-use korangar_interface::layout::{Resolvers, WindowLayout, with_single_resolver};
+use korangar_interface::layout::tooltip::TooltipExt;
+use korangar_interface::layout::{MouseButton, Resolvers, WindowLayout, with_single_resolver};
 use korangar_interface::prelude::{HorizontalAlignment, VerticalAlignment};
 use korangar_interface::window::{CustomWindow, Window};
 use korangar_networking::MessageColor;
@@ -13,6 +15,7 @@ use super::WindowClass;
 use crate::graphics::Color;
 use crate::input::InputEvent;
 use crate::loaders::{FontSize, OverflowBehavior};
+use crate::settings::GameSettingsPathExt;
 use crate::state::localization::LocalizationPathExt;
 use crate::state::theme::{ChatThemePathExt, InterfaceThemePathExt, InterfaceThemeType};
 use crate::state::{ChatMessage, ClientState, ClientStatePathExt, client_state, client_theme};
@@ -111,6 +114,144 @@ pub fn parse_and_validate_item_link(item_body: &str) -> Option<ValidatedItemLink
 /// Valid item links are verified against server reference state; forged or
 /// invalid links have their actionable markup defanged, preserving safe text
 /// without exploits.
+/// A Guide page a chat message can link to (F23, owner decision 2026-10-04).
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum GuideLinkKind {
+    Monster,
+    Item,
+    Map,
+}
+
+impl GuideLinkKind {
+    fn token_name(self) -> &'static str {
+        match self {
+            Self::Monster => "monster",
+            Self::Item => "item",
+            Self::Map => "map",
+        }
+    }
+}
+
+/// A validated `<GUIDE:kind:key>` link. The label always comes from the
+/// client's own reference data, never from the sender, so a link cannot be
+/// forged to show one name and open another, or to name an entry that does
+/// not exist.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct GuideLink {
+    pub kind: GuideLinkKind,
+    pub key: String,
+    pub label: String,
+}
+
+impl GuideLink {
+    /// The wire form posted to chat.
+    pub fn token(&self) -> String {
+        format!("<GUIDE:{}:{}>", self.kind.token_name(), self.key)
+    }
+}
+
+fn monster_label(monster: &crate::dm::reference_data::ReferenceMonster) -> String {
+    match monster.name.is_empty() {
+        true => monster.sprite_name.clone(),
+        false => monster.name.clone(),
+    }
+}
+
+/// `monster:1002`, `item:501` or `map:prontera` -> a link, only when it names
+/// a real entry.
+pub fn parse_guide_link(body: &str) -> Option<GuideLink> {
+    let (kind, key) = body.split_once(':')?;
+    let key = key.trim();
+    let data = crate::dm::reference_data::reference_data();
+    match kind.trim() {
+        "monster" => {
+            let id: u32 = key.parse().ok()?;
+            let monster = data.monster_by_id(id)?;
+            Some(GuideLink {
+                kind: GuideLinkKind::Monster,
+                key: id.to_string(),
+                label: monster_label(monster),
+            })
+        }
+        "item" => {
+            let id: u32 = key.parse().ok()?;
+            let item = data.item_by_id(id).or_else(|| data.card_by_id(id))?;
+            Some(GuideLink {
+                kind: GuideLinkKind::Item,
+                key: id.to_string(),
+                label: item.name.clone(),
+            })
+        }
+        "map" => {
+            let valid = !key.is_empty() && key.len() <= 16 && key.chars().all(|c| c.is_ascii_alphanumeric() || "_-@".contains(c));
+            (valid && crate::world::navigation_graph().maps.iter().any(|map| map == key)).then(|| GuideLink {
+                kind: GuideLinkKind::Map,
+                key: key.to_owned(),
+                label: key.to_owned(),
+            })
+        }
+        _ => None,
+    }
+}
+
+/// `/guide <name>`: an exact (case-insensitive) map, monster or item name.
+pub fn resolve_guide_query(query: &str) -> Option<GuideLink> {
+    let query = query.trim();
+    if query.is_empty() {
+        return None;
+    }
+    let lower = query.to_lowercase();
+    if let Some(map) = crate::world::navigation_graph().maps.iter().find(|map| map.to_lowercase() == lower) {
+        return parse_guide_link(&format!("map:{map}"));
+    }
+    let data = crate::dm::reference_data::reference_data();
+    if let Some(monster) = data.monsters.iter().find(|monster| monster_label(monster).to_lowercase() == lower) {
+        return parse_guide_link(&format!("monster:{}", monster.id));
+    }
+    data.items
+        .iter()
+        .chain(data.cards.iter())
+        .find(|item| item.name.to_lowercase() == lower)
+        .and_then(|item| parse_guide_link(&format!("item:{}", item.id)))
+}
+
+/// Each `<GUIDE:...>` token in `text`, in order: `Some` when valid.
+fn guide_tokens(text: &str) -> Vec<(std::ops::Range<usize>, Option<GuideLink>)> {
+    let mut tokens = Vec::new();
+    let mut from = 0;
+    while let Some(start) = text[from..].find("<GUIDE:").map(|offset| from + offset) {
+        let body_start = start + "<GUIDE:".len();
+        let Some(end) = text[body_start..].find('>').map(|offset| body_start + offset) else {
+            break;
+        };
+        tokens.push((start..end + 1, parse_guide_link(&text[body_start..end])));
+        from = end + 1;
+    }
+    tokens
+}
+
+/// Shown text: a valid link becomes `[Guide: name]`; an invalid one is
+/// defanged to `[broken Guide link]` rather than shown raw.
+fn render_guide_links(text: &str) -> String {
+    let mut out = String::with_capacity(text.len());
+    let mut last = 0;
+    for (range, link) in guide_tokens(text) {
+        out.push_str(&text[last..range.start]);
+        match link {
+            Some(link) => out.push_str(&format!("[Guide: {}]", link.label)),
+            None => out.push_str("[broken Guide link]"),
+        }
+        last = range.end;
+    }
+    out.push_str(&text[last..]);
+    out
+}
+
+/// The first valid Guide link in a message, which a click on it opens.
+pub fn first_guide_link(text: &str) -> Option<GuideLink> {
+    guide_tokens(text).into_iter().find_map(|(_, link)| link)
+}
+
 pub fn sanitize_chat_item_links(text: &str) -> String {
     let mut result = String::with_capacity(text.len());
     let mut remaining = text;
@@ -224,7 +365,23 @@ struct ChatLayoutInfo {
     // computed once here, alongside the height it produced, and `lay_out`
     // borrows from this struct instead of recomputing it.
     display_texts: Vec<String>,
+    /// Per shown message: the click that opens its first Guide link, if any.
+    guide_clicks: Vec<Option<GuideLinkClick>>,
 }
+
+/// Opens a chat message's Guide link (F23).
+struct GuideLinkClick(GuideLink);
+
+impl ClickHandler<ClientState> for GuideLinkClick {
+    fn handle_click(&self, _: &State<ClientState>, queue: &mut EventQueue<ClientState>) {
+        queue.queue(InputEvent::OpenGuideLink {
+            kind: self.0.kind,
+            key: self.0.key.clone(),
+        });
+    }
+}
+
+struct GuideLinkTooltip;
 
 /// GDD 10.15's chat timestamp: display-only, so it lives here rather than on
 /// `ChatMessage::text` (see that field's doc comment for why). One function
@@ -232,9 +389,12 @@ struct ChatLayoutInfo {
 /// actually measured is always exactly the text actually drawn -- computing
 /// it separately in each pass risks the two silently drifting apart and
 /// wrapping/clipping the last line.
-fn display_text(chat_message: &ChatMessage) -> String {
-    let sanitized = sanitize_chat_item_links(&chat_message.text);
-    format!("[{}] {}", chat_message.sent_at.format("%H:%M:%S"), sanitized)
+fn display_text(chat_message: &ChatMessage, show_timestamp: bool) -> String {
+    let sanitized = render_guide_links(&sanitize_chat_item_links(&chat_message.text));
+    match show_timestamp {
+        true => format!("[{}] {}", chat_message.sent_at.format("%H:%M:%S"), sanitized),
+        false => sanitized,
+    }
 }
 
 struct ChatElement<A, B> {
@@ -266,6 +426,7 @@ where
     ) -> Self::LayoutInfo {
         with_single_resolver(resolvers, |resolver| {
             let active_tab = *state.get(&self.active_tab_path);
+            let show_timestamps = *state.get(&client_state().game_settings().show_chat_timestamps());
             let chat_messages = state.get(&self.chat_messages_path);
             // TODO: Theme this.
             let message_spacing = 5.0;
@@ -287,7 +448,7 @@ where
                         MessageColor::Information => Color::monochrome_u8(255),
                     };
 
-                    let display_text = display_text(chat_message);
+                    let display_text = display_text(chat_message, show_timestamps);
                     let (size, _) = resolver.get_text_dimensions(
                         &display_text,
                         color,
@@ -309,11 +470,17 @@ where
                 .unzip();
 
             let area = resolver.with_height(total_height);
+            let guide_clicks = chat_messages
+                .iter()
+                .filter(|chat_message| chat_message_matches_tab(chat_message, active_tab))
+                .map(|chat_message| first_guide_link(&chat_message.text).map(GuideLinkClick))
+                .collect();
 
             Self::LayoutInfo {
                 area,
                 message_heights,
                 display_texts,
+                guide_clicks,
             }
         })
     }
@@ -336,7 +503,8 @@ where
             .filter(|chat_message| chat_message_matches_tab(chat_message, active_tab))
             .zip(layout_info.message_heights.iter())
             .zip(layout_info.display_texts.iter())
-            .for_each(|((chat_message, message_height), display_text)| {
+            .zip(layout_info.guide_clicks.iter())
+            .for_each(|(((chat_message, message_height), display_text), guide_click)| {
                 let color = match chat_message.color {
                     MessageColor::Rgb { red, green, blue } => Color::rgb_u8(red, green, blue),
                     // TODO: Make the color right.
@@ -372,6 +540,13 @@ where
                     OverflowBehavior::LineBreak,
                 );
 
+                if let Some(guide_click) = guide_click
+                    && text_area.check().run(layout)
+                {
+                    layout.register_click_handler(MouseButton::Left, guide_click);
+                    layout.add_tooltip("Click to open this in the Adventure Guide", GuideLinkTooltip.tooltip_id());
+                }
+
                 offset += message_height;
             });
     }
@@ -400,9 +575,43 @@ pub struct ChatWindowState {
     last_whisper_sender: String,
     /// Active viewing tab filter for the message feed (GDD §10.15).
     active_tab: ChatTabIndex,
+    /// Per tab: how many messages the log held when that tab was last left or
+    /// opened. Messages are only ever appended, so newer matching messages
+    /// past this point are that tab's unread count.
+    #[hidden_element]
+    tab_seen: [usize; 5],
+}
+
+/// Messages after `seen` that a tab would show.
+fn unread_on_tab(messages: &[ChatMessage], seen: usize, tab: ChatTabIndex) -> usize {
+    messages
+        .get(seen..)
+        .unwrap_or_default()
+        .iter()
+        .filter(|message| chat_message_matches_tab(message, tab))
+        .count()
+}
+
+/// `Party`, or `Party (3)` with unread messages; capped at `99+`.
+fn tab_label(name: &str, unread: usize) -> String {
+    match unread {
+        0 => name.to_owned(),
+        1..=99 => format!("{name} ({unread})"),
+        _ => format!("{name} (99+)"),
+    }
 }
 
 impl ChatWindowState {
+    /// `text` addressed to the selected channel, the way the Send button
+    /// routes typed chat (party `/p`, whisper `/w target`).
+    pub fn routed(&self, text: &str) -> String {
+        match self.channel {
+            CHANNEL_PARTY => format!("/p {text}"),
+            CHANNEL_WHISPER => format!("/w {} {text}", self.whisper_target.trim()),
+            _ => text.to_owned(),
+        }
+    }
+
     #[allow(dead_code)]
     pub fn active_tab(&self) -> ChatTabIndex {
         self.active_tab
@@ -523,8 +732,32 @@ where
         let is_tab = move |index: ChatTabIndex| {
             ComputedSelector::new_default(move |state: &ClientState| *active_tab_path.follow_safe(state) == index)
         };
+        let tab_seen_path = self.chat_window_state.tab_seen();
         let select_tab = move |index: ChatTabIndex| {
-            move |state: &State<ClientState>, _: &mut EventQueue<ClientState>| state.update_value(active_tab_path, index)
+            move |state: &State<ClientState>, _: &mut EventQueue<ClientState>| {
+                // Both the tab being left and the tab being opened are read up
+                // to now.
+                let now = state.get(&client_state().chat_messages()).len();
+                let leaving = *state.get(&active_tab_path);
+                state.update_value_with(tab_seen_path, move |seen| {
+                    seen[usize::from(leaving)] = now;
+                    seen[usize::from(index)] = now;
+                });
+                state.update_value(active_tab_path, index)
+            }
+        };
+        let label = move |name: &'static str, index: ChatTabIndex| {
+            ComputedSelector::<_, String>::new_default(move |state: &ClientState| {
+                let unread = match *active_tab_path.follow_safe(state) == index {
+                    true => 0,
+                    false => unread_on_tab(
+                        client_state().chat_messages().follow_safe(state),
+                        tab_seen_path.follow_safe(state)[usize::from(index)],
+                        index,
+                    ),
+                };
+                tab_label(name, unread)
+            })
         };
 
         let last_sender_path = self.chat_window_state.last_whisper_sender();
@@ -610,25 +843,25 @@ where
                             event: select_tab(CHAT_TAB_ALL),
                         },
                         button! {
-                            text: "Party",
+                            text: label("Party", CHAT_TAB_PARTY),
                             tooltip: "Show party messages only",
                             disabled: is_tab(CHAT_TAB_PARTY),
                             event: select_tab(CHAT_TAB_PARTY),
                         },
                         button! {
-                            text: "Whisper",
+                            text: label("Whisper", CHAT_TAB_WHISPER),
                             tooltip: "Show private whispers only",
                             disabled: is_tab(CHAT_TAB_WHISPER),
                             event: select_tab(CHAT_TAB_WHISPER),
                         },
                         button! {
-                            text: "System",
+                            text: label("System", CHAT_TAB_SYSTEM),
                             tooltip: "Show system notices, server messages, and errors",
                             disabled: is_tab(CHAT_TAB_SYSTEM),
                             event: select_tab(CHAT_TAB_SYSTEM),
                         },
                         button! {
-                            text: "Loot",
+                            text: label("Loot", CHAT_TAB_LOOT),
                             tooltip: "Show item pickup and drop logs",
                             disabled: is_tab(CHAT_TAB_LOOT),
                             event: select_tab(CHAT_TAB_LOOT),
@@ -651,7 +884,8 @@ mod tests {
 
     use super::{
         CHANNEL_PUBLIC, CHANNEL_WHISPER, CHAT_TAB_ALL, CHAT_TAB_LOOT, CHAT_TAB_PARTY, CHAT_TAB_SYSTEM, CHAT_TAB_WHISPER, ChatWindowState,
-        chat_message_matches_tab, display_text, parse_and_validate_item_link, sanitize_chat_item_links,
+        GuideLinkKind, chat_message_matches_tab, display_text, first_guide_link, parse_and_validate_item_link, parse_guide_link,
+        render_guide_links, resolve_guide_query, sanitize_chat_item_links, tab_label, unread_on_tab,
     };
     use crate::state::ChatMessage;
 
@@ -660,13 +894,39 @@ mod tests {
     /// throughout this crate rely on that), while `display_text` -- what the
     /// window actually measures and draws -- carries the `[HH:MM:SS]` prefix.
     #[test]
+    fn unread_counts_only_newer_messages_the_tab_would_show() {
+        let public = ChatMessage::new("someone says hi".to_owned(), MessageColor::Rgb {
+            red: 255,
+            green: 255,
+            blue: 255,
+        });
+        let messages = vec![public.clone(), public.clone(), public.clone()];
+        // Seen up to the first message: two newer ones for All.
+        assert_eq!(unread_on_tab(&messages, 1, CHAT_TAB_ALL), 2);
+        // The Loot tab would show none of them, so it has nothing unread.
+        let loot = messages[1..].iter().filter(|m| chat_message_matches_tab(m, CHAT_TAB_LOOT)).count();
+        assert_eq!(unread_on_tab(&messages, 1, CHAT_TAB_LOOT), loot);
+        assert_eq!(unread_on_tab(&messages, 3, CHAT_TAB_ALL), 0);
+        // A stale index past the end is not a panic.
+        assert_eq!(unread_on_tab(&messages, 99, CHAT_TAB_ALL), 0);
+    }
+
+    #[test]
+    fn tab_labels_show_counts_and_cap() {
+        assert_eq!(tab_label("Party", 0), "Party");
+        assert_eq!(tab_label("Party", 3), "Party (3)");
+        assert_eq!(tab_label("Party", 120), "Party (99+)");
+    }
+
+    #[test]
     fn display_text_prefixes_a_timestamp_without_touching_the_stored_text() {
         let mut message = ChatMessage::new("hello party".to_owned(), MessageColor::Information);
         // Fix the timestamp so this test does not depend on wall-clock time.
         message.sent_at = chrono::Local.with_ymd_and_hms(2026, 9, 27, 14, 5, 9).unwrap();
 
         assert_eq!(message.text, "hello party");
-        assert_eq!(display_text(&message), "[14:05:09] hello party");
+        assert_eq!(display_text(&message, true), "[14:05:09] hello party");
+        assert_eq!(display_text(&message, false), "hello party");
     }
 
     /// A first whisper should leave the Whisper channel ready to answer.
@@ -794,5 +1054,55 @@ mod tests {
         // Navigation tags in chat are defanged to plain label
         let navi_in_chat = "Meet at <NAVI>[Kafra]<INFO>prontera,150,150</INFO></NAVI> now";
         assert_eq!(sanitize_chat_item_links(navi_in_chat), "Meet at [Kafra] now");
+    }
+
+    #[test]
+    fn guide_links_only_name_real_entries() {
+        let poring = parse_guide_link("monster:1002").expect("Poring is in the bestiary");
+        assert_eq!((poring.kind, poring.key.as_str()), (GuideLinkKind::Monster, "1002"));
+        assert!(!poring.label.is_empty());
+        assert!(parse_guide_link("item:501").is_some(), "Red Potion");
+        assert!(parse_guide_link("map:prontera").is_some());
+        for forged in [
+            "monster:999999",
+            "monster:1002 Evil",
+            "item:abc",
+            "map:../etc",
+            "map:nowhere_map",
+            "spell:1",
+            "monster",
+            "",
+        ] {
+            assert!(parse_guide_link(forged).is_none(), "{forged:?} must not validate");
+        }
+        // The posted token parses back to the same link.
+        let body = poring.token().trim_start_matches("<GUIDE:").trim_end_matches('>').to_owned();
+        assert_eq!(parse_guide_link(&body), Some(poring));
+    }
+
+    #[test]
+    fn guide_links_render_and_defang() {
+        let poring = parse_guide_link("monster:1002").unwrap();
+        let text = "see <GUIDE:monster:999999> then <GUIDE:monster:1002>!";
+        assert_eq!(
+            render_guide_links(text),
+            format!("see [broken Guide link] then [Guide: {}]!", poring.label)
+        );
+        assert_eq!(first_guide_link(text), Some(poring));
+        assert_eq!(render_guide_links("no links <GUIDE:unclosed"), "no links <GUIDE:unclosed");
+        assert_eq!(first_guide_link("plain"), None);
+    }
+
+    #[test]
+    fn guide_query_resolves_exact_names() {
+        assert_eq!(resolve_guide_query("PRONTERA").map(|link| link.kind), Some(GuideLinkKind::Map));
+        let poring = parse_guide_link("monster:1002").unwrap();
+        assert_eq!(
+            resolve_guide_query(&poring.label.to_uppercase()).map(|link| link.key),
+            Some("1002".to_owned())
+        );
+        assert_eq!(resolve_guide_query("Red Potion").map(|link| link.key), Some("501".to_owned()));
+        assert_eq!(resolve_guide_query("definitely not a thing"), None);
+        assert_eq!(resolve_guide_query("  "), None);
     }
 }

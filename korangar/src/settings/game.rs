@@ -316,6 +316,13 @@ pub struct GameSettings {
     /// labels.
     #[serde(default = "default_true")]
     pub show_minimap_portals: bool,
+    /// Chat timestamp prefix (GDD 10.15). On by default, as it always was.
+    #[serde(default = "default_true")]
+    pub show_chat_timestamps: bool,
+    /// Stats window explanation mode (F04): Simple, Detailed or Advanced.
+    #[serde(default)]
+    #[hidden_element]
+    pub stat_view_mode: crate::world::StatViewMode,
     /// Minimap layer toggle (GDD 9.4, 10.12): broad monster population regions.
     #[serde(default = "default_true")]
     pub show_minimap_population_regions: bool,
@@ -415,6 +422,8 @@ impl Default for GameSettings {
             show_minimap_party: true,
             show_minimap_quest_markers: true,
             show_minimap_portals: true,
+            show_chat_timestamps: true,
+            stat_view_mode: crate::world::StatViewMode::Simple,
             show_minimap_population_regions: true,
             autoloot_rate: 0,
             autoloot_types: HashSet::new(),
