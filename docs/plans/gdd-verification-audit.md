@@ -77,7 +77,7 @@ CI where missing.
 | S8/F39 | Online hand-in could take equipped copies | Fixed 2026-10-03 |
 | F23 | No chat timestamp toggle; no `<GUIDE:id>` links | Claim corrected in the plan 2026-10-03 |
 | F30 | Formulas not shown in any window; pharmacy formula dropped the server's random roll | Fixed 2026-10-04 (Crafting Odds window, `pharmacy_success_range`); never seen live (GUI pass 8.7–8.8) |
-| F31 | No assign/complete action in the board window | Actions built 2026-10-04 (window buttons + `/commission assign/complete`); multi-word item names fixed. **Still open, needs an owner decision:** the board is local to one client, so no other player sees a request. A shared board needs a server half |
+| F31 | No assign/complete action; board was local to one client | Fixed 2026-10-04: a shared board on the server (Hercules `commission_board.txt`, table `korangar_commission`), seen by every player; `commission-board-shared` (two clients) passes and fails against both mutations (no poster check; viewer-only list). Never seen on screen (GUI pass 8.9) |
 | F16 | Recap tracks damage taken/interrupts; toast shows only damage dealt | Fixed 2026-10-04: the toast shows dealt, taken and interrupts, and the full recap is posted to chat; never seen live (GUI pass 8.10) |
 | PR #10 | Live-confirmed 2026-09-18 fixes never reached `main` | Settled 2026-10-03: 7 ported + WASD merged (below) |
 | F04 | Stat view modes not wired to any window | Claim wrong — open |
@@ -188,7 +188,7 @@ One list of everything the audit left open. Tick an item here when it is done an
 - [x] `log_zeny: 1` is tracked (`conf/import/logs.conf`, force-added; Hercules `3f1aae763`).
 - [ ] **Decided 2026-10-04: stop logging ground drops.** Turn off picklog type `M` (monster drops to the floor) only; pickups, trades, shops, storage and zeny stay logged.
 - [x] Split hardening: the new half gets `id = 0` (Hercules, same PR); split, persistence, storage and order scenarios pass with the audit clean.
-- [ ] Remaining Batch 4 rows: F26 autoloot settings, F27 refine odds against `refine_db`, F28 live two-client trade, F29, F31 (actions built 2026-10-04; a shared board needs an owner decision).
+- [ ] Remaining Batch 4 rows: F26 autoloot settings, F27 refine odds against `refine_db`, F28 live two-client trade, F29.
 
 **Campaign rewards (added 2026-10-04; outside the GDD rows, so no batch covered it)**
 - [x] All 178 campaign grants inventoried: 93 behind `DM_ClaimGrant`, 85 behind quest state the same block completes (the one exception, the Sigil Ring replacement, is harmless: the ring cannot leave the inventory). Five zeny grants escaped their latch through brace-less `if`s (Arc 1 Mira rescue ×3, Arc 2 East Memorial ×2); fixed in Hercules `9a3752c6c`. Every latch key, numbered ones included, is cleared by `DM_ClearPartyGrants`.

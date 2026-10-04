@@ -1,4 +1,5 @@
 mod combat;
+mod commission;
 mod dialogue;
 mod dm;
 mod finale;
@@ -101,6 +102,7 @@ pub fn all_scenarios() -> Vec<Scenario> {
     scenarios.extend(items::scenarios());
     scenarios.extend(dialogue::scenarios());
     scenarios.extend(social::scenarios());
+    scenarios.extend(commission::scenarios());
     scenarios.extend(dm::scenarios());
     scenarios.extend(finale::scenarios());
     scenarios.extend(mobs::scenarios());

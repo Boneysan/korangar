@@ -139,7 +139,7 @@ use crate::settings::{
     IN_GAME_THEMES_PATH, LightingMode, MENU_THEMES_PATH, ServiceSettingsPathExt, WORLD_THEMES_PATH, should_render_ground_item,
 };
 use crate::state::character_creation::{CharacterCreationPathExt, CharacterSex, HairStyle, StatSpread};
-use crate::state::commission_board::CommissionReply;
+use crate::state::commission_board::{CommissionReply, LIST_COMMAND, commission_command};
 use crate::state::quests::{ClientHuntingGoalEntry, QuestEntry, QuestHuntObjectiveEntry, QuestLocationEntry, QuestRequirementEntry};
 use crate::state::skills::{LearnedSkill, SkillTreeLayoutPathExt, bring_skill_to_level};
 use crate::state::theme::{InterfaceTheme, InterfaceThemeType, WorldTheme};
@@ -5180,6 +5180,8 @@ impl Client {
                     self.audio_engine.play_sound_effect(self.main_menu_click_sound_effect);
                     self.client_state.follow_mut(client_state().party_state()).clear();
                     self.client_state.follow_mut(client_state().skill_tree()).clear();
+                    // The board's `mine` / `yours` flags belong to the previous character.
+                    self.client_state.follow_mut(client_state().commission_board()).clear();
                     self.client_state.follow_mut(client_state().hotbar()).clear();
 
                     let Some(saved_login_data) = self.saved_login_data.as_ref() else {
@@ -5719,7 +5721,15 @@ impl Client {
                     let dmj_packet = !discovery_packet
                         && matches!(color, MessageColor::Server)
                         && self.client_state.follow_mut(client_state().dm_journal()).receive_server_line(&text);
-                    if !discovery_packet && !dmj_packet {
+                    // The shared commission board's list arrives as `[CMB]` lines (F31).
+                    let board_packet = !discovery_packet
+                        && !dmj_packet
+                        && matches!(color, MessageColor::Server)
+                        && self
+                            .client_state
+                            .follow_mut(client_state().commission_board())
+                            .receive_server_line(&text);
+                    if !discovery_packet && !dmj_packet && !board_packet {
                         self.client_state
                             .follow_mut(client_state().chat_messages())
                             .push(ChatMessage::new(text, color));
@@ -6980,6 +6990,8 @@ impl Client {
 
                     self.client_state.follow_mut(client_state().party_state()).clear();
                     self.client_state.follow_mut(client_state().skill_tree()).clear();
+                    // The board's `mine` / `yours` flags belong to the previous character.
+                    self.client_state.follow_mut(client_state().commission_board()).clear();
                     self.client_state.follow_mut(client_state().hotbar()).clear();
                     self.client_state.follow_mut(client_state().quest_log()).clear();
                     self.client_state.follow_mut(client_state().recovery()).clear();
@@ -10316,22 +10328,14 @@ impl Client {
 
                     // Crafting Commission Board (F31, Decision D7 - non-custodial).
                     if text.as_str() == "/commission" || text.starts_with("/commission ") {
+                        // The board lives on the server (F31). Its commands go straight
+                        // to it, without the `> @...` echo typed atcommands get; the
+                        // reply is a `[CMB]` list plus a plain result line.
                         let player_name = self.client_state.follow(client_state().player_name()).to_owned();
-                        let args = text.trim_start_matches("/commission");
-                        match self
-                            .client_state
-                            .follow_mut(client_state().commission_board())
-                            .run_command(&player_name, args)
-                        {
-                            CommissionReply::ToggleWindow => {
-                                if self.map.is_some() {
-                                    match self.interface.is_window_with_class_open(WindowClass::CommissionBoard) {
-                                        true => self.interface.close_window_with_class(WindowClass::CommissionBoard),
-                                        false => self
-                                            .interface
-                                            .open_window(CommissionBoardWindow::new(client_state().commission_board_window())),
-                                    }
-                                }
+                        match commission_command(text.trim_start_matches("/commission")) {
+                            CommissionReply::ToggleWindow => self.input_event_buffer.push(InputEvent::ToggleCommissionBoardWindow),
+                            CommissionReply::Send(command) => {
+                                let _ = self.networking_system.send_chat_message(&player_name, &command);
                             }
                             CommissionReply::Say(line) => self
                                 .client_state
@@ -12381,9 +12385,13 @@ impl Client {
                     if self.map.is_some() {
                         match self.interface.is_window_with_class_open(WindowClass::CommissionBoard) {
                             true => self.interface.close_window_with_class(WindowClass::CommissionBoard),
-                            false => self
-                                .interface
-                                .open_window(CommissionBoardWindow::new(client_state().commission_board_window())),
+                            false => {
+                                self.interface
+                                    .open_window(CommissionBoardWindow::new(client_state().commission_board_window()));
+                                // Opening asks the server for the current board (F31).
+                                let player_name = self.client_state.follow(client_state().player_name()).to_owned();
+                                let _ = self.networking_system.send_chat_message(&player_name, LIST_COMMAND);
+                            }
                         }
                     }
                 }
