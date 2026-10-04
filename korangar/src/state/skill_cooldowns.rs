@@ -71,13 +71,6 @@ impl SkillCooldowns {
     }
 
     /// Remaining ms using the tick from the last [`Self::tick`] call.
-    #[cfg_attr(
-        not(test),
-        expect(
-            dead_code,
-            reason = "per-slot cooldown query; its only reader was the removed SkillBox. The hotbar shows no per-slot cooldown (open work)"
-        )
-    )]
     pub fn remaining_ms_ui(&self, skill_id: SkillId) -> Option<u32> {
         self.remaining_ms(skill_id, self.last_now)
     }
