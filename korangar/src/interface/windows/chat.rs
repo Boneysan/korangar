@@ -13,6 +13,7 @@ use super::WindowClass;
 use crate::graphics::Color;
 use crate::input::InputEvent;
 use crate::loaders::{FontSize, OverflowBehavior};
+use crate::settings::GameSettingsPathExt;
 use crate::state::localization::LocalizationPathExt;
 use crate::state::theme::{ChatThemePathExt, InterfaceThemePathExt, InterfaceThemeType};
 use crate::state::{ChatMessage, ClientState, ClientStatePathExt, client_state, client_theme};
@@ -232,9 +233,12 @@ struct ChatLayoutInfo {
 /// actually measured is always exactly the text actually drawn -- computing
 /// it separately in each pass risks the two silently drifting apart and
 /// wrapping/clipping the last line.
-fn display_text(chat_message: &ChatMessage) -> String {
+fn display_text(chat_message: &ChatMessage, show_timestamp: bool) -> String {
     let sanitized = sanitize_chat_item_links(&chat_message.text);
-    format!("[{}] {}", chat_message.sent_at.format("%H:%M:%S"), sanitized)
+    match show_timestamp {
+        true => format!("[{}] {}", chat_message.sent_at.format("%H:%M:%S"), sanitized),
+        false => sanitized,
+    }
 }
 
 struct ChatElement<A, B> {
@@ -266,6 +270,7 @@ where
     ) -> Self::LayoutInfo {
         with_single_resolver(resolvers, |resolver| {
             let active_tab = *state.get(&self.active_tab_path);
+            let show_timestamps = *state.get(&client_state().game_settings().show_chat_timestamps());
             let chat_messages = state.get(&self.chat_messages_path);
             // TODO: Theme this.
             let message_spacing = 5.0;
@@ -287,7 +292,7 @@ where
                         MessageColor::Information => Color::monochrome_u8(255),
                     };
 
-                    let display_text = display_text(chat_message);
+                    let display_text = display_text(chat_message, show_timestamps);
                     let (size, _) = resolver.get_text_dimensions(
                         &display_text,
                         color,
@@ -400,6 +405,30 @@ pub struct ChatWindowState {
     last_whisper_sender: String,
     /// Active viewing tab filter for the message feed (GDD §10.15).
     active_tab: ChatTabIndex,
+    /// Per tab: how many messages the log held when that tab was last left or
+    /// opened. Messages are only ever appended, so newer matching messages
+    /// past this point are that tab's unread count.
+    #[hidden_element]
+    tab_seen: [usize; 5],
+}
+
+/// Messages after `seen` that a tab would show.
+fn unread_on_tab(messages: &[ChatMessage], seen: usize, tab: ChatTabIndex) -> usize {
+    messages
+        .get(seen..)
+        .unwrap_or_default()
+        .iter()
+        .filter(|message| chat_message_matches_tab(message, tab))
+        .count()
+}
+
+/// `Party`, or `Party (3)` with unread messages; capped at `99+`.
+fn tab_label(name: &str, unread: usize) -> String {
+    match unread {
+        0 => name.to_owned(),
+        1..=99 => format!("{name} ({unread})"),
+        _ => format!("{name} (99+)"),
+    }
 }
 
 impl ChatWindowState {
@@ -523,8 +552,32 @@ where
         let is_tab = move |index: ChatTabIndex| {
             ComputedSelector::new_default(move |state: &ClientState| *active_tab_path.follow_safe(state) == index)
         };
+        let tab_seen_path = self.chat_window_state.tab_seen();
         let select_tab = move |index: ChatTabIndex| {
-            move |state: &State<ClientState>, _: &mut EventQueue<ClientState>| state.update_value(active_tab_path, index)
+            move |state: &State<ClientState>, _: &mut EventQueue<ClientState>| {
+                // Both the tab being left and the tab being opened are read up
+                // to now.
+                let now = state.get(&client_state().chat_messages()).len();
+                let leaving = *state.get(&active_tab_path);
+                state.update_value_with(tab_seen_path, move |seen| {
+                    seen[usize::from(leaving)] = now;
+                    seen[usize::from(index)] = now;
+                });
+                state.update_value(active_tab_path, index)
+            }
+        };
+        let label = move |name: &'static str, index: ChatTabIndex| {
+            ComputedSelector::<_, String>::new_default(move |state: &ClientState| {
+                let unread = match *active_tab_path.follow_safe(state) == index {
+                    true => 0,
+                    false => unread_on_tab(
+                        client_state().chat_messages().follow_safe(state),
+                        tab_seen_path.follow_safe(state)[usize::from(index)],
+                        index,
+                    ),
+                };
+                tab_label(name, unread)
+            })
         };
 
         let last_sender_path = self.chat_window_state.last_whisper_sender();
@@ -610,25 +663,25 @@ where
                             event: select_tab(CHAT_TAB_ALL),
                         },
                         button! {
-                            text: "Party",
+                            text: label("Party", CHAT_TAB_PARTY),
                             tooltip: "Show party messages only",
                             disabled: is_tab(CHAT_TAB_PARTY),
                             event: select_tab(CHAT_TAB_PARTY),
                         },
                         button! {
-                            text: "Whisper",
+                            text: label("Whisper", CHAT_TAB_WHISPER),
                             tooltip: "Show private whispers only",
                             disabled: is_tab(CHAT_TAB_WHISPER),
                             event: select_tab(CHAT_TAB_WHISPER),
                         },
                         button! {
-                            text: "System",
+                            text: label("System", CHAT_TAB_SYSTEM),
                             tooltip: "Show system notices, server messages, and errors",
                             disabled: is_tab(CHAT_TAB_SYSTEM),
                             event: select_tab(CHAT_TAB_SYSTEM),
                         },
                         button! {
-                            text: "Loot",
+                            text: label("Loot", CHAT_TAB_LOOT),
                             tooltip: "Show item pickup and drop logs",
                             disabled: is_tab(CHAT_TAB_LOOT),
                             event: select_tab(CHAT_TAB_LOOT),
@@ -651,7 +704,7 @@ mod tests {
 
     use super::{
         CHANNEL_PUBLIC, CHANNEL_WHISPER, CHAT_TAB_ALL, CHAT_TAB_LOOT, CHAT_TAB_PARTY, CHAT_TAB_SYSTEM, CHAT_TAB_WHISPER, ChatWindowState,
-        chat_message_matches_tab, display_text, parse_and_validate_item_link, sanitize_chat_item_links,
+        chat_message_matches_tab, display_text, parse_and_validate_item_link, sanitize_chat_item_links, tab_label, unread_on_tab,
     };
     use crate::state::ChatMessage;
 
@@ -660,13 +713,39 @@ mod tests {
     /// throughout this crate rely on that), while `display_text` -- what the
     /// window actually measures and draws -- carries the `[HH:MM:SS]` prefix.
     #[test]
+    fn unread_counts_only_newer_messages_the_tab_would_show() {
+        let public = ChatMessage::new("someone says hi".to_owned(), MessageColor::Rgb {
+            red: 255,
+            green: 255,
+            blue: 255,
+        });
+        let messages = vec![public.clone(), public.clone(), public.clone()];
+        // Seen up to the first message: two newer ones for All.
+        assert_eq!(unread_on_tab(&messages, 1, CHAT_TAB_ALL), 2);
+        // The Loot tab would show none of them, so it has nothing unread.
+        let loot = messages[1..].iter().filter(|m| chat_message_matches_tab(m, CHAT_TAB_LOOT)).count();
+        assert_eq!(unread_on_tab(&messages, 1, CHAT_TAB_LOOT), loot);
+        assert_eq!(unread_on_tab(&messages, 3, CHAT_TAB_ALL), 0);
+        // A stale index past the end is not a panic.
+        assert_eq!(unread_on_tab(&messages, 99, CHAT_TAB_ALL), 0);
+    }
+
+    #[test]
+    fn tab_labels_show_counts_and_cap() {
+        assert_eq!(tab_label("Party", 0), "Party");
+        assert_eq!(tab_label("Party", 3), "Party (3)");
+        assert_eq!(tab_label("Party", 120), "Party (99+)");
+    }
+
+    #[test]
     fn display_text_prefixes_a_timestamp_without_touching_the_stored_text() {
         let mut message = ChatMessage::new("hello party".to_owned(), MessageColor::Information);
         // Fix the timestamp so this test does not depend on wall-clock time.
         message.sent_at = chrono::Local.with_ymd_and_hms(2026, 9, 27, 14, 5, 9).unwrap();
 
         assert_eq!(message.text, "hello party");
-        assert_eq!(display_text(&message), "[14:05:09] hello party");
+        assert_eq!(display_text(&message, true), "[14:05:09] hello party");
+        assert_eq!(display_text(&message, false), "hello party");
     }
 
     /// A first whisper should leave the Whisper channel ready to answer.
