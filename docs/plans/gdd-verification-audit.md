@@ -197,13 +197,15 @@ One list of everything the audit left open. Tick an item here when it is done an
 - [x] F27 refine odds checked independently (2026-10-04): 69 values in `docs/refine.v1.json` (every +1..+10 chance for armor and weapon levels 1-4, base costs, armor DEF bonus, weapon stats per level) match `db/re/refine_db.conf` read with Hercules' own libconf. 0 disagree.
 
 **Claims that are wrong or partial (decide: build, or correct the row)**
+- [ ] Hotbar has no per-slot cooldown overlay (found deleting `SkillBox`, PR #18); cooldowns show only as a HUD text line. Owner decision: build it?
+- [ ] `@dm reset` deletes unclaimed grants owed to offline members. Owner decision: intended?
 - [ ] F04 stat view modes: no window offers them. Build the mode switch or drop `world/stat_view.rs` and rewrite the row.
-- [ ] F23: no timestamp toggle, no tab unread indicators, no `<GUIDE:id>` links (row corrected in PR #14). Scope Guide links if wanted.
-- [ ] F11: prediction and rollback have no tests; extract them from `Client` into testable functions.
-- [ ] F16: 10 of 11 pilot MVPs are data-checked only; add one fight scenario per MVP (or a sweep).
+- [ ] F23: no timestamp toggle, no tab unread indicators, no `<GUIDE:id>` links (row corrected in PR #14). Owner decision: scope Guide links if wanted.
+- [x] F11: prediction and rollback have no tests; extract them from `Client` into testable functions. **Done:** PR #16 — `predict_motion` / `rollback_motion` tested with a fake player; mutation-checked.
+- [x] F16: 10 of 11 pilot MVPs are data-checked only; add one fight scenario per MVP (or a sweep). **Done:** PR #18 — `mob-pilot-mvps-summon-escorts` fights all ten; fails naming each when escorts are stripped.
 - [ ] F16 recap: damage taken and interrupts are tracked but not shown.
 - [ ] F39: disconnect and dead-member cases untested; no quest uses `partycompletequest` yet.
-- [ ] F22 and F24 rows cite names that do not exist (`PartyMemberLocationUpdate`, `RequestEquipItem`, `SavedEquipmentSets`); correct the text.
+- [x] F22 and F24 rows cite names that do not exist (`PartyMemberLocationUpdate`, `RequestEquipItem`, `SavedEquipmentSets`); correct the text. **Done:** PR #18 — rows name the real code; `gdd_claims.py` reports 0 findings.
 
 **Live checks nobody can automate**
 - [ ] GUI verification pass, including section 7 (the PR #10 ports, WASD corner/slide, Mouse4/Mouse5, hold-mouse movement).
@@ -213,10 +215,10 @@ One list of everything the audit left open. Tick an item here when it is done an
 - [ ] Pack version gate: the client sends its version but the server check is off; turn it on with the next pack.
 
 **CI and code hygiene**
-- [ ] The PR gate runs 10 of ~207 scenarios; add a fast economy/Batch 1 subset.
-- [ ] Fix the headless tester's 38 clippy errors and lint examples in CI.
-- [ ] Replace the six file-wide `#![allow(dead_code)]` with item-level allowances, and remove the unused duplicates found here (`skill_info.rs` timing helpers, `calculate_projections`, possibly `stat_view.rs`).
-- [ ] Triage the 21 unread fields/methods in `dm/reference_data.rs`.
+- [x] The PR gate runs 10 of ~207 scenarios; add a fast economy/Batch 1 subset. **Done:** PR #18 — 17 scenarios, adding split, trade, storage, pickup, death recovery and MVP escorts.
+- [x] Fix the headless tester's 38 clippy errors and lint examples in CI. **Done:** PR #17 — cleared, and `lint.yml` lints the example.
+- [x] Replace the six file-wide `#![allow(dead_code)]` with item-level allowances, and remove the unused duplicates found here (`skill_info.rs` timing helpers, `calculate_projections`, possibly `stat_view.rs`). **Done:** PR #18 — seven modules now use reasoned `expect(dead_code)`; the unused `SkillBox` component was deleted.
+- [x] Triage the 21 unread fields/methods in `dm/reference_data.rs`. **Done:** PR #18 — `docs/plans/reference-data-unread-fields.md`.
 - [x] `finale-loki-briefing` (2026-10-04 full run): a test bug. Hercules f6974e0ad made Loki's audience menu loop until "We are ready"; the test took the first option and looped. Fixed; the driver now reports the last menus when it runs out of steps.
 - [ ] `mob-coward-poring` failed once in the 2026-10-04 full run ("never fled" after a 235-damage hit) and passed on rerun. Intermittent; investigate if it recurs.
 - [x] `skills-professor` failed in the 2026-10-02 full run; it passes in the 2026-10-04 disposable run (85.8 s). Watch for a recurrence.
