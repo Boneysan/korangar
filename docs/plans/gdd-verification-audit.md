@@ -75,7 +75,7 @@ CI where missing.
 | F15 | ViewData elite broke two elite scenarios and `@metrics spawns` | Fixed 2026-10-03 (korangar `6ecd527b`, Hercules `35964619a`) |
 | F14 | Aggressor flag lost on mode recalculation (latent) | Fixed 2026-10-03 |
 | S8/F39 | Online hand-in could take equipped copies | Fixed 2026-10-03 |
-| F23 | No chat timestamp toggle; no `<GUIDE:id>` links | Claim wrong — open |
+| F23 | No chat timestamp toggle; no `<GUIDE:id>` links | Claim corrected in the plan 2026-10-03 |
 | F30 | Formulas not shown in any window | Partial — open |
 | F31 | No assign/complete action in the board window | Partial — open |
 | F16 | Recap tracks damage taken/interrupts; toast shows only damage dealt | Partial — open |
@@ -155,3 +155,9 @@ ports has been seen live; each needs a line in the GUI pass.
 | F12 | Verified (unseen) | `format_monster_target_summary` (status chips, cast cue, target-of-target) is the production summary and is tested; `BossTargetWindow` opened from the client | GUI pass | 2026-10-03 |
 | F13 | Fixed, unseen | Waypoints, zoom, route accents wired. **Gap:** portal and spawn-region layers had settings the minimap read but no toggle in Game Settings; added `8e702427` | Hiding portals also hides the tracked route's portal accent (tooltip says so) | 2026-10-03 |
 | Slices 2, 3, 10, 13 | Verified (unseen) | Cast footprint uses `level_invariant_skill_footprint` in the render path; Tab cycling, `TimedBufferedAction`, keybinding table wired; 32 Batch 2 tests pass | GUI pass | 2026-10-03 |
+| F20 | Verified (unseen) | `/mark`, `/goal` wired; marked monsters drawn in the world (`lib.rs` target-marker pass); `Tonight:` goals block | Multi-client pass | 2026-10-03 |
+| F22 | Verified (unseen), names wrong | Navigate/jump to member, healer layout and member location exist under other names | Row cites `PartyMemberLocationUpdate`, which does not exist; multi-client pass | 2026-10-03 |
+| F23 | Claim wrong — corrected | Tabs filter (`chat_message_matches_tab`); official-form `<ITEM>…<INFO>id</INFO></ITEM>` links validated and defanged; timestamps always on | No timestamp toggle, no tab unread indicators, no `<GUIDE:id>` links. Row rewritten in the plan | 2026-10-03 |
+| F24 | Fixed, unseen | Four hotbar rows; equipment sets save/equip/delete (`/saveset`, `/equip`). **Defect:** Mouse4/Mouse5 chords were accepted but never read, and could not be captured; fixed `db1544c4` (mutation-checked) | Row cites `RequestEquipItem` / `SavedEquipmentSets`, which do not exist under those names | 2026-10-03 |
+| F25 | Verified (unseen) | Seven profiles applied in `cache.rs`; combat fade; lock state | GUI pass | 2026-10-03 |
+| Slice 11 | Verified (unseen) | Six ping kinds over `[KORANGAR-PING:v2]`, ready check wired; 56 party/chat/HUD tests pass | Multi-client pass. Slices 12 and 14 not traced in this batch | 2026-10-03 |
