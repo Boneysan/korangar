@@ -81,7 +81,7 @@ CI where missing.
 | F16 | Recap tracks damage taken/interrupts; toast shows only damage dealt | Partial — open |
 | PR #10 | Live-confirmed 2026-09-18 fixes never reached `main` | Settled 2026-10-03: 7 ported + WASD merged (below) |
 | F04 | Stat view modes not wired to any window | Claim wrong — open |
-| F03 | Build planner projections not shown | Partial — open |
+| F03 | ~~Build planner projections not shown~~ — wrong: shown via `state/build_planner.rs` (Batch 5) | Closed |
 | CI | PR gate covers 10/206 scenarios; Batch 1 scenarios only weekly | Open |
 
 ## Batch 0 results (2026-10-03)
@@ -97,7 +97,7 @@ nothing in the client calls:
 | Row | Unused outside tests | Meaning |
 |---|---|---|
 | F04 | `StatViewMode`, `SimpleStatDescription`, `DetailedStatRow`, `AdvancedStatMetrics`, `CharacterStatsInput` | Simple/Detailed/Advanced stat modes are not wired to any window |
-| F03 | `calculate_projections`, `can_increase_stat` | The planner window does not show the promised derived projections |
+| F03 | `calculate_projections`, `can_increase_stat` | Unused duplicates only: the planner window shows HP/SP, HIT/FLEE, DEF, ATK and CRIT deltas from `state/build_planner.rs` (corrected in Batch 5) |
 | F02 | `skill_cooldown`, `skill_after_cast_*_delay`, `skill_prerequisites`, `skill_status_change`, `skill_source` | Timing helpers unused; check whether the Guide reads the same data another way |
 | F30 | the whole formula module | No window shows a success chance |
 | F04/F10 | `is_unsupported` in `item_bonus.rs` | Minor |
@@ -161,3 +161,62 @@ ports has been seen live; each needs a line in the GUI pass.
 | F24 | Fixed, unseen | Four hotbar rows; equipment sets save/equip/delete (`/saveset`, `/equip`). **Defect:** Mouse4/Mouse5 chords were accepted but never read, and could not be captured; fixed `db1544c4` (mutation-checked) | Row cites `RequestEquipItem` / `SavedEquipmentSets`, which do not exist under those names | 2026-10-03 |
 | F25 | Verified (unseen) | Seven profiles applied in `cache.rs`; combat fade; lock state | GUI pass | 2026-10-03 |
 | Slice 11 | Verified (unseen) | Six ping kinds over `[KORANGAR-PING:v2]`, ready check wired; 56 party/chat/HUD tests pass | Multi-client pass. Slices 12 and 14 not traced in this batch | 2026-10-03 |
+| F01 | Verified (unseen) | `StatPreviewSelector` drives the Stats window tooltips | GUI pass | 2026-10-04 |
+| F02 | Verified (unseen) | Prerequisites, cooldowns and delays reach the Guide and hotbar tooltips from the exported skill data (`adventure_guide.rs`, `skill_box.rs`) | The `skill_info.rs` timing helpers are unused duplicates of that path | 2026-10-04 |
+| F03 | Verified (unseen) | Build planner window (from the Stats window) shows level/stat sliders and HP/SP, HIT/FLEE, soft DEF/MDEF, status ATK/MATK, CRIT deltas computed in `state/build_planner.rs` | Batch 0's "projections not shown" was wrong; `calculate_projections` is an unused duplicate | 2026-10-04 |
+| F04 | Claim wrong | — | No window offers Simple/Detailed/Advanced modes; `world/stat_view.rs` has no production caller. The row describes code, not a feature | 2026-10-04 |
+| F05 | Verified | Route services, locks and access notes exercised by Guide tests and `generate_navigation_graph.py --check` (export drift clean 2026-10-03) | Live route walk | 2026-10-04 |
+| F06 | Verified (unseen) | `MapSpawnDetails` used by the world map and Guide; danger threshold wired (Batch 1) | GUI pass | 2026-10-04 |
+| F07 | Verified (unseen) | `broad_spawn_rectangles_for_map` feeds the minimap spawn layer (toggle added in Batch 2) | GUI pass | 2026-10-04 |
+| F08 | Verified (unseen) | `alias_targets` feeds skill, status, monster, item, job and map search | GUI pass | 2026-10-04 |
+| F37 | Verified (unseen) | `server-rules.v1.json` embedded and rendered by the Guide (`adventure_guide.rs`); export drift clean | GUI pass | 2026-10-04 |
+| Slices 5, 6, 8, 9 | Verified (unseen) | Navigation graph, world-map atlas, skill tooltips and Guide window wired; all their exports pass `export_supported_data.py --check` | GUI pass | 2026-10-04 |
+| F32 | Verified (unseen) | `effect_density` read at the effect spawn points; cycle button in Game Settings; source-level test keeps telegraphs/cast bars exempt | GUI pass in a crowded fight | 2026-10-04 |
+| F33 | Verified (unseen) | `render_tooltips` flips each tooltip to the roomier side of the cursor; `handle_drag` constrains windows | Screenshot matrix | 2026-10-04 |
+| F35 | Verified (unseen) | Five cues played from `lib.rs` via `state/audio_cues.rs` | Never heard; fit by ear pending | 2026-10-04 |
+| F36 | Verified | `@metrics` exercised by `mob-elite-population` (passes, name-based count since 10-03) | No real-session use yet | 2026-10-04 |
+| F38 | Historical | The 2026-10-03 regression figures are a point-in-time record, not a standing check | The headless tester has 38 clippy errors CI never sees (lint runs without `--examples`) | 2026-10-04 |
+| Slices 1, 4, 15 | Verified (unseen) | `ToastQueue` drives HUD notices; character delete with typed-name confirmation; High Contrast and Deuteranopia are in the theme lists and load real palettes (`state/theme/interface.rs`) | GUI pass | 2026-10-04 |
+
+## Open work (collected 2026-10-04, after Batches 0–6)
+
+One list of everything the audit left open. Tick an item here when it is done and say where.
+
+**Economy safety (Batch 4, in progress on `agent/batch4-economy`)**
+- [x] Loot fixture registered (Hercules `16222684f`); five loot scenarios added (`autopickup-respects-drop-owner` new; four ported from PR #10). All pass; the ownership test fails against a planted bug (`pc_takeitem` ignoring the owner window). `loot-pickup-multi-pile` failed once in ~6 runs (a pile granted to nobody, not lost); it now reports positions on failure. Watch it.
+- [x] Item conservation is a gate: the 2026-10-04 full run's only difference was an unlogged starting Cotton Shirt, now an explicit exception; any other difference fails the run.
+- [x] `log_zeny: 1` is tracked (`conf/import/logs.conf`, force-added; Hercules `3f1aae763`).
+- [ ] Decide a retention policy for `picklog`: monster-drop rows (`M`) alone were 2.5 million on the dev database.
+- [x] Split hardening: the new half gets `id = 0` (Hercules, same PR); split, persistence, storage and order scenarios pass with the audit clean.
+- [ ] Remaining Batch 4 rows: F26 autoloot settings, F27 refine odds against `refine_db`, F28 live two-client trade, F29, F30 (no window shows crafting odds), F31 (no assign/complete action).
+
+**Campaign rewards (added 2026-10-04; outside the GDD rows, so no batch covered it)**
+- [x] All 178 campaign grants inventoried: 93 behind `DM_ClaimGrant`, 85 behind quest state the same block completes (the one exception, the Sigil Ring replacement, is harmless: the ring cannot leave the inventory). Five zeny grants escaped their latch through brace-less `if`s (Arc 1 Mira rescue ×3, Arc 2 East Memorial ×2); fixed in Hercules `9a3752c6c`. Every latch key, numbered ones included, is cleared by `DM_ClearPartyGrants`.
+- [x] `DM_QueueGrant` / `DM_ClaimPendingGrants`: each row is marked claimed before it is paid, and payout runs only after a successful party replay, on Hercules' single script thread, so a disconnect or retry cannot pay twice. Note: `@dm reset` deletes unclaimed grants of offline members — a design question for the owner.
+- [ ] Headless scenarios that try to claim twice: re-talk, reconnect mid-reward, party replay. The item-conservation audit cannot catch this class: a repeated reward is logged correctly every time.
+- [x] F27 refine odds checked independently (2026-10-04): 69 values in `docs/refine.v1.json` (every +1..+10 chance for armor and weapon levels 1-4, base costs, armor DEF bonus, weapon stats per level) match `db/re/refine_db.conf` read with Hercules' own libconf. 0 disagree.
+
+**Claims that are wrong or partial (decide: build, or correct the row)**
+- [ ] F04 stat view modes: no window offers them. Build the mode switch or drop `world/stat_view.rs` and rewrite the row.
+- [ ] F23: no timestamp toggle, no tab unread indicators, no `<GUIDE:id>` links (row corrected in PR #14). Scope Guide links if wanted.
+- [ ] F11: prediction and rollback have no tests; extract them from `Client` into testable functions.
+- [ ] F16: 10 of 11 pilot MVPs are data-checked only; add one fight scenario per MVP (or a sweep).
+- [ ] F16 recap: damage taken and interrupts are tracked but not shown.
+- [ ] F39: disconnect and dead-member cases untested; no quest uses `partycompletequest` yet.
+- [ ] F22 and F24 rows cite names that do not exist (`PartyMemberLocationUpdate`, `RequestEquipItem`, `SavedEquipmentSets`); correct the text.
+
+**Live checks nobody can automate**
+- [ ] GUI verification pass, including section 7 (the PR #10 ports, WASD corner/slide, Mouse4/Mouse5, hold-mouse movement).
+- [ ] Two-client session: party marks, goals, frames, pings, ready check, trade.
+- [ ] Listen to the five F35 audio cues.
+- [ ] Run the Windows pack on Windows (never done), including the Vulkan/DX12 choice.
+- [ ] Pack version gate: the client sends its version but the server check is off; turn it on with the next pack.
+
+**CI and code hygiene**
+- [ ] The PR gate runs 10 of ~207 scenarios; add a fast economy/Batch 1 subset.
+- [ ] Fix the headless tester's 38 clippy errors and lint examples in CI.
+- [ ] Replace the six file-wide `#![allow(dead_code)]` with item-level allowances, and remove the unused duplicates found here (`skill_info.rs` timing helpers, `calculate_projections`, possibly `stat_view.rs`).
+- [ ] Triage the 21 unread fields/methods in `dm/reference_data.rs`.
+- [x] `finale-loki-briefing` (2026-10-04 full run): a test bug. Hercules f6974e0ad made Loki's audience menu loop until "We are ready"; the test took the first option and looped. Fixed; the driver now reports the last menus when it runs out of steps.
+- [ ] `mob-coward-poring` failed once in the 2026-10-04 full run ("never fled" after a 235-damage hit) and passed on rerun. Intermittent; investigate if it recurs.
+- [x] `skills-professor` failed in the 2026-10-02 full run; it passes in the 2026-10-04 disposable run (85.8 s). Watch for a recurrence.

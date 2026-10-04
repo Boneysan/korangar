@@ -162,7 +162,7 @@ enable_dev_npcs() {
         # `#` as the delimiter, NOT `|`: the alternation below would otherwise
         # terminate the s command and sed would abort, leaving this file as just
         # the marker line.
-        sed -E 's#^//("npc/custom/(headless_dialog_test|identify_test|f39_party_credit_test)\.txt",)#\1#' \
+        sed -E 's#^//("npc/custom/(headless_dialog_test|identify_test|f39_party_credit_test|headless_loot_test)\.txt",)#\1#' \
             "$scratch/scripts_dev.conf"
     } > "$hercules_repo/$dev_npc_list"
 }
@@ -535,6 +535,21 @@ set -e
 # Stop first so online flags and character state are flushed before the audit.
 stop_servers
 sleep 1
+
+# Item conservation: every character's holdings must equal its item-log
+# totals, and storage its logged deposits minus withdrawals (see the SQL file).
+# A difference fails the run: a duplicated or vanished item, or a movement
+# that bypassed the log. The one accepted exception, unlogged starting items,
+# is encoded in the SQL itself. Classified against the 2026-10-04 full run,
+# whose only difference was a starting Cotton Shirt.
+conservation_violations=$("${mysql_admin[@]}" --batch --skip-column-names "$db_name" < "$here/item-conservation.sql" 2>&1 || echo "item-conservation.sql could not run")
+if [ -n "$conservation_violations" ]; then
+    echo "Item conservation audit failed:" >&2
+    printf '  %s\n' "$conservation_violations" | head -40 >&2
+    runner_exit=1
+else
+    echo "Item conservation audit: every holding matches the item log"
+fi
 
 # This scenario's client assertions prove visible state; keep the journal in
 # the disposable database and verify the server-side events and per-character

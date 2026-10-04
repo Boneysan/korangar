@@ -262,7 +262,14 @@ fn drive(
             Step::Quest(id) => talk.quests.push(id),
         }
     }
-    Err("the dialogue did not finish within 160 steps".to_owned())
+    // Say whether this was a long page or a loop: the last menus and the tail
+    // of the text are what tell the two apart.
+    let tail: String = talk.text.chars().rev().take(400).collect::<Vec<_>>().into_iter().rev().collect();
+    let last_menus: Vec<_> = talk.menus.iter().rev().take(3).collect();
+    Err(format!(
+        "the dialogue did not finish within 160 steps ({} menus answered; last menus {last_menus:?}; text tail {tail:?})",
+        talk.menus.len()
+    ))
 }
 
 /// The NPC standing on (or beside) `cell`, from what the map has told us.
@@ -963,12 +970,13 @@ fn loki_briefing(config: &Config) -> Result<(), String> {
         let loki = go(&mut primary, RUINS, (148, 150), (150, 150))?;
 
         // The required account: no journey, no allies, no hunt turn-in.
+        // The audience menu loops until "We are ready" (Hercules f6974e0ad, so
+        // the journey and allies pages can be reread); the later progress menu
+        // ends on "Nothing more". Taking the first option looped forever.
         let first = talk(&mut primary, loki, |choices| {
-            if pick(choices, "Nothing more").is_some() {
-                pick(choices, "Nothing more")
-            } else {
-                affirmative(choices)
-            }
+            pick(choices, "We are ready")
+                .or_else(|| pick(choices, "Nothing more"))
+                .or_else(|| affirmative(choices))
         })?;
         expect_flag(&mut primary, "dm_arc19_started", 1)?;
         if first.text.contains(JOURNEY) || first.text.contains(NO_ALLIES) {
