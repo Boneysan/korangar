@@ -81,7 +81,7 @@ CI where missing.
 | F16 | Recap tracks damage taken/interrupts; toast shows only damage dealt | Partial — open |
 | PR #10 | Live-confirmed 2026-09-18 fixes never reached `main` | Settled 2026-10-03: 7 ported + WASD merged (below) |
 | F04 | Stat view modes not wired to any window | Claim wrong — open |
-| F03 | Build planner projections not shown | Partial — open |
+| F03 | ~~Build planner projections not shown~~ — wrong: shown via `state/build_planner.rs` (Batch 5) | Closed |
 | CI | PR gate covers 10/206 scenarios; Batch 1 scenarios only weekly | Open |
 
 ## Batch 0 results (2026-10-03)
@@ -97,7 +97,7 @@ nothing in the client calls:
 | Row | Unused outside tests | Meaning |
 |---|---|---|
 | F04 | `StatViewMode`, `SimpleStatDescription`, `DetailedStatRow`, `AdvancedStatMetrics`, `CharacterStatsInput` | Simple/Detailed/Advanced stat modes are not wired to any window |
-| F03 | `calculate_projections`, `can_increase_stat` | The planner window does not show the promised derived projections |
+| F03 | `calculate_projections`, `can_increase_stat` | Unused duplicates only: the planner window shows HP/SP, HIT/FLEE, DEF, ATK and CRIT deltas from `state/build_planner.rs` (corrected in Batch 5) |
 | F02 | `skill_cooldown`, `skill_after_cast_*_delay`, `skill_prerequisites`, `skill_status_change`, `skill_source` | Timing helpers unused; check whether the Guide reads the same data another way |
 | F30 | the whole formula module | No window shows a success chance |
 | F04/F10 | `is_unsupported` in `item_bonus.rs` | Minor |
@@ -161,3 +161,13 @@ ports has been seen live; each needs a line in the GUI pass.
 | F24 | Fixed, unseen | Four hotbar rows; equipment sets save/equip/delete (`/saveset`, `/equip`). **Defect:** Mouse4/Mouse5 chords were accepted but never read, and could not be captured; fixed `db1544c4` (mutation-checked) | Row cites `RequestEquipItem` / `SavedEquipmentSets`, which do not exist under those names | 2026-10-03 |
 | F25 | Verified (unseen) | Seven profiles applied in `cache.rs`; combat fade; lock state | GUI pass | 2026-10-03 |
 | Slice 11 | Verified (unseen) | Six ping kinds over `[KORANGAR-PING:v2]`, ready check wired; 56 party/chat/HUD tests pass | Multi-client pass. Slices 12 and 14 not traced in this batch | 2026-10-03 |
+| F01 | Verified (unseen) | `StatPreviewSelector` drives the Stats window tooltips | GUI pass | 2026-10-04 |
+| F02 | Verified (unseen) | Prerequisites, cooldowns and delays reach the Guide and hotbar tooltips from the exported skill data (`adventure_guide.rs`, `skill_box.rs`) | The `skill_info.rs` timing helpers are unused duplicates of that path | 2026-10-04 |
+| F03 | Verified (unseen) | Build planner window (from the Stats window) shows level/stat sliders and HP/SP, HIT/FLEE, soft DEF/MDEF, status ATK/MATK, CRIT deltas computed in `state/build_planner.rs` | Batch 0's "projections not shown" was wrong; `calculate_projections` is an unused duplicate | 2026-10-04 |
+| F04 | Claim wrong | — | No window offers Simple/Detailed/Advanced modes; `world/stat_view.rs` has no production caller. The row describes code, not a feature | 2026-10-04 |
+| F05 | Verified | Route services, locks and access notes exercised by Guide tests and `generate_navigation_graph.py --check` (export drift clean 2026-10-03) | Live route walk | 2026-10-04 |
+| F06 | Verified (unseen) | `MapSpawnDetails` used by the world map and Guide; danger threshold wired (Batch 1) | GUI pass | 2026-10-04 |
+| F07 | Verified (unseen) | `broad_spawn_rectangles_for_map` feeds the minimap spawn layer (toggle added in Batch 2) | GUI pass | 2026-10-04 |
+| F08 | Verified (unseen) | `alias_targets` feeds skill, status, monster, item, job and map search | GUI pass | 2026-10-04 |
+| F37 | Verified (unseen) | `server-rules.v1.json` embedded and rendered by the Guide (`adventure_guide.rs`); export drift clean | GUI pass | 2026-10-04 |
+| Slices 5, 6, 8, 9 | Verified (unseen) | Navigation graph, world-map atlas, skill tooltips and Guide window wired; all their exports pass `export_supported_data.py --check` | GUI pass | 2026-10-04 |
