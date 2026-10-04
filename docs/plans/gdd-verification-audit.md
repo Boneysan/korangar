@@ -183,8 +183,8 @@ ports has been seen live; each needs a line in the GUI pass.
 One list of everything the audit left open. Tick an item here when it is done and say where.
 
 **Economy safety (Batch 4, in progress on `agent/batch4-economy`)**
-- [ ] Register `headless_loot_test.txt` in Hercules `npc/scripts_dev.conf` (commented) and in the runner's fixture list; run the five loot scenarios (`autopickup-respects-drop-owner`, `loot-pickup-race`, `loot-pickup-multi-pile`, `autopickup-radius`, `autopickup-party-override`), and prove the ownership test fails against a planted bug.
-- [ ] Classify the item-conservation differences from the 2026-10-04 full run, then make `item-conservation.sql` fail the run instead of reporting.
+- [x] Loot fixture registered (Hercules `16222684f`); five loot scenarios added (`autopickup-respects-drop-owner` new; four ported from PR #10). All pass; the ownership test fails against a planted bug (`pc_takeitem` ignoring the owner window). `loot-pickup-multi-pile` failed once in ~6 runs (a pile granted to nobody, not lost); it now reports positions on failure. Watch it.
+- [x] Item conservation is a gate: the 2026-10-04 full run's only difference was an unlogged starting Cotton Shirt, now an explicit exception; any other difference fails the run.
 - [ ] Move `log_zeny: 1` from the untracked local `conf/import/logs.conf` into tracked config, so a fresh server logs zeny.
 - [ ] Decide a retention policy for `picklog`: monster-drop rows (`M`) alone were 2.5 million on the dev database.
 - [ ] Optional hardening: the split handler copies the source row's `id` into the new half; set it to 0 so the char-server's matching never has to cope with a shared id.
@@ -217,4 +217,5 @@ One list of everything the audit left open. Tick an item here when it is done an
 - [ ] Fix the headless tester's 38 clippy errors and lint examples in CI.
 - [ ] Replace the six file-wide `#![allow(dead_code)]` with item-level allowances, and remove the unused duplicates found here (`skill_info.rs` timing helpers, `calculate_projections`, possibly `stat_view.rs`).
 - [ ] Triage the 21 unread fields/methods in `dm/reference_data.rs`.
+- [ ] New in the 2026-10-04 full run: `finale-loki-briefing` (dialogue did not finish in 160 steps) and `mob-coward-poring` (Poring never fled after a 235-damage hit). 199 passed, 2 failed, 1 expected skip.
 - [x] `skills-professor` failed in the 2026-10-02 full run; it passes in the 2026-10-04 disposable run (85.8 s). Watch for a recurrence.

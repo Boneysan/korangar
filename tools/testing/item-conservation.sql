@@ -11,11 +11,8 @@
 -- Each row printed is a violation: a duplicated or vanished item, or a
 -- movement that bypassed the log. Run against a database whose characters
 -- were all created inside it (starting items are not logged; see the
--- `start_items` exclusion below).
+-- `start_items` exception below).
 
--- Starting items handed out by the char-server at creation are not logged.
--- They are listed in conf/char/char-server.conf `start_items`; their holdings
--- may exceed the log by at most the starting amount.
 SELECT CONCAT('char ', k.`char_id`, ' item ', k.`nameid`, ': holds ', COALESCE(h.`qty`, 0),
               ', item log totals ', COALESCE(l.`qty`, 0))
   FROM (
@@ -34,7 +31,11 @@ SELECT CONCAT('char ', k.`char_id`, ' item ', k.`nameid`, ': holds ', COALESCE(h
           FROM `picklog` p JOIN `char` c ON c.`char_id` = p.`char_id`
          GROUP BY p.`char_id`, p.`nameid`
        ) l ON l.`char_id` = k.`char_id` AND l.`nameid` = k.`nameid`
- WHERE COALESCE(h.`qty`, 0) <> COALESCE(l.`qty`, 0);
+ WHERE COALESCE(h.`qty`, 0) <> COALESCE(l.`qty`, 0)
+   -- Starting items (conf/char/char-server.conf `start_items`: Knife 1201 and
+   -- Cotton Shirt 2301, one each) are created without a log row. Allow exactly
+   -- that surplus and nothing more; update this list if start_items changes.
+   AND NOT (k.`nameid` IN (1201, 2301) AND COALESCE(h.`qty`, 0) - COALESCE(l.`qty`, 0) = 1);
 
 SELECT CONCAT('account ', k.`account_id`, ' storage item ', k.`nameid`, ': holds ', COALESCE(s.`qty`, 0),
               ', deposits minus withdrawals ', COALESCE(r.`qty`, 0))

@@ -4,8 +4,8 @@ use std::time::Duration;
 
 use korangar_networking::{HotkeyState, InventoryItemDetails, NetworkEvent, NoMetadata, ShopItem};
 use ragnarok_packets::{
-    BuyOrSellOption, BuyShopItemsResult, EntityId, EquipPosition, HotbarSlot, HotbarTab, HotkeyData, HotkeyType, InventoryIndex,
-    SellItemsResult, SkillId, SkillLevel, SoldItemInformation, StatType, StatUpType,
+    BuyOrSellOption, BuyShopItemsResult, DisappearanceReason, EntityId, EquipPosition, HotbarSlot, HotbarTab, HotkeyData, HotkeyType,
+    InventoryIndex, SellItemsResult, SkillId, SkillLevel, SoldItemInformation, StatType, StatUpType,
 };
 
 use crate::context::{Config, TestContext};
@@ -27,6 +27,11 @@ pub fn scenarios() -> Vec<Scenario> {
         Scenario::new("storage-persistence", 6, storage_persistence),
         Scenario::new("inventory-order", 6, inventory_order),
         Scenario::new("inventory-split-persistence", 6, inventory_split_persistence),
+        Scenario::new("autopickup-respects-drop-owner", 6, autopickup_respects_drop_owner),
+        Scenario::new("loot-pickup-race", 6, loot_pickup_race),
+        Scenario::new("loot-pickup-multi-pile", 6, loot_pickup_multi_pile),
+        Scenario::new("autopickup-radius", 6, autopickup_radius),
+        Scenario::new("autopickup-party-override", 6, autopickup_party_override),
         Scenario::new("stat-skill-points", 6, stat_skill_points),
         Scenario::new("reset-command-behavior", 6, reset_command_behavior),
         Scenario::new("reset-command-ordinary-reachability", 6, reset_command_ordinary_reachability),
@@ -96,6 +101,449 @@ fn inventory_split_persistence(config: &Config) -> Result<(), String> {
             "split stacks changed across relog: {before_logout:?} before, {after_relog:?} after (a duplicated or lost row)"
         ));
     }
+    Ok(())
+}
+
+/// Automatic pickup must not take another player's drop while the drop is
+/// still theirs. A monster drop belongs to its killer for
+/// `item_first_get_time` (3000 ms, `conf/map/battle/drops.conf`); the fork's
+/// sweep hands every attempt to stock `pc_takeitem`, which enforces that.
+///
+/// The killer (autopickup off) farms Porings until one drops something; the
+/// bystander (solo, autopickup on) is then warped onto the drop. It must not
+/// arrive during the owner's window, and it must arrive once the window ends --
+/// the positive half is what proves the bystander's sweep was running at all.
+fn autopickup_respects_drop_owner(config: &Config) -> Result<(), String> {
+    const MAP: &str = "prontera";
+    let (mut owner, mut bystander) = TestContext::connect_pair(config)?;
+    for context in [&mut owner, &mut bystander] {
+        let _ = context.net.leave_party();
+        context.pump(Duration::from_millis(400));
+    }
+    let reply = owner.gm_expect_feedback("@autopickup 0")?;
+    if !reply.contains("Automatic pickup: off") {
+        return Err(format!("owner's @autopickup 0 was not accepted: {reply}"));
+    }
+    let reply = bystander.gm_expect_feedback("@autopickup 2")?;
+    if !reply.contains("Automatic pickup: on") {
+        return Err(format!("bystander's @autopickup 2 was not accepted: {reply}"));
+    }
+    owner.warp(MAP, 155, 180)?;
+    bystander.warp(MAP, 140, 180)?;
+    owner.say("@str 99")?;
+    owner.say("@heal")?;
+    let owner_id = owner.player_id;
+
+    let mut drop = None;
+    for _ in 0..25 {
+        let target = owner.spawn_monster_near("PORING", 1002)?;
+        let mut dead = false;
+        for _ in 0..20 {
+            let Some(position) = owner.entities.get(&target).map(|entity| entity.position.tile_position()) else {
+                break;
+            };
+            if owner.position.x.abs_diff(position.x) > 1 || owner.position.y.abs_diff(position.y) > 1 {
+                let _ = owner.walk_to(position.x.saturating_sub(1), position.y);
+            }
+            owner.flush();
+            owner.net.player_attack(target).map_err(|_| "owner disconnected")?;
+            let hit = owner.wait_for_within("Poring hit or death", Duration::from_secs(6), &mut |event| match event {
+                NetworkEvent::RemoveEntity {
+                    entity_id,
+                    reason: DisappearanceReason::Died,
+                } if *entity_id == target => Some(true),
+                NetworkEvent::DamageEffect {
+                    source_entity_id,
+                    destination_entity_id,
+                    ..
+                } if *source_entity_id == owner_id && *destination_entity_id == target => Some(false),
+                _ => None,
+            })?;
+            // A killing hit sends damage and death back to back; see
+            // death_recovery_ten_kill_threshold for why the death is awaited here.
+            if hit
+                || owner
+                    .wait_for_within(
+                        "Poring death after a hit",
+                        Duration::from_millis(1000),
+                        &mut |event| match event {
+                            NetworkEvent::RemoveEntity {
+                                entity_id,
+                                reason: DisappearanceReason::Died,
+                            } if *entity_id == target => Some(()),
+                            _ => None,
+                        },
+                    )
+                    .is_ok()
+            {
+                dead = true;
+                break;
+            }
+        }
+        if !dead {
+            continue;
+        }
+        if let Ok(found) = owner.wait_for_within("a Poring drop", Duration::from_millis(1500), &mut |event| match event {
+            NetworkEvent::AddGroundItem {
+                entity_id,
+                item_id,
+                position,
+                ..
+            } => Some((*entity_id, item_id.0, *position)),
+            _ => None,
+        }) {
+            drop = Some((found, std::time::Instant::now()));
+            break;
+        }
+    }
+    let Some(((ground_id, item_id, position), dropped_at)) = drop else {
+        return Err("25 Porings dropped nothing; cannot test drop ownership".to_owned());
+    };
+
+    bystander.warp(MAP, position.x, position.y)?;
+    let window_end = dropped_at + Duration::from_millis(2600);
+    let early = bystander.collect_for(window_end.saturating_duration_since(std::time::Instant::now()));
+    let taken_early = early.iter().any(|event| {
+        matches!(event, NetworkEvent::IventoryItemAdded { item } if item.item_id.0 == item_id)
+            || matches!(event, NetworkEvent::RemoveGroundItem { entity_id } if *entity_id == ground_id)
+    });
+    let arrived_later = !taken_early
+        && bystander
+            .wait_for_within(
+                "the drop once the owner's window ends",
+                Duration::from_secs(5),
+                &mut |event| match event {
+                    NetworkEvent::IventoryItemAdded { item } if item.item_id.0 == item_id => Some(()),
+                    _ => None,
+                },
+            )
+            .is_ok();
+
+    let _ = owner.say("@killmonster");
+    let _ = owner.gm_expect_feedback("@autopickup 2");
+    if taken_early {
+        return Err(format!(
+            "automatic pickup took item {item_id} from its owner's drop inside the {} ms ownership window",
+            3000
+        ));
+    }
+    if !arrived_later {
+        return Err(format!(
+            "the bystander never picked up item {item_id} even after the ownership window, so its automatic pickup was not running and \
+             the first half proves nothing"
+        ));
+    }
+    Ok(())
+}
+
+// Loot scenarios ported 2026-10-04 from the closed PR #10 branch (QW-046 and
+// the autopickup pair), where they were written but never reached main.
+
+/// QW-046 — two clients race one floor pile: one owner, no duplicate.
+fn loot_pickup_race(config: &Config) -> Result<(), String> {
+    const RED_POTION: u32 = 501;
+    let (mut primary, mut partner) = TestContext::connect_pair(config)?;
+    primary.gm_expect_feedback("@autopickup 0")?;
+    partner.gm_expect_feedback("@autopickup 0")?;
+    let index = primary.give_item(RED_POTION, 1)?;
+    primary.flush();
+    primary.net.drop_item(index, 1).map_err(|_| "disconnected")?;
+    let ground_id = primary.wait_for("AddGroundItem", |event| match event {
+        NetworkEvent::AddGroundItem {
+            entity_id, item_id: id, ..
+        } if id.0 == RED_POTION => Some(*entity_id),
+        _ => None,
+    })?;
+    partner.wait_for("partner AddGroundItem", |event| match event {
+        NetworkEvent::AddGroundItem { entity_id, .. } if *entity_id == ground_id => Some(()),
+        _ => None,
+    })?;
+    primary.flush();
+    partner.flush();
+    primary.net.pick_up_item(ground_id).map_err(|_| "disconnected")?;
+    partner.net.pick_up_item(ground_id).map_err(|_| "disconnected")?;
+    let primary_adds = primary
+        .collect_for(Duration::from_millis(800))
+        .into_iter()
+        .filter(|event| matches!(event, NetworkEvent::IventoryItemAdded { item } if item.item_id.0 == RED_POTION))
+        .count();
+    let partner_adds = partner
+        .collect_for(Duration::from_millis(800))
+        .into_iter()
+        .filter(|event| matches!(event, NetworkEvent::IventoryItemAdded { item } if item.item_id.0 == RED_POTION))
+        .count();
+    let _ = primary.gm_expect_feedback("@autopickup 2");
+    let _ = partner.gm_expect_feedback("@autopickup 2");
+    if primary_adds + partner_adds != 1 {
+        return Err(format!(
+            "race must grant the pile once; primary={primary_adds} partner={partner_adds}"
+        ));
+    }
+    Ok(())
+}
+
+/// QW-046 — two clients race two distinct floor piles: each pile is granted
+/// exactly once, and winning one pile does not suppress the other.
+fn loot_pickup_multi_pile(config: &Config) -> Result<(), String> {
+    const RED_POTION: u32 = 501;
+    const ORANGE_POTION: u32 = 502;
+    let (mut primary, mut partner) = TestContext::connect_pair(config)?;
+    primary.gm_expect_feedback("@autopickup 0")?;
+    partner.gm_expect_feedback("@autopickup 0")?;
+
+    let red_index = primary.give_item(RED_POTION, 1)?;
+    let orange_index = primary.give_item(ORANGE_POTION, 1)?;
+    primary.flush();
+    primary.net.drop_item(red_index, 1).map_err(|_| "disconnected")?;
+    primary.net.drop_item(orange_index, 1).map_err(|_| "disconnected")?;
+
+    let red_entity = primary.wait_for("red potion AddGroundItem", |event| match event {
+        NetworkEvent::AddGroundItem { entity_id, item_id, .. } if item_id.0 == RED_POTION => Some(*entity_id),
+        _ => None,
+    })?;
+    let (orange_entity, orange_position) = primary.wait_for("orange potion AddGroundItem", |event| match event {
+        NetworkEvent::AddGroundItem {
+            entity_id,
+            item_id,
+            position,
+            ..
+        } if item_id.0 == ORANGE_POTION => Some((*entity_id, *position)),
+        _ => None,
+    })?;
+    if red_entity == orange_entity {
+        return Err("distinct floor piles reused one entity id".to_owned());
+    }
+    for entity in [red_entity, orange_entity] {
+        partner.wait_for("partner multi-pile AddGroundItem", |event| match event {
+            NetworkEvent::AddGroundItem { entity_id, .. } if *entity_id == entity => Some(()),
+            _ => None,
+        })?;
+    }
+
+    primary.flush();
+    partner.flush();
+    for entity in [red_entity, orange_entity] {
+        primary.net.pick_up_item(entity).map_err(|_| "disconnected")?;
+        partner.net.pick_up_item(entity).map_err(|_| "disconnected")?;
+    }
+    let primary_events = primary.collect_for(Duration::from_millis(900));
+    let partner_events = partner.collect_for(Duration::from_millis(900));
+    let count = |events: &[NetworkEvent], item_id| {
+        events
+            .iter()
+            .filter(|event| matches!(event, NetworkEvent::IventoryItemAdded { item } if item.item_id.0 == item_id))
+            .count()
+    };
+    let red_adds = count(&primary_events, RED_POTION) + count(&partner_events, RED_POTION);
+    let orange_adds = count(&primary_events, ORANGE_POTION) + count(&partner_events, ORANGE_POTION);
+    let _ = primary.gm_expect_feedback("@autopickup 2");
+    let _ = partner.gm_expect_feedback("@autopickup 2");
+    if red_adds != 1 || orange_adds != 1 {
+        // A pile granted to nobody is not lost (the conservation audit checks
+        // that); it stayed on the floor. Say where, so an intermittent failure
+        // (1 in ~6 runs on 2026-10-04) explains itself: Hercules refuses a
+        // pickup more than two cells away (`pc_takeitem`).
+        let orange_left_floor = primary_events
+            .iter()
+            .chain(partner_events.iter())
+            .any(|event| matches!(event, NetworkEvent::RemoveGroundItem { entity_id } if *entity_id == orange_entity));
+        return Err(format!(
+            "multi-pile pickup must grant each pile once; red={red_adds}, orange={orange_adds} (orange at {orange_position:?}, left the \
+             floor: {orange_left_floor}; primary at {:?}, partner at {:?})",
+            primary.position, partner.position
+        ));
+    }
+    Ok(())
+}
+
+/// Did anything take the ground item, and did the bag gain it back?
+fn ground_item_taken(context: &mut TestContext, entity_id: EntityId, item_id: u32, window: Duration) -> (bool, bool) {
+    let mut removed = false;
+    let mut added = false;
+
+    for event in context.collect_for(window) {
+        match event {
+            NetworkEvent::RemoveGroundItem { entity_id: id } if id == entity_id => removed = true,
+            NetworkEvent::IventoryItemAdded { item } if item.item_id.0 == item_id => added = true,
+            _ => {}
+        }
+    }
+
+    (removed, added)
+}
+
+/// Loot within two cells walks into the bag with no click
+/// (`autopickup_radius`, Hercules `pc_autopickup_*`).
+///
+/// Positioned by `@warp` and not by walking: `walk_to` reports success once it
+/// is within one cell of its target, and the exact cell where the behaviour
+/// changes is the entire subject of this test. Distances are measured from the
+/// position `AddGroundItem` reports rather than from where the item was
+/// dropped -- `map_addflooritem` calls `search_freecell`, so a drop lands on a
+/// free cell NEAR the dropper, not necessarily under them.
+///
+/// Four stages, because only the negatives make the positive mean anything:
+/// with the feature off the item survives being stood next to; at three cells
+/// it survives; at two -- the edge of the radius, and of the reach
+/// `pc_takeitem` has always enforced -- it is taken. The last stage only runs
+/// when the third fails, and it separates "the radius is wrong" from "the
+/// sweep never ran at all".
+fn autopickup_radius(config: &Config) -> Result<(), String> {
+    const MAP: &str = "prontera";
+    const X: u16 = 155;
+    const Y: u16 = 180;
+
+    let mut context = TestContext::connect(config)?;
+    let item_id = 501; // Red Potion
+
+    // Off first, or the item below is taken before it can be observed.
+    context.gm_expect_feedback("@autopickup 0")?;
+    context.warp(MAP, X, Y)?;
+
+    // An ownerless floor item from the headless_loot_test fixture: the
+    // server never auto-picks a player's own drop (`player_dropped`), which is
+    // why PR #10's version of this test, dropping its own potion, cannot pass.
+    context.flush();
+    let reply = context.gm_expect_feedback("@testloot 501 1 0 0")?;
+    if !reply.contains("Test loot placed") {
+        return Err(format!(
+            "the @testloot fixture is not loaded (is headless_loot_test.txt enabled?): {reply}"
+        ));
+    }
+
+    let (ground_entity_id, item_position) = context.wait_for("AddGroundItem", |event| match event {
+        NetworkEvent::AddGroundItem {
+            entity_id,
+            item_id: id,
+            position,
+            ..
+        } if id.0 == item_id => Some((*entity_id, *position)),
+        _ => None,
+    })?;
+
+    // Standing next to it, switched off. A server where none of this was wired
+    // up would pass every later stage without this one.
+    let (removed, _) = ground_item_taken(&mut context, ground_entity_id, item_id, Duration::from_millis(1200));
+    if removed {
+        return Err("the drop was taken off the floor while @autopickup was off".to_owned());
+    }
+
+    // The command's own reply is the assertion that it was understood:
+    // gm_expect_feedback is satisfied by ANY server line, including a usage
+    // error, so a silently rejected argument would otherwise look like a
+    // feature that does not work.
+    let reply = context.gm_expect_feedback("@autopickup 2")?;
+    if !reply.contains("Automatic pickup: on") {
+        return Err(format!("@autopickup 2 was not accepted; the server said: {reply}"));
+    }
+
+    // One cell outside the radius.
+    context.warp(MAP, item_position.x + 3, item_position.y)?;
+    let (removed, _) = ground_item_taken(&mut context, ground_entity_id, item_id, Duration::from_millis(1200));
+    if removed {
+        return Err("the drop was taken from three cells away, outside the two cell radius".to_owned());
+    }
+
+    // The edge of the radius.
+    context.warp(MAP, item_position.x + 2, item_position.y)?;
+    let (removed, added) = ground_item_taken(&mut context, ground_entity_id, item_id, Duration::from_millis(2500));
+
+    if !removed {
+        // Which failure is this? Standing on the item is the same code path at
+        // distance zero, so if that works the sweep runs and the radius is
+        // short; if it does not, the sweep is not running at all.
+        context.warp(MAP, item_position.x, item_position.y)?;
+        let (removed_on_top, _) = ground_item_taken(&mut context, ground_entity_id, item_id, Duration::from_millis(2500));
+
+        if removed_on_top {
+            return Err("the drop was taken standing on it but not from two cells away: the radius is shorter than it claims".to_owned());
+        }
+
+        return Err("the drop was never taken, even standing on it: the pickup sweep is not running".to_owned());
+    }
+
+    if !added {
+        return Err("the drop left the ground two cells away but never arrived in the inventory".to_owned());
+    }
+
+    Ok(())
+}
+
+/// A party overrides a member's own "off" (`pc_autopickup_radius`).
+///
+/// The rule the server enforces: your own setting is yours for solo play, and a
+/// party takes it over. Loot in a group is shared -- `party_default_share`
+/// turns both item rules on when the party is formed -- so a member opting out
+/// keeps nothing for themselves, they only leave drops lying on the floor for
+/// everybody.
+///
+/// The personal OFF is established first against a real drop, so the second
+/// half cannot pass by the setting having quietly failed to apply.
+fn autopickup_party_override(config: &Config) -> Result<(), String> {
+    const MAP: &str = "prontera";
+    const X: u16 = 155;
+    const Y: u16 = 180;
+
+    let mut context = TestContext::connect(config)?;
+    let item_id = 501; // Red Potion
+
+    let _ = context.net.leave_party();
+    context.pump(Duration::from_millis(600));
+
+    let reply = context.gm_expect_feedback("@autopickup 0")?;
+    if !reply.contains("Automatic pickup: off") {
+        return Err(format!("@autopickup 0 was not accepted; the server said: {reply}"));
+    }
+
+    context.warp(MAP, X, Y)?;
+    // An ownerless floor item from the headless_loot_test fixture: the
+    // server never auto-picks a player's own drop (`player_dropped`), which is
+    // why PR #10's version of this test, dropping its own potion, cannot pass.
+    context.flush();
+    let reply = context.gm_expect_feedback("@testloot 501 1 0 0")?;
+    if !reply.contains("Test loot placed") {
+        return Err(format!(
+            "the @testloot fixture is not loaded (is headless_loot_test.txt enabled?): {reply}"
+        ));
+    }
+
+    let (ground_entity_id, _) = context.wait_for("AddGroundItem", |event| match event {
+        NetworkEvent::AddGroundItem {
+            entity_id,
+            item_id: id,
+            position,
+            ..
+        } if id.0 == item_id => Some((*entity_id, *position)),
+        _ => None,
+    })?;
+
+    // Solo, switched off: the drop stays where it fell.
+    let (removed, _) = ground_item_taken(&mut context, ground_entity_id, item_id, Duration::from_millis(1200));
+    if removed {
+        return Err("the drop was taken while the character had automatic pickup off".to_owned());
+    }
+
+    // A party of one is still a party, and it is the party that decides.
+    let name = format!("pick{}", std::process::id() % 10000);
+    context.flush();
+    context.say(&format!("@party {name}"))?;
+    context.pump(Duration::from_millis(800));
+
+    let (removed, added) = ground_item_taken(&mut context, ground_entity_id, item_id, Duration::from_millis(2500));
+
+    // Put everything back before reporting: the party would follow this account
+    // into the next scenario, and so would the stored setting.
+    let _ = context.net.leave_party();
+    context.pump(Duration::from_millis(300));
+    let _ = context.gm_expect_feedback("@autopickup 2");
+
+    if !removed {
+        return Err("joining a party did not override the character's own off setting".to_owned());
+    }
+    if !added {
+        return Err("the drop left the ground once in a party but never arrived in the inventory".to_owned());
+    }
+
     Ok(())
 }
 
