@@ -79,7 +79,7 @@ CI where missing.
 | F30 | Formulas not shown in any window | Partial — open |
 | F31 | No assign/complete action in the board window | Partial — open |
 | F16 | Recap tracks damage taken/interrupts; toast shows only damage dealt | Partial — open |
-| PR #10 | Live-confirmed 2026-09-18 fixes never reached `main` | Decision needed |
+| PR #10 | Live-confirmed 2026-09-18 fixes never reached `main` | Settled 2026-10-03: 7 ported + WASD merged (below) |
 | F04 | Stat view modes not wired to any window | Claim wrong — open |
 | F03 | Build planner projections not shown | Partial — open |
 | CI | PR gate covers 10/206 scenarios; Batch 1 scenarios only weekly | Open |
@@ -112,9 +112,23 @@ connection, character select, three quest scenarios, `skills-mage`, `trade-rejec
 quest credit, discovery, DM replay) runs only in the weekly full run on `main`. A green PR says
 nothing about them.
 
-**PR #10.** Its fixes (drag-click sound, Tab confirm-attack, hold-to-walk, pickup toggle, party
-privacy, class on character slot, equipped-gear sell filter) have no equivalent identifiers on
-`main`. Decision still needed: port, or record as dropped.
+**PR #10 — settled 2026-10-03 (owner chose option 1).** Ported onto korangar
+`agent/review-fixes` (local, not pushed), each re-applied against today's `main`:
+
+| Fix | Commit | Notes |
+|---|---|---|
+| Windows pack Vulkan/DX12 choice | `a17b5a2f` | Clean cherry-pick |
+| No click sound on drag start | `b735fca2` | 2 tests |
+| Space attacks the Tab target | `e54146fa` | Rebindable `AttackTarget`; shares Space with the debug camera |
+| Sell list: whole ammo stacks; sell cart cleared after a sale | `9f8e6ee6` | Equipped items were already refused server-side (Hercules `8b850e4e5`); PR #10's filter was test-only. The cart bug was new |
+| Pack version at login, "out of date" popup, Update scripts | `4f361bf0` | **Server check is off**: local `conf/import/login-server.conf` lacks `check_client_version: true` |
+| Class name on character slots | `252c5b3e`..`16675621` | |
+| Vendor "cannot wear" marker with reason tooltip | `dabf385b` | Generator moved to `tools/generate_equipment_eligibility.py`; in `generated-drift.sh` |
+| WASD: one held path, corner rule, wall slide | `9e52e852` | Corner rule from `path.c` `chk_dir`; mutation-checked |
+
+Dropped: the pickup toggle and party privacy (option 2, not chosen), PR #10's quest tracker and
+recovery slices (`main` rebuilt both), the quest-name table, and its docs/runbooks. None of the
+ports has been seen live; each needs a line in the GUI pass.
 
 ## Verdict log
 
