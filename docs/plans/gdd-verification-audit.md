@@ -185,9 +185,9 @@ One list of everything the audit left open. Tick an item here when it is done an
 **Economy safety (Batch 4, in progress on `agent/batch4-economy`)**
 - [x] Loot fixture registered (Hercules `16222684f`); five loot scenarios added (`autopickup-respects-drop-owner` new; four ported from PR #10). All pass; the ownership test fails against a planted bug (`pc_takeitem` ignoring the owner window). `loot-pickup-multi-pile` failed once in ~6 runs (a pile granted to nobody, not lost); it now reports positions on failure. Watch it.
 - [x] Item conservation is a gate: the 2026-10-04 full run's only difference was an unlogged starting Cotton Shirt, now an explicit exception; any other difference fails the run.
-- [ ] Move `log_zeny: 1` from the untracked local `conf/import/logs.conf` into tracked config, so a fresh server logs zeny.
+- [x] `log_zeny: 1` is tracked (`conf/import/logs.conf`, force-added; Hercules `3f1aae763`).
 - [ ] Decide a retention policy for `picklog`: monster-drop rows (`M`) alone were 2.5 million on the dev database.
-- [ ] Optional hardening: the split handler copies the source row's `id` into the new half; set it to 0 so the char-server's matching never has to cope with a shared id.
+- [x] Split hardening: the new half gets `id = 0` (Hercules, same PR); split, persistence, storage and order scenarios pass with the audit clean.
 - [ ] Remaining Batch 4 rows: F26 autoloot settings, F27 refine odds against `refine_db`, F28 live two-client trade, F29, F30 (no window shows crafting odds), F31 (no assign/complete action).
 
 **Campaign rewards (added 2026-10-04; outside the GDD rows, so no batch covered it)**
