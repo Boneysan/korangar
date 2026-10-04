@@ -377,6 +377,11 @@ where
                     overflow_behavior: OverflowBehavior::Shrink,
                 },
                 button! {
+                    text: "Crafting odds",
+                    tooltip: "Your success chance for weapon forging and potion preparation, from your current stats, skills and anvil.",
+                    event: InputEvent::ToggleCraftingOddsWindow,
+                },
+                button! {
                     text: "Build planner",
                     tooltip: "Simulate future levels and stat allocations. Nothing is sent to the server.",
                     event: InputEvent::ToggleBuildPlannerWindow,

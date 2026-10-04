@@ -235,6 +235,8 @@ pub enum InputEvent {
     ToggleMinimapWindow,
     /// Open or close the simulated build planner (GDD F03).
     ToggleBuildPlannerWindow,
+    /// Open or close the crafting odds window (GDD F30).
+    ToggleCraftingOddsWindow,
     /// Adjust one planned stat by one point; never sent to the server.
     BuildPlannerStat {
         stat: crate::world::StatKind,

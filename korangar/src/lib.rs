@@ -9558,6 +9558,16 @@ impl Client {
                         }
                     }
                 }
+                InputEvent::ToggleCraftingOddsWindow => {
+                    if self.client_state.try_follow(this_player()).is_some() {
+                        match self.interface.is_window_with_class_open(WindowClass::CraftingOdds) {
+                            true => self.interface.close_window_with_class(WindowClass::CraftingOdds),
+                            false => self
+                                .interface
+                                .open_window(CraftingOddsWindow::new(this_player().manually_asserted())),
+                        }
+                    }
+                }
                 InputEvent::ToggleBuildPlannerWindow => {
                     if self.client_state.try_follow(this_player()).is_some() {
                         match self.interface.is_window_with_class_open(WindowClass::BuildPlanner) {
@@ -10381,6 +10391,12 @@ impl Client {
                                 );
                             }
                         }
+                        continue;
+                    }
+
+                    // `/craftodds` opens the F30 crafting odds window.
+                    if text.as_str() == "/craftodds" {
+                        self.input_event_buffer.push(InputEvent::ToggleCraftingOddsWindow);
                         continue;
                     }
 
