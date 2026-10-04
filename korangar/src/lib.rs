@@ -10382,6 +10382,26 @@ impl Client {
                         continue;
                     }
 
+                    // `/guide <name>` posts a validated Guide link (F23) on the chat
+                    // channel the player has selected.
+                    if text.as_str() == "/guide" || text.starts_with("/guide ") {
+                        let query = text.trim_start_matches("/guide").trim();
+                        match crate::interface::windows::resolve_guide_query(query) {
+                            Some(link) => {
+                                let routed = self.client_state.follow(client_state().chat_window()).routed(&link.token());
+                                self.input_event_buffer.push(InputEvent::SendMessage { text: routed });
+                            }
+                            None => self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
+                                match query.is_empty() {
+                                    true => "Usage: /guide <map, monster or item name>  (posts a Guide link to chat)".to_owned(),
+                                    false => format!("No Guide entry is named \"{query}\". Use the exact map, monster or item name."),
+                                },
+                                MessageColor::Information,
+                            )),
+                        }
+                        continue;
+                    }
+
                     // Party target markers and Tonight's Goals (F20). Both ride the
                     // versioned party-chat carrier; peers can only change their own
                     // marker and the shared ephemeral goal list.
@@ -12333,6 +12353,23 @@ impl Client {
                                 client_state().adventure_guide(),
                                 self.library.clone(),
                             )),
+                        }
+                    }
+                }
+                InputEvent::OpenGuideLink { kind, key } => {
+                    if self.map.is_some() {
+                        crate::interface::windows::open_guide_entry(
+                            &self.client_state,
+                            client_state().adventure_guide(),
+                            kind,
+                            &key,
+                            self.library.town_pois(&key),
+                        );
+                        if !self.interface.is_window_with_class_open(WindowClass::AdventureGuide) {
+                            self.interface.open_window(AdventureGuideWindow::new(
+                                client_state().adventure_guide(),
+                                self.library.clone(),
+                            ));
                         }
                     }
                 }

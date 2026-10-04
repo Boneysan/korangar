@@ -3309,6 +3309,37 @@ fn all_category_result_slots(rows: &[GuideResult]) -> usize {
     7.min(MAX_RESULTS.saturating_sub(rows.len()))
 }
 
+/// Open the Guide on a monster, item or map from a chat link (F23). The key
+/// was validated when the link was parsed; an entry that has since vanished
+/// shows the same "unavailable" line as an item.
+pub fn open_guide_entry<A>(state: &State<ClientState>, path: A, kind: super::GuideLinkKind, key: &str, town_pois: &[TownPoi])
+where
+    A: Path<ClientState, AdventureGuideWindowState> + Copy,
+{
+    let data = reference_data();
+    let (category, detail) = match kind {
+        super::GuideLinkKind::Item => {
+            if let Ok(item_id) = key.parse() {
+                open_item_entry(state, path, item_id);
+            }
+            return;
+        }
+        super::GuideLinkKind::Monster => (
+            "Monsters",
+            key.parse()
+                .ok()
+                .and_then(|id| data.monster_by_id(id))
+                .map(monster_details)
+                .unwrap_or_else(|| vec!["Reference entry unavailable.".to_owned()]),
+        ),
+        super::GuideLinkKind::Map => ("Maps", map_details(key, town_pois)),
+    };
+    state.update_value(path.category(), category.to_owned());
+    state.update_value(path.query(), key.to_owned());
+    run_search(state, path);
+    state.update_value(path.detail(), detail);
+}
+
 /// Select an item from another in-game surface, populate the Guide search and
 /// detail panes, and leave the guide ready to continue browsing.
 pub fn open_item_entry<A>(state: &State<ClientState>, path: A, item_id: u32)

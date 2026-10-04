@@ -694,6 +694,11 @@ pub enum InputEvent {
     OpenAdventureGuideItem {
         item_id: u32,
     },
+    /// A `<GUIDE:...>` chat link was clicked (F23): open that Guide page.
+    OpenGuideLink {
+        kind: crate::interface::windows::GuideLinkKind,
+        key: String,
+    },
     /// Broadcast the current position through ordinary party chat with a
     /// readable fallback.
     SendPartyPing {

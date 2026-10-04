@@ -65,7 +65,7 @@ mod weapon_refine;
 
 use serde::{Deserialize, Serialize};
 
-pub use self::adventure_guide::{AdventureGuideWindow, AdventureGuideWindowState, open_item_entry};
+pub use self::adventure_guide::{AdventureGuideWindow, AdventureGuideWindowState, open_guide_entry, open_item_entry};
 pub use self::audio_settings::AudioSettingsWindow;
 pub use self::auto_spell::AutoSpellWindow;
 pub use self::build_planner::BuildPlannerWindow;
@@ -76,7 +76,7 @@ pub use self::cache::WindowCache;
 pub use self::character_creation::CharacterCreationWindow;
 pub use self::character_overview::CharacterOverviewWindow;
 pub use self::character_selection::CharacterSelectionWindow;
-pub use self::chat::{ChatTextBox, ChatWindow, ChatWindowState};
+pub use self::chat::{ChatTextBox, ChatWindow, ChatWindowState, GuideLinkKind, resolve_guide_query};
 pub use self::commands::{CommandsWindow, CommandsWindowState};
 pub use self::commission_board::{CommissionBoardWindow, CommissionBoardWindowState};
 pub use self::dialog::{DialogWindow, DialogWindowState};
