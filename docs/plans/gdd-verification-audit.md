@@ -211,4 +211,4 @@ One list of everything the audit left open. Tick an item here when it is done an
 - [ ] Fix the headless tester's 38 clippy errors and lint examples in CI.
 - [ ] Replace the six file-wide `#![allow(dead_code)]` with item-level allowances, and remove the unused duplicates found here (`skill_info.rs` timing helpers, `calculate_projections`, possibly `stat_view.rs`).
 - [ ] Triage the 21 unread fields/methods in `dm/reference_data.rs`.
-- [ ] `skills-professor` failed in the 2026-10-02 full run; check the 2026-10-04 run.
+- [x] `skills-professor` failed in the 2026-10-02 full run; it passes in the 2026-10-04 disposable run (85.8 s). Watch for a recurrence.
