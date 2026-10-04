@@ -1276,14 +1276,16 @@ mod resolve_pending_cast_tests {
             ClientTick(16),
             Some(dest1),
             dest2,
-            Some(start_pos)
+            Some(start_pos),
+            false
         ));
         assert!(!should_reissue_hold_mouse_move(
             ClientTick(0),
             ClientTick(199),
             Some(dest1),
             dest2,
-            Some(start_pos)
+            Some(start_pos),
+            false
         ));
 
         // At or above 200ms with changed destination, re-issues
@@ -1292,17 +1294,29 @@ mod resolve_pending_cast_tests {
             ClientTick(200),
             Some(dest1),
             dest2,
-            Some(start_pos)
+            Some(start_pos),
+            false
         ));
 
-        // At or above 200ms holding towards same destination while player hasn't
-        // arrived, re-issues
+        // Same destination while still walking there: silent, or every resend
+        // becomes a server path correction.
+        assert!(!should_reissue_hold_mouse_move(
+            ClientTick(0),
+            ClientTick(200),
+            Some(dest1),
+            dest1,
+            Some(start_pos),
+            true
+        ));
+
+        // Same destination, but the character stopped short: re-issue.
         assert!(should_reissue_hold_mouse_move(
             ClientTick(0),
             ClientTick(200),
             Some(dest1),
             dest1,
-            Some(start_pos)
+            Some(start_pos),
+            false
         ));
 
         // Once player reaches destination, stops re-issuing
@@ -1311,7 +1325,8 @@ mod resolve_pending_cast_tests {
             ClientTick(200),
             Some(dest1),
             dest1,
-            Some(dest1)
+            Some(dest1),
+            false
         ));
     }
 
@@ -1532,12 +1547,18 @@ fn pending_skill_cursor_state(in_range: bool) -> MouseCursorState {
     }
 }
 
+/// A held mouse re-issues the walk only when the cursor names a new tile, or
+/// when the character stopped short of an unchanged one. Re-sending the same
+/// destination mid-walk is not free: Hercules answers it at the next cell with
+/// a fresh `PlayerMove` (`unit.c`, `change_walk_target`), and the client
+/// re-paths from that origin every time -- the stutter the WASD fix removed.
 fn should_reissue_hold_mouse_move(
     last_tick: ClientTick,
     current_tick: ClientTick,
     last_destination: Option<TilePosition>,
     current_destination: TilePosition,
     player_position: Option<TilePosition>,
+    player_walking: bool,
 ) -> bool {
     let elapsed = current_tick.0.wrapping_sub(last_tick.0);
     if elapsed < 200 {
@@ -1546,7 +1567,7 @@ fn should_reissue_hold_mouse_move(
     if last_destination != Some(current_destination) {
         true
     } else {
-        player_position != Some(current_destination)
+        !player_walking && player_position != Some(current_destination)
     }
 }
 
@@ -13628,6 +13649,7 @@ impl Client {
                     last_walking_destination,
                     destination,
                     player_pos,
+                    self.client_state.try_follow(this_entity()).is_some_and(Entity::is_walking),
                 ) {
                     self.hold_mouse_move_last_tick = client_tick;
                     interface_frame.set_mouse_mode(MouseInputMode::Walk { destination });
