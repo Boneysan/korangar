@@ -1144,6 +1144,19 @@ Ported to korangar `agent/review-fixes`; see the table in
 
 ---
 
+### 8. Owner decisions built 2026-10-04 — automated tests only, never seen
+
+| # | Check | Pass when |
+|---|---|---|
+| 8.1 | Cast a skill with a cooldown from the hotbar | Its slot darkens and counts down (`4.3`, `12`, `2m`), then clears |
+| 8.2 | Game Settings → "Show chat timestamps" off and on | The `[HH:MM:SS]` prefix disappears and returns; wrapping stays correct |
+| 8.3 | Stay on All, receive party chat and a whisper | Party and Whisper tabs show `(n)`; opening a tab clears its count |
+| 8.4 | Stats window → "View: …" button | Cycles Simple / Detailed / Advanced; each shows different text; the choice survives relog |
+| 8.5 | `/guide poring`, `/guide prontera`, `/guide Red Potion`, `/guide nonsense` | First three post `[Guide: …]` on the selected channel; the last explains; clicking a link opens that Guide page |
+| 8.6 | Paste `<GUIDE:monster:999999>` into chat | Shows `[broken Guide link]` and opens nothing |
+
+---
+
 ## Known-unrendered — do not report these as bugs
 
 Verified *stored* but deliberately **not drawn** yet, so a GUI pass will see
