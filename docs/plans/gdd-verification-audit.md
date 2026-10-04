@@ -194,7 +194,7 @@ One list of everything the audit left open. Tick an item here when it is done an
 - [x] All 178 campaign grants inventoried: 93 behind `DM_ClaimGrant`, 85 behind quest state the same block completes (the one exception, the Sigil Ring replacement, is harmless: the ring cannot leave the inventory). Five zeny grants escaped their latch through brace-less `if`s (Arc 1 Mira rescue ×3, Arc 2 East Memorial ×2); fixed in Hercules `9a3752c6c`. Every latch key, numbered ones included, is cleared by `DM_ClearPartyGrants`.
 - [x] `DM_QueueGrant` / `DM_ClaimPendingGrants`: each row is marked claimed before it is paid, and payout runs only after a successful party replay, on Hercules' single script thread, so a disconnect or retry cannot pay twice. Note: `@dm reset` deletes unclaimed grants of offline members — a design question for the owner.
 - [ ] Headless scenarios that try to claim twice: re-talk, reconnect mid-reward, party replay. The item-conservation audit cannot catch this class: a repeated reward is logged correctly every time.
-- [ ] F27 refine odds: compare the export directly against `db/re/refine_db.conf` (the drift check only proves the export matches its own generator).
+- [x] F27 refine odds checked independently (2026-10-04): 69 values in `docs/refine.v1.json` (every +1..+10 chance for armor and weapon levels 1-4, base costs, armor DEF bonus, weapon stats per level) match `db/re/refine_db.conf` read with Hercules' own libconf. 0 disagree.
 
 **Claims that are wrong or partial (decide: build, or correct the row)**
 - [ ] F04 stat view modes: no window offers them. Build the mode switch or drop `world/stat_view.rs` and rewrite the row.
