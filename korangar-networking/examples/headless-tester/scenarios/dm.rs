@@ -35,6 +35,9 @@ pub fn scenarios() -> Vec<Scenario> {
         Scenario::new("dm-party-offline-transitions", 9, dm_party_offline_transitions),
         Scenario::new("dm-party-reward-isolation", 9, dm_party_reward_isolation),
         Scenario::new("dm-party-recreation-isolation", 9, dm_party_recreation_isolation),
+        // Before dm-party-offline-replay: this scenario's @dm reset wipes the
+        // party journal, which the runner's replay SQL audit reads afterwards.
+        Scenario::new("dm-reset-keeps-owed-rewards", 9, dm_reset_keeps_owed_rewards),
         Scenario::new("dm-party-offline-replay", 9, dm_party_offline_replay),
         Scenario::new("dm-party-alternate-character", 9, dm_party_alternate_character),
         Scenario::new("dm-reward-delta", 9, dm_reward_delta),
@@ -313,6 +316,62 @@ fn quest_log_multi(config: &Config) -> Result<(), String> {
 /// Record party campaign state while one member is offline, then verify the
 /// returning character replays both quest and flag transitions and can catch
 /// up again without duplicating the quest notification.
+/// A reward earned while a member is offline is queued for them
+/// (`DM_QueueGrant`). `@dm reset` restarts the story; it must not confiscate
+/// what was already earned (owner decision 2026-10-04). The returning member
+/// is paid at their next sync even though the run was reset in between.
+fn dm_reset_keeps_owed_rewards(config: &Config) -> Result<(), String> {
+    const BASE: usize = 5000;
+
+    let (mut primary, partner) = TestContext::connect_pair(config)?;
+    let partner_account = partner.account_id.0;
+    let mut partner = Some(partner);
+    let result: Result<(), String> = (|| {
+        // A capped character gains no EXP and so shows none: keep the partner
+        // below the cap so the owed reward is visible when it is paid.
+        partner.as_mut().ok_or("partner disconnected")?.ensure_base_level(50)?;
+        form_party(&mut primary, partner.as_mut().ok_or("partner disconnected")?)?;
+        say_expect(&mut primary, "@dm reset confirm", "Campaign reset complete")?;
+        say_expect(&mut primary, "@dm mode on", "Campaign NPCs are active")?;
+
+        drop(partner.take().ok_or("partner disconnected")?);
+        std::thread::sleep(Duration::from_millis(700));
+
+        // Online: paid now. Offline partner: queued.
+        say_expect(
+            &mut primary,
+            &format!("@dm exp {BASE} 2000"),
+            "Granted 5000 base / 2000 job EXP to 1 party member",
+        )?;
+        say_expect(&mut primary, "@dm reset confirm", "Campaign reset complete")?;
+        say_expect(&mut primary, "@dm mode on", "Campaign NPCs are active")?;
+
+        partner = Some(TestContext::connect_partner(config)?);
+        let returning = partner.as_mut().ok_or("partner reconnect failed")?;
+        returning
+            .wait_for("the EXP earned before the reset", |event| match event {
+                NetworkEvent::GainedExperience {
+                    account_id,
+                    amount,
+                    experience_type: ExperienceType::BaseExperience,
+                    ..
+                } if account_id.0 == partner_account && *amount as usize == BASE => Some(()),
+                _ => None,
+            })
+            .map_err(|error| format!("@dm reset confiscated a reward owed to an offline member: {error}"))
+    })();
+
+    if let Some(partner) = partner.as_mut() {
+        let _ = primary.say("@dm mode off");
+        primary.pump(Duration::from_millis(150));
+        leave_party_both(&mut primary, partner);
+    } else {
+        let _ = primary.say("@dm reset confirm");
+        primary.pump(Duration::from_millis(250));
+    }
+    result
+}
+
 fn dm_party_offline_replay(config: &Config) -> Result<(), String> {
     const QUEST_ID: u32 = 20001;
     const FLAG_NAME: &str = "dm_replay_probe";
