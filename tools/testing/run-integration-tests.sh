@@ -536,6 +536,17 @@ set -e
 stop_servers
 sleep 1
 
+# Item conservation: every character's holdings must equal its item-log
+# totals, and storage its logged deposits minus withdrawals (see the SQL file).
+# REPORT-ONLY while its known exceptions are being classified.
+conservation_violations=$("${mysql_admin[@]}" --batch --skip-column-names "$db_name" < "$here/item-conservation.sql" 2>&1 || true)
+if [ -n "$conservation_violations" ]; then
+    echo "Item conservation audit (report-only) found differences:"
+    printf '  %s\n' "$conservation_violations" | head -40
+else
+    echo "Item conservation audit: every holding matches the item log"
+fi
+
 # This scenario's client assertions prove visible state; keep the journal in
 # the disposable database and verify the server-side events and per-character
 # replay cursor directly before the database is dropped.

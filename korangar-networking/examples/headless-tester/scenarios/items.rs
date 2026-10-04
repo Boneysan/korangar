@@ -26,6 +26,7 @@ pub fn scenarios() -> Vec<Scenario> {
         Scenario::new("storage", 6, storage),
         Scenario::new("storage-persistence", 6, storage_persistence),
         Scenario::new("inventory-order", 6, inventory_order),
+        Scenario::new("inventory-split-persistence", 6, inventory_split_persistence),
         Scenario::new("stat-skill-points", 6, stat_skill_points),
         Scenario::new("reset-command-behavior", 6, reset_command_behavior),
         Scenario::new("reset-command-ordinary-reachability", 6, reset_command_ordinary_reachability),
@@ -37,6 +38,65 @@ pub fn scenarios() -> Vec<Scenario> {
         Scenario::new("repair-list-empty", 6, repair_list_empty),
         Scenario::new("repair-invalid-item", 6, repair_invalid_item),
     ]
+}
+
+/// The split packet (fork 0x0EFC) copies the source item, including its
+/// database row id, into a new slot, so a mishandled save could duplicate or
+/// drop a stack. Two back-to-back splits that cannot both be legal, then a
+/// logout/relogin, must leave exactly the original count in the same stacks.
+fn inventory_split_persistence(config: &Config) -> Result<(), String> {
+    let item_id = 501u32; // Red Potion
+    let holdings = |context: &TestContext| -> (u32, Vec<u16>) {
+        let mut amounts: Vec<u16> = context
+            .inventory
+            .iter()
+            .filter(|item| item.item_id.0 == item_id)
+            .map(|item| item.amount())
+            .collect();
+        amounts.sort_unstable();
+        (amounts.iter().map(|amount| u32::from(*amount)).sum(), amounts)
+    };
+
+    let before_logout = {
+        let mut context = TestContext::connect(config)?;
+        context.say(&format!("@delitem {item_id} 30000"))?;
+        context.pump(Duration::from_millis(250));
+        let source_index = context.give_item(item_id, 10)?;
+
+        // Both requests leave before either answer: 10 -> 4 + 6 is legal, and
+        // then a second 6 from the 4 must be refused, not split again.
+        context.net.split_inventory_stack(source_index, 6).map_err(|_| "disconnected")?;
+        context.net.split_inventory_stack(source_index, 6).map_err(|_| "disconnected")?;
+        // The refusal is expected, but the counts are the verdict: a server
+        // that wrongly accepts the second split must fail on what it did.
+        let _ = context.wait_for_within(
+            "rejection of the second split",
+            Duration::from_secs(3),
+            &mut |event| match event {
+                NetworkEvent::ChatMessage { text, .. } if text.contains("amount smaller than the stack") => Some(()),
+                _ => None,
+            },
+        );
+        context.pump(Duration::from_millis(300));
+        let state = holdings(&context);
+        if state != (10, vec![4, 6]) {
+            return Err(format!("back-to-back splits left {state:?}, expected 10 as [4, 6]"));
+        }
+        state
+        // Dropping the context logs out, which saves the inventory.
+    };
+    std::thread::sleep(Duration::from_millis(900));
+
+    let mut context = TestContext::connect(config)?;
+    context.pump(Duration::from_millis(300));
+    let after_relog = holdings(&context);
+    let _ = context.say(&format!("@delitem {item_id} 30000"));
+    if after_relog != before_logout {
+        return Err(format!(
+            "split stacks changed across relog: {before_logout:?} before, {after_relog:?} after (a duplicated or lost row)"
+        ));
+    }
+    Ok(())
 }
 
 /// Kept as the final suite scenario because it fills the disposable character's
