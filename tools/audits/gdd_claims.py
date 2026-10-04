@@ -111,6 +111,8 @@ def path_exists(cited: str) -> bool:
     cited = cited.split(":")[0]
     if "<" in cited or "[" in cited:
         return True  # a pattern or runtime file name, not a source path
+    if cited.startswith("client/"):
+        return True  # written at runtime next to the executable (e.g. client/keybindings.ron)
     for base in (KORANGAR, KORANGAR / "korangar", KORANGAR / "korangar/src", HERCULES, KORANGAR.parent):
         if (base / cited).exists():
             return True
