@@ -51,18 +51,44 @@ foreach ($manifestName in $found) {
 
     Write-Host ''
     Write-Host ("  Checking against " + $manifestName + " ...") -ForegroundColor Cyan
+    Write-Host '  Each file is named before it is hashed. Large GRFs can take a minute.'
 
+    $entries = @()
     foreach ($line in Get-Content -LiteralPath $manifest) {
+        if ($line -notmatch '^([0-9a-fA-F]{64})\s+\.?[\\/]?(.+)$') { continue }
+        $entries = $entries + $line
+    }
+    $total = $entries.Count
+    $n = 0
+
+    foreach ($line in $entries) {
         if ($line -notmatch '^([0-9a-fA-F]{64})\s+\.?[\\/]?(.+)$') { continue }
 
         $expected = $Matches[1]
         $relative = $Matches[2] -replace '/', '\'
         $path = Join-Path $here $relative
+        $n = $n + 1
+        $prefix = '  [' + $n.ToString() + '/' + $total.ToString() + '] ' + $relative
 
         if (-not (Test-Path -LiteralPath $path)) {
-            Write-Host ("  MISSING  " + $relative) -ForegroundColor Red
+            Write-Host ($prefix + ' -- MISSING') -ForegroundColor Red
             $missing = $missing + 1
             continue
+        }
+
+        $bytes = [long](Get-Item -LiteralPath $path).Length
+        $sizeText = if ($bytes -ge 1073741824) {
+            ([math]::Round(($bytes / 1073741824), 1).ToString() + ' GB')
+        } elseif ($bytes -ge 1048576) {
+            ([math]::Round(($bytes / 1048576), 0).ToString() + ' MB')
+        } else {
+            ([math]::Round(($bytes / 1024), 0).ToString() + ' KB')
+        }
+
+        if ($bytes -gt 104857600) {
+            Write-Host ($prefix + ' (' + $sizeText + ') -- large file, please wait...')
+        } else {
+            Write-Host ($prefix + ' (' + $sizeText + ')')
         }
 
         $actual = (Get-FileHash -LiteralPath $path -Algorithm SHA256).Hash
