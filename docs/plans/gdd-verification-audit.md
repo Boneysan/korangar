@@ -171,3 +171,44 @@ ports has been seen live; each needs a line in the GUI pass.
 | F08 | Verified (unseen) | `alias_targets` feeds skill, status, monster, item, job and map search | GUI pass | 2026-10-04 |
 | F37 | Verified (unseen) | `server-rules.v1.json` embedded and rendered by the Guide (`adventure_guide.rs`); export drift clean | GUI pass | 2026-10-04 |
 | Slices 5, 6, 8, 9 | Verified (unseen) | Navigation graph, world-map atlas, skill tooltips and Guide window wired; all their exports pass `export_supported_data.py --check` | GUI pass | 2026-10-04 |
+| F32 | Verified (unseen) | `effect_density` read at the effect spawn points; cycle button in Game Settings; source-level test keeps telegraphs/cast bars exempt | GUI pass in a crowded fight | 2026-10-04 |
+| F33 | Verified (unseen) | `render_tooltips` flips each tooltip to the roomier side of the cursor; `handle_drag` constrains windows | Screenshot matrix | 2026-10-04 |
+| F35 | Verified (unseen) | Five cues played from `lib.rs` via `state/audio_cues.rs` | Never heard; fit by ear pending | 2026-10-04 |
+| F36 | Verified | `@metrics` exercised by `mob-elite-population` (passes, name-based count since 10-03) | No real-session use yet | 2026-10-04 |
+| F38 | Historical | The 2026-10-03 regression figures are a point-in-time record, not a standing check | The headless tester has 38 clippy errors CI never sees (lint runs without `--examples`) | 2026-10-04 |
+| Slices 1, 4, 15 | Verified (unseen) | `ToastQueue` drives HUD notices; character delete with typed-name confirmation; High Contrast and Deuteranopia are in the theme lists and load real palettes (`state/theme/interface.rs`) | GUI pass | 2026-10-04 |
+
+## Open work (collected 2026-10-04, after Batches 0–6)
+
+One list of everything the audit left open. Tick an item here when it is done and say where.
+
+**Economy safety (Batch 4, in progress on `agent/batch4-economy`)**
+- [ ] Register `headless_loot_test.txt` in Hercules `npc/scripts_dev.conf` (commented) and in the runner's fixture list; run the five loot scenarios (`autopickup-respects-drop-owner`, `loot-pickup-race`, `loot-pickup-multi-pile`, `autopickup-radius`, `autopickup-party-override`), and prove the ownership test fails against a planted bug.
+- [ ] Classify the item-conservation differences from the 2026-10-04 full run, then make `item-conservation.sql` fail the run instead of reporting.
+- [ ] Move `log_zeny: 1` from the untracked local `conf/import/logs.conf` into tracked config, so a fresh server logs zeny.
+- [ ] Decide a retention policy for `picklog`: monster-drop rows (`M`) alone were 2.5 million on the dev database.
+- [ ] Optional hardening: the split handler copies the source row's `id` into the new half; set it to 0 so the char-server's matching never has to cope with a shared id.
+- [ ] Remaining Batch 4 rows: F26 autoloot settings, F27 refine odds against `refine_db`, F28 live two-client trade, F29, F30 (no window shows crafting odds), F31 (no assign/complete action).
+
+**Claims that are wrong or partial (decide: build, or correct the row)**
+- [ ] F04 stat view modes: no window offers them. Build the mode switch or drop `world/stat_view.rs` and rewrite the row.
+- [ ] F23: no timestamp toggle, no tab unread indicators, no `<GUIDE:id>` links (row corrected in PR #14). Scope Guide links if wanted.
+- [ ] F11: prediction and rollback have no tests; extract them from `Client` into testable functions.
+- [ ] F16: 10 of 11 pilot MVPs are data-checked only; add one fight scenario per MVP (or a sweep).
+- [ ] F16 recap: damage taken and interrupts are tracked but not shown.
+- [ ] F39: disconnect and dead-member cases untested; no quest uses `partycompletequest` yet.
+- [ ] F22 and F24 rows cite names that do not exist (`PartyMemberLocationUpdate`, `RequestEquipItem`, `SavedEquipmentSets`); correct the text.
+
+**Live checks nobody can automate**
+- [ ] GUI verification pass, including section 7 (the PR #10 ports, WASD corner/slide, Mouse4/Mouse5, hold-mouse movement).
+- [ ] Two-client session: party marks, goals, frames, pings, ready check, trade.
+- [ ] Listen to the five F35 audio cues.
+- [ ] Run the Windows pack on Windows (never done), including the Vulkan/DX12 choice.
+- [ ] Pack version gate: the client sends its version but the server check is off; turn it on with the next pack.
+
+**CI and code hygiene**
+- [ ] The PR gate runs 10 of ~207 scenarios; add a fast economy/Batch 1 subset.
+- [ ] Fix the headless tester's 38 clippy errors and lint examples in CI.
+- [ ] Replace the six file-wide `#![allow(dead_code)]` with item-level allowances, and remove the unused duplicates found here (`skill_info.rs` timing helpers, `calculate_projections`, possibly `stat_view.rs`).
+- [ ] Triage the 21 unread fields/methods in `dm/reference_data.rs`.
+- [ ] `skills-professor` failed in the 2026-10-02 full run; check the 2026-10-04 run.
