@@ -1495,6 +1495,58 @@ enum PredictedMotion {
     Skill(SkillId),
 }
 
+/// What prediction needs from the local player, so the decisions below can be
+/// tested without building a full `Entity` (sprites, animations, a map).
+trait PredictionSubject {
+    fn can_start_action(&self) -> bool;
+    fn start_motion(&mut self, skill_id: Option<SkillId>, client_tick: ClientTick);
+    fn stop_motion(&mut self, client_tick: ClientTick);
+}
+
+impl PredictionSubject for Entity {
+    fn can_start_action(&self) -> bool {
+        !self.is_dead() && !self.is_action_animation_active()
+    }
+
+    fn start_motion(&mut self, skill_id: Option<SkillId>, client_tick: ClientTick) {
+        self.set_skill_attack(skill_id, 0, false, client_tick);
+    }
+
+    fn stop_motion(&mut self, client_tick: ClientTick) {
+        self.set_idle(client_tick);
+    }
+}
+
+/// Start the swing locally before the server answers (F11). Never while dead
+/// or mid-animation: that would cut a real animation short.
+fn predict_motion(
+    slot: &mut Option<PredictedMotion>,
+    subject: Option<&mut impl PredictionSubject>,
+    motion: PredictedMotion,
+    client_tick: ClientTick,
+) {
+    let Some(subject) = subject.filter(|subject| subject.can_start_action()) else {
+        return;
+    };
+    let skill_id = match motion {
+        PredictedMotion::BasicAttack => None,
+        PredictedMotion::Skill(skill_id) => Some(skill_id),
+    };
+    subject.start_motion(skill_id, client_tick);
+    *slot = Some(motion);
+}
+
+/// Undo a predicted swing the server refused. Only a swing this client
+/// predicted is undone: a refusal of anything else must not freeze an
+/// animation the server itself started.
+fn rollback_motion(slot: &mut Option<PredictedMotion>, subject: Option<&mut impl PredictionSubject>, client_tick: ClientTick) {
+    if slot.take().is_some()
+        && let Some(subject) = subject
+    {
+        subject.stop_motion(client_tick);
+    }
+}
+
 /// The server echo repeats a prediction when it names the same motion.
 /// A different skill, or a basic attack after a skill, must replace it.
 fn server_echo_repeats_prediction(predicted: Option<PredictedMotion>, incoming_skill: Option<SkillId>) -> bool {
@@ -1686,6 +1738,77 @@ fn click_started_drag(mouse_mode: &MouseMode<ClientState>) -> bool {
         } | MouseMode::MovingWindow { .. }
             | MouseMode::ResizingWindow { .. }
     )
+}
+
+#[cfg(test)]
+mod prediction_tests {
+    use super::*;
+
+    #[derive(Default)]
+    struct FakePlayer {
+        dead: bool,
+        animating: bool,
+        started: Vec<Option<SkillId>>,
+        stopped: usize,
+    }
+
+    impl PredictionSubject for FakePlayer {
+        fn can_start_action(&self) -> bool {
+            !self.dead && !self.animating
+        }
+
+        fn start_motion(&mut self, skill_id: Option<SkillId>, _client_tick: ClientTick) {
+            self.started.push(skill_id);
+            self.animating = true;
+        }
+
+        fn stop_motion(&mut self, _client_tick: ClientTick) {
+            self.stopped += 1;
+            self.animating = false;
+        }
+    }
+
+    #[test]
+    fn prediction_starts_the_named_motion_and_remembers_it() {
+        let mut slot = None;
+        let mut player = FakePlayer::default();
+        predict_motion(&mut slot, Some(&mut player), PredictedMotion::Skill(SkillId(5)), ClientTick(1));
+        assert_eq!(slot, Some(PredictedMotion::Skill(SkillId(5))));
+        assert_eq!(player.started, vec![Some(SkillId(5))]);
+    }
+
+    #[test]
+    fn no_prediction_while_dead_or_mid_animation() {
+        for (dead, animating) in [(true, false), (false, true)] {
+            let mut slot = None;
+            let mut player = FakePlayer {
+                dead,
+                animating,
+                ..Default::default()
+            };
+            predict_motion(&mut slot, Some(&mut player), PredictedMotion::BasicAttack, ClientTick(1));
+            assert_eq!(slot, None, "dead={dead} animating={animating}");
+            assert!(player.started.is_empty(), "dead={dead} animating={animating}");
+        }
+    }
+
+    #[test]
+    fn a_refusal_undoes_only_a_predicted_motion_and_only_once() {
+        let mut slot = None;
+        let mut player = FakePlayer::default();
+        // Nothing predicted: a refusal must not stop an animation the server started.
+        player.animating = true;
+        rollback_motion(&mut slot, Some(&mut player), ClientTick(2));
+        assert_eq!(player.stopped, 0);
+        assert!(player.animating);
+
+        player.animating = false;
+        predict_motion(&mut slot, Some(&mut player), PredictedMotion::BasicAttack, ClientTick(3));
+        rollback_motion(&mut slot, Some(&mut player), ClientTick(4));
+        rollback_motion(&mut slot, Some(&mut player), ClientTick(5));
+        assert_eq!(player.stopped, 1);
+        assert_eq!(slot, None);
+    }
 }
 
 #[cfg(test)]
@@ -12865,28 +12988,13 @@ impl Client {
     /// Start the local swing or skill motion as soon as the packet is sent.
     /// The matching server echo does not restart it. A refusal returns to idle.
     fn predict_local_motion(&mut self, motion: PredictedMotion, client_tick: ClientTick) {
-        let skill_id = match motion {
-            PredictedMotion::BasicAttack => None,
-            PredictedMotion::Skill(skill_id) => Some(skill_id),
-        };
-        let started = self.client_state.try_follow_mut(this_entity()).is_some_and(|player| {
-            if player.is_dead() || player.is_action_animation_active() {
-                return false;
-            }
-            player.set_skill_attack(skill_id, 0, false, client_tick);
-            true
-        });
-        if started {
-            self.predicted_motion = Some(motion);
-        }
+        let player = self.client_state.try_follow_mut(this_entity());
+        predict_motion(&mut self.predicted_motion, player, motion, client_tick);
     }
 
     fn rollback_predicted_motion(&mut self, client_tick: ClientTick) {
-        if self.predicted_motion.take().is_some()
-            && let Some(player) = self.client_state.try_follow_mut(this_entity())
-        {
-            player.set_idle(client_tick);
-        }
+        let player = self.client_state.try_follow_mut(this_entity());
+        rollback_motion(&mut self.predicted_motion, player, client_tick);
     }
 
     /// Fire any action that the player buffered while out of range or while
