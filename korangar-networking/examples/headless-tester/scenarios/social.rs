@@ -1135,7 +1135,16 @@ fn quest_progress_count(objectives: &[QuestHuntProgress], quest_id: u32) -> Opti
         .map(|objective| objective.current_count)
 }
 
+/// `prt_fild08` Fabres are F14 Aggressors on purpose. Several hitting the
+/// tester keep it in Hercules' walk delay (`unit.c`, `canmove_tick`), so its
+/// walk is never acknowledged. Clear the field before each quest kill.
+fn clear_field_for_quest_kill(context: &mut TestContext) {
+    let _ = context.say("@killmonster");
+    context.pump(Duration::from_millis(300));
+}
+
 fn kill_quest_spore(context: &mut TestContext) -> Result<ragnarok_packets::EntityId, String> {
+    clear_field_for_quest_kill(context);
     let target = context.spawn_monster("SPORE", 1014)?;
     kill_spawned_quest_spore(context, target)
 }
@@ -1145,6 +1154,7 @@ fn kill_quest_spore_with_partner_distance(
     partner: &mut TestContext,
     distance: u16,
 ) -> Result<ragnarok_packets::EntityId, String> {
+    clear_field_for_quest_kill(context);
     let target = context.spawn_monster("SPORE", 1014)?;
     let target_position = context
         .entities
