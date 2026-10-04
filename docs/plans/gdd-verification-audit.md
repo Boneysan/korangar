@@ -78,7 +78,7 @@ CI where missing.
 | F23 | No chat timestamp toggle; no `<GUIDE:id>` links | Claim corrected in the plan 2026-10-03 |
 | F30 | Formulas not shown in any window; pharmacy formula dropped the server's random roll | Fixed 2026-10-04 (Crafting Odds window, `pharmacy_success_range`); never seen live (GUI pass 8.7–8.8) |
 | F31 | No assign/complete action in the board window | Actions built 2026-10-04 (window buttons + `/commission assign/complete`); multi-word item names fixed. **Still open, needs an owner decision:** the board is local to one client, so no other player sees a request. A shared board needs a server half |
-| F16 | Recap tracks damage taken/interrupts; toast shows only damage dealt | Partial — open |
+| F16 | Recap tracks damage taken/interrupts; toast shows only damage dealt | Fixed 2026-10-04: the toast shows dealt, taken and interrupts, and the full recap is posted to chat; never seen live (GUI pass 8.10) |
 | PR #10 | Live-confirmed 2026-09-18 fixes never reached `main` | Settled 2026-10-03: 7 ported + WASD merged (below) |
 | F04 | Stat view modes not wired to any window | Claim wrong — open |
 | F03 | ~~Build planner projections not shown~~ — wrong: shown via `state/build_planner.rs` (Batch 5) | Closed |

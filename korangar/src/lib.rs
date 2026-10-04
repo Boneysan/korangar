@@ -5410,14 +5410,12 @@ impl Client {
                         {
                             self.client_state.follow_mut(client_state().toasts()).push(
                                 "boss-encounter-recap",
-                                format!(
-                                    "Defeated {}! Dealt {} dmg in {:.1}s",
-                                    recap.boss_name,
-                                    recap.damage_dealt,
-                                    (recap.duration_ms as f32) / 1000.0
-                                ),
+                                recap.toast_text(),
                                 crate::state::toasts::ToastPriority::High,
                             );
+                            self.client_state
+                                .follow_mut(client_state().chat_messages())
+                                .push(ChatMessage::new(recap.format_summary(), MessageColor::Information));
                         }
                         if let Some(entity) = self
                             .client_state
