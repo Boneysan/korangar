@@ -52,6 +52,7 @@ pub fn scenarios() -> Vec<Scenario> {
         Scenario::new("mob-coward-poring", 10, coward_poring),
         Scenario::new("mob-eddga-pilot-skills", 10, eddga_pilot_skills),
         Scenario::new("mob-eddga-summons-escorts", 10, eddga_summons_escorts),
+        Scenario::new("mob-pilot-mvps-summon-escorts", 10, pilot_mvps_summon_escorts),
         Scenario::new("mob-eddga-meteor-and-enrage", 10, eddga_meteor_and_enrage),
         Scenario::new("mob-elite-population", 10, elite_population),
         Scenario::new("mob-elite-rollback-switch", 10, elite_rollback_switch),
@@ -612,6 +613,62 @@ fn eddga_summons_escorts(config: &Config) -> Result<(), String> {
     })();
     clear_map(&mut context);
     result
+}
+
+/// The other ten pilot MVPs and their stock escorts, read from Hercules
+/// `db/re/mob_pilot_skill_db.conf` (`NPC_SUMMONSLAVE` values) on 2026-10-04.
+const PILOT_MVP_ESCORTS: [(&str, u16, &[u16]); 10] = [
+    ("MOONLIGHT", 1150, &[1180, 1471]),
+    ("GOLDEN_BUG", 1086, &[1054, 1608]),
+    ("ORK_HERO", 1087, &[1439]),
+    ("MAYA", 1147, &[1194, 1477]),
+    ("BAPHOMET", 1039, &[1101, 1431]),
+    ("PHREEONI", 1159, &[1127, 1558]),
+    ("MISTRESS", 1059, &[1156, 1604]),
+    ("DRAKE", 1112, &[1192, 1566]),
+    ("DOPPELGANGER", 1046, &[1427]),
+    ("OSIRIS", 1038, &[1029, 1522]),
+];
+
+/// F16: every pilot MVP keeps its escorts. Eddga has its own scenario; this
+/// covers the other ten, which were data-checked only. Fought in Prontera,
+/// where nothing spawns naturally, so no wild monster can pass for an escort.
+/// Escorts summoned on spawn (`MSC_SPAWN`) arrive right after the boss, so the
+/// first look happens before any `flush()`.
+fn pilot_mvps_summon_escorts(config: &Config) -> Result<(), String> {
+    let mut context = attacker_on(config, "prontera", 4008)?;
+    context.warp("prontera", 150, 230)?;
+    context.say("@agi 80")?;
+    context.say("@heal")?;
+    context.pump(Duration::from_millis(200));
+    let mut missing = Vec::new();
+    for (name, id, escorts) in PILOT_MVP_ESCORTS {
+        let _ = context.say("@killmonster");
+        context.pump(Duration::from_millis(300));
+        let boss = context.spawn_monster(name, id)?;
+        let summoned = |events: Vec<NetworkEvent>| {
+            events
+                .into_iter()
+                .any(|event| matches!(event, NetworkEvent::AddEntity { entity_data } if escorts.contains(&entity_data.job_id.0)))
+        };
+        let mut found = summoned(context.collect_for(Duration::from_millis(1500)));
+        let mut swings = 0;
+        while !found && swings < 34 {
+            if swings % 2 == 0 {
+                context.say("@heal")?;
+                context.say("@alive")?;
+            }
+            context.flush();
+            context.net.player_attack(boss).map_err(|_| "disconnected")?;
+            found = summoned(context.collect_for(Duration::from_millis(600)));
+            swings += 1;
+        }
+        if !found {
+            missing.push(format!("{name} ({id}) summoned none of {escorts:?} in {swings} swings"));
+        }
+    }
+    let _ = context.say("@killmonster");
+    if missing.is_empty() { Ok(()) } else { Err(missing.join("; ")) }
 }
 
 /// Eddga below 80% HP casts Meteor Storm (3.0 s cast), and below 30% HP
