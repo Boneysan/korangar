@@ -42,6 +42,9 @@ pub struct InputReport {
     pub mouse_target: PickerTarget,
 }
 
+/// Mouse buttons a key binding may use, by their stored chord name.
+const MOUSE_CHORD_KEYS: [&str; 3] = ["MouseMiddle", "MouseBack", "MouseForward"];
+
 pub struct InputSystem {
     previous_mouse_position: ScreenPosition,
     new_mouse_position: ScreenPosition,
@@ -52,6 +55,9 @@ pub struct InputSystem {
     left_mouse_button: Key,
     right_mouse_button: Key,
     middle_mouse_button: Key,
+    /// Mouse4 / Mouse5, read only as key-binding chords.
+    back_mouse_button: Key,
+    forward_mouse_button: Key,
     keys: [Key; KEY_COUNT],
     known_key_codes: Vec<KeyCode>,
     input_buffer: Vec<char>,
@@ -72,6 +78,8 @@ impl InputSystem {
         let left_mouse_button = Key::default();
         let right_mouse_button = Key::default();
         let middle_mouse_button = Key::default();
+        let back_mouse_button = Key::default();
+        let forward_mouse_button = Key::default();
         let keys = [Key::default(); KEY_COUNT];
         let known_key_codes = Vec::new();
 
@@ -88,6 +96,8 @@ impl InputSystem {
             left_mouse_button,
             right_mouse_button,
             middle_mouse_button,
+            back_mouse_button,
+            forward_mouse_button,
             keys,
             known_key_codes,
             input_buffer,
@@ -100,6 +110,8 @@ impl InputSystem {
         self.left_mouse_button.reset();
         self.right_mouse_button.reset();
         self.middle_mouse_button.reset();
+        self.back_mouse_button.reset();
+        self.forward_mouse_button.reset();
         self.keys.iter_mut().for_each(|key| key.reset());
     }
 
@@ -117,6 +129,8 @@ impl InputSystem {
             MouseButton::Left => self.left_mouse_button.set_down(pressed),
             MouseButton::Right => self.right_mouse_button.set_down(pressed),
             MouseButton::Middle => self.middle_mouse_button.set_down(pressed),
+            MouseButton::Back => self.back_mouse_button.set_down(pressed),
+            MouseButton::Forward => self.forward_mouse_button.set_down(pressed),
             _ignored => {}
         }
     }
@@ -143,6 +157,8 @@ impl InputSystem {
         self.left_mouse_button.update();
         self.right_mouse_button.update();
         self.middle_mouse_button.update();
+        self.back_mouse_button.update();
+        self.forward_mouse_button.update();
         self.keys.iter_mut().for_each(|key| key.update());
 
         let mouse_button_released =
@@ -228,8 +244,8 @@ impl InputSystem {
         let alt_down = self.get_key(KeyCode::AltLeft).down() || self.get_key(KeyCode::AltRight).down();
         let shift_down = self.get_key(KeyCode::ShiftLeft).down() || self.get_key(KeyCode::ShiftRight).down();
 
-        let key_released = if chord.key == "MouseMiddle" {
-            self.middle_mouse_button.released()
+        let key_released = if let Some(button) = self.mouse_chord_button(&chord.key) {
+            button.released()
         } else {
             let Some(key_code) = self
                 .known_key_codes
@@ -248,6 +264,18 @@ impl InputSystem {
         self.binding_key_down(bindings, action, false, false)
     }
 
+    /// The mouse button behind a mouse chord name, or `None` for a keyboard
+    /// key. Mouse4/Mouse5 were accepted as chords but only the middle
+    /// button was ever read, so a binding on them never fired.
+    fn mouse_chord_button(&self, key: &str) -> Option<&Key> {
+        match key {
+            "MouseMiddle" => Some(&self.middle_mouse_button),
+            "MouseBack" => Some(&self.back_mouse_button),
+            "MouseForward" => Some(&self.forward_mouse_button),
+            _ => None,
+        }
+    }
+
     fn binding_key_down(&self, bindings: &KeyBindings, action: BindableAction, allow_shift: bool, pressed: bool) -> bool {
         let chord = bindings.chord(action);
         let control_down = self.get_key(KeyCode::ControlLeft).down() || self.get_key(KeyCode::ControlRight).down();
@@ -259,12 +287,8 @@ impl InputSystem {
             shift_down == chord.shift
         };
 
-        let key_active = if chord.key == "MouseMiddle" {
-            if pressed {
-                self.middle_mouse_button.pressed()
-            } else {
-                self.middle_mouse_button.down()
-            }
+        let key_active = if let Some(button) = self.mouse_chord_button(&chord.key) {
+            if pressed { button.pressed() } else { button.down() }
         } else {
             let Some(key_code) = self
                 .known_key_codes
@@ -293,13 +317,16 @@ impl InputSystem {
             events.push(InputEvent::CancelKeyBindingCapture);
             return true;
         }
-        if self.middle_mouse_button.pressed() {
+        if let Some(name) = MOUSE_CHORD_KEYS
+            .into_iter()
+            .find(|name| self.mouse_chord_button(name).is_some_and(Key::pressed))
+        {
             let control = self.get_key(KeyCode::ControlLeft).down() || self.get_key(KeyCode::ControlRight).down();
             let alt = self.get_key(KeyCode::AltLeft).down() || self.get_key(KeyCode::AltRight).down();
             let shift = self.get_key(KeyCode::ShiftLeft).down() || self.get_key(KeyCode::ShiftRight).down();
             events.push(InputEvent::CapturedKeyBinding {
                 action,
-                chord: crate::settings::KeyChord::new("MouseMiddle", control, alt, shift),
+                chord: crate::settings::KeyChord::new(name, control, alt, shift),
             });
             return true;
         }
@@ -724,6 +751,46 @@ mod keybinding_tests {
         input.handle_keyboard_input(&mut events, &bindings, None);
 
         assert!(events.iter().any(|event| matches!(event, InputEvent::ToggleInventoryWindow)));
+    }
+
+    #[test]
+    fn mouse4_and_mouse5_bindings_fire_and_can_be_captured() {
+        let mut bindings = KeyBindings::default();
+        bindings
+            .assign(BindableAction::HotbarSlot(0), KeyChord::new("MouseBack", false, false, false))
+            .expect("Mouse4 is a valid chord");
+        bindings
+            .assign(
+                BindableAction::HotbarSlot(1),
+                KeyChord::new("MouseForward", false, false, false),
+            )
+            .expect("Mouse5 is a valid chord");
+        for (button, slot) in [(winit::event::MouseButton::Back, 0), (winit::event::MouseButton::Forward, 1)] {
+            let mut input = InputSystem::new(Arc::new(AtomicU64::new(0)));
+            input.update_mouse_buttons(button, ElementState::Pressed);
+            input.update_delta(ClientTick(6));
+            let mut events = Vec::new();
+            #[cfg(feature = "debug")]
+            input.handle_keyboard_input(&mut events, &bindings, None, false, false);
+            #[cfg(not(feature = "debug"))]
+            input.handle_keyboard_input(&mut events, &bindings, None);
+            assert!(
+                events
+                    .iter()
+                    .any(|event| matches!(event, InputEvent::CastSkill { slot: hotbar } if hotbar.0 == slot)),
+                "{button:?} did not fire hotbar slot {slot}"
+            );
+        }
+
+        let mut capture = InputSystem::new(Arc::new(AtomicU64::new(0)));
+        capture.update_mouse_buttons(winit::event::MouseButton::Forward, ElementState::Pressed);
+        capture.update_delta(ClientTick(6));
+        let mut events = Vec::new();
+        assert!(capture.capture_keybinding(&mut events, Some(BindableAction::OpenInventory)));
+        assert!(events.iter().any(|event| matches!(
+            event,
+            InputEvent::CapturedKeyBinding { chord, .. } if chord.key == "MouseForward"
+        )));
     }
 
     #[test]
