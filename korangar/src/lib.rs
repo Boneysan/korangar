@@ -1508,12 +1508,17 @@ impl PredictionSubject for Entity {
         !self.is_dead() && !self.is_action_animation_active()
     }
 
+    // Bound as `player` on purpose: tools/audits/observer-parity.sh finds
+    // local-player-only mutations by `player.<mutator>(`, and a predicted swing
+    // is exactly that (observers see the server's packet, never this call).
     fn start_motion(&mut self, skill_id: Option<SkillId>, client_tick: ClientTick) {
-        self.set_skill_attack(skill_id, 0, false, client_tick);
+        let player = self;
+        player.set_skill_attack(skill_id, 0, false, client_tick);
     }
 
     fn stop_motion(&mut self, client_tick: ClientTick) {
-        self.set_idle(client_tick);
+        let player = self;
+        player.set_idle(client_tick);
     }
 }
 
