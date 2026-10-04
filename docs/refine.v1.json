@@ -1,6 +1,6 @@
 {
  "schema_version": 1,
- "source_revision": "cd0486c79a9a595a141ce23ff1b9f1e1b9d61caa",
+ "source_revision": "35964619ad0a7326eef567113c523ebe66e84e53",
  "source_worktree_dirty": false,
  "mode": "renewal",
  "source": "db/re/refine_db.conf (Armors and WeaponLevel1-4.Rates), npc/merchants/refine.txt (NPC costs/safe limits), src/map/skill.c (skill_weaponrefine formula)",
