@@ -188,7 +188,7 @@ One list of everything the audit left open. Tick an item here when it is done an
 - [x] `log_zeny: 1` is tracked (`conf/import/logs.conf`, force-added; Hercules `3f1aae763`).
 - [ ] **Decided 2026-10-04: stop logging ground drops.** Turn off picklog type `M` (monster drops to the floor) only; pickups, trades, shops, storage and zeny stay logged.
 - [x] Split hardening: the new half gets `id = 0` (Hercules, same PR); split, persistence, storage and order scenarios pass with the audit clean.
-- [ ] Remaining Batch 4 rows: F26 autoloot settings, F27 refine odds against `refine_db`, F28 live two-client trade, F29.
+- [ ] Remaining Batch 4 rows: F29. (F26: corrected 2026-10-04, korangar #23. F27: checked, below. F28: two-client transfer headless-verified 2026-10-04 and a cancel display bug fixed; on-screen pass is GUI 8.11.)
 
 **Campaign rewards (added 2026-10-04; outside the GDD rows, so no batch covered it)**
 - [x] All 178 campaign grants inventoried: 93 behind `DM_ClaimGrant`, 85 behind quest state the same block completes (the one exception, the Sigil Ring replacement, is harmless: the ring cannot leave the inventory). Five zeny grants escaped their latch through brace-less `if`s (Arc 1 Mira rescue ×3, Arc 2 East Memorial ×2); fixed in Hercules `9a3752c6c`. Every latch key, numbered ones included, is cleared by `DM_ClearPartyGrants`.

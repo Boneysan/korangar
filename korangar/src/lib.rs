@@ -6605,6 +6605,16 @@ impl Client {
                                 amount,
                                 label,
                             );
+                            // An accepted offer leaves the bag, as in the official
+                            // client: Hercules never says so on completion
+                            // (`trade.c` deletes with `type = 1`), and on cancel it
+                            // re-adds every offered item (`trade_tradecancel` ->
+                            // `clif->additem`). Keeping it in view doubled the stack
+                            // after a cancel. Pinned server-side by the
+                            // `trade-cancel-returns-offered-items` scenario.
+                            self.client_state
+                                .follow_mut(client_state().inventory())
+                                .remove_item(inventory_index, amount.min(u32::from(u16::MAX)) as u16);
                         }
                     } else {
                         self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
@@ -6625,30 +6635,10 @@ impl Client {
                         .push(ChatMessage::new("Trade cancelled.".to_owned(), MessageColor::Information));
                 }
                 NetworkEvent::TradeCompleted { success } => {
-                    // **The server never tells us these left.** `trade.c:600` deletes
-                    // the traded items with `type = 1`, and `pc.c:4960` reads that
-                    // flag as *suppress the client notification* -- so no 0x07FA and
-                    // no 0x00AF arrive for our own side, by design. The official
-                    // client removes them locally, because it already knows what it
-                    // put in the window, and so must we. The partner's client is
-                    // notified normally via `pc->additem`, which is why only the
-                    // giver saw a phantom item.
-                    //
-                    // Read before `clear()`, which drops `our_items` outright.
-                    if success {
-                        let given: Vec<_> = self
-                            .client_state
-                            .follow(client_state().trade_state())
-                            .our_items()
-                            .iter()
-                            .filter_map(|item| item.inventory_index.map(|index| (index, item.amount)))
-                            .collect();
-                        for (index, amount) in given {
-                            self.client_state
-                                .follow_mut(client_state().inventory())
-                                .remove_item(index, amount.min(u32::from(u16::MAX)) as u16);
-                        }
-                    }
+                    // Nothing to remove here: the server never reports our given
+                    // items leaving (`trade.c` deletes with `type = 1`), so they left
+                    // the bag when each offer was accepted (`TradeAddItemResult`).
+                    // A failed trade is cancelled server-side, which re-adds them.
                     self.client_state.follow_mut(client_state().trade_state()).clear();
                     self.interface.close_window_with_class(WindowClass::Trade);
                     let msg = if success {

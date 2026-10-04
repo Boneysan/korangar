@@ -251,8 +251,9 @@ impl TradeState {
         Some(self.pending_adds.remove(position).amount)
     }
 
-    /// What we put into the offer, for removing it from our own inventory once
-    /// the trade commits.
+    /// What we put into the offer. (The bag no longer reads it: an offered
+    /// item leaves the bag when the server accepts the offer.)
+    #[cfg(test)]
     pub fn our_items(&self) -> &[TradeOfferItem] {
         &self.our_items
     }
