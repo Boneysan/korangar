@@ -668,11 +668,11 @@ fn eddga_meteor_attempt(config: &Config) -> Result<(), String> {
                 set_enrage_hp = true;
             }
 
-            if let Some(target_pos) = context.entities.get(&eddga).map(|e| e.position.tile_position()) {
-                if chebyshev(target_pos, context.position) > 1 {
-                    let _ = context.walk_to(target_pos.x.saturating_sub(1), target_pos.y);
-                    context.pump(Duration::from_millis(150));
-                }
+            if let Some(target_pos) = context.entities.get(&eddga).map(|e| e.position.tile_position())
+                && chebyshev(target_pos, context.position) > 1
+            {
+                let _ = context.walk_to(target_pos.x.saturating_sub(1), target_pos.y);
+                context.pump(Duration::from_millis(150));
             }
             context.flush();
             context.net.player_attack(eddga).map_err(|_| "disconnected")?;
@@ -779,10 +779,10 @@ fn wear_down_poring(config: &Config, map: &str) -> Result<(Vec<Seen>, usize), St
         if swing % 2 == 0 {
             context.say("@heal")?;
         }
-        if let Some(target_pos) = context.entities.get(&target).map(|e| e.position.tile_position()) {
-            if chebyshev(target_pos, context.position) > 1 {
-                let _ = context.walk_to(target_pos.x.saturating_sub(1), target_pos.y);
-            }
+        if let Some(target_pos) = context.entities.get(&target).map(|e| e.position.tile_position())
+            && chebyshev(target_pos, context.position) > 1
+        {
+            let _ = context.walk_to(target_pos.x.saturating_sub(1), target_pos.y);
         }
         context.flush();
         context.net.player_attack(target).map_err(|_| "disconnected")?;

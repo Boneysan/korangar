@@ -77,7 +77,7 @@ fn dm_roll(config: &Config) -> Result<(), String> {
 
 fn parse_roll_total(text: &str, marker: &str) -> Result<i32, String> {
     text.split_once(marker)
-        .and_then(|(_, total)| total.trim().split_whitespace().next())
+        .and_then(|(_, total)| total.split_whitespace().next())
         .and_then(|total| total.parse::<i32>().ok())
         .ok_or_else(|| format!("could not parse roll total from {text:?}"))
 }
@@ -366,7 +366,7 @@ fn dm_party_offline_replay(config: &Config) -> Result<(), String> {
         partner.pump(Duration::from_millis(150));
         let _ = primary.say("@dm mode off");
         primary.pump(Duration::from_millis(150));
-        let _ = leave_party_both(&mut primary, partner);
+        leave_party_both(&mut primary, partner);
     } else {
         let _ = primary.say("@dm reset confirm");
         primary.pump(Duration::from_millis(250));
@@ -394,19 +394,19 @@ fn dm_dmj_echo(config: &Config) -> Result<(), String> {
         let mut lines: Vec<String> = Vec::new();
         for context in [&mut primary, &mut partner] {
             for event in context.collect_for(Duration::from_millis(900)) {
-                if let NetworkEvent::ChatMessage { text, color } = event {
-                    if text.contains("[DMJ]") {
-                        // The client intercepts only server-coloured lines that START
-                        // with the prefix (as the discovery channel does). A line that
-                        // arrives differently would show up in chat as raw JSON.
-                        if !matches!(color, korangar_networking::MessageColor::Server) {
-                            return Err(format!("[DMJ] line arrived with a non-server colour: {text:?}"));
-                        }
-                        let Some(json) = text.strip_prefix("[DMJ]") else {
-                            return Err(format!("[DMJ] line does not start with the prefix: {text:?}"));
-                        };
-                        lines.push(json.to_owned());
+                if let NetworkEvent::ChatMessage { text, color } = event
+                    && text.contains("[DMJ]")
+                {
+                    // The client intercepts only server-coloured lines that START
+                    // with the prefix (as the discovery channel does). A line that
+                    // arrives differently would show up in chat as raw JSON.
+                    if !matches!(color, korangar_networking::MessageColor::Server) {
+                        return Err(format!("[DMJ] line arrived with a non-server colour: {text:?}"));
                     }
+                    let Some(json) = text.strip_prefix("[DMJ]") else {
+                        return Err(format!("[DMJ] line does not start with the prefix: {text:?}"));
+                    };
+                    lines.push(json.to_owned());
                 }
             }
         }
@@ -580,9 +580,12 @@ fn dmj_lines(events: Vec<NetworkEvent>) -> Result<Vec<serde_json::Value>, String
 }
 
 /// Every complete flag snapshot among `lines`, as `(seq, flag name -> value)`.
+/// Per sequence number: the expected part count, and the parts seen so far.
+type SnapshotParts = std::collections::BTreeMap<u64, (u64, std::collections::BTreeMap<u64, Vec<(String, i64)>>)>;
+
 /// A snapshot counts only when all of its `of` parts are present.
 fn flag_snapshots(lines: &[serde_json::Value]) -> Vec<(u64, std::collections::BTreeMap<String, i64>)> {
-    let mut by_seq: std::collections::BTreeMap<u64, (u64, std::collections::BTreeMap<u64, Vec<(String, i64)>>)> = Default::default();
+    let mut by_seq: SnapshotParts = Default::default();
     for line in lines.iter().filter(|line| line.get("t").and_then(|t| t.as_str()) == Some("flags")) {
         let (Some(seq), Some(part), Some(of)) = (
             line.get("seq").and_then(|v| v.as_u64()),
@@ -679,7 +682,7 @@ fn dm_flag_channel(config: &Config) -> Result<(), String> {
     let _ = primary.say("@dm mode off");
     primary.pump(Duration::from_millis(150));
     if let Some(partner) = partner.as_mut() {
-        let _ = leave_party_both(&mut primary, partner);
+        leave_party_both(&mut primary, partner);
     } else {
         let _ = primary.say("@dm reset confirm");
         primary.pump(Duration::from_millis(250));
@@ -772,7 +775,7 @@ fn dm_party_offline_transitions(config: &Config) -> Result<(), String> {
         }
         let _ = primary.say("@dm mode off");
         primary.pump(Duration::from_millis(150));
-        let _ = leave_party_both(&mut primary, partner);
+        leave_party_both(&mut primary, partner);
     } else {
         let _ = primary.say("@dm reset confirm");
         primary.pump(Duration::from_millis(250));
@@ -855,7 +858,7 @@ fn dm_party_reward_isolation(config: &Config) -> Result<(), String> {
         partner.pump(Duration::from_millis(150));
         let _ = primary.say("@dm mode off");
         primary.pump(Duration::from_millis(150));
-        let _ = leave_party_both(&mut primary, partner);
+        leave_party_both(&mut primary, partner);
     } else {
         let _ = primary.say("@dm reset confirm");
         primary.pump(Duration::from_millis(250));

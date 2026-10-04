@@ -1762,21 +1762,19 @@ fn sweep_job(config: &Config, job_id: u16, job_name: &str) -> Result<(), String>
                 context.map_name
             );
             context.warp(&sweep_map, start_position.x, start_position.y)?;
-        } else if context.position != start_position {
-            if context.walk_to(start_position.x, start_position.y).is_err() {
-                walk_failures += 1;
-                // **Warp when walking fails, rather than carrying on mispositioned.**
-                // A failed walk is not cosmetic: every later cast is then measured
-                // from the wrong place, so attack skills fall out of range and
-                // ground casts target cells that cannot take a unit — and Hercules
-                // drops both with a bare `return 0` and NO `clif->skill_fail`, i.e.
-                // total silence. Measured on the 2026-08-10 shuffle: one sweep had
-                // 5 failed walks and reported `RG_STRIPARMOR` as silent.
-                //
-                // Walking is kept as the first attempt because it exercises the
-                // ordinary movement path; the warp is the guarantee.
-                let _ = context.warp(&sweep_map.clone(), start_position.x, start_position.y);
-            }
+        } else if context.position != start_position && context.walk_to(start_position.x, start_position.y).is_err() {
+            walk_failures += 1;
+            // **Warp when walking fails, rather than carrying on mispositioned.**
+            // A failed walk is not cosmetic: every later cast is then measured
+            // from the wrong place, so attack skills fall out of range and
+            // ground casts target cells that cannot take a unit — and Hercules
+            // drops both with a bare `return 0` and NO `clif->skill_fail`, i.e.
+            // total silence. Measured on the 2026-08-10 shuffle: one sweep had
+            // 5 failed walks and reported `RG_STRIPARMOR` as silent.
+            //
+            // Walking is kept as the first attempt because it exercises the
+            // ordinary movement path; the warp is the guarantee.
+            let _ = context.warp(&sweep_map.clone(), start_position.x, start_position.y);
         }
 
         // Per-skill fixtures so derived expectations can be honest rather than
@@ -2103,12 +2101,12 @@ fn sweep_job(config: &Config, job_id: u16, job_name: &str) -> Result<(), String>
                     // Soul Link skills need a target of a specific class. Seat
                     // the partner as that job when we know the mapping so the
                     // retry can produce a real buff instead of only refusals.
-                    if let Some(required_job) = soul_link_partner_job(&name) {
-                        if let Some(seat) = partner.as_mut() {
-                            let _ = seat.ensure_job(required_job);
-                            seat.say("@heal")?;
-                            seat.pump(Duration::from_millis(200));
-                        }
+                    if let Some(required_job) = soul_link_partner_job(&name)
+                        && let Some(seat) = partner.as_mut()
+                    {
+                        let _ = seat.ensure_job(required_job);
+                        seat.say("@heal")?;
+                        seat.pump(Duration::from_millis(200));
                     }
                     context.flush();
                     if context.net.cast_skill(skill.skill_id, level, friend).is_ok() {
@@ -2170,7 +2168,7 @@ fn sweep_job(config: &Config, job_id: u16, job_name: &str) -> Result<(), String>
         });
 
         if target.is_some() {
-            let _ = context.kill_all_monsters();
+            context.kill_all_monsters();
         }
     }
 

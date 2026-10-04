@@ -763,7 +763,7 @@ fn run_modifier_step(config: &Config, step: &Step) -> Result<(), String> {
             }
         }
         for (skill_id, level) in step.casts {
-            context.say(&format!("@heal"))?;
+            context.say("@heal")?;
             context.say(&format!("@useskill {skill_id} {level} self"))?;
             context.pump(Duration::from_secs(3));
         }

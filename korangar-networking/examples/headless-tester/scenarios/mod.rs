@@ -124,6 +124,7 @@ pub fn all_scenarios() -> Vec<Scenario> {
 /// remember: `every_public_action_has_a_coverage_row` reads
 /// `korangar-networking/src/lib.rs` and fails the build if you did not — see
 /// its comment for why the manifest was only half a gate until then.
+#[cfg(test)]
 const ACTION_COVERAGE: &[(&str, &str)] = &[
     // Session / connection
     ("connect_to_login_server", "smoke"),

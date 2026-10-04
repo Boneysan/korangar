@@ -604,11 +604,11 @@ fn shop_buy_sell(config: &Config) -> Result<(), String> {
             NetworkEvent::UpdateEntityDetails { entity_id, name } if *entity_id == id => Some(name.clone()),
             _ => None,
         });
-        if let Ok(name) = name {
-            if name.contains("Pet Groomer") {
-                groomer_id = Some(id);
-                break;
-            }
+        if let Ok(name) = name
+            && name.contains("Pet Groomer")
+        {
+            groomer_id = Some(id);
+            break;
         }
     }
 
@@ -645,7 +645,7 @@ fn shop_buy_sell(config: &Config) -> Result<(), String> {
         item_id: pet_food.item_id,
         item_type: pet_food.item_type,
         price: pet_food.price,
-        quantity: pet_food.quantity.clone(),
+        quantity: pet_food.quantity,
         weight: pet_food.weight,
         location: pet_food.location,
     };
@@ -653,10 +653,9 @@ fn shop_buy_sell(config: &Config) -> Result<(), String> {
     context.flush();
     context.net.purchase_items(vec![purchase_item]).map_err(|_| "disconnected")?;
     context.wait_for("BuyingCompleted success", |event| match event {
-        NetworkEvent::BuyingCompleted { result } => match result {
-            BuyShopItemsResult::Success => Some(()),
-            _ => None,
-        },
+        NetworkEvent::BuyingCompleted {
+            result: BuyShopItemsResult::Success,
+        } => Some(()),
         _ => None,
     })?;
 
@@ -700,10 +699,9 @@ fn shop_buy_sell(config: &Config) -> Result<(), String> {
         }])
         .map_err(|_| "disconnected")?;
     context.wait_for("SellingCompleted success", |event| match event {
-        NetworkEvent::SellingCompleted { result } => match result {
-            SellItemsResult::Success => Some(()),
-            _ => None,
-        },
+        NetworkEvent::SellingCompleted {
+            result: SellItemsResult::Success,
+        } => Some(()),
         _ => None,
     })?;
 
@@ -732,7 +730,7 @@ fn shop_close(config: &Config) -> Result<(), String> {
         item_id: pet_food.item_id,
         item_type: pet_food.item_type,
         price: pet_food.price,
-        quantity: pet_food.quantity.clone(),
+        quantity: pet_food.quantity,
         weight: pet_food.weight,
         location: pet_food.location,
     };
@@ -757,7 +755,7 @@ fn shop_close(config: &Config) -> Result<(), String> {
         item_id: pet_food.item_id,
         item_type: pet_food.item_type,
         price: pet_food.price,
-        quantity: pet_food.quantity.clone(),
+        quantity: pet_food.quantity,
         weight: pet_food.weight,
         location: pet_food.location,
     };
@@ -906,10 +904,10 @@ fn find_pet_groomer(context: &mut TestContext) -> Result<EntityId, String> {
             NetworkEvent::UpdateEntityDetails { entity_id, name } if *entity_id == id => Some(name.clone()),
             _ => None,
         });
-        if let Ok(name) = name {
-            if name.contains("Pet Groomer") {
-                return Ok(id);
-            }
+        if let Ok(name) = name
+            && name.contains("Pet Groomer")
+        {
+            return Ok(id);
         }
     }
     Err("Pet Groomer NPC not found near prontera,218,211".to_owned())

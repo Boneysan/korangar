@@ -766,7 +766,7 @@ fn create_temporary_character(
         return Err(format!("leftover temp character {temp_name} exists — delete manually"));
     }
 
-    let used_slots: Vec<u8> = characters.iter().map(|c| c.character_number as u8).collect();
+    let used_slots: Vec<u8> = characters.iter().map(|c| c.character_number).collect();
     let free_slot = (0..9u8).find(|slot| !used_slots.contains(slot)).ok_or("no free character slot")?;
 
     session
@@ -814,7 +814,7 @@ fn character_create_checks(config: &Config, created: &ragnarok_packets::Characte
     }
 
     // A second character with the same name must be rejected.
-    let used_slots: Vec<u8> = characters.iter().map(|c| c.character_number as u8).collect();
+    let used_slots: Vec<u8> = characters.iter().map(|c| c.character_number).collect();
     let second_slot = (0..9u8)
         .find(|slot| !used_slots.contains(slot))
         .ok_or("no free character slot for the duplicate-name attempt")?;
@@ -1394,7 +1394,7 @@ fn try_connect_to_character_select(
         NetworkEvent::LoginServerConnected {
             character_servers,
             login_data,
-        } => Some(Ok((character_servers.clone(), login_data.clone()))),
+        } => Some(Ok((character_servers.clone(), *login_data))),
         NetworkEvent::LoginServerConnectionFailed { message, .. } => Some(Err(format!("login failed: {message}"))),
         _ => None,
     })??;

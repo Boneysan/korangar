@@ -487,6 +487,9 @@ fn wait_for_bit(context: &mut TestContext, name: &str, bit: i64, seconds: u64) -
 
 /// Run one "a prerequisite is missing" case from a fresh preset (runbook test C
 /// and D).
+// Eight arguments: each names one axis of the prerequisite matrix, and a struct
+// would only rename them at every call site.
+#[allow(clippy::too_many_arguments)]
 fn prerequisite_case(
     primary: &mut TestContext,
     board: EntityId,
@@ -662,7 +665,7 @@ fn commit_case(config: &Config, ending: usize) -> Result<(), String> {
         }
 
         // 3. A second visit changes nothing and grants nothing.
-        let again = talk(&mut primary, choice, |choices| affirmative(choices))?;
+        let again = talk(&mut primary, choice, affirmative)?;
         if !again.menus.is_empty() {
             return Err(format!(
                 "after the choice was made the NPC still offered menus: {:?}",
@@ -978,11 +981,9 @@ fn loki_briefing(config: &Config) -> Result<(), String> {
         // Asked for, the allies page is honest about an empty world.
         let mut asked_allies = false;
         let allies = talk(&mut primary, loki, |choices| {
-            if !asked_allies {
-                if let Some(option) = pick(choices, "Hear from our allies") {
-                    asked_allies = true;
-                    return Some(option);
-                }
+            if !asked_allies && let Some(option) = pick(choices, "Hear from our allies") {
+                asked_allies = true;
+                return Some(option);
             }
             if pick(choices, "Nothing more").is_some() {
                 return pick(choices, "Nothing more");
@@ -996,11 +997,9 @@ fn loki_briefing(config: &Config) -> Result<(), String> {
         // Asked for, the journey appears.
         let mut asked_journey = false;
         let journey = talk(&mut primary, loki, |choices| {
-            if !asked_journey {
-                if let Some(option) = pick(choices, "Review our journey") {
-                    asked_journey = true;
-                    return Some(option);
-                }
+            if !asked_journey && let Some(option) = pick(choices, "Review our journey") {
+                asked_journey = true;
+                return Some(option);
             }
             if pick(choices, "Nothing more").is_some() {
                 return pick(choices, "Nothing more");

@@ -332,7 +332,7 @@ impl TestContext {
             NetworkEvent::LoginServerConnected {
                 character_servers,
                 login_data,
-            } => Some(Ok((character_servers.clone(), login_data.clone()))),
+            } => Some(Ok((character_servers.clone(), *login_data))),
             NetworkEvent::LoginServerConnectionFailed { message, .. } => Some_err(format!("login failed: {message}")),
             _ => None,
         })??;
@@ -413,7 +413,7 @@ impl TestContext {
 
         context.net.select_character(slot).map_err(|_| "disconnected")?;
         let map_login_data = context.wait_for("CharacterSelected", |event| match event {
-            NetworkEvent::CharacterSelected { login_data } => Some(Ok(login_data.clone())),
+            NetworkEvent::CharacterSelected { login_data } => Some(Ok(*login_data)),
             NetworkEvent::CharacterSelectionFailed { message, .. } => Some_err(format!("selection failed: {message}")),
             _ => None,
         })??;
@@ -674,7 +674,7 @@ impl TestContext {
     pub fn scan_pending<T>(&mut self, duration: Duration, classify: &mut impl FnMut(&NetworkEvent) -> Option<T>) -> Result<Vec<T>, String> {
         self.pump(duration);
         self.check_connection()?;
-        Ok(self.pending.iter().filter_map(|event| classify(event)).collect())
+        Ok(self.pending.iter().filter_map(classify).collect())
     }
 
     // --- state bookkeeping ------------------------------------------------
