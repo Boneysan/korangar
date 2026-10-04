@@ -1,7 +1,9 @@
 //! Non-custodial crafting commission board (GDD §12.4 / F31, Decision D7).
 //!
-//! Provides a bulletin/matching tracker for player crafting commissions
-//! (weapons, armor, potions, arrows). Adheres strictly to Decision D7:
+//! Provides a tracker for player crafting commissions (weapons, armor,
+//! potions, arrows). **It is local to this client**: nothing is sent to the
+//! server or to other players, so it is the requester's own ledger, not a
+//! shared board, until a server half exists. Adheres strictly to Decision D7:
 //! NO automated escrow or asset custody. Materials and compensation
 //! Zeny must be transferred directly via peer-to-peer trade windows.
 //! All requests explicitly disclose crafting failure risks.
@@ -129,32 +131,41 @@ impl CommissionBoardState {
         Ok(())
     }
 
-    /// Assign an active crafter to a commission request.
-    #[cfg_attr(not(test), allow(dead_code))] // the board window has no assign/complete action yet (F31)
-    pub fn assign_crafter(&mut self, id: u32, crafter_name: &str) -> Result<(), &'static str> {
+    /// Assign a crafter to a commission request. Only the requester may.
+    pub fn assign_crafter(&mut self, id: u32, requester_name: &str, crafter_name: &str) -> Result<(), &'static str> {
         let req = self
             .requests
             .iter_mut()
             .find(|r| r.id == id)
             .ok_or("Commission request not found")?;
 
+        if !req.requester_name.eq_ignore_ascii_case(requester_name) {
+            return Err("Only the original requester may assign a crafter");
+        }
+        if crafter_name.trim().is_empty() {
+            return Err("Name the crafter to assign");
+        }
         if req.status != CommissionStatus::Open {
             return Err("Commission is not open for assignment");
         }
 
-        req.assigned_crafter = Some(crafter_name.to_owned());
+        req.assigned_crafter = Some(crafter_name.trim().to_owned());
         req.status = CommissionStatus::Assigned;
         Ok(())
     }
 
-    /// Mark a commission request as completed following verified peer trade.
-    #[cfg_attr(not(test), allow(dead_code))] // the board window has no assign/complete action yet (F31)
-    pub fn complete_request(&mut self, id: u32) -> Result<(), &'static str> {
+    /// Mark a commission request as completed once the peer trade is done.
+    /// Only the requester may: they are the one who received the item.
+    pub fn complete_request(&mut self, id: u32, requester_name: &str) -> Result<(), &'static str> {
         let req = self
             .requests
             .iter_mut()
             .find(|r| r.id == id)
             .ok_or("Commission request not found")?;
+
+        if !req.requester_name.eq_ignore_ascii_case(requester_name) {
+            return Err("Only the original requester may mark this commission complete");
+        }
 
         if req.status != CommissionStatus::Assigned && req.status != CommissionStatus::Open {
             return Err("Commission cannot be completed from its current status");
@@ -194,6 +205,80 @@ impl CommissionBoardState {
     }
 }
 
+/// What a `/commission` command asks the client to do.
+#[derive(Debug, PartialEq, Eq)]
+pub enum CommissionReply {
+    /// Open or close the board window.
+    ToggleWindow,
+    /// Print this line in chat.
+    Say(String),
+}
+
+const USAGE: &str = "Usage: /commission <board | list | post <item> [fee] | assign <id> <crafter> | complete <id> | cancel <id>>";
+
+/// Split `post`'s arguments into item name and fee. Item names have spaces
+/// ("Fire Damascus"), so the fee is the last word only when it is all digits
+/// and something comes before it.
+fn split_item_and_fee(rest: &[&str]) -> (String, u32) {
+    match rest.split_last() {
+        Some((last, name)) if !name.is_empty() && last.chars().all(|c| c.is_ascii_digit()) => {
+            (name.join(" "), last.parse().unwrap_or(u32::MAX))
+        }
+        _ => (rest.join(" "), 0),
+    }
+}
+
+impl CommissionBoardState {
+    /// Run one `/commission` command for `player_name`. `args` is everything
+    /// after `/commission`.
+    pub fn run_command(&mut self, player_name: &str, args: &str) -> CommissionReply {
+        let words: Vec<&str> = args.split_whitespace().collect();
+        let id = |index: usize| words.get(index).and_then(|word| word.trim_start_matches('#').parse::<u32>().ok());
+        let say = CommissionReply::Say;
+
+        match words.first().copied().unwrap_or("board") {
+            "board" | "window" | "open" => CommissionReply::ToggleWindow,
+            "list" => say(self.format_list()),
+            "post" => {
+                let (item_name, fee) = split_item_and_fee(&words[1..]);
+                if item_name.is_empty() {
+                    return say("Usage: /commission post <item name> [zeny fee]".to_owned());
+                }
+                let id = self.post_request(player_name, ItemId(0), &item_name, "Negotiated via peer trade", 0, fee);
+                say(format!(
+                    "Posted commission #{id} for {item_name} (fee {fee}z). It is on this client only: tell crafters yourself, and trade \
+                     items and zeny directly."
+                ))
+            }
+            "assign" => match id(1) {
+                Some(id) => {
+                    let crafter = words[2..].join(" ");
+                    match self.assign_crafter(id, player_name, &crafter) {
+                        Ok(()) => say(format!("Commission #{id} is now with {crafter}.")),
+                        Err(error) => say(format!("Cannot assign commission #{id}: {error}.")),
+                    }
+                }
+                None => say("Usage: /commission assign <id> <crafter name>".to_owned()),
+            },
+            "complete" | "done" => match id(1) {
+                Some(id) => match self.complete_request(id, player_name) {
+                    Ok(()) => say(format!("Commission #{id} marked complete.")),
+                    Err(error) => say(format!("Cannot complete commission #{id}: {error}.")),
+                },
+                None => say("Usage: /commission complete <id>".to_owned()),
+            },
+            "cancel" => match id(1) {
+                Some(id) => match self.cancel_request(id, player_name) {
+                    Ok(()) => say(format!("Cancelled commission #{id}.")),
+                    Err(error) => say(format!("Cannot cancel commission #{id}: {error}.")),
+                },
+                None => say("Usage: /commission cancel <id>".to_owned()),
+            },
+            _ => say(USAGE.to_owned()),
+        }
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -219,13 +304,13 @@ mod tests {
         assert_eq!(req.risk_disclosure, NON_CUSTODIAL_RISK_DISCLOSURE);
 
         // Assign crafter
-        assert!(board.assign_crafter(id, "BobTheSmith").is_ok());
+        assert!(board.assign_crafter(id, "Alice", "BobTheSmith").is_ok());
         let assigned = board.get_request(id).unwrap();
         assert_eq!(assigned.status, CommissionStatus::Assigned);
         assert_eq!(assigned.assigned_crafter.as_deref(), Some("BobTheSmith"));
 
         // Complete commission
-        assert!(board.complete_request(id).is_ok());
+        assert!(board.complete_request(id, "Alice").is_ok());
         let completed = board.get_request(id).unwrap();
         assert_eq!(completed.status, CommissionStatus::Completed);
         assert!(board.active_requests().is_empty());
@@ -249,5 +334,80 @@ mod tests {
 
         // Double cancel fails
         assert_eq!(board.cancel_request(id, "Alice"), Err("Commission is already cancelled"));
+    }
+
+    fn reply(board: &mut CommissionBoardState, player: &str, args: &str) -> String {
+        match board.run_command(player, args) {
+            CommissionReply::Say(line) => line,
+            CommissionReply::ToggleWindow => "<window>".to_owned(),
+        }
+    }
+
+    #[test]
+    fn post_keeps_multi_word_item_names_and_the_fee() {
+        let mut board = CommissionBoardState::default();
+        reply(&mut board, "Alice", "post Fire Damascus 50000");
+        let request = board.get_request(1).expect("posted");
+        assert_eq!(request.requested_item_name, "Fire Damascus");
+        assert_eq!(request.compensation_zeny, 50_000);
+
+        // No fee: every word is the name. A lone number is a name, not a fee.
+        reply(&mut board, "Alice", "post White Slim Potion");
+        assert_eq!(board.get_request(2).unwrap().requested_item_name, "White Slim Potion");
+        assert_eq!(board.get_request(2).unwrap().compensation_zeny, 0);
+        reply(&mut board, "Alice", "post 100");
+        assert_eq!(board.get_request(3).unwrap().requested_item_name, "100");
+        assert_eq!(board.get_request(3).unwrap().compensation_zeny, 0);
+        assert!(reply(&mut board, "Alice", "post").starts_with("Usage"));
+    }
+
+    #[test]
+    fn assign_then_complete_through_commands() {
+        let mut board = CommissionBoardState::default();
+        reply(&mut board, "Alice", "post Fire Damascus 50000");
+
+        assert_eq!(
+            reply(&mut board, "Alice", "assign 1 Bob the Smith"),
+            "Commission #1 is now with Bob the Smith."
+        );
+        let request = board.get_request(1).unwrap();
+        assert_eq!(request.status, CommissionStatus::Assigned);
+        assert_eq!(request.assigned_crafter.as_deref(), Some("Bob the Smith"));
+        assert!(board.format_list().contains("In Progress"), "{}", board.format_list());
+
+        // "#1" is accepted as well as "1", since that is how the list prints ids.
+        assert_eq!(reply(&mut board, "Alice", "complete #1"), "Commission #1 marked complete.");
+        assert_eq!(board.get_request(1).unwrap().status, CommissionStatus::Completed);
+        assert!(board.active_requests().is_empty());
+    }
+
+    #[test]
+    fn only_the_requester_assigns_or_completes() {
+        let mut board = CommissionBoardState::default();
+        reply(&mut board, "Alice", "post Red Potion 100");
+
+        assert!(reply(&mut board, "Mallory", "assign 1 Mallory").contains("Only the original requester"));
+        assert!(reply(&mut board, "Mallory", "complete 1").contains("Only the original requester"));
+        assert_eq!(board.get_request(1).unwrap().status, CommissionStatus::Open);
+    }
+
+    #[test]
+    fn assign_refuses_a_missing_crafter_and_a_closed_request() {
+        let mut board = CommissionBoardState::default();
+        reply(&mut board, "Alice", "post Red Potion");
+
+        assert!(reply(&mut board, "Alice", "assign 1").contains("Name the crafter"));
+        assert!(reply(&mut board, "Alice", "assign").starts_with("Usage"));
+        assert!(reply(&mut board, "Alice", "assign 9 Bob").contains("not found"));
+        reply(&mut board, "Alice", "cancel 1");
+        assert!(reply(&mut board, "Alice", "assign 1 Bob").contains("not open"));
+        assert!(reply(&mut board, "Alice", "complete 1").contains("cannot be completed"));
+    }
+
+    #[test]
+    fn bare_command_opens_the_window_and_unknown_ones_explain() {
+        let mut board = CommissionBoardState::default();
+        assert_eq!(board.run_command("Alice", ""), CommissionReply::ToggleWindow);
+        assert!(reply(&mut board, "Alice", "frobnicate").starts_with("Usage"));
     }
 }
