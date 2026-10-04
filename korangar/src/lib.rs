@@ -1650,6 +1650,39 @@ fn format_monster_target_summary(
     (lines.join("\n"), is_mvp)
 }
 
+/// A click that only picked something up to drag -- an item or skill box, or a
+/// window's move/resize handle -- is not a completed menu action and must not
+/// chime like one; the drop or cancellation resolves it. (Ported from the
+/// 2026-09-18 live-session fix on the closed PR #10 branch, eb7081d7.)
+fn click_started_drag(mouse_mode: &MouseMode<ClientState>) -> bool {
+    matches!(
+        mouse_mode,
+        MouseMode::Custom {
+            mode: MouseInputMode::MoveItem { .. } | MouseInputMode::MoveSkill { .. }
+        } | MouseMode::MovingWindow { .. }
+            | MouseMode::ResizingWindow { .. }
+    )
+}
+
+#[cfg(test)]
+mod click_sound_tests {
+    use super::*;
+
+    #[test]
+    fn default_mouse_mode_does_not_count_as_a_drag() {
+        assert!(!click_started_drag(&MouseMode::Default));
+    }
+
+    #[test]
+    fn moving_or_resizing_a_window_counts_as_a_drag() {
+        assert!(click_started_drag(&MouseMode::MovingWindow { window_id: 0 }));
+        assert!(click_started_drag(&MouseMode::ResizingWindow {
+            resize_mode: korangar_interface::layout::ResizeMode::Both,
+            window_id: 0,
+        }));
+    }
+}
+
 const TIMED_ACTION_BUFFER_MS: u32 = 200;
 
 /// An incoming cast with a drawable ground footprint: skill, target cell, and
@@ -13393,9 +13426,12 @@ impl Client {
 
             if let Some(mouse_button) = input_report.mouse_click {
                 if is_interface_hovered {
-                    // Starts item/skill drag via SetMouseMode (applied immediately inside click).
+                    // Starts item/skill drag via SetMouseMode -- queued, not applied until
+                    // `process_events` drains it at the end of this frame, so
+                    // `get_mouse_mode()` here would still read last frame's mode.
                     interface_frame.click(&self.client_state, mouse_button);
-                    if mouse_button == MouseButton::Left {
+                    let started_drag = interface_frame.queued_mouse_mode().is_some_and(click_started_drag);
+                    if mouse_button == MouseButton::Left && !started_drag {
                         self.audio_engine.play_sound_effect(self.main_menu_click_sound_effect);
                     }
                 } else if modal_screen {

@@ -85,6 +85,10 @@ impl<App: Application> EventQueue<App> {
         self.events.push(event.into());
     }
 
+    pub fn iter(&self) -> std::slice::Iter<'_, Event<App>> {
+        self.events.iter()
+    }
+
     pub fn iter_mut(&mut self) -> impl Iterator<Item = &mut Event<App>> {
         self.events.iter_mut()
     }

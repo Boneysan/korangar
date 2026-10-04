@@ -805,6 +805,21 @@ pub struct InterfaceFrame<'a, App: Application> {
 }
 
 impl<App: Application> InterfaceFrame<'_, App> {
+    /// The mode a `SetMouseMode` event queued so far this frame (e.g. by the
+    /// click just made) would switch to, without draining the queue.
+    ///
+    /// `get_mouse_mode` is a snapshot from the start of the frame and only
+    /// advances once `Interface::process_events` drains the queue at the end of
+    /// it, so it cannot see a mode set by a click made *this same frame*. A
+    /// caller that must react to "did this click just start a drag" looks at
+    /// the pending event instead. Returns the most recently queued mode.
+    pub fn queued_mouse_mode(&self) -> Option<&MouseMode<App>> {
+        self.event_queue.iter().rev().find_map(|event| match event {
+            Event::SetMouseMode { mouse_mode } => Some(mouse_mode),
+            _ => None,
+        })
+    }
+
     pub fn is_interface_hovered(&self) -> bool {
         self.hovered_window.is_some()
     }
