@@ -78,7 +78,7 @@ use korangar_debug::profiling::Profiler;
 use korangar_interface::layout::MouseButton;
 use korangar_interface::{Interface, MouseMode};
 use korangar_networking::{
-    DisconnectReason, HotkeyState, LoginServerLoginData, MessageColor, NetworkEvent, NetworkEventBuffer, NetworkingSystem, SellItem,
+    DisconnectReason, HotkeyState, LoginServerLoginData, MessageColor, NetworkEvent, NetworkEventBuffer, NetworkingSystem,
     SupportedPacketVersion,
 };
 #[cfg(feature = "debug")]
@@ -7716,28 +7716,7 @@ impl Client {
                     self.interface.close_window_with_class(WindowClass::Dialog);
 
                     let inventory_items = self.client_state.follow(client_state().inventory().items());
-                    let sell_items: Vec<_> = items
-                        .into_iter()
-                        .filter_map(|item| {
-                            let inventory_item = inventory_items
-                                .iter()
-                                .find(|inventory_item| inventory_item.index == item.inventory_index)?;
-
-                            let name = inventory_item.metadata.name.clone();
-                            let texture = inventory_item.metadata.texture.clone();
-                            let quantity = match &inventory_item.details {
-                                korangar_networking::InventoryItemDetails::Regular { amount, .. } => *amount,
-                                korangar_networking::InventoryItemDetails::Equippable { .. } => 1,
-                            };
-
-                            Some(SellItem {
-                                metadata: (ResourceMetadata { name, texture }, quantity),
-                                inventory_index: item.inventory_index,
-                                price: item.price,
-                                overcharge_price: item.overcharge_price,
-                            })
-                        })
-                        .collect();
+                    let sell_items = korangar_networking::sell_entries(items, inventory_items);
 
                     if sell_items.is_empty() {
                         self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
@@ -7754,8 +7733,9 @@ impl Client {
                 }
                 NetworkEvent::SellingCompleted { result } => match result {
                     SellItemsResult::Success => {
-                        // Clear the cart.
-                        self.client_state.follow_mut(client_state().buy_cart()).clear();
+                        // Clear the sell cart: its entries name inventory slots that the
+                        // sale just emptied, and a refilled slot must not be sold next time.
+                        self.client_state.follow_mut(client_state().sell_cart()).clear();
 
                         self.interface.close_window_with_class(WindowClass::Sell);
                         self.interface.close_window_with_class(WindowClass::SellCart);
