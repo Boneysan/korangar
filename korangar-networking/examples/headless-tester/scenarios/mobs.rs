@@ -75,6 +75,8 @@ enum Seen {
     Step {
         tick: u32,
         away: bool,
+        /// Distance from the player before the move.
+        distance_before: i32,
         distance_after: i32,
         length: i32,
     },
@@ -111,6 +113,7 @@ fn record(context: &TestContext, mob: EntityId, events: Vec<NetworkEvent>, seen:
                 seen.push(Seen::Step {
                     tick: starting_timestamp.0,
                     away: chebyshev(from, to) == 1 && distance_after > chebyshev(from, me),
+                    distance_before: chebyshev(from, me),
                     distance_after,
                     length: chebyshev(from, to),
                 });
@@ -797,8 +800,10 @@ fn eddga_meteor_attempt(config: &Config) -> Result<(), String> {
     result
 }
 
-/// A flee: one long move, not a one-cell step, that ends farther from the
-/// player.
+/// A flee: one long move, not a one-cell step, that opens the gap to the
+/// player by at least three cells. Ending far away is not enough: a Poring
+/// chasing its attacker also makes a long move, and against a stale player
+/// position that read as a flee at 20 damage (the server logged none).
 fn flees(seen: &[Seen]) -> Vec<usize> {
     // Returns the damage the player had dealt when each flee happened.
     let mut dealt = 0;
@@ -813,9 +818,10 @@ fn flees(seen: &[Seen]) -> Vec<usize> {
             Seen::Step {
                 length,
                 away: _,
+                distance_before,
                 distance_after,
                 ..
-            } if has_hit && *length >= 4 && *distance_after >= 4 => out.push(dealt),
+            } if has_hit && *length >= 4 && *distance_after >= 4 && *distance_after >= distance_before + 3 => out.push(dealt),
             _ => {}
         }
     }
@@ -827,9 +833,29 @@ fn flees(seen: &[Seen]) -> Vec<usize> {
 /// dealt.
 fn wear_down_poring(config: &Config, map: &str) -> Result<(Vec<Seen>, usize), String> {
     let mut context = attacker_at_level(config, map, 0, 1)?;
+    // The test characters are shared, and other scenarios leave STR at 90 or
+    // more: a "level-1" attacker then one-shots the Poring (235 damage on
+    // 2026-10-04) before it can flee. Put the stats back first.
+    context.say("@streset")?;
+    // Gear left on by an earlier scenario does the same: a double attack read
+    // as one 20-damage hit put the Poring at 33% on the first swing.
+    let worn: Vec<_> = context
+        .inventory
+        .iter()
+        .filter(|item| item.is_equipped())
+        .map(|item| item.index)
+        .collect();
+    for index in worn {
+        let _ = context.net.request_item_unequip(index);
+    }
+    context.pump(Duration::from_millis(400));
     context.say("@dex 50")?;
     context.pump(Duration::from_millis(200));
-    let target = context.spawn_monster("PORING", 1002)?;
+    // prt_fild08 is full of wild Porings. Clear them and only accept the one
+    // spawned beside us: a wild one wandering off read as a flee at 20 damage,
+    // with no Coward flee in the server log.
+    clear_map(&mut context);
+    let target = context.spawn_monster_near("PORING", 1002)?;
     let mut seen = Vec::new();
     let mut dealt = 0;
     for swing in 0..80 {
@@ -841,7 +867,9 @@ fn wear_down_poring(config: &Config, map: &str) -> Result<(Vec<Seen>, usize), St
         {
             let _ = context.walk_to(target_pos.x.saturating_sub(1), target_pos.y);
         }
-        context.flush();
+        // No flush here: a hit's damage event can land after the 600 ms
+        // window, and flushing threw it away, so the test counted 20 damage
+        // while the server had the Poring at 20/60 and rightly fleeing.
         context.net.player_attack(target).map_err(|_| "disconnected")?;
         let events = context.collect_for(Duration::from_millis(600));
         let before = seen.len();
@@ -867,9 +895,11 @@ fn wear_down_poring(config: &Config, map: &str) -> Result<(Vec<Seen>, usize), St
 /// only once it is down to 35% of its 50 HP, never before; and on a map with no
 /// profile it never runs.
 fn coward_poring(config: &Config) -> Result<(), String> {
-    // Poring max HP is 50: 35% is 17.5, so the flee may start once 33 or more
-    // damage is dealt.
-    const FIRST_DAMAGE_THAT_CAN_TRIGGER: usize = 33;
+    // Poring max HP is 60 (db/re/mob_db.conf Id 1002; the earlier "50" was
+    // wrong): the flee may start once HP is at most 35% (21), i.e. after 39 or
+    // more damage.
+    const PORING_HP: usize = 60;
+    const FIRST_DAMAGE_THAT_CAN_TRIGGER: usize = PORING_HP - PORING_HP * 35 / 100;
 
     let (seen, dealt) = wear_down_poring(config, "prt_fild08")?;
     let fled = flees(&seen);
@@ -881,8 +911,9 @@ fn coward_poring(config: &Config) -> Result<(), String> {
     }
     if fled[0] < FIRST_DAMAGE_THAT_CAN_TRIGGER {
         return Err(format!(
-            "the Poring fled after only {} damage; it should hold until 33 (35% of 50 HP)",
-            fled[0]
+            "the Poring fled after only {} damage; it should hold until {FIRST_DAMAGE_THAT_CAN_TRIGGER} (35% of {PORING_HP} HP): {}",
+            fled[0],
+            summary(&seen)
         ));
     }
 
