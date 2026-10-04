@@ -12,7 +12,13 @@
 //! Formulations are traced from Hercules Renewal (`Hercules/src/map/status.c`
 //! and `pc.c`).
 
-#![allow(dead_code)]
+#![cfg_attr(
+    not(test),
+    expect(
+        dead_code,
+        reason = "F04: no window offers the Simple/Detailed/Advanced stat modes; build or remove is an open owner decision"
+    )
+)]
 
 use serde::{Deserialize, Serialize};
 
@@ -20,6 +26,7 @@ use super::stat_formulas;
 use super::stat_preview::StatKind;
 
 /// Display mode for the Character Stats interface (GDD §10.8).
+#[cfg_attr(test, expect(dead_code, reason = "F04: no window switches stat view modes, not even in tests"))]
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Default, Serialize, Deserialize)]
 pub enum StatViewMode {
     /// Plain-language description of what the stat improves plus current major

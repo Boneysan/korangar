@@ -11,8 +11,6 @@
 //! - Exact-vs-estimate provenance tagging on all combat estimates and elemental
 //!   effectiveness lookups.
 
-#![allow(dead_code)]
-
 use serde::{Deserialize, Serialize};
 
 use super::attack_element::elemental_effectiveness;
@@ -109,6 +107,10 @@ pub enum ItemScriptBonus {
 
 impl ItemScriptBonus {
     /// True if this bonus represents an unmodeled or rejected script command.
+    #[cfg_attr(
+        not(test),
+        expect(dead_code, reason = "tooltips render unsupported bonuses by matching the variant directly")
+    )]
     pub fn is_unsupported(&self) -> bool {
         matches!(self, ItemScriptBonus::Unsupported { .. })
     }

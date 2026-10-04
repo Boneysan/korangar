@@ -12,7 +12,7 @@
 //! Not yet called by any window: the formulas are tested against `skill.c`,
 //! but no UI shows a success chance (GDD Appendix E, 2026-10-03). Remove the
 //! allowance below once a crafting view uses them.
-#![cfg_attr(not(test), allow(dead_code))]
+#![expect(dead_code, reason = "F30: the formulas are built and tested, but no window shows them yet")]
 
 /// Quality bonus provided by anvil held in inventory during forging.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Default)]

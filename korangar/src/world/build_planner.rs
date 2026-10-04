@@ -7,8 +7,6 @@
 //! Formulations match Hercules Renewal (`Hercules/src/map/status.c`, `pc.c`,
 //! and `db/re/statpoint.txt`).
 
-#![allow(dead_code)]
-
 use std::collections::HashMap;
 
 use serde::{Deserialize, Serialize};
@@ -288,6 +286,7 @@ impl BuildPlan {
     }
 
     /// Whether a stat can be increased by 1 point.
+    #[expect(dead_code, reason = "the planner window gates stat buttons in state/build_planner.rs")]
     pub fn can_increase_stat(&self, stat: StatKind, max_stat: u16) -> bool {
         let current = self.stats.get_stat(stat);
         if current >= max_stat {
@@ -429,6 +428,13 @@ impl BuildPlan {
     }
 
     /// Compute projected combat parameters.
+    #[cfg_attr(
+        not(test),
+        expect(
+            dead_code,
+            reason = "duplicate: the planner window computes its projections in state/build_planner.rs"
+        )
+    )]
     pub fn calculate_projections(&self, job_bonuses: Option<&PlannedStats>, base_weight_limit: u32) -> ProjectedCombatStats {
         ProjectedCombatStats::calculate(
             self.target_base_level,

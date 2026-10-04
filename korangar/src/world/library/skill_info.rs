@@ -11,8 +11,6 @@
 //!
 //! [`item_stats`]: super::item_stats
 
-#![allow(dead_code)]
-
 use std::collections::HashMap;
 use std::sync::OnceLock;
 
@@ -66,6 +64,13 @@ impl LevelledText {
 }
 
 #[derive(Debug, Clone, Deserialize)]
+#[cfg_attr(
+    not(test),
+    expect(
+        dead_code,
+        reason = "fields kept from the export for parity; the Guide reads prerequisites through the generated skill data"
+    )
+)]
 pub struct SkillPrerequisite {
     #[serde(default, rename = "SkillId")]
     pub skill_id: Option<u16>,
@@ -76,6 +81,10 @@ pub struct SkillPrerequisite {
 }
 
 #[derive(Debug, Clone, Deserialize)]
+#[cfg_attr(
+    not(test),
+    expect(dead_code, reason = "review provenance from the export, kept for audit tooling; not for display")
+)]
 pub struct SkillSource {
     #[serde(default)]
     pub path: String,
@@ -152,31 +161,55 @@ pub fn skill_display_name(skill_id: u16) -> Option<&'static str> {
 }
 
 /// Look up the configured status change associated with a skill.
+#[cfg_attr(
+    not(test),
+    expect(dead_code, reason = "duplicates the export-driven path the Guide and hotbar tooltips use")
+)]
 pub fn skill_status_change(skill_id: u16) -> Option<&'static str> {
     table().get(&skill_id)?.status_change.as_deref()
 }
 
 /// Look up direct skill prerequisites from the server tree.
+#[cfg_attr(
+    not(test),
+    expect(dead_code, reason = "duplicates the export-driven path the Guide and hotbar tooltips use")
+)]
 pub fn skill_prerequisites(skill_id: u16) -> &'static [SkillPrerequisite] {
     table().get(&skill_id).map(|row| row.prerequisites.as_slice()).unwrap_or(&[])
 }
 
 /// Look up configured aftercast action delay in milliseconds at `level`.
+#[cfg_attr(
+    not(test),
+    expect(dead_code, reason = "duplicates the export-driven path the Guide and hotbar tooltips use")
+)]
 pub fn skill_after_cast_act_delay(skill_id: u16, level: u16) -> Option<i64> {
     table().get(&skill_id)?.after_cast_action_delay.as_ref()?.at(level)
 }
 
 /// Look up configured aftercast walk delay in milliseconds at `level`.
+#[cfg_attr(
+    not(test),
+    expect(dead_code, reason = "duplicates the export-driven path the Guide and hotbar tooltips use")
+)]
 pub fn skill_after_cast_walk_delay(skill_id: u16, level: u16) -> Option<i64> {
     table().get(&skill_id)?.after_cast_walk_delay.as_ref()?.at(level)
 }
 
 /// Look up configured cooldown in milliseconds at `level`.
+#[cfg_attr(
+    not(test),
+    expect(dead_code, reason = "duplicates the export-driven path the Guide and hotbar tooltips use")
+)]
 pub fn skill_cooldown(skill_id: u16, level: u16) -> Option<i64> {
     table().get(&skill_id)?.cooldown.as_ref()?.at(level)
 }
 
 /// Look up source provenance for a skill record.
+#[cfg_attr(
+    not(test),
+    expect(dead_code, reason = "duplicates the export-driven path the Guide and hotbar tooltips use")
+)]
 pub fn skill_source(skill_id: u16) -> Option<&'static SkillSource> {
     table().get(&skill_id)?.source.as_ref()
 }

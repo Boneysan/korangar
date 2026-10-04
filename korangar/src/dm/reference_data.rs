@@ -5,7 +5,6 @@
 
 // These fields are staged for the player Guide, which is a later client
 // slice; keep the validated typed model available without warning meanwhile.
-#![allow(dead_code)]
 
 use std::collections::{HashMap, HashSet};
 use std::sync::OnceLock;
@@ -55,6 +54,7 @@ struct VersionedFile<T> {
 /// `db/re/mob_pilot_skill_db.conf` loads after the stock skill files, and only
 /// while battle config `mob_pilot_version` is 1 or more (`mob_readskilldb`).
 #[derive(Debug, Deserialize)]
+#[expect(dead_code, reason = "review provenance from the export, kept for audit tooling; not for display")]
 pub struct ReferencePilotSkillLayer {
     pub setting: String,
     pub configured_value: u32,
@@ -181,6 +181,10 @@ pub struct ReferenceMonster {
 }
 
 #[derive(Debug, Deserialize)]
+#[expect(
+    dead_code,
+    reason = "loaded from the export but not shown in the Guide yet (triage: docs/plans/reference-data-unread-fields.md)"
+)]
 pub struct ReferenceScriptedSpawn {
     pub spawn_kind: String,
     #[serde(default)]
@@ -211,6 +215,7 @@ pub struct MapSpawnDetails {
 }
 
 #[derive(Debug, Deserialize)]
+#[expect(dead_code, reason = "review provenance from the export, kept for audit tooling; not for display")]
 pub struct ReferenceSpawnRegion {
     pub map: String,
     pub kind: String,
@@ -334,6 +339,10 @@ pub struct ReferenceItem {
 /// A production recipe (produce_db.txt) or arrow conversion
 /// (create_arrow_db.txt)
 #[derive(Debug, Deserialize)]
+#[expect(
+    dead_code,
+    reason = "loaded from the export but not shown in the Guide yet (triage: docs/plans/reference-data-unread-fields.md)"
+)]
 pub struct ReferenceCraftingRecipe {
     pub output_id: u32,
     pub output_name: String,
@@ -354,6 +363,10 @@ pub struct ReferenceCraftingRecipe {
 
 /// An item combo entry from item_combo_db.conf
 #[derive(Debug, Deserialize)]
+#[expect(
+    dead_code,
+    reason = "loaded from the export but not shown in the Guide yet (triage: docs/plans/reference-data-unread-fields.md)"
+)]
 pub struct ReferenceItemComboRecipe {
     pub name: String,
     pub members: Vec<String>,
@@ -365,6 +378,10 @@ pub struct ReferenceItemComboRecipe {
 /// All crafting entry types
 #[derive(Debug, Deserialize)]
 #[serde(tag = "kind")]
+#[expect(
+    dead_code,
+    reason = "loaded from the export but not shown in the Guide yet (triage: docs/plans/reference-data-unread-fields.md)"
+)]
 pub enum ReferenceCraftingEntry {
     #[serde(rename = "production")]
     Production(ReferenceCraftingRecipe),
@@ -440,6 +457,10 @@ pub struct ReferenceExchangeItem {
 }
 
 #[derive(Debug, Deserialize)]
+#[expect(
+    dead_code,
+    reason = "loaded from the export but not shown in the Guide yet (triage: docs/plans/reference-data-unread-fields.md)"
+)]
 pub struct ReferenceExchangeOutcome {
     pub label: String,
     pub item_ids: Vec<u32>,
@@ -464,6 +485,7 @@ pub struct ReferenceExchangeSource {
 }
 
 #[derive(Debug, Deserialize)]
+#[expect(dead_code, reason = "review provenance from the export, kept for audit tooling; not for display")]
 pub struct ReferenceGrantNpcClue {
     pub name: String,
     pub internal_name: String,
@@ -492,6 +514,7 @@ pub struct ReferenceMapFlag {
 }
 
 #[derive(Debug, Deserialize)]
+#[expect(dead_code, reason = "review provenance from the export, kept for audit tooling; not for display")]
 pub struct ReferenceRuntimeMapFlagClue {
     pub operation: String,
     pub map: Option<String>,
@@ -504,6 +527,7 @@ pub struct ReferenceRuntimeMapFlagClue {
 }
 
 #[derive(Debug, Deserialize)]
+#[expect(dead_code, reason = "review provenance from the export, kept for audit tooling; not for display")]
 pub struct ReferenceRuntimeMapFlagReview {
     pub id: String,
     pub map: String,
@@ -551,6 +575,7 @@ pub struct ReferenceItemGroupEntry {
 }
 
 #[derive(Debug, Deserialize)]
+#[expect(dead_code, reason = "review provenance from the export, kept for audit tooling; not for display")]
 pub struct ReferenceItemGroupContainer {
     pub container: ReferenceItemGroupItem,
     pub selection_weight: u32,
@@ -568,6 +593,10 @@ pub struct ReferenceItemGroupItem {
 }
 
 #[derive(Debug, Deserialize)]
+#[expect(
+    dead_code,
+    reason = "loaded from the export but not shown in the Guide yet (triage: docs/plans/reference-data-unread-fields.md)"
+)]
 pub struct ReferenceItemShop {
     pub npc_name: String,
     pub map: String,
@@ -595,6 +624,10 @@ pub struct ReferenceSkillPrerequisite {
 }
 
 #[derive(Debug, Deserialize)]
+#[expect(
+    dead_code,
+    reason = "loaded from the export but not shown in the Guide yet (triage: docs/plans/reference-data-unread-fields.md)"
+)]
 pub struct ReferenceSkill {
     #[serde(rename = "Id")]
     pub id: u16,
@@ -704,6 +737,13 @@ pub struct ReferenceItemDrop {
 }
 
 impl ReferenceItem {
+    #[cfg_attr(
+        not(test),
+        expect(
+            dead_code,
+            reason = "Guide search matches through alias_targets and its own filters; this older matcher is unused"
+        )
+    )]
     pub fn matches_query(&self, query: &str) -> bool {
         let query = query.to_lowercase();
         self.matches_lowercase_query(&query)
@@ -742,6 +782,7 @@ pub struct ReferenceSourceCitation {
 }
 
 #[derive(Debug, Clone, Deserialize)]
+#[expect(dead_code, reason = "review provenance from the export, kept for audit tooling; not for display")]
 pub struct ReferenceSkillFormulaReview {
     pub id: String,
     pub title: String,
@@ -815,6 +856,13 @@ pub struct ReferenceKafraRouteEntry {
 }
 
 #[derive(Debug, Clone, Deserialize)]
+#[cfg_attr(
+    not(test),
+    expect(
+        dead_code,
+        reason = "loaded from the export but not shown in the Guide yet (triage: docs/plans/reference-data-unread-fields.md)"
+    )
+)]
 pub struct ReferenceNpcServiceReview {
     pub id: String,
     pub title: String,
@@ -866,6 +914,10 @@ pub struct ReferenceNpc {
 }
 
 #[derive(Debug, Deserialize)]
+#[expect(
+    dead_code,
+    reason = "loaded from the export but not shown in the Guide yet (triage: docs/plans/reference-data-unread-fields.md)"
+)]
 pub struct ReferenceNpcOffer {
     pub item_id: u32,
     pub item_name: String,
@@ -976,6 +1028,10 @@ impl ReferenceJobTablesFile {
 /// One job's stat rules: its stat cap and whether a stat reset grants the
 /// upper-class extra points.
 #[derive(Debug, Deserialize)]
+#[expect(
+    dead_code,
+    reason = "loaded from the export but not shown in the Guide yet (triage: docs/plans/reference-data-unread-fields.md)"
+)]
 pub struct ReferenceStatJob {
     pub job_id: u16,
     pub name: String,
@@ -998,6 +1054,10 @@ pub struct ReferenceStatRules {
 
 impl ReferenceStatRules {
     /// Cumulative stat points at `level` for a non-upper class.
+    #[cfg_attr(
+        not(test),
+        expect(dead_code, reason = "stat-point lookups go through the exp/stat tables directly")
+    )]
     pub fn points_at_level(&self, level: usize) -> Option<u32> {
         self.points_at_level.get(level.checked_sub(1)?).copied()
     }
@@ -1141,6 +1201,7 @@ pub struct ReferenceQuest {
 }
 
 #[derive(Debug, Deserialize)]
+#[expect(dead_code, reason = "review provenance from the export, kept for audit tooling; not for display")]
 pub struct ReferenceQuestFlowReview {
     pub id: String,
     pub title: String,
@@ -1172,6 +1233,10 @@ pub struct ReferenceQuestFlowSource {
 }
 
 #[derive(Debug, Deserialize)]
+#[expect(
+    dead_code,
+    reason = "loaded from the export but not shown in the Guide yet (triage: docs/plans/reference-data-unread-fields.md)"
+)]
 pub struct ReferenceQuestRewardCandidate {
     pub item_id: u32,
     pub item_name: String,
