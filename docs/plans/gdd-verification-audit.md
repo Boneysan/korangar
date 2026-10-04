@@ -217,5 +217,6 @@ One list of everything the audit left open. Tick an item here when it is done an
 - [ ] Fix the headless tester's 38 clippy errors and lint examples in CI.
 - [ ] Replace the six file-wide `#![allow(dead_code)]` with item-level allowances, and remove the unused duplicates found here (`skill_info.rs` timing helpers, `calculate_projections`, possibly `stat_view.rs`).
 - [ ] Triage the 21 unread fields/methods in `dm/reference_data.rs`.
-- [ ] New in the 2026-10-04 full run: `finale-loki-briefing` (dialogue did not finish in 160 steps) and `mob-coward-poring` (Poring never fled after a 235-damage hit). 199 passed, 2 failed, 1 expected skip.
+- [x] `finale-loki-briefing` (2026-10-04 full run): a test bug. Hercules f6974e0ad made Loki's audience menu loop until "We are ready"; the test took the first option and looped. Fixed; the driver now reports the last menus when it runs out of steps.
+- [ ] `mob-coward-poring` failed once in the 2026-10-04 full run ("never fled" after a 235-damage hit) and passed on rerun. Intermittent; investigate if it recurs.
 - [x] `skills-professor` failed in the 2026-10-02 full run; it passes in the 2026-10-04 disposable run (85.8 s). Watch for a recurrence.
