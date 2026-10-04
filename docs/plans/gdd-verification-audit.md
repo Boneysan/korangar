@@ -186,14 +186,14 @@ One list of everything the audit left open. Tick an item here when it is done an
 - [x] Loot fixture registered (Hercules `16222684f`); five loot scenarios added (`autopickup-respects-drop-owner` new; four ported from PR #10). All pass; the ownership test fails against a planted bug (`pc_takeitem` ignoring the owner window). `loot-pickup-multi-pile` failed once in ~6 runs (a pile granted to nobody, not lost); it now reports positions on failure. Watch it.
 - [x] Item conservation is a gate: the 2026-10-04 full run's only difference was an unlogged starting Cotton Shirt, now an explicit exception; any other difference fails the run.
 - [x] `log_zeny: 1` is tracked (`conf/import/logs.conf`, force-added; Hercules `3f1aae763`).
-- [ ] **Decided 2026-10-04: stop logging ground drops.** Turn off picklog type `M` (monster drops to the floor) only; pickups, trades, shops, storage and zeny stay logged.
+- [x] **Decided 2026-10-04: stop logging ground drops.** Done (Hercules #11, `enable: 0xFFFFFFF7`). Turn off picklog type `M` (monster drops to the floor) only; pickups, trades, shops, storage and zeny stay logged.
 - [x] Split hardening: the new half gets `id = 0` (Hercules, same PR); split, persistence, storage and order scenarios pass with the audit clean.
-- [ ] Remaining Batch 4 rows: F29. (F26: corrected 2026-10-04, korangar #23. F27: checked, below. F28: two-client transfer headless-verified 2026-10-04 and a cancel display bug fixed; on-screen pass is GUI 8.11.)
+- [x] Remaining Batch 4 rows, all closed 2026-10-04. F29: `drop_sim.py` checked against `mob.c`/`pc.c`, boss penalty fallback fixed. (F26: corrected 2026-10-04, korangar #23. F27: checked, below. F28: two-client transfer headless-verified 2026-10-04 and a cancel display bug fixed; on-screen pass is GUI 8.11.)
 
 **Campaign rewards (added 2026-10-04; outside the GDD rows, so no batch covered it)**
 - [x] All 178 campaign grants inventoried: 93 behind `DM_ClaimGrant`, 85 behind quest state the same block completes (the one exception, the Sigil Ring replacement, is harmless: the ring cannot leave the inventory). Five zeny grants escaped their latch through brace-less `if`s (Arc 1 Mira rescue ×3, Arc 2 East Memorial ×2); fixed in Hercules `9a3752c6c`. Every latch key, numbered ones included, is cleared by `DM_ClearPartyGrants`.
 - [x] `DM_QueueGrant` / `DM_ClaimPendingGrants`: each row is marked claimed before it is paid, and payout runs only after a successful party replay, on Hercules' single script thread, so a disconnect or retry cannot pay twice. Note: `@dm reset` deletes unclaimed grants of offline members — a design question for the owner.
-- [ ] Headless scenarios that try to claim twice: re-talk, reconnect mid-reward, party replay. The item-conservation audit cannot catch this class: a repeated reward is logged correctly every time.
+- [x] Headless scenarios that try to claim twice (2026-10-04, korangar #22: `campaign-reward-paid-once` covers re-talk, reopened quest, reconnect and a new run after reset). The item-conservation audit cannot catch this class: a repeated reward is logged correctly every time.
 - [x] F27 refine odds checked independently (2026-10-04): 69 values in `docs/refine.v1.json` (every +1..+10 chance for armor and weapon levels 1-4, base costs, armor DEF bonus, weapon stats per level) match `db/re/refine_db.conf` read with Hercules' own libconf. 0 disagree.
 
 **Claims that are wrong or partial (decide: build, or correct the row)**

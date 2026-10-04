@@ -30,13 +30,25 @@ class LevelModifier(unittest.TestCase):
         self.assertEqual(drop_sim.level_modifier(self.TABLE, False, 1, 5), 90)   # diff -4
         self.assertEqual(drop_sim.level_modifier(self.TABLE, False, 1, 6), 100)  # diff -5 has no row
 
-    def test_bosses_use_their_own_table(self):
-        self.assertEqual(drop_sim.level_modifier(self.TABLE, True, 1, 5), 100)
+    def test_a_boss_falls_back_to_the_non_boss_row(self):
+        # pc_level_penalty_mod: a boss reads RC_Boss first and, when that row
+        # is empty at the difference, carries on to RC_NonBoss. The old
+        # expectation here (100) encoded "bosses use only their own table",
+        # which the server never did.
+        self.assertEqual(drop_sim.level_modifier(self.TABLE, True, 1, 5), 90)   # diff -4: no boss row
+        self.assertEqual(drop_sim.level_modifier(self.TABLE, True, 1, 1), 100)  # diff 0: the boss row
+        self.assertEqual(drop_sim.level_modifier(self.TABLE, True, 1, 6), 100)  # diff -5: neither
+
+    def test_a_boss_row_wins_where_it_exists(self):
+        table = {"ITEM_DROP_PENALTY_RATE": {"RC_NonBoss": {4: 90}, "RC_Boss": {4: 60}}}
+        self.assertEqual(drop_sim.level_modifier(table, True, 5, 1), 60)
+        self.assertEqual(drop_sim.level_modifier(table, False, 5, 1), 90)
 
     def test_the_real_table_matches_the_server_rule(self):
         table = drop_sim.rules.parse_level_penalty(drop_sim.LEVEL_PENALTY)
         self.assertEqual(drop_sim.level_modifier(table, False, 10, 20), 70)  # diff -10
         self.assertEqual(drop_sim.level_modifier(table, False, 10, 15), 100)  # diff -5, a gap
+        self.assertEqual(drop_sim.level_modifier(table, True, 10, 20), 70)  # a boss at diff -10
 
 
 class Probability(unittest.TestCase):
