@@ -49,7 +49,20 @@ function Fail($what, $fix) {
 
 function Step($number, $text) {
     Write-Host ''
-    Write-Host ("  [" + $number + "/6] " + $text) -ForegroundColor Cyan
+    Write-Host ("  [" + $number + "/7] " + $text) -ForegroundColor Cyan
+}
+
+function Format-Size([long]$bytes) {
+    if ($bytes -ge 1073741824) {
+        return ([math]::Round(($bytes / 1073741824), 1).ToString() + ' GB')
+    }
+    if ($bytes -ge 1048576) {
+        return ([math]::Round(($bytes / 1048576), 0).ToString() + ' MB')
+    }
+    if ($bytes -ge 1024) {
+        return ([math]::Round(($bytes / 1024), 0).ToString() + ' KB')
+    }
+    return ($bytes.ToString() + ' B')
 }
 
 Write-Host ''
@@ -58,6 +71,7 @@ Write-Host '   Seal Cascade - setup' -ForegroundColor Cyan
 Write-Host '  ============================================' -ForegroundColor Cyan
 Say 'This runs once. It checks your PC, merges in the game data,'
 Say 'and verifies every file. Nothing is sent anywhere.'
+Say 'If a line sits still, it is still working -- hashing a GRF can take a minute.'
 
 # ---------------------------------------------------------------- 1. the CPU
 #
@@ -255,12 +269,21 @@ if ($alreadyHere) {
             continue
         }
 
-        Say ('  ' + $name)
+        $item = Get-Item -LiteralPath $from
+        $sizeText = Format-Size ([long]$item.Length)
+        if ($item.PSIsContainer) {
+            Say ('  ' + $name + ' (folder) ...')
+        } elseif ([long]$item.Length -gt 104857600) {
+            Say ('  ' + $name + ' (' + $sizeText + ') -- large, this can take a few minutes. Leave the window open.')
+        } else {
+            Say ('  ' + $name + ' (' + $sizeText + ')')
+        }
         if ($sameVolume) {
             Move-Item -LiteralPath $from -Destination $to
         } else {
             Copy-Item -LiteralPath $from -Destination $to -Recurse
         }
+        Good ('  ' + $name + ' is in place.')
     }
 
     Good 'Game data is in place.'
@@ -272,17 +295,38 @@ Step 4 'Checking every file'
 function Test-Manifest($manifestPath) {
     $result = New-Object psobject -Property @{ Ok = 0; Bad = 0; Missing = 0; Names = @() }
 
+    $entries = @()
     foreach ($line in Get-Content -LiteralPath $manifestPath) {
+        if ($line -notmatch '^([0-9a-fA-F]{64})\s+\.?[\\/]?(.+)$') { continue }
+        $entries = $entries + $line
+    }
+
+    $total = $entries.Count
+    $n = 0
+    Say ('  ' + $total.ToString() + ' files in this list. Large ones can take a minute each.')
+
+    foreach ($line in $entries) {
         if ($line -notmatch '^([0-9a-fA-F]{64})\s+\.?[\\/]?(.+)$') { continue }
 
         $expected = $Matches[1].ToUpperInvariant()
         $relative = $Matches[2] -replace '/', '\'
         $path = Join-Path $here $relative
+        $n = $n + 1
+        $prefix = '  [' + $n.ToString() + '/' + $total.ToString() + '] ' + $relative
 
         if (-not (Test-Path -LiteralPath $path)) {
             $result.Missing = $result.Missing + 1
             $result.Names = $result.Names + ('MISSING  ' + $relative)
+            Say ($prefix + ' -- missing')
             continue
+        }
+
+        $bytes = [long](Get-Item -LiteralPath $path).Length
+        $sizeText = Format-Size $bytes
+        if ($bytes -gt 104857600) {
+            Say ($prefix + ' (' + $sizeText + ') -- large file, please wait...')
+        } else {
+            Say ($prefix + ' (' + $sizeText + ')')
         }
 
         $actual = (Get-FileHash -LiteralPath $path -Algorithm SHA256).Hash.ToUpperInvariant()
@@ -335,6 +379,7 @@ Good ($totalOk.ToString() + ' files checked, all correct.')
 # --------------------------------------------------------- 5. the mark of the web
 Step 5 'Clearing the downloaded-file warnings'
 
+Say 'Walking this folder for Windows download flags...'
 Get-ChildItem -LiteralPath $here -Recurse -File -ErrorAction SilentlyContinue |
     Where-Object { @('.exe', '.bat', '.ps1', '.ron', '.txt') -contains $_.Extension } |
     Unblock-File -ErrorAction SilentlyContinue
@@ -393,6 +438,79 @@ if (-not $tailscale) {
         Say 'before you play.'
     }
 }
+
+Step 7 'Choosing the graphics API'
+
+# There are two ways to draw this game -- Vulkan and DirectX 12 -- and on some
+# cards only one of them works. A white window, or a window with nothing in it,
+# is nearly always that. The client picks for itself and is usually right, but
+# when it is wrong it is wrong for somebody who cannot see any of this, so the
+# choice is offered here in the one script every friend runs.
+#
+# Play reads the answer from client\graphics-api.txt on every launch, so it
+# sticks: across restarts, and across updates too, because Update merges client\
+# rather than replacing it. Troubleshoot option 8 rewrites the same file, and so
+# does Notepad. Automatic is the default and Enter is the answer.
+Say 'Almost everyone should press Enter for automatic. Pick one of the'
+Say 'others only if the host said to, or if the game shows a white screen'
+Say 'later -- Troubleshoot can change this at any time.'
+Write-Host ''
+Say '  1  Automatic  (recommended)'
+Say '  2  Vulkan'
+Say '  3  DirectX 12'
+Say '  4  OpenGL  (last resort, slower)'
+Write-Host ''
+
+$backendChoice = ''
+$backendLabel = ''
+
+# Bounded, not a `while` on valid input: this runs inside Setup.bat, and a
+# prompt that can never be satisfied -- a redirected console, a stray keypress
+# -- would strand a friend in a loop with no way out but closing the window.
+# Three tries, then automatic, which is what pressing Enter would have done.
+for ($attempt = 1; $attempt -le 3 -and $backendLabel -eq ''; $attempt++) {
+    $pick = Read-Host '  Which one? [1]'
+    $pick = $pick.Trim()
+
+    if ($pick -eq '' -or $pick -eq '1') {
+        $backendChoice = 'auto'
+        $backendLabel = 'chosen automatically'
+    } elseif ($pick -eq '2') {
+        $backendChoice = 'vulkan'
+        $backendLabel = 'Vulkan'
+    } elseif ($pick -eq '3') {
+        $backendChoice = 'dx12'
+        $backendLabel = 'DirectX 12'
+    } elseif ($pick -eq '4') {
+        $backendChoice = 'gl'
+        $backendLabel = 'OpenGL'
+    } else {
+        Warn ('"' + $pick + '" is not one of the numbers. Type 1, 2, 3 or 4.')
+    }
+}
+
+if ($backendLabel -eq '') {
+    $backendChoice = 'auto'
+    $backendLabel = 'chosen automatically'
+    Warn 'Going with automatic. Run Troubleshoot later if the screen is white.'
+}
+
+$clientDir = Join-Path $here 'client'
+if (-not (Test-Path -LiteralPath $clientDir)) {
+    New-Item -ItemType Directory -Path $clientDir | Out-Null
+}
+
+# The value first, because Play reads the first line that is not blank and not
+# a comment. ASCII on purpose: Play is Windows PowerShell 5.1 and reads this
+# back without a BOM to trip over.
+Set-Content -LiteralPath (Join-Path $clientDir 'graphics-api.txt') -Encoding ASCII -Value @(
+    $backendChoice,
+    '# Which graphics API Play starts the game with.',
+    '# One word on the first line: vulkan, dx12, gl, or auto.',
+    '# Written by Setup. Troubleshoot option 8 changes it, and so can you.'
+)
+
+Good ('Graphics API: ' + $backendLabel + '.')
 
 Write-Host ''
 Write-Host '  ============================================' -ForegroundColor Green

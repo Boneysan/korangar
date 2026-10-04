@@ -30,12 +30,66 @@ use tokio::task::JoinHandle;
 pub use self::entity::EntityData;
 pub use self::event::{DisconnectReason, NetworkEvent, QuestHuntObjective, QuestHuntProgress};
 pub use self::hotkey::HotkeyState;
-pub use self::items::{IT_AMMO, InventoryItem, InventoryItemDetails, ItemQuantity, NoMetadata, SellItem, ShopItem};
+pub use self::items::{IT_AMMO, InventoryItem, InventoryItemDetails, ItemQuantity, NoMetadata, SellItem, ShopItem, sell_entries};
 pub use self::message::MessageColor;
 pub use self::packet_versions::SupportedPacketVersion;
 pub use self::server::{
     CharacterServerLoginData, LoginServerLoginData, NotConnectedError, UnifiedCharacterSelectionFailedReason, UnifiedLoginFailedReason,
 };
+
+/// Decimal integer from `tools/packaging/PACK_VERSION`. Sent as CA_LOGIN's
+/// version field so the login server can refuse an old friends pack. Bump that
+/// file (and Hercules `client_version_to_connect`) whenever friends must
+/// update; YYYYMMDD is a good scheme.
+const fn parse_pack_version(raw: &str) -> u32 {
+    let bytes = raw.as_bytes();
+    let mut n = 0u32;
+    let mut i = 0;
+    let mut seen = false;
+    while i < bytes.len() {
+        let b = bytes[i];
+        i += 1;
+        if b == b' ' || b == b'\t' || b == b'\n' || b == b'\r' {
+            continue;
+        }
+        assert!(b.is_ascii_digit(), "PACK_VERSION must be a decimal integer");
+        let digit = (b - b'0') as u32;
+        n = n * 10 + digit;
+        seen = true;
+    }
+    assert!(seen && n > 0, "PACK_VERSION must be a positive integer");
+    n
+}
+
+pub const PACK_VERSION: u32 = parse_pack_version(include_str!("../../tools/packaging/PACK_VERSION"));
+
+/// Login-window popup body when the server refuses this pack as too old.
+pub const OUTDATED_CLIENT_MESSAGE: &str =
+    "This client is out of date. Close the game, download the latest Seal-Cascade zip, and run Update.";
+
+/// CA_LOGIN carrying this pack's version, which Hercules compares against
+/// `client_version_to_connect` when `check_client_version` is on.
+fn pack_login_packet(username: String, password: String) -> LoginServerLoginPacket {
+    let mut login_packet = LoginServerLoginPacket::new(username, password);
+    login_packet.version = PACK_VERSION.to_le_bytes();
+    login_packet
+}
+
+#[cfg(test)]
+mod pack_version_tests {
+    use super::*;
+
+    #[test]
+    fn login_sends_the_pack_version_where_hercules_reads_it() {
+        let packet = pack_login_packet("player".to_owned(), "secret".to_owned());
+        let mut writer = ragnarok_bytes::ByteWriter::new();
+        packet.payload_to_bytes(&mut writer).unwrap();
+        let bytes = writer.into_inner();
+        // Hercules' `struct PACKET_CA_LOGIN`: uint32 version right after the header.
+        assert_eq!(u32::from_le_bytes(bytes[0..4].try_into().unwrap()), PACK_VERSION);
+        assert!(PACK_VERSION >= 20260906, "PACK_VERSION went backwards");
+    }
+}
 
 const fn weapon_refine_wire_index(inventory_index: InventoryIndex) -> u32 {
     inventory_index.0 as u32 + 2
@@ -466,7 +520,7 @@ where
             })
             .expect("network thread dropped");
 
-        let login_packet = LoginServerLoginPacket::new(username.into(), password.into());
+        let login_packet = pack_login_packet(username.into(), password.into());
 
         self.packet_callback.outgoing_packet(&login_packet);
 

@@ -32,6 +32,7 @@ echo   Seal Cascade -- white screen troubleshooter
 echo.
 echo   Try these IN ORDER. After each one, close the game window and
 echo   come back to this menu. Tell the host which number worked.
+echo   When one of them works, use 8 to make it stick for every Play.
 echo.
 echo     1   Reset the graphics settings, then start   ^<-- try this first
 echo     2   Start using Vulkan
@@ -41,6 +42,7 @@ echo     5   Force the Radeon card (if this PC also has built-in graphics)
 echo     6   Start normally, changing nothing
 echo.
 echo     7   Collect a diagnostics report to send to the host
+echo     8   Make one graphics API stick every time you Play
 echo.
 echo     Q   Quit
 echo.
@@ -55,6 +57,7 @@ if "%pick%"=="4" goto opt4
 if "%pick%"=="5" goto opt5
 if "%pick%"=="6" goto run
 if "%pick%"=="7" goto diag
+if "%pick%"=="8" goto stick
 goto menu
 
 :opt1
@@ -93,6 +96,58 @@ if exist "client\graphics_settings.ron" (
     echo   No saved graphics settings found, so there was nothing to reset.
 )
 exit /b 0
+
+rem Options 2 and 3 last exactly one run. That is the wrong shape for a PC where
+rem only one graphics API ever works: the fix should not require starting the
+rem game from a troubleshooting menu every evening. Play.ps1 reads this file and
+rem sets WGPU_BACKEND from it before launching.
+rem
+rem client\ is the right home for it -- Update MERGES that folder rather than
+rem replacing it, so the setting survives a patch, and it is not in
+rem SHA256SUMS-client, so Verify does not call it an unexpected file.
+:stick
+set "SAVE="
+cls
+echo.
+echo   Make one graphics API stick
+echo.
+echo   Play normally chooses for you. If one option above is the only one
+echo   that works on this PC, save it here and Play will use it every
+echo   time -- including after an update.
+echo.
+echo     V   Always use Vulkan
+echo     D   Always use DirectX 12
+echo     G   Always use OpenGL  (last resort, slower)
+echo     A   Go back to choosing automatically
+echo.
+echo     B   Back to the menu, changing nothing
+echo.
+set "want="
+set /p "want=  Type a letter and press Enter: "
+
+if /i "%want%"=="B" goto menu
+if /i "%want%"=="V" set "SAVE=vulkan"
+if /i "%want%"=="D" set "SAVE=dx12"
+if /i "%want%"=="G" set "SAVE=gl"
+if /i "%want%"=="A" set "SAVE=auto"
+if not defined SAVE goto stick
+
+if not exist "client" mkdir "client"
+
+rem Redirect-first form again: "dx12" ends in a DIGIT, and "echo dx12> file"
+rem would read that 2 as a file handle instead of writing the word.
+> "client\graphics-api.txt" echo %SAVE%
+>> "client\graphics-api.txt" echo # Which graphics API Play starts the game with.
+>> "client\graphics-api.txt" echo # One word on the first line: vulkan, dx12, gl, or auto.
+>> "client\graphics-api.txt" echo # Written by Troubleshoot; safe to edit or delete.
+
+echo.
+echo   Saved: %SAVE%
+if /i "%SAVE%"=="auto" echo   Play will go back to choosing the graphics API for you.
+echo   The file is client\graphics-api.txt -- change it here any time.
+echo.
+pause
+goto menu
 
 :diag
 rem Everything here answers a question the game itself cannot, because when it
@@ -249,7 +304,8 @@ echo   Output saved in troubleshoot-launch.log beside the game.
 echo   ------------------------------------------------------------
 echo.
 echo   The game has closed. If the screen was still white, come back
-echo   and try the next number.
+echo   and try the next number. If it LOOKED RIGHT, use option 8 so
+echo   Play starts that way from now on.
 echo.
 pause
 goto menu

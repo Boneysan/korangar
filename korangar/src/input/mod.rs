@@ -1,6 +1,7 @@
 mod event;
 mod key;
 mod mode;
+mod wasd;
 
 use std::mem::variant_count;
 use std::sync::Arc;
@@ -14,6 +15,7 @@ use winit::keyboard::KeyCode;
 pub use self::event::InputEvent;
 pub use self::key::Key;
 pub use self::mode::{Grabbed, MouseInputMode, MouseModeExt};
+pub use self::wasd::{WasdDecision, WasdIntent, WasdMoveInput, WasdStopDecision, decide_keyboard_move, decide_keyboard_stop};
 use crate::graphics::{PickerTarget, ScreenPosition, ScreenSize};
 use crate::settings::{BindableAction, KeyBindings};
 
@@ -564,18 +566,42 @@ impl InputSystem {
         let wasd_free = !use_debug_camera;
         #[cfg(not(feature = "debug"))]
         let wasd_free = true;
+        if wasd_free && self.binding_pressed(bindings, BindableAction::AttackTarget, false) {
+            events.push(InputEvent::AttackTarget);
+        }
         if wasd_free {
             let forward = self.binding_down(bindings, BindableAction::MoveForward);
             let back = self.binding_down(bindings, BindableAction::MoveBackward);
             let left = self.binding_down(bindings, BindableAction::MoveLeft);
             let right = self.binding_down(bindings, BindableAction::MoveRight);
             if forward || back || left || right {
+                // A key that went down this frame is a tap; one already down is
+                // a hold. Known here, rather than guessed from timing.
+                let fresh = [
+                    BindableAction::MoveForward,
+                    BindableAction::MoveBackward,
+                    BindableAction::MoveLeft,
+                    BindableAction::MoveRight,
+                ]
+                .into_iter()
+                .any(|action| self.binding_pressed(bindings, action, false));
                 events.push(InputEvent::KeyboardMove {
                     forward,
                     back,
                     left,
                     right,
+                    fresh,
                 });
+            } else if [
+                BindableAction::MoveForward,
+                BindableAction::MoveBackward,
+                BindableAction::MoveLeft,
+                BindableAction::MoveRight,
+            ]
+            .into_iter()
+            .any(|action| self.binding_released(bindings, action))
+            {
+                events.push(InputEvent::KeyboardMoveStop);
             }
         }
 
@@ -800,6 +826,31 @@ mod keybinding_tests {
     }
 
     #[test]
+    fn space_attacks_the_selected_target_but_not_with_a_modifier() {
+        let bindings = KeyBindings::default();
+        let mut input = InputSystem::new(Arc::new(AtomicU64::new(0)));
+        input.update_keyboard(KeyCode::Space, ElementState::Pressed);
+        input.update_delta(ClientTick(4));
+        let mut events = Vec::new();
+        #[cfg(feature = "debug")]
+        input.handle_keyboard_input(&mut events, &bindings, None, false, false);
+        #[cfg(not(feature = "debug"))]
+        input.handle_keyboard_input(&mut events, &bindings, None);
+        assert!(events.iter().any(|event| matches!(event, InputEvent::AttackTarget)));
+
+        let mut modified = InputSystem::new(Arc::new(AtomicU64::new(0)));
+        modified.update_keyboard(KeyCode::Space, ElementState::Pressed);
+        modified.update_keyboard(KeyCode::ControlLeft, ElementState::Pressed);
+        modified.update_delta(ClientTick(5));
+        let mut events = Vec::new();
+        #[cfg(feature = "debug")]
+        modified.handle_keyboard_input(&mut events, &bindings, None, false, false);
+        #[cfg(not(feature = "debug"))]
+        modified.handle_keyboard_input(&mut events, &bindings, None);
+        assert!(!events.iter().any(|event| matches!(event, InputEvent::AttackTarget)));
+    }
+
+    #[test]
     fn remapped_movement_uses_exact_chord_and_preserves_default_directions() {
         let mut input = InputSystem::new(Arc::new(AtomicU64::new(0)));
         let mut bindings = KeyBindings::default();
@@ -819,7 +870,8 @@ mod keybinding_tests {
             forward: true,
             left: true,
             back: false,
-            right: false
+            right: false,
+            ..
         })));
 
         let mut modified = InputSystem::new(Arc::new(AtomicU64::new(0)));

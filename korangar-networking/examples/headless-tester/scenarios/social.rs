@@ -1135,7 +1135,16 @@ fn quest_progress_count(objectives: &[QuestHuntProgress], quest_id: u32) -> Opti
         .map(|objective| objective.current_count)
 }
 
+/// `prt_fild08` Fabres are F14 Aggressors on purpose. Several hitting the
+/// tester keep it in Hercules' walk delay (`unit.c`, `canmove_tick`), so its
+/// walk is never acknowledged. Clear the field before each quest kill.
+fn clear_field_for_quest_kill(context: &mut TestContext) {
+    let _ = context.say("@killmonster");
+    context.pump(Duration::from_millis(300));
+}
+
 fn kill_quest_spore(context: &mut TestContext) -> Result<ragnarok_packets::EntityId, String> {
+    clear_field_for_quest_kill(context);
     let target = context.spawn_monster("SPORE", 1014)?;
     kill_spawned_quest_spore(context, target)
 }
@@ -1145,6 +1154,7 @@ fn kill_quest_spore_with_partner_distance(
     partner: &mut TestContext,
     distance: u16,
 ) -> Result<ragnarok_packets::EntityId, String> {
+    clear_field_for_quest_kill(context);
     let target = context.spawn_monster("SPORE", 1014)?;
     let target_position = context
         .entities
@@ -1186,7 +1196,22 @@ fn kill_spawned_quest_spore(context: &mut TestContext, target: ragnarok_packets:
         )?;
         match outcome {
             2 => return Ok(target),
-            1 => {}
+            // A killing hit sends damage and death back to back; take the death
+            // now, before the next `flush()` discards it (see the death-recovery
+            // kill loop, which failed on exactly this).
+            1 => {
+                let died = context.wait_for_within(
+                    "quest Spore death after a hit",
+                    Duration::from_millis(1000),
+                    &mut |event| match event {
+                        NetworkEvent::RemoveEntity { entity_id, .. } if *entity_id == target => Some(()),
+                        _ => None,
+                    },
+                );
+                if died.is_ok() {
+                    return Ok(target);
+                }
+            }
             _ => {}
         }
     }

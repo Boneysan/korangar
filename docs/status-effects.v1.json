@@ -1,6 +1,6 @@
 {
  "schema_version": 1,
- "source_revision": "cd0486c79a9a595a141ce23ff1b9f1e1b9d61caa",
+ "source_revision": "35964619ad0a7326eef567113c523ebe66e84e53",
  "source_worktree_dirty": false,
  "mode": "renewal",
  "source": [
@@ -79,7 +79,7 @@
       },
       {
        "path": "src/map/status.c",
-       "line": 7960
+       "line": 7964
       }
      ]
     }
@@ -138,19 +138,19 @@
       },
       {
        "path": "src/map/status.c",
-       "line": 8471
+       "line": 8475
       },
       {
        "path": "src/map/status.c",
-       "line": 8751
+       "line": 8755
       },
       {
        "path": "src/map/status.c",
-       "line": 9720
+       "line": 9724
       },
       {
        "path": "src/map/status.c",
-       "line": 9837
+       "line": 9841
       }
      ]
     }
@@ -2129,7 +2129,7 @@
       },
       {
        "path": "src/map/status.c",
-       "line": 9394
+       "line": 9398
       }
      ]
     },
@@ -2211,7 +2211,7 @@
      "code_call_sites": [
       {
        "path": "src/map/status.c",
-       "line": 9395
+       "line": 9399
       }
      ]
     }
@@ -5526,7 +5526,7 @@
      "code_call_sites": [
       {
        "path": "src/map/status.c",
-       "line": 11472
+       "line": 11476
       }
      ]
     }
@@ -6381,7 +6381,7 @@
      "code_call_sites": [
       {
        "path": "src/map/status.c",
-       "line": 12483
+       "line": 12487
       }
      ]
     }
@@ -6743,7 +6743,7 @@
      "code_call_sites": [
       {
        "path": "src/map/status.c",
-       "line": 8606
+       "line": 8610
       }
      ]
     }
@@ -9577,7 +9577,7 @@
      "code_call_sites": [
       {
        "path": "src/map/status.c",
-       "line": 11738
+       "line": 11742
       }
      ]
     }
@@ -20229,7 +20229,7 @@
      "code_call_sites": [
       {
        "path": "src/map/status.c",
-       "line": 11832
+       "line": 11836
       }
      ]
     }
@@ -23903,7 +23903,7 @@
       },
       {
        "path": "src/map/status.c",
-       "line": 7921
+       "line": 7925
       }
      ]
     }
@@ -24178,7 +24178,7 @@
       },
       {
        "path": "src/map/status.c",
-       "line": 8166
+       "line": 8170
       }
      ]
     }
@@ -25111,7 +25111,7 @@
      "code_call_sites": [
       {
        "path": "src/map/status.c",
-       "line": 11655
+       "line": 11659
       }
      ]
     }
@@ -26640,23 +26640,23 @@
       },
       {
        "path": "src/map/mob.c",
-       "line": 756
-      },
-      {
-       "path": "src/map/mob.c",
-       "line": 3564
-      },
-      {
-       "path": "src/map/mob.c",
-       "line": 3569
-      },
-      {
-       "path": "src/map/mob.c",
-       "line": 3574
+       "line": 770
       },
       {
        "path": "src/map/mob.c",
        "line": 3576
+      },
+      {
+       "path": "src/map/mob.c",
+       "line": 3581
+      },
+      {
+       "path": "src/map/mob.c",
+       "line": 3586
+      },
+      {
+       "path": "src/map/mob.c",
+       "line": 3588
       },
       {
        "path": "src/map/script.c",
@@ -27274,7 +27274,7 @@
      "code_call_sites": [
       {
        "path": "src/map/status.c",
-       "line": 11657
+       "line": 11661
       }
      ]
     }

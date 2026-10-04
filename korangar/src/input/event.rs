@@ -163,6 +163,8 @@ pub enum InputEvent {
     CycleMonsterTarget {
         reverse: bool,
     },
+    /// Attack the monster selected with Tab, as clicking it would (Space).
+    AttackTarget,
     CyclePartyTarget,
     /// Close all ordinary windows while retaining basic info and chat (F11).
     CloseAllOrdinaryWindows,
@@ -422,7 +424,11 @@ pub enum InputEvent {
         back: bool,
         left: bool,
         right: bool,
+        /// A movement key went down this frame (a tap), not one held over.
+        fresh: bool,
     },
+    /// The last held movement key was released.
+    KeyboardMoveStop,
     /// Warp to an online party member (`@partyjump`).
     JumpToPartyMember {
         character_name: String,

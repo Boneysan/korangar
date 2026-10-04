@@ -190,7 +190,11 @@ fn death_recovery_ten_kill_threshold(config: &Config) -> Result<(), String> {
     for kill_index in 1..=10 {
         let _ = context.say("@killmonster");
         context.pump(Duration::from_millis(50));
-        let target = context.spawn_monster("PORING", 1002)?;
+        // `prt_fild08` is full of natural Porings; the first AddEntity of class
+        // 1002 after `@monster` can be one respawning or wandering into view,
+        // and the loop then chased it around the field. Only accept the one
+        // that appeared beside us.
+        let target = context.spawn_monster_near("PORING", 1002)?;
         let mut dead = false;
         for _ in 0..30 {
             let position = context
@@ -220,7 +224,28 @@ fn death_recovery_ten_kill_threshold(config: &Config) -> Result<(), String> {
                     dead = true;
                     break;
                 }
-                false => {}
+                // A hit that kills sends the damage and the death back to back.
+                // Wait for the death here: the next attempt's `flush()` would
+                // otherwise discard it, and the test then attacked a corpse
+                // that never answers (the long-standing flake; one-hit kills
+                // since `@str 60` made it fail every time).
+                false => {
+                    let died = context.wait_for_within(
+                        "Poring death after a hit",
+                        Duration::from_millis(1000),
+                        &mut |event| match event {
+                            NetworkEvent::RemoveEntity {
+                                entity_id,
+                                reason: DisappearanceReason::Died,
+                            } if *entity_id == target => Some(()),
+                            _ => None,
+                        },
+                    );
+                    if died.is_ok() {
+                        dead = true;
+                        break;
+                    }
+                }
             }
         }
         if !dead {

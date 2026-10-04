@@ -106,16 +106,22 @@ UPDATING AN EXISTING INSTALL
 --------------------------------------------------------------------------------
 
   Close the game. Download only Seal-Cascade-macOS.zip, the small client
-  update. Unzip it separately. Copy the new korangar, .command launchers,
-  READ ME FIRST.txt and SHA256SUMS-client into your existing game folder.
-  For archive and client, merge their contents into the corresponding old
-  subfolders. Do NOT choose Finder's Replace for the entire game or client
-  folder; it can discard the files that the small update does not include.
-  Keep the .grf files, BGM, lua_files.7z and SHA256SUMS-assets. Right-click
-  Setup and choose Open to unblock the new files and verify the installation.
+  update. Unzip it separately -- not inside your existing game folder.
+  Right-click Update and choose Open.
 
-  Your characters and progress are on the server. The client update does not
-  include saved passwords or personal interface settings.
+  Update looks for a folder that already has data.grf: first in the same
+  directory as the zip, then outward up the disk, then other volumes
+  (external drives). It prints each place it searches. It will not replace
+  your .grf files, BGM, lua_files.7z, or personal settings in client. Then
+  right-click Verify in the game folder and choose Open, then Play.
+
+  If Update cannot find the install, paste the full path to the folder that
+  already contains data.grf and Play.
+
+  If the login screen says this client is out of date, you are on an old
+  copy. Close the game, download that small zip, and run Update.
+
+  Your characters and progress are on the server.
 
   Text too small? During character creation click "Text size / interface
   scale", or open Menu > Interface Settings > Scaling. Try 1.3 or 1.5.
@@ -127,13 +133,16 @@ UPDATING AN EXISTING INSTALL
 
 
 --------------------------------------------------------------------------------
-THE THREE PROGRAMS IN THIS FOLDER
+THE PROGRAMS IN THIS FOLDER
 --------------------------------------------------------------------------------
 
   Setup     Run once, first. Unblocks the download, merges in the game data,
             checks every file, starts the game.
 
   Play      Starts the game. This is the one you use from then on.
+
+  Update    For later patches. Run this from the unzipped small zip; it finds
+            your existing game folder and copies the new files in.
 
   Verify    Checks every file against the checksum lists. Run it if the game
             behaves strangely after a download.

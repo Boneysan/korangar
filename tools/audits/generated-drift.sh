@@ -59,6 +59,7 @@ generated=(
     "korangar-networking/src/packet_versions/skill_states.rs|python3 tools/generate_skill_states.py $hercules"
     "korangar/src/world/library/msgstringtable.rs|python3 tools/generate_message_table.py $hercules main"
     "korangar-networking/examples/headless-tester/scenarios/skill_expectations.rs|python3 tools/generate_skill_expectations.py --hercules $hercules"
+    "korangar/src/world/library/equipment_eligibility.tsv|python3 tools/generate_equipment_eligibility.py $hercules"
     "korangar/data/attr_fix.conf|cp \"$hercules/db/re/attr_fix.conf\" \"$repo/korangar/data/attr_fix.conf\""
 )
 

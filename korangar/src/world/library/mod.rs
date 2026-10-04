@@ -1,6 +1,8 @@
 mod accessory_name;
 mod baby_job;
 mod campaign_quest;
+mod equip_presentation;
+mod equipment_eligibility;
 mod hidden_chests;
 mod hunt_story;
 mod item_info;
@@ -27,6 +29,8 @@ use mlua::{Lua, LuaOptions, StdLib};
 pub use self::accessory_name::{AccessoryName, AccessoryNameKey};
 pub use self::baby_job::IsBabyJob;
 pub use self::campaign_quest::{CampaignQuest, CampaignQuestTable, QuestGuidance, QuestLocation};
+pub use self::equip_presentation::UnusablePresentation;
+pub use self::equipment_eligibility::Wearer;
 pub use self::hidden_chests::hidden_chests_for_map;
 pub use self::hunt_story::visible_story_steps;
 pub use self::item_info::ItemInfo;

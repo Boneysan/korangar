@@ -1124,6 +1124,24 @@ Rows 1, 2, 3 and 5 of the old checklist already PASSed
 weapon-refine rows (the skill-fail path passed; these two share
 `resolve_item_name`, including its `NOTFOUND` sentinel filter).
 
+### 7. PR #10 ports (2026-10-03) — automated tests only, never seen
+
+Ported to korangar `agent/review-fixes`; see the table in
+[gdd-verification-audit.md](gdd-verification-audit.md). Each row passes only when watched.
+
+| # | Check | Pass when |
+|---|---|---|
+| 7.1 | Drag an inventory item, a skill, and a window title bar | No click sound on pickup; a plain button click still chimes |
+| 7.2 | Tab to a monster, press Space | The character attacks it (walks into range first); Ctrl+Space does nothing; Space with no target does nothing |
+| 7.3 | Sell 500 arrows at a tool dealer, then reopen the shop | The sell list offers 500; after a sale the sell cart opens empty |
+| 7.4 | Log in with a pack whose `PACK_VERSION` differs, server check **on** (test only) | Titled "out of date" popup. `KORANGAR_TEST_OUTDATED_POPUP=1` shows it without a mismatch |
+| 7.5 | Character select with several classes | Each slot names its class under the name |
+| 7.6 | A Mage at a weapon dealer | Swords have a tinted icon and red "!"; hovering says why; usable items unmarked |
+| 7.7 | Hold W in the open, tap W, release mid-walk | Smooth walk with no stutter; a tap moves a short way; release stops within a cell |
+| 7.8 | Hold a diagonal into a wall corner and along a wall (e.g. Prontera buildings) | No snap-back; slides along the wall |
+| 7.9 | Hold W while a monster knocks you back, or warp mid-walk | Holding still walks afterwards without re-pressing |
+| 7.10 | Windows pack: Setup picks Vulkan | `client/graphics-api.txt` written; the client log names Vulkan |
+
 ---
 
 ## Known-unrendered — do not report these as bugs

@@ -78,8 +78,8 @@ use korangar_debug::profiling::Profiler;
 use korangar_interface::layout::MouseButton;
 use korangar_interface::{Interface, MouseMode};
 use korangar_networking::{
-    DisconnectReason, HotkeyState, LoginServerLoginData, MessageColor, NetworkEvent, NetworkEventBuffer, NetworkingSystem, SellItem,
-    SupportedPacketVersion,
+    DisconnectReason, HotkeyState, LoginServerLoginData, MessageColor, NetworkEvent, NetworkEventBuffer, NetworkingSystem,
+    SupportedPacketVersion, UnifiedLoginFailedReason,
 };
 #[cfg(feature = "debug")]
 use networking::{PacketHistory, PacketHistoryCallback};
@@ -123,7 +123,10 @@ use winit::platform::x11::EventLoopBuilderExtX11;
 use winit::window::{Fullscreen, Icon, Window, WindowAttributes, WindowId};
 
 use crate::graphics::*;
-use crate::input::{InputEvent, InputReport, InputSystem};
+use crate::input::{
+    InputEvent, InputReport, InputSystem, WasdDecision, WasdIntent, WasdMoveInput, WasdStopDecision, decide_keyboard_move,
+    decide_keyboard_stop,
+};
 use crate::interface::cursor::{MouseCursor, MouseCursorState};
 use crate::interface::resource::{ItemSource, SkillSource};
 use crate::interface::windows::*;
@@ -1273,14 +1276,16 @@ mod resolve_pending_cast_tests {
             ClientTick(16),
             Some(dest1),
             dest2,
-            Some(start_pos)
+            Some(start_pos),
+            false
         ));
         assert!(!should_reissue_hold_mouse_move(
             ClientTick(0),
             ClientTick(199),
             Some(dest1),
             dest2,
-            Some(start_pos)
+            Some(start_pos),
+            false
         ));
 
         // At or above 200ms with changed destination, re-issues
@@ -1289,17 +1294,29 @@ mod resolve_pending_cast_tests {
             ClientTick(200),
             Some(dest1),
             dest2,
-            Some(start_pos)
+            Some(start_pos),
+            false
         ));
 
-        // At or above 200ms holding towards same destination while player hasn't
-        // arrived, re-issues
+        // Same destination while still walking there: silent, or every resend
+        // becomes a server path correction.
+        assert!(!should_reissue_hold_mouse_move(
+            ClientTick(0),
+            ClientTick(200),
+            Some(dest1),
+            dest1,
+            Some(start_pos),
+            true
+        ));
+
+        // Same destination, but the character stopped short: re-issue.
         assert!(should_reissue_hold_mouse_move(
             ClientTick(0),
             ClientTick(200),
             Some(dest1),
             dest1,
-            Some(start_pos)
+            Some(start_pos),
+            false
         ));
 
         // Once player reaches destination, stops re-issuing
@@ -1308,7 +1325,8 @@ mod resolve_pending_cast_tests {
             ClientTick(200),
             Some(dest1),
             dest1,
-            Some(dest1)
+            Some(dest1),
+            false
         ));
     }
 
@@ -1529,12 +1547,18 @@ fn pending_skill_cursor_state(in_range: bool) -> MouseCursorState {
     }
 }
 
+/// A held mouse re-issues the walk only when the cursor names a new tile, or
+/// when the character stopped short of an unchanged one. Re-sending the same
+/// destination mid-walk is not free: Hercules answers it at the next cell with
+/// a fresh `PlayerMove` (`unit.c`, `change_walk_target`), and the client
+/// re-paths from that origin every time -- the stutter the WASD fix removed.
 fn should_reissue_hold_mouse_move(
     last_tick: ClientTick,
     current_tick: ClientTick,
     last_destination: Option<TilePosition>,
     current_destination: TilePosition,
     player_position: Option<TilePosition>,
+    player_walking: bool,
 ) -> bool {
     let elapsed = current_tick.0.wrapping_sub(last_tick.0);
     if elapsed < 200 {
@@ -1543,7 +1567,7 @@ fn should_reissue_hold_mouse_move(
     if last_destination != Some(current_destination) {
         true
     } else {
-        player_position != Some(current_destination)
+        !player_walking && player_position != Some(current_destination)
     }
 }
 
@@ -1648,6 +1672,39 @@ fn format_monster_target_summary(
     }
 
     (lines.join("\n"), is_mvp)
+}
+
+/// A click that only picked something up to drag -- an item or skill box, or a
+/// window's move/resize handle -- is not a completed menu action and must not
+/// chime like one; the drop or cancellation resolves it. (Ported from the
+/// 2026-09-18 live-session fix on the closed PR #10 branch, eb7081d7.)
+fn click_started_drag(mouse_mode: &MouseMode<ClientState>) -> bool {
+    matches!(
+        mouse_mode,
+        MouseMode::Custom {
+            mode: MouseInputMode::MoveItem { .. } | MouseInputMode::MoveSkill { .. }
+        } | MouseMode::MovingWindow { .. }
+            | MouseMode::ResizingWindow { .. }
+    )
+}
+
+#[cfg(test)]
+mod click_sound_tests {
+    use super::*;
+
+    #[test]
+    fn default_mouse_mode_does_not_count_as_a_drag() {
+        assert!(!click_started_drag(&MouseMode::Default));
+    }
+
+    #[test]
+    fn moving_or_resizing_a_window_counts_as_a_drag() {
+        assert!(click_started_drag(&MouseMode::MovingWindow { window_id: 0 }));
+        assert!(click_started_drag(&MouseMode::ResizingWindow {
+            resize_mode: korangar_interface::layout::ResizeMode::Both,
+            window_id: 0,
+        }));
+    }
 }
 
 const TIMED_ACTION_BUFFER_MS: u32 = 200;
@@ -2215,6 +2272,8 @@ pub struct Client {
     character_preview: Option<(CharacterSex, HairStyle)>,
     /// Last WASD destination packet, so we do not trip flood protection.
     keyboard_move_last_tick: ClientTick,
+    /// Destination and step of the path a held WASD key last sent.
+    keyboard_move_target: Option<(TilePosition, i32, i32)>,
     /// Last hold-mouse destination packet, throttled to 200 ms to avoid flood
     /// protection (F10).
     hold_mouse_move_last_tick: ClientTick,
@@ -3811,6 +3870,14 @@ impl Client {
             crate::client_state().client_info(),
         ));
 
+        // Operator-only: open the outdated-client popup on top of login so we
+        // can confirm it renders without needing a version mismatch.
+        if std::env::var_os("KORANGAR_TEST_OUTDATED_POPUP").is_some() {
+            interface.open_window(OutdatedClientWindow::new(
+                korangar_networking::OUTDATED_CLIENT_MESSAGE.to_owned(),
+            ));
+        }
+
         Some(Self {
             game_file_loader,
             #[cfg(feature = "debug")]
@@ -3913,6 +3980,7 @@ impl Client {
             },
             character_preview: None,
             keyboard_move_last_tick: ClientTick(0),
+            keyboard_move_target: None,
             hold_mouse_move_last_tick: ClientTick(0),
             last_client_tick: ClientTick(0),
             pending_stat_plan: None,
@@ -4658,7 +4726,7 @@ impl Client {
                             .open_window(ServerSelectionWindow::new(client_state().character_servers()));
                     }
                 }
-                NetworkEvent::LoginServerConnectionFailed { message, .. } => {
+                NetworkEvent::LoginServerConnectionFailed { reason, message } => {
                     // M1-015: a failed re-login must not leave a stale server-select
                     // (or character-select) window sitting on a dead/half-open
                     // connection. Tear down every connection-scoped UI surface and
@@ -4671,6 +4739,14 @@ impl Client {
                     self.interface.close_window_with_class(WindowClass::CharacterSelection);
                     self.interface.close_window_with_class(WindowClass::CharacterCreation);
                     self.show_login_error(message);
+                    if reason == UnifiedLoginFailedReason::GameOutdated {
+                        // show_login_error closes WindowClass::Error (the status
+                        // line is the default for password mistakes). Re-open a
+                        // titled popup so "out of date" cannot hide as a red
+                        // line on the form.
+                        client_log!("[login] opening OutdatedClientWindow");
+                        self.interface.open_window(OutdatedClientWindow::new(message.to_owned()));
+                    }
                 }
                 NetworkEvent::LoginServerDisconnected { reason } => {
                     if reason != DisconnectReason::ClosedByClient {
@@ -4919,9 +4995,24 @@ impl Client {
                 NetworkEvent::CharacterList { characters } => {
                     self.audio_engine.play_sound_effect(self.main_menu_click_sound_effect);
 
-                    self.client_state
-                        .follow_mut(client_state().character_slots())
-                        .set_characters(characters);
+                    // Job id to class name here, not in the window: the interface
+                    // layer holds no `Library`. Same reason party rosters and
+                    // trade item names are resolved by the caller.
+                    let class_names: Vec<(usize, String)> = characters
+                        .iter()
+                        .map(|character| {
+                            (
+                                character.character_number as usize,
+                                JobName::get(&self.library, character.job_id).to_string(),
+                            )
+                        })
+                        .collect();
+
+                    let slots = self.client_state.follow_mut(client_state().character_slots());
+                    slots.set_characters(characters);
+                    class_names
+                        .into_iter()
+                        .for_each(|(slot, class_name)| slots.set_class_name(slot, class_name));
 
                     if !self.interface.is_window_with_class_open(WindowClass::CharacterSelection) {
                         // TODO: this will do one unnecessary restore_focus. check
@@ -5103,9 +5194,12 @@ impl Client {
                         self.pending_stat_plan = Some((character_information.character_id, planned));
                     }
 
-                    self.client_state
-                        .follow_mut(client_state().character_slots())
-                        .add_character(character_information);
+                    let slot = character_information.character_number as usize;
+                    let class_name = JobName::get(&self.library, character_information.job_id).to_string();
+
+                    let slots = self.client_state.follow_mut(client_state().character_slots());
+                    slots.add_character(character_information);
+                    slots.set_class_name(slot, class_name);
 
                     self.interface.close_window_with_class(WindowClass::CharacterCreation);
                 }
@@ -7683,28 +7777,7 @@ impl Client {
                     self.interface.close_window_with_class(WindowClass::Dialog);
 
                     let inventory_items = self.client_state.follow(client_state().inventory().items());
-                    let sell_items: Vec<_> = items
-                        .into_iter()
-                        .filter_map(|item| {
-                            let inventory_item = inventory_items
-                                .iter()
-                                .find(|inventory_item| inventory_item.index == item.inventory_index)?;
-
-                            let name = inventory_item.metadata.name.clone();
-                            let texture = inventory_item.metadata.texture.clone();
-                            let quantity = match &inventory_item.details {
-                                korangar_networking::InventoryItemDetails::Regular { amount, .. } => *amount,
-                                korangar_networking::InventoryItemDetails::Equippable { .. } => 1,
-                            };
-
-                            Some(SellItem {
-                                metadata: (ResourceMetadata { name, texture }, quantity),
-                                inventory_index: item.inventory_index,
-                                price: item.price,
-                                overcharge_price: item.overcharge_price,
-                            })
-                        })
-                        .collect();
+                    let sell_items = korangar_networking::sell_entries(items, inventory_items);
 
                     if sell_items.is_empty() {
                         self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
@@ -7721,8 +7794,9 @@ impl Client {
                 }
                 NetworkEvent::SellingCompleted { result } => match result {
                     SellItemsResult::Success => {
-                        // Clear the cart.
-                        self.client_state.follow_mut(client_state().buy_cart()).clear();
+                        // Clear the sell cart: its entries name inventory slots that the
+                        // sale just emptied, and a refilled slot must not be sold next time.
+                        self.client_state.follow_mut(client_state().sell_cart()).clear();
 
                         self.interface.close_window_with_class(WindowClass::Sell);
                         self.interface.close_window_with_class(WindowClass::SellCart);
@@ -8675,7 +8749,30 @@ impl Client {
         self.input_event_buffer = remaining;
     }
 
-    fn apply_keyboard_move(&mut self, client_tick: ClientTick, forward: bool, back: bool, left: bool, right: bool) {
+    /// Releasing the keys ends a held path early. The stop names one cell
+    /// ahead rather than the tile underfoot: the client trails the server
+    /// mid-walk, so the tile underfoot can mean walking backwards.
+    fn stop_keyboard_move(&mut self) {
+        let Some((target, step_x, step_y)) = self.keyboard_move_target.take() else {
+            return;
+        };
+        let Some(here) = self.client_state.try_follow(this_entity()).map(|player| player.get_tile_position()) else {
+            return;
+        };
+        let intent = Some(WasdIntent { target, step_x, step_y });
+        let decision = decide_keyboard_stop(here, intent, |tile| {
+            self.map.as_deref().is_some_and(|map| map.is_walkable(tile))
+        });
+        if let WasdStopDecision::Send { destination } = decision {
+            let _ = self.networking_system.player_move(WorldPosition {
+                x: destination.x,
+                y: destination.y,
+                direction: ragnarok_packets::Direction::North,
+            });
+        }
+    }
+
+    fn apply_keyboard_move(&mut self, client_tick: ClientTick, forward: bool, back: bool, left: bool, right: bool, fresh: bool) {
         if !*self.client_state.follow(client_state().game_settings().wasd_movement()) {
             return;
         }
@@ -8685,10 +8782,6 @@ impl Client {
         let Some(start) = self.client_state.try_follow(this_entity()).map(|player| player.get_tile_position()) else {
             return;
         };
-        if client_tick.0.wrapping_sub(self.keyboard_move_last_tick.0) < 200 {
-            return;
-        }
-
         let view = self.player_camera.view_direction();
         let mut forward_x = view.x;
         let mut forward_z = view.z;
@@ -8726,29 +8819,39 @@ impl Client {
         move_x /= move_length;
         move_z /= move_length;
 
-        // One walkable step. A farther tile jumped through walls and the
-        // server pulled the character back, which is the WASD rubber-band.
-        let step = |dx: i32, dy: i32| -> Option<TilePosition> {
-            let tile_x = start.x as i32 + dx;
-            let tile_y = start.y as i32 + dy;
-            if tile_x < 0 || tile_y < 0 {
-                return None;
-            }
-            let tile = TilePosition {
-                x: tile_x as u16,
-                y: tile_y as u16,
-            };
-            map.is_walkable(tile).then_some(tile)
-        };
-        let destination = step(move_x.round() as i32, move_z.round() as i32)
-            .or_else(|| step(move_x.signum() as i32, 0))
-            .or_else(|| step(0, move_z.signum() as i32));
-        let Some(destination) = destination else {
-            return;
-        };
-        if destination == start {
-            return;
+        // One path per held key, not a one-cell move every 200 ms: each new move
+        // restarts the server's walk, which was the stutter (PR #10, 7745a5d3).
+        // `input::wasd` checks every cell and corner on the way, so the path
+        // is one Hercules will walk as predicted (see its module docs).
+        let step_x = move_x.round() as i32;
+        let step_y = move_z.round() as i32;
+        // A recorded path the character is neither walking nor at was ended by
+        // the server (knockback, stop, stun, death, warp). Forget it, or a held
+        // key would wait for an arrival that will never come.
+        let walking = self.client_state.try_follow(this_entity()).is_some_and(Entity::is_walking);
+        if !walking && self.keyboard_move_target.is_some_and(|(target, ..)| target != start) {
+            self.keyboard_move_target = None;
         }
+        let current = self.keyboard_move_target.map(|(target, held_x, held_y)| WasdIntent {
+            target,
+            step_x: held_x,
+            step_y: held_y,
+        });
+        let WasdDecision::Send { destination, .. } = decide_keyboard_move(
+            WasdMoveInput {
+                start,
+                step_x,
+                step_y,
+                fresh,
+                client_tick: client_tick.0,
+                last_tick: self.keyboard_move_last_tick.0,
+                current,
+            },
+            |tile| map.is_walkable(tile),
+        ) else {
+            return;
+        };
+        self.keyboard_move_target = Some((destination, step_x, step_y));
 
         let _ = self.networking_system.player_move(WorldPosition {
             x: destination.x,
@@ -8863,6 +8966,24 @@ impl Client {
         };
         self.set_targeted_monster(Some(candidates[next_index].2));
         self.report_monster_target();
+    }
+
+    /// Attack the Tab-selected monster through the same `PlayerInteract` path a
+    /// click on it takes, so range walking and attack locking behave the same.
+    /// The selection is re-checked rather than trusted: it may have died or
+    /// faded since it was chosen. (Ported from the closed PR #10, eb7081d7.)
+    fn attack_targeted_monster(&mut self) {
+        let Some(entity_id) = self.targeted_monster else {
+            return;
+        };
+        let still_targetable = self
+            .client_state
+            .follow(client_state().entities())
+            .iter()
+            .any(|entity| entity.get_entity_id() == entity_id && entity.is_targetable_monster());
+        if still_targetable {
+            self.input_event_buffer.push(InputEvent::PlayerInteract { entity_id });
+        }
     }
 
     fn set_targeted_monster(&mut self, target: Option<EntityId>) {
@@ -9674,6 +9795,7 @@ impl Client {
                 InputEvent::TargetSelf => self.cast_armed_at(None, client_tick),
                 InputEvent::TargetPartyMember { index } => self.cast_armed_at(Some(index), client_tick),
                 InputEvent::CycleMonsterTarget { reverse } => self.cycle_monster_target(reverse),
+                InputEvent::AttackTarget => self.attack_targeted_monster(),
                 InputEvent::CyclePartyTarget => self.cycle_party_target(),
                 InputEvent::Escape => {
                     self.interface.unfocus();
@@ -9759,13 +9881,15 @@ impl Client {
                     *self.client_state.follow_mut(client_state().buffered_action()) = None;
                     *self.client_state.follow_mut(client_state().timed_buffered_action()) = None;
                 }
+                InputEvent::KeyboardMoveStop => self.stop_keyboard_move(),
                 InputEvent::KeyboardMove {
                     forward,
                     back,
                     left,
                     right,
+                    fresh,
                 } => {
-                    keyboard_move = Some((forward, back, left, right));
+                    keyboard_move = Some((forward, back, left, right, fresh));
                 }
                 InputEvent::JumpToPartyMember { character_name } => {
                     let command = format!("@partyjump {character_name}");
@@ -12205,8 +12329,8 @@ impl Client {
             self.toggle_sit(client_tick);
         }
 
-        if let Some((forward, back, left, right)) = keyboard_move {
-            self.apply_keyboard_move(client_tick, forward, back, left, right);
+        if let Some((forward, back, left, right, fresh)) = keyboard_move {
+            self.apply_keyboard_move(client_tick, forward, back, left, right, fresh);
         }
 
         if sync_minimap {
@@ -13393,9 +13517,12 @@ impl Client {
 
             if let Some(mouse_button) = input_report.mouse_click {
                 if is_interface_hovered {
-                    // Starts item/skill drag via SetMouseMode (applied immediately inside click).
+                    // Starts item/skill drag via SetMouseMode -- queued, not applied until
+                    // `process_events` drains it at the end of this frame, so
+                    // `get_mouse_mode()` here would still read last frame's mode.
                     interface_frame.click(&self.client_state, mouse_button);
-                    if mouse_button == MouseButton::Left {
+                    let started_drag = interface_frame.queued_mouse_mode().is_some_and(click_started_drag);
+                    if mouse_button == MouseButton::Left && !started_drag {
                         self.audio_engine.play_sound_effect(self.main_menu_click_sound_effect);
                     }
                 } else if modal_screen {
@@ -13522,6 +13649,7 @@ impl Client {
                     last_walking_destination,
                     destination,
                     player_pos,
+                    self.client_state.try_follow(this_entity()).is_some_and(Entity::is_walking),
                 ) {
                     self.hold_mouse_move_last_tick = client_tick;
                     interface_frame.set_mouse_mode(MouseInputMode::Walk { destination });

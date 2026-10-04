@@ -1,4 +1,6 @@
-use ragnarok_packets::{EquipPosition, EquippableItemFlags, InventoryIndex, ItemId, ItemOptions, Price, RegularItemFlags};
+use ragnarok_packets::{
+    EquipPosition, EquippableItemFlags, InventoryIndex, ItemId, ItemOptions, Price, RegularItemFlags, SellItemInformation,
+};
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct NoMetadata;
@@ -66,6 +68,14 @@ impl InventoryItemDetails {
 }
 
 impl<Meta> InventoryItem<Meta> {
+    /// Whether the item sits in an equipment slot right now.
+    pub fn is_equipped(&self) -> bool {
+        match &self.details {
+            InventoryItemDetails::Regular { equipped_position, .. } => !equipped_position.is_empty(),
+            InventoryItemDetails::Equippable { equipped_position, .. } => !equipped_position.is_empty(),
+        }
+    }
+
     /// Stack size. Real gear is always 1; stackables and ammo carry a count.
     pub fn amount(&self) -> u16 {
         match &self.details {
@@ -114,4 +124,75 @@ pub struct SellItem<Meta> {
     pub inventory_index: InventoryIndex,
     pub price: Price,
     pub overcharge_price: Price,
+}
+
+/// Pair the server's sell offers with the inventory, each carrying the whole
+/// stack so a quiver of 500 arrows can be sold as 500, not one. Equipped items
+/// are left out: this server never offers them (Hercules 8b850e4e5) and
+/// refuses the sale, but a stock server lists them.
+pub fn sell_entries<Meta: Clone>(
+    offers: impl IntoIterator<Item = SellItemInformation>,
+    inventory: &[InventoryItem<Meta>],
+) -> Vec<SellItem<(Meta, u16)>> {
+    offers
+        .into_iter()
+        .filter_map(|offer| {
+            let item = inventory.iter().find(|item| item.index == offer.inventory_index)?;
+            (!item.is_equipped()).then(|| SellItem {
+                metadata: (item.metadata.clone(), item.amount()),
+                inventory_index: offer.inventory_index,
+                price: offer.price,
+                overcharge_price: offer.overcharge_price,
+            })
+        })
+        .collect()
+}
+
+#[cfg(test)]
+mod sell_entry_tests {
+    use super::*;
+
+    fn item(index: u16, details: InventoryItemDetails) -> InventoryItem<NoMetadata> {
+        InventoryItem {
+            metadata: NoMetadata,
+            index: InventoryIndex(index),
+            item_id: ItemId(1750),
+            item_type: IT_AMMO,
+            slot: [0; 4],
+            hire_expiration_date: 0,
+            details,
+        }
+    }
+
+    fn offer(index: u16) -> SellItemInformation {
+        SellItemInformation {
+            inventory_index: InventoryIndex(index),
+            price: Price(1),
+            overcharge_price: Price(1),
+        }
+    }
+
+    #[test]
+    fn an_ammo_stack_is_offered_whole() {
+        let inventory = [item(2, InventoryItemDetails::ammo(500, EquipPosition::empty(), true))];
+        let entries = sell_entries([offer(2)], &inventory);
+        assert_eq!(entries.len(), 1);
+        assert_eq!(entries[0].metadata.1, 500);
+    }
+
+    #[test]
+    fn equipped_items_and_unknown_indices_are_left_out() {
+        let inventory = [
+            item(2, InventoryItemDetails::ammo(500, EquipPosition::AMMO, true)),
+            item(3, InventoryItemDetails::Regular {
+                amount: 7,
+                equipped_position: EquipPosition::empty(),
+                flags: RegularItemFlags::IDENTIFIED,
+            }),
+        ];
+        let entries = sell_entries([offer(2), offer(3), offer(9)], &inventory);
+        assert_eq!(entries.len(), 1);
+        assert_eq!(entries[0].inventory_index, InventoryIndex(3));
+        assert_eq!(entries[0].metadata.1, 7);
+    }
 }

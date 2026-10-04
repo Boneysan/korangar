@@ -360,6 +360,18 @@ where
                     event: Toggle(self.game_settings_path.show_minimap_facilities()),
                 },
                 state_button! {
+                    text: "Show portals",
+                    tooltip: "Show or hide warp portals on the minimap. Hiding them also hides a tracked route's portal highlight; the route itself is kept.",
+                    state: self.game_settings_path.show_minimap_portals(),
+                    event: Toggle(self.game_settings_path.show_minimap_portals()),
+                },
+                state_button! {
+                    text: "Show monster regions",
+                    tooltip: "Show or hide the shaded areas where the selected or hunted monster spawns on this map.",
+                    state: self.game_settings_path.show_minimap_population_regions(),
+                    event: Toggle(self.game_settings_path.show_minimap_population_regions()),
+                },
+                state_button! {
                     text: "Show party members",
                     tooltip: "Show or hide same-map party member blips on the minimap.",
                     state: self.game_settings_path.show_minimap_party(),

@@ -2413,6 +2413,11 @@ impl Entity {
     }
 
     /// Whether this monster can be selected as a hostile target right now.
+    /// Whether a server-sent walk is still being played out.
+    pub fn is_walking(&self) -> bool {
+        self.get_common().active_movement.is_some()
+    }
+
     pub fn is_targetable_monster(&self) -> bool {
         let common = self.get_common();
         common.entity_type == EntityType::Monster
