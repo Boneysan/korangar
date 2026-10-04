@@ -19,6 +19,7 @@ pub enum BindableAction {
     CloseTopWindow,
     CloseAllWindows,
     CycleMonsterTarget,
+    AttackTarget,
     CyclePartyTarget,
     SendDangerPing,
     ToggleInterface,
@@ -66,6 +67,7 @@ impl BindableAction {
             Self::CloseTopWindow,
             Self::CloseAllWindows,
             Self::CycleMonsterTarget,
+            Self::AttackTarget,
             Self::CyclePartyTarget,
             Self::SendDangerPing,
             Self::ToggleInterface,
@@ -117,6 +119,7 @@ impl BindableAction {
             Self::CloseTopWindow => "Close top window",
             Self::CloseAllWindows => "Close all ordinary windows",
             Self::CycleMonsterTarget => "Cycle monster target",
+            Self::AttackTarget => "Attack selected monster",
             Self::CyclePartyTarget => "Cycle party target",
             Self::SendDangerPing => "Send party danger ping",
             Self::ToggleInterface => "Toggle interface",
@@ -174,6 +177,7 @@ impl BindableAction {
             Self::CloseTopWindow => ("KeyW", true, false, false),
             Self::CloseAllWindows => ("F11", false, false, false),
             Self::CycleMonsterTarget => ("Tab", false, false, false),
+            Self::AttackTarget => ("Space", false, false, false),
             Self::CyclePartyTarget => ("Tab", true, false, true),
             Self::SendDangerPing => ("KeyG", true, true, false),
             Self::ToggleInterface => ("KeyH", true, false, false),
@@ -406,7 +410,9 @@ impl KeyBindings {
 }
 
 /// The debug camera replaces ordinary movement while active, so sharing
-/// same-direction movement/look bindings is intentional and unambiguous.
+/// same-direction movement/look bindings is intentional and unambiguous. The
+/// same holds for Space: it attacks the Tab target in play and lifts the debug
+/// camera only while that camera is on.
 fn contextual_camera_pair(left: BindableAction, right: BindableAction) -> bool {
     matches!(
         (left, right),
@@ -426,6 +432,8 @@ fn contextual_camera_pair(left: BindableAction, right: BindableAction) -> bool {
             | (BindableAction::DebugCameraLookLeft, BindableAction::MoveLeft)
             | (BindableAction::MoveRight, BindableAction::DebugCameraLookRight)
             | (BindableAction::DebugCameraLookRight, BindableAction::MoveRight)
+            | (BindableAction::AttackTarget, BindableAction::DebugCameraUp)
+            | (BindableAction::DebugCameraUp, BindableAction::AttackTarget)
     )
 }
 

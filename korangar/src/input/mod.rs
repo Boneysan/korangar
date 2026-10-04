@@ -564,6 +564,9 @@ impl InputSystem {
         let wasd_free = !use_debug_camera;
         #[cfg(not(feature = "debug"))]
         let wasd_free = true;
+        if wasd_free && self.binding_pressed(bindings, BindableAction::AttackTarget, false) {
+            events.push(InputEvent::AttackTarget);
+        }
         if wasd_free {
             let forward = self.binding_down(bindings, BindableAction::MoveForward);
             let back = self.binding_down(bindings, BindableAction::MoveBackward);
@@ -797,6 +800,31 @@ mod keybinding_tests {
                 .iter()
                 .any(|event| matches!(event, InputEvent::SendPartyPing { kind } if kind == "danger"))
         );
+    }
+
+    #[test]
+    fn space_attacks_the_selected_target_but_not_with_a_modifier() {
+        let bindings = KeyBindings::default();
+        let mut input = InputSystem::new(Arc::new(AtomicU64::new(0)));
+        input.update_keyboard(KeyCode::Space, ElementState::Pressed);
+        input.update_delta(ClientTick(4));
+        let mut events = Vec::new();
+        #[cfg(feature = "debug")]
+        input.handle_keyboard_input(&mut events, &bindings, None, false, false);
+        #[cfg(not(feature = "debug"))]
+        input.handle_keyboard_input(&mut events, &bindings, None);
+        assert!(events.iter().any(|event| matches!(event, InputEvent::AttackTarget)));
+
+        let mut modified = InputSystem::new(Arc::new(AtomicU64::new(0)));
+        modified.update_keyboard(KeyCode::Space, ElementState::Pressed);
+        modified.update_keyboard(KeyCode::ControlLeft, ElementState::Pressed);
+        modified.update_delta(ClientTick(5));
+        let mut events = Vec::new();
+        #[cfg(feature = "debug")]
+        modified.handle_keyboard_input(&mut events, &bindings, None, false, false);
+        #[cfg(not(feature = "debug"))]
+        modified.handle_keyboard_input(&mut events, &bindings, None);
+        assert!(!events.iter().any(|event| matches!(event, InputEvent::AttackTarget)));
     }
 
     #[test]

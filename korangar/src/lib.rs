@@ -8898,6 +8898,24 @@ impl Client {
         self.report_monster_target();
     }
 
+    /// Attack the Tab-selected monster through the same `PlayerInteract` path a
+    /// click on it takes, so range walking and attack locking behave the same.
+    /// The selection is re-checked rather than trusted: it may have died or
+    /// faded since it was chosen. (Ported from the closed PR #10, eb7081d7.)
+    fn attack_targeted_monster(&mut self) {
+        let Some(entity_id) = self.targeted_monster else {
+            return;
+        };
+        let still_targetable = self
+            .client_state
+            .follow(client_state().entities())
+            .iter()
+            .any(|entity| entity.get_entity_id() == entity_id && entity.is_targetable_monster());
+        if still_targetable {
+            self.input_event_buffer.push(InputEvent::PlayerInteract { entity_id });
+        }
+    }
+
     fn set_targeted_monster(&mut self, target: Option<EntityId>) {
         self.targeted_monster = target;
         *self.client_state.follow_mut(client_state().targeted_monster()) = target;
@@ -9707,6 +9725,7 @@ impl Client {
                 InputEvent::TargetSelf => self.cast_armed_at(None, client_tick),
                 InputEvent::TargetPartyMember { index } => self.cast_armed_at(Some(index), client_tick),
                 InputEvent::CycleMonsterTarget { reverse } => self.cycle_monster_target(reverse),
+                InputEvent::AttackTarget => self.attack_targeted_monster(),
                 InputEvent::CyclePartyTarget => self.cycle_party_target(),
                 InputEvent::Escape => {
                     self.interface.unfocus();

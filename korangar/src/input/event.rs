@@ -163,6 +163,8 @@ pub enum InputEvent {
     CycleMonsterTarget {
         reverse: bool,
     },
+    /// Attack the monster selected with Tab, as clicking it would (Space).
+    AttackTarget,
     CyclePartyTarget,
     /// Close all ordinary windows while retaining basic info and chat (F11).
     CloseAllOrdinaryWindows,
