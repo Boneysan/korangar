@@ -12,7 +12,7 @@ on:
   # had in fact never executed. Turning it on is therefore a decision, not a
   # restoration: a full `all` run is roughly an hour of paired server time.
   #
-  # Weekly, because pull requests already get the nine-scenario gate below in
+  # Weekly, because pull requests already get the seventeen-scenario gate below in
   # minutes. What that gate cannot see is drift with no commit behind it — the
   # pinned Hercules revision, the runner image, the toolchain — and catching
   # that does not need an hour every night.
@@ -87,7 +87,10 @@ jobs:
           REQUESTED: ${{ inputs.scenario }}
         run: |
           if [ "$EVENT_NAME" = "pull_request" ]; then
-            echo "scenario=smoke,account-registration,connection-state,character-select-invalid,dm-quest-lifecycle,quest-log-multi,dm-golden-beats,skills-mage,trade-reject,party-lifecycle" >> "$GITHUB_OUTPUT"
+            # Economy paths (items and zeny change hands) and the server gameplay
+            # the 2026-10-04 audit found unguarded by PR CI: split, trade, storage,
+            # pickup, death recovery, and the pilot MVP escorts. About 2 minutes more.
+            echo "scenario=smoke,account-registration,connection-state,character-select-invalid,dm-quest-lifecycle,quest-log-multi,dm-golden-beats,skills-mage,trade-reject,party-lifecycle,inventory-split,trade-commit,trade-invalid-offers,storage-persistence,drop-pickup,death-recovery-save-point,mob-eddga-summons-escorts" >> "$GITHUB_OUTPUT"
           elif [ -n "$REQUESTED" ]; then
             echo "scenario=$REQUESTED" >> "$GITHUB_OUTPUT"
           else
