@@ -112,6 +112,13 @@ connection, character select, three quest scenarios, `skills-mage`, `trade-rejec
 quest credit, discovery, DM replay) runs only in the weekly full run on `main`. A green PR says
 nothing about them.
 
+**Disposable runner works locally (2026-10-03).** MariaDB login `korangar_it`@`127.0.0.1`, limited
+to `korangar_integration_*` databases, password in git-ignored `target/integration-db.env`
+(`set -a; . target/integration-db.env; set +a` before `tools/testing/run-integration-tests.sh`).
+The dev server must be stopped first (same ports). It cleaned up every database it made. Five of
+Batch 1's seven dev-server failures were only fixtures the dev server does not load; run
+fixture scenarios through this runner, never against `herc_re_db`.
+
 **PR #10 — settled 2026-10-03 (owner chose option 1).** Ported onto korangar
 `agent/review-fixes` (local, not pushed), each re-applied against today's `main`:
 
@@ -134,3 +141,11 @@ ports has been seen live; each needs a line in the GUI pass.
 
 | Row | Verdict | Evidence | Gaps / fixes filed | Date |
 |---|---|---|---|---|
+| F14 | Verified (unseen) | Boot log loads 29 profiles; `check_mob_skill_families.py` passes; 6 mob-AI scenarios pass (skirmisher ×2, keeper ×2, coward, raydric) | **Fabre `Aggressor` on `prt_fild08` is now really aggressive** (it was inert until the 10-03 mode fix) and swarms the novice field; it breaks `party-quest-credit` (A/B: passes with the profile removed). Design call needed | 2026-10-03 |
+| F15 | Verified (unseen) | `mob-eddga-pilot-skills`, `-meteor-and-enrage`, `mob-elite-population`, `mob-elite-rollback-switch` pass | No live fight watched | 2026-10-03 |
+| F16 | Partial | Eddga runtime-verified (`mob-eddga-summons-escorts`). Data check of all 11 MVPs: every cast ≥1 s is `Cancelable`, enrage at 30/40(50)/80% HP, no teleport, escorts restored | The other 10 MVPs are data-checked only, never fought; client recap fields still partial (see above) | 2026-10-03 |
+| F21 / S3 | Verified | `party-experience-sharing` passes: solo 117/87, 31-cell pair 72/53 each, 30-level boundary in, 31-level and other map out; `party_even_share_bonus: 25`, `party_share_level: 30` tracked in config | — | 2026-10-03 |
+| F34 / S4 | Partial | `death-recovery-save-point` passes; danger warning wired (maps window + client) with boundary tests | **`death-recovery-ten-kill-threshold` is flaky and pre-existing**: fails on Hercules `stable`, on korangar `main`'s tester and on this branch; passed on the 10-02 tester. Bisected to `af45e4ab` (added `@str/@dex 60`); reverting those lines passes 2 of 3. The Poring moves 9–12 cells after the first hit even with its Coward profile removed. Filed as its own fix slice | 2026-10-03 |
+| S8 | Verified, test broken | Shared kill credit passes (mixed ownership, 30/31 cells, solo after leave) **with the Fabre profile removed** | `party-quest-credit` fails as shipped: Fabres swarm the test character on `prt_fild08` (see F14) | 2026-10-03 |
+| F39 | Partial | **First ever run**: `party-quest-interaction-credit` passes under the disposable runner (mixed ownership, 30/31 range, party leave) | Disconnect and dead-member cases untested; no quest uses the commands yet | 2026-10-03 |
+| S10 | Verified | All 5 `dm-party-*` scenarios pass under the disposable runner (offline replay and transitions, recreation and reward isolation, alternate character) | — | 2026-10-03 |
