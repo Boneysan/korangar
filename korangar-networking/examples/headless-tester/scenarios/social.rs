@@ -2190,6 +2190,11 @@ fn kill_spore_and_collect_party_exp(
     partner: &mut TestContext,
     partner_distance: Option<u16>,
 ) -> Result<PairExp, String> {
+    // prt_fild08 Fabres are F14 Aggressors (kept by design, 2026-10-03). Several
+    // hitting a tester hold it in Hercules' walk delay, so its walk is never
+    // acknowledged; clear the field so this measures EXP sharing, not Fabres.
+    let _ = primary.say("@killmonster");
+    primary.pump(Duration::from_millis(300));
     let target = primary.spawn_monster("SPORE", 1014)?;
     let target_position = primary
         .entities
