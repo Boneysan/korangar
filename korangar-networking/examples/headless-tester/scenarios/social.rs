@@ -1196,7 +1196,22 @@ fn kill_spawned_quest_spore(context: &mut TestContext, target: ragnarok_packets:
         )?;
         match outcome {
             2 => return Ok(target),
-            1 => {}
+            // A killing hit sends damage and death back to back; take the death
+            // now, before the next `flush()` discards it (see the death-recovery
+            // kill loop, which failed on exactly this).
+            1 => {
+                let died = context.wait_for_within(
+                    "quest Spore death after a hit",
+                    Duration::from_millis(1000),
+                    &mut |event| match event {
+                        NetworkEvent::RemoveEntity { entity_id, .. } if *entity_id == target => Some(()),
+                        _ => None,
+                    },
+                );
+                if died.is_ok() {
+                    return Ok(target);
+                }
+            }
             _ => {}
         }
     }
