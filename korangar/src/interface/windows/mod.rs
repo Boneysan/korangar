@@ -113,7 +113,7 @@ pub use self::party_invite::PartyInviteWindow;
 pub use self::player_target::PlayerTargetWindow;
 #[cfg(feature = "debug")]
 pub use self::profiler::{ProfilerWindow, ProfilerWindowState};
-pub use self::quest_log::QuestLogWindow;
+pub use self::quest_log::{QuestLogWindow, QuestLogWindowState};
 #[cfg(feature = "debug")]
 pub use self::render_options::RenderOptionsWindow;
 pub use self::repair_weapon::RepairWeaponWindow;

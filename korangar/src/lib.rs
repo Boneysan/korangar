@@ -12958,7 +12958,13 @@ impl Client {
             },
             None => QuestEntry {
                 quest_id,
-                name: format!("Quest {quest_id}"),
+                // The server's quest database names every quest (exported to
+                // docs/quests.v1.json); a player should never see "Quest 20004".
+                name: crate::dm::reference_data::reference_data()
+                    .quest_by_id(quest_id)
+                    .map(|quest| quest.name.clone())
+                    .filter(|name| !name.trim().is_empty())
+                    .unwrap_or_else(|| "Unnamed quest".to_owned()),
                 requirements: Vec::new(),
                 hunt_objectives: Vec::new(),
                 location,

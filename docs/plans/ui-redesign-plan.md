@@ -1,6 +1,6 @@
 # Player interface once-over: audit and plan
 
-Status: **plan, 2026-10-05.** Requested after the quest log was called "a confusing mess", widened by the owner to every searchable view and then the whole player interface. Nothing here is built yet. The quest log design below was agreed before this plan existed.
+Status: **in progress, 2026-10-05.** Slice 1 (quest log) built and unit-tested, not yet seen on screen. A glyph fix shipped first: see "Font coverage". Requested after the quest log was called "a confusing mess", widened by the owner to every searchable view and then the whole player interface. Nothing here is built yet. The quest log design below was agreed before this plan existed.
 
 ## Why the interface feels messy
 
@@ -67,6 +67,24 @@ Priority: **P1** means named by the owner or a clear mess; **P2** means visible 
 | Trade, Storage, Chat, Hotbar, Skill Tree | — | Recently worked on or upstream; check only | P3 |
 | Character select and create, Login | — | *needs a look* | P3 |
 | DM windows (Bestiary, Loot, GM Commands with 66 buttons) | — | DM-only; GM Commands would benefit from sections | P3 |
+
+## Font coverage (found while building slice 1)
+
+The game font, NotoSans, comes from a pre-built atlas and has no check mark, star, arrows, triangles or block elements. The world map's visited marker (✓), the drop toasts' star, every route arrow, and the party text HP bar were drawing as missing-glyph boxes.
+- **Fixed:** commit `8d261b1a`.
+- **Kept fixed:** `tools/audits/glyph_coverage.py` now fails CI on any client string character the font cannot draw.
+- **What redesigns can use:** characters the font has, such as `•`, `›`, `»`, `–`, `×`, `…`, `·`, plus colour.
+- **Real icons:** they would need a symbol fallback font added to the atlas (the font README describes how).
+
+## Korean-derived text (owner request, 2026-10-05)
+
+Player-visible text that came from Korean sources gets its own review pass after the window slices. That covers:
+- message-table glosses (`messages_main.h`; 15 lines were already found misaligned on 2026-08-07);
+- item, monster and map names read from the game files;
+- NPC and script text the Guide labels "untranslated";
+- any remaining Korean shown raw.
+
+Step one is an inventory of where each kind reaches the screen. Step two is fixing it at the source data, never by patching single strings in the UI. (The Korean literals in `korangar/src` are game-file paths, which are never drawn.)
 
 ## Slices
 

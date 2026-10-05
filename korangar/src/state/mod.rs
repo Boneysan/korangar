@@ -83,7 +83,7 @@ use crate::input::{InputEvent, MouseInputMode};
 use crate::interface::windows::{
     AdventureGuideWindowState, BestiaryWindowState, ChatWindowState, CommandsWindowState, CommissionBoardWindowState, DialogWindowState,
     DiceWindowState, FriendListWindowState, LoginWindowState, LoginWindowStatePathExt, LootWindowState, PartyWindowState,
-    SkillTreeWindowState, TradeWindowState, WindowCache, WindowClass,
+    QuestLogWindowState, SkillTreeWindowState, TradeWindowState, WindowCache, WindowClass,
 };
 #[cfg(feature = "debug")]
 use crate::interface::windows::{ProfilerWindowState, ThemeInspectorWindowState};
@@ -297,6 +297,7 @@ pub struct ClientState {
     commands_window: CommandsWindowState,
     /// Internal state of the crafting commission board window.
     commission_board_window: CommissionBoardWindowState,
+    quest_log_window: QuestLogWindowState,
     /// Internal state of the friend list window.
     friend_list_window: FriendListWindowState,
     /// Internal state of the party window.
@@ -677,6 +678,7 @@ impl ClientState {
             dice_window,
             commands_window,
             commission_board_window: CommissionBoardWindowState::default(),
+            quest_log_window: QuestLogWindowState::default(),
             bestiary_window,
             adventure_guide,
             loot_window,

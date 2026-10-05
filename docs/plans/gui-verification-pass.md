@@ -1159,6 +1159,7 @@ Ported to korangar `agent/review-fixes`; see the table in
 | 8.9 | Two clients. A: `/commission`, post "Fire Damascus" fee 50000. B: `/commission`. A: `#1` + B's name → Assign, then Complete | B gets the post announcement and sees `#1 Fire Damascus for 50000z, by A, open`; after Assign, B is told and sees "(yours to craft)"; after Complete it leaves both windows. Each click replies in chat, and no `[CMB]` line ever shows in chat |
 | 8.10 | Target an MVP (e.g. `@spawn Eddga`), get hit, interrupt one cast if possible, kill it | Toast reads "Defeated Eddga in …s: dealt …, took …, interrupted … cast(s)"; "took" is non-zero after being hit; chat holds the same recap, with "MVP: <you>", the reward by name (never a number) and the bonus EXP |
 | 8.11 | Two clients, A holds 10 Red Potions. Trade, offer 7, then Cancel; trade again, offer 7, both lock and commit | After the offer A's bag shows 3; after Cancel it shows 10 (not 17); after the completed trade it shows 3 and B shows +7 |
+| 8.12 | Quest Log (`/quest` or the menu) with a story quest, a hunting contract and one tracked quest | Four tabs (Quests, Hunts, My goals, Clues); the open tab looks pressed. Each quest is one collapsible card; a tracked one opens expanded with a `•`. Hunt titles show `1/2` or "ready to turn in"; objectives are green when done; drop maps sit under one "Where to find (N)" fold, not a button each. Story quests show real names, never "Quest 20004". No boxes anywhere |
 
 ---
 
