@@ -1156,6 +1156,7 @@ pub struct ReferenceStatus {
 #[derive(Debug, Deserialize)]
 pub struct ReferenceStatusMechanic {
     pub constant: String,
+    #[expect(dead_code, reason = "parsed with the export; the Guide no longer shows raw status ids to players")]
     pub id: u32,
     #[serde(default)]
     pub flags: Vec<String>,

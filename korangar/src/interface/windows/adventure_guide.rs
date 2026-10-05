@@ -254,7 +254,7 @@ fn push_monster_skills(
 fn monster_details(monster: &ReferenceMonster) -> Vec<String> {
     let data = reference_data();
     let mut lines = vec![
-        format!("{}  (ID {})", display_name(&monster.name, &monster.sprite_name), monster.id),
+        display_name(&monster.name, &monster.sprite_name),
         format!("Level {}   HP {}", monster.level, monster.hp),
         format!("@hunting-goal:{}|Add to personal hunting goals (client-only)", monster.id),
     ];
@@ -454,8 +454,8 @@ fn drop_source_line(monster_id: u32, sprite_name: &str, kind: &str, rate_per_100
 fn item_details(item: &ReferenceItem, card: bool) -> Vec<String> {
     let kind = if card { "Card" } else { item.item_type.as_str() };
     let mut lines = vec![
-        format!("{}  (ID {})", display_name(&item.name, &item.aegis_name), item.id),
-        format!("Type: {kind}   Weight: {}", item.weight),
+        display_name(&item.name, &item.aegis_name),
+        format!("Type: {}   Weight: {}", item_type_label(kind), item.weight),
     ];
     let relevant = reference_data()
         .crafting_entries
@@ -1155,13 +1155,31 @@ fn is_graph_map(map_name: &str) -> bool {
         .any(|known| known.eq_ignore_ascii_case(map_name))
 }
 
+/// The server's item type constant in words ("IT_HEALING" -> "Healing").
+fn item_type_label(item_type: &str) -> String {
+    match item_type {
+        "IT_HEALING" => "Healing".to_owned(),
+        "IT_USABLE" => "Usable".to_owned(),
+        "IT_ETC" => "Miscellaneous".to_owned(),
+        "IT_WEAPON" => "Weapon".to_owned(),
+        "IT_ARMOR" => "Armor".to_owned(),
+        "IT_CARD" | "Card" => "Card".to_owned(),
+        "IT_PETEGG" => "Pet egg".to_owned(),
+        "IT_PETARMOR" => "Pet accessory".to_owned(),
+        "IT_AMMO" => "Ammunition".to_owned(),
+        "IT_DELAYCONSUME" => "Usable (delayed)".to_owned(),
+        "IT_CASH" => "Cash shop item".to_owned(),
+        other => other.strip_prefix("IT_").unwrap_or(other).replace('_', " ").to_lowercase(),
+    }
+}
+
 fn display_name(name: &str, fallback: &str) -> String {
     if name.is_empty() { fallback.to_owned() } else { name.to_owned() }
 }
 
 fn quest_details(quest: &crate::state::quests::QuestEntry) -> Vec<String> {
     let data = reference_data();
-    let mut lines = vec![format!("{}  (Quest ID {})", quest.name(), quest.quest_id)];
+    let mut lines = vec![quest.name().to_owned()];
     if quest.hunt_objectives().is_empty() && quest.requirements().is_empty() {
         lines.push("No objective details are available from the server or bundled campaign data.".to_owned());
     }
@@ -1254,7 +1272,7 @@ fn quest_reference_details(quest: &crate::dm::reference_data::ReferenceQuest) ->
                     target.monster_name
                 ));
             } else {
-                lines.push(format!("Monster ID {mob_id} has no matching bundled bestiary entry."));
+                lines.push("This monster has no Guide entry yet.".to_owned());
             }
         }
     }
@@ -1809,8 +1827,8 @@ fn service_details(service: &ReferenceNpcServiceReview) -> Vec<String> {
     ];
     if let Some(npc) = &service.npc {
         lines.push(format!(
-            "Primary NPC: {} on {} at ({}, {}) [ID {}]",
-            npc.internal_name, npc.map, npc.x, npc.y, npc.npc_id
+            "Primary NPC: {} on {} at ({}, {})",
+            npc.internal_name, npc.map, npc.x, npc.y
         ));
         lines.push(format!(
             "@route-cell:{}:{}:{}|Route to {} ({}, {})",
@@ -1993,7 +2011,7 @@ fn resolve_details_with_library(result: &GuideResult, library: &Library) -> Vec<
 }
 
 fn job_details(job_id: u16, name: &str) -> Vec<String> {
-    let mut lines = vec![format!("{name}  (Job ID {job_id})")];
+    let mut lines = vec![name.to_owned()];
     let data = reference_data();
     if let Some(bonuses) = data.job_bonuses_by_id(job_id) {
         append_job_bonus_details(&mut lines, bonuses);
@@ -2307,7 +2325,6 @@ fn skill_details(skill: &ReferenceSkill) -> Vec<String> {
         .lines()
         .map(str::to_owned)
         .collect::<Vec<_>>();
-    lines.push(format!("Skill identifier: {} (ID {})", skill.name, skill.id));
     let data = reference_data();
 
     if !skill.prerequisites.is_empty() {
@@ -2432,7 +2449,7 @@ fn status_tag(status: &crate::dm::reference_data::ReferenceStatus) -> String {
 fn status_details(status: &crate::dm::reference_data::ReferenceStatus) -> Vec<String> {
     let mut lines = vec![match status.iconless {
         true => format!("{}  ({})", status.name, status_tag(status)),
-        false => format!("{}  (Status icon ID {})", status.name, status.id),
+        false => status.name.clone(),
     }];
     if status.iconless {
         lines.push("The client has no icon or name for this status; the name is derived from the server constant.".to_owned());
@@ -2442,7 +2459,7 @@ fn status_details(status: &crate::dm::reference_data::ReferenceStatus) -> Vec<St
     } else {
         lines.push("Verified server metadata from renewal sc_config.conf:".to_owned());
         for mechanic in &status.statuses {
-            lines.push(format!("{} (status ID {})", mechanic.constant, mechanic.id));
+            lines.push(mechanic.constant.clone());
             let flag_meanings = mechanic
                 .flags
                 .iter()
@@ -2874,7 +2891,7 @@ where
         );
     } else if category == "Skills" {
         rows.extend(data.search_skills(&query, MAX_RESULTS).into_iter().map(|skill| GuideResult {
-            label: format!("{}  (ID {})", display_name(&skill.description, &skill.name), skill.id),
+            label: display_name(&skill.description, &skill.name),
             kind: "skill".to_owned(),
             id: skill.id as u32,
         }));
@@ -3057,9 +3074,8 @@ where
             .collect::<std::collections::HashSet<_>>();
         rows.extend(data.search_quests(&query, MAX_RESULTS).into_iter().map(|quest| GuideResult {
             label: format!(
-                "{}  (Quest {}){}",
+                "{}{}",
                 quest.name,
-                quest.id,
                 if active_ids.contains(&quest.id) { " — Active" } else { "" }
             ),
             kind: "quest".to_owned(),
@@ -3072,7 +3088,7 @@ where
             .filter(|quest| !listed_ids.contains(&quest.quest_id))
             .take(MAX_RESULTS.saturating_sub(rows.len()))
             .map(|quest| GuideResult {
-                label: format!("{}  (Quest {})", quest.name(), quest.quest_id),
+                label: quest.name().to_owned(),
                 kind: "quest".to_owned(),
                 id: quest.quest_id,
             });
@@ -3089,7 +3105,7 @@ where
                 .into_iter()
                 .filter(|item| cards_only || item.item_type != "IT_CARD")
                 .map(|item| GuideResult {
-                    label: format!("{}  (ID {})", display_name(&item.name, &item.aegis_name), item.id),
+                    label: display_name(&item.name, &item.aegis_name),
                     kind: if cards_only { "card" } else { "item" }.to_owned(),
                     id: item.id,
                 }),
@@ -3163,7 +3179,7 @@ fn search_all_categories(
             .filter(|item| item.item_type != "IT_CARD")
             .take(all_category_result_slots(&rows))
             .map(|item| GuideResult {
-                label: format!("{}  (Item, ID {})", display_name(&item.name, &item.aegis_name), item.id),
+                label: format!("{}  (Item)", display_name(&item.name, &item.aegis_name)),
                 kind: "item".to_owned(),
                 id: item.id,
             }),
@@ -3173,7 +3189,7 @@ fn search_all_categories(
             .into_iter()
             .take(all_category_result_slots(&rows))
             .map(|card| GuideResult {
-                label: format!("{}  (Card, ID {})", display_name(&card.name, &card.aegis_name), card.id),
+                label: format!("{}  (Card)", display_name(&card.name, &card.aegis_name)),
                 kind: "card".to_owned(),
                 id: card.id,
             }),
@@ -3182,7 +3198,7 @@ fn search_all_categories(
         data.search_skills(query, all_category_result_slots(&rows))
             .into_iter()
             .map(|skill| GuideResult {
-                label: format!("{}  (Skill, ID {})", display_name(&skill.description, &skill.name), skill.id),
+                label: format!("{}  (Skill)", display_name(&skill.description, &skill.name)),
                 kind: "skill".to_owned(),
                 id: skill.id as u32,
             }),
@@ -3246,7 +3262,7 @@ fn search_all_categories(
         data.search_quests(query, all_category_result_slots(&rows))
             .into_iter()
             .map(|quest| GuideResult {
-                label: format!("{}  (Quest {})", quest.name, quest.id),
+                label: format!("{}  (Quest)", quest.name),
                 kind: "quest".to_owned(),
                 id: quest.id,
             }),
@@ -3347,7 +3363,14 @@ where
     A: Path<ClientState, AdventureGuideWindowState> + Copy,
 {
     state.update_value(path.category(), "Items".to_owned());
-    state.update_value(path.query(), item_id.to_string());
+    // Search by name, so the box shows what the player would type, not "501".
+    let data = reference_data();
+    let query = data
+        .item_by_id(item_id)
+        .or_else(|| data.card_by_id(item_id))
+        .map(|item| display_name(&item.name, &item.aegis_name))
+        .unwrap_or_else(|| item_id.to_string());
+    state.update_value(path.query(), query);
     run_search(state, path);
     let data = reference_data();
     let detail = data
@@ -3378,34 +3401,39 @@ where
                 run_search(state, path);
             }
         };
-        let revision = reference_data().source_revision.clone();
+        // A category button looks pressed while it is the open one, like tabs.
+        let category_button = |label: &'static str, category: &'static str| {
+            button! {
+                text: label,
+                event: set_category(category),
+                disabled: ComputedSelector::new_default(move |state: &ClientState| rust_state::PathExt::follow_safe(&path.category(), state) == category),
+            }
+        };
         window! {
             title: "Adventure Guide",
             class: Self::window_class(),
             theme: InterfaceThemeType::InGame,
             closable: true,
             elements: (
-                text! { text: format!("Open reference • data revision {} • discovery badges sync per account; mechanics remain open • untranslated scripts and missing spawn data are labeled", revision), overflow_behavior: OverflowBehavior::Shrink },
-                text_box! { ghost_text: "Search monsters, items, cards, skills, statuses, jobs, maps, NPCs, services, quests, rumors, refinement, rules…", state: path.query(), input_handler: DefaultHandler::<_, _, MAX_QUERY>::new(path.query(), search), focus_id: GuideSearchBox, overflow_behavior: OverflowBehavior::Shrink },
+                text_box! { ghost_text: "Search by name, then press Enter", state: path.query(), input_handler: DefaultHandler::<_, _, MAX_QUERY>::new(path.query(), search), focus_id: GuideSearchBox, overflow_behavior: OverflowBehavior::Shrink },
                 split! { gaps: theme().window().gaps(), children: (
-                    button! { text: "All", event: set_category("All") },
-                    button! { text: "Monsters", event: set_category("Monsters") },
-                    button! { text: "Items", event: set_category("Items") },
-                    button! { text: "Cards", event: set_category("Cards") },
-                    button! { text: "Skills", event: set_category("Skills") },
-                    button! { text: "Status Effects", event: set_category("Status Effects") },
-                    button! { text: "Jobs", event: set_category("Jobs") },
-                    button! { text: "Maps", event: set_category("Maps") },
+                    category_button("All", "All"),
+                    category_button("Monsters", "Monsters"),
+                    category_button("Items", "Items"),
+                    category_button("Cards", "Cards"),
+                    category_button("Maps", "Maps"),
+                    category_button("NPCs", "NPCs"),
+                    category_button("Quests", "Quests"),
+                    category_button("Services", "Services"),
                 ) },
                 split! { gaps: theme().window().gaps(), children: (
-                    button! { text: "NPCs", event: set_category("NPCs") },
-                    button! { text: "Services", event: set_category("Services") },
-                    button! { text: "Quests", event: set_category("Quests") },
-                    button! { text: "Rumors", event: set_category("Rumors") },
-                    button! { text: "Refinement", event: set_category("Refinement") },
-                    button! { text: "Effective Rules", event: set_category("Effective Rules") },
-                    button! { text: "Mechanics", event: set_category("Mechanics") },
-                    button! { text: "Search", event: search },
+                    category_button("Skills", "Skills"),
+                    category_button("Statuses", "Status Effects"),
+                    category_button("Jobs", "Jobs"),
+                    category_button("Rumors", "Rumors"),
+                    category_button("Refining", "Refinement"),
+                    category_button("Server rules", "Effective Rules"),
+                    category_button("How things work", "Mechanics"),
                 ) },
                 scroll_view! { children: GuideResultList { state_path: path, library: library.clone(), elements: Vec::new() } },
                 scroll_view! { children: GuideLines::new(path.detail()) },
@@ -3425,6 +3453,18 @@ mod tests {
     use crate::state::discovery::DiscoveryState;
     use crate::state::quests::{QuestEntry, QuestHuntObjectiveEntry, QuestRequirementEntry};
     use crate::world::{TownPoi, TownPoiKind};
+
+    #[test]
+    fn item_pages_show_a_name_and_a_type_in_words_not_ids_or_constants() {
+        let item = reference_data().item_by_id(501).expect("Red Potion");
+        let lines = item_details(item, false);
+        assert_eq!(lines[0], "Red Potion");
+        assert!(lines[1].starts_with("Type: Healing"), "{lines:?}");
+        assert!(
+            lines.iter().all(|line| !line.contains("(ID ") && !line.contains("IT_")),
+            "{lines:?}"
+        );
+    }
 
     #[test]
     fn guide_labels_untranslated_script_effects_and_missing_fields() {
@@ -3666,7 +3706,8 @@ mod tests {
         let target = parse_guide_link(status_link).expect("status link is an actionable Guide link");
         assert_eq!(target.kind, "status");
         let status_lines = resolve_details(&target).join("\n");
-        assert!(status_lines.contains("SC_BLESSING (status ID 30)"));
+        assert!(status_lines.lines().any(|line| line == "SC_BLESSING"), "{status_lines}");
+        assert!(!status_lines.contains("status ID"), "no raw ids for players: {status_lines}");
         assert!(status_lines.contains("@guide:skill:34|Associated skill: Blessing (AL_BLESSING)"));
     }
 
@@ -3835,7 +3876,7 @@ mod tests {
             .expect("Blessing status name");
         let details = super::status_details(blessing).join("\n");
         assert!(details.contains("Verified server metadata from renewal sc_config.conf"));
-        assert!(details.contains("SC_BLESSING (status ID 30)"));
+        assert!(details.lines().any(|line| line == "SC_BLESSING"), "{details}");
         assert!(details.contains(
             "Server lifecycle rules: classified by the server as a buff; cannot be applied to boss monsters; not cleared when MADO Gear \
              is removed; cannot be applied while the target is in a no-magic state."
@@ -3893,7 +3934,14 @@ mod tests {
             .find_map(|line| parse_guide_link(line))
             .expect("job skill must be clickable");
         assert_eq!(linked_skill.kind, "skill");
-        assert!(resolve_details(&linked_skill).iter().any(|line| line.contains("Skill identifier:")));
+        // The link resolves to that skill's own page (its tooltip header),
+        // not a fallback. Checked by content: the page no longer shows ids.
+        let skill = reference_data().skill_by_id(linked_skill.id).expect("linked skill exists");
+        let details = resolve_details(&linked_skill);
+        assert!(
+            details.first().is_some_and(|line| line.contains(&skill.description)),
+            "{details:?}"
+        );
     }
 
     #[test]
