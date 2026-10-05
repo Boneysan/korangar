@@ -71,9 +71,20 @@ def unmodelled_settings(settings: dict[str, dict[str, Any]]) -> list[str]:
 
 
 def level_modifier(table: dict[str, dict[str, dict[int, int]]], boss: bool, monster_level: int, player_level: int) -> int:
-    """Item drop modifier in percent: the row at the exact level difference, else 100."""
-    rows = table["ITEM_DROP_PENALTY_RATE"]["RC_Boss" if boss else "RC_NonBoss"]
-    return rows.get(monster_level - player_level, 100)
+    """Item drop modifier in percent: the row at the exact level difference, else 100.
+
+    `pc_level_penalty_mod` (src/map/pc.c) walks the races in order and takes
+    the first row set at that difference. A boss starts at `RC_Boss`, and when
+    that row is empty it carries on to `RC_NonBoss`; a non-boss never reads
+    the boss row. This server's boss table lists only difference 0, so bosses
+    take the non-boss rows everywhere else (as the Guide's level-difference
+    rule says). The parser admits no other races.
+    """
+    rows = table["ITEM_DROP_PENALTY_RATE"]
+    diff = monster_level - player_level
+    if boss and diff in rows.get("RC_Boss", {}):
+        return rows["RC_Boss"][diff]
+    return rows.get("RC_NonBoss", {}).get(diff, 100)
 
 
 def effective_rate(base: int, modifier: int, threshold: int) -> int:

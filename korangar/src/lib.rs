@@ -139,7 +139,7 @@ use crate::settings::{
     IN_GAME_THEMES_PATH, LightingMode, MENU_THEMES_PATH, ServiceSettingsPathExt, WORLD_THEMES_PATH, should_render_ground_item,
 };
 use crate::state::character_creation::{CharacterCreationPathExt, CharacterSex, HairStyle, StatSpread};
-use crate::state::commission_board::CommissionReply;
+use crate::state::commission_board::{CommissionReply, LIST_COMMAND, commission_command};
 use crate::state::quests::{ClientHuntingGoalEntry, QuestEntry, QuestHuntObjectiveEntry, QuestLocationEntry, QuestRequirementEntry};
 use crate::state::skills::{LearnedSkill, SkillTreeLayoutPathExt, bring_skill_to_level};
 use crate::state::theme::{InterfaceTheme, InterfaceThemeType, WorldTheme};
@@ -5180,6 +5180,8 @@ impl Client {
                     self.audio_engine.play_sound_effect(self.main_menu_click_sound_effect);
                     self.client_state.follow_mut(client_state().party_state()).clear();
                     self.client_state.follow_mut(client_state().skill_tree()).clear();
+                    // The board's `mine` / `yours` flags belong to the previous character.
+                    self.client_state.follow_mut(client_state().commission_board()).clear();
                     self.client_state.follow_mut(client_state().hotbar()).clear();
 
                     let Some(saved_login_data) = self.saved_login_data.as_ref() else {
@@ -5719,7 +5721,15 @@ impl Client {
                     let dmj_packet = !discovery_packet
                         && matches!(color, MessageColor::Server)
                         && self.client_state.follow_mut(client_state().dm_journal()).receive_server_line(&text);
-                    if !discovery_packet && !dmj_packet {
+                    // The shared commission board's list arrives as `[CMB]` lines (F31).
+                    let board_packet = !discovery_packet
+                        && !dmj_packet
+                        && matches!(color, MessageColor::Server)
+                        && self
+                            .client_state
+                            .follow_mut(client_state().commission_board())
+                            .receive_server_line(&text);
+                    if !discovery_packet && !dmj_packet && !board_packet {
                         self.client_state
                             .follow_mut(client_state().chat_messages())
                             .push(ChatMessage::new(text, color));
@@ -6595,6 +6605,16 @@ impl Client {
                                 amount,
                                 label,
                             );
+                            // An accepted offer leaves the bag, as in the official
+                            // client: Hercules never says so on completion
+                            // (`trade.c` deletes with `type = 1`), and on cancel it
+                            // re-adds every offered item (`trade_tradecancel` ->
+                            // `clif->additem`). Keeping it in view doubled the stack
+                            // after a cancel. Pinned server-side by the
+                            // `trade-cancel-returns-offered-items` scenario.
+                            self.client_state
+                                .follow_mut(client_state().inventory())
+                                .remove_item(inventory_index, amount.min(u32::from(u16::MAX)) as u16);
                         }
                     } else {
                         self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
@@ -6615,30 +6635,10 @@ impl Client {
                         .push(ChatMessage::new("Trade cancelled.".to_owned(), MessageColor::Information));
                 }
                 NetworkEvent::TradeCompleted { success } => {
-                    // **The server never tells us these left.** `trade.c:600` deletes
-                    // the traded items with `type = 1`, and `pc.c:4960` reads that
-                    // flag as *suppress the client notification* -- so no 0x07FA and
-                    // no 0x00AF arrive for our own side, by design. The official
-                    // client removes them locally, because it already knows what it
-                    // put in the window, and so must we. The partner's client is
-                    // notified normally via `pc->additem`, which is why only the
-                    // giver saw a phantom item.
-                    //
-                    // Read before `clear()`, which drops `our_items` outright.
-                    if success {
-                        let given: Vec<_> = self
-                            .client_state
-                            .follow(client_state().trade_state())
-                            .our_items()
-                            .iter()
-                            .filter_map(|item| item.inventory_index.map(|index| (index, item.amount)))
-                            .collect();
-                        for (index, amount) in given {
-                            self.client_state
-                                .follow_mut(client_state().inventory())
-                                .remove_item(index, amount.min(u32::from(u16::MAX)) as u16);
-                        }
-                    }
+                    // Nothing to remove here: the server never reports our given
+                    // items leaving (`trade.c` deletes with `type = 1`), so they left
+                    // the bag when each offer was accepted (`TradeAddItemResult`).
+                    // A failed trade is cancelled server-side, which re-adds them.
                     self.client_state.follow_mut(client_state().trade_state()).clear();
                     self.interface.close_window_with_class(WindowClass::Trade);
                     let msg = if success {
@@ -6980,6 +6980,8 @@ impl Client {
 
                     self.client_state.follow_mut(client_state().party_state()).clear();
                     self.client_state.follow_mut(client_state().skill_tree()).clear();
+                    // The board's `mine` / `yours` flags belong to the previous character.
+                    self.client_state.follow_mut(client_state().commission_board()).clear();
                     self.client_state.follow_mut(client_state().hotbar()).clear();
                     self.client_state.follow_mut(client_state().quest_log()).clear();
                     self.client_state.follow_mut(client_state().recovery()).clear();
@@ -10316,22 +10318,14 @@ impl Client {
 
                     // Crafting Commission Board (F31, Decision D7 - non-custodial).
                     if text.as_str() == "/commission" || text.starts_with("/commission ") {
+                        // The board lives on the server (F31). Its commands go straight
+                        // to it, without the `> @...` echo typed atcommands get; the
+                        // reply is a `[CMB]` list plus a plain result line.
                         let player_name = self.client_state.follow(client_state().player_name()).to_owned();
-                        let args = text.trim_start_matches("/commission");
-                        match self
-                            .client_state
-                            .follow_mut(client_state().commission_board())
-                            .run_command(&player_name, args)
-                        {
-                            CommissionReply::ToggleWindow => {
-                                if self.map.is_some() {
-                                    match self.interface.is_window_with_class_open(WindowClass::CommissionBoard) {
-                                        true => self.interface.close_window_with_class(WindowClass::CommissionBoard),
-                                        false => self
-                                            .interface
-                                            .open_window(CommissionBoardWindow::new(client_state().commission_board_window())),
-                                    }
-                                }
+                        match commission_command(text.trim_start_matches("/commission")) {
+                            CommissionReply::ToggleWindow => self.input_event_buffer.push(InputEvent::ToggleCommissionBoardWindow),
+                            CommissionReply::Send(command) => {
+                                let _ = self.networking_system.send_chat_message(&player_name, &command);
                             }
                             CommissionReply::Say(line) => self
                                 .client_state
@@ -12381,9 +12375,13 @@ impl Client {
                     if self.map.is_some() {
                         match self.interface.is_window_with_class_open(WindowClass::CommissionBoard) {
                             true => self.interface.close_window_with_class(WindowClass::CommissionBoard),
-                            false => self
-                                .interface
-                                .open_window(CommissionBoardWindow::new(client_state().commission_board_window())),
+                            false => {
+                                self.interface
+                                    .open_window(CommissionBoardWindow::new(client_state().commission_board_window()));
+                                // Opening asks the server for the current board (F31).
+                                let player_name = self.client_state.follow(client_state().player_name()).to_owned();
+                                let _ = self.networking_system.send_chat_message(&player_name, LIST_COMMAND);
+                            }
                         }
                     }
                 }

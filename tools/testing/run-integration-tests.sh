@@ -347,6 +347,7 @@ korangar_upgrades=(
     2026-09-24--19-45.sql # campaign checkpoint and membership
     2026-09-24--19-46.sql # campaign state and pending grants
     2026-09-24--19-47.sql # typed campaign replay journal
+    2026-10-04--20-00.sql # shared crafting commission board (F31)
 )
 for upgrade in "${korangar_upgrades[@]}"; do
     echo "applying Korangar schema upgrade $upgrade"

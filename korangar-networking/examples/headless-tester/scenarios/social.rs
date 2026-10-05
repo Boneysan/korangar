@@ -37,6 +37,8 @@ pub fn scenarios() -> Vec<Scenario> {
         Scenario::new("trade-cancel", 8, trade_cancel),
         Scenario::new("trade-commit", 8, trade_commit),
         Scenario::new("trade-partner-change-after-lock", 8, trade_partner_change_after_lock),
+        Scenario::new("trade-two-way-transfer", 8, trade_two_way_transfer),
+        Scenario::new("trade-cancel-returns-offered-items", 8, trade_cancel_returns_offered_items),
     ]
 }
 
@@ -2635,4 +2637,141 @@ fn trade_partner_change_after_lock(config: &Config) -> Result<(), String> {
     primary.pump(Duration::from_millis(300));
     partner.pump(Duration::from_millis(300));
     result
+}
+
+fn held(context: &TestContext, item_id: u32) -> u32 {
+    context
+        .inventory
+        .iter()
+        .filter(|item| item.item_id.0 == item_id)
+        .map(|item| u32::from(item.amount()))
+        .sum()
+}
+
+/// Zeny as the server has it. A fresh login does not report zeny until it
+/// changes, so this adds one zeny (for real) and returns the new total.
+fn nudged_zeny(context: &mut TestContext) -> Result<u32, String> {
+    context.say("@zeny 1")?;
+    context.wait_for("a zeny update", |event| match event {
+        NetworkEvent::UpdateStat {
+            stat_type: ragnarok_packets::StatType::Zeny(value),
+        } => Some(*value),
+        _ => None,
+    })?;
+    Ok(context.zeny)
+}
+
+/// GDD F28's open item: a real two-client transfer, both ways, checked by
+/// what each side holds afterwards rather than by `TradeCompleted` alone
+/// (`trade-commit` moves one zeny one way and checks nothing). Items and
+/// zeny cross in both directions in one trade; the totals are then read back
+/// from a fresh login, which is the server's own record.
+fn trade_two_way_transfer(config: &Config) -> Result<(), String> {
+    const RED_POTION: u32 = 501;
+    const APPLE: u32 = 512;
+    let (mut primary, mut partner) = connect_pair(config)?;
+
+    let potion_index = primary.give_item(RED_POTION, 7)?;
+    let apple_index = partner.give_item(APPLE, 3)?;
+    primary.say("@zeny 5000")?;
+    partner.say("@zeny 5000")?;
+    let (primary_zeny, partner_zeny) = (nudged_zeny(&mut primary)?, nudged_zeny(&mut partner)?);
+    let before = [
+        (held(&primary, RED_POTION), held(&primary, APPLE)),
+        (held(&partner, RED_POTION), held(&partner, APPLE)),
+    ];
+
+    begin_trade(&mut primary, &mut partner)?;
+    primary.net.trade_add_item(potion_index, 7).map_err(|_| "primary disconnected")?;
+    primary.net.trade_add_zeny(2000).map_err(|_| "primary disconnected")?;
+    partner.net.trade_add_item(apple_index, 3).map_err(|_| "partner disconnected")?;
+    partner.net.trade_add_zeny(500).map_err(|_| "partner disconnected")?;
+    // Both offers are on the other side's screen before anyone locks.
+    primary.wait_for("the partner's apples in the window", |event| match event {
+        NetworkEvent::TradePartnerItem { item_id, amount: 3, .. } if item_id.0 == APPLE => Some(()),
+        _ => None,
+    })?;
+    partner.wait_for("the primary's potions in the window", |event| match event {
+        NetworkEvent::TradePartnerItem { item_id, amount: 7, .. } if item_id.0 == RED_POTION => Some(()),
+        _ => None,
+    })?;
+    primary.net.trade_ok().map_err(|_| "primary disconnected")?;
+    partner.net.trade_ok().map_err(|_| "partner disconnected")?;
+    primary.net.trade_commit().map_err(|_| "primary disconnected")?;
+    partner.net.trade_commit().map_err(|_| "partner disconnected")?;
+    for (side, context) in [("primary", &mut primary), ("partner", &mut partner)] {
+        context.wait_for(&format!("{side}: successful TradeCompleted"), |event| match event {
+            NetworkEvent::TradeCompleted { success: true } => Some(()),
+            _ => None,
+        })?;
+    }
+    primary.pump(Duration::from_millis(500));
+    partner.pump(Duration::from_millis(500));
+
+    // Zeny: each side's live total is the server's (`clif_updatestatus`).
+    let expected_zeny = (primary_zeny - 2000 + 500, partner_zeny - 500 + 2000);
+    if (primary.zeny, partner.zeny) != expected_zeny {
+        return Err(format!(
+            "zeny after the trade: primary {} (expected {}), partner {} (expected {})",
+            primary.zeny, expected_zeny.0, partner.zeny, expected_zeny.1
+        ));
+    }
+
+    // Items: from a fresh login on both sides.
+    drop(primary);
+    drop(partner);
+    let (mut primary, mut partner) = connect_pair(config)?;
+    let after = [
+        (held(&primary, RED_POTION), held(&primary, APPLE)),
+        (held(&partner, RED_POTION), held(&partner, APPLE)),
+    ];
+    let expected = [(before[0].0 - 7, before[0].1 + 3), (before[1].0 + 7, before[1].1 - 3)];
+    if after != expected {
+        return Err(format!(
+            "(potions, apples) after relog: primary {:?} expected {:?}, partner {:?} expected {:?}",
+            after[0], expected[0], after[1], expected[1]
+        ));
+    }
+    // The nudge adds one to each.
+    let zeny = (nudged_zeny(&mut primary)? - 1, nudged_zeny(&mut partner)? - 1);
+    if zeny != expected_zeny {
+        return Err(format!(
+            "zeny after relog {zeny:?}, expected {expected_zeny:?}: the trade was not saved"
+        ));
+    }
+    Ok(())
+}
+
+/// The server fact behind the client hiding an offered item (GDD F28):
+/// Hercules removes traded items with no notification to the giver
+/// (`trade.c`, `pc->delitem(..., 1, ...)`), and on cancel it *re-adds* every
+/// offered item with `clif->additem` (`trade_tradecancel`). That only works
+/// for a client that took the item out of its inventory when the offer was
+/// accepted, as the official client does. A client that keeps it in view
+/// shows the stack doubled after a cancel; this pins the re-add so the client
+/// rule cannot drift from it.
+fn trade_cancel_returns_offered_items(config: &Config) -> Result<(), String> {
+    const RED_POTION: u32 = 501;
+    let (mut primary, mut partner) = connect_pair(config)?;
+    let index = primary.give_item(RED_POTION, 10)?;
+
+    begin_trade(&mut primary, &mut partner)?;
+    primary.net.trade_add_item(index, 7).map_err(|_| "primary disconnected")?;
+    primary.wait_for("the offer accepted", |event| match event {
+        NetworkEvent::TradeAddItemResult {
+            inventory_index,
+            result: 0,
+        } if *inventory_index == index => Some(()),
+        _ => None,
+    })?;
+    primary.flush();
+    primary.net.trade_cancel().map_err(|_| "primary disconnected")?;
+    let returned = primary.wait_for("the offered potions re-added after the cancel", |event| match event {
+        NetworkEvent::IventoryItemAdded { item } if item.index == index => Some(item.amount()),
+        _ => None,
+    })?;
+    if returned != 7 {
+        return Err(format!("the cancel re-added {returned} of the 7 offered potions"));
+    }
+    Ok(())
 }

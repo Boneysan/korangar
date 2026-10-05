@@ -107,10 +107,10 @@ where
     }
 }
 
-fn list_commissions() -> impl Fn(&State<ClientState>, &mut EventQueue<ClientState>) + 'static {
+fn refresh_commissions() -> impl Fn(&State<ClientState>, &mut EventQueue<ClientState>) + 'static {
     move |_, queue| {
         queue.queue(InputEvent::SendMessage {
-            text: "/commission list".to_string(),
+            text: "/commission refresh".to_string(),
         });
     }
 }
@@ -152,7 +152,7 @@ where
             closable: true,
             elements: (
                 text! {
-                    text: "Your own commission list, kept on this client only: other players do not see it. Tell crafters yourself, and trade materials and zeny directly (non-custodial).",
+                    text: "Requests every player on the server can see. Only the poster can assign, complete or cancel one. Materials and payment are traded directly; the board holds nothing (non-custodial).",
                     overflow_behavior: OverflowBehavior::LineBreak,
                 },
                 text! {
@@ -182,13 +182,13 @@ where
                     children: (
                         button! {
                             text: "Post Request",
-                            tooltip: "Add a request to your list (other players do not see it)",
+                            tooltip: "Post a request for every player to see (at most 5 open at once)",
                             event: post_commission(item_path, fee_path),
                         },
                         button! {
-                            text: "Copy list to chat",
-                            tooltip: "Print your active requests in chat",
-                            event: list_commissions(),
+                            text: "Refresh",
+                            tooltip: "Fetch the board from the server",
+                            event: refresh_commissions(),
                         },
                     ),
                 },

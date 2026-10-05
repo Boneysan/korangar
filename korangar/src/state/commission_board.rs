@@ -1,206 +1,165 @@
-//! Non-custodial crafting commission board (GDD §12.4 / F31, Decision D7).
+//! Shared crafting commission board (GDD §12.4 / F31, Decision D7).
 //!
-//! Provides a tracker for player crafting commissions (weapons, armor,
-//! potions, arrows). **It is local to this client**: nothing is sent to the
-//! server or to other players, so it is the requester's own ledger, not a
-//! shared board, until a server half exists. Adheres strictly to Decision D7:
-//! NO automated escrow or asset custody. Materials and compensation
-//! Zeny must be transferred directly via peer-to-peer trade windows.
-//! All requests explicitly disclose crafting failure risks.
+//! The board lives on the server (Hercules `npc/custom/commission_board.txt`,
+//! table `korangar_commission`): every player sees the same requests, and
+//! only a request's poster may assign, complete or cancel it. This client
+//! state is a read-only mirror of the list the server last sent, plus the
+//! translation from `/commission` to the server's `@commission` command.
+//!
+//! The list arrives as `[CMB]{json}` lines on the server-message channel
+//! (`dispbottom`), the same shape as the campaign's `[DMJ]` lines: `begin`,
+//! one `row` per request, then `end`. The mirror is replaced only on `end`,
+//! so a list cut off part-way never shows half a board.
+//!
+//! Non-custodial: materials, the item and the fee move by ordinary player
+//! trade. Nothing here, or on the server, holds them.
 
-use ragnarok_packets::ItemId;
+use serde_json::Value;
 
-pub const NON_CUSTODIAL_RISK_DISCLOSURE: &str = "Non-custodial: Materials & payment must be traded directly. No automated escrow. \
-                                                 Crafting failure risk borne by requester unless negotiated.";
+pub const NON_CUSTODIAL_RISK_DISCLOSURE: &str = "Non-custodial: materials and payment are traded directly. No escrow. Crafting failure \
+                                                 risk is borne by the requester unless negotiated.";
 
-/// Status of a commission request.
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Default)]
+const PREFIX: &str = "[CMB]";
+const VERSION: u64 = 1;
+/// The server sends at most 50 rows; anything far past that is not ours.
+const MAX_ROWS: usize = 200;
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum CommissionStatus {
-    #[default]
     Open,
     Assigned,
-    Completed,
-    Cancelled,
 }
 
-impl CommissionStatus {
-    pub const fn label(self) -> &'static str {
-        match self {
-            Self::Open => "Open",
-            Self::Assigned => "In Progress",
-            Self::Completed => "Completed",
-            Self::Cancelled => "Cancelled",
-        }
-    }
-}
-
-/// A single commission board request.
+/// One request as the server described it.
 #[derive(Clone, Debug, PartialEq, Eq)]
-pub struct CommissionRequest {
+pub struct CommissionRow {
     pub id: u32,
+    pub item_name: String,
+    pub fee: u32,
     pub requester_name: String,
-    pub requested_item_id: ItemId,
-    pub requested_item_name: String,
-    pub materials_summary: String,
-    pub desired_refine: u8,
-    pub compensation_zeny: u32,
-    pub assigned_crafter: Option<String>,
-    pub risk_disclosure: String,
+    pub crafter_name: String,
     pub status: CommissionStatus,
+    /// The viewing character posted it.
+    pub mine: bool,
+    /// The viewing character is its assigned crafter.
+    pub yours: bool,
 }
 
-impl CommissionRequest {
+impl CommissionRow {
+    fn from_json(message: &Value) -> Option<Self> {
+        let text = |key: &str| message.get(key).and_then(Value::as_str).map(str::to_owned);
+        let number = |key: &str| message.get(key).and_then(Value::as_u64).and_then(|value| u32::try_from(value).ok());
+        let flag = |key: &str| message.get(key).and_then(Value::as_u64) == Some(1);
+        Some(Self {
+            id: number("id")?,
+            item_name: text("item")?,
+            fee: number("fee")?,
+            requester_name: text("by")?,
+            crafter_name: text("crafter")?,
+            status: match message.get("status")?.as_str()? {
+                "open" => CommissionStatus::Open,
+                "assigned" => CommissionStatus::Assigned,
+                _ => return None,
+            },
+            mine: flag("mine"),
+            yours: flag("yours"),
+        })
+    }
+
     pub fn format_row(&self) -> String {
-        let crafter = self.assigned_crafter.as_deref().unwrap_or("None");
-        let refine = if self.desired_refine > 0 {
-            format!(" +{}", self.desired_refine)
-        } else {
-            String::new()
+        let state = match self.status {
+            CommissionStatus::Open => "open".to_owned(),
+            CommissionStatus::Assigned => format!("with {}", self.crafter_name),
+        };
+        let note = match (self.mine, self.yours) {
+            (true, _) => " (your request)",
+            (_, true) => " (yours to craft)",
+            _ => "",
         };
         format!(
-            "#{}: {}{} [{}] — Req: {}, Fee: {}z, Crafter: {} (Materials: {})",
-            self.id,
-            self.requested_item_name,
-            refine,
-            self.status.label(),
-            self.requester_name,
-            self.compensation_zeny,
-            crafter,
-            self.materials_summary
+            "#{} {} for {}z, by {}, {state}{note}",
+            self.id, self.item_name, self.fee, self.requester_name
         )
     }
 }
 
-/// Board state maintaining open, active, and completed commissions.
+/// The client's mirror of the server's board.
 #[derive(Clone, Debug, Default)]
 pub struct CommissionBoardState {
-    requests: Vec<CommissionRequest>,
-    next_id: u32,
+    rows: Vec<CommissionRow>,
+    /// Rows of a list still arriving; `None` outside `begin` .. `end`.
+    incoming: Option<Vec<CommissionRow>>,
+    /// Whether any complete list has arrived yet.
+    received: bool,
+    /// Lines that had the prefix but could not be understood.
+    dropped: u32,
 }
 
 impl CommissionBoardState {
-    /// Post a new commission request. Returns the allocated request ID.
-    pub fn post_request(
-        &mut self,
-        requester_name: &str,
-        requested_item_id: ItemId,
-        requested_item_name: &str,
-        materials_summary: &str,
-        desired_refine: u8,
-        compensation_zeny: u32,
-    ) -> u32 {
-        self.next_id = self.next_id.saturating_add(1).max(1);
-        let id = self.next_id;
-
-        let request = CommissionRequest {
-            id,
-            requester_name: requester_name.to_owned(),
-            requested_item_id,
-            requested_item_name: requested_item_name.to_owned(),
-            materials_summary: materials_summary.to_owned(),
-            desired_refine,
-            compensation_zeny,
-            assigned_crafter: None,
-            risk_disclosure: NON_CUSTODIAL_RISK_DISCLOSURE.to_owned(),
-            status: CommissionStatus::Open,
+    /// Take one server-message line. Returns true when the line belongs to
+    /// the board (understood or not), so it stays out of chat.
+    pub fn receive_server_line(&mut self, text: &str) -> bool {
+        let Some(body) = text.strip_prefix(PREFIX) else {
+            return false;
         };
-
-        self.requests.push(request);
-        id
+        if !self.apply(body) {
+            self.dropped = self.dropped.saturating_add(1);
+        }
+        true
     }
 
-    /// Cancel an existing request. Only the original requester may cancel.
-    pub fn cancel_request(&mut self, id: u32, requester_name: &str) -> Result<(), &'static str> {
-        let req = self
-            .requests
-            .iter_mut()
-            .find(|r| r.id == id)
-            .ok_or("Commission request not found")?;
-
-        if req.status == CommissionStatus::Completed {
-            return Err("Cannot cancel a completed commission");
+    fn apply(&mut self, body: &str) -> bool {
+        let Ok(message) = serde_json::from_str::<Value>(body.trim()) else {
+            return false;
+        };
+        if message.get("v").and_then(Value::as_u64) != Some(VERSION) {
+            return false;
         }
-        if req.status == CommissionStatus::Cancelled {
-            return Err("Commission is already cancelled");
+        match message.get("t").and_then(Value::as_str) {
+            Some("begin") => {
+                self.incoming = Some(Vec::new());
+                true
+            }
+            Some("row") => match (self.incoming.as_mut(), CommissionRow::from_json(&message)) {
+                (Some(rows), Some(row)) if rows.len() < MAX_ROWS => {
+                    rows.push(row);
+                    true
+                }
+                _ => false,
+            },
+            Some("end") => match self.incoming.take() {
+                Some(rows) => {
+                    self.rows = rows;
+                    self.received = true;
+                    true
+                }
+                None => false,
+            },
+            _ => false,
         }
-        if !req.requester_name.eq_ignore_ascii_case(requester_name) {
-            return Err("Only the original requester may cancel this commission");
-        }
-
-        req.status = CommissionStatus::Cancelled;
-        Ok(())
     }
 
-    /// Assign a crafter to a commission request. Only the requester may.
-    pub fn assign_crafter(&mut self, id: u32, requester_name: &str, crafter_name: &str) -> Result<(), &'static str> {
-        let req = self
-            .requests
-            .iter_mut()
-            .find(|r| r.id == id)
-            .ok_or("Commission request not found")?;
-
-        if !req.requester_name.eq_ignore_ascii_case(requester_name) {
-            return Err("Only the original requester may assign a crafter");
-        }
-        if crafter_name.trim().is_empty() {
-            return Err("Name the crafter to assign");
-        }
-        if req.status != CommissionStatus::Open {
-            return Err("Commission is not open for assignment");
-        }
-
-        req.assigned_crafter = Some(crafter_name.trim().to_owned());
-        req.status = CommissionStatus::Assigned;
-        Ok(())
-    }
-
-    /// Mark a commission request as completed once the peer trade is done.
-    /// Only the requester may: they are the one who received the item.
-    pub fn complete_request(&mut self, id: u32, requester_name: &str) -> Result<(), &'static str> {
-        let req = self
-            .requests
-            .iter_mut()
-            .find(|r| r.id == id)
-            .ok_or("Commission request not found")?;
-
-        if !req.requester_name.eq_ignore_ascii_case(requester_name) {
-            return Err("Only the original requester may mark this commission complete");
-        }
-
-        if req.status != CommissionStatus::Assigned && req.status != CommissionStatus::Open {
-            return Err("Commission cannot be completed from its current status");
-        }
-
-        req.status = CommissionStatus::Completed;
-        Ok(())
-    }
-
-    /// Get all currently active (open or assigned) commission requests.
-    pub fn active_requests(&self) -> Vec<&CommissionRequest> {
-        self.requests
-            .iter()
-            .filter(|r| r.status == CommissionStatus::Open || r.status == CommissionStatus::Assigned)
-            .collect()
-    }
-
-    /// Get a request by its unique ID.
     #[cfg(test)]
-    pub fn get_request(&self, id: u32) -> Option<&CommissionRequest> {
-        self.requests.iter().find(|r| r.id == id)
+    pub fn rows(&self) -> &[CommissionRow] {
+        &self.rows
     }
 
-    /// Format summary list of active requests.
-    pub fn format_list(&self) -> String {
-        let active = self.active_requests();
-        if active.is_empty() {
-            return "No active commission requests on the board.".to_owned();
-        }
+    /// Forget the board, e.g. on logout: the next character sees its own
+    /// `mine` / `yours` flags only after the server sends them.
+    pub fn clear(&mut self) {
+        *self = Self::default();
+    }
 
-        let mut lines = vec!["=== Active Commission Board ===".to_owned()];
-        for req in active {
-            lines.push(req.format_row());
+    pub fn format_list(&self) -> String {
+        if !self.received {
+            return "Loading the board from the server...".to_owned();
         }
-        lines.push(format!("Note: {NON_CUSTODIAL_RISK_DISCLOSURE}"));
+        if self.rows.is_empty() {
+            return "No open commissions. Post one below.".to_owned();
+        }
+        // Decision D7: every listed request carries the failure-risk disclosure.
+        let mut lines: Vec<String> = self.rows.iter().map(CommissionRow::format_row).collect();
+        lines.push(NON_CUSTODIAL_RISK_DISCLOSURE.to_owned());
         lines.join("\n")
     }
 }
@@ -208,74 +167,54 @@ impl CommissionBoardState {
 /// What a `/commission` command asks the client to do.
 #[derive(Debug, PartialEq, Eq)]
 pub enum CommissionReply {
-    /// Open or close the board window.
+    /// Open or close the board window, and refresh it from the server.
     ToggleWindow,
-    /// Print this line in chat.
+    /// Send this `@commission` command to the server.
+    Send(String),
+    /// Print this line in chat, sending nothing.
     Say(String),
 }
 
-const USAGE: &str = "Usage: /commission <board | list | post <item> [fee] | assign <id> <crafter> | complete <id> | cancel <id>>";
+const USAGE: &str = "Usage: /commission [post <item> [fee] | assign <id> <crafter> | complete <id> | cancel <id>]";
+
+/// The server command that refreshes the list.
+pub const LIST_COMMAND: &str = "@commission list";
 
 /// Split `post`'s arguments into item name and fee. Item names have spaces
 /// ("Fire Damascus"), so the fee is the last word only when it is all digits
 /// and something comes before it.
-fn split_item_and_fee(rest: &[&str]) -> (String, u32) {
+fn split_item_and_fee<'a>(rest: &[&'a str]) -> (String, Option<&'a str>) {
     match rest.split_last() {
-        Some((last, name)) if !name.is_empty() && last.chars().all(|c| c.is_ascii_digit()) => {
-            (name.join(" "), last.parse().unwrap_or(u32::MAX))
-        }
-        _ => (rest.join(" "), 0),
+        Some((last, name)) if !name.is_empty() && last.chars().all(|c| c.is_ascii_digit()) => (name.join(" "), Some(last)),
+        _ => (rest.join(" "), None),
     }
 }
 
-impl CommissionBoardState {
-    /// Run one `/commission` command for `player_name`. `args` is everything
-    /// after `/commission`.
-    pub fn run_command(&mut self, player_name: &str, args: &str) -> CommissionReply {
-        let words: Vec<&str> = args.split_whitespace().collect();
-        let id = |index: usize| words.get(index).and_then(|word| word.trim_start_matches('#').parse::<u32>().ok());
-        let say = CommissionReply::Say;
+/// Translate one `/commission` command (`args` is everything after it) into
+/// what the server understands. The server decides whether it is allowed.
+pub fn commission_command(args: &str) -> CommissionReply {
+    let words: Vec<&str> = args.split_whitespace().collect();
+    let id = words
+        .get(1)
+        .map(|word| word.trim_start_matches('#'))
+        .filter(|word| !word.is_empty() && word.chars().all(|c| c.is_ascii_digit()));
 
-        match words.first().copied().unwrap_or("board") {
-            "board" | "window" | "open" => CommissionReply::ToggleWindow,
-            "list" => say(self.format_list()),
-            "post" => {
-                let (item_name, fee) = split_item_and_fee(&words[1..]);
-                if item_name.is_empty() {
-                    return say("Usage: /commission post <item name> [zeny fee]".to_owned());
-                }
-                let id = self.post_request(player_name, ItemId(0), &item_name, "Negotiated via peer trade", 0, fee);
-                say(format!(
-                    "Posted commission #{id} for {item_name} (fee {fee}z). It is on this client only: tell crafters yourself, and trade \
-                     items and zeny directly."
-                ))
-            }
-            "assign" => match id(1) {
-                Some(id) => {
-                    let crafter = words[2..].join(" ");
-                    match self.assign_crafter(id, player_name, &crafter) {
-                        Ok(()) => say(format!("Commission #{id} is now with {crafter}.")),
-                        Err(error) => say(format!("Cannot assign commission #{id}: {error}.")),
-                    }
-                }
-                None => say("Usage: /commission assign <id> <crafter name>".to_owned()),
-            },
-            "complete" | "done" => match id(1) {
-                Some(id) => match self.complete_request(id, player_name) {
-                    Ok(()) => say(format!("Commission #{id} marked complete.")),
-                    Err(error) => say(format!("Cannot complete commission #{id}: {error}.")),
-                },
-                None => say("Usage: /commission complete <id>".to_owned()),
-            },
-            "cancel" => match id(1) {
-                Some(id) => match self.cancel_request(id, player_name) {
-                    Ok(()) => say(format!("Cancelled commission #{id}.")),
-                    Err(error) => say(format!("Cannot cancel commission #{id}: {error}.")),
-                },
-                None => say("Usage: /commission cancel <id>".to_owned()),
-            },
-            _ => say(USAGE.to_owned()),
-        }
+    match words.first().copied().unwrap_or("board") {
+        "board" | "window" | "open" | "list" => CommissionReply::ToggleWindow,
+        "refresh" => CommissionReply::Send(LIST_COMMAND.to_owned()),
+        "post" => match split_item_and_fee(&words[1..]) {
+            (item, _) if item.is_empty() => CommissionReply::Say("Usage: /commission post <item name> [zeny fee]".to_owned()),
+            (item, fee) => CommissionReply::Send(format!("@commission post {} {item}", fee.unwrap_or("0"))),
+        },
+        "assign" => match (id, words.len() > 2) {
+            (Some(id), true) => CommissionReply::Send(format!("@commission assign {id} {}", words[2..].join(" "))),
+            _ => CommissionReply::Say("Usage: /commission assign <id> <crafter name>".to_owned()),
+        },
+        action @ ("complete" | "cancel") => match id {
+            Some(id) => CommissionReply::Send(format!("@commission {action} {id}")),
+            None => CommissionReply::Say(format!("Usage: /commission {action} <id>")),
+        },
+        _ => CommissionReply::Say(USAGE.to_owned()),
     }
 }
 
@@ -283,131 +222,123 @@ impl CommissionBoardState {
 mod tests {
     use super::*;
 
-    #[test]
-    fn commission_board_lifecycle_and_non_custodial_disclosure() {
-        let mut board = CommissionBoardState::default();
-
-        let id = board.post_request(
-            "Alice",
-            ItemId(1201), // Knife
-            "Fire Stiletto +5",
-            "Steel x5, Flame Heart x1 provided",
-            5,
-            50_000,
-        );
-
-        assert_eq!(id, 1);
-        let req = board.get_request(id).expect("request exists");
-        assert_eq!(req.status, CommissionStatus::Open);
-        assert_eq!(req.requester_name, "Alice");
-        assert_eq!(req.compensation_zeny, 50_000);
-        assert_eq!(req.risk_disclosure, NON_CUSTODIAL_RISK_DISCLOSURE);
-
-        // Assign crafter
-        assert!(board.assign_crafter(id, "Alice", "BobTheSmith").is_ok());
-        let assigned = board.get_request(id).unwrap();
-        assert_eq!(assigned.status, CommissionStatus::Assigned);
-        assert_eq!(assigned.assigned_crafter.as_deref(), Some("BobTheSmith"));
-
-        // Complete commission
-        assert!(board.complete_request(id, "Alice").is_ok());
-        let completed = board.get_request(id).unwrap();
-        assert_eq!(completed.status, CommissionStatus::Completed);
-        assert!(board.active_requests().is_empty());
+    /// A line exactly as `commission_board.txt`'s S_List builds it.
+    fn row(id: u32, item: &str, status: &str, mine: u8, yours: u8) -> String {
+        format!(
+            "[CMB]{{\"t\":\"row\",\"v\":1,\"id\":{id},\"item\":\"{item}\",\"fee\":50000,\"by\":\"Alice\",\"crafter\":\"Bob\",\"status\":\"\
+             {status}\",\"mine\":{mine},\"yours\":{yours}}}"
+        )
     }
 
-    #[test]
-    fn cancellation_requires_requester_authorization() {
-        let mut board = CommissionBoardState::default();
-
-        let id = board.post_request("Alice", ItemId(501), "Red Potion x100", "Herb x100 provided", 0, 10_000);
-
-        // Unauthorized cancel fails
-        assert_eq!(
-            board.cancel_request(id, "Mallory"),
-            Err("Only the original requester may cancel this commission")
-        );
-
-        // Requester cancel succeeds
-        assert!(board.cancel_request(id, "Alice").is_ok());
-        assert_eq!(board.get_request(id).unwrap().status, CommissionStatus::Cancelled);
-
-        // Double cancel fails
-        assert_eq!(board.cancel_request(id, "Alice"), Err("Commission is already cancelled"));
-    }
-
-    fn reply(board: &mut CommissionBoardState, player: &str, args: &str) -> String {
-        match board.run_command(player, args) {
-            CommissionReply::Say(line) => line,
-            CommissionReply::ToggleWindow => "<window>".to_owned(),
+    fn feed(board: &mut CommissionBoardState, lines: &[String]) {
+        for line in lines {
+            assert!(board.receive_server_line(line), "{line}");
         }
     }
 
     #[test]
-    fn post_keeps_multi_word_item_names_and_the_fee() {
+    fn a_complete_list_replaces_the_board() {
         let mut board = CommissionBoardState::default();
-        reply(&mut board, "Alice", "post Fire Damascus 50000");
-        let request = board.get_request(1).expect("posted");
-        assert_eq!(request.requested_item_name, "Fire Damascus");
-        assert_eq!(request.compensation_zeny, 50_000);
-
-        // No fee: every word is the name. A lone number is a name, not a fee.
-        reply(&mut board, "Alice", "post White Slim Potion");
-        assert_eq!(board.get_request(2).unwrap().requested_item_name, "White Slim Potion");
-        assert_eq!(board.get_request(2).unwrap().compensation_zeny, 0);
-        reply(&mut board, "Alice", "post 100");
-        assert_eq!(board.get_request(3).unwrap().requested_item_name, "100");
-        assert_eq!(board.get_request(3).unwrap().compensation_zeny, 0);
-        assert!(reply(&mut board, "Alice", "post").starts_with("Usage"));
-    }
-
-    #[test]
-    fn assign_then_complete_through_commands() {
-        let mut board = CommissionBoardState::default();
-        reply(&mut board, "Alice", "post Fire Damascus 50000");
-
+        assert!(board.format_list().starts_with("Loading"));
+        feed(&mut board, &[
+            "[CMB]{\"t\":\"begin\",\"v\":1,\"n\":2}".to_owned(),
+            row(3, "Fire Damascus", "assigned", 1, 0),
+            row(2, "Red Potion", "open", 0, 0),
+            "[CMB]{\"t\":\"end\",\"v\":1}".to_owned(),
+        ]);
+        assert_eq!(board.rows().len(), 2);
+        assert_eq!(board.rows()[0].status, CommissionStatus::Assigned);
         assert_eq!(
-            reply(&mut board, "Alice", "assign 1 Bob the Smith"),
-            "Commission #1 is now with Bob the Smith."
+            board.format_list(),
+            format!(
+                "#3 Fire Damascus for 50000z, by Alice, with Bob (your request)\n#2 Red Potion for 50000z, by Alice, \
+                 open\n{NON_CUSTODIAL_RISK_DISCLOSURE}"
+            )
         );
-        let request = board.get_request(1).unwrap();
-        assert_eq!(request.status, CommissionStatus::Assigned);
-        assert_eq!(request.assigned_crafter.as_deref(), Some("Bob the Smith"));
-        assert!(board.format_list().contains("In Progress"), "{}", board.format_list());
 
-        // "#1" is accepted as well as "1", since that is how the list prints ids.
-        assert_eq!(reply(&mut board, "Alice", "complete #1"), "Commission #1 marked complete.");
-        assert_eq!(board.get_request(1).unwrap().status, CommissionStatus::Completed);
-        assert!(board.active_requests().is_empty());
+        // An empty list is a real answer, not "loading".
+        feed(&mut board, &[
+            "[CMB]{\"t\":\"begin\",\"v\":1,\"n\":0}".to_owned(),
+            "[CMB]{\"t\":\"end\",\"v\":1}".to_owned(),
+        ]);
+        assert!(board.rows().is_empty());
+        assert!(board.format_list().starts_with("No open commissions"));
     }
 
     #[test]
-    fn only_the_requester_assigns_or_completes() {
+    fn a_list_cut_off_before_end_leaves_the_old_board() {
         let mut board = CommissionBoardState::default();
-        reply(&mut board, "Alice", "post Red Potion 100");
-
-        assert!(reply(&mut board, "Mallory", "assign 1 Mallory").contains("Only the original requester"));
-        assert!(reply(&mut board, "Mallory", "complete 1").contains("Only the original requester"));
-        assert_eq!(board.get_request(1).unwrap().status, CommissionStatus::Open);
+        feed(&mut board, &[
+            "[CMB]{\"t\":\"begin\",\"v\":1,\"n\":1}".to_owned(),
+            row(1, "Red Potion", "open", 0, 0),
+            "[CMB]{\"t\":\"end\",\"v\":1}".to_owned(),
+        ]);
+        feed(&mut board, &[
+            "[CMB]{\"t\":\"begin\",\"v\":1,\"n\":2}".to_owned(),
+            row(5, "Sword", "open", 0, 0),
+        ]);
+        assert_eq!(board.rows().len(), 1);
+        assert_eq!(board.rows()[0].id, 1);
     }
 
     #[test]
-    fn assign_refuses_a_missing_crafter_and_a_closed_request() {
+    fn foreign_and_malformed_lines_are_handled_apart() {
         let mut board = CommissionBoardState::default();
-        reply(&mut board, "Alice", "post Red Potion");
-
-        assert!(reply(&mut board, "Alice", "assign 1").contains("Name the crafter"));
-        assert!(reply(&mut board, "Alice", "assign").starts_with("Usage"));
-        assert!(reply(&mut board, "Alice", "assign 9 Bob").contains("not found"));
-        reply(&mut board, "Alice", "cancel 1");
-        assert!(reply(&mut board, "Alice", "assign 1 Bob").contains("not open"));
-        assert!(reply(&mut board, "Alice", "complete 1").contains("cannot be completed"));
+        // Ordinary server text is not ours and goes to chat.
+        assert!(!board.receive_server_line("Commission #3 posted: Fire Damascus for 50000z."));
+        // Ours but unreadable: kept out of chat, counted, board unchanged.
+        assert!(board.receive_server_line("[CMB]not json"));
+        assert!(board.receive_server_line("[CMB]{\"t\":\"begin\",\"v\":2,\"n\":0}"));
+        assert!(board.receive_server_line("[CMB]{\"t\":\"end\",\"v\":1}"));
+        assert_eq!(board.dropped, 3);
+        assert!(board.format_list().starts_with("Loading"));
     }
 
     #[test]
-    fn bare_command_opens_the_window_and_unknown_ones_explain() {
+    fn escaped_names_survive_the_round_trip() {
+        // S_Json escapes `\` and `"` in names; serde must read them back.
         let mut board = CommissionBoardState::default();
-        assert_eq!(board.run_command("Alice", ""), CommissionReply::ToggleWindow);
-        assert!(reply(&mut board, "Alice", "frobnicate").starts_with("Usage"));
+        feed(&mut board, &[
+            "[CMB]{\"t\":\"begin\",\"v\":1,\"n\":1}".to_owned(),
+            "[CMB]{\"t\":\"row\",\"v\":1,\"id\":1,\"item\":\"Sword\",\"fee\":0,\"by\":\"Al\\\"x\\\\\",\"crafter\":\"\",\"status\":\"open\"\
+             ,\"mine\":0,\"yours\":0}"
+                .to_owned(),
+            "[CMB]{\"t\":\"end\",\"v\":1}".to_owned(),
+        ]);
+        assert_eq!(board.rows()[0].requester_name, "Al\"x\\");
+    }
+
+    #[test]
+    fn commands_translate_to_the_servers_syntax() {
+        let send = |text: &str| CommissionReply::Send(text.to_owned());
+        // The server takes the fee first so names keep their spaces.
+        assert_eq!(
+            commission_command("post Fire Damascus 50000"),
+            send("@commission post 50000 Fire Damascus")
+        );
+        assert_eq!(
+            commission_command("post White Slim Potion"),
+            send("@commission post 0 White Slim Potion")
+        );
+        assert_eq!(commission_command("post 100"), send("@commission post 0 100"));
+        assert_eq!(
+            commission_command("assign #3 Bob the Smith"),
+            send("@commission assign 3 Bob the Smith")
+        );
+        assert_eq!(commission_command("complete 3"), send("@commission complete 3"));
+        assert_eq!(commission_command("cancel #3"), send("@commission cancel 3"));
+        assert_eq!(commission_command(""), CommissionReply::ToggleWindow);
+        assert_eq!(commission_command("list"), CommissionReply::ToggleWindow);
+        assert_eq!(commission_command("refresh"), send("@commission list"));
+    }
+
+    #[test]
+    fn malformed_commands_explain_and_send_nothing() {
+        for args in ["post", "assign 3", "assign x Bob", "complete", "cancel abc", "frobnicate"] {
+            assert!(
+                matches!(commission_command(args), CommissionReply::Say(ref line) if line.starts_with("Usage")),
+                "{args}"
+            );
+        }
     }
 }
