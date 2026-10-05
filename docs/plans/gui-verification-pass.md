@@ -1171,6 +1171,9 @@ Ported to korangar `agent/review-fixes`; see the table in
 | 8.21 | Trade window | The zeny steppers are a "+" row and a "−" row of three; each still adjusts the offer |
 | 8.22 | Adventure Guide pages: a status (Blessing), a refine page, an NPC, a job | Source notes ("Source: …", export revision, internal script names, C call sites) are not mixed into the page; they sit in a folded "Where this comes from" at the end. Useful facts stay on the page under plain headers ("How the server treats this status:", "Also placed by events or quests at …"). Item effects read "not translated yet" or "not documented yet" |
 | 8.23 | **Interface scale 100%, 200%, 300%, 400%** (Interface Settings → Scaling; 400% is the maximum) for every window in 8.12–8.22 | At each scale: no text cut off mid-word or overlapping; tab and button rows still fit (or wrap) inside the window; folded sections open and close; the window fits the screen or can be moved so its close button is reachable; text stays sharp. Note the smallest scale at which anything breaks, per window |
+| 8.24 | Main Menu (second pass) | Buttons sit in pairs under each heading (World Map/Minimap, Quest Log/Adventure Guide, Emotes/Commission Board, Game/Interface, Graphics/Audio, Log out/Exit), roughly half the old height |
+| 8.25 | Build Planner and Equipment | Planner: levels and the six stats stay open; "Results" is open, "Skills" and "Saved builds" are folded. Equipment: the nine slots are unchanged; the set buttons fold into "Equipment sets" |
+| 8.26 | Adventure Guide categories | Three rows of five (All…Maps; NPCs…Jobs; Skills…How things work), open one pressed; still readable at 400% (row 8.23) |
 
 ---
 

@@ -35,38 +35,53 @@ impl CustomWindow<ClientState> for MenuWindow {
                     text: "Adventure",
                     color: MENU_HEADING,
                 },
-                button! {
+                split! {
+                    gaps: theme().window().gaps(),
+                    children: (
+                        button! {
                     text: "World Map",
                     tooltip: "View connected regions and follow a route to a destination",
                     event: InputEvent::ToggleMapsWindow,
                 },
-                button! {
+                        button! {
                     text: client_state().localization().minimap_button_text(),
                     event: InputEvent::ToggleMinimapWindow,
                 },
-                button! {
+                    ),
+                },
+                split! {
+                    gaps: theme().window().gaps(),
+                    children: (
+                        button! {
                     text: "Quest Log",
                     tooltip: "Search campaign and regular quests, pin favorites, and check collection progress (^000001Ctrl+Q^000000)",
                     event: InputEvent::ToggleQuestLogWindow,
                 },
-                button! {
+                        button! {
                     text: "Adventure Guide",
                     tooltip: "Search open monster, item, and card reference data",
                     event: InputEvent::ToggleAdventureGuideWindow,
+                },
+                    ),
                 },
                 text! {
                     text: "Social",
                     color: MENU_HEADING,
                 },
-                button! {
+                split! {
+                    gaps: theme().window().gaps(),
+                    children: (
+                        button! {
                     text: "Emotes",
                     tooltip: "Choose an animated emote to display over your character (^000001Alt+L^000000)",
                     event: InputEvent::ToggleEmoteWindow,
                 },
-                button! {
+                        button! {
                     text: "Commission Board",
                     tooltip: "Post or view peer crafting requests (/commission)",
                     event: InputEvent::ToggleCommissionBoardWindow,
+                },
+                    ),
                 },
                 button! {
                     text: "Dice Roller",
@@ -77,21 +92,31 @@ impl CustomWindow<ClientState> for MenuWindow {
                     text: "Settings",
                     color: MENU_HEADING,
                 },
-                button! {
+                split! {
+                    gaps: theme().window().gaps(),
+                    children: (
+                        button! {
                     text: client_state().localization().game_settings_button_text(),
                     event: InputEvent::ToggleGameSettingsWindow,
                 },
-                button! {
+                        button! {
                     text: client_state().localization().interface_settings_button_text(),
                     event: InputEvent::ToggleInterfaceSettingsWindow,
                 },
-                button! {
+                    ),
+                },
+                split! {
+                    gaps: theme().window().gaps(),
+                    children: (
+                        button! {
                     text: client_state().localization().graphics_settings_button_text(),
                     event: InputEvent::ToggleGraphicsSettingsWindow,
                 },
-                button! {
+                        button! {
                     text: client_state().localization().audio_settings_button_text(),
                     event: InputEvent::ToggleAudioSettingsWindow,
+                },
+                    ),
                 },
                 text! {
                     text: "Dungeon Master",
@@ -163,13 +188,18 @@ impl CustomWindow<ClientState> for MenuWindow {
                     foreground_color: client_theme().debug_button().foreground_color(),
                     hovered_background_color: client_theme().debug_button().hovered_background_color(),
                 },
-                button! {
+                split! {
+                    gaps: theme().window().gaps(),
+                    children: (
+                        button! {
                     text: client_state().localization().log_out_button_text(),
                     event: InputEvent::LogOut,
                 },
-                button! {
+                        button! {
                     text: client_state().localization().exit_button_text(),
                     event: InputEvent::Exit,
+                },
+                    ),
                 },
             ),
         }
