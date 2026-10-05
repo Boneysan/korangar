@@ -655,17 +655,23 @@ impl CustomWindow<ClientState> for MinimapWindow {
                         },
                     ),
                 },
-                split! { gaps: theme().window().gaps(), children: (
-                    button! { text: "Location", tooltip: "Share your current position", event: InputEvent::SendPartyPing { kind: "location".to_owned() } },
-                    button! { text: "Assist", tooltip: "Ask party members for help here", event: InputEvent::SendPartyPing { kind: "assist".to_owned() } },
-                    button! { text: "Danger", tooltip: "Warn the party about danger here", event: InputEvent::SendPartyPing { kind: "danger".to_owned() } },
-                ) },
-                split! { gaps: theme().window().gaps(), children: (
-                    button! { text: "Retreat", tooltip: "Suggest regrouping or retreating here", event: InputEvent::SendPartyPing { kind: "retreat".to_owned() } },
-                    button! { text: "Ready", tooltip: "Mark this location as ready", event: InputEvent::SendPartyPing { kind: "ready".to_owned() } },
-                    button! { text: "On my way", tooltip: "Tell the party you are moving here", event: InputEvent::SendPartyPing { kind: "on-my-way".to_owned() } },
-                ) },
-                button! { text: "Share current route", tooltip: "Send your selected map route to party members; they choose whether to accept it", event: InputEvent::SharePartyDestination },
+                collapsible! {
+                    text: "Party pings",
+                    initially_expanded: false,
+                    children: (
+                        split! { gaps: theme().window().gaps(), children: (
+                            button! { text: "Location", tooltip: "Share your current position", event: InputEvent::SendPartyPing { kind: "location".to_owned() } },
+                            button! { text: "Assist", tooltip: "Ask party members for help here", event: InputEvent::SendPartyPing { kind: "assist".to_owned() } },
+                            button! { text: "Danger", tooltip: "Warn the party about danger here", event: InputEvent::SendPartyPing { kind: "danger".to_owned() } },
+                        ) },
+                        split! { gaps: theme().window().gaps(), children: (
+                            button! { text: "Retreat", tooltip: "Suggest regrouping or retreating here", event: InputEvent::SendPartyPing { kind: "retreat".to_owned() } },
+                            button! { text: "Ready", tooltip: "Mark this location as ready", event: InputEvent::SendPartyPing { kind: "ready".to_owned() } },
+                            button! { text: "On my way", tooltip: "Tell the party you are moving here", event: InputEvent::SendPartyPing { kind: "on-my-way".to_owned() } },
+                        ) },
+                        button! { text: "Share current route", tooltip: "Send your selected map route to party members; they choose whether to accept it", event: InputEvent::SharePartyDestination },
+                    ),
+                },
             ),
         }
     }

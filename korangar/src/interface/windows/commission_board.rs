@@ -15,6 +15,9 @@ use crate::state::{ClientState, ClientStatePathExt, client_state};
 
 const MAXIMUM_INPUT_LENGTH: usize = 60;
 
+/// Secondary text: quieter than the list and buttons.
+const QUIET: crate::graphics::Color = crate::graphics::Color::rgb_u8(150, 150, 150);
+
 /// ZST focus ID for requested item name text box.
 pub struct CommissionItemTextBox;
 
@@ -146,44 +149,22 @@ where
         let crafter_path = self.commission_board_window_state.crafter_name();
 
         window! {
-            title: "Crafting Commission Board",
+            title: "Commission Board",
             class: Self::window_class(),
             theme: InterfaceThemeType::InGame,
             closable: true,
             elements: (
                 text! {
-                    text: "Requests every player on the server can see. Only the poster can assign, complete or cancel one. Materials and payment are traded directly; the board holds nothing (non-custodial).",
+                    text: "Every player sees these requests. Trade materials and payment directly; the board holds nothing.",
+                    color: QUIET,
                     overflow_behavior: OverflowBehavior::LineBreak,
-                },
-                text! {
-                    text: "Item Name:",
-                    overflow_behavior: OverflowBehavior::Shrink,
-                },
-                text_box! {
-                    ghost_text: "e.g. Fire Damascus, White Slim Potion",
-                    state: item_path,
-                    input_handler: DefaultHandler::<_, _, MAXIMUM_INPUT_LENGTH>::new(item_path, post_commission(item_path, fee_path)),
-                    focus_id: CommissionItemTextBox,
-                    overflow_behavior: OverflowBehavior::Shrink,
-                },
-                text! {
-                    text: "Offered Fee (Zeny, optional):",
-                    overflow_behavior: OverflowBehavior::Shrink,
-                },
-                text_box! {
-                    ghost_text: "e.g. 50000",
-                    state: fee_path,
-                    input_handler: DefaultHandler::<_, _, MAXIMUM_INPUT_LENGTH>::new(fee_path, post_commission(item_path, fee_path)),
-                    focus_id: CommissionFeeTextBox,
-                    overflow_behavior: OverflowBehavior::Shrink,
                 },
                 split! {
                     gaps: theme().window().gaps(),
                     children: (
-                        button! {
-                            text: "Post Request",
-                            tooltip: "Post a request for every player to see (at most 5 open at once)",
-                            event: post_commission(item_path, fee_path),
+                        text! {
+                            text: "Open requests",
+                            overflow_behavior: OverflowBehavior::Shrink,
                         },
                         button! {
                             text: "Refresh",
@@ -199,46 +180,78 @@ where
                     },
                     overflow_behavior: OverflowBehavior::LineBreak,
                 },
-                text! {
-                    text: "Request # and crafter:",
-                    overflow_behavior: OverflowBehavior::Shrink,
-                },
-                split! {
-                    gaps: theme().window().gaps(),
+                collapsible! {
+                    text: "Post a request",
+                    initially_expanded: false,
                     children: (
                         text_box! {
-                            ghost_text: "e.g. 1",
-                            state: id_path,
-                            input_handler: DefaultHandler::<_, _, MAXIMUM_INPUT_LENGTH>::new(id_path, act_on_request("complete", id_path, crafter_path)),
-                            focus_id: CommissionIdTextBox,
+                            ghost_text: "Item you want, e.g. Fire Damascus",
+                            state: item_path,
+                            input_handler: DefaultHandler::<_, _, MAXIMUM_INPUT_LENGTH>::new(item_path, post_commission(item_path, fee_path)),
+                            focus_id: CommissionItemTextBox,
                             overflow_behavior: OverflowBehavior::Shrink,
                         },
                         text_box! {
-                            ghost_text: "crafter name",
-                            state: crafter_path,
-                            input_handler: DefaultHandler::<_, _, MAXIMUM_INPUT_LENGTH>::new(crafter_path, act_on_request("assign", id_path, crafter_path)),
-                            focus_id: CommissionCrafterTextBox,
+                            ghost_text: "Fee in zeny (optional)",
+                            state: fee_path,
+                            input_handler: DefaultHandler::<_, _, MAXIMUM_INPUT_LENGTH>::new(fee_path, post_commission(item_path, fee_path)),
+                            focus_id: CommissionFeeTextBox,
                             overflow_behavior: OverflowBehavior::Shrink,
+                        },
+                        button! {
+                            text: "Post request",
+                            tooltip: "Post a request for every player to see (at most 5 open at once)",
+                            event: post_commission(item_path, fee_path),
                         },
                     ),
                 },
-                split! {
-                    gaps: theme().window().gaps(),
+                collapsible! {
+                    text: "Manage your requests",
+                    initially_expanded: false,
                     children: (
-                        button! {
-                            text: "Assign",
-                            tooltip: "Record the crafter who took request # (open requests only)",
-                            event: act_on_request("assign", id_path, crafter_path),
+                        text! {
+                            text: "Enter a request number from the list. Only the player who posted it can change it.",
+                            color: QUIET,
+                            overflow_behavior: OverflowBehavior::LineBreak,
                         },
-                        button! {
-                            text: "Complete",
-                            tooltip: "Mark request # done once the trade is finished",
-                            event: act_on_request("complete", id_path, crafter_path),
+                        split! {
+                            gaps: theme().window().gaps(),
+                            children: (
+                                text_box! {
+                                    ghost_text: "Request #",
+                                    state: id_path,
+                                    input_handler: DefaultHandler::<_, _, MAXIMUM_INPUT_LENGTH>::new(id_path, act_on_request("complete", id_path, crafter_path)),
+                                    focus_id: CommissionIdTextBox,
+                                    overflow_behavior: OverflowBehavior::Shrink,
+                                },
+                                text_box! {
+                                    ghost_text: "Crafter's name",
+                                    state: crafter_path,
+                                    input_handler: DefaultHandler::<_, _, MAXIMUM_INPUT_LENGTH>::new(crafter_path, act_on_request("assign", id_path, crafter_path)),
+                                    focus_id: CommissionCrafterTextBox,
+                                    overflow_behavior: OverflowBehavior::Shrink,
+                                },
+                            ),
                         },
-                        button! {
-                            text: "Cancel",
-                            tooltip: "Withdraw request #",
-                            event: act_on_request("cancel", id_path, crafter_path),
+                        split! {
+                            gaps: theme().window().gaps(),
+                            children: (
+                                button! {
+                                    text: "Assign",
+                                    tooltip: "Record the crafter who took this request (open requests only)",
+                                    event: act_on_request("assign", id_path, crafter_path),
+                                },
+                                button! {
+                                    text: "Complete",
+                                    tooltip: "Mark the request done once the trade is finished",
+                                    event: act_on_request("complete", id_path, crafter_path),
+                                },
+                                button! {
+                                    text: "Cancel",
+                                    tooltip: "Withdraw the request",
+                                    event: act_on_request("cancel", id_path, crafter_path),
+                                },
+                            ),
                         },
                     ),
                 },

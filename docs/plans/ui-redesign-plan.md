@@ -1,6 +1,6 @@
 # Player interface once-over: audit and plan
 
-Status: **in progress, 2026-10-05.** Slice 1 (quest log) and a first pass of slice 2 (Adventure Guide: ids, header, categories) built and unit-tested, not yet seen on screen. The Guide's side-by-side detail pane waits on the open window-width question. A glyph fix shipped first: see "Font coverage". Requested after the quest log was called "a confusing mess", widened by the owner to every searchable view and then the whole player interface. Nothing here is built yet. The quest log design below was agreed before this plan existed.
+Status: **in progress, 2026-10-05.** Slice 1 (quest log) and a first pass of slice 2 (Adventure Guide: ids, header, categories) built and unit-tested, not yet seen on screen. Slices 4 (Menu, Game Settings) and 5 (Commission Board, Party, Minimap) built too. The Guide's side-by-side detail pane waits on the open window-width question; the World Map slice waits on screenshots. A glyph fix shipped first: see "Font coverage". Requested after the quest log was called "a confusing mess", widened by the owner to every searchable view and then the whole player interface. Nothing here is built yet. The quest log design below was agreed before this plan existed.
 
 ## Why the interface feels messy
 
@@ -113,7 +113,26 @@ Each slice is one PR.
 5. **Minimap, Party, Commission Board.**
 6. **P3 pass.** Short look at each remaining window with the owner, fixing only what fails a rule.
 
-## Open questions for the owner
+## GUI testing (owner request, 2026-10-05)
+
+Unit tests on a row plan prove structure: what is grouped, collapsed, labelled or never shown. They cannot prove that a window reads well. So every slice also gets on-screen checks, and a slice counts as done only once those have been run.
+
+- **Where the checks live:** each slice adds one or more rows to section 8 of [`gui-verification-pass.md`](gui-verification-pass.md). A row names what to open, what to do, and what must be true on screen.
+- **Rows so far:**
+  - **8.12:** Quest Log.
+  - **8.13:** Adventure Guide.
+  - **8.14:** Menu and Game Settings.
+  - **8.15 onwards:** Commission Board, Party, Minimap and later slices, added as they land.
+- **Every row also checks three things:**
+  - no missing-glyph boxes;
+  - no raw ids or developer text;
+  - every control the window had before is still reachable.
+- **Who runs them:** the owner, in a normal client build against the dev server (`cargo run --release --bin korangar` in `korangar/korangar`).
+- **What counts as a result:** a screenshot per row is the best evidence, and it is the "before/after" record for the window.
+- **Failures:** a row that fails goes back to its slice before the next slice starts on the same window.
+- **Automation (later):** a headless screenshot harness (scripted login, open a window, capture) would let rows like these run unattended. It needs a client-side automation hook that does not exist yet; it is listed here as a possible follow-up, not planned work.
+
+
 
 - **Screenshots:** can you capture the windows as they look today, especially the World Map and the Guide? That gives each slice a before picture and gets the map slice started.
 - **Icons:** should the kind tags in lists be text (`[Item]`) or icons? Icons need sprite work.

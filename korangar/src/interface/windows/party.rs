@@ -334,161 +334,185 @@ where
                     text: self.party_path.status_text(),
                     overflow_behavior: OverflowBehavior::LineBreak,
                 },
-                text_box! {
-                    ghost_text: "Party name, or character to invite",
-                    state: name_path,
-                    input_handler: DefaultHandler::<_, _, MAXIMUM_NAME_LENGTH>::new(name_path, submit),
-                    focus_id: PartyNameTextBox,
-                    overflow_behavior: OverflowBehavior::Shrink,
-                },
-                split! {
-                    gaps: theme().window().gaps(),
-                    children: (
-                        button! {
-                            text: "Create",
-                            tooltip: "Create a party with the name above [^000001/party create <name>^000000]",
-                            disabled: cannot_create,
-                            disabled_tooltip: "Type a party name first — and leave your current party, you can only be in one",
-                            event: create,
-                        },
-                        button! {
-                            text: "Invite",
-                            tooltip: "Invite the character named above [^000001/party invite <name>^000000]",
-                            disabled: cannot_invite,
-                            disabled_tooltip: "Type a character name, and create or join a party first",
-                            event: invite,
-                        },
-                    ),
-                },
-                split! {
-                    gaps: theme().window().gaps(),
-                    children: (
-                        button! {
-                            text: "Accept",
-                            tooltip: "Join the party that invited you [^000001/party accept^000000]",
-                            disabled: no_invite_for_accept,
-                            disabled_tooltip: "Nobody has invited you",
-                            event: |_state: &State<ClientState>, queue: &mut EventQueue<ClientState>| {
-                                queue.queue(InputEvent::AcceptPartyInvite);
-                            },
-                        },
-                        button! {
-                            text: "Reject",
-                            tooltip: "Decline the invite [^000001/party reject^000000]",
-                            disabled: no_invite_for_reject,
-                            disabled_tooltip: "Nobody has invited you",
-                            event: |_state: &State<ClientState>, queue: &mut EventQueue<ClientState>| {
-                                queue.queue(InputEvent::RejectPartyInvite);
-                            },
-                        },
-                        button! {
-                            text: "Leave",
-                            tooltip: "Leave the current party [^000001/party leave^000000]",
-                            disabled: not_in_party,
-                            disabled_tooltip: "You are not in a party",
-                            event: |_state: &State<ClientState>, queue: &mut EventQueue<ClientState>| {
-                                queue.queue(InputEvent::LeaveParty);
-                            },
-                        },
-                    ),
-                },
-                split! {
-                    gaps: theme().window().gaps(),
-                    children: (
-                        state_button! {
-                            text: "Share EXP",
-                            tooltip: "Split experience across the party (leader only)",
-                            state: self.party_path.share_experience(),
-                            event: move |state: &State<ClientState>, queue: &mut EventQueue<ClientState>| {
-                                // All three rules ride one packet, so the two we
-                                // are not changing must be sent as they stand.
-                                let party = state.get(&party_path);
-                                queue.queue(InputEvent::SetPartyShare {
-                                    experience: !party.share_experience(),
-                                    pickup: party.share_pickup(),
-                                    division: party.share_loot(),
-                                });
-                            },
-                        },
-                        state_button! {
-                            text: "Share pickup",
-                            tooltip: "Everyone picks up for the party (leader only)",
-                            state: self.party_path.share_pickup(),
-                            event: move |state: &State<ClientState>, queue: &mut EventQueue<ClientState>| {
-                                let party = state.get(&party_path);
-                                queue.queue(InputEvent::SetPartyShare {
-                                    experience: party.share_experience(),
-                                    pickup: !party.share_pickup(),
-                                    division: party.share_loot(),
-                                });
-                            },
-                        },
-                        state_button! {
-                            text: "Share loot",
-                            tooltip: "Distribute looted items (leader only)",
-                            state: self.party_path.share_loot(),
-                            event: move |state: &State<ClientState>, queue: &mut EventQueue<ClientState>| {
-                                let party = state.get(&party_path);
-                                queue.queue(InputEvent::SetPartyShare {
-                                    experience: party.share_experience(),
-                                    pickup: party.share_pickup(),
-                                    division: !party.share_loot(),
-                                });
-                            },
-                        },
-                    ),
-                },
-                split! {
-                    gaps: theme().window().gaps(),
-                    children: (
-                        state_button! {
-                            text: "Block invites",
-                            tooltip: "Refuse all party invites server-side [^000001/party block on^000000]",
-                            state: self.party_path.deny_invites(),
-                            event: move |state: &State<ClientState>, queue: &mut EventQueue<ClientState>| {
-                                // Send the opposite of what the server last told us,
-                                // never of a locally-toggled value, so a refused
-                                // request cannot leave the button lying.
-                                let blocked = !*state.get(&party_path.deny_invites());
-                                queue.queue(InputEvent::SetPartyInvitationBlock { blocked });
-                            },
-                        },
-                        state_button! {
-                            text: "Healer layout",
-                            tooltip: "Enlarge health and SP bar readability for healer role [GDD 10.14]",
-                            state: self.party_path.healer_layout(),
-                            event: move |state: &State<ClientState>, _: &mut EventQueue<ClientState>| {
-                                let current = *state.get(&party_path.healer_layout());
-                                state.update_value_with(party_path, move |party| party.set_healer_layout(!current));
-                            },
-                        },
-                    ),
-                },
                 text! {
                     text: self.party_path.display_text(),
                 },
-                text! {
-                    text: self.party_path.shared_destination_text(),
-                },
-                button! {
-                    text: "Accept shared destination",
-                    tooltip: "Set the shared route locally and acknowledge it to the party",
-                    event: InputEvent::AcceptPartyDestination,
-                },
-                button! {
-                    text: "Decline shared destination",
-                    tooltip: "Dismiss the shared route on this client only; the party is not told",
-                    event: InputEvent::DeclinePartyDestination,
-                },
-                text! { text: self.party_path.markers_text(), },
-                text! { text: self.party_path.goals_text(), },
-                text! { text: self.party_path.ready_check_text(), },
-                split! { gaps: theme().window().gaps(), children: (
-                    button! { text: "Start ready check", tooltip: "Ask current online party members to confirm readiness", event: InputEvent::StartPartyReadyCheck },
-                    button! { text: "Ready", event: InputEvent::RespondPartyReadyCheck { ready: true } },
-                    button! { text: "Not ready", event: InputEvent::RespondPartyReadyCheck { ready: false } },
-                ) },
                 PartyMemberList::new(self.party_path.members(), self.party_path),
+                collapsible! {
+                    text: "Invite and membership",
+                    initially_expanded: false,
+                    children: (
+                    text_box! {
+                        ghost_text: "Party name, or character to invite",
+                        state: name_path,
+                        input_handler: DefaultHandler::<_, _, MAXIMUM_NAME_LENGTH>::new(name_path, submit),
+                        focus_id: PartyNameTextBox,
+                        overflow_behavior: OverflowBehavior::Shrink,
+                    },
+                    split! {
+                        gaps: theme().window().gaps(),
+                        children: (
+                            button! {
+                                text: "Create",
+                                tooltip: "Create a party with the name above [^000001/party create <name>^000000]",
+                                disabled: cannot_create,
+                                disabled_tooltip: "Type a party name first — and leave your current party, you can only be in one",
+                                event: create,
+                            },
+                            button! {
+                                text: "Invite",
+                                tooltip: "Invite the character named above [^000001/party invite <name>^000000]",
+                                disabled: cannot_invite,
+                                disabled_tooltip: "Type a character name, and create or join a party first",
+                                event: invite,
+                            },
+                        ),
+                    },
+                    split! {
+                        gaps: theme().window().gaps(),
+                        children: (
+                            button! {
+                                text: "Accept",
+                                tooltip: "Join the party that invited you [^000001/party accept^000000]",
+                                disabled: no_invite_for_accept,
+                                disabled_tooltip: "Nobody has invited you",
+                                event: |_state: &State<ClientState>, queue: &mut EventQueue<ClientState>| {
+                                    queue.queue(InputEvent::AcceptPartyInvite);
+                                },
+                            },
+                            button! {
+                                text: "Reject",
+                                tooltip: "Decline the invite [^000001/party reject^000000]",
+                                disabled: no_invite_for_reject,
+                                disabled_tooltip: "Nobody has invited you",
+                                event: |_state: &State<ClientState>, queue: &mut EventQueue<ClientState>| {
+                                    queue.queue(InputEvent::RejectPartyInvite);
+                                },
+                            },
+                            button! {
+                                text: "Leave",
+                                tooltip: "Leave the current party [^000001/party leave^000000]",
+                                disabled: not_in_party,
+                                disabled_tooltip: "You are not in a party",
+                                event: |_state: &State<ClientState>, queue: &mut EventQueue<ClientState>| {
+                                    queue.queue(InputEvent::LeaveParty);
+                                },
+                            },
+                        ),
+                    },
+                    ),
+                },
+                collapsible! {
+                    text: "Party settings",
+                    initially_expanded: false,
+                    children: (
+                    split! {
+                        gaps: theme().window().gaps(),
+                        children: (
+                            state_button! {
+                                text: "Share EXP",
+                                tooltip: "Split experience across the party (leader only)",
+                                state: self.party_path.share_experience(),
+                                event: move |state: &State<ClientState>, queue: &mut EventQueue<ClientState>| {
+                                    // All three rules ride one packet, so the two we
+                                    // are not changing must be sent as they stand.
+                                    let party = state.get(&party_path);
+                                    queue.queue(InputEvent::SetPartyShare {
+                                        experience: !party.share_experience(),
+                                        pickup: party.share_pickup(),
+                                        division: party.share_loot(),
+                                    });
+                                },
+                            },
+                            state_button! {
+                                text: "Share pickup",
+                                tooltip: "Everyone picks up for the party (leader only)",
+                                state: self.party_path.share_pickup(),
+                                event: move |state: &State<ClientState>, queue: &mut EventQueue<ClientState>| {
+                                    let party = state.get(&party_path);
+                                    queue.queue(InputEvent::SetPartyShare {
+                                        experience: party.share_experience(),
+                                        pickup: !party.share_pickup(),
+                                        division: party.share_loot(),
+                                    });
+                                },
+                            },
+                            state_button! {
+                                text: "Share loot",
+                                tooltip: "Distribute looted items (leader only)",
+                                state: self.party_path.share_loot(),
+                                event: move |state: &State<ClientState>, queue: &mut EventQueue<ClientState>| {
+                                    let party = state.get(&party_path);
+                                    queue.queue(InputEvent::SetPartyShare {
+                                        experience: party.share_experience(),
+                                        pickup: party.share_pickup(),
+                                        division: !party.share_loot(),
+                                    });
+                                },
+                            },
+                        ),
+                    },
+                    split! {
+                        gaps: theme().window().gaps(),
+                        children: (
+                            state_button! {
+                                text: "Block invites",
+                                tooltip: "Refuse all party invites server-side [^000001/party block on^000000]",
+                                state: self.party_path.deny_invites(),
+                                event: move |state: &State<ClientState>, queue: &mut EventQueue<ClientState>| {
+                                    // Send the opposite of what the server last told us,
+                                    // never of a locally-toggled value, so a refused
+                                    // request cannot leave the button lying.
+                                    let blocked = !*state.get(&party_path.deny_invites());
+                                    queue.queue(InputEvent::SetPartyInvitationBlock { blocked });
+                                },
+                            },
+                            state_button! {
+                                text: "Healer layout",
+                                tooltip: "Enlarge health and SP bar readability for healer role [GDD 10.14]",
+                                state: self.party_path.healer_layout(),
+                                event: move |state: &State<ClientState>, _: &mut EventQueue<ClientState>| {
+                                    let current = *state.get(&party_path.healer_layout());
+                                    state.update_value_with(party_path, move |party| party.set_healer_layout(!current));
+                                },
+                            },
+                        ),
+                    },
+                    ),
+                },
+                collapsible! {
+                    text: "Shared destination and markers",
+                    initially_expanded: false,
+                    children: (
+                    text! {
+                        text: self.party_path.shared_destination_text(),
+                    },
+                    button! {
+                        text: "Accept shared destination",
+                        tooltip: "Set the shared route locally and acknowledge it to the party",
+                        event: InputEvent::AcceptPartyDestination,
+                    },
+                    button! {
+                        text: "Decline shared destination",
+                        tooltip: "Dismiss the shared route on this client only; the party is not told",
+                        event: InputEvent::DeclinePartyDestination,
+                    },
+                    text! { text: self.party_path.markers_text(), },
+                    text! { text: self.party_path.goals_text(), },
+                    ),
+                },
+                collapsible! {
+                    text: "Ready check",
+                    initially_expanded: false,
+                    children: (
+                    text! { text: self.party_path.ready_check_text(), },
+                    split! { gaps: theme().window().gaps(), children: (
+                        button! { text: "Start ready check", tooltip: "Ask current online party members to confirm readiness", event: InputEvent::StartPartyReadyCheck },
+                        button! { text: "Ready", event: InputEvent::RespondPartyReadyCheck { ready: true } },
+                        button! { text: "Not ready", event: InputEvent::RespondPartyReadyCheck { ready: false } },
+                    ) },
+                    ),
+                },
             )
         }
     }
