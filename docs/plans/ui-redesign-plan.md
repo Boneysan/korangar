@@ -84,7 +84,18 @@ Player-visible text that came from Korean sources gets its own review pass after
 - NPC and script text the Guide labels "untranslated";
 - any remaining Korean shown raw.
 
-Step one is an inventory of where each kind reaches the screen. Step two is fixing it at the source data, never by patching single strings in the UI. (The Korean literals in `korangar/src` are game-file paths, which are never drawn.)
+**Inventory, 2026-10-05 (step one done).** Measured with an opt-in census test, `korean_text_census` in `world/library/mod.rs`. It builds the client's data library exactly as the game does, then scans every display table for Hangul (the font has none, so Hangul draws as boxes). Results:
+- **Job names:** 0 of 3,896 contain Korean.
+- **Skill names:** 0 of 1,446.
+- **Town facility labels:** 0 of 247.
+- **Message table:** 0 of 3,577.
+- **Item names:** 2,866 of 29,232 strings, about 1,433 items, are still Korean (mostly cash-shop boxes). None of those items exists in the server's item database, so the server can never send them and players cannot see them.
+- **Item descriptions:** not loaded from the game files at all.
+- **Not covered by the census:** text the server sends at runtime (NPC dialogue, chat, monster names). It comes from Hercules data and scripts in English, plus the realigned message glosses.
+
+Step two is a review of English *quality* rather than leftover Korean: awkward or literal translations in item, skill and monster names, and NPC lines. That review needs your eyes on specific screens.
+
+Original plan for this section: Step two is fixing it at the source data, never by patching single strings in the UI. (The Korean literals in `korangar/src` are game-file paths, which are never drawn.)
 
 ## Slices
 

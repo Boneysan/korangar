@@ -123,6 +123,12 @@ impl TownInfoTable {
         }
     }
 
+    /// Every facility on every map, for whole-table checks.
+    #[cfg(test)]
+    pub(super) fn all_pois(&self) -> impl Iterator<Item = &TownPoi> {
+        self.by_map.values().flatten()
+    }
+
     pub fn pois_for_map(&self, map_name: &str) -> &[TownPoi] {
         self.by_map.get(&Self::key(map_name)).map(Vec::as_slice).unwrap_or(&[])
     }
