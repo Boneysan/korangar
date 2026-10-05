@@ -1174,6 +1174,7 @@ Ported to korangar `agent/review-fixes`; see the table in
 | 8.24 | Main Menu (second pass) | Buttons sit in pairs under each heading (World Map/Minimap, Quest Log/Adventure Guide, Emotes/Commission Board, Game/Interface, Graphics/Audio, Log out/Exit), roughly half the old height |
 | 8.25 | Build Planner and Equipment | Planner: levels and the six stats stay open; "Results" is open, "Skills" and "Saved builds" are folded. Equipment: the nine slots are unchanged; the set buttons fold into "Equipment sets" |
 | 8.26 | Adventure Guide categories | Three rows of five (All…Maps; NPCs…Jobs; Skills…How things work), open one pressed; still readable at 400% (row 8.23) |
+| 8.27 | Adventure Guide live search: type "por" letter by letter, backspace, then click Monsters, then Items | Results narrow with every keystroke (no Enter needed) and widen again on Backspace; clicking a category shows *that* category's matches immediately (it used to show the previous category's until the next search); Esc leaves the box. Typing stays smooth with "All" selected |
 
 ---
 

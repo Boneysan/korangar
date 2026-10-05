@@ -5,7 +5,6 @@
 use std::collections::HashSet;
 use std::sync::Arc;
 
-use korangar_interface::components::text_box::DefaultHandler;
 use korangar_interface::element::store::{ElementStore, ElementStoreMut};
 use korangar_interface::element::{Element, ElementBox, StateElement};
 use korangar_interface::layout::{Resolvers, WindowLayout, with_single_resolver};
@@ -2908,12 +2907,66 @@ where
     }
 }
 
-fn run_search<A>(state: &State<ClientState>, path: A)
+/// The search text after one keystroke, or `None` when the key does nothing.
+/// Enter and Tab keep the text (and search again); Backspace removes the
+/// last character; other control keys are ignored; the length is capped.
+fn next_query(current: &str, character: char) -> Option<String> {
+    match character {
+        '\x09' | '\x0d' => Some(current.to_owned()),
+        '\x08' => {
+            let mut text = current.to_owned();
+            text.pop();
+            Some(text)
+        }
+        character if !character.is_control() && current.len() < MAX_QUERY => Some(format!("{current}{character}")),
+        _ => None,
+    }
+}
+
+/// The Guide's search box: edits the text like the default text box, and
+/// searches again after every change, so results narrow as you type. Enter
+/// still searches too.
+struct LiveSearchHandler<A> {
+    path: A,
+}
+
+impl<A> korangar_interface::event::InputHandler<ClientState> for LiveSearchHandler<A>
 where
     A: Path<ClientState, AdventureGuideWindowState> + Copy,
 {
-    let query = state.get(&path.query()).to_lowercase();
-    let category = state.get(&path.category()).clone();
+    fn handle_character(
+        &self,
+        state: &State<ClientState>,
+        queue: &mut korangar_interface::event::EventQueue<ClientState>,
+        character: char,
+    ) {
+        if character == '\x1b' {
+            queue.queue(korangar_interface::event::Event::Unfocus);
+            return;
+        }
+        let current = state.get(&self.path.query()).clone();
+        let Some(next) = next_query(&current, character) else {
+            return;
+        };
+        if next != current {
+            state.update_value(self.path.query(), next.clone());
+        }
+        let category = state.get(&self.path.category()).clone();
+        run_search_for(state, self.path, &next, &category);
+    }
+}
+
+/// Search with the query and category given, not read back from state.
+/// `rust_state` queues updates until the frame applies them, so a caller
+/// that has just changed the category or the text must pass the new value:
+/// reading it back gave the *previous* one (a category button searched the
+/// category you had left, and live search would lag a keystroke).
+fn run_search_for<A>(state: &State<ClientState>, path: A, query: &str, category: &str)
+where
+    A: Path<ClientState, AdventureGuideWindowState> + Copy,
+{
+    let query = query.to_lowercase();
+    let category = category.to_owned();
     let data = reference_data();
     let discovery_path = client_state().discovery();
     let discovery = state.get(&discovery_path);
@@ -3402,7 +3455,7 @@ where
     };
     state.update_value(path.category(), category.to_owned());
     state.update_value(path.query(), key.to_owned());
-    run_search(state, path);
+    run_search_for(state, path, key, category);
     state.update_value(path.detail(), detail);
 }
 
@@ -3420,8 +3473,8 @@ where
         .or_else(|| data.card_by_id(item_id))
         .map(|item| display_name(&item.name, &item.aegis_name))
         .unwrap_or_else(|| item_id.to_string());
+    run_search_for(state, path, &query, "Items");
     state.update_value(path.query(), query);
-    run_search(state, path);
     let data = reference_data();
     let detail = data
         .item_by_id(item_id)
@@ -3444,11 +3497,11 @@ where
         struct GuideSearchBox;
         let path = self.state_path;
         let library = self.library;
-        let search = move |state: &State<ClientState>, _queue: &mut EventQueue<ClientState>| run_search(state, path);
         let set_category = |category: &'static str| {
             move |state: &State<ClientState>, _queue: &mut EventQueue<ClientState>| {
                 state.update_value(path.category(), category.to_owned());
-                run_search(state, path);
+                let query = state.get(&path.query()).clone();
+                run_search_for(state, path, &query, category);
             }
         };
         // A category button looks pressed while it is the open one, like tabs.
@@ -3465,7 +3518,7 @@ where
             theme: InterfaceThemeType::InGame,
             closable: true,
             elements: (
-                text_box! { ghost_text: "Search by name, then press Enter", state: path.query(), input_handler: DefaultHandler::<_, _, MAX_QUERY>::new(path.query(), search), focus_id: GuideSearchBox, overflow_behavior: OverflowBehavior::Shrink },
+                text_box! { ghost_text: "Search by name", state: path.query(), input_handler: LiveSearchHandler { path }, focus_id: GuideSearchBox, overflow_behavior: OverflowBehavior::Shrink },
                 split! { gaps: theme().window().gaps(), children: (
                     category_button("All", "All"),
                     category_button("Monsters", "Monsters"),
@@ -3505,6 +3558,22 @@ mod tests {
     use crate::state::discovery::DiscoveryState;
     use crate::state::quests::{QuestEntry, QuestHuntObjectiveEntry, QuestRequirementEntry};
     use crate::world::{TownPoi, TownPoiKind};
+
+    #[test]
+    fn each_keystroke_yields_the_text_to_search_for() {
+        use super::{MAX_QUERY, next_query};
+        assert_eq!(next_query("pori", 'n').as_deref(), Some("porin"));
+        assert_eq!(next_query("poring", '\x08').as_deref(), Some("porin"));
+        assert_eq!(next_query("", '\x08').as_deref(), Some(""), "backspace on empty stays empty");
+        assert_eq!(
+            next_query("poring", '\x0d').as_deref(),
+            Some("poring"),
+            "Enter searches the same text"
+        );
+        assert_eq!(next_query("poring", '\x01'), None, "other control keys do nothing");
+        let full = "x".repeat(MAX_QUERY);
+        assert_eq!(next_query(&full, 'y'), None, "the length is capped");
+    }
 
     #[test]
     fn source_notes_are_told_apart_from_player_information() {
