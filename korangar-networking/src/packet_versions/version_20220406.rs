@@ -329,6 +329,9 @@ where
     // Reviewed no-op: the cast it scales already arrives as its own packet and
     // drives the telegraph; the scale hint adds nothing the client draws yet.
     packet_handler.register_noop::<SkillScalePacket>()?;
+    // Reviewed no-op: the client has no party loot feed yet; a later one could
+    // say "<member> picked up <item>" from this.
+    packet_handler.register_noop::<PartyItemPickupPacket>()?;
     packet_handler.register(|packet: EntityMessagePacket| {
         // Drop the alpha channel because it might be 0.
         let color = MessageColor::Rgb {

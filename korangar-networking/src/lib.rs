@@ -1896,6 +1896,24 @@ mod packet_handlers {
     }
 
     #[test]
+    fn party_item_pickup_0x0b67_is_consumed_whole() {
+        use ragnarok_bytes::ByteReader;
+        use ragnarok_packets::handler::HandlerResult;
+
+        let mut handler = NetworkingSystem::create_map_server_packet_handler(NoPacketCallback, SupportedPacketVersion::_20220406).unwrap();
+        // The 2026-10-05 sample (account 2000001 picked up item 1501), padded
+        // with the zero tail the run truncated, to Hercules' 33 bytes.
+        let mut bytes = vec![0x67, 0x0B, 0x81, 0x84, 0x1E, 0x00, 0xDD, 0x05, 0x00, 0x00];
+        bytes.resize(33, 0);
+        let mut reader = ByteReader::without_metadata(&bytes);
+        let HandlerResult::Ok(events) = handler.process_one(&mut reader) else {
+            panic!("0x0B67 did not parse");
+        };
+        assert!(events.0.is_empty(), "a reviewed no-op publishes nothing: {:?}", events.0);
+        assert!(reader.is_empty(), "0x0B67 must consume exactly its 33 bytes");
+    }
+
+    #[test]
     fn mvp_packets_name_the_mvp_and_the_reward() {
         use ragnarok_bytes::ByteReader;
         use ragnarok_packets::handler::HandlerResult;

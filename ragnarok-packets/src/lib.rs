@@ -5883,6 +5883,24 @@ pub struct PartyInviteSenderPacket {
     pub character_name: String,
 }
 
+/// A party member picked up an item (`ZC_ITEM_PICKUP_PARTY`, Hercules
+/// `clif_item_pickup_party`), 33 bytes at this packet version. First seen
+/// 2026-10-05 in a full headless run.
+#[derive(Debug, Clone, Packet, ServerPacket, MapServer)]
+#[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
+#[header(0x0B67)]
+pub struct PartyItemPickupPacket {
+    pub account_id: AccountId,
+    pub item_id: ItemId,
+    pub identified: u8,
+    pub damaged: u8,
+    pub slot: [u32; 4],
+    pub location: u16,
+    pub item_type: u8,
+    pub refine: u8,
+    pub grade: u8,
+}
+
 /// A cast's area scale (`ZC_SKILL_SCALE`, Hercules `clif_skill_scale`),
 /// sent right after the ordinary cast packet for skills flagged
 /// `INF2_SHOW_SKILL_SCALE` (first seen 2026-10-04: a monster's `NPC_SLOWCAST`).

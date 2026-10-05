@@ -249,6 +249,9 @@ const PAINT_BRUSH: u32 = 6122;
 /// alone cannot distinguish them and the ids have to be listed.
 const TRAP_PLACING_SKILLS: &[u16] = &[115, 116, 117, 118, 119, 120, 121, 122, 123, 125];
 
+/// SA_VOLCANO, SA_DELUGE, SA_VIOLENTGALE, SA_LANDPROTECTOR.
+const SAGE_FIELDS: &[u16] = &[285, 286, 287, 288];
+
 /// Every skill whose `skill_db` entry has a `Unit:` block — i.e. every skill
 /// that is supposed to leave a skill unit on the ground.
 ///
@@ -1718,6 +1721,19 @@ fn sweep_job(config: &Config, job_id: u16, job_name: &str) -> Result<(), String>
         context.pump(Duration::from_millis(400));
     }
 
+    // The Sage fields (Volcano, Deluge, Violent Gale) take a Blue Gemstone.
+    // Without one each answered with a single "Blue Gemstone required." line,
+    // and a field whose line missed the window read as silent
+    // (`skills-professor`, 2026-10-05). Blue only, deliberately: Yellow would
+    // also arm SA_ABRACADABRA, whose random skill can teleport or summon and
+    // derail the rest of the sweep. Land Protector (Blue + Yellow) stays a
+    // deterministic refusal. Returned below, like the traps.
+    let needs_blue_gems = skills.iter().any(|skill| SAGE_FIELDS.contains(&skill.skill_id.0));
+    if needs_blue_gems {
+        let _ = context.say(&format!("@item {BLUE_GEMSTONE} 10"));
+        context.pump(Duration::from_millis(400));
+    }
+
     let player_id = context.player_id;
     let mut outcomes: Vec<SkillOutcome> = Vec::new();
     let mut ground_cast_index: usize = 0;
@@ -2204,6 +2220,10 @@ fn sweep_job(config: &Config, job_id: u16, job_name: &str) -> Result<(), String>
     // runs the way the observer scenario's ammunition did.
     if needs_traps {
         let _ = context.say(&format!("@delitem {TRAP_ITEM} 30000"));
+        context.pump(Duration::from_millis(300));
+    }
+    if needs_blue_gems {
+        let _ = context.say(&format!("@delitem {BLUE_GEMSTONE} 30000"));
         context.pump(Duration::from_millis(300));
     }
 

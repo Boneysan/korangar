@@ -233,37 +233,35 @@ reclaim_orphans() {
 }
 
 stop_servers() {
-    local pid attempt still_running
-    for pid in "${server_pids[@]-}"; do
-        if [ -n "$pid" ] && kill -0 "$pid" 2>/dev/null; then
-            kill "$pid" 2>/dev/null || true
-        fi
-    done
+    # Stop in reverse start order: map-server, then char-server, then
+    # login-server, each fully exited before the next is signalled. Signalling
+    # all three at once let char-server exit before map-server's final
+    # character saves reached it, so the last scenario's character lost
+    # whatever it picked up since its last autosave: the item log had every
+    # pickup and SQL did not (2026-10-05: "char 150000 item 915: holds 6, item
+    # log totals 15" after a two-scenario run; full runs hid it because later
+    # scenarios' logins forced the save first).
+    local index pid attempt
+    for ((index = ${#server_pids[@]} - 1; index >= 0; index--)); do
+        pid="${server_pids[$index]}"
+        [ -n "$pid" ] || continue
+        kill -0 "$pid" 2>/dev/null && kill "$pid" 2>/dev/null || true
 
-    # Hercules normally exits promptly on SIGTERM, but map-server can remain
-    # alive indefinitely while tearing down a heavily exercised skill run.
-    # Never strand CI after the tester has already produced its result: allow a
-    # bounded graceful window, then stop only the exact PIDs this script owns.
-    attempt=0
-    while [ "$attempt" -lt 100 ]; do
-        still_running=false
-        for pid in "${server_pids[@]-}"; do
-            if [ -n "$pid" ] && kill -0 "$pid" 2>/dev/null; then
-                still_running=true
-                break
-            fi
+        # Hercules normally exits promptly on SIGTERM, but map-server can
+        # remain alive indefinitely while tearing down a heavily exercised
+        # skill run. Never strand CI after the tester has already produced its
+        # result: allow a bounded graceful window, then stop only the exact PID
+        # this script owns.
+        attempt=0
+        while [ "$attempt" -lt 100 ] && kill -0 "$pid" 2>/dev/null; do
+            sleep 0.1
+            attempt=$((attempt + 1))
         done
-        ! $still_running && break
-        sleep 0.1
-        attempt=$((attempt + 1))
-    done
-
-    for pid in "${server_pids[@]-}"; do
-        if [ -n "$pid" ] && kill -0 "$pid" 2>/dev/null; then
+        if kill -0 "$pid" 2>/dev/null; then
             echo "warning: server pid $pid did not stop gracefully; forcing shutdown" >&2
             kill -9 "$pid" 2>/dev/null || true
         fi
-        [ -n "$pid" ] && wait "$pid" 2>/dev/null || true
+        wait "$pid" 2>/dev/null || true
     done
     server_pids=()
 }
