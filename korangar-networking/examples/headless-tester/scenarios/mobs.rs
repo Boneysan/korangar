@@ -976,8 +976,18 @@ fn wear_down_poring(config: &Config, map: &str) -> Result<(Vec<Seen>, usize), St
         // 600 ms later killed a Poring already at 20/60 before it could flee,
         // and the test reported "never fled".
         if dealt >= PORING_HP - PORING_HP * 35 / 100 {
-            let events = context.collect_for(Duration::from_millis(3000));
-            record(&context, target, events, &mut seen);
+            // Up to 8 s, stopping as soon as it runs. Fleeing is a skill
+            // (NPC_RUN), and a Poring that has just attacked waits out its
+            // attack delay (~1.9 s) before it can use one; 3 s was too tight
+            // on a slow CI runner (2026-10-05: "never fled" at 40/60 with no
+            // step at all, while it passed 4/4 locally).
+            for _ in 0..8 {
+                let events = context.collect_for(Duration::from_millis(1000));
+                record(&context, target, events, &mut seen);
+                if !flees(&seen).is_empty() {
+                    break;
+                }
+            }
             break;
         }
         if swing % 2 == 0 {
