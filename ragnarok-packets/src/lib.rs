@@ -5883,6 +5883,34 @@ pub struct PartyInviteSenderPacket {
     pub character_name: String,
 }
 
+/// Who earned the MVP of a kill (`ZC_MVP`, Hercules `clif_mvp_effect`), sent
+/// to everyone around it. Arrives before the boss's death packet
+/// (`mob_dead`), so a recap can still attach it.
+#[derive(Debug, Clone, Packet, ServerPacket, MapServer)]
+#[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
+#[header(0x010C)]
+pub struct MvpPacket {
+    pub account_id: AccountId,
+}
+
+/// The MVP's reward item, to the MVP only (`ZC_MVP_GETTING_ITEM`,
+/// `clif_mvp_item`). A 4-byte id at this packet version (length 6).
+#[derive(Debug, Clone, Packet, ServerPacket, MapServer)]
+#[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
+#[header(0x010A)]
+pub struct MvpItemPacket {
+    pub item_id: ItemId,
+}
+
+/// The MVP's bonus EXP, to the MVP only (`ZC_MVP_GETTING_SPECIAL_EXP`,
+/// `clif_mvp_exp`, capped at `INT32_MAX` by the server).
+#[derive(Debug, Clone, Packet, ServerPacket, MapServer)]
+#[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
+#[header(0x010B)]
+pub struct MvpExperiencePacket {
+    pub experience: u32,
+}
+
 /// Why a skill failed, when the protocol has no code for it
 /// (`ZC_SKILL_FAIL_REASON`, **fork packet 0x0EFE**).
 ///

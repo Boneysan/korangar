@@ -621,6 +621,18 @@ pub enum NetworkEvent {
     },
     /// Fork packet 0x0EFF: names the sender of the `PartyInvite` that follows.
     /// Arrives first; pair the two by `party_id`.
+    /// `account_id` earned the MVP of a kill nearby (0x010C).
+    Mvp {
+        account_id: AccountId,
+    },
+    /// We were the MVP and received this item (0x010A).
+    MvpReward {
+        item_id: ItemId,
+    },
+    /// We were the MVP and received this bonus EXP (0x010B).
+    MvpExperience {
+        experience: u32,
+    },
     PartyInviteSender {
         party_id: PartyId,
         character_name: String,

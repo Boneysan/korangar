@@ -1877,6 +1877,43 @@ mod packet_handlers {
     /// which no static table can reach. Fed as two reads, exactly as Hercules
     /// sends them, so this covers the pairing and not just the wording.
     #[test]
+    fn mvp_packets_name_the_mvp_and_the_reward() {
+        use ragnarok_bytes::ByteReader;
+        use ragnarok_packets::handler::HandlerResult;
+        use ragnarok_packets::{AccountId, ItemId};
+
+        use crate::NetworkEvent;
+
+        let mut handler = NetworkingSystem::create_map_server_packet_handler(NoPacketCallback, SupportedPacketVersion::_20220406).unwrap();
+        let mut one = |bytes: &[u8]| {
+            let mut reader = ByteReader::without_metadata(bytes);
+            let HandlerResult::Ok(events) = handler.process_one(&mut reader) else {
+                panic!("packet {:02X}{:02X} did not parse", bytes[1], bytes[0]);
+            };
+            assert!(reader.is_empty(), "packet {:02X}{:02X} left bytes unread", bytes[1], bytes[0]);
+            events.0
+        };
+        // Lengths per Hercules packets2022_len_main.h: all three are 6 bytes.
+        let events = one(&[0x0C, 0x01, 0x40, 0x42, 0x0F, 0x00]);
+        assert!(
+            matches!(events.as_slice(), [NetworkEvent::Mvp {
+                account_id: AccountId(1_000_000)
+            }]),
+            "{events:?}"
+        );
+        let events = one(&[0x0A, 0x01, 0x8F, 0x0A, 0x00, 0x00]); // 2703
+        assert!(
+            matches!(events.as_slice(), [NetworkEvent::MvpReward { item_id: ItemId(2703) }]),
+            "{events:?}"
+        );
+        let events = one(&[0x0B, 0x01, 0xA0, 0x86, 0x01, 0x00]); // 100000
+        assert!(
+            matches!(events.as_slice(), [NetworkEvent::MvpExperience { experience: 100_000 }]),
+            "{events:?}"
+        );
+    }
+
+    #[test]
     fn skill_fail_reason_0x0efe_explains_the_following_failure() {
         use ragnarok_bytes::ByteReader;
         use ragnarok_packets::handler::HandlerResult;

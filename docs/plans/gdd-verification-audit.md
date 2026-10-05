@@ -80,7 +80,7 @@ CI where missing.
 | F31 | No assign/complete action; board was local to one client | Fixed 2026-10-04: a shared board on the server (Hercules `commission_board.txt`, table `korangar_commission`), seen by every player; `commission-board-shared` (two clients) passes and fails against both mutations (no poster check; viewer-only list). Never seen on screen (GUI pass 8.9) |
 | F16 | Recap tracks damage taken/interrupts; toast shows only damage dealt | Fixed 2026-10-04: the toast shows dealt, taken and interrupts, and the full recap is posted to chat; never seen live (GUI pass 8.10) |
 | PR #10 | Live-confirmed 2026-09-18 fixes never reached `main` | Settled 2026-10-03: 7 ported + WASD merged (below) |
-| F04 | Stat view modes not wired to any window | Claim wrong — open |
+| F04 | Stat view modes not wired to any window | Fixed 2026-10-04 (korangar #21): Stats window "View:" button cycles Simple / Detailed / Advanced; never seen live (GUI pass 8.4) |
 | F03 | ~~Build planner projections not shown~~ — wrong: shown via `state/build_planner.rs` (Batch 5) | Closed |
 | CI | PR gate covers 10/206 scenarios; Batch 1 scenarios only weekly | Open |
 
@@ -143,11 +143,11 @@ ports has been seen live; each needs a line in the GUI pass.
 |---|---|---|---|---|
 | F14 | Verified (unseen) | Boot log loads 29 profiles; `check_mob_skill_families.py` passes; 6 mob-AI scenarios pass (skirmisher ×2, keeper ×2, coward, raydric) | **Fabre `Aggressor` on `prt_fild08` is now really aggressive** (it was inert until the 10-03 mode fix) and swarms the novice field; it breaks `party-quest-credit` (A/B: passes with the profile removed). Design call needed | 2026-10-03 |
 | F15 | Verified (unseen) | `mob-eddga-pilot-skills`, `-meteor-and-enrage`, `mob-elite-population`, `mob-elite-rollback-switch` pass | No live fight watched | 2026-10-03 |
-| F16 | Partial | Eddga runtime-verified (`mob-eddga-summons-escorts`). Data check of all 11 MVPs: every cast ≥1 s is `Cancelable`, enrage at 30/40(50)/80% HP, no teleport, escorts restored | The other 10 MVPs are data-checked only, never fought; client recap fields still partial (see above) | 2026-10-03 |
+| F16 | Partial | Eddga runtime-verified (`mob-eddga-summons-escorts`). Data check of all 11 MVPs: every cast ≥1 s is `Cancelable`, enrage at 30/40(50)/80% HP, no teleport, escorts restored | All ten other MVPs fought by `mob-pilot-mvps-summon-escorts` (PR #18). Recap shows dealt/taken/interrupts (#24) and the MVP, reward and bonus EXP (0x010A/B/C modelled, 2026-10-04). Not seen on screen | 2026-10-04 |
 | F21 / S3 | Verified | `party-experience-sharing` passes: solo 117/87, 31-cell pair 72/53 each, 30-level boundary in, 31-level and other map out; `party_even_share_bonus: 25`, `party_share_level: 30` tracked in config | — | 2026-10-03 |
 | F34 / S4 | Verified | `death-recovery-save-point` passes; `death-recovery-ten-kill-threshold` **fixed and 6/6 green** (was flaky since `af45e4ab`); danger warning wired with boundary tests | Root cause was the test, not the server: a killing hit sends damage then death back to back, the loop returned on the damage, and the next `flush()` discarded the death, so it attacked a corpse. `af45e4ab`'s `@str 60` made one-hit kills the norm. The quest-Spore helper had the same latent flaw; both fixed | 2026-10-03 |
 | S8 | Verified, test broken | Shared kill credit passes (mixed ownership, 30/31 cells, solo after leave) **with the Fabre profile removed** | `party-quest-credit` fails as shipped: Fabres swarm the test character on `prt_fild08` (see F14) | 2026-10-03 |
-| F39 | Partial | **First ever run**: `party-quest-interaction-credit` passes under the disposable runner (mixed ownership, 30/31 range, party leave) | Disconnect and dead-member cases untested; no quest uses the commands yet | 2026-10-03 |
+| F39 | Partial | **First ever run**: `party-quest-interaction-credit` passes under the disposable runner (mixed ownership, 30/31 range, party leave) | Dead/revived/disconnected/former members covered (sections E–H). Content check 2026-10-04: no quest here needs the commands — every non-fixture quest, the 41 hunts included, is campaign content already shared party-wide (offline members too) by `DM_PartyApplyQuest`. Only stock RO quests could use them; that is an owner choice | 2026-10-04 |
 | S10 | Verified | All 5 `dm-party-*` scenarios pass under the disposable runner (offline replay and transitions, recreation and reward isolation, alternate character) | — | 2026-10-03 |
 | F09 | Verified (unseen) | Every cited function has a production caller (`hovered_skill_range`, `pending_skill_cursor_state`, `stippled_footprint_cells`, quickcast/hold-aim settings in the window) | GUI pass | 2026-10-03 |
 | F10 | Fixed, unseen | Throttle wired at the hold-mouse site. **Defect:** it re-sent an unchanged destination every 200 ms mid-walk; Hercules answers each with a new `PlayerMove` (`unit.c` `change_walk_target`) — the WASD stutter mechanism. Fixed `f5703669` (test expectation changed on that source evidence) | Live check: hold the mouse on a far tile | 2026-10-03 |
@@ -175,7 +175,7 @@ ports has been seen live; each needs a line in the GUI pass.
 | F33 | Verified (unseen) | `render_tooltips` flips each tooltip to the roomier side of the cursor; `handle_drag` constrains windows | Screenshot matrix | 2026-10-04 |
 | F35 | Verified (unseen) | Five cues played from `lib.rs` via `state/audio_cues.rs` | Never heard; fit by ear pending | 2026-10-04 |
 | F36 | Verified | `@metrics` exercised by `mob-elite-population` (passes, name-based count since 10-03) | No real-session use yet | 2026-10-04 |
-| F38 | Historical | The 2026-10-03 regression figures are a point-in-time record, not a standing check | The headless tester has 38 clippy errors CI never sees (lint runs without `--examples`) | 2026-10-04 |
+| F38 | Historical | The 2026-10-03 regression figures are a point-in-time record, not a standing check | Fixed: `lint.yml` now runs clippy on the headless tester | 2026-10-04 |
 | Slices 1, 4, 15 | Verified (unseen) | `ToastQueue` drives HUD notices; character delete with typed-name confirmation; High Contrast and Deuteranopia are in the theme lists and load real palettes (`state/theme/interface.rs`) | GUI pass | 2026-10-04 |
 
 ## Open work (collected 2026-10-04, after Batches 0–6)
@@ -197,19 +197,19 @@ One list of everything the audit left open. Tick an item here when it is done an
 - [x] F27 refine odds checked independently (2026-10-04): 69 values in `docs/refine.v1.json` (every +1..+10 chance for armor and weapon levels 1-4, base costs, armor DEF bonus, weapon stats per level) match `db/re/refine_db.conf` read with Hercules' own libconf. 0 disagree.
 
 **Claims that are wrong or partial (decide: build, or correct the row)**
-- [ ] **Decided 2026-10-04: build.** Hotbar per-slot cooldown overlay (dim the slot, show seconds left) from the existing cooldown state.
-- [ ] **Decided 2026-10-04: keep owed rewards.** `@dm reset` must not delete grants already earned by offline members; they are paid at the next sync.
-- [ ] **Decided 2026-10-04: build the switch.** F04: wire Simple/Detailed/Advanced into the Stats window from `world/stat_view.rs`.
-- [ ] **Decided 2026-10-04: build all three.** F23: timestamp toggle, tab unread markers, and validated `<GUIDE:id>` chat links.
+- [x] **Decided 2026-10-04: build.** (Done, korangar #21; GUI pass 8.1.) Hotbar per-slot cooldown overlay (dim the slot, show seconds left) from the existing cooldown state.
+- [x] **Decided 2026-10-04: keep owed rewards.** (Done, Hercules #11; scenario `dm-reset-keeps-owed-rewards`.) `@dm reset` must not delete grants already earned by offline members; they are paid at the next sync.
+- [x] **Decided 2026-10-04: build the switch.** (Done, korangar #21; GUI pass 8.4.) F04: wire Simple/Detailed/Advanced into the Stats window from `world/stat_view.rs`.
+- [x] **Decided 2026-10-04: build all three.** (Done, korangar #21; GUI pass 8.2, 8.3, 8.5, 8.6.) F23: timestamp toggle, tab unread markers, and validated `<GUIDE:id>` chat links.
 - [x] F11: prediction and rollback have no tests; extract them from `Client` into testable functions. **Done:** PR #16 — `predict_motion` / `rollback_motion` tested with a fake player; mutation-checked.
 - [x] F16: 10 of 11 pilot MVPs are data-checked only; add one fight scenario per MVP (or a sweep). **Done:** PR #18 — `mob-pilot-mvps-summon-escorts` fights all ten; fails naming each when escorts are stripped.
-- [ ] F16 recap: damage taken and interrupts are tracked but not shown.
+- [x] F16 recap: damage taken and interrupts are tracked but not shown. (Shown since korangar #24; MVP lines added 2026-10-04.)
 - [x] F39: dead, revived, disconnected and former members are all covered by `party-quest-interaction-credit` sections E–H, which pass (the open note predated them). Remaining: no quest uses `partycompletequest` yet (content decision).
 - [x] F22 and F24 rows cite names that do not exist (`PartyMemberLocationUpdate`, `RequestEquipItem`, `SavedEquipmentSets`); correct the text. **Done:** PR #18 — rows name the real code; `gdd_claims.py` reports 0 findings.
 
 **Live checks nobody can automate**
 - [ ] GUI verification pass, including section 7 (the PR #10 ports, WASD corner/slide, Mouse4/Mouse5, hold-mouse movement).
-- [ ] Two-client session: party marks, goals, frames, pings, ready check, trade.
+- [ ] Two-client session: party marks, goals, frames, pings, ready check, trade (GUI 8.11), commission board (GUI 8.9).
 - [ ] Listen to the five F35 audio cues.
 - [ ] Run the Windows pack on Windows (never done), including the Vulkan/DX12 choice.
 - [ ] Pack version gate: the client sends its version but the server check is off; turn it on with the next pack.
@@ -220,5 +220,5 @@ One list of everything the audit left open. Tick an item here when it is done an
 - [x] Replace the six file-wide `#![allow(dead_code)]` with item-level allowances, and remove the unused duplicates found here (`skill_info.rs` timing helpers, `calculate_projections`, possibly `stat_view.rs`). **Done:** PR #18 — seven modules now use reasoned `expect(dead_code)`; the unused `SkillBox` component was deleted.
 - [x] Triage the 21 unread fields/methods in `dm/reference_data.rs`. **Done:** PR #18 — `docs/plans/reference-data-unread-fields.md`.
 - [x] `finale-loki-briefing` (2026-10-04 full run): a test bug. Hercules f6974e0ad made Loki's audience menu loop until "We are ready"; the test took the first option and looped. Fixed; the driver now reports the last menus when it runs out of steps.
-- [ ] `mob-coward-poring` failed once in the 2026-10-04 full run ("never fled" after a 235-damage hit) and passed on rerun. Intermittent; investigate if it recurs.
+- [x] (Fixed 2026-10-04: five test-side causes plus a real Coward AI bug, Hercules #12 / korangar #22; 5/5 green.) `mob-coward-poring` failed once in the 2026-10-04 full run ("never fled" after a 235-damage hit) and passed on rerun. Intermittent; investigate if it recurs.
 - [x] `skills-professor` failed in the 2026-10-02 full run; it passes in the 2026-10-04 disposable run (85.8 s). Watch for a recurrence.

@@ -1620,6 +1620,13 @@ where
         previous_leader_account_id: packet.previous_leader_account_id,
         new_leader_account_id: packet.new_leader_account_id,
     })?;
+    packet_handler.register(|packet: MvpPacket| NetworkEvent::Mvp {
+        account_id: packet.account_id,
+    })?;
+    packet_handler.register(|packet: MvpItemPacket| NetworkEvent::MvpReward { item_id: packet.item_id })?;
+    packet_handler.register(|packet: MvpExperiencePacket| NetworkEvent::MvpExperience {
+        experience: packet.experience,
+    })?;
     packet_handler.register(|packet: PartyInviteSenderPacket| NetworkEvent::PartyInviteSender {
         party_id: packet.party_id,
         character_name: packet.character_name,

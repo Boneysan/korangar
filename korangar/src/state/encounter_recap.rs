@@ -6,7 +6,7 @@
 //! encounter duration, and MVP recognition without altering gameplay or
 //! forcing scripted cutscenes.
 
-use ragnarok_packets::{ClientTick, EntityId, ItemId};
+use ragnarok_packets::{ClientTick, EntityId};
 
 /// A finalized recap of a concluded boss encounter.
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -18,7 +18,10 @@ pub struct EncounterRecap {
     pub damage_taken: u32,
     pub casts_interrupted: u32,
     pub mvp_player_name: Option<String>,
-    pub mvp_reward_item_id: Option<ItemId>,
+    /// The reward's display name, resolved when it arrived: user-facing text
+    /// never shows a raw item id.
+    pub mvp_reward: Option<String>,
+    pub mvp_experience: Option<u32>,
 }
 
 impl EncounterRecap {
@@ -53,12 +56,20 @@ impl EncounterRecap {
         if let Some(mvp) = &self.mvp_player_name {
             lines.push(format!("MVP: {mvp}"));
         }
-        // `mvp_reward_item_id` is not printed: user-facing text never shows a
-        // raw item id, and nothing records an award yet (`record_mvp_award`).
+        if let Some(reward) = &self.mvp_reward {
+            lines.push(format!("MVP Reward: {reward}"));
+        }
+        if let Some(experience) = self.mvp_experience {
+            lines.push(format!("MVP Bonus EXP: {experience}"));
+        }
 
         lines.join("\n")
     }
 }
+
+/// How long before the boss's death an MVP packet may arrive and still be
+/// this kill's. The server sends both in one tick; this allows for jitter.
+const MVP_WINDOW_MS: u32 = 2000;
 
 /// Accumulator tracking boss engagement state.
 #[derive(Clone, Debug, Default)]
@@ -70,7 +81,10 @@ pub struct EncounterRecapState {
     damage_taken: u32,
     casts_interrupted: u32,
     pending_mvp_name: Option<String>,
-    pending_mvp_reward: Option<ItemId>,
+    pending_mvp_reward: Option<String>,
+    pending_mvp_experience: Option<u32>,
+    /// When the last MVP packet arrived.
+    pending_mvp_tick: Option<u32>,
     latest_recap: Option<EncounterRecap>,
 }
 
@@ -91,6 +105,8 @@ impl EncounterRecapState {
         self.casts_interrupted = 0;
         self.pending_mvp_name = None;
         self.pending_mvp_reward = None;
+        self.pending_mvp_experience = None;
+        self.pending_mvp_tick = None;
     }
 
     /// Record damage dealt by the player to a target entity.
@@ -114,14 +130,24 @@ impl EncounterRecapState {
         }
     }
 
-    /// Record MVP award announcement or bonus item packet.
-    #[cfg_attr(not(test), allow(dead_code))] // nothing calls it yet: MVP announcements are not wired to the recap
-    pub fn record_mvp_award(&mut self, player_name: Option<String>, reward_item: Option<ItemId>) {
+    /// Record the MVP announcement (0x010C), the MVP's reward (0x010A, its
+    /// resolved name) or bonus EXP (0x010B). The server sends them just before
+    /// the boss's death packet, so they attach to the encounter it closes.
+    /// None of them names the monster, so they are taken only while a boss
+    /// is being tracked: an MVP killed by strangers nearby is not ours.
+    pub fn record_mvp_award(&mut self, player_name: Option<String>, reward: Option<String>, experience: Option<u32>, now: ClientTick) {
+        if self.active_boss_id.is_none() {
+            return;
+        }
+        self.pending_mvp_tick = Some(now.0);
         if player_name.is_some() {
             self.pending_mvp_name = player_name;
         }
-        if reward_item.is_some() {
-            self.pending_mvp_reward = reward_item;
+        if reward.is_some() {
+            self.pending_mvp_reward = reward;
+        }
+        if experience.is_some() {
+            self.pending_mvp_experience = experience;
         }
     }
 
@@ -130,6 +156,15 @@ impl EncounterRecapState {
         if self.active_boss_id != Some(boss_id) {
             return None;
         }
+
+        // `mob_dead` sends the MVP packets in the same server tick as the death
+        // packet. Anything older belongs to some other kill nearby.
+        if self.pending_mvp_tick.is_some_and(|tick| now.0.saturating_sub(tick) > MVP_WINDOW_MS) {
+            self.pending_mvp_name = None;
+            self.pending_mvp_reward = None;
+            self.pending_mvp_experience = None;
+        }
+        self.pending_mvp_tick = None;
 
         let start = self.start_tick.unwrap_or(now);
         let duration_ms = now.0.saturating_sub(start.0);
@@ -142,7 +177,8 @@ impl EncounterRecapState {
             damage_taken: self.damage_taken,
             casts_interrupted: self.casts_interrupted,
             mvp_player_name: self.pending_mvp_name.take(),
-            mvp_reward_item_id: self.pending_mvp_reward.take(),
+            mvp_reward: self.pending_mvp_reward.take(),
+            mvp_experience: self.pending_mvp_experience.take(),
         };
 
         self.active_boss_id = None;
@@ -165,6 +201,8 @@ impl EncounterRecapState {
         self.casts_interrupted = 0;
         self.pending_mvp_name = None;
         self.pending_mvp_reward = None;
+        self.pending_mvp_experience = None;
+        self.pending_mvp_tick = None;
     }
 
     /// Get the most recently completed encounter recap, if any.
@@ -216,7 +254,9 @@ mod tests {
         state.record_cast_interrupted(minion);
 
         // MVP award.
-        state.record_mvp_award(Some("Hero".to_string()), Some(ItemId(501)));
+        state.record_mvp_award(Some("Hero".to_string()), None, None, tick(23_900));
+        state.record_mvp_award(None, Some("Red Potion".to_string()), None, tick(23_900));
+        state.record_mvp_award(None, None, Some(4200), tick(23_900));
 
         // Boss defeat at tick 25000 (24.0s elapsed).
         let recap = state.finish_encounter(boss, tick(25000)).expect("recap produced");
@@ -228,7 +268,8 @@ mod tests {
         assert_eq!(recap.damage_taken, 300);
         assert_eq!(recap.casts_interrupted, 1);
         assert_eq!(recap.mvp_player_name.as_deref(), Some("Hero"));
-        assert_eq!(recap.mvp_reward_item_id, Some(ItemId(501)));
+        assert_eq!(recap.mvp_reward.as_deref(), Some("Red Potion"));
+        assert_eq!(recap.mvp_experience, Some(4200));
 
         // Active state is cleared.
         assert!(!state.is_tracking_boss(boss));
@@ -241,8 +282,8 @@ mod tests {
         assert!(summary.contains("Damage Taken: 300"));
         assert!(summary.contains("Enemy Casts Interrupted: 1"));
         assert!(summary.contains("MVP: Hero"));
-        // The reward is recorded as item 501 above; its raw id must not leak.
-        assert!(!summary.contains("501"), "{summary}");
+        assert!(summary.contains("MVP Reward: Red Potion"), "{summary}");
+        assert!(summary.contains("MVP Bonus EXP: 4200"), "{summary}");
 
         // The toast carries every tracked number, not only damage dealt.
         assert_eq!(
@@ -284,5 +325,33 @@ mod tests {
 
         // Finishing a cleared encounter produces nothing
         assert_eq!(state.finish_encounter(boss, tick(500)), None);
+    }
+
+    #[test]
+    fn another_kills_mvp_during_our_fight_is_not_ours() {
+        let mut state = EncounterRecapState::default();
+        let boss = id(1115);
+        state.start_or_continue_encounter(boss, "Eddga", tick(0));
+        // Strangers finish a different MVP nearby, 20 s into our fight.
+        state.record_mvp_award(Some("Stranger".to_string()), None, None, tick(20_000));
+        let recap = state.finish_encounter(boss, tick(40_000)).expect("tracked");
+        assert_eq!(recap.mvp_player_name, None);
+        assert!(!recap.format_summary().contains("MVP"), "{}", recap.format_summary());
+
+        // Packets that arrive with the death are kept.
+        state.start_or_continue_encounter(boss, "Eddga", tick(50_000));
+        state.record_mvp_award(Some("Hero".to_string()), None, None, tick(59_990));
+        let recap = state.finish_encounter(boss, tick(60_000)).expect("tracked");
+        assert_eq!(recap.mvp_player_name.as_deref(), Some("Hero"));
+    }
+
+    #[test]
+    fn an_mvp_nobody_here_was_fighting_is_ignored() {
+        let mut state = EncounterRecapState::default();
+        state.record_mvp_award(Some("Stranger".to_string()), None, None, tick(0));
+        let boss = id(1115);
+        state.start_or_continue_encounter(boss, "Eddga", tick(0));
+        let recap = state.finish_encounter(boss, tick(1000)).expect("tracked");
+        assert_eq!(recap.mvp_player_name, None);
     }
 }
