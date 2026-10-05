@@ -326,6 +326,12 @@ where
         }
     })?;
     packet_handler.register_noop::<OpenUiPacket>()?;
+    // Reviewed no-op: the cast it scales already arrives as its own packet and
+    // drives the telegraph; the scale hint adds nothing the client draws yet.
+    packet_handler.register_noop::<SkillScalePacket>()?;
+    // Reviewed no-op: the client has no party loot feed yet; a later one could
+    // say "<member> picked up <item>" from this.
+    packet_handler.register_noop::<PartyItemPickupPacket>()?;
     packet_handler.register(|packet: EntityMessagePacket| {
         // Drop the alpha channel because it might be 0.
         let color = MessageColor::Rgb {
@@ -1619,6 +1625,13 @@ where
     packet_handler.register(|packet: PartyLeaderChangedPacket| NetworkEvent::PartyLeaderChanged {
         previous_leader_account_id: packet.previous_leader_account_id,
         new_leader_account_id: packet.new_leader_account_id,
+    })?;
+    packet_handler.register(|packet: MvpPacket| NetworkEvent::Mvp {
+        account_id: packet.account_id,
+    })?;
+    packet_handler.register(|packet: MvpItemPacket| NetworkEvent::MvpReward { item_id: packet.item_id })?;
+    packet_handler.register(|packet: MvpExperiencePacket| NetworkEvent::MvpExperience {
+        experience: packet.experience,
     })?;
     packet_handler.register(|packet: PartyInviteSenderPacket| NetworkEvent::PartyInviteSender {
         party_id: packet.party_id,

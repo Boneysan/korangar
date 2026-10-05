@@ -246,8 +246,16 @@ B2b|noop=OpenMarketPacket
 B2b|noop=OpenUiPacket
 B2b|noop=Packet0b18
 B2b|noop=Packet8302
+# 0x0B67 ZC_ITEM_PICKUP_PARTY (2026-10-05): "a party member picked something up".
+# No party loot feed exists to show it; parsed so it leaves the unknown-packet
+# backlog. A future feed could print "<member> picked up <item>" from it.
+B2b|noop=PartyItemPickupPacket
 B2b|noop=PersonalInformationPacket
 B2b|noop=ReputationPacket
+# 0x0A41 ZC_SKILL_SCALE (2026-10-05): an area-scale hint sent after the ordinary
+# cast packet for INF2_SHOW_SKILL_SCALE skills. The cast packet already drives
+# the telegraph, so nothing is dropped that the client draws.
+B2b|noop=SkillScalePacket
 B2b|noop=UpdateConfigurationPacket
 B2b|noop=UpdateShowEquipPacket
 #

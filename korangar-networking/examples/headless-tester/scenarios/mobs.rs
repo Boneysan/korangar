@@ -71,6 +71,12 @@ enum Seen {
     Miss,
     /// The server refused the attack (out of range, not attackable...).
     Refused,
+    /// Something other than the player damaged it (source id, amount).
+    OtherHit(u32, usize),
+    /// The player started walking (server tick). The tester takes the walk's
+    /// destination as the player's position at once, so for a moment after
+    /// this a monster step toward where the player really is can read as away.
+    PlayerMoved(u32),
     /// It moved one cell. `away` means that cell is farther from the player.
     Step {
         tick: u32,
@@ -79,6 +85,8 @@ enum Seen {
         distance_before: i32,
         distance_after: i32,
         length: i32,
+        /// Origin, destination and the player's position, for failure messages.
+        trace: [(i32, i32); 3],
     },
 }
 
@@ -100,7 +108,14 @@ fn record(context: &TestContext, mob: EntityId, events: Vec<NetworkEvent>, seen:
                 destination_entity_id,
                 ..
             } if source_entity_id == context.player_id && destination_entity_id == mob => seen.push(Seen::Miss),
+            NetworkEvent::DamageEffect {
+                source_entity_id,
+                destination_entity_id,
+                damage_amount: Some(amount),
+                ..
+            } if destination_entity_id == mob && amount > 0 => seen.push(Seen::OtherHit(source_entity_id.0, amount)),
             NetworkEvent::AttackFailed { .. } => seen.push(Seen::Refused),
+            NetworkEvent::PlayerMove { starting_timestamp, .. } => seen.push(Seen::PlayerMoved(starting_timestamp.0)),
             NetworkEvent::EntityMove {
                 entity_id,
                 origin,
@@ -108,14 +123,42 @@ fn record(context: &TestContext, mob: EntityId, events: Vec<NetworkEvent>, seen:
                 starting_timestamp,
             } if entity_id == mob => {
                 let me = context.position;
+                // A step that starts within a second of the player setting off
+                // is measured against a position the player has not reached. A
+                // real retreat comes first and *causes* that walk (the next
+                // attack request chases it), so it is never in this window.
+                let player_walking = seen
+                    .iter()
+                    .rev()
+                    .find_map(|item| match item {
+                        Seen::PlayerMoved(tick) => Some(*tick),
+                        _ => None,
+                    })
+                    .is_some_and(|moved| starting_timestamp.0.wrapping_sub(moved) < 1000);
+                // The server re-sends a walk in progress with an updated origin
+                // and the same destination ((132,70)->(133,71) then
+                // (132,71)->(133,71), 221 ms apart, on 2026-10-05). That is one
+                // retreat, not two.
+                let same_walk = seen.iter().rev().find_map(|item| match item {
+                    Seen::Step {
+                        trace: [_, previous_to, _],
+                        ..
+                    } => Some(*previous_to),
+                    _ => None,
+                }) == Some((destination.tile_position().x as i32, destination.tile_position().y as i32));
                 let (from, to) = (origin.tile_position(), destination.tile_position());
                 let distance_after = chebyshev(to, me);
                 seen.push(Seen::Step {
                     tick: starting_timestamp.0,
-                    away: chebyshev(from, to) == 1 && distance_after > chebyshev(from, me),
+                    away: chebyshev(from, to) == 1 && distance_after > chebyshev(from, me) && !player_walking && !same_walk,
                     distance_before: chebyshev(from, me),
                     distance_after,
                     length: chebyshev(from, to),
+                    trace: [
+                        (from.x as i32, from.y as i32),
+                        (to.x as i32, to.y as i32),
+                        (me.x as i32, me.y as i32),
+                    ],
                 });
             }
             _ => {}
@@ -136,14 +179,42 @@ fn retreat_ticks(seen: &[Seen]) -> Vec<u32> {
 /// saw.
 fn summary(seen: &[Seen]) -> String {
     let count = |wanted: fn(&Seen) -> bool| seen.iter().filter(|item| wanted(item)).count();
+    let others: Vec<String> = seen
+        .iter()
+        .filter_map(|item| match item {
+            Seen::OtherHit(source, amount) => Some(format!("{amount} from {source}")),
+            _ => None,
+        })
+        .collect();
     format!(
-        "{} hit, {} missed, {} refused, {} step(s) ({} away)",
+        "{} hit ({}), {} missed, {} refused, {} step(s) ({} away){}",
         count(|item| matches!(item, Seen::Hit(_))),
+        seen.iter()
+            .filter_map(|item| match item {
+                Seen::Hit(amount) => Some(amount.to_string()),
+                _ => None,
+            })
+            .collect::<Vec<_>>()
+            .join("+"),
         count(|item| matches!(item, Seen::Miss)),
         count(|item| matches!(item, Seen::Refused)),
         count(|item| matches!(item, Seen::Step { .. })),
         count(|item| matches!(item, Seen::Step { away: true, .. })),
-    )
+        match others.is_empty() {
+            true => String::new(),
+            false => format!("; other damage: {}", others.join(", ")),
+        },
+    ) + &match seen
+        .iter()
+        .filter_map(|item| match item {
+            Seen::Step { trace: [from, to, me], .. } => Some(format!("{from:?}->{to:?} me {me:?}")),
+            _ => None,
+        })
+        .collect::<Vec<_>>()
+    {
+        steps if steps.is_empty() => String::new(),
+        steps => format!("; moves: {}", steps.join(", ")),
+    }
 }
 
 fn hits(seen: &[Seen]) -> usize {
@@ -192,8 +263,12 @@ fn attacker_at_level(config: &Config, map: &str, job: u16, level: u32) -> Result
     Ok(context)
 }
 
+/// Kill every monster on the map *without drops*. `@killmonster` drops their
+/// loot (`atkillmonster_sub` zaps rather than kills), and a freshly spawned
+/// Poring, a looter, then walked off to collect the Jellopies: six cells in a
+/// straight line, read as a flee at 20 damage with no Coward flee logged.
 fn clear_map(context: &mut TestContext) {
-    let _ = context.say("@killmonster");
+    let _ = context.say("@killmonster2");
     context.pump(Duration::from_millis(300));
     let _ = context.say("@alive");
     context.pump(Duration::from_millis(200));
@@ -221,6 +296,9 @@ fn beat_on(context: &mut TestContext, mob: (&str, u16), swings: usize, gap: Dura
     }
     Ok(seen)
 }
+
+/// `DamageMotion` of ORC_SKELETON (1152) and ELITE_ORC_SKELETON (20901).
+const SKELETON_DAMAGE_MOTION_MS: u32 = 648;
 
 /// How many times to try a profile case at a fresh spot before giving up. The
 /// step needs an open cell next to the monster and farther from the player; in
@@ -268,10 +346,17 @@ fn skirmisher_case(config: &Config, mob: (&str, u16), job: u16, swings: usize, t
         }
         for pair in ticks.windows(2) {
             let gap_ms = pair[1].wrapping_sub(pair[0]);
-            // Allow up to one server tick (100ms) of timer jitter.
-            if gap_ms < cooldown_ms.saturating_sub(100) {
+            // The ticks are when each walk *started*; the server times the
+            // cooldown from when it *decided*. A monster still reeling from a
+            // hit cannot start walking until its damage motion ends (648 ms
+            // for both skeletons), so a delayed retreat followed by a prompt
+            // one shows a gap up to that much short (2392 ms against 3000 on
+            // 2026-10-05, with the server's own decisions 3 s apart). Allow it,
+            // plus one server tick of jitter.
+            if gap_ms < cooldown_ms.saturating_sub(SKELETON_DAMAGE_MOTION_MS + 100) {
                 return Err(format!(
-                    "two retreats {gap_ms} ms apart; the cooldown is {cooldown_ms} ms ({ticks:?})"
+                    "two retreats {gap_ms} ms apart; the cooldown is {cooldown_ms} ms ({ticks:?}); {}",
+                    summary(&seen)
                 ));
             }
         }
@@ -589,9 +674,30 @@ fn eddga_summons_escorts(config: &Config) -> Result<(), String> {
     context.say("@heal")?;
     context.pump(Duration::from_millis(200));
     let result: Result<(), String> = (|| {
+        // Eddga summons Bigfoots the moment it spawns (MSC_SPAWN), and again
+        // only while it has 3 or fewer (MSC_SLAVELE). Those spawn-time escorts
+        // could arrive with Eddga itself and be thrown away by the flush below,
+        // after which it never summoned again: "no Bigfoot in 34 swings". So
+        // escorts are read from the entity list, which a flush still updates,
+        // counting only ones that were not on the field before Eddga.
+        let escorts_before: Vec<_> = context
+            .entities
+            .iter()
+            .filter(|(_, entity)| EDDGA_ESCORTS.contains(&entity.job_id.0))
+            .map(|(id, _)| *id)
+            .collect();
+        let new_escort = |context: &TestContext| {
+            context
+                .entities
+                .iter()
+                .any(|(id, entity)| EDDGA_ESCORTS.contains(&entity.job_id.0) && !escorts_before.contains(id))
+        };
         let eddga = context.spawn_monster(EDDGA.0, EDDGA.1)?;
         let mut casts: Vec<u16> = Vec::new();
         for swing in 0..34 {
+            if new_escort(&context) {
+                return Ok(());
+            }
             if swing % 2 == 0 {
                 context.say("@heal")?;
                 context.say("@alive")?;
@@ -609,6 +715,9 @@ fn eddga_summons_escorts(config: &Config) -> Result<(), String> {
                     _ => {}
                 }
             }
+        }
+        if new_escort(&context) {
+            return Ok(());
         }
         Err(format!(
             "a provoked Eddga summoned no Bigfoot ({EDDGA_ESCORTS:?}) in 34 swings; Eddga's casts: {casts:?}"
@@ -831,6 +940,9 @@ fn flees(seen: &[Seen]) -> Vec<usize> {
 /// Wear a Poring down with a level-1 character (1 to 3 damage a swing, so its
 /// 50 HP last) until it flees or dies; return what was seen and the damage
 /// dealt.
+/// Poring (1002) has 60 HP in `db/re/mob_db.conf`.
+const PORING_HP: usize = 60;
+
 fn wear_down_poring(config: &Config, map: &str) -> Result<(Vec<Seen>, usize), String> {
     let mut context = attacker_at_level(config, map, 0, 1)?;
     // The test characters are shared, and other scenarios leave STR at 90 or
@@ -859,6 +971,15 @@ fn wear_down_poring(config: &Config, map: &str) -> Result<(Vec<Seen>, usize), St
     let mut seen = Vec::new();
     let mut dealt = 0;
     for swing in 0..80 {
+        // At the threshold, stop swinging and give it time to run. A monster
+        // cannot move while it reels from a hit, so a third 20-damage swing
+        // 600 ms later killed a Poring already at 20/60 before it could flee,
+        // and the test reported "never fled".
+        if dealt >= PORING_HP - PORING_HP * 35 / 100 {
+            let events = context.collect_for(Duration::from_millis(3000));
+            record(&context, target, events, &mut seen);
+            break;
+        }
         if swing % 2 == 0 {
             context.say("@heal")?;
         }
@@ -898,7 +1019,6 @@ fn coward_poring(config: &Config) -> Result<(), String> {
     // Poring max HP is 60 (db/re/mob_db.conf Id 1002; the earlier "50" was
     // wrong): the flee may start once HP is at most 35% (21), i.e. after 39 or
     // more damage.
-    const PORING_HP: usize = 60;
     const FIRST_DAMAGE_THAT_CAN_TRIGGER: usize = PORING_HP - PORING_HP * 35 / 100;
 
     let (seen, dealt) = wear_down_poring(config, "prt_fild08")?;

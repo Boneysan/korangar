@@ -1877,6 +1877,80 @@ mod packet_handlers {
     /// which no static table can reach. Fed as two reads, exactly as Hercules
     /// sends them, so this covers the pairing and not just the wording.
     #[test]
+    fn skill_scale_0x0a41_is_consumed_whole() {
+        use ragnarok_bytes::ByteReader;
+        use ragnarok_packets::handler::HandlerResult;
+
+        let mut handler = NetworkingSystem::create_map_server_packet_handler(NoPacketCallback, SupportedPacketVersion::_20220406).unwrap();
+        // The bytes the 2026-10-04 full run captured.
+        let bytes = vec![
+            0x41, 0x0A, 0xF3, 0x09, 0x90, 0x06, 0xA0, 0x02, 0x05, 0x00, 0xAC, 0x00, 0x8B, 0x00, 0x00, 0x00, 0x00, 0x00,
+        ];
+        assert_eq!(bytes.len(), 18, "Hercules packetLen(0x0a41, 18)");
+        let mut reader = ByteReader::without_metadata(&bytes);
+        let HandlerResult::Ok(events) = handler.process_one(&mut reader) else {
+            panic!("0x0A41 did not parse");
+        };
+        assert!(events.0.is_empty(), "a reviewed no-op publishes nothing: {:?}", events.0);
+        assert!(reader.is_empty(), "0x0A41 must consume exactly its 18 bytes");
+    }
+
+    #[test]
+    fn party_item_pickup_0x0b67_is_consumed_whole() {
+        use ragnarok_bytes::ByteReader;
+        use ragnarok_packets::handler::HandlerResult;
+
+        let mut handler = NetworkingSystem::create_map_server_packet_handler(NoPacketCallback, SupportedPacketVersion::_20220406).unwrap();
+        // The 2026-10-05 sample (account 2000001 picked up item 1501), padded
+        // with the zero tail the run truncated, to Hercules' 33 bytes.
+        let mut bytes = vec![0x67, 0x0B, 0x81, 0x84, 0x1E, 0x00, 0xDD, 0x05, 0x00, 0x00];
+        bytes.resize(33, 0);
+        let mut reader = ByteReader::without_metadata(&bytes);
+        let HandlerResult::Ok(events) = handler.process_one(&mut reader) else {
+            panic!("0x0B67 did not parse");
+        };
+        assert!(events.0.is_empty(), "a reviewed no-op publishes nothing: {:?}", events.0);
+        assert!(reader.is_empty(), "0x0B67 must consume exactly its 33 bytes");
+    }
+
+    #[test]
+    fn mvp_packets_name_the_mvp_and_the_reward() {
+        use ragnarok_bytes::ByteReader;
+        use ragnarok_packets::handler::HandlerResult;
+        use ragnarok_packets::{AccountId, ItemId};
+
+        use crate::NetworkEvent;
+
+        let mut handler = NetworkingSystem::create_map_server_packet_handler(NoPacketCallback, SupportedPacketVersion::_20220406).unwrap();
+        let mut one = |bytes: &[u8]| {
+            let mut reader = ByteReader::without_metadata(bytes);
+            let HandlerResult::Ok(events) = handler.process_one(&mut reader) else {
+                panic!("packet {:02X}{:02X} did not parse", bytes[1], bytes[0]);
+            };
+            assert!(reader.is_empty(), "packet {:02X}{:02X} left bytes unread", bytes[1], bytes[0]);
+            events.0
+        };
+        // Lengths per Hercules packets2022_len_main.h: all three are 6 bytes.
+        let events = one(&[0x0C, 0x01, 0x40, 0x42, 0x0F, 0x00]);
+        assert!(
+            matches!(events.as_slice(), [NetworkEvent::Mvp {
+                account_id: AccountId(1_000_000)
+            }]),
+            "{events:?}"
+        );
+        let events = one(&[0x0A, 0x01, 0x8F, 0x0A, 0x00, 0x00]); // 2703
+        assert!(
+            matches!(events.as_slice(), [NetworkEvent::MvpReward { item_id: ItemId(2703) }]),
+            "{events:?}"
+        );
+        let events = one(&[0x0B, 0x01, 0xA0, 0x86, 0x01, 0x00]); // 100000
+        assert!(
+            matches!(events.as_slice(), [NetworkEvent::MvpExperience { experience: 100_000 }]),
+            "{events:?}"
+        );
+    }
+
+    #[test]
     fn skill_fail_reason_0x0efe_explains_the_following_failure() {
         use ragnarok_bytes::ByteReader;
         use ragnarok_packets::handler::HandlerResult;

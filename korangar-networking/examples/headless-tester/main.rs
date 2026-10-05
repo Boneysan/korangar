@@ -26,11 +26,9 @@ use crate::scenarios::{PROVISIONING_PHASE, SKIPPED_PREFIX, Scenario, all_scenari
 // this explicit baseline even while empty: if a deliberately opaque packet is
 // accepted later, it must be reviewed and named here rather than silently
 // weakening the gate for every future header.
-const REVIEWED_UNKNOWN_PACKET_HEADERS: &[u16] = &[
-    0x010A, // ZC_MVP_GETTING_ITEM
-    0x010B, // ZC_MVP_GETTING_SPECIAL_EXP
-    0x010C, // ZC_MVP_GETTING_AREA
-];
+// The three MVP packets (0x010A/B/C) were listed here until 2026-10-04,
+// when the boss recap (F16) began reading them.
+const REVIEWED_UNKNOWN_PACKET_HEADERS: &[u16] = &[];
 
 #[derive(Parser, Debug)]
 #[command(version, about, long_about = None)]

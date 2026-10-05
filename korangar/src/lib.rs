@@ -7053,6 +7053,39 @@ impl Client {
                         .follow_mut(client_state().chat_messages())
                         .push(ChatMessage::new(message.to_owned(), MessageColor::Information));
                 }
+                // F16: MVP news for the boss recap. The server sends these just
+                // before the boss's death packet, which closes the recap.
+                NetworkEvent::Mvp { account_id } => {
+                    let name = if self.client_state.follow(client_state().party_state()).local_account_id() == Some(account_id) {
+                        Some(self.client_state.follow(client_state().player_name()).to_owned())
+                    } else {
+                        self.client_state
+                            .follow(client_state().party_state())
+                            .members()
+                            .iter()
+                            .find(|member| member.account_id() == account_id)
+                            .map(|member| member.name().to_owned())
+                    };
+                    // Outside the party the name is not known to us; say so plainly.
+                    let name = name.unwrap_or_else(|| "a player outside your party".to_owned());
+                    self.client_state
+                        .follow_mut(client_state().encounter_recap())
+                        .record_mvp_award(Some(name), None, None, client_tick);
+                }
+                NetworkEvent::MvpReward { item_id } => {
+                    let name = resolve_item_name(&self.library, item_id, true).unwrap_or_else(|| "an unknown item".to_owned());
+                    self.client_state
+                        .follow_mut(client_state().encounter_recap())
+                        .record_mvp_award(None, Some(name), None, client_tick);
+                }
+                NetworkEvent::MvpExperience { experience } => {
+                    self.client_state.follow_mut(client_state().encounter_recap()).record_mvp_award(
+                        None,
+                        None,
+                        Some(experience),
+                        client_tick,
+                    );
+                }
                 NetworkEvent::PartyInviteSender { party_id, character_name } => {
                     // Arrives just before the invite it belongs to.
                     self.client_state

@@ -233,37 +233,35 @@ reclaim_orphans() {
 }
 
 stop_servers() {
-    local pid attempt still_running
-    for pid in "${server_pids[@]-}"; do
-        if [ -n "$pid" ] && kill -0 "$pid" 2>/dev/null; then
-            kill "$pid" 2>/dev/null || true
-        fi
-    done
+    # Stop in reverse start order: map-server, then char-server, then
+    # login-server, each fully exited before the next is signalled. Signalling
+    # all three at once let char-server exit before map-server's final
+    # character saves reached it, so the last scenario's character lost
+    # whatever it picked up since its last autosave: the item log had every
+    # pickup and SQL did not (2026-10-05: "char 150000 item 915: holds 6, item
+    # log totals 15" after a two-scenario run; full runs hid it because later
+    # scenarios' logins forced the save first).
+    local index pid attempt
+    for ((index = ${#server_pids[@]} - 1; index >= 0; index--)); do
+        pid="${server_pids[$index]}"
+        [ -n "$pid" ] || continue
+        kill -0 "$pid" 2>/dev/null && kill "$pid" 2>/dev/null || true
 
-    # Hercules normally exits promptly on SIGTERM, but map-server can remain
-    # alive indefinitely while tearing down a heavily exercised skill run.
-    # Never strand CI after the tester has already produced its result: allow a
-    # bounded graceful window, then stop only the exact PIDs this script owns.
-    attempt=0
-    while [ "$attempt" -lt 100 ]; do
-        still_running=false
-        for pid in "${server_pids[@]-}"; do
-            if [ -n "$pid" ] && kill -0 "$pid" 2>/dev/null; then
-                still_running=true
-                break
-            fi
+        # Hercules normally exits promptly on SIGTERM, but map-server can
+        # remain alive indefinitely while tearing down a heavily exercised
+        # skill run. Never strand CI after the tester has already produced its
+        # result: allow a bounded graceful window, then stop only the exact PID
+        # this script owns.
+        attempt=0
+        while [ "$attempt" -lt 100 ] && kill -0 "$pid" 2>/dev/null; do
+            sleep 0.1
+            attempt=$((attempt + 1))
         done
-        ! $still_running && break
-        sleep 0.1
-        attempt=$((attempt + 1))
-    done
-
-    for pid in "${server_pids[@]-}"; do
-        if [ -n "$pid" ] && kill -0 "$pid" 2>/dev/null; then
+        if kill -0 "$pid" 2>/dev/null; then
             echo "warning: server pid $pid did not stop gracefully; forcing shutdown" >&2
             kill -9 "$pid" 2>/dev/null || true
         fi
-        [ -n "$pid" ] && wait "$pid" 2>/dev/null || true
+        wait "$pid" 2>/dev/null || true
     done
     server_pids=()
 }
@@ -547,6 +545,15 @@ conservation_violations=$("${mysql_admin[@]}" --batch --skip-column-names "$db_n
 if [ -n "$conservation_violations" ]; then
     echo "Item conservation audit failed:" >&2
     printf '  %s\n' "$conservation_violations" | head -40 >&2
+    # The bare totals do not say what happened; print the log rows behind
+    # each flagged character and item so the failure explains itself.
+    printf '%s\n' "$conservation_violations" | grep -oE '^char [0-9]+ item [0-9]+' | head -10 |
+        while read -r _ char_id _ item_id; do
+            echo "  picklog for char $char_id item $item_id (time, type, amount, map, unique id):" >&2
+            "${mysql_admin[@]}" --batch --skip-column-names "$db_name" \
+                --execute="SELECT \`time\`, \`type\`, \`amount\`, \`map\`, \`unique_id\` FROM \`picklog\` WHERE \`char_id\` = $char_id AND \`nameid\` = $item_id ORDER BY \`id\`" 2>&1 |
+                sed 's/^/    /' >&2
+        done
     runner_exit=1
 else
     echo "Item conservation audit: every holding matches the item log"
