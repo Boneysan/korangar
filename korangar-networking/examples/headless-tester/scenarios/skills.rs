@@ -217,6 +217,20 @@ const SKILL_MC_IDENTIFY: u16 = 40;
 const SKILL_AL_CRUCIS: u16 = 32;
 const SKILL_PR_TURNUNDEAD: u16 = 77;
 const SKILL_HT_REMOVETRAP: u16 = 124;
+/// Springs (disarms) an existing trap: like Remove Trap it needs one to aim
+/// at. It used to fall through to a plain ground cast at an arbitrary cell,
+/// sprang nothing, and recorded whatever else the window held (2026-10-04:
+/// a nearby mine's "damage" against an Effect expectation).
+const SKILL_HT_SPRINGTRAP: u16 = 131;
+
+/// Indulge converts HP to SP and is refused at full SP with a bare
+/// `return 0` and no message (`skill.c` `skill_check_condition_castbegin`),
+/// and the sweep heals to full before every cast.
+const SKILL_PF_HPCONVERSION: u16 = 373;
+
+fn targets_owned_trap(skill_id: u16) -> bool {
+    matches!(skill_id, SKILL_HT_REMOVETRAP | SKILL_HT_SPRINGTRAP)
+}
 const SKILL_HT_LANDMINE: u16 = 116;
 const SKILL_RG_GRAFFITI: u16 = 220;
 const SKILL_RG_CLEANER: u16 = 222;
@@ -1831,7 +1845,7 @@ fn sweep_job(config: &Config, job_id: u16, job_name: &str) -> Result<(), String>
                 approach_target(&mut context, position)?;
                 Some(target)
             }
-            SkillType::Trap if skill.skill_id.0 == SKILL_HT_REMOVETRAP => prepared.attack_target.or(owned_trap_entity),
+            SkillType::Trap if targets_owned_trap(skill.skill_id.0) => prepared.attack_target.or(owned_trap_entity),
             _ => prepared.attack_target,
         };
 
@@ -1840,7 +1854,7 @@ fn sweep_job(config: &Config, job_id: u16, job_name: &str) -> Result<(), String>
             SkillType::Attack => context.net.cast_skill(skill.skill_id, level, target.unwrap()),
             // Removetrap targets a skill-unit entity when we have one; ground
             // cell is the fallback used by jobs that only expose Trap typing.
-            SkillType::Trap if skill.skill_id.0 == SKILL_HT_REMOVETRAP && target.is_some() => {
+            SkillType::Trap if targets_owned_trap(skill.skill_id.0) && target.is_some() => {
                 owned_trap_entity = None;
                 owned_trap_cell = None;
                 context.net.cast_skill(skill.skill_id, level, target.unwrap())
@@ -1913,8 +1927,8 @@ fn sweep_job(config: &Config, job_id: u16, job_name: &str) -> Result<(), String>
                 ground_targets.push((name.clone(), position, cell));
                 if TRAP_PLACING_SKILLS.contains(&skill.skill_id.0) {
                     owned_trap_cell = Some(cell);
-                } else if skill.skill_id.0 == SKILL_HT_REMOVETRAP {
-                    // Trap is gone after a successful remove; do not reuse the cell.
+                } else if targets_owned_trap(skill.skill_id.0) {
+                    // Trap is gone (removed or sprung); do not reuse the cell.
                     owned_trap_cell = None;
                     owned_trap_entity = None;
                 }
@@ -1994,6 +2008,8 @@ fn sweep_job(config: &Config, job_id: u16, job_name: &str) -> Result<(), String>
         // reported `cast` and the arms underneath it were unreachable for that
         // skill. They now all get their chance, and `evidence_rank` decides which
         // of the things that actually happened gets reported.
+        // Hindsight's spell list (below) marks the caster busy until it is
+        // answered; see the release after the window.
         let response = observe_window(
             &mut context,
             "skill response",
@@ -2081,6 +2097,16 @@ fn sweep_job(config: &Config, job_id: u16, job_name: &str) -> Result<(), String>
                 _ => None,
             },
         )?;
+        // `SA_AUTOSPELL` opens a spell list and sets `workinprogress` until it
+        // is answered (`skill_autospell_select_spell_pc`), and a busy caster has
+        // every later skill refused with MSG_BUSY. Unanswered, it turned the
+        // rest of the Sage and Professor sweeps into "fail-feedback" (and once
+        // went silent on Indulge). Any answer clears it (`clif_parse_AutoSpell`);
+        // Napalm Beat is the level-1 choice.
+        if response.saw("spell-list") {
+            let _ = context.net.select_auto_spell(ragnarok_packets::SkillId(11));
+            context.pump(Duration::from_millis(300));
+        }
 
         // **A silent `Support` cast gets one retry against a real Friend target.**
         // Deliberately additive: the self-cast above is left exactly as it was,
@@ -2366,7 +2392,12 @@ fn prepare_skill_cast(
         SKILL_PR_TURNUNDEAD => {
             prepared.attack_target = Some(ensure_undead_target(context)?);
         }
-        SKILL_HT_REMOVETRAP => {
+        SKILL_PF_HPCONVERSION => {
+            // Spend some SP so there is room to convert into.
+            context.say("@heal 0 -50")?;
+            context.pump(Duration::from_millis(200));
+        }
+        SKILL_HT_REMOVETRAP | SKILL_HT_SPRINGTRAP => {
             // Soft: Rogue/Stalker may expose Removetrap without a placer skill.
             match ensure_owned_trap(context, owned_trap_cell, owned_trap_entity, skills) {
                 Ok((cell, entity)) => {

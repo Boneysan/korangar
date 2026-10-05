@@ -654,9 +654,30 @@ fn eddga_summons_escorts(config: &Config) -> Result<(), String> {
     context.say("@heal")?;
     context.pump(Duration::from_millis(200));
     let result: Result<(), String> = (|| {
+        // Eddga summons Bigfoots the moment it spawns (MSC_SPAWN), and again
+        // only while it has 3 or fewer (MSC_SLAVELE). Those spawn-time escorts
+        // could arrive with Eddga itself and be thrown away by the flush below,
+        // after which it never summoned again: "no Bigfoot in 34 swings". So
+        // escorts are read from the entity list, which a flush still updates,
+        // counting only ones that were not on the field before Eddga.
+        let escorts_before: Vec<_> = context
+            .entities
+            .iter()
+            .filter(|(_, entity)| EDDGA_ESCORTS.contains(&entity.job_id.0))
+            .map(|(id, _)| *id)
+            .collect();
+        let new_escort = |context: &TestContext| {
+            context
+                .entities
+                .iter()
+                .any(|(id, entity)| EDDGA_ESCORTS.contains(&entity.job_id.0) && !escorts_before.contains(id))
+        };
         let eddga = context.spawn_monster(EDDGA.0, EDDGA.1)?;
         let mut casts: Vec<u16> = Vec::new();
         for swing in 0..34 {
+            if new_escort(&context) {
+                return Ok(());
+            }
             if swing % 2 == 0 {
                 context.say("@heal")?;
                 context.say("@alive")?;
@@ -674,6 +695,9 @@ fn eddga_summons_escorts(config: &Config) -> Result<(), String> {
                     _ => {}
                 }
             }
+        }
+        if new_escort(&context) {
+            return Ok(());
         }
         Err(format!(
             "a provoked Eddga summoned no Bigfoot ({EDDGA_ESCORTS:?}) in 34 swings; Eddga's casts: {casts:?}"
