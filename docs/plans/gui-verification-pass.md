@@ -1165,6 +1165,7 @@ Ported to korangar `agent/review-fixes`; see the table in
 | 8.15 | Commission Board (`/commission`) | Title "Commission Board". The open requests list comes first with Refresh beside its heading; "Post a request" and "Manage your requests" are folded sections with self-explaining box hints ("Item you want…", "Request #", "Crafter's name"). Empty board says to open "Post a request". Posting, assign, complete and cancel all still work |
 | 8.16 | Party window, in a party of two | Status, party summary and the member list are at the top; invites, settings (share EXP/pickup/loot, block invites, healer layout), shared destination and markers, and ready check are four folded sections. Every former button is inside one and still works |
 | 8.17 | Minimap | Map and zoom buttons only; the six ping buttons and "Share current route" are inside a folded "Party pings" section and still send |
+| 8.18 | Character Overview (top-left panel) | Navigation buttons in pairs (Inventory/Equipment, Skills/Stats, Friends/Party, Minimap/HUD) then Menu; "Reset stats" and "Reset skills" are no longer loose buttons but inside a folded "Free resets" section, so a misclick cannot reset a build |
 
 ---
 
