@@ -143,7 +143,7 @@ impl CustomWindow<ClientState> for BuildPlannerWindow {
         }
 
         window! {
-            title: "Build Planner (simulation)",
+            title: "Build Planner",
             class: Self::window_class(),
             theme: InterfaceThemeType::InGame,
             closable: true,

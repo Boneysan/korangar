@@ -134,6 +134,7 @@ Unit tests on a row plan prove structure: what is grouped, collapsed, labelled o
   - **8.13:** Adventure Guide.
   - **8.14:** Menu and Game Settings.
   - **8.15 onwards:** Commission Board, Party, Minimap and later slices, added as they land.
+- **Interface scale (owner request, 2026-10-05):** every redesigned window is also checked at 100%, 200%, 300% and 400%, the highest setting the client offers (row 8.23). Scaling enlarges the whole interface, not text alone, so wide rows of tabs and buttons are the main risk.
 - **Every row also checks three things:**
   - no missing-glyph boxes;
   - no raw ids or developer text;

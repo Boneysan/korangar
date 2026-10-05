@@ -146,7 +146,7 @@ where
                                     },
                                     button! {
                                         text: "Navigate",
-                                        tooltip: "Plot a navigation route to this party member [GDD 10.14]",
+                                        tooltip: "Plot a route to this party member",
                                         disabled: navigate_blocked,
                                         disabled_tooltip: "Cannot navigate to offline member, empty map, or yourself",
                                         event: move |state: &State<ClientState>, queue: &mut EventQueue<ClientState>| {
@@ -163,7 +163,7 @@ where
                                     },
                                     button! {
                                         text: "Target",
-                                        tooltip: "Open this member's target frame and arm them as your support-skill target [GDD 10.14]",
+                                        tooltip: "Target this member, so your next support skill goes to them",
                                         disabled: target_blocked,
                                         disabled_tooltip: "You cannot target yourself this way",
                                         event: move |state: &State<ClientState>, queue: &mut EventQueue<ClientState>| {
@@ -457,7 +457,7 @@ where
                         children: (
                             state_button! {
                                 text: "Block invites",
-                                tooltip: "Refuse all party invites server-side [^000001/party block on^000000]",
+                                tooltip: "Refuse all party invites [^000001/party block on^000000]",
                                 state: self.party_path.deny_invites(),
                                 event: move |state: &State<ClientState>, queue: &mut EventQueue<ClientState>| {
                                     // Send the opposite of what the server last told us,
@@ -469,7 +469,7 @@ where
                             },
                             state_button! {
                                 text: "Healer layout",
-                                tooltip: "Enlarge health and SP bar readability for healer role [GDD 10.14]",
+                                tooltip: "Larger, easier-to-read HP and SP bars for healers",
                                 state: self.party_path.healer_layout(),
                                 event: move |state: &State<ClientState>, _: &mut EventQueue<ClientState>| {
                                     let current = *state.get(&party_path.healer_layout());

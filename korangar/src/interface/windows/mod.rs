@@ -50,6 +50,7 @@ mod quest_log;
 mod render_options;
 mod repair_weapon;
 mod respawn;
+mod rows;
 mod selection_list;
 mod sell;
 mod sell_cart;

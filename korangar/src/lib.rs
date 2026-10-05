@@ -8776,7 +8776,7 @@ impl Client {
                             self.client_state.follow_mut(client_state().toasts()).push(
                                 format!("personal-hunt:{monster_id}"),
                                 if added {
-                                    "Added to your personal, client-only hunting goals.".to_owned()
+                                    "Added to your hunting goals (Quest Log, My goals tab).".to_owned()
                                 } else {
                                     "Already listed, or the five-goal limit has been reached.".to_owned()
                                 },
@@ -11061,7 +11061,7 @@ impl Client {
                             self.client_state.follow_mut(client_state().toasts()).push(
                                 format!("personal-hunt:{monster_id}"),
                                 if added {
-                                    "Added to your personal, client-only hunting goals.".to_owned()
+                                    "Added to your hunting goals (Quest Log, My goals tab).".to_owned()
                                 } else {
                                     "Already listed, or the five-goal limit has been reached.".to_owned()
                                 },

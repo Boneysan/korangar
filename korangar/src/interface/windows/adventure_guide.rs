@@ -256,7 +256,7 @@ fn monster_details(monster: &ReferenceMonster) -> Vec<String> {
     let mut lines = vec![
         display_name(&monster.name, &monster.sprite_name),
         format!("Level {}   HP {}", monster.level, monster.hp),
-        format!("@hunting-goal:{}|Add to personal hunting goals (client-only)", monster.id),
+        format!("@hunting-goal:{}|Add to my hunting goals", monster.id),
     ];
     if let Some(element) = &monster.element {
         lines.push(format!("Element: {} {}", element.r#type, element.level));
@@ -379,7 +379,7 @@ fn monster_details(monster: &ReferenceMonster) -> Vec<String> {
         }
     }
     if !monster.scripted_spawn_references.is_empty() {
-        lines.push("Loaded-script spawn call sites (event/quest/instance conditions are not interpreted):".to_owned());
+        lines.push("Also placed by events or quests at (conditions not shown):".to_owned());
         for spawn in monster.scripted_spawn_references.iter().take(8) {
             let location = match (spawn.map.as_deref(), spawn.coordinates.as_slice()) {
                 (Some(map), [Some(x), Some(y)]) => format!("{map} at ({x}, {y})"),
@@ -746,9 +746,9 @@ fn item_details(item: &ReferenceItem, card: bool) -> Vec<String> {
                 .join(" + ");
             let effect_note = combo.effect_summary.as_deref().unwrap_or_else(|| {
                 if combo.effect_status == "scripted_not_translated" {
-                    "combo effect script not translated"
+                    "combo effect not described yet"
                 } else {
-                    "no combo script field in source"
+                    "no combo effect listed"
                 }
             });
             lines.push(format!("{members} — {effect_note}"));
@@ -836,13 +836,13 @@ fn item_details(item: &ReferenceItem, card: bool) -> Vec<String> {
                 .to_owned(),
         );
     } else if item.effect_status == "scripted_not_translated" {
-        lines.push("Script effect: not translated yet; conditions and interactions are not documented.".to_owned());
+        lines.push("Effect: not translated yet.".to_owned());
     } else if item.effect_status == "no_script_field" {
-        lines.push("No item script effect field is present in the loaded item record.".to_owned());
+        lines.push("No special effect listed.".to_owned());
     } else if !item.effect_status.is_empty() {
         lines.push(format!("Effect coverage: {}", item.effect_status.replace('_', " ")));
     } else {
-        lines.push("Detailed script effect: not documented yet.".to_owned());
+        lines.push("Effect details: not documented yet.".to_owned());
     }
     if !item.drops_from.is_empty() {
         lines.push("Monster database drop rates (server modifiers may change realized chances):".to_owned());
@@ -1143,7 +1143,7 @@ fn coverage_details() -> Vec<String> {
 /// established (a map flag, say) is still shown.
 fn player_source(path: &str, line: u32) -> String {
     match crate::dm::reference_data::is_campaign_source_path(path) {
-        true => "campaign script (source withheld)".to_owned(),
+        true => "campaign event".to_owned(),
         false => format!("{path}:{line}"),
     }
 }
@@ -1364,7 +1364,7 @@ fn quest_reference_details(quest: &crate::dm::reference_data::ReferenceQuest) ->
             let route_label = match npc.reviewed_role.as_deref() {
                 Some("offer") => "Route to quest offer",
                 Some("turn_in") => "Route to quest turn-in",
-                _ => "Route to related script NPC",
+                _ => "Route to related NPC",
             };
             lines.push(format!(
                 "@route-cell:{}:{}:{}|{route_label}: {} — {}",
@@ -1714,9 +1714,9 @@ fn npc_details(npc: &ReferenceNpc) -> Vec<String> {
     let kind = match npc.declared_type.as_str() {
         "shop" => "Static shop declaration",
         "cashshop" => "Cash shop declaration",
-        "trader" => "Trader declaration (stock may be script-driven)",
+        "trader" => "Trader (stock may change)",
         "warp" => "Warp declaration",
-        _ => "NPC script declaration (specific behavior not inferred)",
+        _ => "NPC",
     };
     let mut lines = vec![
         format!("{display}"),
@@ -2457,7 +2457,7 @@ fn status_details(status: &crate::dm::reference_data::ReferenceStatus) -> Vec<St
     if status.statuses.is_empty() {
         lines.push("Verified reference: server status-icon name only; no matching sc_config record.".to_owned());
     } else {
-        lines.push("Verified server metadata from renewal sc_config.conf:".to_owned());
+        lines.push("How the server treats this status:".to_owned());
         for mechanic in &status.statuses {
             lines.push(mechanic.constant.clone());
             let flag_meanings = mechanic
@@ -2756,6 +2756,36 @@ fn push_text_lines(elements: &mut Vec<ElementBox<ClientState>>, lines: Vec<Strin
     }
 }
 
+/// Whether a Guide page line is a note about where the data came from (file
+/// references, export revisions, internal names) rather than something a
+/// player reads for. Those collect into a folded section at the end of the
+/// page instead of interrupting it. `in_call_site_list` is true while the
+/// indented lines under a call-site header are being read.
+fn is_source_note(line: &str, in_call_site_list: bool) -> bool {
+    const PREFIXES: [&str; 14] = [
+        "Source:",
+        "Values are exported",
+        "Exported from Hercules",
+        "Job bonus source:",
+        "Internal script name:",
+        "Literal Hercules C",
+        "Related NPC script reference:",
+        "Script call evidence:",
+        "Formula: Unreviewed",
+        "Verified reference:",
+        "Spawn rosters are configured data",
+        "No job-level stat bonus schedule",
+        "No matching skill tree is present",
+        "No class table is defined",
+    ];
+    (in_call_site_list && line.starts_with("  "))
+        || PREFIXES.iter().any(|prefix| line.starts_with(prefix))
+        || line.contains("in Hercules job_db")
+        || line.ends_with("script clues omitted.")
+        || line.ends_with("NPC script references omitted.")
+        || line.contains("loaded-script directive(s) for this flag are superseded")
+}
+
 struct GuideLines<A> {
     path: A,
     elements: Vec<ElementBox<ClientState>>,
@@ -2789,16 +2819,29 @@ where
             self.elements.clear();
             let current_map = state.get(&client_state().minimap()).map_name().to_owned();
             let count = state.get(&self.path).len();
+            let mut source_notes: Vec<ElementBox<ClientState>> = Vec::new();
+            let mut in_call_site_list = false;
             for index in 0..count {
                 let line = self.path.index(index).manually_asserted();
                 let value = state.get(&line).clone();
+                let starts_call_sites = value.starts_with("Literal Hercules C");
+                if is_source_note(&value, in_call_site_list) {
+                    in_call_site_list = starts_call_sites || in_call_site_list;
+                    source_notes.push(ErasedElement::new(text! {
+                        text: value.trim_start().to_owned(),
+                        color: crate::graphics::Color::rgb_u8(150, 150, 150),
+                        overflow_behavior: OverflowBehavior::Shrink,
+                    }));
+                    continue;
+                }
+                in_call_site_list = false;
                 if let Some(monster_id) = value
                     .strip_prefix("@hunting-goal:")
                     .and_then(|link| link.split_once('|'))
                     .and_then(|(monster_id, _)| monster_id.parse::<u32>().ok())
                 {
                     self.elements.push(ErasedElement::new(button! {
-                        text: "Add to personal hunting goals (client-only)",
+                        text: "Add to my hunting goals",
                         tooltip: "Saved for this character. This is not a server quest and has no kill counter.",
                         event: InputEvent::AddClientHuntingGoal { monster_id },
                     }));
@@ -2838,6 +2881,13 @@ where
                         text! { text: line, overflow_behavior: OverflowBehavior::Shrink },
                     ));
                 }
+            }
+            if !source_notes.is_empty() {
+                self.elements.push(ErasedElement::new(collapsible! {
+                    text: "Where this comes from",
+                    initially_expanded: false,
+                    children: (super::rows::Rows { elements: source_notes },),
+                }));
             }
             for (index, element) in self.elements.iter_mut().enumerate() {
                 element.create_layout_info(state, store.child_store(index as u64), resolver);
@@ -3455,6 +3505,28 @@ mod tests {
     use crate::world::{TownPoi, TownPoiKind};
 
     #[test]
+    fn source_notes_are_told_apart_from_player_information() {
+        use super::is_source_note;
+        assert!(is_source_note(
+            "Source: bundled Hercules refine_db.conf (Armors) and npc/merchants/refine.txt.",
+            false
+        ));
+        assert!(is_source_note("Internal script name: Kafra#prt", false));
+        assert!(
+            is_source_note("  src/map/skill.c:1234", true),
+            "indented call sites under their header"
+        );
+        assert!(!is_source_note("  src/map/skill.c:1234", false));
+        // Player information stays on the page.
+        assert!(!is_source_note("persists through death", false));
+        assert!(!is_source_note(
+            "Also placed by events or quests at (conditions not shown):",
+            false
+        ));
+        assert!(!is_source_note("Level 1   HP 60", false));
+    }
+
+    #[test]
     fn item_pages_show_a_name_and_a_type_in_words_not_ids_or_constants() {
         let item = reference_data().item_by_id(501).expect("Red Potion");
         let lines = item_details(item, false);
@@ -3601,7 +3673,7 @@ mod tests {
         assert!(
             details
                 .iter()
-                .any(|line| line == &format!("@hunting-goal:{}|Add to personal hunting goals (client-only)", monster.id))
+                .any(|line| line == &format!("@hunting-goal:{}|Add to my hunting goals", monster.id))
         );
         let skill_link = details
             .iter()
@@ -3875,7 +3947,7 @@ mod tests {
             .next()
             .expect("Blessing status name");
         let details = super::status_details(blessing).join("\n");
-        assert!(details.contains("Verified server metadata from renewal sc_config.conf"));
+        assert!(details.contains("How the server treats this status:"));
         assert!(details.lines().any(|line| line == "SC_BLESSING"), "{details}");
         assert!(details.contains(
             "Server lifecycle rules: classified by the server as a buff; cannot be applied to boss monsters; not cleared when MADO Gear \

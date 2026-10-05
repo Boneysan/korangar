@@ -1169,6 +1169,8 @@ Ported to korangar `agent/review-fixes`; see the table in
 | 8.19 | Stats window | The six stat rows lead; "View: …" and its explanation sit inside a folded "What each stat does"; Build planner and Crafting odds share one row |
 | 8.20 | Inventory and Storage | Filters are two rows of four (Storage: four and three) instead of a tall column; the open filter looks pressed; Sort and search still work |
 | 8.21 | Trade window | The zeny steppers are a "+" row and a "−" row of three; each still adjusts the offer |
+| 8.22 | Adventure Guide pages: a status (Blessing), a refine page, an NPC, a job | Source notes ("Source: …", export revision, internal script names, C call sites) are not mixed into the page; they sit in a folded "Where this comes from" at the end. Useful facts stay on the page under plain headers ("How the server treats this status:", "Also placed by events or quests at …"). Item effects read "not translated yet" or "not documented yet" |
+| 8.23 | **Interface scale 100%, 200%, 300%, 400%** (Interface Settings → Scaling; 400% is the maximum) for every window in 8.12–8.22 | At each scale: no text cut off mid-word or overlapping; tab and button rows still fit (or wrap) inside the window; folded sections open and close; the window fits the screen or can be moved so its close button is reachable; text stays sharp. Note the smallest scale at which anything breaks, per window |
 
 ---
 
