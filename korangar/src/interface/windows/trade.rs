@@ -106,29 +106,39 @@ where
                     tooltip: "Put the amount above into the trade",
                     event: add_zeny,
                 },
-                button! {
-                    text: "+100 zeny",
-                    event: InputEvent::TradeAdjustZeny { delta: 100 },
+                split! {
+                    gaps: theme().window().gaps(),
+                    children: (
+                        button! {
+                            text: "+100 zeny",
+                            event: InputEvent::TradeAdjustZeny { delta: 100 },
+                        },
+                        button! {
+                            text: "+1,000 zeny",
+                            event: InputEvent::TradeAdjustZeny { delta: 1_000 },
+                        },
+                        button! {
+                            text: "+10,000 zeny",
+                            event: InputEvent::TradeAdjustZeny { delta: 10_000 },
+                        },
+                    ),
                 },
-                button! {
-                    text: "+1,000 zeny",
-                    event: InputEvent::TradeAdjustZeny { delta: 1_000 },
-                },
-                button! {
-                    text: "+10,000 zeny",
-                    event: InputEvent::TradeAdjustZeny { delta: 10_000 },
-                },
-                button! {
-                    text: "−100 zeny",
-                    event: InputEvent::TradeAdjustZeny { delta: -100 },
-                },
-                button! {
-                    text: "−1,000 zeny",
-                    event: InputEvent::TradeAdjustZeny { delta: -1_000 },
-                },
-                button! {
-                    text: "−10,000 zeny",
-                    event: InputEvent::TradeAdjustZeny { delta: -10_000 },
+                split! {
+                    gaps: theme().window().gaps(),
+                    children: (
+                        button! {
+                            text: "−100 zeny",
+                            event: InputEvent::TradeAdjustZeny { delta: -100 },
+                        },
+                        button! {
+                            text: "−1,000 zeny",
+                            event: InputEvent::TradeAdjustZeny { delta: -1_000 },
+                        },
+                        button! {
+                            text: "−10,000 zeny",
+                            event: InputEvent::TradeAdjustZeny { delta: -10_000 },
+                        },
+                    ),
                 },
                 button! {
                     text: "Lock offer",

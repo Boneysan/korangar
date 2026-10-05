@@ -1,6 +1,6 @@
 # Player interface once-over: audit and plan
 
-Status: **in progress, 2026-10-05.** Slice 1 (quest log) and a first pass of slice 2 (Adventure Guide: ids, header, categories) built and unit-tested, not yet seen on screen. Slices 4 (Menu, Game Settings) and 5 (Commission Board, Party, Minimap) built too. The Guide's side-by-side detail pane waits on the open window-width question; the World Map slice waits on screenshots. A glyph fix shipped first: see "Font coverage". Requested after the quest log was called "a confusing mess", widened by the owner to every searchable view and then the whole player interface. Nothing here is built yet. The quest log design below was agreed before this plan existed.
+Status: **in progress, 2026-10-05.** Slice 1 (quest log) and a first pass of slice 2 (Adventure Guide: ids, header, categories) built and unit-tested, not yet seen on screen. Slices 4 (Menu, Game Settings) and 5 (Commission Board, Party, Minimap) built too, and slice 6 has started (Character Overview, Stats, Inventory, Storage, Trade). The Guide's side-by-side detail pane waits on the open window-width question; the World Map slice waits on screenshots. A glyph fix shipped first: see "Font coverage". Requested after the quest log was called "a confusing mess", widened by the owner to every searchable view and then the whole player interface. Nothing here is built yet. The quest log design below was agreed before this plan existed.
 
 ## Why the interface feels messy
 

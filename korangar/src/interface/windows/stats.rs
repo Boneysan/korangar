@@ -365,26 +365,37 @@ where
                 stat_row!(intelligence_text, intelligence, bonus_intelligence, intelligence_stat_points_cost, Intelligence),
                 stat_row!(dexterity_text, dexterity, bonus_dexterity, dexterity_stat_points_cost, Dexterity),
                 stat_row!(luck_text, luck, bonus_luck, luck_stat_points_cost, Luck),
-                button! {
+                collapsible! {
+                    text: "What each stat does",
+                    initially_expanded: false,
+                    children: (
+                        button! {
                     text: StatViewSelector::label(player_path),
                     tooltip: "Simple explains each stat; Detailed shows what the next point changes and which skills use it; Advanced shows the exact Renewal formulas.",
                     event: move |state: &rust_state::State<ClientState>, _: &mut EventQueue<ClientState>| {
                         state.update_value_with(client_state().game_settings().stat_view_mode(), |mode| *mode = mode.next());
                     },
                 },
-                text! {
+                        text! {
                     text: StatViewSelector::body(player_path),
                     overflow_behavior: OverflowBehavior::Shrink,
                 },
-                button! {
+                    ),
+                },
+                split! {
+                    gaps: theme().window().gaps(),
+                    children: (
+                        button! {
+                    text: "Build planner",
+                    tooltip: "Simulate future levels and stat allocations. Nothing is sent to the server.",
+                    event: InputEvent::ToggleBuildPlannerWindow,
+                },
+                        button! {
                     text: "Crafting odds",
                     tooltip: "Your success chance for weapon forging and potion preparation, from your current stats, skills and anvil.",
                     event: InputEvent::ToggleCraftingOddsWindow,
                 },
-                button! {
-                    text: "Build planner",
-                    tooltip: "Simulate future levels and stat allocations. Nothing is sent to the server.",
-                    event: InputEvent::ToggleBuildPlannerWindow,
+                    ),
                 },
             ),
         }

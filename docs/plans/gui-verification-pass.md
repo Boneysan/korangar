@@ -1166,6 +1166,9 @@ Ported to korangar `agent/review-fixes`; see the table in
 | 8.16 | Party window, in a party of two | Status, party summary and the member list are at the top; invites, settings (share EXP/pickup/loot, block invites, healer layout), shared destination and markers, and ready check are four folded sections. Every former button is inside one and still works |
 | 8.17 | Minimap | Map and zoom buttons only; the six ping buttons and "Share current route" are inside a folded "Party pings" section and still send |
 | 8.18 | Character Overview (top-left panel) | Navigation buttons in pairs (Inventory/Equipment, Skills/Stats, Friends/Party, Minimap/HUD) then Menu; "Reset stats" and "Reset skills" are no longer loose buttons but inside a folded "Free resets" section, so a misclick cannot reset a build |
+| 8.19 | Stats window | The six stat rows lead; "View: …" and its explanation sit inside a folded "What each stat does"; Build planner and Crafting odds share one row |
+| 8.20 | Inventory and Storage | Filters are two rows of four (Storage: four and three) instead of a tall column; the open filter looks pressed; Sort and search still work |
+| 8.21 | Trade window | The zeny steppers are a "+" row and a "−" row of three; each still adjusts the offer |
 
 ---
 
