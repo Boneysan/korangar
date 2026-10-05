@@ -46,6 +46,7 @@ const FINALE_FLAGS: [&str; 5] = [
 pub fn scenarios() -> Vec<Scenario> {
     vec![
         Scenario::new("finale-readiness-and-preparation", 9, readiness_and_preparation),
+        Scenario::new("campaign-reward-paid-once", 9, campaign_reward_paid_once),
         Scenario::new("finale-prerequisites-absent", 9, prerequisites_absent),
         Scenario::new("finale-commit-shared-seal", 9, commit_shared_seal),
         Scenario::new("finale-commit-reforged-seal", 9, commit_reforged_seal),
@@ -377,6 +378,122 @@ fn finish(mut primary: TestContext, mut partner: TestContext) {
 }
 
 // ---- scenarios --------------------------------------------------------------
+
+/// A campaign reward pays once, however the player comes back for it.
+///
+/// Arc 1's Mira rescue pays EXP and 1,500 zeny behind `DM_ClaimGrant`. A
+/// re-talk is refused by the quest state (20004 complete); the real test is
+/// the latch, so the quest is then reopened -- a member whose quest state
+/// lags, or a script path that forgets to check -- and the same choice made
+/// again, then once more after a reconnect. Until Hercules 9a3752c6c the
+/// zeny sat outside the latch and this paid twice. Finally `@dm reset` starts
+/// a new run, in which the reward must pay again.
+fn campaign_reward_paid_once(config: &Config) -> Result<(), String> {
+    const QUEST: u32 = 20004;
+    const ZENY: u32 = 1500;
+    const MOTHER_STAND: (u16, u16) = (156, 42);
+    const MOTHER: (u16, u16) = (156, 40);
+
+    let (primary, partner) = begin(config, "finale-bare")?;
+    let mut primary = Some(primary);
+    let reopen_quest = |context: &mut TestContext| -> Result<(), String> {
+        let _ = context.say(&format!("@dmquest erase {QUEST}"));
+        context.pump(Duration::from_millis(300));
+        context.flush();
+        context.say(&format!("@dmquest start {QUEST}"))?;
+        context.wait_for("quest 20004 active", |event| match event {
+            NetworkEvent::QuestAdded { quest_id, active: true } if *quest_id == QUEST => Some(()),
+            _ => None,
+        })
+    };
+    let choose_rescue = |choices: &[String]| pick(choices, "Walk Mira home").or_else(|| affirmative(choices));
+
+    let result: Result<(), String> = (|| {
+        let context = primary.as_mut().ok_or("primary disconnected")?;
+        say_expect(context, "@dmflag set dm_arc01_started 1", "set to 1")?;
+        say_expect(context, "@dmflag set dm_arc01_child_found 1", "set to 1")?;
+        reopen_quest(context)?;
+        let mother = go(context, "prontera", MOTHER_STAND, MOTHER)?;
+
+        let before = context.zeny;
+        talk(context, mother, choose_rescue)?;
+        context.pump(Duration::from_millis(500));
+        if context.zeny != before + ZENY {
+            return Err(format!(
+                "the rescue paid {} zeny, expected {ZENY}",
+                context.zeny as i64 - before as i64
+            ));
+        }
+        let paid = context.zeny;
+
+        talk(context, mother, choose_rescue)?;
+        context.pump(Duration::from_millis(500));
+        if context.zeny != paid {
+            return Err(format!("a plain re-talk paid again: {} -> {}", paid, context.zeny));
+        }
+
+        reopen_quest(context)?;
+        talk(context, mother, choose_rescue)?;
+        context.pump(Duration::from_millis(500));
+        if context.zeny != paid {
+            return Err(format!(
+                "with the quest reopened, the same choice paid again: {} -> {}",
+                paid, context.zeny
+            ));
+        }
+
+        drop(primary.take());
+        std::thread::sleep(Duration::from_millis(900));
+        primary = Some(TestContext::connect(config)?);
+        let context = primary.as_mut().ok_or("primary reconnect failed")?;
+        context.pump(Duration::from_millis(500));
+        // A fresh login does not report zeny until it next changes, so the
+        // context would read 0 here. Nudge it by one to get the real total.
+        context.say("@zeny 1")?;
+        context.pump(Duration::from_millis(500));
+        if context.zeny < paid {
+            return Err(format!(
+                "could not read zeny after the reconnect (read {}, had {paid})",
+                context.zeny
+            ));
+        }
+        let after_relog = context.zeny;
+        reopen_quest(context)?;
+        let mother = go(context, "prontera", MOTHER_STAND, MOTHER)?;
+        talk(context, mother, choose_rescue)?;
+        context.pump(Duration::from_millis(500));
+        if context.zeny != after_relog {
+            return Err(format!(
+                "after a reconnect the same choice paid again: {} -> {}",
+                after_relog, context.zeny
+            ));
+        }
+
+        // A reset starts a new run: the same reward must be earnable again.
+        // Until the reset cleared the claim latches, a replayed campaign paid
+        // nothing for any beat paid in the previous run.
+        say_expect(context, "@dm reset confirm", "Campaign reset complete")?;
+        say_expect(context, "@dm mode on", "Campaign NPCs are active")?;
+        say_expect(context, "@dmflag set dm_arc01_started 1", "set to 1")?;
+        say_expect(context, "@dmflag set dm_arc01_child_found 1", "set to 1")?;
+        reopen_quest(context)?;
+        let before_new_run = context.zeny;
+        talk(context, mother, choose_rescue)?;
+        context.pump(Duration::from_millis(500));
+        if context.zeny != before_new_run + ZENY {
+            return Err(format!(
+                "after @dm reset the rescue paid {} zeny in the new run, expected {ZENY}",
+                context.zeny as i64 - before_new_run as i64
+            ));
+        }
+        Ok(())
+    })();
+
+    if let Some(primary) = primary {
+        finish(primary, partner);
+    }
+    result
+}
 
 /// Tests A and B of the runbook: in a bare world only Unbound can be prepared;
 /// in a generous world nothing is Ready until the party prepares it; each
