@@ -1144,7 +1144,7 @@ Ported to korangar `agent/review-fixes`; see the table in
 
 ---
 
-### 8. Owner decisions built 2026-10-04 — automated tests only, never seen
+### 8. Owner decisions and F16/F30/F31 built 2026-10-04 — automated tests only, never seen
 
 | # | Check | Pass when |
 |---|---|---|
@@ -1154,6 +1154,10 @@ Ported to korangar `agent/review-fixes`; see the table in
 | 8.4 | Stats window → "View: …" button | Cycles Simple / Detailed / Advanced; each shows different text; the choice survives relog |
 | 8.5 | `/guide poring`, `/guide prontera`, `/guide Red Potion`, `/guide nonsense` | First three post `[Guide: …]` on the selected channel; the last explains; clicking a link opens that Guide page |
 | 8.6 | Paste `<GUIDE:monster:999999>` into chat | Shows `[broken Guide link]` and opens nothing |
+| 8.7 | As a Blacksmith: Stats → "Crafting odds" (or `/craftodds`); then `@item 989` and `@dex 10` | Lists only learned smithing skills, Lv1..skill-level weapons; the Emperium Anvil line and +10% appear at once; DEX changes the figures without reopening. A non-crafter sees the "None of your skills" note |
+| 8.8 | As an Alchemist, same window | Potion groups show a range (`77.60% to 87.50%`); Blue Potion shows one figure. Compare one attempt count against the range over ~50 Red Potions if time allows |
+| 8.9 | `/commission`, post "Fire Damascus" fee 50000, then `#1` + a crafter name → Assign, then Complete | The list in the window shows `Fire Damascus`, `50000z`, then In Progress with the crafter, then drops off the active list; each step also replies in chat |
+| 8.10 | Target an MVP (e.g. `@spawn Eddga`), get hit, interrupt one cast if possible, kill it | Toast reads "Defeated Eddga in …s: dealt …, took …, interrupted … cast(s)"; "took" is non-zero after being hit; chat holds the same recap |
 
 ---
 

@@ -9,10 +9,8 @@
 //! Uses integer basis points (0.01% units, where 10,000 = 100.00%) matching the
 //! server's exact arithmetic.
 //!
-//! Not yet called by any window: the formulas are tested against `skill.c`,
-//! but no UI shows a success chance (GDD Appendix E, 2026-10-03). Remove the
-//! allowance below once a crafting view uses them.
-#![expect(dead_code, reason = "F30: the formulas are built and tested, but no window shows them yet")]
+//! Forging and pharmacy feed the Crafting Odds window
+//! (`interface/windows/crafting_odds.rs`, F30).
 
 /// Quality bonus provided by anvil held in inventory during forging.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Default)]
@@ -105,39 +103,37 @@ pub fn weapon_forge_success_rate(
 }
 
 /// Potion difficulty category for Alchemist Pharmacy.
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
-pub enum PotionType {
-    RedPotion,
-    YellowPotion,
-    WhitePotion,
-    BluePotion,
-    Alcohol,
-    BottleGrenade,
-    AcidBottle,
-    PlantBottle,
-    MarineSphereBottle,
-    CoatingBottle,
-}
-
-impl PotionType {
-    /// Baseline base difficulty modifier in basis points (skill.c:20300).
-    pub const fn base_modifier(self) -> i32 {
-        match self {
-            Self::RedPotion | Self::YellowPotion | Self::WhitePotion => 2000,
-            Self::Alcohol => 1000,
-            Self::BottleGrenade | Self::AcidBottle | Self::PlantBottle | Self::MarineSphereBottle => 0,
-            Self::BluePotion => 0,
-            Self::CoatingBottle => -500,
-        }
+/// The random term `skill.c` adds to Potion Preparation for one product, as
+/// `(lowest, highest)` basis points. Hercules rolls it per attempt (`case
+/// ITEMID_RED_POTION: make_per += (1+rnd()%100)*10 + 2000`), so a single
+/// "success rate" for a potion does not exist: only a range does. Products
+/// not named in that switch (Blue Potion, Condensed Red, Anodyne, Aloevera,
+/// Embryo, the resist potions) get nothing.
+pub const fn pharmacy_product_roll(item_id: u32) -> (i32, i32) {
+    match item_id {
+        // Red, Yellow, White Potion.
+        501 | 503 | 504 => (2010, 3000),
+        // Alcohol.
+        970 => (1010, 2000),
+        // Bottle Grenade, Acid Bottle, Plant Bottle, Marine Sphere Bottle.
+        7135..=7138 => (10, 1000),
+        // Condensed Yellow Potion.
+        546 => (-500, -10),
+        // Condensed White Potion, Glistening Coat.
+        547 | 7139 => (-1000, -10),
+        _ => (0, 0),
     }
 }
 
-/// Calculate the expected base success rate for Alchemist Potion Preparation
-/// (skill.c:20290).
+/// Potion Preparation success chance for one product (`skill.c`, the
+/// `AM_PHARMACY` case of `skill_produce_mix`), as `(lowest, highest)` basis
+/// points over the server's random roll, each clamped to 1..=10000.
 ///
-/// Returns base success rate in basis points (1..=10000) excluding random roll.
+/// `vanilmirth_instruction_lv` is the alchemist's Vanilmirth's Instruction
+/// Change level (+1% each), 0 without a living homunculus. Baby classes are
+/// halved after everything else, as on the server.
 #[allow(clippy::too_many_arguments)] // mirrors skill.c's inputs one to one
-pub fn pharmacy_base_success_rate(
+pub fn pharmacy_success_range(
     job_level: i32,
     int_: i32,
     dex: i32,
@@ -145,25 +141,30 @@ pub fn pharmacy_base_success_rate(
     pharmacy_lv: i32,
     learning_potion_lv: i32,
     vanilmirth_instruction_lv: i32,
-    potion_type: PotionType,
-) -> i32 {
-    // skill.c:20290:
-    // make_per = pc->checkskill(sd,AM_LEARNINGPOTION)*50
-    //   + pc->checkskill(sd,AM_PHARMACY)*300 + sd->status.job_level*20
-    //   + (st->int_/2)*10 + st->dex*10+st->luk*10;
-    let mut rate = (learning_potion_lv * 50) + (pharmacy_lv * 300) + (job_level * 20) + ((int_ / 2) * 10) + (dex * 10) + (luk * 10);
-
-    // Vanilmirth Instruction Change bonus: +1% per level
-    rate += vanilmirth_instruction_lv.clamp(0, 5) * 100;
-
-    // Item difficulty modifier
-    rate += potion_type.base_modifier();
-
-    rate.clamp(1, 10000)
+    item_id: u32,
+    is_baby: bool,
+) -> (i32, i32) {
+    // skill.c: make_per = AM_LEARNINGPOTION*50 + AM_PHARMACY*300 + job_level*20
+    //   + (int/2)*10 + dex*10 + luk*10; plus HVAN_INSTRUCT*100 with a homunculus.
+    let base = (learning_potion_lv * 50)
+        + (pharmacy_lv * 300)
+        + (job_level * 20)
+        + ((int_ / 2) * 10)
+        + (dex * 10)
+        + (luk * 10)
+        + vanilmirth_instruction_lv.max(0) * 100;
+    let (low, high) = pharmacy_product_roll(item_id);
+    let finish = |rate: i32| {
+        // potion_produce_rate is 100 here (conf/map/battle/items.conf), so no
+        // scaling; then the baby penalty and the floor of 1.
+        let rate = if is_baby { (rate * 50) / 100 } else { rate };
+        rate.clamp(1, 10000)
+    };
+    (finish(base + low), finish(base + high))
 }
 
-/// Cooking Set type used when creating stat food dishes (skill.c:20500-20525).
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Default)]
+#[expect(dead_code, reason = "F30: cooking odds are not shown; the window covers forging and pharmacy only")]
 pub enum CookingKitType {
     #[default]
     OutdoorKit, // val == 11
@@ -199,6 +200,7 @@ impl CookingKitType {
 /// ```
 ///
 /// Returns expected rate clamped to 1..=10000.
+#[expect(dead_code, reason = "F30: cooking odds are not shown; the window covers forging and pharmacy only")]
 pub fn cooking_dish_expected_rate(
     base_level: i32,
     dex: i32,
@@ -244,8 +246,184 @@ pub fn cooking_dish_expected_rate(
 /// Calculate Geneticist Mix Cooking success rating (skill.c:20455).
 ///
 /// Formula: `job_level / 4 + luk / 2 + dex / 3`
+#[expect(dead_code, reason = "F30: cooking odds are not shown; the window covers forging and pharmacy only")]
 pub fn mix_cooking_rating(job_level: i32, dex: i32, luk: i32) -> i32 {
     (job_level / 4) + (luk / 2) + (dex / 3)
+}
+
+/// Item ids of the four anvils (`ITEMID_ANVIL` .. `ITEMID_EMPERIUM_ANVIL`).
+const ANVILS: [(u32, AnvilType); 4] = [
+    (989, AnvilType::Emperium),
+    (988, AnvilType::Golden),
+    (987, AnvilType::Oridecon),
+    (986, AnvilType::Normal),
+];
+
+/// The anvil forging would use: the server checks Emperium, Golden, Oridecon,
+/// then plain, and takes the first one carried. `None` without any.
+pub fn best_anvil(carried: impl IntoIterator<Item = u32>) -> Option<AnvilType> {
+    let carried: Vec<u32> = carried.into_iter().collect();
+    ANVILS.iter().find(|(id, _)| carried.contains(id)).map(|(_, anvil)| *anvil)
+}
+
+const BS_WEAPONRESEARCH: u16 = 107;
+const BS_ORIDEOCON: u16 = 97;
+const AM_LEARNINGPOTION: u16 = 227;
+const AM_PHARMACY: u16 = 228;
+
+/// The seven smithing skills. Skill level N unlocks weapon level N (every
+/// `db/produce_db.txt` row for these skills requires exactly that).
+const SMITHING: [(u16, &str); 7] = [
+    (98, "Dagger"),
+    (99, "Sword"),
+    (100, "Two-Handed Sword"),
+    (101, "Axe"),
+    (102, "Mace"),
+    (103, "Knuckle"),
+    (104, "Spear"),
+];
+
+/// Potion Preparation products grouped by the roll they share
+/// ([`pharmacy_product_roll`]); the item id stands for its group.
+const PHARMACY_GROUPS: [(u32, &str); 6] = [
+    (501, "Red, Yellow, White Potion"),
+    (970, "Alcohol"),
+    (7135, "Bottle Grenade, Acid, Plant, Marine Sphere Bottle"),
+    (505, "Blue Potion, Condensed Red, Anodyne, Aloevera, Embryo, resist potions"),
+    (546, "Condensed Yellow Potion"),
+    (547, "Condensed White Potion, Glistening Coat"),
+];
+
+/// What the F30 odds window needs, as the server last reported it. Stats are
+/// totals (base plus bonus), which is what `skill.c` reads.
+#[derive(Clone, Debug, Default)]
+pub struct CraftingOddsInput {
+    pub job_level: i32,
+    pub int_: i32,
+    pub dex: i32,
+    pub luk: i32,
+    /// `(skill id, level)` for every learned skill.
+    pub skills: Vec<(u16, u16)>,
+    pub anvil: Option<AnvilType>,
+    pub is_baby: bool,
+}
+
+impl CraftingOddsInput {
+    fn level(&self, skill_id: u16) -> i32 {
+        self.skills
+            .iter()
+            .find(|(id, _)| *id == skill_id)
+            .map_or(0, |(_, level)| i32::from(*level))
+    }
+}
+
+/// Whether `job_id` is a baby class, whose crafting the server halves
+/// (`sd->job & JOBL_BABY`), from the job tables the server itself uses.
+pub fn is_baby_class(job_id: u16) -> bool {
+    crate::dm::reference_data::reference_data()
+        .job_tables
+        .job(job_id)
+        .is_some_and(|job| job.baby)
+}
+
+fn percent(basis_points: i32) -> String {
+    format!("{}.{:02}%", basis_points / 100, basis_points % 100)
+}
+
+/// The F30 window body: forging and potion odds for the character's own
+/// stats, skills and carried anvil. Only crafts the character can attempt
+/// are listed.
+pub fn crafting_odds_text(input: &CraftingOddsInput) -> String {
+    let mut lines = Vec::new();
+    let anvil_name = |anvil: AnvilType| match anvil {
+        AnvilType::Normal => "Anvil",
+        AnvilType::Oridecon => "Oridecon Anvil",
+        AnvilType::Golden => "Golden Anvil",
+        AnvilType::Emperium => "Emperium Anvil",
+    };
+
+    let smithing: Vec<_> = SMITHING
+        .iter()
+        .map(|(id, name)| (*name, input.level(*id)))
+        .filter(|(_, level)| *level > 0)
+        .collect();
+    if !smithing.is_empty() {
+        let anvil = input.anvil.unwrap_or_default();
+        let anvil_text = match input.anvil {
+            Some(anvil) => format!("{} in your bag, +{}", anvil_name(anvil), percent(anvil.bonus_basis_points())),
+            None => "no anvil in your bag, +0%".to_owned(),
+        };
+        lines.push(format!(
+            "Weapon Forging (DEX {}, LUK {}, job level {}; {anvil_text})",
+            input.dex, input.luk, input.job_level
+        ));
+        for (name, level) in smithing {
+            let rates: Vec<String> = (1..=level.min(3))
+                .map(|weapon_level| {
+                    let rate = weapon_forge_success_rate(
+                        input.job_level,
+                        input.dex,
+                        input.luk,
+                        level,
+                        input.level(BS_WEAPONRESEARCH),
+                        input.level(BS_ORIDEOCON),
+                        weapon_level,
+                        false,
+                        0,
+                        anvil,
+                        input.is_baby,
+                    );
+                    format!("Lv{weapon_level} weapon {}", percent(rate))
+                })
+                .collect();
+            lines.push(format!("  {name} (skill Lv {level}): {}", rates.join(", ")));
+        }
+        lines.push("  Each Star Crumb costs 15%, an Elemental Stone 20%.".to_owned());
+    }
+
+    let pharmacy = input.level(AM_PHARMACY);
+    if pharmacy > 0 {
+        if !lines.is_empty() {
+            lines.push(String::new());
+        }
+        lines.push(format!(
+            "Potion Preparation (Pharmacy Lv {pharmacy}, Learning Potion Lv {})",
+            input.level(AM_LEARNINGPOTION)
+        ));
+        for (item_id, name) in PHARMACY_GROUPS {
+            let (low, high) = pharmacy_success_range(
+                input.job_level,
+                input.int_,
+                input.dex,
+                input.luk,
+                pharmacy,
+                input.level(AM_LEARNINGPOTION),
+                0,
+                item_id,
+                input.is_baby,
+            );
+            let range = match low == high {
+                true => percent(low),
+                false => format!("{} to {}", percent(low), percent(high)),
+            };
+            lines.push(format!("  {name}: {range}"));
+        }
+        lines.push(
+            "  The server rolls within each range per attempt. A Vanilmirth's Instruction Change adds 1% per level (not counted here)."
+                .to_owned(),
+        );
+    }
+
+    if lines.is_empty() {
+        return "None of your skills forge weapons or prepare potions, so there are no odds to show. Blacksmiths and Alchemists see \
+                theirs here."
+            .to_owned();
+    }
+    if input.is_baby {
+        lines.push(String::new());
+        lines.push("Baby classes craft at half these odds; the figures above already include it.".to_owned());
+    }
+    lines.join("\n")
 }
 
 #[cfg(test)]
@@ -278,22 +456,122 @@ mod tests {
     }
 
     #[test]
-    fn pharmacy_base_success_rate_matches_hercules_arithmetic() {
-        // Job 50, INT 50, DEX 60, LUK 40, Pharmacy 10, Learning Potion 10
-        // Learning = 10 * 50 = 500
-        // Pharmacy = 10 * 300 = 3000
-        // Job = 50 * 20 = 1000
-        // INT/2 * 10 = 25 * 10 = 250
-        // DEX * 10 = 600
-        // LUK * 10 = 400
-        // Subtotal = 5750
-        // White Potion (+2000) => 7750
-        let white_potion = pharmacy_base_success_rate(50, 50, 60, 40, 10, 10, 0, PotionType::WhitePotion);
-        assert_eq!(white_potion, 7750);
+    fn pharmacy_range_follows_the_servers_roll() {
+        // Job 50, INT 50, DEX 60, LUK 40, Pharmacy 10, Learning Potion 10:
+        // 500 + 3000 + 1000 + 250 + 600 + 400 = 5750.
+        // White Potion: + (1+rnd()%100)*10 + 2000, so +2010 ..= +3000.
+        assert_eq!(pharmacy_success_range(50, 50, 60, 40, 10, 10, 0, 504, false), (7760, 8750));
+        // Acid Bottle: + 10 ..= 1000.
+        assert_eq!(pharmacy_success_range(50, 50, 60, 40, 10, 10, 0, 7136, false), (5760, 6750));
+        // Blue Potion: no roll at all.
+        assert_eq!(pharmacy_success_range(50, 50, 60, 40, 10, 10, 0, 505, false), (5750, 5750));
+        // Condensed Yellow loses 10 ..= 500; Glistening Coat 10 ..= 1000.
+        assert_eq!(pharmacy_success_range(50, 50, 60, 40, 10, 10, 0, 546, false), (5250, 5740));
+        assert_eq!(pharmacy_success_range(50, 50, 60, 40, 10, 10, 0, 7139, false), (4750, 5740));
+        // A Vanilmirth's Instruction Change Lv 5 adds 500 before the roll.
+        assert_eq!(pharmacy_success_range(50, 50, 60, 40, 10, 10, 5, 505, false), (6250, 6250));
+        // Baby: halved after the roll, as skill.c applies it last.
+        assert_eq!(pharmacy_success_range(50, 50, 60, 40, 10, 10, 0, 504, true), (3880, 4375));
+    }
 
-        // Acid Bottle (+0) => 5750
-        let acid_bottle = pharmacy_base_success_rate(50, 50, 60, 40, 10, 10, 0, PotionType::AcidBottle);
-        assert_eq!(acid_bottle, 5750);
+    #[test]
+    fn pharmacy_range_is_clamped_like_the_server_roll() {
+        // A strong alchemist making Red Potions can exceed 10000, which the
+        // server's rnd()%10000 < make_per treats as certain.
+        assert_eq!(pharmacy_success_range(70, 120, 150, 120, 10, 10, 5, 501, false).1, 10000);
+        // A novice-level attempt at Glistening Coat floors at 1, never negative.
+        assert_eq!(pharmacy_success_range(1, 1, 1, 1, 1, 0, 0, 7139, false).0, 1);
+    }
+
+    #[test]
+    fn best_anvil_takes_the_servers_order_not_the_bag_order() {
+        assert_eq!(best_anvil([986, 988, 987]), Some(AnvilType::Golden));
+        assert_eq!(best_anvil([986, 989]), Some(AnvilType::Emperium));
+        assert_eq!(best_anvil([986]), Some(AnvilType::Normal));
+        assert_eq!(best_anvil([501, 998]), None);
+    }
+
+    #[test]
+    fn baby_crafters_are_recognised_and_adults_are_not() {
+        // db/constants.conf: Job_Baby_Blacksmith 4033, Job_Baby_Alchemist 4041.
+        assert!(is_baby_class(4033));
+        assert!(is_baby_class(4041));
+        // Blacksmith 10, Alchemist 18, Whitesmith 4011, Creator 4019.
+        for adult in [10, 18, 4011, 4019] {
+            assert!(!is_baby_class(adult), "job {adult}");
+        }
+    }
+
+    fn smith(skills: &[(u16, u16)]) -> CraftingOddsInput {
+        CraftingOddsInput {
+            job_level: 50,
+            int_: 1,
+            dex: 60,
+            luk: 40,
+            skills: skills.to_vec(),
+            anvil: Some(AnvilType::Normal),
+            is_baby: false,
+        }
+    }
+
+    #[test]
+    fn odds_window_lists_only_the_weapon_levels_the_skill_unlocks() {
+        // Sword 2, Weaponry Research 10: 5000 + 1000 + 600 + 400 + 1000 + 1000.
+        let text = crafting_odds_text(&smith(&[(99, 2), (107, 10)]));
+        assert!(
+            text.contains("Sword (skill Lv 2): Lv1 weapon 90.00%, Lv2 weapon 70.00%"),
+            "{text}"
+        );
+        assert!(!text.contains("Lv3 weapon"), "{text}");
+        assert!(!text.contains("Dagger"), "an unlearned smithing skill is not listed: {text}");
+        assert!(!text.contains("Potion Preparation"), "{text}");
+    }
+
+    #[test]
+    fn odds_window_applies_oridecon_research_only_to_level_three() {
+        // Mace 3, Oridecon Research 5: Lv3 gets +500 and pays -3000.
+        // 5000 + 1000 + 600 + 400 + 1500 = 8500; Lv2 8500-2000; Lv3 8500-3000+500.
+        let text = crafting_odds_text(&smith(&[(102, 3), (97, 5)]));
+        assert!(
+            text.contains("Lv1 weapon 85.00%, Lv2 weapon 65.00%, Lv3 weapon 60.00%"),
+            "{text}"
+        );
+    }
+
+    #[test]
+    fn odds_window_names_the_anvil_and_its_bonus() {
+        let mut input = smith(&[(98, 1)]);
+        input.anvil = Some(AnvilType::Emperium);
+        let text = crafting_odds_text(&input);
+        assert!(text.contains("Emperium Anvil in your bag, +10.00%"), "{text}");
+        // 5000 + 1000 + 600 + 400 + 500 + 1000.
+        assert!(text.contains("Lv1 weapon 85.00%"), "{text}");
+        input.anvil = None;
+        assert!(crafting_odds_text(&input).contains("no anvil in your bag"));
+    }
+
+    #[test]
+    fn odds_window_shows_potion_ranges_and_the_baby_note() {
+        let mut input = smith(&[(228, 10), (227, 10)]);
+        input.int_ = 50;
+        let text = crafting_odds_text(&input);
+        assert!(text.contains("Red, Yellow, White Potion: 77.60% to 87.50%"), "{text}");
+        assert!(
+            text.contains("Blue Potion, Condensed Red, Anodyne, Aloevera, Embryo, resist potions: 57.50%\n"),
+            "{text}"
+        );
+        assert!(!text.contains("Weapon Forging"), "{text}");
+        assert!(!text.contains("Baby"), "{text}");
+        input.is_baby = true;
+        let baby = crafting_odds_text(&input);
+        assert!(baby.contains("Red, Yellow, White Potion: 38.80% to 43.75%"), "{baby}");
+        assert!(baby.contains("Baby classes craft at half"), "{baby}");
+    }
+
+    #[test]
+    fn odds_window_explains_itself_to_a_non_crafter() {
+        let text = crafting_odds_text(&smith(&[(5, 10), (28, 10)]));
+        assert!(text.starts_with("None of your skills"), "{text}");
     }
 
     #[test]

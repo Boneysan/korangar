@@ -22,9 +22,24 @@ pub struct EncounterRecap {
 }
 
 impl EncounterRecap {
-    /// Format a concise, readable multi-line recap for display in the HUD or
-    /// combat log.
-    #[cfg_attr(not(test), allow(dead_code))] // no recap window yet: the defeat toast is the only consumer
+    /// The defeat toast: one line with every tracked number, so damage taken
+    /// and interrupts are not only recorded but seen (F16).
+    pub fn toast_text(&self) -> String {
+        let casts = match self.casts_interrupted {
+            1 => "1 cast".to_owned(),
+            count => format!("{count} casts"),
+        };
+        format!(
+            "Defeated {} in {:.1}s: dealt {}, took {}, interrupted {casts}",
+            self.boss_name,
+            (self.duration_ms as f32) / 1000.0,
+            self.damage_dealt,
+            self.damage_taken,
+        )
+    }
+
+    /// The full recap, posted to chat when the boss falls so it outlives the
+    /// toast.
     pub fn format_summary(&self) -> String {
         let seconds = (self.duration_ms as f32) / 1000.0;
         let mut lines = vec![
@@ -38,9 +53,8 @@ impl EncounterRecap {
         if let Some(mvp) = &self.mvp_player_name {
             lines.push(format!("MVP: {mvp}"));
         }
-        if let Some(item_id) = self.mvp_reward_item_id {
-            lines.push(format!("MVP Reward Item ID: {}", item_id.0));
-        }
+        // `mvp_reward_item_id` is not printed: user-facing text never shows a
+        // raw item id, and nothing records an award yet (`record_mvp_award`).
 
         lines.join("\n")
     }
@@ -101,7 +115,7 @@ impl EncounterRecapState {
     }
 
     /// Record MVP award announcement or bonus item packet.
-    #[cfg_attr(not(test), allow(dead_code))] // no recap window yet: the defeat toast is the only consumer
+    #[cfg_attr(not(test), allow(dead_code))] // nothing calls it yet: MVP announcements are not wired to the recap
     pub fn record_mvp_award(&mut self, player_name: Option<String>, reward_item: Option<ItemId>) {
         if player_name.is_some() {
             self.pending_mvp_name = player_name;
@@ -227,6 +241,32 @@ mod tests {
         assert!(summary.contains("Damage Taken: 300"));
         assert!(summary.contains("Enemy Casts Interrupted: 1"));
         assert!(summary.contains("MVP: Hero"));
+        // The reward is recorded as item 501 above; its raw id must not leak.
+        assert!(!summary.contains("501"), "{summary}");
+
+        // The toast carries every tracked number, not only damage dealt.
+        assert_eq!(
+            recap.toast_text(),
+            "Defeated Eddga in 24.0s: dealt 1250, took 300, interrupted 1 cast"
+        );
+    }
+
+    #[test]
+    fn toast_counts_only_the_bosss_own_hits_and_casts() {
+        let mut state = EncounterRecapState::default();
+        let (boss, minion) = (id(1115), id(2000));
+        state.start_or_continue_encounter(boss, "Eddga", tick(0));
+        state.record_damage_taken(boss, 400);
+        state.record_damage_taken(minion, 999);
+        state.record_cast_interrupted(minion);
+        state.record_cast_interrupted(boss);
+        state.record_cast_interrupted(boss);
+
+        let recap = state.finish_encounter(boss, tick(1500)).expect("tracked");
+        assert_eq!(
+            recap.toast_text(),
+            "Defeated Eddga in 1.5s: dealt 0, took 400, interrupted 2 casts"
+        );
     }
 
     #[test]

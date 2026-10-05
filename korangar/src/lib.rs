@@ -139,6 +139,7 @@ use crate::settings::{
     IN_GAME_THEMES_PATH, LightingMode, MENU_THEMES_PATH, ServiceSettingsPathExt, WORLD_THEMES_PATH, should_render_ground_item,
 };
 use crate::state::character_creation::{CharacterCreationPathExt, CharacterSex, HairStyle, StatSpread};
+use crate::state::commission_board::CommissionReply;
 use crate::state::quests::{ClientHuntingGoalEntry, QuestEntry, QuestHuntObjectiveEntry, QuestLocationEntry, QuestRequirementEntry};
 use crate::state::skills::{LearnedSkill, SkillTreeLayoutPathExt, bring_skill_to_level};
 use crate::state::theme::{InterfaceTheme, InterfaceThemeType, WorldTheme};
@@ -5409,14 +5410,12 @@ impl Client {
                         {
                             self.client_state.follow_mut(client_state().toasts()).push(
                                 "boss-encounter-recap",
-                                format!(
-                                    "Defeated {}! Dealt {} dmg in {:.1}s",
-                                    recap.boss_name,
-                                    recap.damage_dealt,
-                                    (recap.duration_ms as f32) / 1000.0
-                                ),
+                                recap.toast_text(),
                                 crate::state::toasts::ToastPriority::High,
                             );
+                            self.client_state
+                                .follow_mut(client_state().chat_messages())
+                                .push(ChatMessage::new(recap.format_summary(), MessageColor::Information));
                         }
                         if let Some(entity) = self
                             .client_state
@@ -9558,6 +9557,16 @@ impl Client {
                         }
                     }
                 }
+                InputEvent::ToggleCraftingOddsWindow => {
+                    if self.client_state.try_follow(this_player()).is_some() {
+                        match self.interface.is_window_with_class_open(WindowClass::CraftingOdds) {
+                            true => self.interface.close_window_with_class(WindowClass::CraftingOdds),
+                            false => self
+                                .interface
+                                .open_window(CraftingOddsWindow::new(this_player().manually_asserted())),
+                        }
+                    }
+                }
                 InputEvent::ToggleBuildPlannerWindow => {
                     if self.client_state.try_follow(this_player()).is_some() {
                         match self.interface.is_window_with_class_open(WindowClass::BuildPlanner) {
@@ -10307,17 +10316,14 @@ impl Client {
 
                     // Crafting Commission Board (F31, Decision D7 - non-custodial).
                     if text.as_str() == "/commission" || text.starts_with("/commission ") {
-                        let mut words = text.split_whitespace();
-                        let _cmd = words.next();
-                        let subcmd = words.next().unwrap_or("board");
-                        let chat = |state: &mut State<ClientState>, line: String| {
-                            state
-                                .follow_mut(client_state().chat_messages())
-                                .push(ChatMessage::new(line, MessageColor::Information));
-                        };
-
-                        match subcmd {
-                            "board" | "window" | "open" => {
+                        let player_name = self.client_state.follow(client_state().player_name()).to_owned();
+                        let args = text.trim_start_matches("/commission");
+                        match self
+                            .client_state
+                            .follow_mut(client_state().commission_board())
+                            .run_command(&player_name, args)
+                        {
+                            CommissionReply::ToggleWindow => {
                                 if self.map.is_some() {
                                     match self.interface.is_window_with_class_open(WindowClass::CommissionBoard) {
                                         true => self.interface.close_window_with_class(WindowClass::CommissionBoard),
@@ -10327,60 +10333,17 @@ impl Client {
                                     }
                                 }
                             }
-                            "list" => {
-                                let list = self.client_state.follow(client_state().commission_board()).format_list();
-                                chat(&mut self.client_state, list);
-                            }
-                            "post" => {
-                                let item_name = words.next().unwrap_or("");
-                                if item_name.is_empty() {
-                                    chat(
-                                        &mut self.client_state,
-                                        "Usage: /commission post <item_name> [zeny_fee]".to_string(),
-                                    );
-                                } else {
-                                    let fee: u32 = words.next().and_then(|w| w.parse().ok()).unwrap_or(0);
-                                    let player_name = self.client_state.follow(client_state().player_name()).to_owned();
-                                    let id = self.client_state.follow_mut(client_state().commission_board()).post_request(
-                                        &player_name,
-                                        ItemId(0),
-                                        item_name,
-                                        "Negotiated via peer trade",
-                                        0,
-                                        fee,
-                                    );
-                                    chat(
-                                        &mut self.client_state,
-                                        format!(
-                                            "Posted commission request #{id} for {item_name} (Fee: {fee}z). Reminder: Non-custodial, \
-                                             trade items directly."
-                                        ),
-                                    );
-                                }
-                            }
-                            "cancel" => {
-                                let id_opt: Option<u32> = words.next().and_then(|w| w.parse().ok());
-                                if let Some(id) = id_opt {
-                                    let player_name = self.client_state.follow(client_state().player_name()).to_owned();
-                                    match self
-                                        .client_state
-                                        .follow_mut(client_state().commission_board())
-                                        .cancel_request(id, &player_name)
-                                    {
-                                        Ok(()) => chat(&mut self.client_state, format!("Cancelled commission request #{id}.")),
-                                        Err(err) => chat(&mut self.client_state, format!("Cannot cancel commission #{id}: {err}")),
-                                    }
-                                } else {
-                                    chat(&mut self.client_state, "Usage: /commission cancel <request_id>".to_string());
-                                }
-                            }
-                            _ => {
-                                chat(
-                                    &mut self.client_state,
-                                    "Usage: /commission <board|list|post <item> [fee]|cancel <id>>".to_string(),
-                                );
-                            }
+                            CommissionReply::Say(line) => self
+                                .client_state
+                                .follow_mut(client_state().chat_messages())
+                                .push(ChatMessage::new(line, MessageColor::Information)),
                         }
+                        continue;
+                    }
+
+                    // `/craftodds` opens the F30 crafting odds window.
+                    if text.as_str() == "/craftodds" {
+                        self.input_event_buffer.push(InputEvent::ToggleCraftingOddsWindow);
                         continue;
                     }
 

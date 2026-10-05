@@ -12,6 +12,7 @@ mod character_selection;
 mod chat;
 mod commands;
 mod commission_board;
+mod crafting_odds;
 mod dialog;
 mod dice;
 mod disconnect_notice;
@@ -79,6 +80,7 @@ pub use self::character_selection::CharacterSelectionWindow;
 pub use self::chat::{ChatTextBox, ChatWindow, ChatWindowState, GuideLinkKind, resolve_guide_query};
 pub use self::commands::{CommandsWindow, CommandsWindowState};
 pub use self::commission_board::{CommissionBoardWindow, CommissionBoardWindowState};
+pub use self::crafting_odds::CraftingOddsWindow;
 pub use self::dialog::{DialogWindow, DialogWindowState};
 pub use self::dice::{DiceWindow, DiceWindowState};
 pub use self::disconnect_notice::DisconnectNoticeWindow;
@@ -157,6 +159,7 @@ pub enum WindowClass {
     SkillTree,
     Stats,
     BuildPlanner,
+    CraftingOdds,
     FriendList,
     FriendRequest,
     Login,
