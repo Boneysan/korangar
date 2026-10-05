@@ -286,157 +286,203 @@ where
             theme: InterfaceThemeType::InGame,
             closable: true,
             elements: (
-                state_button! {
-                    text: client_state().localization().auto_attack_button_text(),
-                    state: self.game_settings_path.auto_attack(),
-                    event: Toggle(self.game_settings_path.auto_attack()),
-                },
-                state_button! {
-                    text: client_state().localization().show_minimap_button_text(),
-                    state: self.game_settings_path.show_minimap(),
-                    event: InputEvent::ToggleMinimapWindow,
-                },
-                state_button! {
-                    text: "Warn before high-level maps",
-                    tooltip: "Show a non-blocking toast when the map's static-spawn mean is at least 15 levels above your character. This never prevents travel.",
-                    state: self.game_settings_path.warn_dangerous_maps(),
-                    event: Toggle(self.game_settings_path.warn_dangerous_maps()),
-                },
-                state_button! {
-                    text: "WASD movement",
-                    tooltip: "Walk with W A S D relative to the camera. Click-to-move still works.",
-                    state: self.game_settings_path.wasd_movement(),
-                    event: Toggle(self.game_settings_path.wasd_movement()),
-                },
-                state_button! {
-                    text: "Reduce motion",
-                    tooltip: "Disable nonessential camera shake. Combat cues and telegraphs remain visible.",
-                    state: self.game_settings_path.reduce_motion(),
-                    event: Toggle(self.game_settings_path.reduce_motion()),
-                },
-                state_button! {
-                    text: "Audio cues",
-                    tooltip: "Short sounds for dangerous enemy casts, interrupts, quest completion, party pings, and card drops. Each one also has a visual cue; sound is never the only warning.",
-                    state: self.game_settings_path.audio_cues(),
-                    event: Toggle(self.game_settings_path.audio_cues()),
-                },
-                state_button! {
-                    text: "Reduce flashing",
-                    tooltip: "Dim procedural combat bursts and their point lights. Skill timing, telegraphs, and sounds remain unchanged.",
-                    state: self.game_settings_path.reduce_flashing(),
-                    event: Toggle(self.game_settings_path.reduce_flashing()),
-                },
-                state_button! {
-                    text: "Quickcast ground skills at cursor",
-                    tooltip: "Global default for ground/trap skills unless a learned skill has an override. When enabled, selecting a skill casts at the current map cell; without a valid cursor target it falls back to aim-and-click.",
-                    state: self.game_settings_path.quickcast_ground_skills(),
-                    event: Toggle(self.game_settings_path.quickcast_ground_skills()),
-                },
-                state_button! {
-                    text: "Hold ground skill key to aim, release to cast",
-                    tooltip: "Global default for ground/trap skills unless a learned skill has an override. Hold its hotbar key while aiming, then release over a valid target; this takes precedence over the global quickcast option.",
-                    state: self.game_settings_path.hold_aim_release_ground_skills(),
-                    event: Toggle(self.game_settings_path.hold_aim_release_ground_skills()),
-                },
-                text! { text: "Per-skill ground/trap targeting — click a learned skill to cycle its override." },
-                scroll_view! {
-                    children: GroundSkillModeList {
-                        game_settings_path: self.game_settings_path,
-                        elements: Vec::new(),
-                        entries: Vec::new(),
-                    }
-                },
-                state_button! {
-                    text: "Show quest markers",
-                    tooltip: "Show or hide quest indicators on NPCs and objective locations.",
-                    state: self.game_settings_path.show_quest_markers(),
-                    event: Toggle(self.game_settings_path.show_quest_markers()),
-                },
-                state_button! {
-                    text: "Show chat timestamps",
-                    tooltip: "Show or hide the [HH:MM:SS] time in front of each chat message.",
-                    state: self.game_settings_path.show_chat_timestamps(),
-                    event: Toggle(self.game_settings_path.show_chat_timestamps()),
-                },
-                text! { text: "Minimap layers" },
-                state_button! {
-                    text: "Show facility markers",
-                    tooltip: "Show or hide Towninfo facility markers (shops, Kafra, guides, inns) on the minimap.",
-                    state: self.game_settings_path.show_minimap_facilities(),
-                    event: Toggle(self.game_settings_path.show_minimap_facilities()),
-                },
-                state_button! {
-                    text: "Show portals",
-                    tooltip: "Show or hide warp portals on the minimap. Hiding them also hides a tracked route's portal highlight; the route itself is kept.",
-                    state: self.game_settings_path.show_minimap_portals(),
-                    event: Toggle(self.game_settings_path.show_minimap_portals()),
-                },
-                state_button! {
-                    text: "Show monster regions",
-                    tooltip: "Show or hide the shaded areas where the selected or hunted monster spawns on this map.",
-                    state: self.game_settings_path.show_minimap_population_regions(),
-                    event: Toggle(self.game_settings_path.show_minimap_population_regions()),
-                },
-                state_button! {
-                    text: "Show party members",
-                    tooltip: "Show or hide same-map party member blips on the minimap.",
-                    state: self.game_settings_path.show_minimap_party(),
-                    event: Toggle(self.game_settings_path.show_minimap_party()),
-                },
-                state_button! {
-                    text: "Show quest marks",
-                    tooltip: "Show or hide the server's compass/quest marks on the minimap. Separate from \"Show quest markers\" above, which controls the overhead world markers.",
-                    state: self.game_settings_path.show_minimap_quest_markers(),
-                    event: Toggle(self.game_settings_path.show_minimap_quest_markers()),
-                },
-                text! { text: "Loot" },
-                AutolootPanel {
-                    game_settings_path: self.game_settings_path,
-                    elements: Vec::new(),
-                },
-                state_button! {
-                    text: "Show combat text",
-                    tooltip: "Show floating damage, miss, and healing numbers. This does not change combat results or sound cues.",
-                    state: self.game_settings_path.show_combat_text(),
-                    event: Toggle(self.game_settings_path.show_combat_text()),
-                },
-                button! { text: "Cycle effect density (full / reduced / minimal)", tooltip: "Thins other players' cosmetic skill visuals in crowded fights. Your own skills, enemy skills, ground telegraphs, cast bars, and combat text are never hidden.", event: InputEvent::CycleEffectDensity },
-                button! { text: "Cycle route preference (fewest maps / cheapest / shortest walk / avoid locked)", tooltip: "Like a GPS route option. Shortest walk is an estimate: it measures straight lines inside each map and ignores walls. Avoid locked steps prefers routes without quest, item, or marriage gates.", event: InputEvent::CycleRoutePreference },
-                button! { text: "Cycle combat text detail (all / important / status only)", tooltip: "All shows every number; Important keeps critical hits, misses, and healing; Status only hides floating numbers while leaving textual status notices visible.", event: InputEvent::CycleCombatTextFrequency },
-                button! { text: "Cycle combat text size (small / normal / large)", tooltip: "Adjusts floating combat text size independently from the overall interface scale.", event: InputEvent::CycleCombatTextSize },
-                text! { text: "Keyboard shortcuts — select an action, then press its replacement chord. Escape cancels." },
-                scroll_view! { children: KeyBindingList { game_settings_path: self.game_settings_path, elements: Vec::new(), labels: Vec::new() } },
-                button! { text: "Reset keyboard shortcuts", event: InputEvent::ResetKeyBindings },
-                button! { text: "Import shortcuts", tooltip: "Read and validate client/keybindings.ron", event: InputEvent::ImportKeyBindings },
-                button! { text: "Export shortcuts", tooltip: "Write client/keybindings.ron", event: InputEvent::ExportKeyBindings },
-                text! { text: "HUD layout" },
-                button! { text: "Lock / unlock HUD editing", tooltip: "Locks window movement and resizing.", event: InputEvent::ToggleHudEditLock },
-                split! {
-                    gaps: theme().window().gaps(),
+                collapsible! {
+                    text: "Combat",
+                    initially_expanded: false,
                     children: (
-                        button! { text: "Classic layout", tooltip: "Classic Ragnarok Online layout with top-left status and top-right minimap.", event: InputEvent::SelectHudLayout("Classic") },
-                        button! { text: "Modern layout", tooltip: "Modern layout with centered hotbar and side frames.", event: InputEvent::SelectHudLayout("Modern") },
+                        state_button! {
+                                            text: client_state().localization().auto_attack_button_text(),
+                                            state: self.game_settings_path.auto_attack(),
+                                            event: Toggle(self.game_settings_path.auto_attack()),
+                                        },
+                        state_button! {
+                                            text: "Show combat text",
+                                            tooltip: "Show floating damage, miss, and healing numbers. This does not change combat results or sound cues.",
+                                            state: self.game_settings_path.show_combat_text(),
+                                            event: Toggle(self.game_settings_path.show_combat_text()),
+                                        },
+                        button! { text: "Cycle combat text detail (all / important / status only)", tooltip: "All shows every number; Important keeps critical hits, misses, and healing; Status only hides floating numbers while leaving textual status notices visible.", event: InputEvent::CycleCombatTextFrequency },
+                        button! { text: "Cycle combat text size (small / normal / large)", tooltip: "Adjusts floating combat text size independently from the overall interface scale.", event: InputEvent::CycleCombatTextSize },
+                        button! { text: "Cycle effect density (full / reduced / minimal)", tooltip: "Thins other players' cosmetic skill visuals in crowded fights. Your own skills, enemy skills, ground telegraphs, cast bars, and combat text are never hidden.", event: InputEvent::CycleEffectDensity },
                     ),
                 },
-                split! {
-                    gaps: theme().window().gaps(),
+                collapsible! {
+                    text: "Controls",
+                    initially_expanded: false,
                     children: (
-                        button! { text: "Exploration layout", tooltip: "Enlarged minimap and prominent quest tracker for world navigation.", event: InputEvent::SelectHudLayout("Exploration") },
-                        button! { text: "Dungeon layout", tooltip: "Enlarged party frame and clear target frame for group dungeon runs.", event: InputEvent::SelectHudLayout("Dungeon") },
+                        state_button! {
+                                            text: "WASD movement",
+                                            tooltip: "Walk with W A S D relative to the camera. Click-to-move still works.",
+                                            state: self.game_settings_path.wasd_movement(),
+                                            event: Toggle(self.game_settings_path.wasd_movement()),
+                                        },
+                        state_button! {
+                                            text: "Quickcast ground skills at cursor",
+                                            tooltip: "Global default for ground/trap skills unless a learned skill has an override. When enabled, selecting a skill casts at the current map cell; without a valid cursor target it falls back to aim-and-click.",
+                                            state: self.game_settings_path.quickcast_ground_skills(),
+                                            event: Toggle(self.game_settings_path.quickcast_ground_skills()),
+                                        },
+                        state_button! {
+                                            text: "Hold ground skill key to aim, release to cast",
+                                            tooltip: "Global default for ground/trap skills unless a learned skill has an override. Hold its hotbar key while aiming, then release over a valid target; this takes precedence over the global quickcast option.",
+                                            state: self.game_settings_path.hold_aim_release_ground_skills(),
+                                            event: Toggle(self.game_settings_path.hold_aim_release_ground_skills()),
+                                        },
+                        text! { text: "Per-skill ground/trap targeting — click a learned skill to cycle its override." },
+                        scroll_view! {
+                                            children: GroundSkillModeList {
+                                                game_settings_path: self.game_settings_path,
+                                                elements: Vec::new(),
+                                                entries: Vec::new(),
+                                            }
+                                        },
                     ),
                 },
-                split! {
-                    gaps: theme().window().gaps(),
+                collapsible! {
+                    text: "Map and routes",
+                    initially_expanded: false,
                     children: (
-                        button! { text: "Healer layout", tooltip: "Enlarged, accessible party frames for rapid party member targeting and healing.", event: InputEvent::SelectHudLayout("Healer") },
-                        button! { text: "Farming layout", tooltip: "Quick access to inventory drops, loot, and combat targets.", event: InputEvent::SelectHudLayout("Farming") },
+                        state_button! {
+                                            text: client_state().localization().show_minimap_button_text(),
+                                            state: self.game_settings_path.show_minimap(),
+                                            event: InputEvent::ToggleMinimapWindow,
+                                        },
+                        state_button! {
+                                            text: "Warn before high-level maps",
+                                            tooltip: "Show a non-blocking toast when the map's static-spawn mean is at least 15 levels above your character. This never prevents travel.",
+                                            state: self.game_settings_path.warn_dangerous_maps(),
+                                            event: Toggle(self.game_settings_path.warn_dangerous_maps()),
+                                        },
+                        state_button! {
+                                            text: "Show quest markers",
+                                            tooltip: "Show or hide quest indicators on NPCs and objective locations.",
+                                            state: self.game_settings_path.show_quest_markers(),
+                                            event: Toggle(self.game_settings_path.show_quest_markers()),
+                                        },
+                        button! { text: "Cycle route preference (fewest maps / cheapest / shortest walk / avoid locked)", tooltip: "Like a GPS route option. Shortest walk is an estimate: it measures straight lines inside each map and ignores walls. Avoid locked steps prefers routes without quest, item, or marriage gates.", event: InputEvent::CycleRoutePreference },
+                        text! { text: "Minimap layers" },
+                        state_button! {
+                                            text: "Show facility markers",
+                                            tooltip: "Show or hide Towninfo facility markers (shops, Kafra, guides, inns) on the minimap.",
+                                            state: self.game_settings_path.show_minimap_facilities(),
+                                            event: Toggle(self.game_settings_path.show_minimap_facilities()),
+                                        },
+                        state_button! {
+                                            text: "Show portals",
+                                            tooltip: "Show or hide warp portals on the minimap. Hiding them also hides a tracked route's portal highlight; the route itself is kept.",
+                                            state: self.game_settings_path.show_minimap_portals(),
+                                            event: Toggle(self.game_settings_path.show_minimap_portals()),
+                                        },
+                        state_button! {
+                                            text: "Show monster regions",
+                                            tooltip: "Show or hide the shaded areas where the selected or hunted monster spawns on this map.",
+                                            state: self.game_settings_path.show_minimap_population_regions(),
+                                            event: Toggle(self.game_settings_path.show_minimap_population_regions()),
+                                        },
+                        state_button! {
+                                            text: "Show party members",
+                                            tooltip: "Show or hide same-map party member blips on the minimap.",
+                                            state: self.game_settings_path.show_minimap_party(),
+                                            event: Toggle(self.game_settings_path.show_minimap_party()),
+                                        },
+                        state_button! {
+                                            text: "Show quest marks",
+                                            tooltip: "Show or hide the server's compass/quest marks on the minimap. Separate from \"Show quest markers\" above, which controls the overhead world markers.",
+                                            state: self.game_settings_path.show_minimap_quest_markers(),
+                                            event: Toggle(self.game_settings_path.show_minimap_quest_markers()),
+                                        },
                     ),
                 },
-                button! { text: "Minimal layout", tooltip: "Compact status and hotbar for maximum world visibility.", event: InputEvent::SelectHudLayout("Minimal") },
-                button! { text: "Save current as My Layout", tooltip: "Overwrites the per-character My Layout slot.", event: InputEvent::SaveHudLayout("My Layout") },
-                button! { text: "Reset HUD layout", event: InputEvent::ResetHudLayout },
-                button! { text: "Cycle HUD snap grid (off / 8 / 16 / 32 px)", tooltip: "When enabled, dragged windows snap their positions to the selected screen-pixel grid.", event: InputEvent::CycleHudSnapGrid },
-                button! { text: "Toggle combat HUD fade", tooltip: "Outside combat, the hotbar, status bar, and monster target fade. They return for five seconds after you deal or take damage, and while the pointer is over them.", event: InputEvent::ToggleCombatHudFade },
+                collapsible! {
+                    text: "Chat",
+                    initially_expanded: false,
+                    children: (
+                        state_button! {
+                                            text: "Show chat timestamps",
+                                            tooltip: "Show or hide the [HH:MM:SS] time in front of each chat message.",
+                                            state: self.game_settings_path.show_chat_timestamps(),
+                                            event: Toggle(self.game_settings_path.show_chat_timestamps()),
+                                        },
+                    ),
+                },
+                collapsible! {
+                    text: "Loot",
+                    initially_expanded: false,
+                    children: (
+                        AutolootPanel {
+                                            game_settings_path: self.game_settings_path,
+                                            elements: Vec::new(),
+                                        },
+                    ),
+                },
+                collapsible! {
+                    text: "Accessibility",
+                    initially_expanded: false,
+                    children: (
+                        state_button! {
+                                            text: "Reduce motion",
+                                            tooltip: "Disable nonessential camera shake. Combat cues and telegraphs remain visible.",
+                                            state: self.game_settings_path.reduce_motion(),
+                                            event: Toggle(self.game_settings_path.reduce_motion()),
+                                        },
+                        state_button! {
+                                            text: "Audio cues",
+                                            tooltip: "Short sounds for dangerous enemy casts, interrupts, quest completion, party pings, and card drops. Each one also has a visual cue; sound is never the only warning.",
+                                            state: self.game_settings_path.audio_cues(),
+                                            event: Toggle(self.game_settings_path.audio_cues()),
+                                        },
+                        state_button! {
+                                            text: "Reduce flashing",
+                                            tooltip: "Dim procedural combat bursts and their point lights. Skill timing, telegraphs, and sounds remain unchanged.",
+                                            state: self.game_settings_path.reduce_flashing(),
+                                            event: Toggle(self.game_settings_path.reduce_flashing()),
+                                        },
+                    ),
+                },
+                collapsible! {
+                    text: "Keyboard shortcuts",
+                    initially_expanded: false,
+                    children: (
+                        text! { text: "Keyboard shortcuts — select an action, then press its replacement chord. Escape cancels." },
+                        scroll_view! { children: KeyBindingList { game_settings_path: self.game_settings_path, elements: Vec::new(), labels: Vec::new() } },
+                        button! { text: "Reset keyboard shortcuts", event: InputEvent::ResetKeyBindings },
+                        button! { text: "Import shortcuts", tooltip: "Read and validate client/keybindings.ron", event: InputEvent::ImportKeyBindings },
+                        button! { text: "Export shortcuts", tooltip: "Write client/keybindings.ron", event: InputEvent::ExportKeyBindings },
+                    ),
+                },
+                collapsible! {
+                    text: "HUD layout",
+                    initially_expanded: false,
+                    children: (
+                        button! { text: "Lock / unlock HUD editing", tooltip: "Locks window movement and resizing.", event: InputEvent::ToggleHudEditLock },
+                        split! {
+                                            gaps: theme().window().gaps(),
+                                            children: (
+                                                button! { text: "Classic layout", tooltip: "Classic Ragnarok Online layout with top-left status and top-right minimap.", event: InputEvent::SelectHudLayout("Classic") },
+                                                button! { text: "Modern layout", tooltip: "Modern layout with centered hotbar and side frames.", event: InputEvent::SelectHudLayout("Modern") },
+                                            ),
+                                        },
+                        split! {
+                                            gaps: theme().window().gaps(),
+                                            children: (
+                                                button! { text: "Exploration layout", tooltip: "Enlarged minimap and prominent quest tracker for world navigation.", event: InputEvent::SelectHudLayout("Exploration") },
+                                                button! { text: "Dungeon layout", tooltip: "Enlarged party frame and clear target frame for group dungeon runs.", event: InputEvent::SelectHudLayout("Dungeon") },
+                                            ),
+                                        },
+                        split! {
+                                            gaps: theme().window().gaps(),
+                                            children: (
+                                                button! { text: "Healer layout", tooltip: "Enlarged, accessible party frames for rapid party member targeting and healing.", event: InputEvent::SelectHudLayout("Healer") },
+                                                button! { text: "Farming layout", tooltip: "Quick access to inventory drops, loot, and combat targets.", event: InputEvent::SelectHudLayout("Farming") },
+                                            ),
+                                        },
+                        button! { text: "Minimal layout", tooltip: "Compact status and hotbar for maximum world visibility.", event: InputEvent::SelectHudLayout("Minimal") },
+                        button! { text: "Save current as My Layout", tooltip: "Overwrites the per-character My Layout slot.", event: InputEvent::SaveHudLayout("My Layout") },
+                        button! { text: "Reset HUD layout", event: InputEvent::ResetHudLayout },
+                        button! { text: "Cycle HUD snap grid (off / 8 / 16 / 32 px)", tooltip: "When enabled, dragged windows snap their positions to the selected screen-pixel grid.", event: InputEvent::CycleHudSnapGrid },
+                        button! { text: "Toggle combat HUD fade", tooltip: "Outside combat, the hotbar, status bar, and monster target fade. They return for five seconds after you deal or take damage, and while the pointer is over them.", event: InputEvent::ToggleCombatHudFade },
+                    ),
+                },
             ),
         }
     }
