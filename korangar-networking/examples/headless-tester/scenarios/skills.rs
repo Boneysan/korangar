@@ -1929,6 +1929,19 @@ fn sweep_job(config: &Config, job_id: u16, job_name: &str) -> Result<(), String>
                 } else {
                     let (dx, dy) = GROUND_OFFSETS[ground_cast_index % GROUND_OFFSETS.len()];
                     ground_cast_index += 1;
+                    // Stay a cell inside the skill's own range. The recorded
+                    // position can be one cell off after a failed walk, and an
+                    // out-of-range ground cast is dropped without a word: Land
+                    // Protector (range 2) aimed 2 cells from (286,338) while the
+                    // server had the caster at (287,338), 3 away, and went silent
+                    // (seen with server logging, 2026-10-05).
+                    // Only short-range skills are pulled in: folding the radius-3
+                    // cells onto radius 2 for traps (range 3) would stack units on
+                    // one cell, which RO also refuses silently.
+                    let (dx, dy) = match skill.attack_range.0 <= 2 {
+                        true => (dx.clamp(-1, 1), dy.clamp(-1, 1)),
+                        false => (dx, dy),
+                    };
                     TilePosition {
                         x: (position.x as i16 + dx).max(5) as u16,
                         y: (position.y as i16 + dy).max(5) as u16,

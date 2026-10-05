@@ -135,11 +135,22 @@ fn record(context: &TestContext, mob: EntityId, events: Vec<NetworkEvent>, seen:
                         _ => None,
                     })
                     .is_some_and(|moved| starting_timestamp.0.wrapping_sub(moved) < 1000);
+                // The server re-sends a walk in progress with an updated origin
+                // and the same destination ((132,70)->(133,71) then
+                // (132,71)->(133,71), 221 ms apart, on 2026-10-05). That is one
+                // retreat, not two.
+                let same_walk = seen.iter().rev().find_map(|item| match item {
+                    Seen::Step {
+                        trace: [_, previous_to, _],
+                        ..
+                    } => Some(*previous_to),
+                    _ => None,
+                }) == Some((destination.tile_position().x as i32, destination.tile_position().y as i32));
                 let (from, to) = (origin.tile_position(), destination.tile_position());
                 let distance_after = chebyshev(to, me);
                 seen.push(Seen::Step {
                     tick: starting_timestamp.0,
-                    away: chebyshev(from, to) == 1 && distance_after > chebyshev(from, me) && !player_walking,
+                    away: chebyshev(from, to) == 1 && distance_after > chebyshev(from, me) && !player_walking && !same_walk,
                     distance_before: chebyshev(from, me),
                     distance_after,
                     length: chebyshev(from, to),
@@ -286,6 +297,9 @@ fn beat_on(context: &mut TestContext, mob: (&str, u16), swings: usize, gap: Dura
     Ok(seen)
 }
 
+/// `DamageMotion` of ORC_SKELETON (1152) and ELITE_ORC_SKELETON (20901).
+const SKELETON_DAMAGE_MOTION_MS: u32 = 648;
+
 /// How many times to try a profile case at a fresh spot before giving up. The
 /// step needs an open cell next to the monster and farther from the player; in
 /// a corridor there is none and the code, by design, falls through to the stock
@@ -332,8 +346,14 @@ fn skirmisher_case(config: &Config, mob: (&str, u16), job: u16, swings: usize, t
         }
         for pair in ticks.windows(2) {
             let gap_ms = pair[1].wrapping_sub(pair[0]);
-            // Allow up to one server tick (100ms) of timer jitter.
-            if gap_ms < cooldown_ms.saturating_sub(100) {
+            // The ticks are when each walk *started*; the server times the
+            // cooldown from when it *decided*. A monster still reeling from a
+            // hit cannot start walking until its damage motion ends (648 ms
+            // for both skeletons), so a delayed retreat followed by a prompt
+            // one shows a gap up to that much short (2392 ms against 3000 on
+            // 2026-10-05, with the server's own decisions 3 s apart). Allow it,
+            // plus one server tick of jitter.
+            if gap_ms < cooldown_ms.saturating_sub(SKELETON_DAMAGE_MOTION_MS + 100) {
                 return Err(format!(
                     "two retreats {gap_ms} ms apart; the cooldown is {cooldown_ms} ms ({ticks:?}); {}",
                     summary(&seen)
