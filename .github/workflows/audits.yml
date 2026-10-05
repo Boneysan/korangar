@@ -151,3 +151,7 @@ jobs:
       - name: No state is stored and never read
         working-directory: korangar
         run: python3 tools/audits/unread-state.py
+
+      - name: Every UI character is in the game font
+        working-directory: korangar
+        run: python3 tools/audits/glyph_coverage.py

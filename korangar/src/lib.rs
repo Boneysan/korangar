@@ -4757,7 +4757,7 @@ impl Client {
             character_server_information.server_port,
         );
         client_log!(
-            "[login] SelectServer '{}' → {address}",
+            "[login] SelectServer '{}' -> {address}",
             character_server_information.server_name
         );
 
@@ -5543,9 +5543,9 @@ impl Client {
                         if is_card || is_wishlisted {
                             let item_name = stats.as_ref().map(|s| s.name.as_str()).unwrap_or("Unknown Item");
                             let alert_msg = if is_card {
-                                format!("★ Rare Card Drop: {item_name}!")
+                                format!("Rare card drop: {item_name}!")
                             } else {
-                                format!("★ Wishlist Item Drop: {item_name}!")
+                                format!("Wishlist item drop: {item_name}!")
                             };
                             self.play_audio_cue(crate::state::audio_cues::AudioCue::CardDrop, None, client_tick);
                             self.client_state.follow_mut(client_state().toasts()).push(
@@ -14951,7 +14951,7 @@ impl<'a, 'm: 'a> MapRenderContext<'a, 'm> {
                             )
                             .map(|(destination, is_route)| {
                                 if is_route {
-                                    format!("→ Route portal: {destination}")
+                                    format!("› Route portal: {destination}")
                                 } else {
                                     format!("Portal to {destination}")
                                 }

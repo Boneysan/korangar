@@ -1590,7 +1590,7 @@ fn map_details(map_name: &str, town_pois: &[TownPoi]) -> Vec<String> {
             let action = edge.action.as_deref().unwrap_or("Talk to the listed NPC.");
             let availability = if edge.availability == "conditional" { " (conditional)" } else { "" };
             lines.push(format!(
-                "Service at ({}, {}): {action}{availability} → {}",
+                "Service at ({}, {}): {action}{availability} › {}",
                 edge.from.x, edge.from.y, edge.to.map
             ));
             if let Some(requirements) = &edge.requirements {
@@ -2064,7 +2064,7 @@ fn append_exp_table(lines: &mut Vec<String>, label: &str, group_name: &str, grou
     }
     let steps = milestones
         .iter()
-        .filter_map(|level| Some(format!("{level}→{}: {}", level + 1, group_digits(group.exp_to_next(*level)?))))
+        .filter_map(|level| Some(format!("{level}–{}: {}", level + 1, group_digits(group.exp_to_next(*level)?))))
         .collect::<Vec<_>>();
     lines.push(format!("  {}", steps.join("; ")));
     if let Some(total) = group.total_to_reach(group.max_level) {
@@ -4409,9 +4409,9 @@ mod tests {
         let (id, name) = job_names().find(|(_, name)| *name == "Knight").expect("Knight job");
         let text = super::job_details(id, name).join("\n");
         assert!(text.contains("server group FirstClasses, maximum level 99"), "{text}");
-        assert!(text.contains("1→2: 350"), "{text}");
-        assert!(text.contains("50→51: 47,000"), "{text}");
-        assert!(text.contains("98→99: 3,300,000"), "{text}");
+        assert!(text.contains("1–2: 350"), "{text}");
+        assert!(text.contains("50–51: 47,000"), "{text}");
+        assert!(text.contains("98–99: 3,300,000"), "{text}");
         assert!(text.contains("Total from level 1 to level 99:"), "{text}");
         assert!(text.contains("server group SecondClasses"), "{text}");
     }
@@ -4958,7 +4958,7 @@ mod monster_page_and_route_offer_tests {
             panic!("eclage is routable through its locked entrance");
         };
         assert!(
-            notes.iter().any(|line| line.starts_with("Locked step ecl_fild01 → eclage")),
+            notes.iter().any(|line| line.starts_with("Locked step ecl_fild01 › eclage")),
             "{notes:#?}"
         );
 

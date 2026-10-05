@@ -733,7 +733,7 @@ mod tests {
 
         let route_portal = exits.iter().find(|e| e.to_map == "prontera").expect("route portal to prontera");
         assert!(route_portal.is_route_exit);
-        assert_eq!(route_portal.label(), "→ Route portal: prontera");
+        assert_eq!(route_portal.label(), "› Route portal: prontera");
 
         let non_route = exits.iter().find(|e| e.to_map == "izlude").expect("exit to izlude");
         assert!(!non_route.is_route_exit);
