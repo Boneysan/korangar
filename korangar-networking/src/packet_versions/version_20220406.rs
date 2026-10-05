@@ -326,6 +326,9 @@ where
         }
     })?;
     packet_handler.register_noop::<OpenUiPacket>()?;
+    // Reviewed no-op: the cast it scales already arrives as its own packet and
+    // drives the telegraph; the scale hint adds nothing the client draws yet.
+    packet_handler.register_noop::<SkillScalePacket>()?;
     packet_handler.register(|packet: EntityMessagePacket| {
         // Drop the alpha channel because it might be 0.
         let color = MessageColor::Rgb {

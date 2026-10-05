@@ -1877,6 +1877,25 @@ mod packet_handlers {
     /// which no static table can reach. Fed as two reads, exactly as Hercules
     /// sends them, so this covers the pairing and not just the wording.
     #[test]
+    fn skill_scale_0x0a41_is_consumed_whole() {
+        use ragnarok_bytes::ByteReader;
+        use ragnarok_packets::handler::HandlerResult;
+
+        let mut handler = NetworkingSystem::create_map_server_packet_handler(NoPacketCallback, SupportedPacketVersion::_20220406).unwrap();
+        // The bytes the 2026-10-04 full run captured.
+        let bytes = vec![
+            0x41, 0x0A, 0xF3, 0x09, 0x90, 0x06, 0xA0, 0x02, 0x05, 0x00, 0xAC, 0x00, 0x8B, 0x00, 0x00, 0x00, 0x00, 0x00,
+        ];
+        assert_eq!(bytes.len(), 18, "Hercules packetLen(0x0a41, 18)");
+        let mut reader = ByteReader::without_metadata(&bytes);
+        let HandlerResult::Ok(events) = handler.process_one(&mut reader) else {
+            panic!("0x0A41 did not parse");
+        };
+        assert!(events.0.is_empty(), "a reviewed no-op publishes nothing: {:?}", events.0);
+        assert!(reader.is_empty(), "0x0A41 must consume exactly its 18 bytes");
+    }
+
+    #[test]
     fn mvp_packets_name_the_mvp_and_the_reward() {
         use ragnarok_bytes::ByteReader;
         use ragnarok_packets::handler::HandlerResult;

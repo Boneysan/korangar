@@ -881,7 +881,13 @@ impl TestContext {
                 stat_type: ragnarok_packets::StatType::Zeny(value),
             } => Some(*value),
             _ => None,
-        })
+        })?;
+        // The first update can be an earlier change still in flight (a
+        // preceding `@zeny 5000`), not this nudge: the 2026-10-04 full run read
+        // one short on both sides of a trade. Updates arrive in order, so let
+        // the rest land and take the last.
+        self.pump(Duration::from_millis(400));
+        Ok(self.zeny)
     }
 
     /// Send a chat line / GM command (no feedback expected).

@@ -5883,6 +5883,22 @@ pub struct PartyInviteSenderPacket {
     pub character_name: String,
 }
 
+/// A cast's area scale (`ZC_SKILL_SCALE`, Hercules `clif_skill_scale`),
+/// sent right after the ordinary cast packet for skills flagged
+/// `INF2_SHOW_SKILL_SCALE` (first seen 2026-10-04: a monster's `NPC_SLOWCAST`).
+/// `account_id` is negative-encoded for a disguised caster's own view.
+#[derive(Debug, Clone, Packet, ServerPacket, MapServer)]
+#[cfg_attr(feature = "interface", derive(rust_state::RustState, korangar_interface::element::StateElement))]
+#[header(0x0A41)]
+pub struct SkillScalePacket {
+    pub source_id: u32,
+    pub skill_id: SkillId,
+    pub skill_level: SkillLevel,
+    pub x: u16,
+    pub y: u16,
+    pub cast_time: u32,
+}
+
 /// Who earned the MVP of a kill (`ZC_MVP`, Hercules `clif_mvp_effect`), sent
 /// to everyone around it. Arrives before the boss's death packet
 /// (`mob_dead`), so a recap can still attach it.

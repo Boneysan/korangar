@@ -73,6 +73,10 @@ enum Seen {
     Refused,
     /// Something other than the player damaged it (source id, amount).
     OtherHit(u32, usize),
+    /// The player started walking (server tick). The tester takes the walk's
+    /// destination as the player's position at once, so for a moment after
+    /// this a monster step toward where the player really is can read as away.
+    PlayerMoved(u32),
     /// It moved one cell. `away` means that cell is farther from the player.
     Step {
         tick: u32,
@@ -111,6 +115,7 @@ fn record(context: &TestContext, mob: EntityId, events: Vec<NetworkEvent>, seen:
                 ..
             } if destination_entity_id == mob && amount > 0 => seen.push(Seen::OtherHit(source_entity_id.0, amount)),
             NetworkEvent::AttackFailed { .. } => seen.push(Seen::Refused),
+            NetworkEvent::PlayerMove { starting_timestamp, .. } => seen.push(Seen::PlayerMoved(starting_timestamp.0)),
             NetworkEvent::EntityMove {
                 entity_id,
                 origin,
@@ -118,11 +123,23 @@ fn record(context: &TestContext, mob: EntityId, events: Vec<NetworkEvent>, seen:
                 starting_timestamp,
             } if entity_id == mob => {
                 let me = context.position;
+                // A step that starts within a second of the player setting off
+                // is measured against a position the player has not reached. A
+                // real retreat comes first and *causes* that walk (the next
+                // attack request chases it), so it is never in this window.
+                let player_walking = seen
+                    .iter()
+                    .rev()
+                    .find_map(|item| match item {
+                        Seen::PlayerMoved(tick) => Some(*tick),
+                        _ => None,
+                    })
+                    .is_some_and(|moved| starting_timestamp.0.wrapping_sub(moved) < 1000);
                 let (from, to) = (origin.tile_position(), destination.tile_position());
                 let distance_after = chebyshev(to, me);
                 seen.push(Seen::Step {
                     tick: starting_timestamp.0,
-                    away: chebyshev(from, to) == 1 && distance_after > chebyshev(from, me),
+                    away: chebyshev(from, to) == 1 && distance_after > chebyshev(from, me) && !player_walking,
                     distance_before: chebyshev(from, me),
                     distance_after,
                     length: chebyshev(from, to),
@@ -318,7 +335,8 @@ fn skirmisher_case(config: &Config, mob: (&str, u16), job: u16, swings: usize, t
             // Allow up to one server tick (100ms) of timer jitter.
             if gap_ms < cooldown_ms.saturating_sub(100) {
                 return Err(format!(
-                    "two retreats {gap_ms} ms apart; the cooldown is {cooldown_ms} ms ({ticks:?})"
+                    "two retreats {gap_ms} ms apart; the cooldown is {cooldown_ms} ms ({ticks:?}); {}",
+                    summary(&seen)
                 ));
             }
         }
@@ -878,6 +896,9 @@ fn flees(seen: &[Seen]) -> Vec<usize> {
 /// Wear a Poring down with a level-1 character (1 to 3 damage a swing, so its
 /// 50 HP last) until it flees or dies; return what was seen and the damage
 /// dealt.
+/// Poring (1002) has 60 HP in `db/re/mob_db.conf`.
+const PORING_HP: usize = 60;
+
 fn wear_down_poring(config: &Config, map: &str) -> Result<(Vec<Seen>, usize), String> {
     let mut context = attacker_at_level(config, map, 0, 1)?;
     // The test characters are shared, and other scenarios leave STR at 90 or
@@ -906,6 +927,15 @@ fn wear_down_poring(config: &Config, map: &str) -> Result<(Vec<Seen>, usize), St
     let mut seen = Vec::new();
     let mut dealt = 0;
     for swing in 0..80 {
+        // At the threshold, stop swinging and give it time to run. A monster
+        // cannot move while it reels from a hit, so a third 20-damage swing
+        // 600 ms later killed a Poring already at 20/60 before it could flee,
+        // and the test reported "never fled".
+        if dealt >= PORING_HP - PORING_HP * 35 / 100 {
+            let events = context.collect_for(Duration::from_millis(3000));
+            record(&context, target, events, &mut seen);
+            break;
+        }
         if swing % 2 == 0 {
             context.say("@heal")?;
         }
@@ -945,7 +975,6 @@ fn coward_poring(config: &Config) -> Result<(), String> {
     // Poring max HP is 60 (db/re/mob_db.conf Id 1002; the earlier "50" was
     // wrong): the flee may start once HP is at most 35% (21), i.e. after 39 or
     // more damage.
-    const PORING_HP: usize = 60;
     const FIRST_DAMAGE_THAT_CAN_TRIGGER: usize = PORING_HP - PORING_HP * 35 / 100;
 
     let (seen, dealt) = wear_down_poring(config, "prt_fild08")?;
