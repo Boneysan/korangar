@@ -71,6 +71,8 @@ enum Seen {
     Miss,
     /// The server refused the attack (out of range, not attackable...).
     Refused,
+    /// Something other than the player damaged it (source id, amount).
+    OtherHit(u32, usize),
     /// It moved one cell. `away` means that cell is farther from the player.
     Step {
         tick: u32,
@@ -79,6 +81,8 @@ enum Seen {
         distance_before: i32,
         distance_after: i32,
         length: i32,
+        /// Origin, destination and the player's position, for failure messages.
+        trace: [(i32, i32); 3],
     },
 }
 
@@ -100,6 +104,12 @@ fn record(context: &TestContext, mob: EntityId, events: Vec<NetworkEvent>, seen:
                 destination_entity_id,
                 ..
             } if source_entity_id == context.player_id && destination_entity_id == mob => seen.push(Seen::Miss),
+            NetworkEvent::DamageEffect {
+                source_entity_id,
+                destination_entity_id,
+                damage_amount: Some(amount),
+                ..
+            } if destination_entity_id == mob && amount > 0 => seen.push(Seen::OtherHit(source_entity_id.0, amount)),
             NetworkEvent::AttackFailed { .. } => seen.push(Seen::Refused),
             NetworkEvent::EntityMove {
                 entity_id,
@@ -116,6 +126,11 @@ fn record(context: &TestContext, mob: EntityId, events: Vec<NetworkEvent>, seen:
                     distance_before: chebyshev(from, me),
                     distance_after,
                     length: chebyshev(from, to),
+                    trace: [
+                        (from.x as i32, from.y as i32),
+                        (to.x as i32, to.y as i32),
+                        (me.x as i32, me.y as i32),
+                    ],
                 });
             }
             _ => {}
@@ -136,14 +151,42 @@ fn retreat_ticks(seen: &[Seen]) -> Vec<u32> {
 /// saw.
 fn summary(seen: &[Seen]) -> String {
     let count = |wanted: fn(&Seen) -> bool| seen.iter().filter(|item| wanted(item)).count();
+    let others: Vec<String> = seen
+        .iter()
+        .filter_map(|item| match item {
+            Seen::OtherHit(source, amount) => Some(format!("{amount} from {source}")),
+            _ => None,
+        })
+        .collect();
     format!(
-        "{} hit, {} missed, {} refused, {} step(s) ({} away)",
+        "{} hit ({}), {} missed, {} refused, {} step(s) ({} away){}",
         count(|item| matches!(item, Seen::Hit(_))),
+        seen.iter()
+            .filter_map(|item| match item {
+                Seen::Hit(amount) => Some(amount.to_string()),
+                _ => None,
+            })
+            .collect::<Vec<_>>()
+            .join("+"),
         count(|item| matches!(item, Seen::Miss)),
         count(|item| matches!(item, Seen::Refused)),
         count(|item| matches!(item, Seen::Step { .. })),
         count(|item| matches!(item, Seen::Step { away: true, .. })),
-    )
+        match others.is_empty() {
+            true => String::new(),
+            false => format!("; other damage: {}", others.join(", ")),
+        },
+    ) + &match seen
+        .iter()
+        .filter_map(|item| match item {
+            Seen::Step { trace: [from, to, me], .. } => Some(format!("{from:?}->{to:?} me {me:?}")),
+            _ => None,
+        })
+        .collect::<Vec<_>>()
+    {
+        steps if steps.is_empty() => String::new(),
+        steps => format!("; moves: {}", steps.join(", ")),
+    }
 }
 
 fn hits(seen: &[Seen]) -> usize {
@@ -192,8 +235,12 @@ fn attacker_at_level(config: &Config, map: &str, job: u16, level: u32) -> Result
     Ok(context)
 }
 
+/// Kill every monster on the map *without drops*. `@killmonster` drops their
+/// loot (`atkillmonster_sub` zaps rather than kills), and a freshly spawned
+/// Poring, a looter, then walked off to collect the Jellopies: six cells in a
+/// straight line, read as a flee at 20 damage with no Coward flee logged.
 fn clear_map(context: &mut TestContext) {
-    let _ = context.say("@killmonster");
+    let _ = context.say("@killmonster2");
     context.pump(Duration::from_millis(300));
     let _ = context.say("@alive");
     context.pump(Duration::from_millis(200));

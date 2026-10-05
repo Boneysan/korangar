@@ -415,7 +415,9 @@ fn campaign_reward_paid_once(config: &Config) -> Result<(), String> {
         reopen_quest(context)?;
         let mother = go(context, "prontera", MOTHER_STAND, MOTHER)?;
 
-        let before = context.zeny;
+        // `context.zeny` reads 0 until the session sees a zeny update; on a
+        // character holding 2M from earlier scenarios that read as "paid 2M".
+        let before = context.known_zeny()?;
         talk(context, mother, choose_rescue)?;
         context.pump(Duration::from_millis(500));
         if context.zeny != before + ZENY {

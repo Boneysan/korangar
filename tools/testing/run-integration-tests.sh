@@ -547,6 +547,15 @@ conservation_violations=$("${mysql_admin[@]}" --batch --skip-column-names "$db_n
 if [ -n "$conservation_violations" ]; then
     echo "Item conservation audit failed:" >&2
     printf '  %s\n' "$conservation_violations" | head -40 >&2
+    # The bare totals do not say what happened; print the log rows behind
+    # each flagged character and item so the failure explains itself.
+    printf '%s\n' "$conservation_violations" | grep -oE '^char [0-9]+ item [0-9]+' | head -10 |
+        while read -r _ char_id _ item_id; do
+            echo "  picklog for char $char_id item $item_id (time, type, amount, map, unique id):" >&2
+            "${mysql_admin[@]}" --batch --skip-column-names "$db_name" \
+                --execute="SELECT \`time\`, \`type\`, \`amount\`, \`map\`, \`unique_id\` FROM \`picklog\` WHERE \`char_id\` = $char_id AND \`nameid\` = $item_id ORDER BY \`id\`" 2>&1 |
+                sed 's/^/    /' >&2
+        done
     runner_exit=1
 else
     echo "Item conservation audit: every holding matches the item log"

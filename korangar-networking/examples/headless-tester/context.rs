@@ -871,6 +871,19 @@ impl TestContext {
 
     // --- high-level helpers -----------------------------------------------
 
+    /// Zeny as the server has it. A fresh login does not report zeny until it
+    /// changes, so `self.zeny` can read 0 for a rich character; this adds one
+    /// zeny (for real) and returns the new, reported total.
+    pub fn known_zeny(&mut self) -> Result<u32, String> {
+        self.say("@zeny 1")?;
+        self.wait_for("a zeny update", |event| match event {
+            NetworkEvent::UpdateStat {
+                stat_type: ragnarok_packets::StatType::Zeny(value),
+            } => Some(*value),
+            _ => None,
+        })
+    }
+
     /// Send a chat line / GM command (no feedback expected).
     pub fn say(&mut self, text: &str) -> Result<(), String> {
         let name = self.character_name.clone();

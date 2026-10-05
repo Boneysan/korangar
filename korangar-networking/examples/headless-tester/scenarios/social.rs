@@ -2648,17 +2648,8 @@ fn held(context: &TestContext, item_id: u32) -> u32 {
         .sum()
 }
 
-/// Zeny as the server has it. A fresh login does not report zeny until it
-/// changes, so this adds one zeny (for real) and returns the new total.
 fn nudged_zeny(context: &mut TestContext) -> Result<u32, String> {
-    context.say("@zeny 1")?;
-    context.wait_for("a zeny update", |event| match event {
-        NetworkEvent::UpdateStat {
-            stat_type: ragnarok_packets::StatType::Zeny(value),
-        } => Some(*value),
-        _ => None,
-    })?;
-    Ok(context.zeny)
+    context.known_zeny()
 }
 
 /// GDD F28's open item: a real two-client transfer, both ways, checked by
