@@ -159,7 +159,9 @@ pub enum InputEvent {
     ToggleHudWindow,
     /// Close the most recently opened or clicked closable window.
     CloseTopWindow,
-    /// Escape: close the top window, or open the menu when nothing is closable.
+    /// Escape: leave a focused text box; otherwise cancel an armed skill, your
+    /// cast, or a queued action; otherwise open or close the menu. It never
+    /// closes other windows (that is `CloseTopWindow`, Ctrl+W).
     Escape,
     /// Arm the local character as the skill target.
     TargetSelf,

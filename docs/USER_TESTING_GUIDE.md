@@ -907,7 +907,7 @@ Every modernized MVP encounter enforces the 6-component design pattern:
   3. Press **Escape** a second time.
 - **Expected Results:**
   - First Escape press: Text field loses cursor focus; character movement is restored; game menu does NOT open.
-  - Second Escape press: Closes topmost open window or brings up system menu.
+  - Second Escape press: Opens the system menu (a third press closes it). Escape never closes other windows; Ctrl+W closes the topmost one.
 
 ### Test Case 11.4: Window Grid Snapping
 - **Objective:** Verify pixel grid snapping intervals.

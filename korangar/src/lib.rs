@@ -10063,8 +10063,12 @@ impl Client {
                 InputEvent::AttackTarget => self.attack_targeted_monster(),
                 InputEvent::CyclePartyTarget => self.cycle_party_target(),
                 InputEvent::Escape => {
-                    self.interface.unfocus();
-                    if self.pending_skill.is_some() {
+                    // Escape cancels, then opens the menu. It does not close
+                    // windows (Ctrl+W, `CloseTopWindow`, does), and while typing
+                    // it only leaves the text box.
+                    if self.interface.has_focus() {
+                        self.interface.unfocus();
+                    } else if self.pending_skill.is_some() {
                         self.pending_skill = None;
                         *self.client_state.follow_mut(client_state().buffered_action()) = None;
                         *self.client_state.follow_mut(client_state().timed_buffered_action()) = None;
@@ -10084,8 +10088,7 @@ impl Client {
                             "Queued action canceled",
                             crate::state::toasts::ToastPriority::Normal,
                         );
-                    } else if !self.interface.close_top_window(&self.client_state) && self.client_state.try_follow(this_entity()).is_some()
-                    {
+                    } else if self.client_state.try_follow(this_entity()).is_some() {
                         match self.interface.is_window_with_class_open(WindowClass::Menu) {
                             true => self.interface.close_window_with_class(WindowClass::Menu),
                             false => self.interface.open_window(MenuWindow),

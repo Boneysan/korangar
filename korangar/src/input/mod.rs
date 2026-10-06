@@ -399,7 +399,8 @@ impl InputSystem {
             events.push(InputEvent::SendPartyPing { kind: "danger".to_owned() });
         }
 
-        // Escape still closes a window while chat or another control is focused.
+        // Escape is delivered even while chat or another text box is focused,
+        // so it can leave the box (see `InputEvent::Escape`).
         if self.get_key(KeyCode::Escape).pressed() {
             events.push(InputEvent::Escape);
         }
@@ -455,9 +456,9 @@ impl InputSystem {
         let control_down = self.get_key(KeyCode::ControlLeft).down() || self.get_key(KeyCode::ControlRight).down();
         let shift_down = self.get_key(KeyCode::ShiftLeft).down() || self.get_key(KeyCode::ShiftRight).down();
 
-        if self.get_key(KeyCode::Escape).pressed() {
-            events.push(InputEvent::Escape);
-        }
+        // Escape is pushed by `push_game_action_keys` below. Pushing it here as
+        // well sent two per press: the menu opened and closed in one frame, and
+        // each press used to close two windows.
 
         // Official client: I opens the inventory. Only on this path, so a
         // focused chat box still types the letter.
@@ -732,6 +733,30 @@ mod keybinding_tests {
 
     use super::{InputEvent, InputSystem};
     use crate::settings::{BindableAction, KeyBindings, KeyChord};
+
+    #[test]
+    fn one_escape_press_is_one_escape_event() {
+        let bindings = KeyBindings::default();
+        let escape_count = |events: &[InputEvent]| events.iter().filter(|event| matches!(event, InputEvent::Escape)).count();
+
+        let mut input = InputSystem::new(Arc::new(AtomicU64::new(0)));
+        input.update_keyboard(KeyCode::Escape, ElementState::Pressed);
+        input.update_delta(ClientTick(1));
+        let mut events = Vec::new();
+        #[cfg(feature = "debug")]
+        input.handle_keyboard_input(&mut events, &bindings, None, false, false);
+        #[cfg(not(feature = "debug"))]
+        input.handle_keyboard_input(&mut events, &bindings, None);
+        assert_eq!(escape_count(&events), 1, "unfocused path");
+
+        // A focused text box takes the other path, which must also send one.
+        let mut input = InputSystem::new(Arc::new(AtomicU64::new(0)));
+        input.update_keyboard(KeyCode::Escape, ElementState::Pressed);
+        input.update_delta(ClientTick(1));
+        let mut events = Vec::new();
+        input.handle_game_action_keys(&mut events, &bindings, None);
+        assert_eq!(escape_count(&events), 1, "focused path");
+    }
 
     #[test]
     fn remapped_shortcut_dispatches_from_the_persisted_table() {
