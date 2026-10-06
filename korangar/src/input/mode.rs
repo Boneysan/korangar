@@ -45,6 +45,11 @@ pub trait MouseModeExt {
 
     fn is_grabbing(&self) -> bool;
 
+    /// A window title bar or resize handle is being dragged. The cursor runs
+    /// ahead of the window edge while it does, so it must not count as a
+    /// world click.
+    fn is_dragging_window(&self) -> bool;
+
     fn grabbed(&self) -> Option<Grabbed>;
 }
 
@@ -73,6 +78,10 @@ impl MouseModeExt for MouseMode<ClientState> {
                 mode: MouseInputMode::MoveSkill { .. },
             }
         )
+    }
+
+    fn is_dragging_window(&self) -> bool {
+        matches!(self, MouseMode::MovingWindow { .. } | MouseMode::ResizingWindow { .. })
     }
 
     fn grabbed(&self) -> Option<Grabbed> {

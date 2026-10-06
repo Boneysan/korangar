@@ -41,6 +41,7 @@ mod monster_target;
 #[cfg(feature = "debug")]
 mod packet_inspector;
 mod party;
+mod party_healer;
 mod party_invite;
 mod player_target;
 #[cfg(feature = "debug")]
@@ -110,6 +111,7 @@ pub use self::monster_target::{BossTargetWindow, MonsterTargetWindow};
 #[cfg(feature = "debug")]
 pub use self::packet_inspector::PacketInspectorWindow;
 pub use self::party::{PartyWindow, PartyWindowState};
+pub use self::party_healer::PartyHealerWindow;
 pub use self::party_invite::PartyInviteWindow;
 pub use self::player_target::PlayerTargetWindow;
 #[cfg(feature = "debug")]
@@ -167,6 +169,9 @@ pub enum WindowClass {
     Menu,
     Minimap,
     Party,
+    /// Party HP at a glance for healers; a row click selects the support
+    /// target.
+    PartyHealer,
     /// Quest log: active quests and campaign contract requirements.
     QuestLog,
     /// Incoming party invite popup (Accept / Decline).

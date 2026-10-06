@@ -1,5 +1,5 @@
 use korangar_interface::window::{CustomWindow, Window};
-use rust_state::Path;
+use rust_state::{Path, PathExt};
 
 use crate::graphics::Color;
 use crate::input::InputEvent;
@@ -46,12 +46,34 @@ where
             title: client_state().localization().character_overview_window_title(),
             class: Self::window_class(),
             theme: InterfaceThemeType::InGame,
-            minimum_width: 300.0,
-            maximum_width: 900.0,
+            closable: true,
+            // Height always fits the content, so Minimize really shrinks the
+            // window; a resizable window keeps its saved height regardless.
+            resizable: false,
+            minimum_width: ComputedSelector::new_default(|state: &ClientState| match client_state().game_settings().overview_minimized().follow_safe(state) {
+                true => 140.0,
+                false => 300.0,
+            }),
+            maximum_width: ComputedSelector::new_default(|state: &ClientState| match client_state().game_settings().overview_minimized().follow_safe(state) {
+                true => 160.0,
+                false => 900.0,
+            }),
             elements: (
-                state_button! {
+                // Minimized, the window is just its title bar and an Expand button;
+                // the setting used to flip with nothing reading it.
+                either! {
+                    selector: client_state().game_settings().overview_minimized(),
+                    on_true: button! {
+                        text: "Expand",
+                        tooltip: "Show the full character overview",
+                        event: Toggle(client_state().game_settings().overview_minimized()),
+                    },
+                    on_false: fragment! {
+                        gaps: theme().window().gaps(),
+                        children: (
+                button! {
                     text: "Minimize",
-                    state: client_state().game_settings().overview_minimized(),
+                    tooltip: "Shrink this window to a small box",
                     event: Toggle(client_state().game_settings().overview_minimized()),
                 },
                 fragment! {
@@ -193,6 +215,9 @@ where
                     event: InputEvent::SendMessage { text: "@skreset".to_owned() },
                 },
                     ),
+                },
+                        ),
+                    },
                 },
             ),
         }

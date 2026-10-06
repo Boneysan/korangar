@@ -647,6 +647,9 @@ pub fn should_render_ground_item(filter: GroundLootFilter, wishlist: &HashSet<u3
 
 impl Drop for GameSettings {
     fn drop(&mut self) {
+        // Tests run from the client's own directory: saving here would
+        // overwrite the player's real file with whatever the test built.
+        #[cfg(not(test))]
         self.save();
     }
 }

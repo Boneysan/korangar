@@ -467,14 +467,10 @@ where
                                     queue.queue(InputEvent::SetPartyInvitationBlock { blocked });
                                 },
                             },
-                            state_button! {
-                                text: "Healer layout",
-                                tooltip: "Larger, easier-to-read HP and SP bars for healers",
-                                state: self.party_path.healer_layout(),
-                                event: move |state: &State<ClientState>, _: &mut EventQueue<ClientState>| {
-                                    let current = *state.get(&party_path.healer_layout());
-                                    state.update_value_with(party_path, move |party| party.set_healer_layout(!current));
-                                },
+                            button! {
+                                text: "Healer window",
+                                tooltip: "Open a separate window with every member's HP; click a member to make them your support target",
+                                event: InputEvent::TogglePartyHealerWindow,
                             },
                         ),
                     },

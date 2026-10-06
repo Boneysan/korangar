@@ -590,7 +590,15 @@ where
                 Event::FocusElement { .. } => {}
                 Event::FocusElementPost { element_id } => self.focused_element = Some(element_id),
                 Event::Unfocus => self.focused_element = None,
-                Event::SetMouseMode { mouse_mode } => self.mouse_mode = mouse_mode,
+                Event::SetMouseMode { mouse_mode } => {
+                    let dragging_window =
+                        |mode: &MouseMode<App>| matches!(mode, MouseMode::MovingWindow { .. } | MouseMode::ResizingWindow { .. });
+                    let drag_ended = dragging_window(&self.mouse_mode) && !dragging_window(&mouse_mode);
+                    self.mouse_mode = mouse_mode;
+                    if drag_ended {
+                        self.window_cache.persist();
+                    }
+                }
                 Event::Application { custom_event } => custom_events.push(custom_event),
                 Event::OpenOverlay {
                     element,

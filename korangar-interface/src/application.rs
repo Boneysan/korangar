@@ -200,6 +200,11 @@ where
     /// Update the size of a registered window.
     fn update_size(&mut self, window_class: App::WindowClass, size: App::Size);
 
+    /// Write the cache to storage now. Called when a window move or resize
+    /// ends, so a layout survives the client being killed or crashing, not
+    /// just a clean exit.
+    fn persist(&mut self) {}
+
     /// Whether the player has locked HUD window movement and resizing.
     fn movement_locked(&self) -> bool {
         false

@@ -92,6 +92,9 @@ impl LoginSettings {
 
 impl Drop for LoginSettings {
     fn drop(&mut self) {
+        // Tests run from the client's own directory: saving here would
+        // overwrite the player's real file with whatever the test built.
+        #[cfg(not(test))]
         self.save();
     }
 }

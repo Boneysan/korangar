@@ -780,7 +780,10 @@ mod tests {
             position: None,
         }));
 
-        let mut settings = GameSettings::default();
+        // ManuallyDrop: dropping a GameSettings writes client/game_settings.ron,
+        // and tests run from the client's own directory, so a plain value here
+        // reset the player's real settings file on every test run.
+        let mut settings = std::mem::ManuallyDrop::new(GameSettings::default());
         settings.show_minimap_portals = false;
         settings.show_minimap_population_regions = false;
         settings.show_minimap_facilities = false;

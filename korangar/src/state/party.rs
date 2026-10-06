@@ -384,6 +384,8 @@ pub struct PartyMemberState {
     /// elements with their own buttons, and an element's text has to come from
     /// a *field* path rather than a method.
     display_label: String,
+    /// Cached [`Self::healer_line`] for the party healer window.
+    healer_label: String,
 }
 
 #[allow(dead_code)]
@@ -457,6 +459,10 @@ impl PartyMemberState {
         &self.display_label
     }
 
+    pub fn healer_label(&self) -> &str {
+        &self.healer_label
+    }
+
     /// `(current, maximum)` SP, same contract as [`Self::health`].
     pub fn spell(&self) -> Option<(usize, usize)> {
         match (self.spell_points, self.maximum_spell_points) {
@@ -498,7 +504,7 @@ impl PartyMemberState {
     }
 
     /// One-line roster summary for the party window.
-    fn summary_line(&self, local_map: &str, local_position: Option<TilePosition>, healer_layout: bool) -> String {
+    fn summary_line(&self, local_map: &str, local_position: Option<TilePosition>) -> String {
         // Match the friend-list blue/neutral/orange status palette while
         // retaining explicit words for color-independent status reading.
         let reset = crate::state::COLOR_RESET;
@@ -520,26 +526,7 @@ impl PartyMemberState {
             true => String::new(),
             false => format!(" {}", self.class_name),
         };
-        let (hp, sp) = if healer_layout {
-            let hp_str = match self.health() {
-                Some((hp, max)) => {
-                    let pct = ((hp as f32 / max as f32) * 100.0).round() as usize;
-                    let bar_len = (pct / 10).min(10);
-                    // NotoSans has no block elements (█ ░ drew as boxes).
-                    let bar = "|".repeat(bar_len) + &"·".repeat(10 - bar_len);
-                    format!("  [^00FF66HP: {bar} {hp}/{max} ({pct}%)]^000000")
-                }
-                None => "  [^777777HP: ?/??^000000]".to_owned(),
-            };
-            let sp_str = match self.spell() {
-                Some((sp, max)) => {
-                    let pct = ((sp as f32 / max as f32) * 100.0).round() as usize;
-                    format!("  [^66CCFFSP: {sp}/{max} ({pct}%)]^000000")
-                }
-                None => String::new(),
-            };
-            (hp_str, sp_str)
-        } else {
+        let (hp, sp) = {
             let hp_str = match self.health() {
                 Some((hp, max)) => format!("  {hp}/{max} HP"),
                 None => String::new(),
@@ -552,6 +539,36 @@ impl PartyMemberState {
         };
         let location = self.location_summary(local_map, local_position);
         format!("{}{leader}{level}{class}  ({online}){hp}{sp}{location}", self.name)
+    }
+
+    /// One row of the party healer window: whether they are your support
+    /// target, then a large HP bar with numbers and percentage, then SP.
+    fn healer_line(&self, selected: bool) -> String {
+        let marker = match selected {
+            true => "> ",
+            false => "",
+        };
+        let status = match (self.online, self.is_dead) {
+            (false, _) => return format!("{marker}{}  ^777777offline^000000", self.name),
+            (true, true) => format!("  {}DEAD{}", crate::state::COLOR_DEAD, crate::state::COLOR_RESET),
+            (true, false) => String::new(),
+        };
+        // The bar itself is drawn by the healer window; this is the readout.
+        let hp = match self.health() {
+            Some((hp, max)) => {
+                let pct = ((hp as f32 / max as f32) * 100.0).round() as usize;
+                format!("  ^00FF66HP {hp}/{max} ({pct}%)^000000")
+            }
+            None => "  ^777777HP ?^000000".to_owned(),
+        };
+        let sp = match self.spell() {
+            Some((sp, max)) => {
+                let pct = ((sp as f32 / max as f32) * 100.0).round() as usize;
+                format!("  ^66CCFFSP {sp}/{max} ({pct}%)^000000")
+            }
+            None => String::new(),
+        };
+        format!("{marker}{}{status}{hp}{sp}", self.name)
     }
 
     fn from_roster_member(member: PartyMember) -> Self {
@@ -572,6 +589,7 @@ impl PartyMemberState {
             class_name: String::new(),
             is_dead: false,
             display_label: String::new(),
+            healer_label: String::new(),
         }
     }
 
@@ -593,6 +611,7 @@ impl PartyMemberState {
             class_name: String::new(),
             is_dead: false,
             display_label: String::new(),
+            healer_label: String::new(),
         }
     }
 }
@@ -635,7 +654,10 @@ pub struct PartyState {
     status_text: String,
     shared_destination: Option<SharedDestination>,
     shared_destination_text: String,
-    healer_layout: bool,
+    /// The member support skills go to, mirrored from the client so the
+    /// healer window can mark it.
+    #[hidden_element]
+    support_target: Option<AccountId>,
     #[hidden_element]
     ready_check: Option<ReadyCheck>,
     ready_check_text: String,
@@ -664,7 +686,7 @@ impl Default for PartyState {
             members: Vec::new(),
             share_pickup: false,
             share_loot: false,
-            healer_layout: false,
+            support_target: None,
             display_text: String::new(),
             status_text: "Not in a party.".to_owned(),
             shared_destination: None,
@@ -869,13 +891,15 @@ impl PartyState {
         self.shared_destination_text = "No shared destination.".to_owned();
     }
 
-    pub fn healer_layout(&self) -> bool {
-        self.healer_layout
+    pub fn support_target(&self) -> Option<AccountId> {
+        self.support_target
     }
 
-    pub fn set_healer_layout(&mut self, enabled: bool) {
-        self.healer_layout = enabled;
-        self.rebuild_display_text();
+    pub fn set_support_target(&mut self, account_id: Option<AccountId>) {
+        if self.support_target != account_id {
+            self.support_target = account_id;
+            self.rebuild_display_text();
+        }
     }
 
     pub fn ready_check_text(&self) -> &str {
@@ -1156,6 +1180,28 @@ impl PartyState {
         }
     }
 
+    /// Your own row. Hercules reports party HP only for the *other* members
+    /// (`PARTY_WOS`), so the client fills its own from the local player.
+    /// Rebuilds only on a change, since it is called every frame.
+    pub fn update_local_vitals(&mut self, health: (usize, usize), spell: (usize, usize)) {
+        let Some(account_id) = self.local_account_id else {
+            return;
+        };
+        let unchanged = self
+            .members
+            .iter()
+            .find(|member| member.account_id == account_id)
+            .is_none_or(|member| {
+                member.health_points == Some(health.0)
+                    && member.maximum_health_points == Some(health.1)
+                    && member.spell_points == Some(spell.0)
+                    && member.maximum_spell_points == Some(spell.1)
+            });
+        if !unchanged {
+            self.update_health(account_id, health.0, health.1, Some(spell));
+        }
+    }
+
     pub fn update_job_and_level(&mut self, account_id: AccountId, job_id: JobId, base_level: u16, class_name: String) {
         if let Some(member) = self.members.iter_mut().find(|member| member.account_id == account_id) {
             member.job_id = Some(job_id);
@@ -1244,10 +1290,11 @@ impl PartyState {
             .map(|member| (member.map_name.clone(), member.position));
         let (local_map, local_position) = local.unwrap_or_default();
 
-        let healer_layout = self.healer_layout;
+        let support_target = self.support_target;
         // Members render as their own elements, so each caches its own line.
         for member in &mut self.members {
-            member.display_label = member.summary_line(&local_map, local_position, healer_layout);
+            member.display_label = member.summary_line(&local_map, local_position);
+            member.healer_label = member.healer_line(support_target == Some(member.account_id));
         }
 
         if self.members.is_empty() {
@@ -1291,6 +1338,7 @@ mod tests {
             class_name: String::new(),
             is_dead: false,
             display_label: String::new(),
+            healer_label: String::new(),
         });
 
         assert!(state.message_sender_matches(AccountId(7), "ada"));
@@ -1607,33 +1655,45 @@ mod tests {
     }
 
     #[test]
-    fn healer_layout_enlarges_health_and_sp_readability() {
+    fn healer_window_rows_show_hp_bars_and_mark_the_support_target() {
         let mut state = PartyState::default();
-        let member = PartyMember {
-            account_id: AccountId(2),
-            character_id: CharacterId(2),
-            player_name: "Tank".to_owned(),
+        let member = |account: u32, name: &str| PartyMember {
+            account_id: AccountId(account),
+            character_id: CharacterId(account),
+            player_name: name.to_owned(),
             map_name: "prontera.gat".to_owned(),
             offline: 0,
             leader: 0,
             job_id: JobId(1),
             base_level: 50,
         };
-        state.set_roster("P".to_owned(), vec![member], |_| "Knight".to_owned());
+        state.set_roster("P".to_owned(), vec![member(2, "Tank"), member(3, "Mage")], |_| {
+            "Knight".to_owned()
+        });
         state.update_health(AccountId(2), 800, 1000, Some((150, 200)));
 
-        let find_label = |state: &PartyState| state.members()[0].display_label().to_owned();
+        let label = |state: &PartyState, index: usize| state.members()[index].healer_label().to_owned();
 
-        // Standard layout shows plain numbers
-        assert!(!state.healer_layout());
-        assert!(find_label(&state).contains("800/1000 HP"));
-        assert!(find_label(&state).contains("150/200 SP"));
+        assert!(label(&state, 0).starts_with("Tank"), "{}", label(&state, 0));
+        assert!(label(&state, 0).contains("HP 800/1000 (80%)"));
+        assert!(label(&state, 0).contains("SP 150/200 (75%)"));
+        // HP not reported yet reads as unknown, not as empty.
+        assert!(label(&state, 1).contains("HP ?"));
+        // The party window's own roster keeps its plain numbers.
+        assert!(state.members()[0].display_label().contains("800/1000 HP"));
 
-        // Healer layout enabled: shows high-visibility bar and percentage
-        state.set_healer_layout(true);
-        assert!(state.healer_layout());
-        assert!(find_label(&state).contains("HP: ||||||||·· 800/1000 (80%)"));
-        assert!(find_label(&state).contains("SP: 150/200 (75%)"));
+        state.set_support_target(Some(AccountId(3)));
+        assert!(label(&state, 1).starts_with("> Mage"), "{}", label(&state, 1));
+        assert!(!label(&state, 0).starts_with('>'));
+
+        state.set_support_target(None);
+        assert!(!label(&state, 1).starts_with('>'));
+
+        // Your own row is filled from the local player, not a party packet.
+        state.set_local_account_id(AccountId(3));
+        state.update_local_vitals((400, 500), (90, 100));
+        assert!(label(&state, 1).contains("HP 400/500 (80%)"), "{}", label(&state, 1));
+        assert!(label(&state, 1).contains("SP 90/100 (90%)"));
     }
 
     #[test]

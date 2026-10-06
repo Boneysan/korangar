@@ -31,6 +31,11 @@ impl CustomWindow<ClientState> for MenuWindow {
             theme: InterfaceThemeType::InGame,
             closable: true,
             elements: (
+                button! {
+                    text: "Character overview",
+                    tooltip: "Name, class, levels and shortcuts to your other windows (^000001Alt+V^000000)",
+                    event: InputEvent::ToggleCharacterOverviewWindow,
+                },
                 text! {
                     text: "Adventure",
                     color: MENU_HEADING,

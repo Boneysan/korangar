@@ -631,6 +631,27 @@ When writing code or adding features, agents must adhere to these project-specif
      screen. Unit-tested and enum-pinned only. **Watch it once if you ever
      re-enable the warp rule** — this fork has been bitten repeatedly by guards
      nobody watched fail. Requires `dev.sh build` and a server restart.
+   - **A flinch stop is reported to the player** (2026-10-05) —
+     `src/map/unit.c`, `unit_set_walkdelay`. Upstream stops a walking unit on
+     the next cell when damage makes it flinch (`STOPWALKING_FLAG_NEXTCELL`) and
+     sends **nothing**, so a client keeps walking until its next move reply and
+     then snaps back: the rubber-banding seen under a group of mobs, measured at
+     up to 8 tiles. For `BL_PC` the stop now also carries
+     `STOPWALKING_FLAG_FIXPOS`, which sends the existing `ZC_STOPMOVE` (the
+     client's `EntityStopMove`) to the area. No new packet, no length entry.
+     **Do not "fix" this client-side instead:** predicting the flinch was tried
+     and failed — the damage lands `min(attack motion, 1000)` ms after the hit
+     packet (`battle_delay_damage`) and the immunity window lives in
+     `canmove_tick`, which the client cannot see, so one wrong guess leaves the
+     client walking where the server stopped. After the delta the trace showed
+     no correction over 1 tile in 220. Requires `dev.sh build` and a restart.
+   - **Sitting keeps natural regen** (2026-10-05) — `src/map/status.c`,
+     `status_natural_heal`. The fork's sit bonus (25% of max HP/SP every
+     `campaign_sit_recovery_interval_ms`) used to `return 0` after applying,
+     which skipped natural regen entirely, so a sitting character recovered
+     nothing between bonus ticks. It now falls through to natural regen, which
+     already runs at double rate while sitting. A fix to fork code, not to
+     upstream behaviour.
    Type `0` is deliberate in the `skillcastcancel` call: a voluntary abort must not be blocked by the skill's `castcancel` flag or by Phen / `no_castcancel` (that is `type&2`, for damage interrupts), and the skill to drop is `ud->skill_id`, not `SA_CASTCANCEL`'s `skill_id_old` (`type&1`). SP is untouched because it is charged at cast *end*. Requires `make -j8` and a server restart.
 4. **Rebaseability**: Keep custom UI features isolated in `korangar/src/interface/windows/dm/` (and state in `korangar/src/dm/`) as much as possible to ensure the fork remains rebaseable against upstream Korangar.
 5. **No Upstream IP**: Per `wiki/Contributing.md`, do not include code taken directly from or inspired by GRAVITY's intellectual property.

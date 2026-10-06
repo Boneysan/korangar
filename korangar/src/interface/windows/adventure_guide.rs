@@ -450,12 +450,58 @@ fn drop_source_line(monster_id: u32, sprite_name: &str, kind: &str, rate_per_100
     )
 }
 
+/// The "dropped by" rows of an item page. They lead the page because "where
+/// do I get this" is the question most players open it with.
+fn push_item_drop_lines(lines: &mut Vec<String>, item: &ReferenceItem) {
+    if !item.drops_from.is_empty() {
+        lines.push("Dropped by (database rates; server rates may differ):".to_owned());
+        for source in item.drops_from.iter().take(8) {
+            lines.push(drop_source_line(
+                source.monster_id,
+                &source.sprite_name,
+                &source.kind,
+                source.rate_per_10000,
+            ));
+            if let Some(monster) = reference_data().monster_by_id(source.monster_id) {
+                for region in monster.spawn_regions.iter().take(3) {
+                    if !is_graph_map(&region.map) {
+                        continue;
+                    }
+                    lines.push(format!("@route:{}", region.map));
+                }
+            }
+        }
+    } else {
+        let dropping_monsters = reference_data().monsters_dropping_item(item.id);
+        if !dropping_monsters.is_empty() {
+            lines.push("Dropped by (database rates; server rates may differ):".to_owned());
+            for monster in dropping_monsters.iter().take(8) {
+                if let Some(drop) = monster.drops.iter().find(|d| d.item_id == item.id) {
+                    lines.push(drop_source_line(
+                        monster.id,
+                        &monster.sprite_name,
+                        &drop.kind,
+                        drop.rate_per_10000,
+                    ));
+                    for region in monster.spawn_regions.iter().take(3) {
+                        if !is_graph_map(&region.map) {
+                            continue;
+                        }
+                        lines.push(format!("@route:{}", region.map));
+                    }
+                }
+            }
+        }
+    }
+}
+
 fn item_details(item: &ReferenceItem, card: bool) -> Vec<String> {
     let kind = if card { "Card" } else { item.item_type.as_str() };
     let mut lines = vec![
         display_name(&item.name, &item.aegis_name),
         format!("Type: {}   Weight: {}", item_type_label(kind), item.weight),
     ];
+    push_item_drop_lines(&mut lines, item);
     let relevant = reference_data()
         .crafting_entries
         .iter()
@@ -843,46 +889,6 @@ fn item_details(item: &ReferenceItem, card: bool) -> Vec<String> {
     } else {
         lines.push("Effect details: not documented yet.".to_owned());
     }
-    if !item.drops_from.is_empty() {
-        lines.push("Monster database drop rates (server modifiers may change realized chances):".to_owned());
-        for source in item.drops_from.iter().take(8) {
-            lines.push(drop_source_line(
-                source.monster_id,
-                &source.sprite_name,
-                &source.kind,
-                source.rate_per_10000,
-            ));
-            if let Some(monster) = reference_data().monster_by_id(source.monster_id) {
-                for region in monster.spawn_regions.iter().take(3) {
-                    if !is_graph_map(&region.map) {
-                        continue;
-                    }
-                    lines.push(format!("@route:{}", region.map));
-                }
-            }
-        }
-    } else {
-        let dropping_monsters = reference_data().monsters_dropping_item(item.id);
-        if !dropping_monsters.is_empty() {
-            lines.push("Monster database drop sources (server modifiers may change realized chances):".to_owned());
-            for monster in dropping_monsters.iter().take(8) {
-                if let Some(drop) = monster.drops.iter().find(|d| d.item_id == item.id) {
-                    lines.push(drop_source_line(
-                        monster.id,
-                        &monster.sprite_name,
-                        &drop.kind,
-                        drop.rate_per_10000,
-                    ));
-                    for region in monster.spawn_regions.iter().take(3) {
-                        if !is_graph_map(&region.map) {
-                            continue;
-                        }
-                        lines.push(format!("@route:{}", region.map));
-                    }
-                }
-            }
-        }
-    }
     if let Some(source) = &item.source {
         lines.push(format!("Source: {} ({})", source.path, source.record));
     }
@@ -1159,7 +1165,8 @@ fn item_type_label(item_type: &str) -> String {
     match item_type {
         "IT_HEALING" => "Healing".to_owned(),
         "IT_USABLE" => "Usable".to_owned(),
-        "IT_ETC" => "Miscellaneous".to_owned(),
+        // Hercules defaults an item_db record with no `Type` to IT_ETC.
+        "IT_ETC" | "" => "Miscellaneous".to_owned(),
         "IT_WEAPON" => "Weapon".to_owned(),
         "IT_ARMOR" => "Armor".to_owned(),
         "IT_CARD" | "Card" => "Card".to_owned(),
@@ -2652,6 +2659,7 @@ where
                 let library = self.library.clone();
                 self.elements.push(ErasedElement::new(button! {
                     text: row_path.label(),
+                    overflow_behavior: OverflowBehavior::LineBreak,
                     event: move |state: &State<ClientState>, _queue: &mut EventQueue<ClientState>| {
                         let result = state.get(&row_path).clone();
                         let detail = if result.kind == "quest" {
@@ -2750,7 +2758,7 @@ fn push_text_lines(elements: &mut Vec<ElementBox<ClientState>>, lines: Vec<Strin
 
     for line in lines {
         elements.push(ErasedElement::new(
-            text! { text: line, overflow_behavior: OverflowBehavior::Shrink },
+            text! { text: line, overflow_behavior: OverflowBehavior::LineBreak },
         ));
     }
 }
@@ -2829,7 +2837,7 @@ where
                     source_notes.push(ErasedElement::new(text! {
                         text: value.trim_start().to_owned(),
                         color: crate::graphics::Color::rgb_u8(150, 150, 150),
-                        overflow_behavior: OverflowBehavior::Shrink,
+                        overflow_behavior: OverflowBehavior::LineBreak,
                     }));
                     continue;
                 }
@@ -2871,13 +2879,14 @@ where
                     let detail_path = self.path;
                     self.elements.push(ErasedElement::new(button! {
                         text: result.label.clone(),
+                        overflow_behavior: OverflowBehavior::LineBreak,
                         event: move |state: &State<ClientState>, _queue: &mut EventQueue<ClientState>| {
                             state.update_value(detail_path, resolve_details(&result));
                         },
                     }));
                 } else {
                     self.elements.push(ErasedElement::new(
-                        text! { text: line, overflow_behavior: OverflowBehavior::Shrink },
+                        text! { text: line, overflow_behavior: OverflowBehavior::LineBreak },
                     ));
                 }
             }
@@ -3517,6 +3526,8 @@ where
             class: Self::window_class(),
             theme: InterfaceThemeType::InGame,
             closable: true,
+            minimum_width: 640.0,
+            maximum_width: 1400.0,
             elements: (
                 text_box! { ghost_text: "Search by name", state: path.query(), input_handler: LiveSearchHandler { path }, focus_id: GuideSearchBox, overflow_behavior: OverflowBehavior::Shrink },
                 split! { gaps: theme().window().gaps(), children: (
@@ -3540,8 +3551,13 @@ where
                     category_button("Server rules", "Effective Rules"),
                     category_button("How things work", "Mechanics"),
                 ) },
-                scroll_view! { children: GuideResultList { state_path: path, library: library.clone(), elements: Vec::new() } },
-                scroll_view! { children: GuideLines::new(path.detail()) },
+                // Side by side, not stacked: a scroll view takes all the height left
+                // in the window, so a details view placed below the results list
+                // got none and every entry looked empty.
+                split! { gaps: theme().window().gaps(), children: (
+                    scroll_view! { children: GuideResultList { state_path: path, library: library.clone(), elements: Vec::new() } },
+                    scroll_view! { children: GuideLines::new(path.detail()) },
+                ) },
             ),
         }
     }
@@ -5157,5 +5173,18 @@ mod monster_page_and_route_offer_tests {
             panic!("guild dungeons have no known entrance");
         };
         assert!(lines[0].starts_with("gld_dun01: no loaded warp"), "{lines:#?}");
+    }
+
+    #[test]
+    fn item_page_leads_with_drops_and_names_untyped_items() {
+        // Jellopy has recipes, script clues and containers; the drop list used
+        // to come after ~60 of those lines.
+        let lines = super::item_details(super::reference_data().item_by_id(909).expect("Jellopy"), false);
+        assert_eq!(lines[1], "Type: Miscellaneous   Weight: 10");
+        let drops = lines.iter().position(|line| line.starts_with("Dropped by")).expect("drop header");
+        let recipes = lines.iter().position(|line| line.starts_with("Crafting")).expect("recipe header");
+        assert_eq!(drops, 2, "{lines:#?}");
+        assert!(drops < recipes);
+        assert!(lines[drops + 1].starts_with("@guide:monster:1002|Poring"), "{lines:#?}");
     }
 }

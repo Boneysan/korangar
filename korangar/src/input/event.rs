@@ -65,6 +65,14 @@ pub enum InputEvent {
     ToggleMenuWindow,
     /// Open or close the basic character information window.
     ToggleCharacterOverviewWindow,
+    /// Open or close the party healer window.
+    TogglePartyHealerWindow,
+    /// Make a party member the support target without opening a target
+    /// frame (the party healer window's row click).
+    SelectSupportTarget {
+        account_id: AccountId,
+        character_name: String,
+    },
     /// Open or close the inventory window. Only works while playing.
     ToggleInventoryWindow,
     /// Open or close the equipment window. Only works while playing.

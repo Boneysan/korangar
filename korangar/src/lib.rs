@@ -1053,6 +1053,19 @@ mod resolve_pending_cast_tests {
     use crate::graphics::PickerTarget;
 
     #[test]
+    fn undead_is_decided_by_element_like_the_server() {
+        assert!(super::monster_is_undead(1028), "Soldier Skeleton is Undead 1");
+        assert!(!super::monster_is_undead(1002), "Poring is Water");
+        assert!(!super::monster_is_undead(0), "unknown id");
+    }
+
+    #[test]
+    fn only_heal_may_target_a_monster() {
+        assert!(super::support_skill_may_target_monster(28));
+        assert!(!super::support_skill_may_target_monster(34)); // Blessing
+    }
+
+    #[test]
     fn entity_targeted_casts_on_entity() {
         let id = EntityId(42);
         assert_eq!(
@@ -1372,6 +1385,11 @@ mod resolve_pending_cast_tests {
         let monster = create_test_monster("Poring", 1, Some("Water 1"), Some("Plant"), Some("Medium"), false);
 
         let (summary, is_boss) = format_monster_target_summary("Poring", 50, 50, 0, 0, None, None, Some(&monster));
+        // An undamaged monster arrives with the server's -1 HP sentinel.
+        let (untouched, _) =
+            format_monster_target_summary("Poring", u32::MAX as usize, u32::MAX as usize, 0, 0, None, None, Some(&monster));
+        assert!(untouched.contains("HP full"), "{untouched}");
+        assert!(!untouched.contains("4294967295"), "{untouched}");
         assert!(!is_boss);
         assert!(summary.contains("Poring"));
         assert!(summary.contains("Lv 1  Water 1  Plant  Medium"));
@@ -1469,6 +1487,22 @@ enum PendingCastResolution {
     /// entity-targeted convention that a stray click doesn't waste the cast;
     /// explicit right-click / Escape is the only way to cancel.
     Fizzle,
+}
+
+/// Heal (AL_HEAL, 28) is a support skill the server turns into holy damage on
+/// an undead target, so the client must let it be aimed at a monster.
+fn support_skill_may_target_monster(skill_id: u16) -> bool {
+    skill_id == 28
+}
+
+/// Whether Hercules treats this monster as undead for offensive Heal. The
+/// server runs with `undead_detect_type: 0`, which checks the element only, so
+/// an Undead-race monster with another element is healed, not damaged.
+fn monster_is_undead(monster_id: u32) -> bool {
+    crate::dm::reference_data::reference_data()
+        .monster_by_id(monster_id)
+        .and_then(|monster| monster.element.as_ref())
+        .is_some_and(|element| element.r#type == "Undead")
 }
 
 /// Decide what a click does for an armed skill. Pure — the caller performs the
@@ -1643,6 +1677,13 @@ fn elite_base_name(name: &str) -> Option<&str> {
 }
 
 #[allow(clippy::too_many_arguments)] // one input per target-frame line
+/// Hercules sends -1 for a monster's HP until a normal monster is damaged,
+/// and always for a boss (`show_monster_hp_bar: 1`). The sentinel means "full"
+/// or "hidden", never a number to print.
+fn monster_hp_hidden(maximum: usize) -> bool {
+    maximum >= u32::MAX as usize
+}
+
 fn format_monster_target_summary(
     name: &str,
     health: usize,
@@ -1687,6 +1728,10 @@ fn format_monster_target_summary(
     });
 
     let hp_line = match maximum {
+        max if monster_hp_hidden(max) => match is_mvp {
+            true => "HP hidden".to_string(),
+            false => "HP full".to_string(),
+        },
         max if max > 0 => format!("HP {health}/{max}"),
         _ => "HP unknown".to_string(),
     };
@@ -2316,6 +2361,9 @@ pub struct Client {
     predicted_motion: Option<PredictedMotion>,
     /// Monster selected by click or keyboard cycling for the target surface.
     targeted_monster: Option<EntityId>,
+    /// Set by a game-window resize; the settings file is written once it
+    /// has been quiet for a moment.
+    window_geometry_changed_at: Option<std::time::Instant>,
     /// Why the map server is dropping us, held from `SC_NOTIFY_BAN` until the
     /// disconnect itself lands. The packet arrives immediately before the
     /// socket closes, so it cannot be shown on the map screen we are
@@ -4064,6 +4112,7 @@ impl Client {
             last_attack_target: None,
             predicted_motion: None,
             targeted_monster: None,
+            window_geometry_changed_at: None,
             pending_disconnect_reason: None,
             disconnect_needs_notice: false,
             disconnect_notice_delay: 0,
@@ -4804,6 +4853,24 @@ impl Client {
             .tick_target_markers(client_tick);
         self.networking_system.get_events(&mut self.network_event_buffer);
 
+        if self
+            .window_geometry_changed_at
+            .is_some_and(|changed_at| changed_at.elapsed() >= std::time::Duration::from_millis(500))
+        {
+            self.window_geometry_changed_at = None;
+            self.client_state.follow(client_state().game_settings()).save();
+        }
+
+        // The server never reports your own HP to your party roster.
+        if let Some(player) = self.client_state.try_follow(this_player()) {
+            let common = player.get_common();
+            let health = (common.health_points, common.maximum_health_points);
+            let spell = (player.spell_points, player.maximum_spell_points);
+            self.client_state
+                .follow_mut(client_state().party_state())
+                .update_local_vitals(health, spell);
+        }
+
         // Deferred: cannot call &mut self helpers while draining network_event_buffer.
         let mut open_storage_ui = false;
 
@@ -4970,7 +5037,7 @@ impl Client {
                     // Drop any armed skill so it can't leak across a logout/relogin and fire on
                     // the first click of the next session.
                     self.pending_skill = None;
-                    self.support_target = None;
+                    self.set_support_target(None);
 
                     if reason != DisconnectReason::ClosedByClient {
                         #[cfg(feature = "debug")]
@@ -4992,7 +5059,7 @@ impl Client {
 
                     self.map = None;
                     self.set_targeted_monster(None);
-                    self.support_target = None;
+                    self.set_support_target(None);
 
                     self.particle_holder.clear();
                     self.pending_impacts.clear();
@@ -5302,7 +5369,7 @@ impl Client {
                     self.client_state.follow_mut(client_state().dialog_window()).end();
 
                     self.map = None;
-                    self.support_target = None;
+                    self.set_support_target(None);
 
                     self.particle_holder.clear();
                     self.pending_impacts.clear();
@@ -5658,7 +5725,7 @@ impl Client {
                     // to `pc->statusup`), so a whole build is at most six.
 
                     self.map = None;
-                    self.support_target = None;
+                    self.set_support_target(None);
                     self.particle_holder.clear();
                     self.pending_impacts.clear();
                     self.emote_bubbles.clear();
@@ -7382,7 +7449,7 @@ impl Client {
                 } => {
                     self.client_state.follow_mut(client_state().party_state()).remove_member(account_id);
                     if self.support_target == Some(EntityId(account_id.0)) {
-                        self.support_target = None;
+                        self.set_support_target(None);
                         if self.interface.is_window_with_class_open(WindowClass::PlayerTarget) {
                             self.interface.close_window_with_class(WindowClass::PlayerTarget);
                         }
@@ -9307,10 +9374,20 @@ impl Client {
             .collect()
     }
 
+    /// Every support-target change goes through here so the party healer
+    /// window's `>` marker always agrees with where support skills will land.
+    fn set_support_target(&mut self, target: Option<EntityId>) {
+        self.support_target = target;
+        let account_id = target.map(|entity_id| AccountId(entity_id.0));
+        self.client_state
+            .follow_mut(client_state().party_state())
+            .set_support_target(account_id);
+    }
+
     fn cycle_party_target(&mut self) {
         let targets = self.available_party_targets();
         if targets.is_empty() {
-            self.support_target = None;
+            self.set_support_target(None);
             self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
                 "No visible online party members to target.".to_owned(),
                 MessageColor::Information,
@@ -9322,7 +9399,7 @@ impl Client {
             .and_then(|current| targets.iter().position(|(entity_id, _)| *entity_id == current))
             .map_or(0, |index| (index + 1) % targets.len());
         let (entity_id, name) = targets[next].clone();
-        self.support_target = Some(entity_id);
+        self.set_support_target(Some(entity_id));
         self.client_state
             .follow_mut(client_state().chat_messages())
             .push(ChatMessage::new(format!("Support target: {name}"), MessageColor::Information));
@@ -9342,7 +9419,7 @@ impl Client {
             ));
             return;
         };
-        self.support_target = Some(entity_id);
+        self.set_support_target(Some(entity_id));
 
         let Some(pending) = self.pending_skill.clone() else {
             let name = match party_index {
@@ -9536,6 +9613,20 @@ impl Client {
                             false => self.interface.open_window(MenuWindow),
                         }
                     }
+                }
+                InputEvent::TogglePartyHealerWindow => match self.interface.is_window_with_class_open(WindowClass::PartyHealer) {
+                    true => self.interface.close_window_with_class(WindowClass::PartyHealer),
+                    false => self.interface.open_window(PartyHealerWindow::new(client_state().party_state())),
+                },
+                InputEvent::SelectSupportTarget {
+                    account_id,
+                    character_name,
+                } => {
+                    self.set_support_target(Some(EntityId(account_id.0)));
+                    self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
+                        format!("Support target: {character_name}"),
+                        MessageColor::Information,
+                    ));
                 }
                 InputEvent::ToggleCharacterOverviewWindow => {
                     if self.client_state.try_follow(this_entity()).is_some() {
@@ -10122,7 +10213,7 @@ impl Client {
                     // Same two effects a world click on that player has
                     // (EntityType::Player above): become the active
                     // support-skill target, and open their frame.
-                    self.support_target = Some(EntityId(account_id.0));
+                    self.set_support_target(Some(EntityId(account_id.0)));
                     self.interface
                         .open_window(PlayerTargetWindow::new(account_id, character_name, class_name));
                 }
@@ -10219,7 +10310,11 @@ impl Client {
                                     let card = facts
                                         .map(|facts| format!("  Lv {}  {}  {}", facts.level, facts.element, facts.race))
                                         .unwrap_or_default();
-                                    spotted_monster = Some(format!("{name}{card}  HP {health}/{maximum}"));
+                                    let hp = match monster_hp_hidden(maximum) {
+                                        true => String::new(),
+                                        false => format!("  HP {health}/{maximum}"),
+                                    };
+                                    spotted_monster = Some(format!("{name}{card}{hp}"));
                                 }
                                 if action_animation_locked {
                                     queue_monster_attack = true;
@@ -10247,12 +10342,13 @@ impl Client {
                             // nonsense.
                             EntityType::Player if is_local_player => Ok(()),
                             EntityType::Player => {
-                                self.support_target = Some(entity_id);
                                 let character_name = entity
                                     .get_details()
                                     .map(|details| details.split('#').next().unwrap_or(details).to_owned())
                                     .unwrap_or_else(|| "Unknown".to_owned());
                                 let class_name = JobName::get(&self.library, entity.get_job_id()).to_string();
+                                // After the last use of `entity`, which borrows the entity list.
+                                self.set_support_target(Some(entity_id));
 
                                 self.interface
                                     .open_window(PlayerTargetWindow::new(AccountId(entity_id.0), character_name, class_name));
@@ -11428,24 +11524,36 @@ impl Client {
                                 }
                             }
                             SkillType::Support => {
-                                // Prefer the hovered player, then the selected party target,
-                                // and finally self so self-buffs never require a target click.
+                                // Prefer the hovered entity, then (for offensive Heal) an undead
+                                // Tab target, then the selected party target, and finally self so
+                                // self-buffs never require a target click.
+                                let undead_tab_target = self
+                                    .targeted_monster
+                                    .filter(|_| support_skill_may_target_monster(learnable_skill.skill_id.0))
+                                    .filter(|target_id| {
+                                        self.client_state.follow(client_state().entities()).iter().any(|entity| {
+                                            entity.get_entity_id() == *target_id
+                                                && entity.get_entity_type() == EntityType::Monster
+                                                && monster_is_undead(entity.get_job_id().0 as u32)
+                                        })
+                                    });
                                 let target_id = match input_report.mouse_target {
                                     PickerTarget::Entity(entity_id) => entity_id,
-                                    _ => self
-                                        .support_target
-                                        .filter(|target_id| {
-                                            self.client_state.follow(client_state().entities()).iter().any(|entity| {
-                                                entity.get_entity_id() == *target_id && entity.get_entity_type() == EntityType::Player
+                                    _ => undead_tab_target.unwrap_or_else(|| {
+                                        self.support_target
+                                            .filter(|target_id| {
+                                                self.client_state.follow(client_state().entities()).iter().any(|entity| {
+                                                    entity.get_entity_id() == *target_id && entity.get_entity_type() == EntityType::Player
+                                                })
                                             })
-                                        })
-                                        .unwrap_or_else(|| self.client_state.follow(this_entity().manually_asserted()).get_entity_id()),
+                                            .unwrap_or_else(|| self.client_state.follow(this_entity().manually_asserted()).get_entity_id())
+                                    }),
                                 };
                                 let target_is_monster =
                                     self.client_state.follow(client_state().entities()).iter().any(|entity| {
                                         entity.get_entity_id() == target_id && entity.get_entity_type() == EntityType::Monster
                                     });
-                                if target_is_monster {
+                                if target_is_monster && !support_skill_may_target_monster(learnable_skill.skill_id.0) {
                                     let name = learnable_skill.skill_name.clone();
                                     self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
                                         format!("{name} cannot be cast on a monster."),
@@ -13674,7 +13782,9 @@ impl Client {
                     // `get_mouse_mode()` here would still read last frame's mode.
                     interface_frame.click(&self.client_state, mouse_button);
                     let started_drag = interface_frame.queued_mouse_mode().is_some_and(click_started_drag);
-                    if mouse_button == MouseButton::Left && !started_drag {
+                    // The click sound belongs to the login screens only; in-game
+                    // windows stay silent.
+                    if mouse_button == MouseButton::Left && !started_drag && modal_screen {
                         self.audio_engine.play_sound_effect(self.main_menu_click_sound_effect);
                     }
                 } else if modal_screen {
@@ -13702,7 +13812,10 @@ impl Client {
                                     let target_is_monster = self.client_state.follow(client_state().entities()).iter().any(|entity| {
                                         entity.get_entity_id() == entity_id && entity.get_entity_type() == EntityType::Monster
                                     });
-                                    if target_is_monster && matches!(pending.skill_type, SkillType::Support | SkillType::SelfCast) {
+                                    if target_is_monster
+                                        && matches!(pending.skill_type, SkillType::Support | SkillType::SelfCast)
+                                        && !support_skill_may_target_monster(pending.skill_id.0)
+                                    {
                                         deferred_ui_chat_message = Some(format!("{} cannot be cast on a monster.", pending.skill_name));
                                         false
                                     } else {
@@ -13789,6 +13902,8 @@ impl Client {
                 }
             } else if input_report.left_mouse_button_down
                 && !is_interface_hovered
+                && !mouse_mode.is_dragging_window()
+                && !interface_frame.queued_mouse_mode().is_some_and(MouseModeExt::is_dragging_window)
                 && self.pending_skill.is_none()
                 && let PickerTarget::Tile { x, y } = input_report.mouse_target
             {
@@ -14162,6 +14277,9 @@ impl ApplicationHandler for Client {
                         let logical: LogicalSize<u32> = screen_size.to_logical(window.scale_factor());
                         *self.client_state.follow_mut(client_state().game_settings().window_size()) = Some((logical.width, logical.height));
                     }
+                    // Written once the resizing settles, not on every event of a drag,
+                    // so the size survives a crash or a killed process.
+                    self.window_geometry_changed_at = Some(std::time::Instant::now());
                 }
 
                 self.apply_window_size(screen_size);

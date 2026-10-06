@@ -225,6 +225,7 @@ impl WindowCache {
             WindowClass::Hud => state(AnchorPoint::TopRight, -(280.0 + MARGIN), 230.0, 260.0, 110.0),
             // Party roster left of center.
             WindowClass::Party => state(AnchorPoint::CenterLeft, MARGIN, -40.0, 320.0, 240.0),
+            WindowClass::PartyHealer => state(AnchorPoint::CenterLeft, MARGIN, 220.0, 320.0, 180.0),
             WindowClass::Storage => state(AnchorPoint::CenterRight, -(380.0 + MARGIN), -80.0, 360.0, 320.0),
             WindowClass::Trade => state(AnchorPoint::Center, -20.0, -80.0, 400.0, 360.0),
             WindowClass::TradeRequest => state(AnchorPoint::Center, 0.0, -40.0, 320.0, 160.0),
@@ -793,6 +794,10 @@ impl WindowCache {
 }
 
 impl korangar_interface::application::WindowCache<ClientState> for WindowCache {
+    fn persist(&mut self) {
+        self.save();
+    }
+
     fn create() -> Self {
         let mut cache = Self::load().unwrap_or_else(|| {
             #[cfg(feature = "debug")]
@@ -944,6 +949,9 @@ impl korangar_interface::application::WindowCache<ClientState> for WindowCache {
 
 impl Drop for WindowCache {
     fn drop(&mut self) {
+        // Tests run from the client's own directory: saving here would
+        // overwrite the player's real file with whatever the test built.
+        #[cfg(not(test))]
         self.save();
     }
 }
