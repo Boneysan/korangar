@@ -9808,15 +9808,16 @@ impl Client {
                         .push(ChatMessage::new(text, MessageColor::Information));
                 }
                 InputEvent::ToggleCombatHudFade => {
-                    let enabled = self.interface.toggle_combat_fade();
-                    let text = if enabled {
-                        "Combat HUD fades five seconds after the last hit."
-                    } else {
-                        "Combat HUD stays visible out of combat."
+                    let text = match self.interface.cycle_combat_fade() {
+                        Some(opacity) => format!(
+                            "Combat HUD fades to {}% out of combat, five seconds after the last hit.",
+                            (opacity * 100.0).round()
+                        ),
+                        None => "Combat HUD fade is off: it stays fully visible out of combat.".to_owned(),
                     };
                     self.client_state
                         .follow_mut(client_state().chat_messages())
-                        .push(ChatMessage::new(text.to_owned(), MessageColor::Information));
+                        .push(ChatMessage::new(text, MessageColor::Information));
                 }
                 InputEvent::ToggleHudEditLock => {
                     let locked = self.interface.toggle_window_movement_lock();
@@ -13433,13 +13434,16 @@ impl Client {
 
         map.register_point_lights(point_light_manager, point_light_set_buffer, current_camera);
 
-        // A warm light follows the camera focus, which is the player character.
-        point_light_manager.register(
-            crate::world::PointLightId::CHARACTER,
-            current_camera.focus_point() + Vector3::new(0.0, 10.0, 0.0),
-            Color::rgb_u8(255, 214, 160),
-            48.0,
-        );
+        // A warm light follows the camera focus, which is the player character,
+        // on dark maps only: in towns and fields it only washed out the ground.
+        if map.is_dark() {
+            point_light_manager.register(
+                crate::world::PointLightId::CHARACTER,
+                current_camera.focus_point() + Vector3::new(0.0, 10.0, 0.0),
+                Color::rgb_u8(255, 214, 160),
+                48.0,
+            );
+        }
 
         match lighting_mode {
             LightingMode::Classic => point_light_manager.create_point_light_set(0),

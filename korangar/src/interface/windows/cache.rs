@@ -89,12 +89,34 @@ pub struct WindowCache {
     /// When false, combat windows stay fully visible out of combat.
     #[serde(default = "combat_fade_defaults_on")]
     combat_fade_enabled: bool,
+    /// How see-through combat windows are while faded; one of [`FADE_STEPS`].
+    #[serde(default = "default_noncombat_opacity")]
+    noncombat_opacity: f32,
     #[serde(skip, default = "no_recent_combat")]
     last_combat: Cell<Option<Instant>>,
 }
 
 const COMBAT_HOLD: Duration = Duration::from_secs(5);
 const NONCOMBAT_OPACITY: f32 = 0.35;
+/// The faded opacities the combat-fade button steps through, before "off".
+const FADE_STEPS: [f32; 4] = [0.2, NONCOMBAT_OPACITY, 0.5, 0.75];
+
+fn default_noncombat_opacity() -> f32 {
+    NONCOMBAT_OPACITY
+}
+
+/// The fade setting after one press: each faded level in turn, then off, then
+/// the faintest level again. An opacity not in the list (a hand-edited file)
+/// moves to the next step above it.
+fn next_combat_fade(enabled: bool, opacity: f32) -> (bool, f32) {
+    if !enabled {
+        return (true, FADE_STEPS[0]);
+    }
+    match FADE_STEPS.iter().find(|step| **step > opacity + f32::EPSILON) {
+        Some(next) => (true, *next),
+        None => (false, opacity),
+    }
+}
 
 fn combat_fade_defaults_on() -> bool {
     true
@@ -128,6 +150,7 @@ impl Default for WindowCache {
             character_profiles: HashMap::new(),
             character_active_profiles: HashMap::new(),
             combat_fade_enabled: true,
+            noncombat_opacity: NONCOMBAT_OPACITY,
             last_combat: Cell::new(None),
         }
     }
@@ -926,10 +949,10 @@ impl korangar_interface::application::WindowCache<ClientState> for WindowCache {
         self.last_combat.set(Some(Instant::now()));
     }
 
-    fn toggle_combat_fade(&mut self) -> bool {
-        self.combat_fade_enabled = !self.combat_fade_enabled;
+    fn cycle_combat_fade(&mut self) -> Option<f32> {
+        (self.combat_fade_enabled, self.noncombat_opacity) = next_combat_fade(self.combat_fade_enabled, self.noncombat_opacity);
         self.save();
-        self.combat_fade_enabled
+        self.combat_fade_enabled.then_some(self.noncombat_opacity)
     }
 
     fn window_alpha(&self, class: WindowClass) -> f32 {
@@ -942,7 +965,7 @@ impl korangar_interface::application::WindowCache<ClientState> for WindowCache {
         if !combat_only || !self.combat_fade_enabled || in_combat {
             1.0
         } else {
-            NONCOMBAT_OPACITY
+            self.noncombat_opacity
         }
     }
 }
@@ -963,6 +986,19 @@ mod tests {
     use korangar_interface::application::WindowCache as _;
 
     use super::*;
+
+    #[test]
+    fn combat_fade_cycles_through_its_levels_then_off() {
+        let mut state = (true, NONCOMBAT_OPACITY);
+        let mut seen = Vec::new();
+        for _ in 0..5 {
+            state = next_combat_fade(state.0, state.1);
+            seen.push(state.0.then_some(state.1));
+        }
+        assert_eq!(seen, vec![Some(0.5), Some(0.75), None, Some(0.2), Some(0.35)]);
+        // A value not on the list moves to the next step above it.
+        assert_eq!(next_combat_fade(true, 0.4), (true, 0.5));
+    }
 
     fn size(width: f32, height: f32) -> ScreenSize {
         ScreenSize { width, height }

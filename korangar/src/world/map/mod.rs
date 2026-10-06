@@ -714,6 +714,11 @@ impl Map {
         self.lighting.ambient_light_color()
     }
 
+    /// Whether the light that follows the player should be on here.
+    pub fn is_dark(&self) -> bool {
+        self.lighting.is_dark()
+    }
+
     #[cfg_attr(feature = "debug", korangar_debug::profile)]
     pub fn directional_light(&self) -> (Vector3<f32>, Color) {
         self.lighting.directional_light()

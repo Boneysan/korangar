@@ -227,9 +227,10 @@ where
     /// Remember that the player just dealt or took damage.
     fn note_combat(&self) {}
 
-    /// Toggle out-of-combat fading. Returns whether fading is now enabled.
-    fn toggle_combat_fade(&mut self) -> bool {
-        false
+    /// Step out-of-combat fading to its next level. Returns the faded
+    /// opacity now in use, or `None` when fading is off.
+    fn cycle_combat_fade(&mut self) -> Option<f32> {
+        None
     }
 
     /// Draw opacity for a window. Combat-only windows fade after the combat

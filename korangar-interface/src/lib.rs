@@ -442,8 +442,8 @@ where
         self.window_cache.note_combat();
     }
 
-    pub fn toggle_combat_fade(&mut self) -> bool {
-        self.window_cache.toggle_combat_fade()
+    pub fn cycle_combat_fade(&mut self) -> Option<f32> {
+        self.window_cache.cycle_combat_fade()
     }
 
     /// Cycle window-position snapping and return its new grid size.
