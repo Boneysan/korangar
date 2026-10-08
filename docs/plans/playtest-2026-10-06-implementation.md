@@ -1,25 +1,24 @@
 # Implementation plan — playtest 2026-10-06
 
 Handoff plan for the findings in [playtest-2026-10-06.md](playtest-2026-10-06.md). Written
-2026-10-07. Work one slice at a time, in order, and finish its acceptance check before
-starting the next. Waves 1–2 are scoped. Wave 3 is scoped but less urgent. Wave 4 needs
-owner decisions before any code.
+2026-10-07. The named slices below are implemented. None are live-verified. P7 still
+waits on a live `KORANGAR_MOVE_TRACE=1` capture. Do not start a new slice unless the
+owner names one.
 
 ## Before you start
 
-- korangar branch: `agent/playtest-fixes-2026-10-05`. Hercules branch: `agent/flinch-stop-and-sit-regen`.
-- `korangar/src/lib.rs` carries **uncommitted work you do not own**: the `KORANGAR_MOVE_TRACE`
-  diagnostic (`trace_move_correction`) and its three call sites. Do not revert or reformat it.
-  The same file also holds slice P0 and the P1 `UseItemAck` arm. Also uncommitted: `korangar-interface/src/lib.rs` (P0),
-  `korangar/src/interface/windows/menu.rs` (P6), the P1 networking and inventory files, the headless
-  tester's item-use wait, and both playtest plan docs. Commit only
-  when the owner asks, and stage `korangar/src/lib.rs` by hunk.
+- korangar `85534f49` on `agent/playtest-fixes-2026-10-05`. Hercules `73aab7bdb` on
+  `agent/flinch-stop-and-sit-regen`. Both were pushed 2026-10-07. A later edit to these
+  plan docs is local until the owner asks for another commit.
+- `KORANGAR_MOVE_TRACE` (`trace_move_correction` and its three call sites) is inside
+  `85534f49`. Leave it alone. It does not name a rubber-banding cause.
 - Validation order (workspace `CLAUDE.md`): `cargo fmt --all -- --check` → narrowest test
   filter → `cargo check -p korangar` → `cargo test -p korangar --lib` → live client check.
 - Status words: *implemented and compiles* / *automated tests pass* / *live-verified*. Every
   slice below ends at live-verified. Without that, it is not done.
 - Hercules: rebuild with `Hercules/dev.sh build`, restart with `./dev.sh restart && ./dev.sh wait`.
-  Script-only changes need `@reloadscript` or a restart, plus a load check of the map-server log.
+  Script-only changes need `@reloadscript` or a restart. Item 50002 and the floor-1
+  `iz_ac01` map caches load only when the map-server process starts, so those need a restart.
 
 ## Wave 1 — confirmed causes, small fixes
 
