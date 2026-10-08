@@ -652,6 +652,15 @@ When writing code or adding features, agents must adhere to these project-specif
      nothing between bonus ticks. It now falls through to natural regen, which
      already runs at double rate while sitting. A fix to fork code, not to
      upstream behaviour.
+   - **Academy stair landings sit outside the return warps** (2026-10-07) —
+     `npc/re/warps/cities/izlude.txt`. Stock `iz_ac01` stairs both landed on
+     `iz_ac02,124,46`, the corner of `#to_ac1f01` (126,48, span 2). Arrival
+     runs `npc_touch_areanpc` (`clif.c`), so upstairs warped straight back to
+     `iz_ac01,78,28`. The left stair now lands on `126,45` and the right stair
+     on `131,45` (`132,45` is a wall on `maps/re/iz_ac02.mcache`), including the
+     `_a`–`_d` copies. Downstairs landings `78,28` and `122,28` were already one
+     cell outside their triggers and were left alone. Script only:
+     `@reloadscript` or a restart. Not live-verified.
    Type `0` is deliberate in the `skillcastcancel` call: a voluntary abort must not be blocked by the skill's `castcancel` flag or by Phen / `no_castcancel` (that is `type&2`, for damage interrupts), and the skill to drop is `ud->skill_id`, not `SA_CASTCANCEL`'s `skill_id_old` (`type&1`). SP is untouched because it is charged at cast *end*. Requires `make -j8` and a server restart.
 4. **Rebaseability**: Keep custom UI features isolated in `korangar/src/interface/windows/dm/` (and state in `korangar/src/dm/`) as much as possible to ensure the fork remains rebaseable against upstream Korangar.
 5. **No Upstream IP**: Per `wiki/Contributing.md`, do not include code taken directly from or inspired by GRAVITY's intellectual property.

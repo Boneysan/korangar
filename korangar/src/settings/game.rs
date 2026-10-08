@@ -300,6 +300,14 @@ pub struct GameSettings {
     /// Show server-provided quest markers above NPCs and objective locations.
     #[serde(default = "default_true")]
     pub show_quest_markers: bool,
+    /// Draw each NPC's name over its head. Off restores the hover-only label.
+    #[serde(default = "default_true")]
+    pub show_npc_names: bool,
+    /// Draw a line where a walkable cell meets a blocked one. Off by default.
+    /// This is the client's own walk mesh: a cell the server rejects and the
+    /// client still calls walkable gets no line.
+    #[serde(default)]
+    pub show_walk_obstacles: bool,
     /// Minimap layer toggle (GDD 10.12): Towninfo facility markers (shops,
     /// Kafra, guides, inns).
     #[serde(default = "default_true")]
@@ -418,6 +426,8 @@ impl Default for GameSettings {
             hold_aim_release_ground_skills: false,
             ground_skill_target_modes: HashMap::new(),
             show_quest_markers: true,
+            show_npc_names: true,
+            show_walk_obstacles: false,
             show_minimap_facilities: true,
             show_minimap_party: true,
             show_minimap_quest_markers: true,
@@ -738,6 +748,7 @@ mod tests {
         assert!(!default_settings.quickcast_ground_skills);
         assert!(!default_settings.hold_aim_release_ground_skills);
         assert!(default_settings.show_quest_markers);
+        assert!(default_settings.show_npc_names);
         assert!(default_settings.show_minimap_facilities);
         assert!(default_settings.show_minimap_party);
         assert!(default_settings.show_minimap_quest_markers);
@@ -761,6 +772,7 @@ mod tests {
         assert!(!old_settings.quickcast_ground_skills);
         assert!(!old_settings.hold_aim_release_ground_skills);
         assert!(old_settings.show_quest_markers);
+        assert!(old_settings.show_npc_names, "older settings files keep NPC names on");
         assert!(old_settings.show_minimap_facilities);
         assert!(old_settings.show_minimap_party);
         assert!(old_settings.show_minimap_quest_markers);

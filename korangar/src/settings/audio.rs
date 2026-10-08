@@ -125,6 +125,20 @@ impl AudioSettings {
     }
 }
 
+#[cfg(test)]
+mod tests {
+    use super::{AudioSettings, VolumePreset};
+
+    #[test]
+    fn a_new_file_starts_music_at_half_and_a_saved_hundred_stays() {
+        let missing: AudioSettings = ron::from_str("()").unwrap();
+        assert_eq!(missing.music, VolumePreset(50));
+
+        let chosen: AudioSettings = ron::from_str("(music:(100))").unwrap();
+        assert_eq!(chosen.music, VolumePreset(100));
+    }
+}
+
 impl Drop for AudioSettings {
     fn drop(&mut self) {
         // Tests run from the client's own directory: saving here would

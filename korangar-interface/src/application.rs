@@ -234,8 +234,14 @@ where
     }
 
     /// Draw opacity for a window. Combat-only windows fade after the combat
-    /// hold expires.
+    /// hold expires. The result also includes the player's window opacity.
     fn window_alpha(&self, _class: App::WindowClass) -> f32 {
+        1.0
+    }
+
+    /// Step every window through solid, 75%, 50%, and 25%, then back to solid.
+    /// Returns the opacity now in use.
+    fn cycle_window_opacity(&mut self) -> f32 {
         1.0
     }
 

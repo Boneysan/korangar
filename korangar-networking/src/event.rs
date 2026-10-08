@@ -716,6 +716,15 @@ pub enum NetworkEvent {
         index: InventoryIndex,
         amount: u16,
     },
+    /// Successful or failed item use (`ZC_USE_ITEM_ACK` 0x01C8). `amount` is
+    /// the stack still in the slot. Hercules broadcasts a success to the area,
+    /// so apply it only when `entity_id` is the local player.
+    UseItemAck {
+        entity_id: EntityId,
+        index: InventoryIndex,
+        amount: i16,
+        success: bool,
+    },
     AttackFailed {
         target_entity_id: EntityId,
         target_position: TilePosition,

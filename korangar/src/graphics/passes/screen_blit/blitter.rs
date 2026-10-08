@@ -1,6 +1,9 @@
+use bytemuck::bytes_of;
 use wgpu::{
-    ColorTargetState, ColorWrites, Device, FragmentState, MultisampleState, PipelineCompilationOptions, PipelineLayoutDescriptor,
-    PrimitiveState, Queue, RenderPass, RenderPipeline, RenderPipelineDescriptor, TextureSampleType, TextureViewDimension, VertexState,
+    BindGroup, BindGroupDescriptor, BindGroupEntry, BindGroupLayoutDescriptor, BindGroupLayoutEntry, BindingType, Buffer,
+    BufferBindingType, BufferDescriptor, BufferUsages, ColorTargetState, ColorWrites, Device, FragmentState, MultisampleState,
+    PipelineCompilationOptions, PipelineLayoutDescriptor, PrimitiveState, Queue, RenderPass, RenderPipeline, RenderPipelineDescriptor,
+    ShaderStages, TextureSampleType, TextureViewDimension, VertexState,
 };
 
 use crate::graphics::passes::screen_blit::ScreenBlitRenderPassContext;
@@ -12,6 +15,8 @@ const DRAWER_NAME: &str = "screen blit blitter";
 
 pub(crate) struct ScreenBlitBlitterDrawer {
     pipeline: RenderPipeline,
+    grade_buffer: Buffer,
+    grade_bind_group: BindGroup,
 }
 
 impl Drawer<{ BindGroupCount::None }, { ColorAttachmentCount::One }, { DepthAttachmentCount::None }> for ScreenBlitBlitterDrawer {
@@ -21,7 +26,7 @@ impl Drawer<{ BindGroupCount::None }, { ColorAttachmentCount::One }, { DepthAtta
     fn new(
         _capabilities: &Capabilities,
         device: &Device,
-        _queue: &Queue,
+        queue: &Queue,
         shader_compiler: &ShaderCompiler,
         global_context: &GlobalContext,
         _render_pass_context: &Self::Context,
@@ -42,9 +47,40 @@ impl Drawer<{ BindGroupCount::None }, { ColorAttachmentCount::One }, { DepthAtta
             false,
         );
 
+        let grade_layout = device.create_bind_group_layout(&BindGroupLayoutDescriptor {
+            label: Some("screen blit color grade"),
+            entries: &[BindGroupLayoutEntry {
+                binding: 0,
+                visibility: ShaderStages::FRAGMENT,
+                ty: BindingType::Buffer {
+                    ty: BufferBindingType::Uniform,
+                    has_dynamic_offset: false,
+                    min_binding_size: None,
+                },
+                count: None,
+            }],
+        });
+
+        let grade_buffer = device.create_buffer(&BufferDescriptor {
+            label: Some("screen blit color grade"),
+            size: 16,
+            usage: BufferUsages::UNIFORM | BufferUsages::COPY_DST,
+            mapped_at_creation: false,
+        });
+        queue.write_buffer(&grade_buffer, 0, bytes_of(&[1.0f32, 1.0, 1.0, 1.0]));
+
+        let grade_bind_group = device.create_bind_group(&BindGroupDescriptor {
+            label: Some("screen blit color grade"),
+            layout: &grade_layout,
+            entries: &[BindGroupEntry {
+                binding: 0,
+                resource: grade_buffer.as_entire_binding(),
+            }],
+        });
+
         let pipeline_layout = device.create_pipeline_layout(&PipelineLayoutDescriptor {
             label: Some(&label),
-            bind_group_layouts: &[Some(&texture_bind_group_layout)],
+            bind_group_layouts: &[Some(&texture_bind_group_layout), Some(&grade_layout)],
             immediate_size: 0,
         });
 
@@ -74,12 +110,25 @@ impl Drawer<{ BindGroupCount::None }, { ColorAttachmentCount::One }, { DepthAtta
             multiview_mask: None,
         });
 
-        Self { pipeline }
+        Self {
+            pipeline,
+            grade_buffer,
+            grade_bind_group,
+        }
     }
 
     fn draw(&mut self, pass: &mut RenderPass<'_>, draw_data: Self::DrawData<'_>) {
         pass.set_pipeline(&self.pipeline);
         pass.set_bind_group(0, draw_data.get_bind_group(), &[]);
+        pass.set_bind_group(1, &self.grade_bind_group, &[]);
         pass.draw(0..3, 0..1);
+    }
+}
+
+impl ScreenBlitBlitterDrawer {
+    /// xyz multiply the linear color. w is saturation. Written before the blit
+    /// pass.
+    pub(crate) fn prepare(&self, queue: &Queue, grade: [f32; 4]) {
+        queue.write_buffer(&self.grade_buffer, 0, bytes_of(&grade));
     }
 }

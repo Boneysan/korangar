@@ -92,6 +92,10 @@ pub struct WindowCache {
     /// How see-through combat windows are while faded; one of [`FADE_STEPS`].
     #[serde(default = "default_noncombat_opacity")]
     noncombat_opacity: f32,
+    /// Opacity of every window. One of [`WINDOW_OPACITY_STEPS`]. Old caches
+    /// omit it and stay solid.
+    #[serde(default = "default_window_opacity")]
+    window_opacity: f32,
     #[serde(skip, default = "no_recent_combat")]
     last_combat: Cell<Option<Instant>>,
 }
@@ -103,6 +107,21 @@ const FADE_STEPS: [f32; 4] = [0.2, NONCOMBAT_OPACITY, 0.5, 0.75];
 
 fn default_noncombat_opacity() -> f32 {
     NONCOMBAT_OPACITY
+}
+
+fn default_window_opacity() -> f32 {
+    1.0
+}
+
+/// Solid, then 75%, 50%, 25%, then solid again.
+const WINDOW_OPACITY_STEPS: [f32; 4] = [1.0, 0.75, 0.5, 0.25];
+
+fn next_window_opacity(opacity: f32) -> f32 {
+    WINDOW_OPACITY_STEPS
+        .iter()
+        .find(|step| **step < opacity - f32::EPSILON)
+        .copied()
+        .unwrap_or(WINDOW_OPACITY_STEPS[0])
 }
 
 /// The fade setting after one press: each faded level in turn, then off, then
@@ -151,6 +170,7 @@ impl Default for WindowCache {
             character_active_profiles: HashMap::new(),
             combat_fade_enabled: true,
             noncombat_opacity: NONCOMBAT_OPACITY,
+            window_opacity: default_window_opacity(),
             last_combat: Cell::new(None),
         }
     }
@@ -245,7 +265,8 @@ impl WindowCache {
             // clipped everything past the first. Sized for the full list.
             WindowClass::StatusBar => state(AnchorPoint::TopCenter, -160.0, MARGIN, 320.0, 160.0),
             // Zeny / EXP / cooldown strip under the minimap.
-            WindowClass::Hud => state(AnchorPoint::TopRight, -(280.0 + MARGIN), 230.0, 260.0, 110.0),
+            // Level row plus the quest tracker need more than the old 110px strip.
+            WindowClass::Hud => state(AnchorPoint::TopRight, -(280.0 + MARGIN), 230.0, 260.0, 280.0),
             // Party roster left of center.
             WindowClass::Party => state(AnchorPoint::CenterLeft, MARGIN, -40.0, 320.0, 240.0),
             WindowClass::PartyHealer => state(AnchorPoint::CenterLeft, MARGIN, 220.0, 320.0, 180.0),
@@ -256,7 +277,7 @@ impl WindowCache {
             WindowClass::WarpSelection | WindowClass::WeaponRefine | WindowClass::RepairWeapon => {
                 state(AnchorPoint::Center, 0.0, -80.0, 360.0, 300.0)
             }
-            WindowClass::ItemActions => state(AnchorPoint::Center, 0.0, -40.0, 280.0, 220.0),
+            WindowClass::ItemActions => state(AnchorPoint::Center, 0.0, -40.0, 280.0, 280.0),
             // Dialogs / shops slightly right of center so they don't cover chat.
             WindowClass::Dialog => state(AnchorPoint::CenterRight, -(420.0 + MARGIN), -160.0, 400.0, 280.0),
             WindowClass::Buy => state(AnchorPoint::CenterRight, -(440.0 + MARGIN), -200.0, 420.0, 360.0),
@@ -290,7 +311,8 @@ impl WindowCache {
             WindowClass::Dice => state(AnchorPoint::CenterRight, -(300.0 + MARGIN), -180.0, 300.0, 360.0),
             WindowClass::CommissionBoard => state(AnchorPoint::Center, -210.0, -190.0, 420.0, 380.0),
             WindowClass::Emotes => state(AnchorPoint::CenterRight, -(540.0 + MARGIN), -240.0, 520.0, 480.0),
-            WindowClass::Maps => state(AnchorPoint::Center, 0.0, -40.0, 900.0, 650.0),
+            // Tall enough for the official 1280×1024 world-map sheet plus the town row.
+            WindowClass::Maps => state(AnchorPoint::Center, 0.0, -40.0, 1000.0, 930.0),
             // Login / char select stay centered (menu flow).
             WindowClass::Login | WindowClass::SelectServer | WindowClass::CharacterSelection | WindowClass::CharacterCreation => {
                 return None;
@@ -368,6 +390,46 @@ impl WindowCache {
         }
         if self.active_profile.is_empty() {
             self.active_profile = "Classic".to_owned();
+        }
+        self.grow_saved_hud_sizes();
+    }
+
+    /// The HUD default used to be 260×110. That clips the level row and the
+    /// quest tracker. Only that exact saved size is grown; a size the player
+    /// chose is left alone.
+    fn grow_clipped_hud(entries: &mut HashMap<WindowClass, WindowState>) {
+        let Some(hud) = entries.get_mut(&WindowClass::Hud) else {
+            return;
+        };
+        if (hud.size.width - 260.0).abs() < 0.5 && (hud.size.height - 110.0).abs() < 0.5 {
+            hud.size.height = 280.0;
+        }
+    }
+
+    fn grow_saved_hud_sizes(&mut self) {
+        Self::grow_clipped_hud(&mut self.entries);
+        Self::grow_saved_world_map(&mut self.entries);
+        for entries in self.profiles.values_mut() {
+            Self::grow_clipped_hud(entries);
+            Self::grow_saved_world_map(entries);
+        }
+        for profiles in self.character_profiles.values_mut() {
+            for entries in profiles.values_mut() {
+                Self::grow_clipped_hud(entries);
+                Self::grow_saved_world_map(entries);
+            }
+        }
+    }
+
+    /// The World Map default used to be 900×650, which clips the official
+    /// sheet. Only that exact saved size is grown.
+    fn grow_saved_world_map(entries: &mut HashMap<WindowClass, WindowState>) {
+        let Some(maps) = entries.get_mut(&WindowClass::Maps) else {
+            return;
+        };
+        if (maps.size.width - 900.0).abs() < 0.5 && (maps.size.height - 650.0).abs() < 0.5 {
+            maps.size.width = 1000.0;
+            maps.size.height = 930.0;
         }
     }
 
@@ -962,11 +1024,18 @@ impl korangar_interface::application::WindowCache<ClientState> for WindowCache {
             .and_then(|state| state.combat_only)
             .unwrap_or_else(|| combat_only_by_default(class));
         let in_combat = self.last_combat.get().is_some_and(|at| at.elapsed() < COMBAT_HOLD);
-        if !combat_only || !self.combat_fade_enabled || in_combat {
+        let combat = if !combat_only || !self.combat_fade_enabled || in_combat {
             1.0
         } else {
             self.noncombat_opacity
-        }
+        };
+        combat * self.window_opacity.clamp(0.25, 1.0)
+    }
+
+    fn cycle_window_opacity(&mut self) -> f32 {
+        self.window_opacity = next_window_opacity(self.window_opacity);
+        self.save();
+        self.window_opacity
     }
 }
 
@@ -998,6 +1067,50 @@ mod tests {
         assert_eq!(seen, vec![Some(0.5), Some(0.75), None, Some(0.2), Some(0.35)]);
         // A value not on the list moves to the next step above it.
         assert_eq!(next_combat_fade(true, 0.4), (true, 0.5));
+    }
+
+    #[test]
+    fn window_opacity_scales_every_window_including_combat_fade() {
+        let mut cache = WindowCache::default();
+        assert!((cache.window_alpha(WindowClass::Chat) - 1.0).abs() < f32::EPSILON);
+        assert!((cache.window_alpha(WindowClass::Hotbar) - 0.35).abs() < f32::EPSILON);
+
+        cache.window_opacity = 0.5;
+        assert!((cache.window_alpha(WindowClass::Chat) - 0.5).abs() < f32::EPSILON);
+        assert!((cache.window_alpha(WindowClass::Hotbar) - 0.175).abs() < 0.001);
+
+        assert!((next_window_opacity(1.0) - 0.75).abs() < f32::EPSILON);
+        assert!((next_window_opacity(0.75) - 0.5).abs() < f32::EPSILON);
+        assert!((next_window_opacity(0.5) - 0.25).abs() < f32::EPSILON);
+        assert!((next_window_opacity(0.25) - 1.0).abs() < f32::EPSILON);
+    }
+
+    #[test]
+    fn the_old_hud_strip_grows_and_a_chosen_height_does_not() {
+        let mut old_default = HashMap::new();
+        old_default.insert(WindowClass::Hud, WindowState::new(settled_anchor(), size(260.0, 110.0)));
+        WindowCache::grow_clipped_hud(&mut old_default);
+        assert!((old_default[&WindowClass::Hud].size.height - 280.0).abs() < 0.5);
+
+        let mut chosen = HashMap::new();
+        chosen.insert(WindowClass::Hud, WindowState::new(settled_anchor(), size(260.0, 160.0)));
+        WindowCache::grow_clipped_hud(&mut chosen);
+        assert!((chosen[&WindowClass::Hud].size.height - 160.0).abs() < 0.5);
+    }
+
+    #[test]
+    fn the_old_world_map_grows_and_a_chosen_size_does_not() {
+        let mut old_default = HashMap::new();
+        old_default.insert(WindowClass::Maps, WindowState::new(settled_anchor(), size(900.0, 650.0)));
+        WindowCache::grow_saved_world_map(&mut old_default);
+        assert!((old_default[&WindowClass::Maps].size.width - 1000.0).abs() < 0.5);
+        assert!((old_default[&WindowClass::Maps].size.height - 930.0).abs() < 0.5);
+
+        let mut chosen = HashMap::new();
+        chosen.insert(WindowClass::Maps, WindowState::new(settled_anchor(), size(800.0, 600.0)));
+        WindowCache::grow_saved_world_map(&mut chosen);
+        assert!((chosen[&WindowClass::Maps].size.width - 800.0).abs() < 0.5);
+        assert!((chosen[&WindowClass::Maps].size.height - 600.0).abs() < 0.5);
     }
 
     fn size(width: f32, height: f32) -> ScreenSize {

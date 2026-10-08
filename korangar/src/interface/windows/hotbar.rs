@@ -191,16 +191,24 @@ where
         layout_info: &'a Self::LayoutInfo,
         layout: &mut WindowLayout<'a, ClientState>,
     ) {
+        // The key name sits beside the button, not on top of the icon.
+        let full_area = layout_info.area;
+        let mut slot_area = full_area;
+        slot_area.left += 18.0;
+        slot_area.width = (slot_area.width - 18.0).max(8.0);
+        let mut key_area = full_area;
+        key_area.width = 18.0;
+
         let is_drop_target = matches!(layout.get_mouse_mode(), MouseMode::Custom {
             mode: MouseInputMode::MoveSkill { .. } | MouseInputMode::MoveItem { .. },
         });
         let is_hovered = match is_drop_target {
-            true => layout_info.area.check().any_mouse_mode().run(layout),
-            false => layout_info.area.check().run(layout),
+            true => slot_area.check().any_mouse_mode().run(layout),
+            false => slot_area.check().run(layout),
         };
 
         layout.add_rectangle(
-            layout_info.area,
+            slot_area,
             CornerDiameter::uniform(20.0),
             if is_hovered && !is_drop_target {
                 Color::rgb_u8(60, 60, 60)
@@ -228,15 +236,15 @@ where
                     false => Color::rgb_u8(160, 160, 160),
                 };
                 if let (Some(actions), Some(sprite)) = (&skill.actions, &skill.sprite) {
-                    layout.with_clip(layout_info.area, |layout| {
-                        layout.add_sprite(layout_info.area, actions, sprite, &skill.animation_state, 0, color, 1.0);
+                    layout.with_clip(slot_area, |layout| {
+                        layout.add_sprite(slot_area, actions, sprite, &skill.animation_state, 0, color, 1.0);
                     });
                 }
                 // Per-slot cooldown: dim the slot and show the time left.
                 let cooldown = state.get(&client_state().skill_cooldowns()).remaining_ms_ui(skill.skill_id);
                 if let Some(label) = cooldown.and_then(cooldown_label) {
                     layout.add_rectangle(
-                        layout_info.area,
+                        slot_area,
                         CornerDiameter::uniform(20.0),
                         Color::rgba_u8(0, 0, 0, 150),
                         Color::rgba_u8(0, 0, 0, 0),
@@ -246,7 +254,7 @@ where
                         *self.cooldown_text.get() = label;
                     }
                     layout.add_text(
-                        layout_info.area,
+                        slot_area,
                         unsafe { self.cooldown_text.as_ref_unchecked().as_str() },
                         FontSize(14.0),
                         Color::rgb_u8(255, 255, 255),
@@ -275,7 +283,7 @@ where
                 let inventory_path = client_state().inventory();
                 let item = state.get(&inventory_path).items().iter().find(|item| item.item_id == *item_id);
                 if let Some(texture) = item.and_then(|item| item.metadata.texture.clone()) {
-                    layout.add_texture(layout_info.area, texture, Color::WHITE, false);
+                    layout.add_texture(slot_area, texture, Color::WHITE, false);
                 }
                 if let Some(item) = item {
                     let amount = match &item.details {
@@ -286,7 +294,7 @@ where
                             *self.amount_text.get() = amount.to_string();
                         }
                         layout.add_text(
-                            layout_info.area,
+                            slot_area,
                             unsafe { self.amount_text.as_ref_unchecked().as_str() },
                             FontSize(12.0),
                             Color::rgb_u8(255, 200, 255),
@@ -320,13 +328,13 @@ where
         }
 
         layout.add_text(
-            layout_info.area,
+            key_area,
             slot_label(self.slot),
             FontSize(10.0),
-            Color::rgb_u8(200, 200, 200),
+            Color::rgb_u8(220, 220, 220),
             Color::rgb_u8(255, 160, 60),
-            HorizontalAlignment::Left { offset: 3.0, border: 2.0 },
-            VerticalAlignment::Top { offset: 2.0 },
+            HorizontalAlignment::Right { offset: 0.0, border: 1.0 },
+            VerticalAlignment::Center { offset: 0.0 },
             OverflowBehavior::Shrink,
         );
     }
@@ -363,7 +371,8 @@ where
             theme: InterfaceThemeType::InGame,
             elements: (
                 state_button! {
-                    text: "Lock skill bar",
+                    text: "Lock",
+                    tooltip: "When locked, slots cannot be dragged. Number keys still use them.",
                     state: client_state().game_settings().hotbar_locked(),
                     event: Toggle(client_state().game_settings().hotbar_locked()),
                 },

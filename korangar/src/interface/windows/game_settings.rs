@@ -359,6 +359,18 @@ where
                                             state: self.game_settings_path.show_quest_markers(),
                                             event: Toggle(self.game_settings_path.show_quest_markers()),
                                         },
+                        state_button! {
+                                            text: "Show NPC names",
+                                            tooltip: "Show each NPC's name over its head. Turn this off to see a name only while the cursor is on that NPC.",
+                                            state: self.game_settings_path.show_npc_names(),
+                                            event: Toggle(self.game_settings_path.show_npc_names()),
+                                        },
+                        state_button! {
+                                            text: "Show walk obstacles",
+                                            tooltip: "Draw a line where a walkable cell meets a blocked one, so walls and gaps are visible while you walk. This is the client's own walk mesh. A floor the server blocks and the client still calls walkable has no line.",
+                                            state: self.game_settings_path.show_walk_obstacles(),
+                                            event: Toggle(self.game_settings_path.show_walk_obstacles()),
+                                        },
                         button! { text: "Cycle route preference (fewest maps / cheapest / shortest walk / avoid locked)", tooltip: "Like a GPS route option. Shortest walk is an estimate: it measures straight lines inside each map and ignores walls. Avoid locked steps prefers routes without quest, item, or marriage gates.", event: InputEvent::CycleRoutePreference },
                         text! { text: "Minimap layers" },
                         state_button! {
@@ -481,6 +493,7 @@ where
                         button! { text: "Reset HUD layout", event: InputEvent::ResetHudLayout },
                         button! { text: "Cycle HUD snap grid (off / 8 / 16 / 32 px)", tooltip: "When enabled, dragged windows snap their positions to the selected screen-pixel grid.", event: InputEvent::CycleHudSnapGrid },
                         button! { text: "Combat HUD fade (20% / 35% / 50% / 75% / off)", tooltip: "Each click steps how see-through the hotbar, status bar, and monster target are outside combat, then turns fading off. They return for five seconds after you deal or take damage, and while the pointer is over them.", event: InputEvent::ToggleCombatHudFade },
+                        button! { text: "Window opacity (100% / 75% / 50% / 25%)", tooltip: "Each click makes every window more see-through, then returns to solid. Combat HUD fade still applies on top for the hotbar, status bar, and target frame.", event: InputEvent::CycleWindowOpacity },
                     ),
                 },
             ),

@@ -252,10 +252,151 @@ pub fn bring_skill_to_level(
     available_skill_points.saturating_sub(total_points_required)
 }
 
+/// Novice Basic Skill. Once the character leaves the novice job, a full reset
+/// keeps this skill and does not return its points. `@refundskill` does the
+/// same.
+pub const NOVICE_BASIC_SKILL_ID: SkillId = SkillId(1);
+
+/// Job ids whose server map identity is still Novice: Novice, High Novice,
+/// Baby.
+const NOVICE_JOB_IDS: [u16; 3] = [0, 4001, 4023];
+
+/// What the skill-tree minus does with one point.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum SkillPointRefund {
+    /// Drop one locally queued point. The server has not been asked yet.
+    UndoPending,
+    /// Ask the server to return one spent point.
+    AskServer,
+}
+
+/// Decide the skill-tree minus. Quest and soul-link skills are not spent
+/// points. A queued point is undone before a spent point is refunded, so Apply
+/// cannot put the point back. Basic Skill is only refundable on a novice job;
+/// the server refuses everyone else.
+pub fn skill_point_refund(
+    acquisition: SkillAcquisition,
+    skill_id: SkillId,
+    learned_level: u16,
+    pending_points: u16,
+    job_id: Option<JobId>,
+) -> Option<SkillPointRefund> {
+    if acquisition != SkillAcquisition::Job {
+        return None;
+    }
+    if pending_points > 0 {
+        return Some(SkillPointRefund::UndoPending);
+    }
+    if learned_level == 0 {
+        return None;
+    }
+    if skill_id == NOVICE_BASIC_SKILL_ID && !job_id.is_some_and(|job| NOVICE_JOB_IDS.contains(&job.0)) {
+        return None;
+    }
+    Some(SkillPointRefund::AskServer)
+}
+
+/// Forget a cast level that is no longer strictly below the learned rank.
+/// The map only stores a level when the player chose to cast below the rank
+/// they have. A refund replaces the skill list and can leave a higher choice.
+pub fn clamp_chosen_cast_levels(chosen: &mut HashMap<SkillId, SkillLevel>, learned: &[(SkillId, SkillLevel)]) {
+    chosen.retain(|skill_id, level| {
+        learned
+            .iter()
+            .any(|(id, learned_level)| *id == *skill_id && level.0 > 0 && level.0 < learned_level.0)
+    });
+}
+
 /// One entry in the Auto Spell chooser: the skill to answer with, and a name
 /// to show for it.
 #[derive(Clone, Debug, RustState, StateElement)]
 pub struct AutoSpellChoice {
     pub skill_id: SkillId,
     pub name: String,
+}
+
+#[cfg(test)]
+mod skill_point_refund_tests {
+    use ragnarok_packets::{JobId, SkillId, SkillLevel};
+
+    use super::{SkillAcquisition, SkillPointRefund, clamp_chosen_cast_levels, skill_point_refund};
+
+    fn refund(acquisition: SkillAcquisition, skill_id: u16, learned: u16, pending: u16, job: Option<u16>) -> Option<SkillPointRefund> {
+        skill_point_refund(acquisition, SkillId(skill_id), learned, pending, job.map(JobId))
+    }
+
+    #[test]
+    fn spent_job_skill_asks_the_server() {
+        assert_eq!(
+            refund(SkillAcquisition::Job, 5, 3, 0, Some(1)),
+            Some(SkillPointRefund::AskServer)
+        );
+    }
+
+    #[test]
+    fn queued_point_is_undone_before_a_spent_point() {
+        assert_eq!(
+            refund(SkillAcquisition::Job, 5, 3, 1, Some(1)),
+            Some(SkillPointRefund::UndoPending)
+        );
+        assert_eq!(
+            refund(SkillAcquisition::Job, 5, 0, 2, Some(1)),
+            Some(SkillPointRefund::UndoPending)
+        );
+    }
+
+    #[test]
+    fn quest_and_soul_link_skills_have_no_minus() {
+        assert_eq!(refund(SkillAcquisition::Quest, 142, 1, 0, Some(0)), None);
+        assert_eq!(refund(SkillAcquisition::SoulLink, 261, 1, 0, Some(1)), None);
+        assert_eq!(refund(SkillAcquisition::Quest, 142, 1, 1, Some(0)), None);
+    }
+
+    #[test]
+    fn unlearned_job_skill_has_no_minus() {
+        assert_eq!(refund(SkillAcquisition::Job, 5, 0, 0, Some(1)), None);
+    }
+
+    #[test]
+    fn basic_skill_refunds_only_for_a_novice() {
+        assert_eq!(
+            refund(SkillAcquisition::Job, 1, 9, 0, Some(0)),
+            Some(SkillPointRefund::AskServer)
+        );
+        assert_eq!(
+            refund(SkillAcquisition::Job, 1, 9, 0, Some(4001)),
+            Some(SkillPointRefund::AskServer)
+        );
+        assert_eq!(
+            refund(SkillAcquisition::Job, 1, 9, 0, Some(4023)),
+            Some(SkillPointRefund::AskServer)
+        );
+        assert_eq!(refund(SkillAcquisition::Job, 1, 9, 0, Some(1)), None);
+        assert_eq!(refund(SkillAcquisition::Job, 1, 9, 0, Some(23)), None);
+        assert_eq!(refund(SkillAcquisition::Job, 1, 9, 0, None), None);
+        assert_eq!(
+            refund(SkillAcquisition::Job, 1, 9, 1, Some(1)),
+            Some(SkillPointRefund::UndoPending)
+        );
+    }
+
+    #[test]
+    fn chosen_cast_level_drops_when_the_learned_rank_no_longer_contains_it() {
+        let mut chosen = hashbrown::HashMap::new();
+        chosen.insert(SkillId(5), SkillLevel(3));
+        chosen.insert(SkillId(7), SkillLevel(5));
+        chosen.insert(SkillId(8), SkillLevel(1));
+        chosen.insert(SkillId(9), SkillLevel(0));
+
+        clamp_chosen_cast_levels(&mut chosen, &[
+            (SkillId(5), SkillLevel(5)),
+            (SkillId(7), SkillLevel(4)),
+            (SkillId(9), SkillLevel(3)),
+        ]);
+
+        assert_eq!(chosen.get(&SkillId(5)).copied(), Some(SkillLevel(3)));
+        assert!(!chosen.contains_key(&SkillId(7)));
+        assert!(!chosen.contains_key(&SkillId(8)));
+        assert!(!chosen.contains_key(&SkillId(9)));
+    }
 }

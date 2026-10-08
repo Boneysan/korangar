@@ -358,6 +358,24 @@ fn client_tick_reached(now: u32, deadline: u32) -> bool {
     now.wrapping_sub(deadline) < (1 << 31)
 }
 
+/// Map name as the client compares it: no `.gat`, no surrounding space.
+pub(crate) fn reported_party_map(map_name: &str) -> &str {
+    let name = map_name.trim();
+    name.strip_suffix(".gat").or_else(|| name.strip_suffix(".GAT")).unwrap_or(name)
+}
+
+fn same_party_map(left: &str, right: &str) -> bool {
+    let left = reported_party_map(left);
+    let right = reported_party_map(right);
+    !left.is_empty() && left.eq_ignore_ascii_case(right)
+}
+
+/// Hercules removes a party minimap dot by sending 0x0107 with x and y set to
+/// -1. On the wire those are `u16::MAX`, which is not a real map cell.
+fn party_position_removed(position: TilePosition) -> bool {
+    position.x == u16::MAX || position.y == u16::MAX
+}
+
 #[derive(Clone, Debug, RustState, StateElement)]
 pub struct PartyMemberState {
     account_id: AccountId,
@@ -404,6 +422,11 @@ impl PartyMemberState {
 
     pub fn map_name(&self) -> &str {
         &self.map_name
+    }
+
+    /// Map name without a `.gat` suffix, for comparisons with the minimap.
+    pub fn reported_map(&self) -> &str {
+        reported_party_map(&self.map_name)
     }
 
     pub fn position(&self) -> Option<TilePosition> {
@@ -1119,12 +1142,27 @@ impl PartyState {
     }
 
     pub fn set_roster(&mut self, party_name: String, members: Vec<PartyMember>, class_name: impl Fn(JobId) -> String) {
+        // `ZC_GROUP_LIST` carries no tile and no HP. Hercules sends it on every
+        // map change, and it only resends 0x0107 when a member *moves*. Replacing
+        // the row outright left a standing member with no cell until their next
+        // step, so the minimap dot vanished.
+        let previous = std::mem::take(&mut self.members);
         self.party_name = party_name;
         self.members = members
             .into_iter()
             .map(|member| {
                 let class = class_name(member.job_id);
                 let mut member = PartyMemberState::from_roster_member(member);
+                if let Some(old) = previous.iter().find(|old| old.account_id == member.account_id) {
+                    if member.online && same_party_map(&old.map_name, &member.map_name) {
+                        member.position = old.position;
+                    }
+                    member.health_points = old.health_points;
+                    member.maximum_health_points = old.maximum_health_points;
+                    member.spell_points = old.spell_points;
+                    member.maximum_spell_points = old.maximum_spell_points;
+                    member.is_dead = old.is_dead;
+                }
                 member.class_name = class;
                 member
             })
@@ -1153,7 +1191,7 @@ impl PartyState {
 
     pub fn update_position(&mut self, account_id: AccountId, position: TilePosition) {
         if let Some(member) = self.members.iter_mut().find(|member| member.account_id == account_id) {
-            member.position = Some(position);
+            member.position = if party_position_removed(position) { None } else { Some(position) };
             self.rebuild_display_text();
         }
     }
@@ -1591,6 +1629,49 @@ mod tests {
         let member = &state.members()[0];
         assert_eq!(member.health(), Some((90, 200)));
         assert_eq!(member.spell(), Some((30, 60)));
+    }
+
+    /// A roster refresh must not drop a cell the roster packet does not carry.
+    /// Hercules resends the roster on every map change and only resends 0x0107
+    /// when that member takes another step.
+    #[test]
+    fn roster_refresh_keeps_a_same_map_cell_and_a_leave_clears_it() {
+        let mut state = PartyState::default();
+        let on_prontera = |offline: u8| PartyMember {
+            account_id: AccountId(1),
+            character_id: CharacterId(1),
+            player_name: "Bob".to_owned(),
+            map_name: "prontera.gat".to_owned(),
+            offline,
+            leader: 0,
+            job_id: JobId(1),
+            base_level: 50,
+        };
+        state.set_roster("P".to_owned(), vec![on_prontera(0)], |_| "Priest".to_owned());
+        state.update_position(AccountId(1), TilePosition::new(10, 20));
+        state.update_health(AccountId(1), 100, 200, Some((30, 60)));
+
+        state.set_roster("P".to_owned(), vec![on_prontera(0)], |_| "Priest".to_owned());
+        let member = &state.members()[0];
+        assert_eq!(member.position(), Some(TilePosition::new(10, 20)));
+        assert_eq!(member.reported_map(), "prontera");
+        assert_eq!(member.health(), Some((100, 200)));
+        assert_eq!(member.spell(), Some((30, 60)));
+
+        let mut moved = on_prontera(0);
+        moved.map_name = "izlude.gat".to_owned();
+        state.set_roster("P".to_owned(), vec![moved], |_| "Priest".to_owned());
+        assert_eq!(state.members()[0].position(), None);
+        assert_eq!(state.members()[0].health(), Some((100, 200)));
+
+        state.update_position(AccountId(1), TilePosition::new(4, 5));
+        state.update_position(AccountId(1), TilePosition::new(u16::MAX, u16::MAX));
+        assert_eq!(state.members()[0].position(), None);
+
+        state.update_position(AccountId(1), TilePosition::new(4, 5));
+        state.set_roster("P".to_owned(), vec![on_prontera(1)], |_| "Priest".to_owned());
+        assert!(!state.members()[0].online());
+        assert_eq!(state.members()[0].position(), None);
     }
 
     /// GDD 10.14: "show 'other map' or tile distance from `party_state`".

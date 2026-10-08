@@ -18,6 +18,11 @@ impl AccessoryName {
     pub fn as_str(&self) -> &str {
         &self.0
     }
+
+    #[cfg(test)]
+    pub(crate) fn from_sprite_name(name: &str) -> Self {
+        Self(name.to_owned())
+    }
 }
 
 /// Female headgear sprites are a separate table where they differ; the male

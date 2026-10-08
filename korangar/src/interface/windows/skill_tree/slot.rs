@@ -16,9 +16,9 @@ use crate::input::{InputEvent, MouseInputMode};
 use crate::interface::resource::SkillSource;
 use crate::loaders::OverflowBehavior;
 use crate::renderer::LayoutExt;
-use crate::state::skills::{LearnableSkill, LearnedSkill, SkillAcquisition};
+use crate::state::skills::{LearnableSkill, LearnedSkill, SkillAcquisition, SkillPointRefund, skill_point_refund};
 use crate::state::theme::{InterfaceThemePathExt, SkillTreeThemePathExt};
-use crate::state::{ClientState, ClientStatePathExt, client_state, client_theme};
+use crate::state::{ClientState, ClientStatePathExt, client_state, client_theme, this_entity};
 use crate::world::skill_tooltip_text;
 
 struct LevelDisplay {
@@ -142,6 +142,60 @@ where
     }
 }
 
+struct RefundSkillPointClickHandler<A, B, C> {
+    learnable_skill_path: A,
+    learned_skill_path: B,
+    window_state_path: C,
+}
+
+impl<A, B, C> RefundSkillPointClickHandler<A, B, C> {
+    fn new(learnable_skill_path: A, learned_skill_path: B, window_state_path: C) -> Self {
+        Self {
+            learnable_skill_path,
+            learned_skill_path,
+            window_state_path,
+        }
+    }
+}
+
+impl<A, B, C> ClickHandler<ClientState> for RefundSkillPointClickHandler<A, B, C>
+where
+    A: Path<ClientState, LearnableSkill, false>,
+    B: Path<ClientState, LearnedSkill, false>,
+    C: Path<ClientState, SkillTreeWindowState>,
+{
+    fn handle_click(&self, state: &State<ClientState>, queue: &mut EventQueue<ClientState>) {
+        let Some(learnable_skill) = state.try_get(&self.learnable_skill_path) else {
+            return;
+        };
+        let skill_id = learnable_skill.skill_id;
+        let acquisition = learnable_skill.acquisition;
+        let pending_path = self.window_state_path.pending_skill_points();
+        let pending_points = state.get(&pending_path).iter().filter(|id| **id == skill_id).count() as u16;
+        let learned_level = state
+            .try_get(&self.learned_skill_path)
+            .map(|skill| skill.skill_level.0)
+            .unwrap_or(0);
+        let job_id = state.try_follow(this_entity()).map(|entity| entity.get_job_id());
+
+        match skill_point_refund(acquisition, skill_id, learned_level, pending_points, job_id) {
+            Some(SkillPointRefund::UndoPending) => {
+                state.update_value_with(pending_path, move |pending| {
+                    if let Some(index) = pending.iter().rposition(|id| *id == skill_id) {
+                        pending.remove(index);
+                    }
+                });
+            }
+            Some(SkillPointRefund::AskServer) => {
+                queue.queue(InputEvent::SendMessage {
+                    text: format!("@refundskill {}", skill_id.0),
+                });
+            }
+            None => {}
+        }
+    }
+}
+
 struct ChooseLowerClickHandler<A, B> {
     learned_skill_path: A,
     window_state_path: B,
@@ -228,6 +282,7 @@ pub struct SkillSlot<A, B, C, D> {
     available_skill_points_path: D,
     click_handler: SkillSlotClickHandler<A, B, C>,
     assign_to_hotbar_handler: AssignToHotbarClickHandler<A, B, C>,
+    refund_handler: RefundSkillPointClickHandler<A, B, C>,
     choose_lower_handler: ChooseLowerClickHandler<B, C>,
     choose_higher_handler: ChooseHigherClickHandler<B, C>,
     level_display: LevelDisplay,
@@ -261,6 +316,7 @@ where
                 learned_skill_path,
                 window_state_path,
             },
+            refund_handler: RefundSkillPointClickHandler::new(learnable_skill_path, learned_skill_path, window_state_path),
             choose_lower_handler: ChooseLowerClickHandler::new(learned_skill_path, window_state_path),
             choose_higher_handler: ChooseHigherClickHandler::new(learned_skill_path, window_state_path),
             level_display: LevelDisplay::default(),
@@ -511,6 +567,55 @@ where
                 layout.with_clip(sprite_area, |layout| {
                     layout.add_sprite(sprite_area, actions, sprite, &skill.animation_state, 0, color, 1.3);
                 });
+            }
+
+            let learned_level = learned_skill.map(|skill| skill.skill_level.0).unwrap_or(0);
+            let job_id = state.try_follow(this_entity()).map(|entity| entity.get_job_id());
+            let refund = skill_point_refund(skill.acquisition, skill.skill_id, learned_level, pending_skill_points, job_id);
+            if let Some(refund) = refund {
+                let refund_area = layout_info.area.interior(
+                    RANK_UP_SIZE,
+                    RANK_UP_SIZE,
+                    HorizontalAlignment::Left { offset: 4.0, border: 0.0 },
+                    VerticalAlignment::Center { offset: 0.0 },
+                );
+                let is_refund_hovered = refund_area.check().run(layout);
+                let refund_color = match is_refund_hovered {
+                    true => *state.get(&client_theme().skill_tree().pending_points_color()),
+                    false => *state.get(&client_theme().skill_tree().points_color()),
+                };
+
+                layout.add_rectangle(
+                    refund_area,
+                    *state.get(&client_theme().skill_tree().slot_corner_diameter()),
+                    *state.get(&client_theme().skill_tree().slot_background_color()),
+                    refund_color,
+                    *state.get(&client_theme().skill_tree().slot_outline()),
+                );
+                layout.add_text(
+                    refund_area,
+                    "-",
+                    *state.get(&client_theme().skill_tree().points_font_size()),
+                    refund_color,
+                    *state.get(&client_theme().skill_tree().highlight_color()),
+                    HorizontalAlignment::Center { offset: 0.0, border: 0.0 },
+                    VerticalAlignment::Center { offset: 0.0 },
+                    OverflowBehavior::Shrink,
+                );
+
+                if is_refund_hovered {
+                    layout.register_click_handler(MouseButton::Left, &self.refund_handler);
+                    match refund {
+                        SkillPointRefund::UndoPending => {
+                            struct UndoQueuedPointTooltip;
+                            layout.add_tooltip("Remove a queued point", UndoQueuedPointTooltip.tooltip_id());
+                        }
+                        SkillPointRefund::AskServer => {
+                            struct RefundSpentPointTooltip;
+                            layout.add_tooltip("Refund one skill point", RefundSpentPointTooltip.tooltip_id());
+                        }
+                    }
+                }
             }
 
             if can_rank_up {

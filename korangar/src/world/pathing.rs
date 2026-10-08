@@ -10,6 +10,12 @@ const MOVE_DIAGONAL_COST: usize = 14;
 const MOVE_ORTHOGONAL_COST: usize = 10;
 /// The maximum size a walkable path can have.
 pub const MAX_WALK_PATH_SIZE: usize = 32;
+/// Hercules `max_walk_path` in `conf/map/battle/client.conf`. A click whose
+/// path is longer than this is dropped by `unit_walk_toxy`.
+pub const SERVER_MAX_WALK_PATH: usize = 17;
+/// With `OFFICIAL_WALKPATH` (`src/config/core.h`), a click whose straight shot
+/// is blocked is dropped above `(max_walk_path / 17) * 14`.
+pub const SERVER_OBSTRUCTED_WALK_PATH: usize = 14;
 
 /// Essential trait that is needed to be implements for pathfinding.
 pub trait Traversable {
@@ -272,6 +278,135 @@ impl PathFinder {
     }
 }
 
+/// Cell a click or a held mouse button may name.
+///
+/// The cursor cell is what the player asked for. Hercules drops the packet
+/// when the walked path is longer than [`SERVER_MAX_WALK_PATH`], and when the
+/// straight shot is blocked it drops anything longer than
+/// [`SERVER_OBSTRUCTED_WALK_PATH`] (`unit.c`, `OFFICIAL_WALKPATH`). Sending
+/// the cursor anyway means a long click never starts. This returns the
+/// furthest cell on the walkable route that the server still accepts, so a
+/// held button can continue on the next send.
+///
+/// `None` means there is no step to take: the click is the cell underfoot, or
+/// the first step is a wall.
+pub fn click_walk_destination(
+    finder: &mut PathFinder,
+    map: &impl Traversable,
+    start: TilePosition,
+    clicked: TilePosition,
+) -> Option<TilePosition> {
+    if start == clicked {
+        return None;
+    }
+
+    let route = match finder.find_navigation_path(map, start, clicked) {
+        Some(path) => path.to_vec(),
+        None => straight_walk_prefix(map, start, clicked, SERVER_MAX_WALK_PATH),
+    };
+    furthest_accepted_step(&route, map)
+}
+
+/// Furthest cell of `path` (index 0 is the start) that `unit_walk_toxy` will
+/// walk. The cap depends on the straight shot to that cell, matching
+/// `path_search_long`: a clear shot may be 17 steps, a blocked shot 14.
+fn furthest_accepted_step(path: &[TilePosition], map: &impl Traversable) -> Option<TilePosition> {
+    if path.len() < 2 {
+        return None;
+    }
+
+    let start = path[0];
+    let max_step = (path.len() - 1).min(SERVER_MAX_WALK_PATH);
+    let mut best = None;
+    for step in 1..=max_step {
+        let cell = path[step];
+        let clear = shot_is_clear(
+            |x, y| tile_is_walkable(map, x, y),
+            start.x as i32,
+            start.y as i32,
+            cell.x as i32,
+            cell.y as i32,
+        );
+        let limit = if clear { SERVER_MAX_WALK_PATH } else { SERVER_OBSTRUCTED_WALK_PATH };
+        if step <= limit {
+            best = Some(cell);
+        }
+    }
+    best
+}
+
+/// Hercules `path_search_long` (`path.c`). The start cell is not tested.
+fn shot_is_clear(walkable: impl Fn(i32, i32) -> bool, mut x0: i32, mut y0: i32, mut x1: i32, mut y1: i32) -> bool {
+    let mut dx = x1 - x0;
+    if dx < 0 {
+        std::mem::swap(&mut x0, &mut x1);
+        std::mem::swap(&mut y0, &mut y1);
+        dx = -dx;
+    }
+    let dy = y1 - y0;
+    let weight = if dx > dy.abs() { dx } else { dy.abs() };
+    if weight == 0 {
+        return true;
+    }
+
+    let mut wx = 0;
+    let mut wy = 0;
+    while x0 != x1 || y0 != y1 {
+        wx += dx;
+        wy += dy;
+        if wx >= weight {
+            wx -= weight;
+            x0 += 1;
+        }
+        if wy >= weight {
+            wy -= weight;
+            y0 += 1;
+        } else if wy < 0 {
+            wy += weight;
+            y0 -= 1;
+        }
+        if !walkable(x0, y0) {
+            return false;
+        }
+    }
+    true
+}
+
+fn tile_is_walkable(map: &impl Traversable, x: i32, y: i32) -> bool {
+    let (Ok(x), Ok(y)) = (u16::try_from(x), u16::try_from(y)) else {
+        return false;
+    };
+    map.is_walkable(TilePosition { x, y })
+}
+
+/// Walkable steps toward `clicked` when no full route exists, diagonal first.
+/// Includes `start`. Stops at a wall or after `max_steps`.
+fn straight_walk_prefix(map: &impl Traversable, start: TilePosition, clicked: TilePosition, max_steps: usize) -> Vec<TilePosition> {
+    let mut path = vec![start];
+    let mut here = start;
+    for _ in 0..max_steps {
+        let dx = (clicked.x as i32 - here.x as i32).signum();
+        let dy = (clicked.y as i32 - here.y as i32).signum();
+        if dx == 0 && dy == 0 {
+            break;
+        }
+        let next_x = here.x as i32 + dx;
+        let next_y = here.y as i32 + dy;
+        let (Ok(x), Ok(y)) = (u16::try_from(next_x), u16::try_from(next_y)) else {
+            break;
+        };
+        let next = TilePosition { x, y };
+        let corner_open =
+            dx == 0 || dy == 0 || (map.is_walkable(TilePosition { x, y: here.y }) && map.is_walkable(TilePosition { x: here.x, y }));
+        if !corner_open || !map.is_walkable(next) {
+            break;
+        }
+        path.push(next);
+        here = next;
+    }
+    path
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -425,6 +560,93 @@ mod tests {
             assert_eq!(step.x as usize, index);
             assert_eq!(step.y as usize, index);
         }
+    }
+
+    #[test]
+    fn a_long_open_click_stops_at_seventeen_steps() {
+        let map = TestMap::new(40, 5);
+        let mut finder = PathFinder::default();
+        let start = TilePosition { x: 0, y: 0 };
+        let clicked = TilePosition { x: 30, y: 0 };
+
+        let destination = click_walk_destination(&mut finder, &map, start, clicked).unwrap();
+
+        assert_eq!(destination, TilePosition { x: 17, y: 0 });
+    }
+
+    #[test]
+    fn a_short_click_and_a_short_detour_name_the_clicked_cell() {
+        let map = TestMap::new(10, 10);
+        let mut finder = PathFinder::default();
+        let start = TilePosition { x: 0, y: 0 };
+        let clicked = TilePosition { x: 5, y: 0 };
+        assert_eq!(click_walk_destination(&mut finder, &map, start, clicked), Some(clicked));
+
+        // Same shape as `test_path_with_obstacle`: four steps around a wall.
+        // The server still accepts that, so the click is not shortened.
+        let mut blocked = TestMap::new(5, 5);
+        blocked.set_unwalkable(&[TilePosition { x: 1, y: 1 }, TilePosition { x: 1, y: 2 }, TilePosition {
+            x: 1,
+            y: 3,
+        }]);
+        let goal = TilePosition { x: 2, y: 2 };
+        assert_eq!(click_walk_destination(&mut finder, &blocked, start, goal), Some(goal));
+    }
+
+    #[test]
+    fn a_click_on_the_cell_underfoot_or_into_a_solid_wall_sends_nothing() {
+        let map = TestMap::new(5, 5);
+        let mut finder = PathFinder::default();
+        let start = TilePosition { x: 0, y: 2 };
+        assert!(click_walk_destination(&mut finder, &map, start, start).is_none());
+
+        let mut wall = TestMap::new(5, 5);
+        for y in 0..5 {
+            wall.set_unwalkable(&[TilePosition { x: 1, y }]);
+        }
+        assert!(click_walk_destination(&mut finder, &wall, start, TilePosition { x: 3, y: 2 }).is_none());
+    }
+
+    #[test]
+    fn a_click_past_a_wall_walks_up_to_the_wall() {
+        let mut map = TestMap::new(12, 3);
+        for y in 0..3 {
+            map.set_unwalkable(&[TilePosition { x: 4, y }]);
+        }
+        let mut finder = PathFinder::default();
+
+        let destination = click_walk_destination(&mut finder, &map, TilePosition { x: 0, y: 0 }, TilePosition { x: 8, y: 0 }).unwrap();
+
+        assert_eq!(destination, TilePosition { x: 3, y: 0 });
+    }
+
+    #[test]
+    fn a_route_around_a_wall_does_not_ask_for_a_hidden_step_past_fourteen() {
+        // One corridor: ten east, two north, then west back to the goal.
+        // Steps 12 through 14 sit past the corner (the straight shot is
+        // blocked) and are still legal. Step 15 is not.
+        let mut map = TestMap::new(12, 4);
+        for x in 0..12 {
+            for y in 0..4 {
+                map.set_unwalkable(&[TilePosition { x, y }]);
+            }
+        }
+        for x in 0..=10 {
+            map.not_walkable.remove(&TilePosition { x, y: 0 });
+            map.not_walkable.remove(&TilePosition { x, y: 2 });
+        }
+        map.not_walkable.remove(&TilePosition { x: 10, y: 1 });
+
+        let mut finder = PathFinder::default();
+        let start = TilePosition { x: 0, y: 0 };
+        let clicked = TilePosition { x: 0, y: 2 };
+        let destination = click_walk_destination(&mut finder, &map, start, clicked).unwrap();
+
+        assert_eq!(destination, TilePosition { x: 8, y: 2 });
+        let path = finder.find_navigation_path(&map, start, clicked).unwrap();
+        let step = path.iter().position(|cell| *cell == destination).unwrap();
+        assert_eq!(step, SERVER_OBSTRUCTED_WALK_PATH);
+        assert_ne!(destination, clicked);
     }
 
     #[test]

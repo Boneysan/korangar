@@ -53,6 +53,34 @@ struct LoaderArchive {
     is_game_archive: bool,
 }
 
+/// Reports a fixed set of paths as present. Part-file tests use it so a hat
+/// can resolve without opening a GRF.
+#[cfg(test)]
+struct ListedArchive {
+    paths: std::collections::HashSet<String>,
+}
+
+#[cfg(test)]
+impl Archive for ListedArchive {
+    fn from_path(_path: &Path) -> Self {
+        Self {
+            paths: std::collections::HashSet::new(),
+        }
+    }
+
+    fn file_exists(&self, asset_path: &str) -> bool {
+        self.paths.contains(asset_path)
+    }
+
+    fn get_file_by_path(&self, asset_path: &str) -> Option<Vec<u8>> {
+        self.file_exists(asset_path).then(Vec::new)
+    }
+
+    fn get_files_with_extension(&self, _files: &mut Vec<String>, _extensions: &[&str]) {}
+
+    fn hash(&self, _hasher: &mut blake3::Hasher) {}
+}
+
 /// Type implementing the game file loader.
 ///
 /// Currently, there are two types implementing
@@ -84,6 +112,21 @@ impl GameFileLoader {
             .unwrap()
             .iter()
             .any(|archive| archive.archive.file_exists(path))
+    }
+
+    /// A loader whose `file_exists` is true exactly for these paths.
+    ///
+    /// Paths are stored lowercased, matching `sprite_part_exists`.
+    #[cfg(test)]
+    pub fn with_existing_files_for_test(paths: &[&str]) -> Self {
+        let loader = Self::default();
+        loader.add_archive(
+            Box::new(ListedArchive {
+                paths: paths.iter().map(|path| path.to_lowercase()).collect(),
+            }),
+            false,
+        );
+        loader
     }
 
     fn add_archive(&self, archive: Box<dyn Archive>, is_game_archive: bool) {

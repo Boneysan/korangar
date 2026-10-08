@@ -43,6 +43,18 @@ impl Hotbar {
         self.slots.iter().position(Option::is_none).map(|index| HotbarSlot(index as u16))
     }
 
+    /// Where a right-click "add" lands. A slot that already holds this skill
+    /// or item is replaced, so a second add updates that slot instead of
+    /// filling another one. Otherwise the first empty slot. `None` when the
+    /// bar is full and this thing is not already on it; a drag onto a slot
+    /// still replaces that slot directly.
+    pub fn slot_to_assign(&self, is_same: impl Fn(&HotbarBinding) -> bool) -> Option<HotbarSlot> {
+        if let Some(index) = self.slots.iter().position(|slot| slot.as_ref().is_some_and(&is_same)) {
+            return Some(HotbarSlot(index as u16));
+        }
+        self.first_empty_slot()
+    }
+
     pub fn get_slot(&self, slot: HotbarSlot) -> &Option<HotbarBinding> {
         self.slots.get(slot.0 as usize).unwrap_or(&None)
     }
@@ -147,5 +159,42 @@ mod tests {
     fn four_rows_fit_the_server_table() {
         assert_eq!(HOTBAR_SLOTS, 36);
         assert!(HOTBAR_SLOTS < 38);
+    }
+
+    fn holds_item(item_id: u32) -> impl Fn(&HotbarBinding) -> bool {
+        move |binding| matches!(binding, HotbarBinding::Item { item_id: bound } if bound.0 == item_id)
+    }
+
+    #[test]
+    fn right_click_assign_replaces_the_slot_that_already_has_the_item() {
+        let mut hotbar = Hotbar::default();
+        hotbar.set_slot(HotbarSlot(0), HotbarBinding::Item { item_id: ItemId(504) });
+        hotbar.set_slot(HotbarSlot(2), HotbarBinding::Item { item_id: ItemId(501) });
+
+        assert_eq!(hotbar.slot_to_assign(holds_item(501)), Some(HotbarSlot(2)));
+        assert_eq!(hotbar.slot_to_assign(holds_item(502)), Some(HotbarSlot(1)));
+    }
+
+    #[test]
+    fn right_click_assign_refuses_a_full_bar_that_does_not_already_hold_the_item() {
+        let mut hotbar = Hotbar::default();
+        for index in 0..HOTBAR_SLOTS {
+            hotbar.set_slot(HotbarSlot(index as u16), HotbarBinding::Item { item_id: ItemId(501) });
+        }
+
+        assert_eq!(hotbar.slot_to_assign(holds_item(501)), Some(HotbarSlot(0)));
+        assert_eq!(hotbar.slot_to_assign(holds_item(502)), None);
+    }
+
+    #[test]
+    fn putting_an_item_in_a_filled_slot_replaces_that_slot() {
+        let mut hotbar = Hotbar::default();
+        hotbar.set_slot(HotbarSlot(4), HotbarBinding::Item { item_id: ItemId(501) });
+        hotbar.set_slot(HotbarSlot(4), HotbarBinding::Item { item_id: ItemId(502) });
+
+        match hotbar.get_slot(HotbarSlot(4)) {
+            Some(HotbarBinding::Item { item_id }) => assert_eq!(item_id.0, 502),
+            other => panic!("slot 4 should hold the dropped item, got {other:?}"),
+        }
     }
 }

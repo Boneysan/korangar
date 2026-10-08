@@ -1,5 +1,5 @@
 use ragnarok_packets::{
-    EquipPosition, EquippableItemFlags, InventoryIndex, ItemId, ItemOptions, Price, RegularItemFlags, SellItemInformation,
+    EntityId, EquipPosition, EquippableItemFlags, InventoryIndex, ItemId, ItemOptions, Price, RegularItemFlags, SellItemInformation,
 };
 
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -148,6 +148,42 @@ pub fn sell_entries<Meta: Clone>(
         .collect()
 }
 
+/// Apply `ZC_USE_ITEM_ACK` (0x01C8) to one inventory.
+///
+/// Hercules reports the stack still in the slot (`amount - 1` for an immediate
+/// consume, the unchanged count when the item is kept) and deletes it with no
+/// separate delete packet. A success is broadcast to the whole area, so an
+/// `entity_id` other than `local_entity_id` is ignored. A failed use is
+/// ignored. Zero removes the slot. A negative count is ignored.
+pub fn apply_use_item_ack<Meta>(
+    inventory: &mut Vec<InventoryItem<Meta>>,
+    local_entity_id: EntityId,
+    entity_id: EntityId,
+    index: InventoryIndex,
+    amount: i16,
+    success: bool,
+) {
+    if !success || entity_id != local_entity_id {
+        return;
+    }
+    let Ok(amount) = u16::try_from(amount) else {
+        return;
+    };
+
+    let Some(position) = inventory.iter().position(|item| item.index == index) else {
+        return;
+    };
+    if amount == 0 {
+        inventory.remove(position);
+        return;
+    }
+    match &mut inventory[position].details {
+        InventoryItemDetails::Regular { amount: slot_amount, .. } | InventoryItemDetails::Equippable { amount: slot_amount, .. } => {
+            *slot_amount = amount;
+        }
+    }
+}
+
 #[cfg(test)]
 mod sell_entry_tests {
     use super::*;
@@ -194,5 +230,67 @@ mod sell_entry_tests {
         assert_eq!(entries.len(), 1);
         assert_eq!(entries[0].inventory_index, InventoryIndex(3));
         assert_eq!(entries[0].metadata.1, 7);
+    }
+}
+
+#[cfg(test)]
+mod use_item_ack_tests {
+    use super::*;
+
+    fn potion(amount: u16) -> InventoryItem<NoMetadata> {
+        InventoryItem {
+            metadata: NoMetadata,
+            index: InventoryIndex(3),
+            item_id: ItemId(569),
+            item_type: 0,
+            slot: [0; 4],
+            hire_expiration_date: 0,
+            details: InventoryItemDetails::Regular {
+                amount,
+                equipped_position: EquipPosition::empty(),
+                flags: RegularItemFlags::empty(),
+            },
+        }
+    }
+
+    fn apply(inventory: &mut Vec<InventoryItem<NoMetadata>>, entity_id: EntityId, amount: i16, success: bool) {
+        apply_use_item_ack(inventory, EntityId(1), entity_id, InventoryIndex(3), amount, success);
+    }
+
+    #[test]
+    fn a_successful_ack_sets_the_remaining_stack() {
+        let mut inventory = vec![potion(5)];
+        apply(&mut inventory, EntityId(1), 2, true);
+        assert_eq!(inventory.len(), 1);
+        assert_eq!(inventory[0].amount(), 2);
+    }
+
+    #[test]
+    fn another_players_ack_leaves_the_stack_alone() {
+        let mut inventory = vec![potion(5)];
+        apply(&mut inventory, EntityId(99), 0, true);
+        assert_eq!(inventory.len(), 1);
+        assert_eq!(inventory[0].amount(), 5);
+    }
+
+    #[test]
+    fn a_failed_use_leaves_the_stack_alone() {
+        let mut inventory = vec![potion(5)];
+        apply(&mut inventory, EntityId(1), 0, false);
+        assert_eq!(inventory[0].amount(), 5);
+    }
+
+    #[test]
+    fn a_remaining_count_of_zero_removes_the_slot() {
+        let mut inventory = vec![potion(1)];
+        apply(&mut inventory, EntityId(1), 0, true);
+        assert!(inventory.is_empty());
+    }
+
+    #[test]
+    fn a_negative_remaining_count_is_ignored() {
+        let mut inventory = vec![potion(5)];
+        apply(&mut inventory, EntityId(1), -1, true);
+        assert_eq!(inventory[0].amount(), 5);
     }
 }

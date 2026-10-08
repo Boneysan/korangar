@@ -102,7 +102,7 @@ use settings::{
 use state::hotbar::{HOTBAR_SLOTS, HotbarBinding};
 use state::inventory::InventoryPathExt;
 use state::localization::Localization;
-use state::skills::SkillTreePathExt;
+use state::skills::{SkillTreePathExt, clamp_chosen_cast_levels};
 use state::theme::{CursorThemePathExt, IndicatorThemePathExt, InterfaceThemePathExt, WorldThemePathExt};
 use state::{ChatMessage, ClientState, ClientStatePathExt, client_state, this_entity, this_player};
 #[cfg(feature = "debug")]
@@ -682,6 +682,16 @@ const SURVIVES_RETURN_TO_CHARACTER_SELECT: &[WindowClass] = &[
     WindowClass::RenderOptions,
 ];
 
+/// Closable windows that are part of the play screen rather than something the
+/// player opened to look at, so Escape skips them on its way to the menu.
+const ESCAPE_KEEPS_OPEN: &[WindowClass] = &[
+    WindowClass::Hud,
+    WindowClass::Minimap,
+    WindowClass::MonsterTarget,
+    WindowClass::BossTarget,
+    WindowClass::PartyHealer,
+];
+
 // Create the `threads` module.
 #[cfg(feature = "debug")]
 korangar_debug::create_profiler_threads!(threads, {
@@ -1047,8 +1057,9 @@ mod resolve_pending_cast_tests {
     use ragnarok_packets::{AttackRange, EntityId, HotbarSlot, ItemId, SkillId, SkillLevel, SkillType, TilePosition};
 
     use super::{
-        PendingCastResolution, PendingSkill, PredictedMotion, is_within_skill_range, pending_held_skill_canceled_by_interface_focus,
-        pending_skill_commits_on_release, resolve_pending_cast, server_echo_repeats_prediction, skill_range_ring,
+        PendingCastResolution, PendingSkill, PredictedMotion, attack_skill_key_target, is_within_skill_range,
+        pending_held_skill_canceled_by_interface_focus, pending_skill_commits_on_release, resolve_pending_cast,
+        server_echo_repeats_prediction, skill_range_ring,
     };
     use crate::graphics::PickerTarget;
 
@@ -1076,6 +1087,19 @@ mod resolve_pending_cast_tests {
             resolve_pending_cast(SkillType::Support, PickerTarget::Entity(id)),
             PendingCastResolution::CastEntity(id)
         );
+    }
+
+    #[test]
+    fn an_attack_skill_key_prefers_the_hovered_entity_then_the_tab_target() {
+        let hovered = EntityId(4);
+        let tab = EntityId(9);
+
+        assert_eq!(attack_skill_key_target(PickerTarget::Entity(hovered), Some(tab)), Some(hovered));
+        assert_eq!(attack_skill_key_target(PickerTarget::Tile { x: 3, y: 8 }, Some(tab)), Some(tab));
+        assert_eq!(attack_skill_key_target(PickerTarget::Nothing, Some(tab)), Some(tab));
+        // No live Tab target: a dead monster, or none selected. Stay armed.
+        assert_eq!(attack_skill_key_target(PickerTarget::Tile { x: 3, y: 8 }, None), None);
+        assert_eq!(attack_skill_key_target(PickerTarget::Nothing, None), None);
     }
 
     #[test]
@@ -1344,6 +1368,22 @@ mod resolve_pending_cast_tests {
         ));
     }
 
+    #[test]
+    fn hold_walk_continues_only_a_press_that_started_on_the_world() {
+        use super::hold_walk_allowed;
+
+        // The button is still down over a tile after the window closed.
+        assert!(!hold_walk_allowed(false, false, false, false, true));
+        // A press that began on a tile keeps walking as the cursor moves.
+        assert!(hold_walk_allowed(true, false, false, false, true));
+        // Still over the interface, dragging a window, an armed skill, or
+        // empty space: no walk, even when the press began on the world.
+        assert!(!hold_walk_allowed(true, true, false, false, true));
+        assert!(!hold_walk_allowed(true, false, true, false, true));
+        assert!(!hold_walk_allowed(true, false, false, true, true));
+        assert!(!hold_walk_allowed(true, false, false, false, false));
+    }
+
     fn create_test_monster(
         name: &str,
         lv: u16,
@@ -1523,6 +1563,18 @@ fn resolve_pending_cast(skill_type: SkillType, target: PickerTarget) -> PendingC
     }
 }
 
+/// Where a number-key attack skill goes before it arms.
+///
+/// The hovered entity wins, including when it is not the Tab target. Otherwise
+/// a Tab target that is still a live monster. `None` means stay armed and wait
+/// for a click. A dead or gone selection is passed in as `None` by the caller.
+fn attack_skill_key_target(hovered: PickerTarget, live_tab_target: Option<EntityId>) -> Option<EntityId> {
+    match hovered {
+        PickerTarget::Entity(entity_id) => Some(entity_id),
+        _ => live_tab_target,
+    }
+}
+
 /// A local swing started before the server confirms the action.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 enum PredictedMotion {
@@ -1661,6 +1713,21 @@ fn should_reissue_hold_mouse_move(
     } else {
         !player_walking && player_position != Some(current_destination)
     }
+}
+
+/// A held left button may keep walking only when that press began on the world.
+///
+/// Closing a window, equipping, or dropping a hotbar icon can release the
+/// cursor onto a tile while the button is still down. The next frame would
+/// otherwise see bare ground and send `PlayerMove`.
+fn hold_walk_allowed(
+    press_started_on_world: bool,
+    interface_hovered: bool,
+    dragging_window: bool,
+    skill_armed: bool,
+    over_tile: bool,
+) -> bool {
+    press_started_on_world && !interface_hovered && !dragging_window && !skill_armed && over_tile
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -2242,6 +2309,29 @@ fn cancel_own_cast<Callback: PacketCallback + Send>(
 /// the sender sees nothing at all and has no record of what they sent or to
 /// whom. Every send path funnels through here.
 ///
+/// Rubber-banding trace (`KORANGAR_MOVE_TRACE=1`): logs a server position that
+/// is more than one tile from where the client is drawing the entity, i.e. a
+/// visible snap. `lag_ms` is how far the move's server start time is behind
+/// the client clock.
+fn trace_move_correction(kind: &str, entity_id: EntityId, drawn: TilePosition, server: TilePosition, lag_ms: Option<i64>) {
+    if std::env::var_os("KORANGAR_MOVE_TRACE").is_none() {
+        return;
+    }
+    let tiles = (drawn.x as i32 - server.x as i32)
+        .abs()
+        .max((drawn.y as i32 - server.y as i32).abs());
+    if tiles > 1 {
+        client_log!(
+            "[move-trace] {kind} entity={} drawn=({},{}) server=({},{}) snap={tiles} tiles lag_ms={lag_ms:?}",
+            entity_id.0,
+            drawn.x,
+            drawn.y,
+            server.x,
+            server.y
+        );
+    }
+}
+
 /// Echoed optimistically, before the acknowledgement: a whisper to someone
 /// offline or ignoring prints its own failure line from `WhisperResult`, which
 /// then reads as a reply to the echoed message.
@@ -2454,6 +2544,9 @@ pub struct Client {
     /// Last hold-mouse destination packet, throttled to 200 ms to avoid flood
     /// protection (F10).
     hold_mouse_move_last_tick: ClientTick,
+    /// True only while the current left press began over the world. A press
+    /// that began on a window must not walk after that window closes.
+    left_press_started_on_world: bool,
     /// Latest client tick recorded for reactive target frames and combat cues.
     last_client_tick: ClientTick,
     /// A stat spread chosen at character creation, waiting for the character it
@@ -4160,6 +4253,7 @@ impl Client {
             keyboard_move_last_tick: ClientTick(0),
             keyboard_move_target: None,
             hold_mouse_move_last_tick: ClientTick(0),
+            left_press_started_on_world: false,
             last_client_tick: ClientTick(0),
             pending_stat_plan: None,
             armed_stat_plan: None,
@@ -4320,6 +4414,11 @@ impl Client {
             self.graphics_engine
                 .set_screen_space_anti_aliasing(graphics_settings.screen_space_anti_aliasing);
             self.active_graphics_settings.screen_space_anti_aliasing = graphics_settings.screen_space_anti_aliasing;
+        }
+
+        if self.active_graphics_settings.color_filter != graphics_settings.color_filter {
+            self.graphics_engine.set_color_filter(graphics_settings.color_filter);
+            self.active_graphics_settings.color_filter = graphics_settings.color_filter;
         }
 
         if self.active_graphics_settings.shadow_resolution != graphics_settings.shadow_resolution {
@@ -4512,6 +4611,29 @@ impl Client {
             && self.networking_system.entity_details(entity_id).is_ok()
         {
             entity.set_details_requested();
+        }
+
+        // Overhead names need the same details packet the hover label uses.
+        // Ask once per NPC; `Requested` is no longer unavailable.
+        if *self.client_state.follow(client_state().game_settings().show_npc_names()) {
+            let pending: Vec<_> = self
+                .client_state
+                .follow(client_state().entities())
+                .iter()
+                .filter(|entity| entity.get_entity_type() == EntityType::Npc && entity.are_details_unavailable())
+                .map(|entity| entity.get_entity_id())
+                .collect();
+            for entity_id in pending {
+                if self.networking_system.entity_details(entity_id).is_ok()
+                    && let Some(entity) = self
+                        .client_state
+                        .follow_mut(client_state().entities())
+                        .iter_mut()
+                        .find(|entity| entity.get_entity_id() == entity_id)
+                {
+                    entity.set_details_requested();
+                }
+            }
         }
     }
 
@@ -5665,6 +5787,13 @@ impl Client {
                     if let Some(entity) = entity
                         && let Some(map) = &self.map
                     {
+                        trace_move_correction(
+                            "move",
+                            entity_id,
+                            entity.get_tile_position(),
+                            origin.tile_position(),
+                            Some(client_tick.0 as i64 - starting_timestamp.0 as i64),
+                        );
                         entity.move_from_to(
                             map,
                             &mut self.path_finder,
@@ -5704,6 +5833,13 @@ impl Client {
                     if let Some(map) = &self.map
                         && let Some(player) = self.client_state.try_follow_mut(this_entity())
                     {
+                        trace_move_correction(
+                            "own-move",
+                            player.get_entity_id(),
+                            player.get_tile_position(),
+                            origin.tile_position(),
+                            Some(client_tick.0 as i64 - starting_timestamp.0 as i64),
+                        );
                         player.move_from_to(
                             map,
                             &mut self.path_finder,
@@ -6746,9 +6882,32 @@ impl Client {
                 NetworkEvent::InventoryItemRemoved { index, amount, .. } => {
                     self.client_state.follow_mut(client_state().inventory()).remove_item(index, amount);
                 }
+                NetworkEvent::UseItemAck {
+                    entity_id,
+                    index,
+                    amount,
+                    success,
+                } => {
+                    if let Some(local_entity_id) = self.client_state.try_follow(this_entity()).map(Entity::get_entity_id) {
+                        self.client_state.follow_mut(client_state().inventory()).apply_use_item_ack(
+                            local_entity_id,
+                            entity_id,
+                            index,
+                            amount,
+                            success,
+                        );
+                    }
+                }
                 NetworkEvent::SkillTree { skill_information } => {
-                    *self.client_state.follow_mut(client_state().skill_tree().skills()) =
-                        skill_information.into_iter().map(LearnedSkill::new).collect();
+                    let learned: Vec<LearnedSkill> = skill_information.into_iter().map(LearnedSkill::new).collect();
+                    let learned_levels: Vec<(SkillId, SkillLevel)> =
+                        learned.iter().map(|skill| (skill.skill_id, skill.skill_level)).collect();
+                    clamp_chosen_cast_levels(
+                        self.client_state
+                            .follow_mut(client_state().skill_tree_window().chosen_skill_level()),
+                        &learned_levels,
+                    );
+                    *self.client_state.follow_mut(client_state().skill_tree().skills()) = learned;
                 }
                 NetworkEvent::PlaySoundEffect { file_name, entity_id } => {
                     // `soundeffect` gives a bare file name; the GRF keeps them
@@ -7027,6 +7186,7 @@ impl Client {
                             .iter_mut()
                             .find(|entity| entity.get_entity_id() == entity_id)
                     {
+                        trace_move_correction("stop", entity_id, entity.get_tile_position(), position, None);
                         entity.set_position(map, position, client_tick);
                     }
                 }
@@ -7393,6 +7553,7 @@ impl Client {
                     self.client_state
                         .follow_mut(client_state().party_state())
                         .set_roster(party_name, members, |job_id| JobName::get(library, job_id).to_string());
+                    self.sync_followed_party_member();
                 }
                 NetworkEvent::PartyMemberAdded { member } => {
                     let class_name = JobName::get(&self.library, member.job_id).to_string();
@@ -7408,11 +7569,13 @@ impl Client {
                     self.client_state
                         .follow_mut(client_state().party_state())
                         .add_or_update_member(member, class_name);
+                    self.sync_followed_party_member();
                 }
                 NetworkEvent::PartyMemberPosition { account_id, position } => {
                     self.client_state
                         .follow_mut(client_state().party_state())
                         .update_position(account_id, position);
+                    self.sync_followed_party_member();
                 }
                 NetworkEvent::PartyMemberHealth {
                     account_id,
@@ -7448,6 +7611,7 @@ impl Client {
                     result,
                 } => {
                     self.client_state.follow_mut(client_state().party_state()).remove_member(account_id);
+                    self.sync_followed_party_member();
                     if self.support_target == Some(EntityId(account_id.0)) {
                         self.set_support_target(None);
                         if self.interface.is_window_with_class_open(WindowClass::PlayerTarget) {
@@ -8102,6 +8266,17 @@ impl Client {
                         attack_range,
                         upgradable,
                     );
+                    let learned_levels: Vec<(SkillId, SkillLevel)> = self
+                        .client_state
+                        .follow(client_state().skill_tree().skills())
+                        .iter()
+                        .map(|skill| (skill.skill_id, skill.skill_level))
+                        .collect();
+                    clamp_chosen_cast_levels(
+                        self.client_state
+                            .follow_mut(client_state().skill_tree_window().chosen_skill_level()),
+                        &learned_levels,
+                    );
                 }
                 NetworkEvent::RemoveSkill { skill_id } => {
                     self.client_state.follow_mut(client_state().skill_tree()).remove_skill(skill_id);
@@ -8375,7 +8550,7 @@ impl Client {
         }
     }
 
-    /// Load the official minimap bitmap and Towninfo facility POIs for a map.
+    /// Load the official minimap bitmap and the server-checked facility POIs.
     ///
     /// Uses `file_exists` before loading so a missing BMP is not replaced by
     /// the generic "missing" texture (which would look like a broken map).
@@ -8444,7 +8619,68 @@ impl Client {
         }
     }
 
-    fn refresh_navigation_marker(&mut self) {
+    /// Keep a "Navigate" route on the party member it was aimed at.
+    ///
+    /// The button stores one cell. Hercules then sends a new cell on 0x0107,
+    /// and a new map on the roster packet. Without this, the gold marker stays
+    /// where that member was when Navigate was pressed.
+    fn sync_followed_party_member(&mut self) {
+        let Some(account_id) = self
+            .client_state
+            .follow(client_state().minimap())
+            .navigation_target()
+            .and_then(|target| target.party_account_id)
+        else {
+            return;
+        };
+
+        let located = self
+            .client_state
+            .follow(client_state().party_state())
+            .members()
+            .iter()
+            .find(|member| member.account_id() == account_id)
+            .map(|member| {
+                (
+                    member.online(),
+                    member.name().to_owned(),
+                    member.reported_map().to_owned(),
+                    member.position().map(|position| (position.x, position.y)),
+                )
+            });
+
+        match located {
+            None => {
+                self.client_state.follow_mut(client_state().minimap()).clear_navigation();
+            }
+            Some((false, name, ..)) => {
+                self.client_state.follow_mut(client_state().minimap()).clear_navigation();
+                self.client_state.follow_mut(client_state().toasts()).push(
+                    "party-nav",
+                    format!("{name} is offline, so the route was cleared."),
+                    crate::state::toasts::ToastPriority::Normal,
+                );
+            }
+            // A roster row can arrive before its map name. Leave the route
+            // where it is until a real map shows up.
+            Some((true, _, map_name, _)) if map_name.is_empty() => {}
+            Some((true, _, map_name, position)) => {
+                let changed = self
+                    .client_state
+                    .follow_mut(client_state().minimap())
+                    .navigation_target_mut()
+                    .is_some_and(|target| target.retarget_party_member(account_id, &map_name, position));
+                if changed {
+                    self.refresh_navigation_marker();
+                }
+            }
+        }
+    }
+
+    fn refresh_navigation_marker(&mut self) -> bool {
+        if self.clear_navigation_on_arrival() {
+            return true;
+        }
         let minimap = client_state().minimap();
         let current_map = self.client_state.follow(minimap).map_name().to_string();
         let target = self.client_state.follow(minimap).navigation_target().cloned();
@@ -8479,6 +8715,36 @@ impl Client {
         let minimap_state = self.client_state.follow_mut(minimap);
         minimap_state.set_navigation_marker(destination);
         minimap_state.set_navigation_breadcrumbs(breadcrumbs);
+        false
+    }
+
+    /// Clear a fixed route once the player is standing on it.
+    ///
+    /// Checked on every frame after movement, and again whenever the route is
+    /// rebuilt, so walking onto the cell and loading onto it both count.
+    fn clear_navigation_on_arrival(&mut self) -> bool {
+        let current_map = self.client_state.follow(client_state().minimap()).map_name().to_owned();
+        let Some(target) = self.client_state.follow(client_state().minimap()).navigation_target().cloned() else {
+            return false;
+        };
+        let Some(player) = self.client_state.try_follow(this_entity()).map(Entity::get_tile_position) else {
+            return false;
+        };
+        if !crate::state::minimap::navigation_has_arrived(
+            &current_map,
+            (player.x, player.y),
+            &target,
+            crate::state::minimap::NAVIGATION_ARRIVAL_RADIUS,
+        ) {
+            return false;
+        }
+        self.client_state.follow_mut(client_state().minimap()).clear_navigation();
+        self.client_state.follow_mut(client_state().toasts()).push(
+            "navigation-arrived",
+            "Arrived",
+            crate::state::toasts::ToastPriority::Normal,
+        );
+        true
     }
 
     fn restore_tracked_quests(&mut self) {
@@ -9807,6 +10073,14 @@ impl Client {
                         .follow_mut(client_state().chat_messages())
                         .push(ChatMessage::new(text, MessageColor::Information));
                 }
+                InputEvent::CycleWindowOpacity => {
+                    let opacity = self.interface.cycle_window_opacity();
+                    let percent = (opacity * 100.0).round();
+                    self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
+                        format!("Window opacity is {percent}%."),
+                        MessageColor::Information,
+                    ));
+                }
                 InputEvent::ToggleCombatHudFade => {
                     let text = match self.interface.cycle_combat_fade() {
                         Some(opacity) => format!(
@@ -10064,9 +10338,10 @@ impl Client {
                 InputEvent::AttackTarget => self.attack_targeted_monster(),
                 InputEvent::CyclePartyTarget => self.cycle_party_target(),
                 InputEvent::Escape => {
-                    // Escape cancels, then opens the menu. It does not close
-                    // windows (Ctrl+W, `CloseTopWindow`, does), and while typing
-                    // it only leaves the text box.
+                    // Escape cancels, then closes the top window, then opens the
+                    // menu once nothing is left to close. The HUD-like windows in
+                    // `ESCAPE_KEEPS_OPEN` survive it. While typing it only leaves
+                    // the text box.
                     if self.interface.has_focus() {
                         self.interface.unfocus();
                     } else if self.pending_skill.is_some() {
@@ -10089,11 +10364,10 @@ impl Client {
                             "Queued action canceled",
                             crate::state::toasts::ToastPriority::Normal,
                         );
-                    } else if self.client_state.try_follow(this_entity()).is_some() {
-                        match self.interface.is_window_with_class_open(WindowClass::Menu) {
-                            true => self.interface.close_window_with_class(WindowClass::Menu),
-                            false => self.interface.open_window(MenuWindow),
-                        }
+                    } else if self.client_state.try_follow(this_entity()).is_some()
+                        && !self.interface.close_top_window_except(&self.client_state, ESCAPE_KEEPS_OPEN)
+                    {
+                        self.interface.open_window(MenuWindow);
                     }
                 }
                 InputEvent::CloseAllOrdinaryWindows => {
@@ -10170,6 +10444,7 @@ impl Client {
                         .send_chat_message(self.client_state.follow(client_state().player_name()), &command);
                 }
                 InputEvent::NavigateToPartyMember {
+                    account_id,
                     character_name,
                     map_name,
                     position,
@@ -10189,10 +10464,7 @@ impl Client {
                         );
                     } else {
                         self.client_state.follow_mut(client_state().minimap()).set_navigation_target(Some(
-                            crate::state::minimap::NavigationTarget {
-                                map_name: destination_map.clone(),
-                                position,
-                            },
+                            crate::state::minimap::NavigationTarget::follow_party_member(account_id, destination_map.clone(), position),
                         ));
                         self.refresh_navigation_marker();
                         if !self.interface.is_window_with_class_open(WindowClass::Minimap) {
@@ -11377,7 +11649,11 @@ impl Client {
                     _ => {}
                 },
                 InputEvent::AssignSkillToHotbar { skill } => {
-                    let slot = self.client_state.follow(client_state().hotbar()).first_empty_slot();
+                    let skill_id = skill.skill_id;
+                    let slot = self
+                        .client_state
+                        .follow(client_state().hotbar())
+                        .slot_to_assign(|binding| matches!(binding, HotbarBinding::Skill(existing) if existing.skill_id == skill_id));
                     match slot {
                         Some(slot) => self.client_state.follow_mut(client_state().hotbar()).update_slot(
                             &mut self.networking_system,
@@ -11386,6 +11662,23 @@ impl Client {
                         ),
                         None => self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
                             "The hotbar is full. Clear a slot or drag the skill onto a slot to replace it.".to_owned(),
+                            MessageColor::Error,
+                        )),
+                    }
+                }
+                InputEvent::AssignItemToHotbar { item_id } => {
+                    let slot = self
+                        .client_state
+                        .follow(client_state().hotbar())
+                        .slot_to_assign(|binding| matches!(binding, HotbarBinding::Item { item_id: bound } if *bound == item_id));
+                    match slot {
+                        Some(slot) => self.client_state.follow_mut(client_state().hotbar()).update_slot(
+                            &mut self.networking_system,
+                            slot,
+                            HotbarBinding::Item { item_id },
+                        ),
+                        None => self.client_state.follow_mut(client_state().chat_messages()).push(ChatMessage::new(
+                            "The hotbar is full. Clear a slot or drag the item onto a slot to replace it.".to_owned(),
                             MessageColor::Error,
                         )),
                     }
@@ -11593,8 +11886,9 @@ impl Client {
                                 }
                             }
                             SkillType::Attack => {
-                                // Entity-target: fast-cast if the cursor is already over a target,
-                                // otherwise arm and wait for the next left-click to pick one.
+                                // Hovered entity, then a live Tab target, then arm and wait.
+                                // A click while armed still uses `resolve_pending_cast` and
+                                // does not suddenly fire at the Tab target.
                                 let pending = PendingSkill {
                                     skill_id: learnable_skill.skill_id,
                                     skill_level,
@@ -11603,8 +11897,14 @@ impl Client {
                                     skill_name: learnable_skill.skill_name.clone(),
                                     confirm_on_hotbar_release: None,
                                 };
-                                match resolve_pending_cast(pending.skill_type, input_report.mouse_target) {
-                                    PendingCastResolution::CastEntity(entity_id) => {
+                                let live_tab_target = self.targeted_monster.filter(|entity_id| {
+                                    self.client_state
+                                        .follow(client_state().entities())
+                                        .iter()
+                                        .any(|entity| entity.get_entity_id() == *entity_id && entity.is_targetable_monster())
+                                });
+                                match attack_skill_key_target(input_report.mouse_target, live_tab_target) {
+                                    Some(entity_id) => {
                                         if !queue_action_if_animation_locked(
                                             &mut self.client_state,
                                             BufferedAction::CastSkill {
@@ -12039,7 +12339,11 @@ impl Client {
                     if self.map.is_some() {
                         match self.interface.is_window_with_class_open(WindowClass::Maps) {
                             true => self.interface.close_window_with_class(WindowClass::Maps),
-                            false => self.interface.open_window(MapsWindow::new(self.library.clone())),
+                            false => self.interface.open_window(MapsWindow::new(
+                                self.library.clone(),
+                                &self.game_file_loader,
+                                &self.texture_loader,
+                            )),
                         }
                     }
                 }
@@ -12062,18 +12366,15 @@ impl Client {
                             crate::state::toasts::ToastPriority::Normal,
                         );
                     } else {
-                        self.client_state.follow_mut(client_state().minimap()).set_navigation_target(Some(
-                            crate::state::minimap::NavigationTarget {
-                                map_name,
-                                position: Some((x, y)),
-                            },
-                        ));
-                        self.refresh_navigation_marker();
+                        self.client_state
+                            .follow_mut(client_state().minimap())
+                            .set_navigation_target(Some(crate::state::minimap::NavigationTarget::fixed(map_name, Some((x, y)))));
+                        let arrived = self.refresh_navigation_marker();
                         if !self.interface.is_window_with_class_open(WindowClass::Minimap) {
                             self.interface.open_window(MinimapWindow);
                         }
                         let minimap = self.client_state.follow(client_state().minimap());
-                        if minimap.navigation_marker().is_none() || minimap.navigation_breadcrumbs().is_empty() {
+                        if !arrived && (minimap.navigation_marker().is_none() || minimap.navigation_breadcrumbs().is_empty()) {
                             self.client_state.follow_mut(client_state().toasts()).push(
                                 "navigation-unavailable",
                                 format!("No walkable route to {destination} is available from this position."),
@@ -12099,13 +12400,14 @@ impl Client {
                     } else {
                         self.client_state
                             .follow_mut(client_state().minimap())
-                            .set_navigation_target(Some(crate::state::minimap::NavigationTarget { map_name, position: None }));
-                        self.refresh_navigation_marker();
+                            .set_navigation_target(Some(crate::state::minimap::NavigationTarget::fixed(map_name, None)));
+                        let arrived = self.refresh_navigation_marker();
                         if !self.interface.is_window_with_class_open(WindowClass::Minimap) {
                             self.interface.open_window(MinimapWindow);
                         }
                         let minimap = self.client_state.follow(client_state().minimap());
-                        if !current_map.eq_ignore_ascii_case(&destination)
+                        if !arrived
+                            && !current_map.eq_ignore_ascii_case(&destination)
                             && (minimap.navigation_marker().is_none() || minimap.navigation_breadcrumbs().is_empty())
                         {
                             self.client_state.follow_mut(client_state().toasts()).push(
@@ -12286,10 +12588,7 @@ impl Client {
                         continue;
                     }
                     self.client_state.follow_mut(client_state().minimap()).set_navigation_target(Some(
-                        crate::state::minimap::NavigationTarget {
-                            map_name: destination.map_name().to_owned(),
-                            position: destination.position(),
-                        },
+                        crate::state::minimap::NavigationTarget::fixed(destination.map_name().to_owned(), destination.position()),
                     ));
                     self.refresh_navigation_marker();
                     if !self.interface.is_window_with_class_open(WindowClass::Minimap) {
@@ -12428,10 +12727,7 @@ impl Client {
                     }
                 }
                 InputEvent::ClearNavigationDestination => {
-                    let minimap = self.client_state.follow_mut(client_state().minimap());
-                    minimap.set_navigation_target(None);
-                    minimap.set_navigation_marker(None);
-                    minimap.set_navigation_breadcrumbs(Vec::new());
+                    self.client_state.follow_mut(client_state().minimap()).clear_navigation();
                 }
                 InputEvent::ToggleCommandsWindow => {
                     if self.map.is_some() {
@@ -12462,12 +12758,13 @@ impl Client {
                 }
                 InputEvent::OpenGuideLink { kind, key } => {
                     if self.map.is_some() {
+                        let town_pois = self.library.town_pois(&key);
                         crate::interface::windows::open_guide_entry(
                             &self.client_state,
                             client_state().adventure_guide(),
                             kind,
                             &key,
-                            self.library.town_pois(&key),
+                            &town_pois,
                         );
                         if !self.interface.is_window_with_class_open(WindowClass::AdventureGuide) {
                             self.interface.open_window(AdventureGuideWindow::new(
@@ -13024,18 +13321,19 @@ impl Client {
     ///
     /// Build a quest-log entry for a quest id.
     ///
-    /// A campaign hunting contract contributes its name and its turn-in list;
-    /// anything else (a story quest, or a quest outside the campaign) is listed
-    /// by id, which is still more than the log showed before it existed.
+    /// A campaign hunting contract contributes its name and its turn-in list.
+    /// A renewal Izlude arrival quest contributes the NPC cell and the steps
+    /// from `npc/re/jobs/novice/academy.txt`. Anything else is listed by its
+    /// exported name and has no map cell.
     fn resolve_quest_entry(&self, quest_id: u32) -> QuestEntry {
-        let location = self.library.campaign_quest_location(quest_id).map(|location| QuestLocationEntry {
+        let mut location = self.library.campaign_quest_location(quest_id).map(|location| QuestLocationEntry {
             is_turn_in: location.is_turn_in,
             npc: location.npc.clone(),
             map_name: location.map_name.clone(),
             x: location.x,
             y: location.y,
         });
-        let guidance = self
+        let mut guidance: Vec<String> = self
             .library
             .campaign_quest_guidance(quest_id)
             .map(|guidance| {
@@ -13044,6 +13342,18 @@ impl Client {
                     .collect()
             })
             .unwrap_or_default();
+        if location.is_none()
+            && let Some(story) = crate::world::newbie_quest_guide(quest_id)
+        {
+            location = Some(QuestLocationEntry {
+                is_turn_in: story.is_turn_in,
+                npc: story.npc.to_owned(),
+                map_name: story.map.to_owned(),
+                x: story.x,
+                y: story.y,
+            });
+            guidance.extend(story.steps.iter().map(|step| (*step).to_owned()));
+        }
 
         match self.library.campaign_quest(quest_id) {
             Some(contract) => QuestEntry {
@@ -13598,6 +13908,7 @@ impl Client {
             &render_options,
         );
 
+        self.clear_navigation_on_arrival();
         self.refresh_monster_target_summary();
 
         self.process_buffered_action(client_tick);
@@ -13622,6 +13933,9 @@ impl Client {
         self.sprite_effects.update(client_tick);
         self.effect_holder
             .update(self.client_state.follow(client_state().entities()), delta_time as f32);
+
+        let walk_obstacle_texture = (currently_playing && *self.client_state.follow(client_state().game_settings().show_walk_obstacles()))
+            .then(|| self.flat_tile_texture());
 
         let current_camera: &(dyn Camera + Send + Sync) = match currently_playing {
             #[cfg(feature = "debug")]
@@ -13783,6 +14097,9 @@ impl Client {
             self.mouse_cursor.set_state(cursor_state, client_tick);
 
             if let Some(mouse_button) = input_report.mouse_click {
+                if matches!(mouse_button, MouseButton::Left | MouseButton::DoubleLeft) {
+                    self.left_press_started_on_world = !is_interface_hovered && !modal_screen;
+                }
                 if is_interface_hovered {
                     // Starts item/skill drag via SetMouseMode -- queued, not applied until
                     // `process_events` drains it at the end of this frame, so
@@ -13876,12 +14193,16 @@ impl Client {
                                     }
                                 }
                                 PickerTarget::Tile { x, y } => {
-                                    let destination = TilePosition { x, y };
-                                    self.hold_mouse_move_last_tick = client_tick;
-
-                                    interface_frame.set_mouse_mode(MouseInputMode::Walk { destination });
-
-                                    self.input_event_buffer.push(InputEvent::PlayerMove { destination });
+                                    let clicked = TilePosition { x, y };
+                                    let player_position = self.client_state.try_follow(this_entity()).map(Entity::get_tile_position);
+                                    if let Some(start) = player_position
+                                        && let Some(destination) =
+                                            click_walk_destination(&mut self.path_finder, map.as_ref(), start, clicked)
+                                    {
+                                        self.hold_mouse_move_last_tick = client_tick;
+                                        interface_frame.set_mouse_mode(MouseInputMode::Walk { destination });
+                                        self.input_event_buffer.push(InputEvent::PlayerMove { destination });
+                                    }
                                 }
                                 #[cfg(feature = "debug")]
                                 PickerTarget::Marker(marker_identifier) => {
@@ -13908,27 +14229,43 @@ impl Client {
                     }
                 }
             } else if input_report.left_mouse_button_down
-                && !is_interface_hovered
-                && !mouse_mode.is_dragging_window()
-                && !interface_frame.queued_mouse_mode().is_some_and(MouseModeExt::is_dragging_window)
-                && self.pending_skill.is_none()
+                && hold_walk_allowed(
+                    self.left_press_started_on_world,
+                    is_interface_hovered,
+                    mouse_mode.is_dragging_window() || interface_frame.queued_mouse_mode().is_some_and(MouseModeExt::is_dragging_window),
+                    self.pending_skill.is_some(),
+                    matches!(input_report.mouse_target, PickerTarget::Tile { .. }),
+                )
                 && let PickerTarget::Tile { x, y } = input_report.mouse_target
             {
-                let destination = TilePosition { x, y };
-                let player_pos = self.client_state.try_follow(this_entity()).map(Entity::get_tile_position);
-
-                if should_reissue_hold_mouse_move(
-                    self.hold_mouse_move_last_tick,
-                    client_tick,
-                    last_walking_destination,
-                    destination,
-                    player_pos,
-                    self.client_state.try_follow(this_entity()).is_some_and(Entity::is_walking),
-                ) {
-                    self.hold_mouse_move_last_tick = client_tick;
-                    interface_frame.set_mouse_mode(MouseInputMode::Walk { destination });
-                    self.input_event_buffer.push(InputEvent::PlayerMove { destination });
+                let clicked = TilePosition { x, y };
+                // Pathfinding only when a send is due. Comparing the raw cursor
+                // against the last sent cell would re-send the same clamped
+                // cell every 200 ms, which is the stutter a held walk avoids.
+                let elapsed = client_tick.0.wrapping_sub(self.hold_mouse_move_last_tick.0);
+                if elapsed >= 200 {
+                    let player_position = self.client_state.try_follow(this_entity()).map(Entity::get_tile_position);
+                    let walking = self.client_state.try_follow(this_entity()).is_some_and(Entity::is_walking);
+                    if let Some(start) = player_position
+                        && let Some(destination) = click_walk_destination(&mut self.path_finder, map.as_ref(), start, clicked)
+                        && should_reissue_hold_mouse_move(
+                            self.hold_mouse_move_last_tick,
+                            client_tick,
+                            last_walking_destination,
+                            destination,
+                            Some(start),
+                            walking,
+                        )
+                    {
+                        self.hold_mouse_move_last_tick = client_tick;
+                        interface_frame.set_mouse_mode(MouseInputMode::Walk { destination });
+                        self.input_event_buffer.push(InputEvent::PlayerMove { destination });
+                    }
                 }
+            }
+
+            if !input_report.left_mouse_button_down {
+                self.left_press_started_on_world = false;
             }
 
             if input_report.mouse_button_released {
@@ -14001,6 +14338,7 @@ impl Client {
                 targeted_monster: self.targeted_monster,
                 pending_skill: self.pending_skill.as_ref(),
                 skill_footprint_texture: self.skill_footprint_texture.as_ref(),
+                walk_obstacle_texture: walk_obstacle_texture.as_ref(),
                 #[cfg(feature = "debug")]
                 render_options: &render_options,
                 #[cfg(feature = "debug")]
@@ -14214,6 +14552,7 @@ impl ApplicationHandler for Client {
                 graphics_settings.screen_space_anti_aliasing,
                 graphics_settings.high_quality_interface,
             );
+            self.graphics_engine.set_color_filter(graphics_settings.color_filter);
 
             // Update graphics settings capabilities based on the new surface.
             // We don't expect the capabilities to change on consecutive calls but we
@@ -14408,6 +14747,9 @@ struct MapRenderContext<'a, 'm: 'a> {
     /// Tile texture for that footprint. `None` if it failed to load — the
     /// footprint is then simply not drawn.
     skill_footprint_texture: Option<&'a Arc<Texture>>,
+    /// Solid tile used to stroke walk-obstacle edges. `None` when the option
+    /// is off, so the texture is not built on frames that do not draw it.
+    walk_obstacle_texture: Option<&'a Arc<Texture>>,
     #[cfg(feature = "debug")]
     render_options: &'a RenderOptions,
     #[cfg(feature = "debug")]
@@ -14458,6 +14800,33 @@ struct MapRenderContext<'a, 'm: 'a> {
 }
 
 impl<'a, 'm: 'a> MapRenderContext<'a, 'm> {
+    fn render_npc_nameplates(&mut self) {
+        if !*self.client_state.follow(client_state().game_settings().show_npc_names()) {
+            return;
+        }
+
+        let window_size = self.screen_size;
+        for entity in self.client_state.follow(client_state().entities()).iter() {
+            let Some(name) = npc_overhead_name(entity.get_entity_type(), entity.get_details().map(String::as_str)) else {
+                continue;
+            };
+            // Sit the label on the head. Quest icons use a higher offset.
+            let world = entity.get_position() + Vector3::new(0.0, 15.0, 0.0);
+            let clip = self.current_camera.view_projection_matrix() * world.to_homogeneous();
+            if clip.w <= 0.0 {
+                continue;
+            }
+            let screen = self.current_camera.clip_to_screen_space(clip);
+            if !(0.0..=1.0).contains(&screen.x) || !(0.0..=1.0).contains(&screen.y) {
+                continue;
+            }
+            self.middle_interface_renderer.render_world_label(name, ScreenPosition {
+                left: screen.x * window_size.width,
+                top: screen.y * window_size.height,
+            });
+        }
+    }
+
     #[inline(always)]
     #[cfg(feature = "debug")]
     #[korangar_debug::profile]
@@ -14732,6 +15101,28 @@ impl<'a, 'm: 'a> MapRenderContext<'a, 'm> {
         }
     }
 
+    /// Outlines the client's walk obstacles around the player. Off unless Game
+    /// Settings asks for it. The mesh is the one pathing uses, so a floor the
+    /// server blocks and the client still calls walkable stays unmarked.
+    #[inline(always)]
+    #[cfg_attr(feature = "debug", korangar_debug::profile)]
+    fn render_walk_obstacles(&mut self) {
+        if !self.currently_playing {
+            return;
+        }
+        if !*self.client_state.follow(client_state().game_settings().show_walk_obstacles()) {
+            return;
+        }
+        let Some(player_position) = self.client_state.try_follow(this_entity()).map(Entity::get_tile_position) else {
+            return;
+        };
+        let Some(texture) = self.walk_obstacle_texture else {
+            return;
+        };
+        self.map
+            .render_walk_obstacle_outlines(self.effect_renderer, texture, player_position);
+    }
+
     /// Draws the reach of an armed skill as a ring around the player.
     ///
     /// The cursor footprint shows the impact shape. This ring shows how far
@@ -14896,6 +15287,7 @@ impl<'a, 'm: 'a> MapRenderContext<'a, 'm> {
             );
         }
 
+        self.render_walk_obstacles();
         self.update_cast_telegraph_labels();
         self.particle_holder.render(
             self.bottom_interface_renderer,
@@ -15032,6 +15424,8 @@ impl<'a, 'm: 'a> MapRenderContext<'a, 'm> {
             }
         }
 
+        self.render_npc_nameplates();
+
         match self.mouse_target {
             PickerTarget::Tile { x, y } => {
                 // Only show if the mouse mode is default or walking.
@@ -15090,9 +15484,15 @@ impl<'a, 'm: 'a> MapRenderContext<'a, 'm> {
                         } else {
                             None
                         };
-                        if let Some(text) =
-                            portal_tooltip.or_else(|| entity.get_details().map(|name| name.split('#').next().unwrap().to_owned()))
-                        {
+                        let name_is_over_the_head = *self.client_state.follow(client_state().game_settings().show_npc_names())
+                            && entity.get_entity_type() == EntityType::Npc;
+                        if let Some(text) = portal_tooltip.or_else(|| {
+                            if name_is_over_the_head {
+                                None
+                            } else {
+                                entity.get_details().map(|name| name.split('#').next().unwrap().to_owned())
+                            }
+                        }) {
                             self.middle_interface_renderer
                                 .render_hover_text(&text, self.scaling, self.mouse_position);
                         }

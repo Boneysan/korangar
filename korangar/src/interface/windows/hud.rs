@@ -1,14 +1,17 @@
 use std::cell::{Cell, UnsafeCell};
 
+use korangar_interface::element::store::{ElementStore, ElementStoreMut};
+use korangar_interface::element::{Element, ElementBox};
+use korangar_interface::layout::{Resolvers, WindowLayout, with_single_resolver};
 use korangar_interface::window::{CustomWindow, Window};
-use rust_state::{Path, PathExt, Selector};
+use rust_state::{Path, PathExt, Selector, State};
 
 use crate::graphics::Color;
+use crate::input::InputEvent;
 use crate::interface::windows::WindowClass;
 use crate::loaders::OverflowBehavior;
 use crate::state::ClientState;
 use crate::state::party::PartyStatePathExt;
-use crate::state::quests::QuestLogStatePathExt;
 use crate::state::recovery::RecoveryStatePathExt;
 use crate::state::skill_cooldowns::{SkillCooldowns, SkillCooldownsPathExt};
 use crate::state::theme::InterfaceThemeType;
@@ -56,7 +59,6 @@ where
 
         let cooldown_text = self.cooldowns_path.display_text();
         let toast_text = self.toasts_path.display_text();
-        let quest_text = self.quests_path.display_text();
         let goals_text = self.party_path.goals_hud_text();
         let recovery_status = self.recovery_path.display_text();
 
@@ -75,6 +77,17 @@ where
                         // player checks under pressure. Both were missing entirely
                         // — the client drew no numeric vitals anywhere, so the only
                         // way to read your own health was the sprite's bar.
+                        split! {
+                            children: (
+                                text! { text: "Level", overflow_behavior: OverflowBehavior::Shrink },
+                                text! {
+                                    text: PartialEqDisplaySelector::new(self.player_path.base_level()),
+                                    color: Color::rgb_u8(230, 230, 230),
+                                    horizontal_alignment: HorizontalAlignment::Right { offset: 0.0, border: 2.0 },
+                                    overflow_behavior: OverflowBehavior::Shrink,
+                                },
+                            ),
+                        },
                         split! {
                             children: (
                                 text! { text: "HP", overflow_behavior: OverflowBehavior::Shrink },
@@ -152,10 +165,10 @@ where
                             color: Color::rgb_u8(255, 180, 120),
                             overflow_behavior: OverflowBehavior::Shrink,
                         },
-                        text! {
-                            text: quest_text,
-                            color: Color::rgb_u8(140, 200, 255),
-                            overflow_behavior: OverflowBehavior::Shrink,
+                        TrackedQuestHud {
+                            quests_path: self.quests_path,
+                            fingerprint: Vec::new(),
+                            elements: Vec::new(),
                         },
                         text! {
                             text: goals_text,
@@ -170,6 +183,100 @@ where
                     ),
                 },
             )
+        }
+    }
+}
+
+/// Tracked quests on the HUD. The first is marked Primary. Navigate uses the
+/// quest's NPC cell when one is known; otherwise the row says there is no map
+/// location. Untrack is the same control as the quest log.
+struct TrackedQuestHud<Q> {
+    quests_path: Q,
+    fingerprint: Vec<(u32, String, bool)>,
+    elements: Vec<ElementBox<ClientState>>,
+}
+
+impl<Q> Element<ClientState> for TrackedQuestHud<Q>
+where
+    Q: Path<ClientState, crate::state::quests::QuestLogState>,
+{
+    type LayoutInfo = ();
+
+    fn create_layout_info(
+        &mut self,
+        state: &State<ClientState>,
+        mut store: ElementStoreMut,
+        resolvers: &mut dyn Resolvers<ClientState>,
+    ) -> Self::LayoutInfo {
+        with_single_resolver(resolvers, |resolver| {
+            use korangar_interface::prelude::*;
+
+            let rows = state.get(&self.quests_path).hud_rows();
+            let fingerprint: Vec<_> = rows
+                .iter()
+                .map(|row| (row.quest_id, row.title.clone(), row.map_name.is_some()))
+                .collect();
+            if fingerprint != self.fingerprint {
+                self.elements.clear();
+                if rows.is_empty() {
+                    self.elements.push(ErasedElement::new(text! {
+                        text: "No tracked quest",
+                        color: Color::rgb_u8(140, 200, 255),
+                        overflow_behavior: OverflowBehavior::Shrink,
+                    }));
+                }
+                for row in rows {
+                    let quest_id = row.quest_id;
+                    let title_color = if row.is_primary {
+                        Color::rgb_u8(255, 220, 120)
+                    } else {
+                        Color::rgb_u8(140, 200, 255)
+                    };
+                    self.elements.push(ErasedElement::new(text! {
+                        text: row.title.clone(),
+                        color: title_color,
+                        overflow_behavior: OverflowBehavior::LineBreak,
+                    }));
+                    match row.map_name.clone() {
+                        Some(map_name) => {
+                            let x = row.x;
+                            let y = row.y;
+                            self.elements.push(ErasedElement::new(button! {
+                                text: "Navigate",
+                                tooltip: "Show the route to this quest.",
+                                event: InputEvent::SetNavigationDestination { map_name, x, y },
+                            }));
+                        }
+                        None => self.elements.push(ErasedElement::new(text! {
+                            text: "No map location",
+                            color: Color::rgb_u8(160, 160, 160),
+                            overflow_behavior: OverflowBehavior::Shrink,
+                        })),
+                    }
+                    self.elements.push(ErasedElement::new(button! {
+                        text: "Untrack",
+                        tooltip: "Take this quest off the HUD. Track it again from the quest log.",
+                        event: InputEvent::ToggleQuestTracking(quest_id),
+                    }));
+                }
+                self.fingerprint = fingerprint;
+            }
+
+            for (index, element) in self.elements.iter_mut().enumerate() {
+                element.create_layout_info(state, store.child_store(index as u64), resolver);
+            }
+        });
+    }
+
+    fn lay_out<'a>(
+        &'a self,
+        state: &'a State<ClientState>,
+        store: ElementStore<'a>,
+        _: &'a Self::LayoutInfo,
+        layout: &mut WindowLayout<'a, ClientState>,
+    ) {
+        for (index, element) in self.elements.iter().enumerate() {
+            element.lay_out(state, store.child_store(index as u64), &(), layout);
         }
     }
 }

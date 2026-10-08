@@ -17,6 +17,7 @@ mod skill_info;
 mod skill_information;
 mod skill_requirements;
 mod skill_tree;
+mod story_quest;
 mod towninfo;
 
 use std::hash::Hash;
@@ -44,6 +45,7 @@ pub use self::msgstringtable::MsgStringTable;
 pub use self::skill_info::{skill_display_name, skill_element_name, skill_layout_value, skill_tooltip_text};
 pub(crate) use self::skill_information::skill_asset_file_names;
 pub use self::skill_tree::SkillTreeLayout;
+pub use self::story_quest::newbie_quest_guide;
 pub use self::towninfo::{TownInfoTable, TownPoi, TownPoiKind};
 use crate::loaders::GameFileLoader;
 pub use crate::world::library::skill_information::SkillListInformation;
@@ -108,10 +110,12 @@ impl Library {
         T::try_get(self, key)
     }
 
-    /// Facility POIs (shops, kafra, guides, …) for a map base name.
-    #[inline]
-    pub fn town_pois(&self, map_name: &str) -> &[TownPoi] {
-        self.towninfo_table.pois_for_map(map_name)
+    /// Facility marks for a map base name. A Towninfo row is kept only when a
+    /// server NPC occupies that cell and matches the role. Exact-name dealers
+    /// the table missed are added at the server cell. [`Self::is_town_map`]
+    /// still uses the raw Towninfo table.
+    pub fn town_pois(&self, map_name: &str) -> Vec<TownPoi> {
+        towninfo::cached_verified_pois(map_name, self.towninfo_table.pois_for_map(map_name))
     }
 
     /// Whether the map is a town / safe map (has Towninfo facilities). Used to
@@ -146,6 +150,31 @@ impl Library {
             .iter()
             .map(|(job_id, identity)| (*job_id, identity.to_string()))
             .collect()
+    }
+
+    /// One accessory name and nothing else. Part-file tests use this so they
+    /// do not open the GRFs.
+    #[cfg(test)]
+    pub(crate) fn with_accessory_names_for_test(entries: &[(u16, bool, &str)]) -> Self {
+        let mut accessory_name_table = HashMap::new();
+        for &(view_id, female, name) in entries {
+            accessory_name_table.insert(AccessoryNameKey { view_id, female }, AccessoryName::from_sprite_name(name));
+        }
+
+        Self {
+            accessory_name_table,
+            job_identity_table: HashMap::new(),
+            job_name_table: HashMap::new(),
+            item_info_table: HashMap::new(),
+            map_sky_data_table: HashMap::new(),
+            skill_information_table: HashMap::new(),
+            skill_requirements_table: HashMap::new(),
+            skill_tree_table: HashMap::new(),
+            baby_job_table: HashMap::new(),
+            towninfo_table: TownInfoTable::default(),
+            campaign_quest_table: CampaignQuestTable::default(),
+            msgstringtable: MsgStringTable::default(),
+        }
     }
 
     pub(crate) fn skill_asset_entries(&self) -> Vec<(ragnarok_packets::SkillId, &str, &str)> {

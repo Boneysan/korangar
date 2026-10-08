@@ -426,10 +426,18 @@ pub enum InputEvent {
         /// Skill to move.
         skill: LearnableSkill,
     },
-    /// Assign a skill to the first free hotbar slot (skill-tree right click).
+    /// Assign a skill from the skill tree (right click). An existing slot for
+    /// that skill is replaced; otherwise the first free slot is used.
     AssignSkillToHotbar {
         skill: LearnableSkill,
     },
+    /// Assign a consumable from the inventory menu. An existing slot for that
+    /// item is replaced; otherwise the first free slot is used.
+    AssignItemToHotbar {
+        item_id: ragnarok_packets::ItemId,
+    },
+    /// Step every window's opacity through 100%, 75%, 50%, and 25%.
+    CycleWindowOpacity,
     /// Camera-relative keyboard movement (WASD).
     KeyboardMove {
         forward: bool,
@@ -448,6 +456,7 @@ pub enum InputEvent {
     /// Plot a route to an online party member's map and coordinates (GDD
     /// 10.14).
     NavigateToPartyMember {
+        account_id: AccountId,
         character_name: String,
         map_name: String,
         position: Option<(u16, u16)>,

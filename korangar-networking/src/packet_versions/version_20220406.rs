@@ -1000,17 +1000,14 @@ where
         amount: packet.amount,
     })?;
     packet_handler.register(|packet: InventoryOrderPacket| NetworkEvent::InventoryOrder { indices: packet.indices })?;
-    packet_handler.register(|packet: UseItemAckPacket| -> NetworkEventList {
-        if packet.result != 0 && packet.amount == 0 {
-            NetworkEvent::InventoryItemRemoved {
-                reason: RemoveItemReason::Normal,
-                index: packet.index,
-                amount: 1,
-            }
-            .into()
-        } else {
-            NetworkEventList::default()
-        }
+    // ZC_USE_ITEM_ACK (0x01C8). The amount is the stack still in the slot.
+    // Hercules deletes the item with no 0x07FA (`pc_delitem` type 1) and
+    // broadcasts a success to the area, so the client filters on entity id.
+    packet_handler.register(|packet: UseItemAckPacket| NetworkEvent::UseItemAck {
+        entity_id: packet.entity_id,
+        index: packet.index,
+        amount: packet.amount,
+        success: packet.result != 0,
     })?;
     // ZC_ITEM_THROW_ACK (0x00AF). Success usually also sends 0x07FA; amount 0 means
     // rejected.
@@ -2617,6 +2614,61 @@ mod dropped_feature_tests {
             }
             [] => panic!("0x0191 published nothing — it is registered as a no-op again, and the trap's message is dropped"),
             other => panic!("0x0191 produced {other:?}"),
+        }
+    }
+
+    /// `ZC_USE_ITEM_ACK` (0x01C8) reports the stack still in the slot.
+    /// Acting only when that amount is 0 left every potion use but the last
+    /// one unchanged. Amount 0 used to become "remove one from this client",
+    /// which deleted a neighbor's matching slot because the ack is broadcast.
+    #[test]
+    fn a_use_item_ack_keeps_the_remaining_count_and_who_used_it() {
+        fn ack(entity_id: u32, amount: i16, result: u8) -> Vec<u8> {
+            let mut bytes = vec![0xC8, 0x01];
+            // Hercules sends the inventory slot plus 2. Slot 3 is wire index 5.
+            bytes.extend(5u16.to_le_bytes());
+            bytes.extend(569u32.to_le_bytes());
+            bytes.extend(entity_id.to_le_bytes());
+            bytes.extend(amount.to_le_bytes());
+            bytes.push(result);
+            bytes
+        }
+
+        match events(&ack(7, 2, 1)).as_slice() {
+            [
+                NetworkEvent::UseItemAck {
+                    entity_id,
+                    index,
+                    amount: 2,
+                    success: true,
+                },
+            ] => {
+                assert_eq!(*entity_id, EntityId(7));
+                assert_eq!(*index, InventoryIndex(3));
+            }
+            other => panic!("a partial use produced {other:?}"),
+        }
+
+        // The last of a stack is still an ack for that player, not a local removal.
+        match events(&ack(9, 0, 1)).as_slice() {
+            [
+                NetworkEvent::UseItemAck {
+                    entity_id,
+                    amount: 0,
+                    success: true,
+                    ..
+                },
+            ] => assert_eq!(*entity_id, EntityId(9)),
+            other => panic!("the last item produced {other:?}"),
+        }
+
+        match events(&ack(7, 0, 0)).as_slice() {
+            [
+                NetworkEvent::UseItemAck {
+                    amount: 0, success: false, ..
+                },
+            ] => {}
+            other => panic!("a failed use produced {other:?}"),
         }
     }
 }

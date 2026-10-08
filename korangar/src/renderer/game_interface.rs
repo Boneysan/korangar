@@ -231,6 +231,10 @@ impl GameInterfaceRenderer {
         );
     }
 
+    pub fn render_world_label(&self, text: &str, position: ScreenPosition) {
+        self.render_text(text, position, Color::WHITE, FontSize(16.0), AlignHorizontal::Center);
+    }
+
     pub fn render_hover_text(&self, text: &str, scaling: Scaling, mouse_position: ScreenPosition) {
         let offset = ScreenPosition {
             left: 15.0 * scaling.get_factor(),

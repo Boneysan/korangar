@@ -4,7 +4,7 @@ use korangar_interface::window::{CustomWindow, Window};
 use rust_state::{Path, PathExt, Selector};
 
 use crate::interface::windows::WindowClass;
-use crate::loaders::OverflowBehavior;
+use crate::loaders::FontSize;
 use crate::state::theme::InterfaceThemeType;
 use crate::state::{ClientState, ClientStatePathExt, client_state};
 use crate::world::{CraftingOddsInput, Player, best_anvil, crafting_odds_text, is_baby_class};
@@ -77,12 +77,16 @@ where
             theme: InterfaceThemeType::InGame,
             closable: true,
             elements: (
-                text! {
-                    text: CraftingOddsSelector {
-                        player_path: self.player_path,
-                        text: UnsafeCell::default(),
+                scroll_view! {
+                    children: text! {
+                        text: CraftingOddsSelector {
+                            player_path: self.player_path,
+                            text: UnsafeCell::default(),
+                        },
+                        // Theme body size, wrapping onto new lines. Shrink
+                        // crushed a long odds line down until it was unreadable.
+                        font_size: FontSize(14.0),
                     },
-                    overflow_behavior: OverflowBehavior::Shrink,
                 },
             ),
         }

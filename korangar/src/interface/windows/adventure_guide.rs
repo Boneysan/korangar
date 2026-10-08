@@ -71,9 +71,19 @@ fn listed<T: std::fmt::Display>(value: Option<T>) -> String {
 /// record. Values are shown as configured; `Attack` keeps the database's own
 /// two-number form because the two values feed different damage paths.
 fn monster_combat_lines(monster: &ReferenceMonster) -> Vec<String> {
-    let attack = monster
-        .attack
-        .map_or_else(|| "not listed".to_owned(), |[first, second]| format!("{first} / {second}"));
+    // The database stores two attack figures in either order. Show the lower
+    // one first so the line reads as a range.
+    let attack = monster.attack.map_or_else(
+        || "not listed".to_owned(),
+        |pair| {
+            let (low, high) = if pair[0] <= pair[1] {
+                (pair[0], pair[1])
+            } else {
+                (pair[1], pair[0])
+            };
+            format!("{low}–{high}")
+        },
+    );
     let speed = match monster.move_speed {
         Some(speed) => format!("{speed} ms per cell (an unhasted player is 150; lower is faster)"),
         None => "not listed".to_owned(),
@@ -81,7 +91,7 @@ fn monster_combat_lines(monster: &ReferenceMonster) -> Vec<String> {
     vec![
         format!("EXP: base {}   job {}", listed(monster.base_exp), listed(monster.job_exp)),
         format!(
-            "Attack (database attack1 / attack2): {attack}   DEF {}   MDEF {}",
+            "Attack: {attack}   DEF {}   MDEF {}",
             listed(monster.defense),
             listed(monster.magic_defense)
         ),
@@ -237,16 +247,15 @@ fn push_monster_skills(
         if !mob_skill.target_summary.is_empty() {
             lines.push(format!("  {}", mob_skill.target_summary));
         }
-        // The translation above is derived from these raw fields; showing them
-        // lets a reader check it against mob_skill_db.conf (encyclopedia
-        // evidence contract: keep the raw source beside the explanation).
-        lines.push(format!("  Server record: {}", raw_mob_skill_record(mob_skill)));
+        // The translation above is derived from these raw fields. The record
+        // stays on a source line so a reader can check mob_skill_db.conf.
+        lines.push(format!("Source: {}.", raw_mob_skill_record(mob_skill)));
     }
     if skills.len() > 8 {
-        lines.push(format!("{} additional skill records omitted.", skills.len() - 8));
+        lines.push(format!("Source: {} additional skill records omitted.", skills.len() - 8));
     }
     if let Some(source) = source {
-        lines.push(format!("Monster-skill source: {} ({})", source.path, source.record));
+        lines.push(format!("Source: {} ({}).", source.path, source.record));
     }
 }
 
@@ -267,17 +276,15 @@ fn monster_details(monster: &ReferenceMonster) -> Vec<String> {
         lines.push(format!("Size: {size}"));
     }
     lines.extend(monster_combat_lines(monster));
-    lines.push(format!("Skills: {}   Drops: {}", monster.skills.len(), monster.drops.len()));
     let pilot = data.pilot_skill_layer.as_ref();
     match (&monster.pilot_skills, pilot) {
         (Some(pilot_skills), Some(layer)) => {
-            let state = match layer.active {
-                true => "ON on this server",
-                false => "off on this server",
-            };
+            lines.push(match layer.active {
+                true => "Uses the newer skill list on this server.".to_owned(),
+                false => "Uses the original skill list on this server.".to_owned(),
+            });
             lines.push(format!(
-                "AI pilot layer: {} = {} in {} ({state}). While it is on, this monster uses the pilot skills; while it is off, the stock \
-                 skills.",
+                "Source: {} = {} in {}.",
                 layer.setting, layer.configured_value, layer.config_source
             ));
             let (first, second) = match layer.active {
@@ -301,15 +308,13 @@ fn monster_details(monster: &ReferenceMonster) -> Vec<String> {
             push_monster_skills(&mut lines, first, first_skills, first_source);
             push_monster_skills(&mut lines, second, second_skills, second_source);
         }
-        _ => push_monster_skills(
-            &mut lines,
-            "Configured monster skills and trigger conditions:",
-            &monster.skills,
-            &monster.skills_source,
-        ),
+        _ => push_monster_skills(&mut lines, "Skills:", &monster.skills, &monster.skills_source),
     }
-    if !monster.drops.is_empty() {
-        lines.push("Configured database drop rates (server modifiers may change realized chances):".to_owned());
+    if monster.drops.is_empty() {
+        lines.push("No drops listed.".to_owned());
+    } else {
+        lines.push("Drops:".to_owned());
+        lines.push("Source: drop rates are the database figures. The server's drop-rate setting can change them.".to_owned());
     }
     let mut sorted_drops = monster.drops.iter().collect::<Vec<_>>();
     sorted_drops.sort_by_key(|drop| {
@@ -344,35 +349,37 @@ fn monster_details(monster: &ReferenceMonster) -> Vec<String> {
         .filter(|region| is_graph_map(&region.map))
         .collect::<Vec<_>>();
     if routeable_regions.is_empty() {
-        lines.push("No graph-known static spawn-map route is available; conditional/scripted spawns may also be omitted.".to_owned());
+        lines.push("No map with a route lists this monster.".to_owned());
     } else {
-        lines.push("Loaded static spawn placements (configured directive centers/spreads; exact runtime cells are randomized):".to_owned());
+        lines.push("Found on:".to_owned());
         for region in routeable_regions.iter().take(12) {
+            lines.push(region.map.clone());
             lines.push(format!(
-                "{} — {} loaded records, {} monsters listed",
-                region.map, region.spawn_records, region.listed_monsters
+                "Source: {} loaded records, {} monsters listed.",
+                region.spawn_records, region.listed_monsters
             ));
             for placement in region.placements.iter().take(3) {
-                let location = if placement.random_map_cell {
-                    "random eligible cell on map".to_owned()
+                let place = if placement.random_map_cell {
+                    "a random cell on the map".to_owned()
                 } else if placement.x_spread != 0 || placement.y_spread != 0 {
                     format!(
-                        "around ({}, {}) — spread {}×{}",
+                        "around ({}, {}), spread {}×{}",
                         placement.x, placement.y, placement.x_spread, placement.y_spread
                     )
                 } else {
                     format!("at ({}, {})", placement.x, placement.y)
                 };
-                lines.push(format!("  {location} — {} listed — {}", placement.amount, placement.source));
+                lines.push(format!("  {place} ×{}", placement.amount));
+                lines.push(format!("Source: {}.", placement.source));
             }
             if region.placements.len() > 3 {
-                lines.push(format!("  {} more placement records", region.placements.len() - 3));
+                lines.push(format!("Source: {} more placement records.", region.placements.len() - 3));
             }
             lines.push(format!("@route:{}", region.map));
         }
         if routeable_regions.len() > 12 {
             lines.push(format!(
-                "{} additional spawn maps omitted from this detail view.",
+                "Source: {} additional spawn maps omitted.",
                 routeable_regions.len() - 12
             ));
         }
@@ -387,26 +394,27 @@ fn monster_details(monster: &ReferenceMonster) -> Vec<String> {
                 }
                 (None, _) if spawn.map_template.is_some() => {
                     format!(
-                        "{}instance of map template {}",
+                        "{}an instance of {}",
                         if spawn.map_template_approximate {
-                            "approximately on an "
+                            "approximately on "
                         } else {
-                            "on an "
+                            "on "
                         },
                         spawn.map_template.as_deref().unwrap_or_default()
                     )
                 }
-                (None, [Some(x), Some(y)]) => format!("map expression `{}` at ({x}, {y})", spawn.map_expression),
+                (None, [Some(x), Some(y)]) => format!("a script-chosen map at ({x}, {y})"),
                 (None, [Some(x1), Some(y1), Some(x2), Some(y2)]) => {
-                    format!("map expression `{}` in area ({x1}, {y1})–({x2}, {y2})", spawn.map_expression)
+                    format!("a script-chosen map in area ({x1}, {y1})–({x2}, {y2})")
                 }
-                (..) => format!("map expression `{}`", spawn.map_expression),
+                (..) => "a script-chosen map".to_owned(),
             };
-            let amount = spawn
-                .amount
-                .map(|count| format!("; configured call amount {count}"))
-                .unwrap_or_default();
-            lines.push(format!("{} — {location}{amount} — {}", spawn.spawn_kind, spawn.source));
+            let amount = spawn.amount.map(|count| format!(" ×{count}")).unwrap_or_default();
+            lines.push(format!("{location}{amount}."));
+            if !spawn.map_expression.is_empty() {
+                lines.push(format!("Source: map expression `{}`.", spawn.map_expression));
+            }
+            lines.push(format!("Source: {} — {}.", spawn.spawn_kind, spawn.source));
             if let (Some(map), [Some(x), Some(y)]) = (spawn.map.as_deref(), spawn.coordinates.as_slice()) {
                 lines.push(format!("@route-cell:{map}:{x}:{y}|Route near scripted spawn — {map}"));
             } else if let (Some(map), [Some(x1), Some(y1), Some(x2), Some(y2)]) = (spawn.map.as_deref(), spawn.coordinates.as_slice()) {
@@ -417,11 +425,11 @@ fn monster_details(monster: &ReferenceMonster) -> Vec<String> {
         }
         if monster.scripted_spawn_references.len() > 8 {
             lines.push(format!(
-                "{} additional scripted spawn references omitted.",
+                "Source: {} additional scripted spawns omitted.",
                 monster.scripted_spawn_references.len() - 8
             ));
         }
-        lines.push("A call site does not prove it runs for every player or when the monster is currently present.".to_owned());
+        lines.push("A script placement does not mean the monster is there for every player right now.".to_owned());
     }
     let related_rumors = reference_data().rumors_for_monster(monster.id);
     if !related_rumors.is_empty() {
@@ -442,9 +450,9 @@ fn drop_source_line(monster_id: u32, sprite_name: &str, kind: &str, rate_per_100
         Some(monster) => (display_name(&monster.name, &monster.sprite_name), Some(monster.level)),
         None => (sprite_name.to_owned(), None),
     };
-    let level = level.map(|level| format!(", Lv {level}")).unwrap_or_default();
+    let level = level.map(|level| format!(" (Lv {level})")).unwrap_or_default();
     format!(
-        "@guide:monster:{monster_id}|{name} (ID {monster_id}{level}) — {} drop {:.2}%",
+        "@guide:monster:{monster_id}|{name}{level} — {} drop {:.2}%",
         if kind == "mvp" { "MVP" } else { "normal" },
         rate_per_10000 as f32 / 100.0
     )
@@ -454,7 +462,7 @@ fn drop_source_line(monster_id: u32, sprite_name: &str, kind: &str, rate_per_100
 /// do I get this" is the question most players open it with.
 fn push_item_drop_lines(lines: &mut Vec<String>, item: &ReferenceItem) {
     if !item.drops_from.is_empty() {
-        lines.push("Dropped by (database rates; server rates may differ):".to_owned());
+        lines.push("Dropped by:".to_owned());
         for source in item.drops_from.iter().take(8) {
             lines.push(drop_source_line(
                 source.monster_id,
@@ -474,7 +482,7 @@ fn push_item_drop_lines(lines: &mut Vec<String>, item: &ReferenceItem) {
     } else {
         let dropping_monsters = reference_data().monsters_dropping_item(item.id);
         if !dropping_monsters.is_empty() {
-            lines.push("Dropped by (database rates; server rates may differ):".to_owned());
+            lines.push("Dropped by:".to_owned());
             for monster in dropping_monsters.iter().take(8) {
                 if let Some(drop) = monster.drops.iter().find(|d| d.item_id == item.id) {
                     lines.push(drop_source_line(
@@ -493,6 +501,133 @@ fn push_item_drop_lines(lines: &mut Vec<String>, item: &ReferenceItem) {
             }
         }
     }
+    if lines.iter().any(|line| line.starts_with("Dropped by:")) {
+        lines.push("Source: drop rates are the database figures. The server's drop-rate setting can change them.".to_owned());
+    }
+}
+
+/// Combat numbers, the effect, the price, and who sells it. These come before
+/// the script clues so a player sees what the item is and where to get it.
+fn push_item_player_facts(lines: &mut Vec<String>, item: &ReferenceItem) {
+    if !item.job.is_empty() {
+        let mut jobs = item
+            .job
+            .iter()
+            .filter(|(_, allowed)| **allowed)
+            .map(|(name, _)| name.as_str())
+            .collect::<Vec<_>>();
+        jobs.sort_unstable();
+        lines.push(format!("Allowed jobs: {}", jobs.join(", ")));
+    }
+    if let Some(gender) = &item.gender {
+        let label = match gender.as_str() {
+            "SEX_MALE" => "Male characters",
+            "SEX_FEMALE" => "Female characters",
+            _ => gender,
+        };
+        lines.push(format!("Gender restriction: {label}"));
+    }
+    if let Some(location) = &item.loc {
+        let locations = match location {
+            serde_json::Value::String(value) => vec![value.as_str()],
+            serde_json::Value::Array(values) => values.iter().filter_map(serde_json::Value::as_str).collect(),
+            _ => Vec::new(),
+        };
+        if !locations.is_empty() {
+            let readable = locations
+                .iter()
+                .map(|location| location.strip_prefix("EQP_").unwrap_or(location).replace('_', " "))
+                .collect::<Vec<_>>()
+                .join(", ");
+            lines.push(format!("Worn on: {readable}"));
+        } else if let Some(flags) = location.as_i64() {
+            lines.push(format!("Source: equipment location flags {flags}."));
+        }
+    }
+    if let Some(level) = &item.equip_level {
+        let requirement = match level {
+            serde_json::Value::Array(range) if range.len() == 2 => {
+                format!("{}–{}", range[0], range[1])
+            }
+            other => other.to_string(),
+        };
+        lines.push(format!("Required base level: {requirement}"));
+    }
+    if let Some(weapon_level) = item.weapon_level {
+        lines.push(format!("Weapon level: {weapon_level}"));
+    }
+    if let Some(refineable) = item.refine {
+        lines.push(if refineable { "Can be refined." } else { "Cannot be refined." }.to_owned());
+    }
+    if let Some(atk) = item.atk {
+        lines.push(format!("ATK: {atk}"));
+    }
+    if let Some(matk) = item.matk {
+        lines.push(format!("MATK: {matk}"));
+    }
+    if let Some(defense) = item.defense {
+        lines.push(format!("DEF: {defense}"));
+    }
+    if let Some(slots) = item.slots {
+        lines.push(format!("Slots: {slots}"));
+    }
+    if let Some(summary) = &item.effect_summary {
+        lines.push(format!("Effect: {summary}"));
+        lines.push("Source: the effect text covers recognized script patterns. Stacking with other effects may be unstated.".to_owned());
+    } else if item.effect_status == "scripted_not_translated" {
+        lines.push("Effect: not translated yet.".to_owned());
+    } else if item.effect_status == "no_script_field" {
+        lines.push("No special effect listed.".to_owned());
+    } else if !item.effect_status.is_empty() {
+        lines.push(format!("Source: effect coverage {}.", item.effect_status.replace('_', " ")));
+    } else {
+        lines.push("Effect details: not documented yet.".to_owned());
+    }
+    if item.buy > 0 {
+        lines.push(format!("Buy price: {}z", item.buy));
+    }
+    if let Some(sell) = item.sell {
+        lines.push(format!("Sell price: {sell}z"));
+    }
+    if item.shops.is_empty() {
+        return;
+    }
+    lines.push("Sold by:".to_owned());
+    for shop in item.shops.iter().take(8) {
+        let price = if shop.uses_item_db_price {
+            if item.buy > 0 {
+                format!("{} {}", item.buy, shop.currency)
+            } else {
+                "the item database price".to_owned()
+            }
+        } else {
+            format!("{} {}", shop.price.unwrap_or_default(), shop.currency)
+        };
+        let place = match shop.shop_type.as_str() {
+            "cashshop" => "cash shop",
+            _ => "shop",
+        };
+        lines.push(format!(
+            "{place}: {} on {} at ({}, {}) for {price}.",
+            shop.npc_name, shop.map, shop.x, shop.y,
+        ));
+        if let (Ok(x), Ok(y)) = (u16::try_from(shop.x), u16::try_from(shop.y))
+            && is_graph_map(&shop.map)
+        {
+            lines.push(format!(
+                "@route-cell:{map}:{x}:{y}|Route to {} — {map}",
+                shop.npc_name,
+                map = shop.map
+            ));
+        }
+        if !shop.source.is_empty() {
+            lines.push(format!("Source: {}.", shop.source));
+        }
+    }
+    if item.shops.len() > 8 {
+        lines.push(format!("{} additional shops omitted.", item.shops.len() - 8));
+    }
+    lines.push("Source: only shops whose stock is written out in a script are listed.".to_owned());
 }
 
 fn item_details(item: &ReferenceItem, card: bool) -> Vec<String> {
@@ -502,6 +637,7 @@ fn item_details(item: &ReferenceItem, card: bool) -> Vec<String> {
         format!("Type: {}   Weight: {}", item_type_label(kind), item.weight),
     ];
     push_item_drop_lines(&mut lines, item);
+    push_item_player_facts(&mut lines, item);
     let relevant = reference_data()
         .crafting_entries
         .iter()
@@ -513,6 +649,7 @@ fn item_details(item: &ReferenceItem, card: bool) -> Vec<String> {
         .collect::<Vec<_>>();
     if !relevant.is_empty() {
         lines.push("Crafting and conversion recipes:".to_owned());
+        let mut recipe_sources = Vec::new();
         for recipe in relevant.iter().take(12) {
             if recipe.output_id == item.id {
                 let materials = recipe
@@ -535,21 +672,28 @@ fn item_details(item: &ReferenceItem, card: bool) -> Vec<String> {
                     .unwrap_or_default();
                 let item_level = recipe.item_level.map(|level| format!("; item level {level}")).unwrap_or_default();
                 lines.push(format!(
-                    "Makes {} ×{} from {materials}{requirement}{item_level} — {}:{}",
-                    recipe.output_name, recipe.output_amount, recipe.source.path, recipe.source.record
+                    "Makes {} ×{} from {materials}{requirement}{item_level}",
+                    recipe.output_name, recipe.output_amount
                 ));
             } else {
                 lines.push(format!(
-                    "Used to make @guide:item:{}|{} ×{} — {}:{}",
-                    recipe.output_id, recipe.output_name, recipe.output_amount, recipe.source.path, recipe.source.record
+                    "Used to make @guide:item:{}|{} ×{}",
+                    recipe.output_id, recipe.output_name, recipe.output_amount
                 ));
+            }
+            let citation = format!("{}:{}", recipe.source.path, recipe.source.record);
+            if !recipe.source.path.is_empty() && !recipe_sources.contains(&citation) {
+                recipe_sources.push(citation);
             }
         }
         if relevant.len() > 12 {
             lines.push(format!("{} additional recipe links omitted.", relevant.len() - 12));
         }
+        for citation in recipe_sources {
+            lines.push(format!("Source: recipe {citation}."));
+        }
         lines.push(
-            "Recipe lists are configured server recipes; they do not establish access to the required skill or guarantee success."
+            "Source: recipe lists are configured server recipes. They do not establish access to the required skill or guarantee success."
                 .to_owned(),
         );
     }
@@ -563,21 +707,26 @@ fn item_details(item: &ReferenceItem, card: bool) -> Vec<String> {
         })
         .collect::<Vec<_>>();
     if !reviewed_quest_rewards.is_empty() {
-        lines.push("Source-reviewed quest rewards:".to_owned());
+        lines.push("Quest rewards:".to_owned());
         for (quest, flow, reward) in reviewed_quest_rewards {
             lines.push(format!(
-                "@guide:quest:{}|{} ×{} — {} [{}; {}:{}]",
-                quest.id,
-                quest.name,
-                reward.amount,
-                reward.explanation,
-                reward.evidence_state.label(),
-                reward.source_path,
-                reward.source_line
+                "@guide:quest:{}|From the quest {}: ×{}",
+                quest.id, quest.name, reward.amount
             ));
+            if !reward.explanation.is_empty() {
+                lines.push(reward.explanation.clone());
+            }
             for condition in &flow.conditions {
                 lines.push(format!("Reward condition: {condition}"));
             }
+            lines.push(format!(
+                "Source: {} ×{} at {}:{} ({}).",
+                reward.item_name,
+                reward.amount,
+                reward.source_path,
+                reward.source_line,
+                reward.evidence_state.label()
+            ));
         }
     }
     let reviewed_reward_source_keys = reference_data()
@@ -595,34 +744,40 @@ fn item_details(item: &ReferenceItem, card: bool) -> Vec<String> {
         })
         .collect::<Vec<_>>();
     if !grants.is_empty() {
-        lines.push("Item grant clues in loaded NPC scripts:".to_owned());
+        lines.push("May also be given:".to_owned());
         for grant in grants.iter().take(10) {
             let status = match grant.condition_status.as_str() {
                 "script_context_unreviewed" => "conditions not reviewed",
                 other => other,
             };
-            let source = format!(
-                "via {}, {status} — {}:{}",
-                grant.grant_kind, grant.source.path, grant.source.line
-            );
             if let Some(npc) = &grant.npc_clue {
                 lines.push(format!(
-                    "{} ×{} near {} at {} ({}, {}) — {source}",
-                    grant.item_name, grant.amount, npc.name, npc.map, npc.x, npc.y
+                    "May be given near {} on {} at ({}, {}): ×{}.",
+                    npc.name, npc.map, npc.x, npc.y, grant.amount
                 ));
-                if is_graph_map(&npc.map) {
-                    lines.push(format!("@route:{}", npc.map));
+                if let (Ok(x), Ok(y)) = (u16::try_from(npc.x), u16::try_from(npc.y))
+                    && is_graph_map(&npc.map)
+                {
+                    lines.push(format!(
+                        "@route-cell:{map}:{x}:{y}|Route to {} — {map}",
+                        npc.name,
+                        map = npc.map
+                    ));
                 }
             } else {
-                lines.push(format!("{} ×{} — {source}", grant.item_name, grant.amount));
+                lines.push(format!("May be given: ×{}.", grant.amount));
             }
+            lines.push(format!(
+                "Source: {} via {}, {status}, {}:{}.",
+                grant.item_name, grant.grant_kind, grant.source.path, grant.source.line
+            ));
         }
         if grants.len() > 10 {
             lines.push(format!("{} additional script clues omitted.", grants.len() - 10));
         }
         lines.push(
-            "These calls show possible grants in the script; the surrounding conditions and whether a player can trigger them are not \
-             reviewed."
+            "Source: these calls show possible grants in the script. The surrounding conditions and whether a player can trigger them are \
+             not reviewed."
                 .to_owned(),
         );
     }
@@ -632,25 +787,36 @@ fn item_details(item: &ReferenceItem, card: bool) -> Vec<String> {
         .filter(|use_ref| use_ref.item_id == item.id)
         .collect::<Vec<_>>();
     if !uses.is_empty() {
-        lines.push("Consumed in loaded NPC scripts (possible requirements or exchanges):".to_owned());
+        lines.push("Used as a turn-in or ingredient:".to_owned());
         for use_ref in uses.iter().take(10) {
-            let evidence = format!("{}:{}", use_ref.source.path, use_ref.source.line);
             if let Some(npc) = &use_ref.npc_clue {
                 lines.push(format!(
-                    "{} ×{} near {} at {} ({}, {}) — {evidence}",
-                    use_ref.item_name, use_ref.amount, npc.name, npc.map, npc.x, npc.y
+                    "Used near {} on {} at ({}, {}): ×{}.",
+                    npc.name, npc.map, npc.x, npc.y, use_ref.amount
                 ));
-                if is_graph_map(&npc.map) {
-                    lines.push(format!("@route:{}", npc.map));
+                if let (Ok(x), Ok(y)) = (u16::try_from(npc.x), u16::try_from(npc.y))
+                    && is_graph_map(&npc.map)
+                {
+                    lines.push(format!(
+                        "@route-cell:{map}:{x}:{y}|Route to {} — {map}",
+                        npc.name,
+                        map = npc.map
+                    ));
                 }
             } else {
-                lines.push(format!("{} ×{} — {evidence}", use_ref.item_name, use_ref.amount));
+                lines.push(format!("Used: ×{}.", use_ref.amount));
             }
+            lines.push(format!(
+                "Source: {} at {}:{}.",
+                use_ref.item_name, use_ref.source.path, use_ref.source.line
+            ));
         }
         if uses.len() > 10 {
             lines.push(format!("{} additional consumption clues omitted.", uses.len() - 10));
         }
-        lines.push("These literal removals do not prove an exchange; rewards and conditions may be elsewhere or dynamic.".to_owned());
+        lines.push(
+            "Source: these literal removals do not prove an exchange. Rewards and conditions may be elsewhere or dynamic.".to_owned(),
+        );
     }
     let exchanges = reference_data()
         .item_exchanges
@@ -661,7 +827,7 @@ fn item_details(item: &ReferenceItem, card: bool) -> Vec<String> {
         })
         .collect::<Vec<_>>();
     if !exchanges.is_empty() {
-        lines.push("Source-reviewed exchanges:".to_owned());
+        lines.push("Exchanges:".to_owned());
         for exchange in exchanges {
             lines.push(format!(
                 "{} — @guide:npc:{}|{} at {} ({}, {})",
@@ -699,10 +865,13 @@ fn item_details(item: &ReferenceItem, card: bool) -> Vec<String> {
                 lines.push(format!("Condition: {condition}"));
             }
             lines.push(format!(
-                "Reviewed source: {} lines {:?}",
+                "Source: {} lines {:?}.",
                 exchange.source.path, exchange.source.reviewed_lines
             ));
-            lines.push(format!("Reviewed by {} on {}", exchange.reviewed_by, exchange.reviewed_on));
+            lines.push(format!(
+                "Source: reviewed by {} on {}.",
+                exchange.reviewed_by, exchange.reviewed_on
+            ));
             if is_graph_map(&exchange.npc.map) {
                 lines.push(format!(
                     "@route-cell:{}:{}:{}|Route to exchange — {}",
@@ -710,74 +879,6 @@ fn item_details(item: &ReferenceItem, card: bool) -> Vec<String> {
                 ));
             }
         }
-    }
-    if item.buy > 0 {
-        lines.push(format!("Buy price: {}z", item.buy));
-    }
-    if let Some(sell) = item.sell {
-        lines.push(format!("Sell price: {sell}z"));
-    }
-    if !item.job.is_empty() {
-        let mut jobs = item
-            .job
-            .iter()
-            .filter(|(_, allowed)| **allowed)
-            .map(|(name, _)| name.as_str())
-            .collect::<Vec<_>>();
-        jobs.sort_unstable();
-        lines.push(format!("Allowed jobs: {}", jobs.join(", ")));
-    }
-    if let Some(gender) = &item.gender {
-        let label = match gender.as_str() {
-            "SEX_MALE" => "Male characters",
-            "SEX_FEMALE" => "Female characters",
-            _ => gender,
-        };
-        lines.push(format!("Gender restriction: {label}"));
-    }
-    if let Some(location) = &item.loc {
-        let locations = match location {
-            serde_json::Value::String(value) => vec![value.as_str()],
-            serde_json::Value::Array(values) => values.iter().filter_map(serde_json::Value::as_str).collect(),
-            _ => Vec::new(),
-        };
-        if !locations.is_empty() {
-            let readable = locations
-                .iter()
-                .map(|location| location.strip_prefix("EQP_").unwrap_or(location).replace('_', " "))
-                .collect::<Vec<_>>()
-                .join(", ");
-            lines.push(format!("Equipment location: {readable}"));
-        } else if let Some(flags) = location.as_i64() {
-            lines.push(format!("Equipment location flags: {flags}"));
-        }
-    }
-    if let Some(level) = &item.equip_level {
-        let requirement = match level {
-            serde_json::Value::Array(range) if range.len() == 2 => {
-                format!("{}–{}", range[0], range[1])
-            }
-            other => other.to_string(),
-        };
-        lines.push(format!("Required base level: {requirement}"));
-    }
-    if let Some(weapon_level) = item.weapon_level {
-        lines.push(format!("Weapon level: {weapon_level}"));
-    }
-    if let Some(refineable) = item.refine {
-        lines.push(if refineable { "Can be refined." } else { "Cannot be refined." }.to_owned());
-    }
-    if let Some(atk) = item.atk {
-        lines.push(format!("ATK: {atk}"));
-    }
-    if let Some(matk) = item.matk {
-        lines.push(format!("MATK: {matk}"));
-    }
-    if let Some(defense) = item.defense {
-        lines.push(format!("DEF: {defense}"));
-    }
-    if let Some(slots) = item.slots {
-        lines.push(format!("Slots: {slots}"));
     }
     if !item.combos.is_empty() {
         lines.push("Item set combinations:".to_owned());
@@ -797,14 +898,14 @@ fn item_details(item: &ReferenceItem, card: bool) -> Vec<String> {
                 }
             });
             lines.push(format!("{members} — {effect_note}"));
-            lines.push(format!("Combo source: {} ({})", combo.source.path, combo.source.record));
+            lines.push(format!("Source: combo {} ({}).", combo.source.path, combo.source.record));
         }
         if item.combos.len() > 8 {
             lines.push(format!("{} additional item combinations omitted.", item.combos.len() - 8));
         }
     }
     if !item.group_contents.is_empty() {
-        lines.push("Randomized group contents (configured chance for one group selection):".to_owned());
+        lines.push("One of these, at random:".to_owned());
         for entry in item.group_contents.iter().take(16) {
             lines.push(format!(
                 "@guide:item:{}|{} — {:.2}% (weight {}/{})",
@@ -822,10 +923,11 @@ fn item_details(item: &ReferenceItem, card: bool) -> Vec<String> {
             ));
         }
         if let Some(entry) = item.group_contents.first() {
-            lines.push(format!("Contents source: {} ({})", entry.source.path, entry.source.record));
+            lines.push(format!("Source: contents {} ({}).", entry.source.path, entry.source.record));
         }
         lines.push(
-            "These are configured group-selection chances; custom item scripts may apply additional rules or grant multiple results."
+            "Source: these are configured group-selection chances. Custom item scripts may apply additional rules or grant multiple \
+             results."
                 .to_owned(),
         );
     }
@@ -844,50 +946,6 @@ fn item_details(item: &ReferenceItem, card: bool) -> Vec<String> {
         if item.contained_in_groups.len() > 8 {
             lines.push(format!("{} additional containers omitted.", item.contained_in_groups.len() - 8));
         }
-    }
-    if !item.shops.is_empty() {
-        lines.push("Literal shop listings in loaded NPC scripts (availability or conditions not reviewed):".to_owned());
-        for shop in item.shops.iter().take(8) {
-            let price = if shop.uses_item_db_price {
-                if item.buy > 0 {
-                    format!("{} {} (item DB value)", item.buy, shop.currency)
-                } else {
-                    "item DB value".to_owned()
-                }
-            } else {
-                format!("{} {}", shop.price.unwrap_or_default(), shop.currency)
-            };
-            lines.push(format!(
-                "{} — {} at {} ({}, {}) — {} — {}",
-                shop.npc_name, shop.shop_type, shop.map, shop.x, shop.y, price, shop.source
-            ));
-            if is_graph_map(&shop.map) {
-                lines.push(format!("@route:{}", shop.map));
-            }
-        }
-        if item.shops.len() > 8 {
-            lines.push(format!("{} additional loaded shop listings omitted.", item.shops.len() - 8));
-        }
-        lines.push(
-            "Only literal stock declarations from loaded NPC scripts are indexed; conditional and runtime-added stock may be missing."
-                .to_owned(),
-        );
-    }
-    if let Some(summary) = &item.effect_summary {
-        lines.push(format!("Effect: {summary}"));
-        lines.push(
-            "Effect summaries cover only recognized script patterns. Conditions and trigger odds are included when supported; stacking \
-             and cross-effect interactions may remain undocumented."
-                .to_owned(),
-        );
-    } else if item.effect_status == "scripted_not_translated" {
-        lines.push("Effect: not translated yet.".to_owned());
-    } else if item.effect_status == "no_script_field" {
-        lines.push("No special effect listed.".to_owned());
-    } else if !item.effect_status.is_empty() {
-        lines.push(format!("Effect coverage: {}", item.effect_status.replace('_', " ")));
-    } else {
-        lines.push("Effect details: not documented yet.".to_owned());
     }
     if let Some(source) = &item.source {
         lines.push(format!("Source: {} ({})", source.path, source.record));
@@ -1183,6 +1241,31 @@ fn display_name(name: &str, fallback: &str) -> String {
     if name.is_empty() { fallback.to_owned() } else { name.to_owned() }
 }
 
+/// Player label for an NPC script declaration. The raw token stays in the data.
+fn npc_kind_label(declared_type: &str) -> &'static str {
+    match declared_type {
+        "shop" => "Shop",
+        "cashshop" => "Cash shop",
+        "trader" => "Trader",
+        "warp" => "Warp",
+        _ => "NPC",
+    }
+}
+
+/// `kafra_suite` is an export token. The page shows the words.
+fn service_kind_words(kind: &str) -> String {
+    kind.replace('_', " ")
+}
+
+/// The name a player sees. The client draws NPC names without the `#` suffix.
+fn talk_name(internal_name: &str) -> &str {
+    internal_name
+        .split('#')
+        .next()
+        .filter(|name| !name.is_empty())
+        .unwrap_or(internal_name)
+}
+
 fn quest_details(quest: &crate::state::quests::QuestEntry) -> Vec<String> {
     let data = reference_data();
     let mut lines = vec![quest.name().to_owned()];
@@ -1222,46 +1305,64 @@ fn quest_details(quest: &crate::state::quests::QuestEntry) -> Vec<String> {
 
 fn quest_reference_details(quest: &crate::dm::reference_data::ReferenceQuest) -> Vec<String> {
     let data = reference_data();
-    let mut lines = vec![format!("{} — bundled hunt reference", quest.name)];
-    if let Some(flow) = &quest.flow_review {
+    let story = crate::world::newbie_quest_guide(quest.id);
+    let mut lines = vec![quest.name.clone()];
+    if let Some(story) = story {
+        let role = if story.is_turn_in { "Turn in to" } else { "Go to" };
+        lines.push(format!("{role}: {} on {} at ({}, {}).", story.npc, story.map, story.x, story.y));
+        lines.extend(story.steps.iter().map(|step| (*step).to_owned()));
         lines.push(format!(
-            "Source-reviewed flow: {} [{}; reviewed {}]",
-            flow.title,
-            flow.evidence_state.label(),
-            flow.reviewed_on
+            "@route-cell:{}:{}:{}|Route to {} — {}",
+            story.map, story.x, story.y, story.npc, story.map
         ));
+        lines.push("Source: npc/re/jobs/novice/academy.txt.".to_owned());
+    }
+    if let Some(flow) = &quest.flow_review {
+        if !flow.title.is_empty() {
+            lines.push(flow.title.clone());
+        }
         for condition in &flow.conditions {
-            lines.push(format!("Verified condition: {condition}"));
+            lines.push(format!("Requirement: {condition}"));
         }
         for reward in &flow.verified_item_rewards {
             lines.push(format!(
-                "@guide:item:{}|{} ×{} — {} [{}; {}:{}]",
-                reward.item_id,
+                "@guide:item:{}|Reward: {} ×{}",
+                reward.item_id, reward.item_name, reward.amount
+            ));
+            if !reward.explanation.is_empty() {
+                lines.push(reward.explanation.clone());
+            }
+            lines.push(format!(
+                "Source: {} ×{} at {}:{} ({}).",
                 reward.item_name,
                 reward.amount,
-                reward.explanation,
-                reward.evidence_state.label(),
                 reward.source_path,
-                reward.source_line
+                reward.source_line,
+                reward.evidence_state.label()
             ));
         }
         for source in &flow.sources {
-            lines.push(format!("Flow source: {} lines {:?}", source.path, source.lines));
+            lines.push(format!("Source: {} lines {:?}.", source.path, source.lines));
         }
-        lines.push(format!("Reviewed by {} on {}", flow.reviewed_by, flow.reviewed_on));
-        lines.push(format!("Review method: {}", flow.review_method));
+        lines.push(format!(
+            "Source: reviewed by {} on {}. Method: {} ({}).",
+            flow.reviewed_by,
+            flow.reviewed_on,
+            flow.review_method,
+            flow.evidence_state.label()
+        ));
     }
-    if quest.targets.is_empty() {
-        lines.push("No explicit hunt targets are recorded for this quest.".to_owned());
+    if story.is_none() && quest.targets.is_empty() {
+        lines.push("No hunt target is listed.".to_owned());
     }
-    if quest.npc_references.is_empty() {
-        lines.push("No NPC giver or turn-in has been source-reviewed in this quest entry.".to_owned());
+    if story.is_none() && quest.npc_references.is_empty() {
+        lines.push("No quest giver or turn-in is listed.".to_owned());
     }
     for target in &quest.targets {
         let title = format!("{} × {}", target.monster_name, target.count);
         lines.push(format!("Objective: {title}"));
         if let Some(level) = target.level_range {
-            lines.push(format!("Target level bounds (raw server values): {} / {}", level[0], level[1]));
+            lines.push(format!("Level {}–{}.", level[0], level[1]));
         }
         let map_has_route = target.map_name.as_ref().is_some_and(|map| is_graph_map(map));
         if let Some(map) = &target.map_name {
@@ -1297,15 +1398,15 @@ fn quest_reference_details(quest: &crate::dm::reference_data::ReferenceQuest) ->
         })
         .collect::<Vec<_>>();
     if !unreviewed_reward_candidates.is_empty() {
-        lines.push("Nearby literal item-grant candidates (not verified quest rewards):".to_owned());
+        lines.push("Possible reward, not confirmed:".to_owned());
         for candidate in unreviewed_reward_candidates.iter().take(16) {
             lines.push(format!(
-                "@guide:item:{}|{} × {} — candidate near quest completion",
+                "@guide:item:{}|{} ×{}",
                 candidate.item_id, candidate.item_name, candidate.amount
             ));
             lines.push(format!(
-                "Candidate evidence: {}:{}; nearby completequest call at line {} (offset {} lines)",
-                candidate.source_path, candidate.source_line, candidate.nearby_completequest_line, candidate.distance_lines
+                "Source: {}:{}; a completequest call is {} lines away, at line {}.",
+                candidate.source_path, candidate.source_line, candidate.distance_lines, candidate.nearby_completequest_line
             ));
         }
         if unreviewed_reward_candidates.len() > 16 {
@@ -1316,20 +1417,20 @@ fn quest_reference_details(quest: &crate::dm::reference_data::ReferenceQuest) ->
         }
     }
     for npc in quest.npc_references.iter().take(8) {
-        let reviewed_label = match npc.reviewed_role.as_deref() {
-            Some("offer") => Some("Reviewed quest offer"),
-            Some("turn_in") => Some("Reviewed quest turn-in"),
-            _ => None,
+        let role = match npc.reviewed_role.as_deref() {
+            Some("offer") => "Offered by",
+            Some("turn_in") => "Turn in to",
+            _ => "Mentioned near",
         };
-        if let Some(label) = reviewed_label {
+        lines.push(format!("{role} {} on {} at ({}, {}).", npc.name, npc.map_name, npc.x, npc.y));
+        if npc.reviewed_role.is_some() {
             lines.push(format!(
-                "{label}: {} — {} ({}, {}) [{}; source lines {:?}]",
-                npc.name, npc.map_name, npc.x, npc.y, npc.source_path, npc.reviewed_source_lines
+                "Source: {} source lines {:?}.",
+                npc.source_path, npc.reviewed_source_lines
             ));
             if let Some(evidence) = &npc.review_evidence {
-                lines.push(format!(
-                    "Source-reviewed route: {evidence} Requirements or availability may still apply."
-                ));
+                lines.push("Requirements or availability may still apply.".to_owned());
+                lines.push(format!("Source: {evidence}"));
             }
             if let Some(reward) = &npc.verified_reward {
                 let item_name = data
@@ -1337,15 +1438,12 @@ fn quest_reference_details(quest: &crate::dm::reference_data::ReferenceQuest) ->
                     .map(|item| display_name(&item.name, &item.aegis_name))
                     .unwrap_or_else(|| format!("Item {}", reward.item_id));
                 lines.push(format!(
-                    "Verified turn-in reward: {} base EXP + @guide:item:{}|{} ×{}",
+                    "Reward: {} base EXP and @guide:item:{}|{} ×{}",
                     reward.base_exp, reward.item_id, item_name, reward.item_amount
                 ));
             }
         } else {
-            lines.push(format!(
-                "Related NPC script reference: {} — {} ({}, {}) [{}:{}]",
-                npc.name, npc.map_name, npc.x, npc.y, npc.source_path, npc.source_line
-            ));
+            lines.push(format!("Source: {}:{}.", npc.source_path, npc.source_line));
         }
         if !npc.uses.is_empty() {
             let clues = npc
@@ -1382,14 +1480,13 @@ fn quest_reference_details(quest: &crate::dm::reference_data::ReferenceQuest) ->
     }
     if quest.npc_references.len() > 8 {
         lines.push(format!(
-            "{} additional related NPC script references omitted.",
+            "Source: {} additional related NPCs omitted.",
             quest.npc_references.len() - 8
         ));
     }
-    lines.push(
-        "Unreviewed quest steps, prerequisites, branch logic, and rewards remain incomplete unless explicitly source-reviewed above."
-            .to_owned(),
-    );
+    if story.is_none() {
+        lines.push("Source: steps, requirements, and rewards are only what the loaded scripts record.".to_owned());
+    }
     lines
 }
 
@@ -1417,18 +1514,23 @@ fn map_details(map_name: &str, town_pois: &[TownPoi]) -> Vec<String> {
     });
     configured_flags.dedup_by(|left, right| left.flag.eq_ignore_ascii_case(&right.flag) && left.value.eq_ignore_ascii_case(&right.value));
     if !configured_flags.is_empty() {
-        lines.push("Configured map flags from loaded scripts:".to_owned());
+        lines.push("Map rules:".to_owned());
         for entry in configured_flags.iter().take(24) {
-            let value = if entry.value.is_empty() {
-                String::new()
+            let shown = if entry.description.is_empty() {
+                if entry.value.is_empty() {
+                    entry.flag.clone()
+                } else {
+                    format!("{} ({})", entry.flag, entry.value)
+                }
+            } else if entry.value.is_empty() {
+                entry.description.clone()
             } else {
-                format!(" ({})", entry.value)
+                format!("{} ({})", entry.description, entry.value)
             };
+            lines.push(shown);
             lines.push(format!(
-                "{}{}: {} — {}",
+                "Source: {} at {}.",
                 entry.flag,
-                value,
-                entry.description,
                 player_source(&entry.source.path, entry.source.line)
             ));
             if let Some(overridden) = entry.overridden_directive_count {
@@ -1441,30 +1543,27 @@ fn map_details(map_name: &str, town_pois: &[TownPoi]) -> Vec<String> {
         if configured_flags.len() > 24 {
             lines.push(format!("{} additional map-flag entries omitted.", configured_flags.len() - 24));
         }
-        lines.push(
-            "These show the last literal directive in loaded-file order. Runtime setmapflag/removemapflag calls and map-zone \
-             configuration can still change effective rules."
-                .to_owned(),
-        );
+        lines.push("Scripts can still change these rules during play.".to_owned());
     }
     for review in reference
         .runtime_map_flag_reviews
         .iter()
         .filter(|review| review.map.eq_ignore_ascii_case(map_name))
     {
-        lines.push(format!(
-            "Source-reviewed runtime rule: {} [{}]",
-            review.title,
-            review.evidence_state.label()
-        ));
+        lines.push(review.title.clone());
         lines.push(review.summary.clone());
         for condition in &review.conditions {
             lines.push(format!("Condition: {condition}"));
         }
         for source in &review.sources {
-            lines.push(format!("Reviewed source: {} lines {:?}", source.path, source.lines));
+            lines.push(format!("Source: {} lines {:?}.", source.path, source.lines));
         }
-        lines.push(format!("Reviewed by {} on {}", review.reviewed_by, review.reviewed_on));
+        lines.push(format!(
+            "Source: reviewed by {} on {} ({}).",
+            review.reviewed_by,
+            review.reviewed_on,
+            review.evidence_state.label()
+        ));
     }
     let mut runtime_flags = reference
         .runtime_map_flag_clues
@@ -1473,20 +1572,17 @@ fn map_details(map_name: &str, town_pois: &[TownPoi]) -> Vec<String> {
         .collect::<Vec<_>>();
     runtime_flags.sort_by_key(|clue| (clue.flag.to_lowercase(), clue.source.path.clone(), clue.source.line));
     if !runtime_flags.is_empty() {
-        lines.push("Runtime map-flag call sites (source clues; execution and conditions unreviewed):".to_owned());
+        lines.push("Scripts can change these rules:".to_owned());
         for clue in runtime_flags.iter().take(16) {
+            let shown = if clue.value.is_empty() {
+                clue.flag.clone()
+            } else {
+                format!("{} ({})", clue.flag, clue.value)
+            };
+            lines.push(shown);
             lines.push(format!(
-                "{}({}, {}){} — {}:{}",
-                clue.operation,
-                clue.map_expression,
-                clue.flag,
-                if clue.value.is_empty() {
-                    String::new()
-                } else {
-                    format!(", {}", clue.value)
-                },
-                clue.source.path,
-                clue.source.line
+                "Source: {}({}, {}) at {}:{}.",
+                clue.operation, clue.map_expression, clue.flag, clue.source.path, clue.source.line
             ));
         }
         if runtime_flags.len() > 16 {
@@ -1495,7 +1591,7 @@ fn map_details(map_name: &str, town_pois: &[TownPoi]) -> Vec<String> {
                 runtime_flags.len() - 16
             ));
         }
-        lines.push("A call site does not prove that its event runs or establish the map's current rules.".to_owned());
+        lines.push("Source: a script call does not prove that the event runs.".to_owned());
     }
     match reference.map_spawn_details(map_name) {
         Some(details) => {
@@ -1504,23 +1600,20 @@ fn map_details(map_name: &str, town_pois: &[TownPoi]) -> Vec<String> {
             } else {
                 String::new()
             };
+            lines.push(format!("Suggested level: ~{}{range_str}", details.mean_level));
             lines.push(format!(
-                "Suggested level: ~{}{range_str} (static-spawn-record-weighted mean; reference only)",
-                details.mean_level
-            ));
-            lines.push(format!(
-                "Static population: {} spawn records across {} species",
-                details.records, details.species
+                "Static population: {} kinds of monster in {} spawn groups",
+                details.species, details.records
             ));
         }
         None => {
             lines.push(if is_template {
                 "No base-map static population is attached to this instance template.".to_owned()
             } else {
-                "Suggested level: unavailable (no verified static spawn records; low coverage)".to_owned()
+                "Suggested level: not listed.".to_owned()
             });
             if !is_template {
-                lines.push("Static population: no verified spawn records (low coverage or non-combat map)".to_owned());
+                lines.push("Static population: none listed.".to_owned());
             }
         }
     }
@@ -1528,24 +1621,16 @@ fn map_details(map_name: &str, town_pois: &[TownPoi]) -> Vec<String> {
     let mut static_mobs = reference
         .monsters
         .iter()
-        .filter_map(|monster| {
-            monster
-                .spawn_regions
-                .iter()
-                .find(|region| region.map.eq_ignore_ascii_case(map_name))
-                .map(|region| (monster, region))
-        })
+        .filter(|monster| monster.spawn_regions.iter().any(|region| region.map.eq_ignore_ascii_case(map_name)))
         .collect::<Vec<_>>();
-    static_mobs.sort_by_key(|(monster, _)| (monster.name.to_lowercase(), monster.id));
+    static_mobs.sort_by_key(|monster| (monster.name.to_lowercase(), monster.id));
     if !static_mobs.is_empty() {
-        lines.push(format!("Static monster roster ({} species):", static_mobs.len()));
-        for (monster, region) in &static_mobs {
+        lines.push(format!("Monsters that spawn here ({} kinds):", static_mobs.len()));
+        for monster in &static_mobs {
             lines.push(format!(
-                "@guide:monster:{}|{} — {} listed across {} configured spawn records",
+                "@guide:monster:{}|{}",
                 monster.id,
-                display_name(&monster.name, &monster.sprite_name),
-                region.listed_monsters,
-                region.spawn_records
+                display_name(&monster.name, &monster.sprite_name)
             ));
         }
     }
@@ -1568,25 +1653,22 @@ fn map_details(map_name: &str, town_pois: &[TownPoi]) -> Vec<String> {
     scripted_mobs.sort_by_key(|(monster, _)| (monster.name.to_lowercase(), monster.id));
     if !scripted_mobs.is_empty() {
         lines.push(format!(
-            "Scripted spawn clues ({} species; some map links are approximate; triggers and runtime populations unknown):",
+            "Also placed by scripts ({} kinds; the trigger is not listed):",
             scripted_mobs.len()
         ));
         for (monster, call_sites) in &scripted_mobs {
             lines.push(format!(
-                "@guide:monster:{}|{} — {} call sites",
+                "@guide:monster:{}|{}",
                 monster.id,
-                display_name(&monster.name, &monster.sprite_name),
-                call_sites
+                display_name(&monster.name, &monster.sprite_name)
             ));
+            lines.push(format!("Source: {call_sites} script placements."));
         }
     } else {
-        lines.push("No loaded scripted-spawn call is currently linked to this map.".to_owned());
+        lines.push("No script places a monster on this map.".to_owned());
     }
-    lines.push(
-        "The roster lists configured static spawns and identifiable script call sites; it does not show live counts. Dynamic map \
-         expressions may prevent some script spawns from being assigned to this map."
-            .to_owned(),
-    );
+    lines.push("These are configured spawns, not how many are alive right now.".to_owned());
+    lines.push("Source: a script that picks the map while it runs may not be listed on this map.".to_owned());
 
     let mut exits: Vec<_> = graph
         .edges
@@ -1594,7 +1676,7 @@ fn map_details(map_name: &str, town_pois: &[TownPoi]) -> Vec<String> {
         .filter(|edge| edge.kind == "walk_warp" && edge.from.map.eq_ignore_ascii_case(map_name))
         .collect();
     exits.sort_by_key(|edge| (edge.to.map.to_ascii_lowercase(), edge.from.x, edge.from.y, edge.to.x, edge.to.y));
-    lines.push(format!("Verified outgoing portal connections: {}", exits.len()));
+    lines.push(format!("Exits: {}", exits.len()));
     for edge in exits.iter().take(8) {
         lines.push(format!("Exit at ({}, {}) to {}", edge.from.x, edge.from.y, edge.to.map));
         lines.push(format!("@route:{}", edge.to.map));
@@ -1609,7 +1691,7 @@ fn map_details(map_name: &str, town_pois: &[TownPoi]) -> Vec<String> {
         .collect();
     services.sort_by_key(|edge| (edge.to.map.to_ascii_lowercase(), edge.from.x, edge.from.y));
     if !services.is_empty() {
-        lines.push(format!("Verified NPC travel services: {}", services.len()));
+        lines.push(format!("Travel services: {}", services.len()));
         for edge in services {
             let action = edge.action.as_deref().unwrap_or("Talk to the listed NPC.");
             let availability = if edge.availability == "conditional" { " (conditional)" } else { "" };
@@ -1621,7 +1703,7 @@ fn map_details(map_name: &str, town_pois: &[TownPoi]) -> Vec<String> {
                 lines.push(format!("Requirement: {requirements}"));
             }
             if let Some(source) = &edge.source {
-                lines.push(format!("Reviewed source: {source}"));
+                lines.push(format!("Source: {source}."));
             }
             lines.push(format!("@route:{}", edge.to.map));
         }
@@ -1634,7 +1716,7 @@ fn map_details(map_name: &str, town_pois: &[TownPoi]) -> Vec<String> {
         if routeable_poi_count == 8 {
             break;
         }
-        lines.push(format!("Towninfo facility: {} at ({x}, {y})", poi.name));
+        lines.push(format!("{} at ({x}, {y})", poi.name));
         lines.push(format!("@route-cell:{map_name}:{x}:{y}|Route to {} — {map_name}", poi.name));
         routeable_poi_count += 1;
     }
@@ -1644,19 +1726,23 @@ fn map_details(map_name: &str, town_pois: &[TownPoi]) -> Vec<String> {
         .count();
     if valid_poi_count > routeable_poi_count {
         lines.push(format!(
-            "{} additional Towninfo facility routes omitted.",
+            "Source: {} additional facility routes omitted.",
             valid_poi_count - routeable_poi_count
         ));
     }
     if town_pois.is_empty() {
-        lines.push("Towninfo facilities: none listed for this map".to_owned());
+        lines.push("No facilities are marked on this map.".to_owned());
     }
     let map_services = reference.services_for_map(map_name);
     if !map_services.is_empty() {
-        lines.push(format!("Reviewed NPC services ({}):", map_services.len()));
+        lines.push(format!("Services here ({}):", map_services.len()));
         for service in map_services {
             if let Some(index) = reference.npc_service_index_by_id(&service.id) {
-                lines.push(format!("@guide:service:{index}|{} ({})", service.title, service.service_kind));
+                lines.push(format!(
+                    "@guide:service:{index}|{} ({})",
+                    service.title,
+                    service_kind_words(&service.service_kind)
+                ));
             }
         }
     }
@@ -1717,36 +1803,30 @@ fn parse_route_cell_link(line: &str) -> Option<(String, u16, u16, String)> {
 
 fn npc_details(npc: &ReferenceNpc) -> Vec<String> {
     let display = display_name(&npc.display_name, &npc.name);
-    let kind = match npc.declared_type.as_str() {
-        "shop" => "Static shop declaration",
-        "cashshop" => "Cash shop declaration",
-        "trader" => "Trader (stock may change)",
-        "warp" => "Warp declaration",
-        _ => "NPC",
-    };
     let mut lines = vec![
-        format!("{display}"),
-        format!("Type: {kind}"),
-        format!("Map: {} at ({}, {})", npc.map, npc.x, npc.y),
+        display.clone(),
+        format!("Type: {}.", npc_kind_label(&npc.declared_type)),
+        format!("On {} at ({}, {}).", npc.map, npc.x, npc.y),
     ];
     if !npc.internal_name.is_empty() {
         lines.push(format!("Internal script name: {}", npc.internal_name));
     }
     if !npc.sprite.is_empty() && npc.declared_type != "warp" {
-        lines.push(format!("Declared sprite: {}", npc.sprite));
+        lines.push(format!("Source: sprite {}.", npc.sprite));
     }
-    lines.push(format!("Source: {}:{}", npc.source.path, npc.source.line));
+    lines.push(format!("Source: {}:{}.", npc.source.path, npc.source.line));
     for exchange in reference_data()
         .item_exchanges
         .iter()
         .filter(|exchange| exchange.npc.npc_id == npc.id)
     {
-        lines.push(format!("Reviewed service: {}", exchange.npc.service_role));
-        lines.push(format!(
-            "Source-reviewed exchange: {} [{}]",
-            exchange.title,
-            exchange.evidence_state.label()
-        ));
+        let role = exchange.npc.service_role.as_str();
+        if role.contains(' ') {
+            lines.push(format!("Service: {role}."));
+        } else {
+            lines.push(format!("Source: service role {role}."));
+        }
+        lines.push(format!("Exchange: {}.", exchange.title));
         let costs = exchange
             .inputs
             .iter()
@@ -1769,10 +1849,15 @@ fn npc_details(npc: &ReferenceNpc) -> Vec<String> {
             lines.push(format!("Condition: {condition}"));
         }
         lines.push(format!(
-            "Reviewed source: {} lines {:?}",
+            "Source: {} lines {:?}.",
             exchange.source.path, exchange.source.reviewed_lines
         ));
-        lines.push(format!("Reviewed by {} on {}", exchange.reviewed_by, exchange.reviewed_on));
+        lines.push(format!(
+            "Source: reviewed by {} on {} ({}).",
+            exchange.reviewed_by,
+            exchange.reviewed_on,
+            exchange.evidence_state.label()
+        ));
     }
     if is_graph_map(&npc.map) {
         if let (Ok(x), Ok(y)) = (u16::try_from(npc.x), u16::try_from(npc.y)) {
@@ -1788,26 +1873,29 @@ fn npc_details(npc: &ReferenceNpc) -> Vec<String> {
     }
     if matches!(npc.declared_type.as_str(), "shop" | "cashshop" | "trader") {
         if npc.offers.is_empty() {
-            lines.push("No literal stock was linked to this declaration; conditional or runtime stock may still exist.".to_owned());
+            lines.push("No listed stock. The shop may still sell other things.".to_owned());
         } else {
-            lines.push(format!("Indexed literal stock ({} offers):", npc.offers.len()));
+            lines.push("Sells:".to_owned());
             for offer in npc.offers.iter().take(24) {
                 let price = if offer.uses_item_db_price {
-                    format!("item DB price ({})", offer.currency)
+                    format!("the item database price ({})", offer.currency)
                 } else {
                     format!("{} {}", offer.price.unwrap_or_default(), offer.currency)
                 };
                 lines.push(format!("@guide:item:{}|{} — {price}", offer.item_id, offer.item_name));
             }
-            if npc.offers.len() > 24 {
-                lines.push(format!("{} additional offers omitted.", npc.offers.len() - 24));
+            let mut seen_sources = Vec::new();
+            for offer in npc.offers.iter().take(24) {
+                if !offer.source.is_empty() && !seen_sources.contains(&offer.source.as_str()) {
+                    seen_sources.push(offer.source.as_str());
+                    lines.push(format!("Source: {}.", offer.source));
+                }
             }
-            if let Some(offer) = npc.offers.first() {
-                lines.push(format!("Offer source: {}", offer.source));
+            if npc.offers.len() > 24 {
+                lines.push(format!("Source: {} additional offers omitted.", npc.offers.len() - 24));
             }
         }
-        lines
-            .push("Only literal offers from loaded scripts are indexed; conditional, barter, and runtime stock may be missing.".to_owned());
+        lines.push("Source: only shops whose stock is written out in a script are listed.".to_owned());
     }
     for service in reference_data()
         .npc_services
@@ -1816,8 +1904,9 @@ fn npc_details(npc: &ReferenceNpc) -> Vec<String> {
     {
         if let Some(index) = reference_data().npc_service_index_by_id(&service.id) {
             lines.push(format!(
-                "@guide:service:{index}|Reviewed service: {} ({})",
-                service.title, service.service_kind
+                "@guide:service:{index}|{} ({})",
+                service.title,
+                service_kind_words(&service.service_kind)
             ));
         }
     }
@@ -1826,40 +1915,41 @@ fn npc_details(npc: &ReferenceNpc) -> Vec<String> {
 
 fn service_details(service: &ReferenceNpcServiceReview) -> Vec<String> {
     let mut lines = vec![
-        format!("{}  (Service: {})", service.title, service.service_kind),
-        format!("Reviewed NPC service ({}):", service.evidence_state.label()),
-        format!("  Review method: {}", service.review_method),
-        format!("  Reviewed on: {} by {}", service.reviewed_on, service.reviewed_by),
+        service.title.clone(),
+        format!("Service: {}.", service_kind_words(&service.service_kind)),
+        format!(
+            "Source: reviewed by {} on {}. Method: {} ({}).",
+            service.reviewed_by,
+            service.reviewed_on,
+            service.review_method,
+            service.evidence_state.label()
+        ),
     ];
     if let Some(npc) = &service.npc {
-        lines.push(format!(
-            "Primary NPC: {} on {} at ({}, {})",
-            npc.internal_name, npc.map, npc.x, npc.y
-        ));
+        let name = talk_name(&npc.internal_name);
+        lines.push(format!("Talk to {name} on {} at ({}, {}).", npc.map, npc.x, npc.y));
+        lines.push(format!("Internal script name: {}.", npc.internal_name));
         lines.push(format!(
             "@route-cell:{}:{}:{}|Route to {} ({}, {})",
-            npc.map, npc.x, npc.y, npc.internal_name, npc.x, npc.y
+            npc.map, npc.x, npc.y, name, npc.x, npc.y
         ));
-        lines.push(format!(
-            "@guide:npc:{}|NPC Record: {} ({})",
-            npc.npc_id, npc.internal_name, npc.map
-        ));
+        lines.push(format!("@guide:npc:{}|{name}", npc.npc_id));
         if is_graph_map(&npc.map) {
             lines.push(format!("@route:{}", npc.map));
         }
     }
     if !service.conditions.is_empty() {
-        lines.push("Conditions & service rules:".to_owned());
+        lines.push("Requirements:".to_owned());
         for condition in &service.conditions {
-            lines.push(format!("  - {condition}"));
+            lines.push(condition.clone());
         }
     }
     if let Some(route_table) = &service.route_table {
-        lines.push("Kafra transportation routes:".to_owned());
+        lines.push("Kafra routes:".to_owned());
         for route in route_table {
-            lines.push(format!("  Origin map {}:", route.origin_map));
+            lines.push(format!("From {}:", route.origin_map));
             for dest in &route.destinations {
-                lines.push(format!("    -> {} (Fee: {} Zeny)", dest.name, dest.fee));
+                lines.push(format!("  {} — Fee: {} Zeny", dest.name, dest.fee));
             }
             if is_graph_map(&route.origin_map) {
                 lines.push(format!("@route:{}|Route to origin {}", route.origin_map, route.origin_map));
@@ -1870,25 +1960,11 @@ fn service_details(service: &ReferenceNpcServiceReview) -> Vec<String> {
         lines.push(format!("Route note: {note}"));
     }
     if let Some(count) = service.location_count {
-        lines.push(format!(
-            "Staff deployment: verified across {} locations in the game world.",
-            count
-        ));
+        lines.push(format!("Found in {count} places."));
     }
-    if !service.sources.is_empty() {
-        let citations = service
-            .sources
-            .iter()
-            .map(|s| {
-                format!(
-                    "{}:{}",
-                    s.path,
-                    s.lines.iter().map(ToString::to_string).collect::<Vec<_>>().join(",")
-                )
-            })
-            .collect::<Vec<_>>()
-            .join("; ");
-        lines.push(format!("Citations: {citations}"));
+    for source in &service.sources {
+        let cited = source.lines.iter().map(ToString::to_string).collect::<Vec<_>>().join(",");
+        lines.push(format!("Source: {}:{cited}.", source.path));
     }
     lines
 }
@@ -2010,14 +2086,277 @@ fn resolve_details_with_library(result: &GuideResult, library: &Library) -> Vec<
         return crate::world::navigation_graph()
             .maps
             .get(result.id as usize)
-            .map(|map_name| map_details(map_name, library.town_pois(map_name)))
+            .map(|map_name| {
+                let town_pois = library.town_pois(map_name);
+                map_details(map_name, &town_pois)
+            })
             .unwrap_or_else(|| vec!["Map entry unavailable.".to_owned()]);
     }
     resolve_details(result)
 }
 
+/// One person on the first-job path, at the cell their script declares.
+struct FirstJobStop {
+    /// Name a player should look for. The Acolyte guild NPC speaks as Father
+    /// Mareusis; the script declaration is Cleric.
+    label: &'static str,
+    declared_name: &'static str,
+    map: &'static str,
+    x: u16,
+    y: u16,
+    source: &'static str,
+}
+
+/// Academy instructor plus the town guild that actually changes the job.
+struct FirstJobPath {
+    job_id: u16,
+    town: &'static str,
+    directions: &'static str,
+    academy: FirstJobStop,
+    guild: FirstJobStop,
+    /// The Thief guildsman changes the job only after the guide's interview.
+    ceremony: Option<FirstJobStop>,
+}
+
+/// Renewal first jobs. Cells are the script declarations, not the speech
+/// markers (those disagree: Adric's sign says 62,51 and the NPC stands at
+/// 60,51).
+const FIRST_JOBS: &[FirstJobPath] = &[
+    FirstJobPath {
+        job_id: 1,
+        town: "Izlude",
+        directions: "Swordman Trainer teaches on the Academy's second floor and does not change your job. The guild indoors in Izlude, \
+                     west of the plaza, does.",
+        academy: FirstJobStop {
+            label: "Swordman Trainer",
+            declared_name: "Swordman Trainer",
+            map: "iz_ac02",
+            x: 60,
+            y: 51,
+            source: "npc/re/jobs/novice/academy.txt",
+        },
+        guild: FirstJobStop {
+            label: "Swordman",
+            declared_name: "Swordman",
+            map: "izlude_in",
+            x: 74,
+            y: 172,
+            source: "npc/re/jobs/1-1/swordman.txt",
+        },
+        ceremony: None,
+    },
+    FirstJobPath {
+        job_id: 2,
+        town: "Geffen",
+        directions: "Mage Chuck teaches on the Academy's second floor and sends you to Geffen. The Mage Guildsman there changes your job.",
+        academy: FirstJobStop {
+            label: "Mage Chuck",
+            declared_name: "Mage Chuck",
+            map: "iz_ac02",
+            x: 148,
+            y: 110,
+            source: "npc/re/jobs/novice/academy.txt",
+        },
+        guild: FirstJobStop {
+            label: "Mage Guildsman",
+            declared_name: "Mage Guildsman",
+            map: "geffen_in",
+            x: 164,
+            y: 124,
+            source: "npc/re/jobs/1-1/mage.txt",
+        },
+        ceremony: None,
+    },
+    FirstJobPath {
+        job_id: 3,
+        town: "Payon",
+        directions: "Archer Teacher teaches on the Academy's second floor and sends you to Payon. The guild is in Archer Village, north \
+                     of town.",
+        academy: FirstJobStop {
+            label: "Archer Teacher",
+            declared_name: "Archer Teacher",
+            map: "iz_ac02",
+            x: 65,
+            y: 109,
+            source: "npc/re/jobs/novice/academy.txt",
+        },
+        guild: FirstJobStop {
+            label: "Archer Guildsman",
+            declared_name: "Archer Guildsman",
+            map: "payon_in02",
+            x: 64,
+            y: 71,
+            source: "npc/re/jobs/1-1/archer.txt",
+        },
+        ceremony: None,
+    },
+    FirstJobPath {
+        job_id: 4,
+        town: "Prontera",
+        directions: "Acolyte Leader Alice teaches on the Academy's second floor and sends you to the Prontera church. Father Mareusis \
+                     there changes your job. His script name is Cleric.",
+        academy: FirstJobStop {
+            label: "Acolyte Leader Alice",
+            declared_name: "Acolyte Leader Alice",
+            map: "iz_ac02",
+            x: 156,
+            y: 169,
+            source: "npc/re/jobs/novice/academy.txt",
+        },
+        guild: FirstJobStop {
+            label: "Father Mareusis",
+            declared_name: "Cleric",
+            map: "prt_church",
+            x: 184,
+            y: 41,
+            source: "npc/re/jobs/1-1/acolyte.txt",
+        },
+        ceremony: None,
+    },
+    FirstJobPath {
+        job_id: 5,
+        town: "Alberta",
+        directions: "Salim Hamid teaches on the Academy's second floor and sends you to Alberta. The Merchant inside changes your job.",
+        academy: FirstJobStop {
+            label: "Salim Hamid",
+            declared_name: "Salim Hamid",
+            map: "iz_ac02",
+            x: 50,
+            y: 169,
+            source: "npc/re/jobs/novice/academy.txt",
+        },
+        guild: FirstJobStop {
+            label: "Merchant",
+            declared_name: "Merchant",
+            map: "alberta_in",
+            x: 53,
+            y: 43,
+            source: "npc/re/jobs/1-1/merchant.txt",
+        },
+        ceremony: None,
+    },
+    FirstJobPath {
+        job_id: 6,
+        town: "Morocc",
+        directions: "Guest Lecturer Mayssel teaches on the Academy's second floor and sends you to the pyramid northwest of Morocc. Talk \
+                     to the Thief Guide first. The guildsman beside them changes your job after that interview.",
+        academy: FirstJobStop {
+            label: "Guest Lecturer Mayssel",
+            declared_name: "Guest Lecturer Mayssel",
+            map: "iz_ac02",
+            x: 52,
+            y: 136,
+            source: "npc/re/jobs/novice/academy.txt",
+        },
+        guild: FirstJobStop {
+            label: "Thief Guide",
+            declared_name: "Thief Guide",
+            map: "moc_prydb1",
+            x: 39,
+            y: 129,
+            source: "npc/re/jobs/1-1/thief.txt",
+        },
+        ceremony: Some(FirstJobStop {
+            label: "Thief Guildsman",
+            declared_name: "Thief Guildsman",
+            map: "moc_prydb1",
+            x: 42,
+            y: 133,
+            source: "npc/re/jobs/1-1/thief.txt",
+        }),
+    },
+];
+
+fn first_job_path(job_id: u16) -> Option<&'static FirstJobPath> {
+    FIRST_JOBS.iter().find(|path| path.job_id == job_id)
+}
+
+fn push_first_job_stop(lines: &mut Vec<String>, role: &str, stop: &FirstJobStop) {
+    lines.push(format!("{role}: {} on {} at ({}, {}).", stop.label, stop.map, stop.x, stop.y));
+    if stop.label != stop.declared_name {
+        lines.push(format!("Script name: {}.", stop.declared_name));
+    }
+    lines.push(format!(
+        "@route-cell:{}:{}:{}|Route to {} — {}",
+        stop.map, stop.x, stop.y, stop.label, stop.map
+    ));
+}
+
+fn first_job_source_note(paths: &[&FirstJobPath]) -> String {
+    let mut sources = Vec::new();
+    for path in paths {
+        for stop in [&path.academy, &path.guild].into_iter().chain(path.ceremony.as_ref()) {
+            if !sources.contains(&stop.source) {
+                sources.push(stop.source);
+            }
+        }
+    }
+    format!("Source: {}.", sources.join("; "))
+}
+
+fn push_one_first_job(lines: &mut Vec<String>, path: &FirstJobPath) {
+    lines.push(format!("Town for this class: {}.", path.town));
+    lines.push(path.directions.to_owned());
+    push_first_job_stop(lines, "Academy trainer", &path.academy);
+    push_first_job_stop(lines, "Town guild", &path.guild);
+    if let Some(ceremony) = &path.ceremony {
+        push_first_job_stop(lines, "Job ceremony", ceremony);
+    }
+}
+
+/// Novice sees every first job. Each first job sees only its own trainer and
+/// guild.
+fn append_first_job_path(lines: &mut Vec<String>, job_id: u16) {
+    if job_id == 0 {
+        lines.push(
+            "Criatura Academy, second floor (iz_ac02), teaches the six first jobs. The instructor does not change your job. At job level \
+             10 they send you to the town guild, and that guild's quest does."
+                .to_owned(),
+        );
+        for path in FIRST_JOBS {
+            let name = job_names()
+                .find(|(id, _)| *id == path.job_id)
+                .map(|(_, name)| name)
+                .unwrap_or("First job");
+            lines.push(format!("{name} — {}", path.town));
+            push_one_first_job(lines, path);
+        }
+        lines.push(first_job_source_note(&FIRST_JOBS.iter().collect::<Vec<_>>()));
+        return;
+    }
+    let Some(path) = first_job_path(job_id) else {
+        return;
+    };
+    push_one_first_job(lines, path);
+    lines.push(first_job_source_note(&[path]));
+}
+
+/// Searches that should open the novice page even though its title is not those
+/// words.
+fn newbie_path_query(query: &str) -> bool {
+    let query = query.trim().to_lowercase();
+    [
+        "trainer",
+        "job change",
+        "which town",
+        "newbie",
+        "new player",
+        "first job",
+        "criatura",
+    ]
+    .iter()
+    .any(|phrase| query.contains(phrase))
+        || query == "academy"
+        || query.starts_with("academ")
+}
+
 fn job_details(job_id: u16, name: &str) -> Vec<String> {
     let mut lines = vec![name.to_owned()];
+    append_first_job_path(&mut lines, job_id);
+    // The numbers a player checks first: the cap, the body, then the EXP grind
+    // and the skill list.
+    append_stat_rule_details(&mut lines, job_id);
+    append_class_table_details(&mut lines, job_id);
     let data = reference_data();
     if let Some(bonuses) = data.job_bonuses_by_id(job_id) {
         append_job_bonus_details(&mut lines, bonuses);
@@ -2025,8 +2364,6 @@ fn job_details(job_id: u16, name: &str) -> Vec<String> {
         lines.push("No job-level stat bonus schedule is present for this job ID in Hercules job_db2.txt.".to_owned());
     }
     append_exp_details(&mut lines, job_id);
-    append_stat_rule_details(&mut lines, job_id);
-    append_class_table_details(&mut lines, job_id);
     let Some(tree) = data.job_skill_tree_by_id(job_id) else {
         lines.push("No matching skill tree is present in the bundled Hercules job-skill export.".to_owned());
         lines.push("Job bonus source: bundled Hercules job_db2.txt export; conditional-script effects are not inferred.".to_owned());
@@ -2055,7 +2392,7 @@ fn job_details(job_id: u16, name: &str) -> Vec<String> {
         lines.push(format!("@guide:skill:{}|{label}", skill.skill_id));
     }
     lines.push(
-        "Sources: bundled Hercules renewal skill_tree.conf and skill_db.conf for skills; job_db2.txt for job-level stat bonuses. \
+        "Source: bundled Hercules renewal skill_tree.conf and skill_db.conf for skills; job_db2.txt for job-level stat bonuses. \
          Conditional-script effects are not inferred."
             .to_owned(),
     );
@@ -2086,11 +2423,10 @@ fn append_exp_table(lines: &mut Vec<String>, label: &str, group_name: &str, grou
     if let Some(last) = u16::try_from(group.exp.len()).ok().filter(|last| !milestones.contains(last)) {
         milestones.push(last);
     }
-    let steps = milestones
-        .iter()
-        .filter_map(|level| Some(format!("{level}–{}: {}", level + 1, group_digits(group.exp_to_next(*level)?))))
-        .collect::<Vec<_>>();
-    lines.push(format!("  {}", steps.join("; ")));
+    for level in milestones {
+        let Some(exp) = group.exp_to_next(level) else { continue };
+        lines.push(format!("  {level}–{}: {}", level + 1, group_digits(exp)));
+    }
     if let Some(total) = group.total_to_reach(group.max_level) {
         lines.push(format!(
             "  Total from level 1 to level {}: {}",
@@ -2140,31 +2476,25 @@ fn append_class_table_details(lines: &mut Vec<String>, job_id: u16) {
         .collect();
     levels.dedup();
 
-    let figures = |at_one: &dyn Fn(usize) -> Option<u64>, at_cap: &dyn Fn(usize) -> Option<u64>| {
-        levels
-            .iter()
-            .filter_map(|level| {
-                Some(format!(
-                    "level {level}: {} / {}",
-                    group_digits(at_one(*level)?),
-                    group_digits(at_cap(*level)?)
-                ))
-            })
-            .collect::<Vec<_>>()
-            .join("; ")
+    let mut push_levels = |header: String, at_one: &dyn Fn(usize) -> Option<u64>, at_cap: &dyn Fn(usize) -> Option<u64>| {
+        lines.push(header);
+        for level in &levels {
+            let (Some(low), Some(high)) = (at_one(*level), at_cap(*level)) else {
+                continue;
+            };
+            lines.push(format!("  level {level}: {} / {}", group_digits(low), group_digits(high)));
+        }
     };
-    lines.push(format!(
-        "Base max HP at VIT 1 / VIT {cap} (class table before gear and statuses): {}",
-        figures(&|level| data.job_tables.base_max_hp(job_id, level, 1), &|level| data
-            .job_tables
-            .base_max_hp(job_id, level, cap))
-    ));
-    lines.push(format!(
-        "Base max SP at INT 1 / INT {cap}: {}",
-        figures(&|level| data.job_tables.base_max_sp(job_id, level, 1), &|level| data
-            .job_tables
-            .base_max_sp(job_id, level, cap))
-    ));
+    push_levels(
+        format!("Base max HP at VIT 1 / VIT {cap} (class table before gear and statuses):"),
+        &|level| data.job_tables.base_max_hp(job_id, level, 1),
+        &|level| data.job_tables.base_max_hp(job_id, level, cap),
+    );
+    push_levels(
+        format!("Base max SP at INT 1 / INT {cap}:"),
+        &|level| data.job_tables.base_max_sp(job_id, level, 1),
+        &|level| data.job_tables.base_max_sp(job_id, level, cap),
+    );
 
     // A few generated tables collapse to a tiny value. Say so rather than show
     // a plausible-looking table with a hole in it.
@@ -2194,15 +2524,13 @@ fn append_class_table_details(lines: &mut Vec<String>, job_id: u16) {
         lines.push("No base ASPD values are defined for this job.".to_owned());
         return;
     }
-    let values = weapons
-        .iter()
-        .map(|(name, value)| format!("{} {value}", spaced(name)))
-        .collect::<Vec<_>>()
-        .join(", ");
     lines.push(format!(
-        "Base ASPD values by weapon (the B in the ASPD rule): {values}. Maximum ASPD {}.",
+        "Base ASPD values by weapon (the B in the ASPD rule). Maximum ASPD {}.",
         job.max_aspd
     ));
+    for (name, value) in &weapons {
+        lines.push(format!("  {} {value}", spaced(name)));
+    }
     // Passive ASPD skills this job learns, at their maximum level. They add to
     // the base formula and only count with the right weapon.
     if let Some(tree) = data.job_skill_tree_by_id(job_id) {
@@ -2223,55 +2551,46 @@ fn append_class_table_details(lines: &mut Vec<String>, job_id: u16) {
             })
             .collect();
         if !listed.is_empty() {
-            lines.push(format!(
-                "Passive ASPD skills at maximum level (added inside the base ASPD formula): {}.",
-                listed.join(", ")
-            ));
+            lines.push("Passive ASPD skills at maximum level (added inside the base ASPD formula):".to_owned());
+            for skill in listed {
+                lines.push(format!("  {skill}"));
+            }
         }
     }
-    let at_cap = weapons
-        .iter()
-        .filter(|(name, _)| name.as_str() != "Shield")
-        .map(|(name, value)| {
-            // The server's own pipeline, including the class cap, then back to
-            // the ASPD number the game displays: 200 - motion / 10.
-            let motion = stat_formulas::attack_motion(&stat_formulas::AspdInputs {
-                agi: cap,
-                dex: cap,
-                class_base: **value,
-                ranged: is_ranged_weapon(name),
-                max_aspd: job.max_aspd,
-                ..Default::default()
-            });
-            format!("{} {}", spaced(name), 200 - motion / 10)
-        })
-        .collect::<Vec<_>>()
-        .join(", ");
     lines.push(format!(
-        "Base ASPD at DEX {cap} and AGI {cap}, no passive ASPD skills, no shield, before gear and statuses: {at_cap}."
+        "Base ASPD at DEX {cap} and AGI {cap}, no passive ASPD skills, no shield, before gear and statuses:"
     ));
+    for (name, value) in weapons.iter().filter(|(name, _)| name.as_str() != "Shield") {
+        // The server's own pipeline, including the class cap, then back to
+        // the ASPD number the game displays: 200 - motion / 10.
+        let motion = stat_formulas::attack_motion(&stat_formulas::AspdInputs {
+            agi: cap,
+            dex: cap,
+            class_base: **value,
+            ranged: is_ranged_weapon(name),
+            max_aspd: job.max_aspd,
+            ..Default::default()
+        });
+        lines.push(format!("  {} {}", spaced(name), 200 - motion / 10));
+    }
     // A shield adds its value to B, which slows you down.
     let shield = job.base_aspd.get("Shield").copied().unwrap_or(0);
     if shield > 0 {
-        let with_shield = ["Fist", "Dagger", "Sword", "Spear", "Axe", "Mace", "Rod", "Knuckle", "Book"]
-            .iter()
-            .filter_map(|weapon| {
-                let value = *job.base_aspd.get(*weapon)?;
-                let motion = stat_formulas::attack_motion(&stat_formulas::AspdInputs {
-                    agi: cap,
-                    dex: cap,
-                    class_base: stat_formulas::class_aspd_base(value, None, shield),
-                    ranged: false,
-                    max_aspd: job.max_aspd,
-                    ..Default::default()
-                });
-                Some(format!("{} {}", spaced(weapon), 200 - motion / 10))
-            })
-            .collect::<Vec<_>>()
-            .join(", ");
-        lines.push(format!(
-            "The same with a shield worn (its value, {shield}, slows you down): {with_shield}."
-        ));
+        lines.push(format!("The same with a shield worn (its value, {shield}, slows you down):"));
+        for weapon in ["Fist", "Dagger", "Sword", "Spear", "Axe", "Mace", "Rod", "Knuckle", "Book"] {
+            let Some(value) = job.base_aspd.get(weapon).copied() else {
+                continue;
+            };
+            let motion = stat_formulas::attack_motion(&stat_formulas::AspdInputs {
+                agi: cap,
+                dex: cap,
+                class_base: stat_formulas::class_aspd_base(value, None, shield),
+                ranged: false,
+                max_aspd: job.max_aspd,
+                ..Default::default()
+            });
+            lines.push(format!("  {} {}", spaced(weapon), 200 - motion / 10));
+        }
     }
 }
 
@@ -2303,8 +2622,8 @@ fn append_exp_details(lines: &mut Vec<String>, job_id: u16) {
     append_exp_table(lines, "Base", &job.base_group, base);
     append_exp_table(lines, "Job", &job.job_group, job_group);
     lines.push(
-        "EXP table source: Hercules db/re/exp_group_db.conf and job_db.conf. These are the table values; the server's base, job and quest \
-         EXP rates (see the Experience and drop modifiers rule) and the level-difference modifiers scale what a kill awards."
+        "Source: Hercules db/re/exp_group_db.conf and job_db.conf. These are the table values; the server's base, job and quest EXP rates \
+         (see the Experience and drop modifiers rule) and the level-difference modifiers scale what a kill awards."
             .to_owned(),
     );
 }
@@ -2334,12 +2653,15 @@ fn skill_details(skill: &ReferenceSkill) -> Vec<String> {
     let data = reference_data();
 
     if !skill.prerequisites.is_empty() {
-        lines.push("Skill tree prerequisites:".to_owned());
+        lines.push("Requires:".to_owned());
         for req in &skill.prerequisites {
-            if let Some(req_id) = req.skill_id {
-                lines.push(format!("@guide:skill:{req_id}|Requires: {} Lv {}", req.name, req.level));
-            } else {
-                lines.push(format!("Requires: {} Lv {}", req.name, req.level));
+            let name = match req.skill_id {
+                Some(req_id) => skill_player_name(u32::from(req_id), &req.name),
+                None => req.name.clone(),
+            };
+            match req.skill_id {
+                Some(req_id) => lines.push(format!("@guide:skill:{req_id}|{name} level {}", req.level)),
+                None => lines.push(format!("{name} level {}", req.level)),
             }
         }
     }
@@ -2355,28 +2677,34 @@ fn skill_details(skill: &ReferenceSkill) -> Vec<String> {
         })
         .collect();
     if !job_sources.is_empty() {
-        lines.push("Job-tree availability and prerequisites:".to_owned());
+        lines.push("Classes that learn this:".to_owned());
         for (tree, job_skill) in job_sources.iter().take(12) {
-            let mut details = format!("{} — max Lv {}", tree.tree_name, job_skill.max_level);
+            let mut details = format!("{}: up to level {}", tree.tree_name, job_skill.max_level);
             if job_skill.minimum_job_level > 0 {
-                details.push_str(&format!(", job Lv {}", job_skill.minimum_job_level));
+                details.push_str(&format!(", from job level {}", job_skill.minimum_job_level));
             }
             if !job_skill.prerequisites.is_empty() {
                 let prerequisites = job_skill
                     .prerequisites
                     .iter()
-                    .map(|prerequisite| format!("{} Lv {}", prerequisite.name, prerequisite.level))
+                    .map(|prerequisite| {
+                        format!(
+                            "{} level {}",
+                            skill_player_name(u32::from(prerequisite.skill_id), &prerequisite.name),
+                            prerequisite.level
+                        )
+                    })
                     .collect::<Vec<_>>()
                     .join(", ");
-                details.push_str(&format!(", requires {prerequisites}"));
+                details.push_str(&format!(", after {prerequisites}"));
             }
             lines.push(format!("@guide:job:{}|{details}", tree.job_id));
         }
         if job_sources.len() > 12 {
-            lines.push(format!("{} additional job trees omitted.", job_sources.len() - 12));
+            lines.push(format!("Source: {} additional job trees omitted.", job_sources.len() - 12));
         }
     } else {
-        lines.push("No exported job-tree requirement record is available for this skill.".to_owned());
+        lines.push("No class lists this skill.".to_owned());
     }
 
     let linked_statuses: Vec<_> = data
@@ -2390,9 +2718,9 @@ fn skill_details(skill: &ReferenceSkill) -> Vec<String> {
         })
         .collect();
     if !linked_statuses.is_empty() {
-        lines.push("Associated status references:".to_owned());
+        lines.push("Applies:".to_owned());
         for status in &linked_statuses {
-            lines.push(format!("@guide:status:{}|{} ({})", status.id, status.name, status_tag(status)));
+            lines.push(format!("@guide:status:{}|{}", status.id, status.name));
         }
     }
     if let Some(status_change) = &skill.status_change {
@@ -2400,72 +2728,58 @@ fn skill_details(skill: &ReferenceSkill) -> Vec<String> {
             .iter()
             .any(|status| status.statuses.iter().any(|mechanic| mechanic.constant == *status_change));
         if !has_linked_icon {
-            lines.push(format!(
-                "Skill database StatusChange: {status_change} (no matching client status icon)"
-            ));
+            lines.push("Applies a status that has no icon.".to_owned());
+            lines.push(format!("Source: status change {status_change}."));
         }
     }
 
     if let Some(review) = data.skill_formula_review_for_skill(skill.id) {
-        lines.push(format!("Reviewed combat formula ({}):", review.evidence_state.label()));
-        lines.push(format!("  Title: {}", review.title));
-        lines.push(format!("  Formula: {}", review.formula));
-        lines.push(format!("  Worked example: {}", review.worked_example));
-        if !review.conditions.is_empty() {
-            lines.push("  Conditions & caveats:".to_owned());
-            for cond in &review.conditions {
-                lines.push(format!("  - {cond}"));
-            }
+        lines.push(review.title.clone());
+        lines.push(review.formula.clone());
+        if !review.worked_example.is_empty() {
+            lines.push(format!("Worked example: {}", review.worked_example));
         }
-        if !review.sources.is_empty() {
-            let citations = review
-                .sources
-                .iter()
-                .map(|s| {
-                    format!(
-                        "{}:{}",
-                        s.path,
-                        s.lines.iter().map(ToString::to_string).collect::<Vec<_>>().join(",")
-                    )
-                })
-                .collect::<Vec<_>>()
-                .join("; ");
-            lines.push(format!("  Citations: {citations}"));
+        for cond in &review.conditions {
+            lines.push(format!("Note: {cond}"));
+        }
+        lines.push(format!("Source: reviewed as {}.", review.evidence_state.label()));
+        for source in &review.sources {
+            let cited = source.lines.iter().map(ToString::to_string).collect::<Vec<_>>().join(",");
+            lines.push(format!("Source: {}:{cited}.", source.path));
         }
     } else {
-        lines.push("Formula: Unreviewed in Hercules renewal engine source.".to_owned());
+        lines.push("No damage formula is written up for this skill.".to_owned());
+        lines.push("Source: no reviewed formula in the Hercules renewal engine.".to_owned());
     }
 
     lines.push("Source: bundled Hercules skill database export.".to_owned());
     if let Some(source) = &skill.source {
-        lines.push(format!("Source record: {} ({})", source.path, source.record));
+        lines.push(format!("Source: {} ({}).", source.path, source.record));
     }
     lines
 }
 
-/// How a status is identified in a list: its client icon id, or, for the
-/// classic ailments that have no icon, the server constant.
-fn status_tag(status: &crate::dm::reference_data::ReferenceStatus) -> String {
-    match (status.iconless, status.statuses.first()) {
-        (true, Some(mechanic)) => format!("server status {}", mechanic.constant),
-        _ => format!("icon {}", status.id),
-    }
+/// The name a player reads for a skill. The export token is the fallback.
+fn skill_player_name(id: u32, fallback: &str) -> String {
+    reference_data()
+        .skill_by_id(id)
+        .map(|skill| display_name(&skill.description, &skill.name))
+        .filter(|name| !name.is_empty())
+        .unwrap_or_else(|| fallback.to_owned())
 }
 
 fn status_details(status: &crate::dm::reference_data::ReferenceStatus) -> Vec<String> {
-    let mut lines = vec![match status.iconless {
-        true => format!("{}  ({})", status.name, status_tag(status)),
-        false => status.name.clone(),
-    }];
+    let mut lines = vec![status.name.clone()];
     if status.iconless {
-        lines.push("The client has no icon or name for this status; the name is derived from the server constant.".to_owned());
+        lines.push("This status has no icon. The name is derived from the server constant.".to_owned());
     }
     if status.statuses.is_empty() {
-        lines.push("Verified reference: server status-icon name only; no matching sc_config record.".to_owned());
+        lines.push("No server rules are listed for this status.".to_owned());
+        lines.push("Source: server status-icon name only; no matching sc_config record.".to_owned());
     } else {
         lines.push("How the server treats this status:".to_owned());
         for mechanic in &status.statuses {
-            lines.push(mechanic.constant.clone());
+            lines.push(format!("Source: server status {}.", mechanic.constant));
             let flag_meanings = mechanic
                 .flags
                 .iter()
@@ -2531,12 +2845,11 @@ fn status_details(status: &crate::dm::reference_data::ReferenceStatus) -> Vec<St
                 ));
             }
             if let Some(skill) = &mechanic.associated_skill {
-                let label = if skill.description.is_empty() {
-                    skill.name.clone()
-                } else {
-                    format!("{} ({})", skill.description, skill.name)
-                };
-                lines.push(format!("@guide:skill:{}|Associated skill: {label}", skill.id));
+                let label = display_name(&skill.description, &skill.name);
+                lines.push(format!("@guide:skill:{}|Applied by {label}", skill.id));
+                if !skill.name.is_empty() {
+                    lines.push(format!("Source: skill {}.", skill.name));
+                }
             }
             for skill in &mechanic.status_change_skills {
                 if mechanic
@@ -2546,23 +2859,25 @@ fn status_details(status: &crate::dm::reference_data::ReferenceStatus) -> Vec<St
                 {
                     continue;
                 }
-                let label = if skill.description.is_empty() {
-                    skill.name.clone()
-                } else {
-                    format!("{} ({})", skill.description, skill.name)
-                };
-                lines.push(format!("@guide:skill:{}|Skill database StatusChange: {label}", skill.id));
+                let label = display_name(&skill.description, &skill.name);
+                lines.push(format!("@guide:skill:{}|Applied by {label}", skill.id));
+                if !skill.name.is_empty() {
+                    lines.push(format!("Source: skill {}.", skill.name));
+                }
             }
             if !mechanic.code_call_sites.is_empty() {
                 lines.push(format!(
-                    "Literal Hercules C sc_start call sites (not exhaustive; {} total):",
+                    "Source: sc_start call sites are not exhaustive ({} found).",
                     mechanic.code_call_sites.len()
                 ));
                 for source in mechanic.code_call_sites.iter().take(8) {
-                    lines.push(format!("  {}:{}", source.path, source.line));
+                    lines.push(format!("Source: {}:{}.", source.path, source.line));
                 }
                 if mechanic.code_call_sites.len() > 8 {
-                    lines.push(format!("  … and {} more", mechanic.code_call_sites.len() - 8));
+                    lines.push(format!(
+                        "Source: {} additional call sites omitted.",
+                        mechanic.code_call_sites.len() - 8
+                    ));
                 }
             }
         }
@@ -3009,15 +3324,19 @@ where
         }));
     } else if category == "Status Effects" {
         rows.extend(data.search_statuses(&query, MAX_RESULTS).into_iter().map(|status| GuideResult {
-            label: format!("{}  ({})", status.name, status_tag(status).replacen("icon", "status icon", 1)),
+            label: status.name.clone(),
             kind: "status".to_owned(),
             id: status.id,
         }));
     } else if category == "NPCs" {
         rows.extend(data.search_npcs(&query, MAX_RESULTS).into_iter().map(|npc| GuideResult {
             label: format!(
-                "{}  ({} • {} {}, {})",
-                npc.display_name, npc.declared_type, npc.map, npc.x, npc.y
+                "{}  ({} on {} at {}, {})",
+                npc.display_name,
+                npc_kind_label(&npc.declared_type),
+                npc.map,
+                npc.x,
+                npc.y
             ),
             kind: "npc".to_owned(),
             id: npc.id,
@@ -3080,7 +3399,7 @@ where
                         (false, false) => "[Sync pending] ",
                     },
                     service.title,
-                    service.service_kind,
+                    service_kind_words(&service.service_kind),
                 ),
                 kind: "service".to_owned(),
                 id: index as u32,
@@ -3319,7 +3638,7 @@ fn search_all_categories(
         data.search_statuses(query, all_category_result_slots(&rows))
             .into_iter()
             .map(|status| GuideResult {
-                label: format!("{}  ({})", status.name, status_tag(status).replacen("icon", "Status icon", 1)),
+                label: format!("{}  (Status)", status.name),
                 kind: "status".to_owned(),
                 id: status.id,
             }),
@@ -3328,7 +3647,7 @@ fn search_all_categories(
         data.search_npcs(query, all_category_result_slots(&rows))
             .into_iter()
             .map(|npc| GuideResult {
-                label: format!("{}  (NPC: {} — {})", npc.display_name, npc.declared_type, npc.map),
+                label: format!("{}  ({} on {})", npc.display_name, npc_kind_label(&npc.declared_type), npc.map),
                 kind: "npc".to_owned(),
                 id: npc.id,
             }),
@@ -3360,6 +3679,13 @@ fn search_all_categories(
                 id: index as u32,
             }),
     );
+    if newbie_path_query(query) {
+        rows.push(GuideResult {
+            label: "First jobs: Academy trainers and which town (Job)".to_owned(),
+            kind: "job".to_owned(),
+            id: 0,
+        });
+    }
     rows.extend(
         job_names()
             .filter(|(_, name)| job_matches(query, name))
@@ -3390,7 +3716,7 @@ fn search_all_categories(
                         "{}{}  (Service: {})",
                         if discovery.visited_service(&service.id) { "[Visited] " } else { "" },
                         service.title,
-                        service.service_kind
+                        service_kind_words(&service.service_kind)
                     ),
                     kind: "service".to_owned(),
                     id: index as u32,
@@ -3568,7 +3894,7 @@ mod tests {
     use super::{
         GuideResult, ReferenceItem, display_name, item_details, job_matches, job_names, map_details, monster_details, parse_guide_link,
         parse_route_cell_link, quest_details, quest_reference_details, reference_data, refinement_details, resolve_details, rumor_details,
-        search_all_categories, server_rule_details, skill_details, status_details, status_tag,
+        search_all_categories, server_rule_details, skill_details, status_details,
     };
     use crate::dm::reference_data::{ReferenceQuest, ReferenceQuestTarget};
     use crate::state::discovery::DiscoveryState;
@@ -3787,7 +4113,7 @@ mod tests {
         assert!(detail.contains("Fire Bolt"));
         assert!(detail.contains("SP "));
         assert!(detail.contains("Source: bundled Hercules skill database export."));
-        assert!(detail.contains("Source record: db/re/skill_db.conf (Id=19)"));
+        assert!(detail.contains("Source: db/re/skill_db.conf (Id=19)."));
     }
 
     #[test]
@@ -3797,29 +4123,30 @@ mod tests {
         // Heal (28) has a reviewed formula
         let heal = data.search_skills("AL_HEAL", 1).into_iter().next().expect("Heal skill");
         let heal_details = skill_details(heal).join("\n");
-        assert!(
-            heal_details.contains("Reviewed combat formula (conditional):"),
-            "{heal_details}"
-        );
         assert!(heal_details.contains("Heal's Renewal healing formula"), "{heal_details}");
         assert!(
-            heal_details.contains("Formula: AL_HEAL (id 28) computes its healed HP"),
+            heal_details.contains("AL_HEAL (id 28) computes its healed HP"),
             "{heal_details}"
         );
         assert!(heal_details.contains("Worked example:"), "{heal_details}");
-        assert!(heal_details.contains("Citations: src/map/skill.c:"), "{heal_details}");
+        assert!(heal_details.contains("Source: reviewed as conditional."), "{heal_details}");
+        assert!(heal_details.contains("Source: src/map/skill.c:"), "{heal_details}");
 
         // Fire Bolt (19) has a reviewed formula
         let fire_bolt = data.search_skills("MG_FIREBOLT", 1).into_iter().next().expect("Fire Bolt skill");
         let bolt_details = skill_details(fire_bolt).join("\n");
-        assert!(bolt_details.contains("Reviewed combat formula"), "{bolt_details}");
+        assert!(bolt_details.contains("Source: reviewed as "), "{bolt_details}");
         assert!(bolt_details.contains("Fire/Cold/Lightning Bolt"), "{bolt_details}");
 
         // Basic Skill (1) is unreviewed and should be explicitly flagged
         let basic = data.search_skills("NV_BASIC", 1).into_iter().next().expect("Basic Skill");
         let basic_details = skill_details(basic).join("\n");
         assert!(
-            basic_details.contains("Formula: Unreviewed in Hercules renewal engine source."),
+            basic_details.contains("No damage formula is written up for this skill."),
+            "{basic_details}"
+        );
+        assert!(
+            basic_details.contains("Source: no reviewed formula in the Hercules renewal engine."),
             "{basic_details}"
         );
     }
@@ -3831,19 +4158,31 @@ mod tests {
         // Fire Wall (18) requires Fire Ball (17) Lv 5 and Sight (10) Lv 1
         let firewall = data.skill_by_id(18).expect("Fire Wall skill");
         let fw_details = skill_details(firewall).join("\n");
-        assert!(fw_details.contains("Skill tree prerequisites:"), "{fw_details}");
+        assert!(fw_details.contains("Requires:"), "{fw_details}");
+        let fire_ball = data.skill_by_id(17).expect("Fire Ball");
+        let sight = data.skill_by_id(10).expect("Sight");
         assert!(
-            fw_details.contains("@guide:skill:17|Requires: MG_FIREBALL Lv 5"),
+            fw_details.contains(&format!(
+                "@guide:skill:17|{} level 5",
+                display_name(&fire_ball.description, &fire_ball.name)
+            )),
             "{fw_details}"
         );
-        assert!(fw_details.contains("@guide:skill:10|Requires: MG_SIGHT Lv 1"), "{fw_details}");
         assert!(
-            fw_details.contains("Source record: db/re/skill_db.conf (Id=18)"),
+            fw_details.contains(&format!(
+                "@guide:skill:10|{} level 1",
+                display_name(&sight.description, &sight.name)
+            )),
             "{fw_details}"
         );
+        assert!(fw_details.contains("Source: db/re/skill_db.conf (Id=18)."), "{fw_details}");
 
         // Test clickable link navigation to prerequisite
-        let prereq_link = parse_guide_link("@guide:skill:17|Requires: MG_FIREBALL Lv 5").expect("skill link");
+        let prereq_link = parse_guide_link(&format!(
+            "@guide:skill:17|{} level 5",
+            display_name(&fire_ball.description, &fire_ball.name)
+        ))
+        .expect("skill link");
         assert_eq!(prereq_link.kind, "skill");
         assert_eq!(prereq_link.id, 17);
         let resolved = resolve_details(&prereq_link).join("\n");
@@ -3865,9 +4204,12 @@ mod tests {
         let target = parse_guide_link(status_link).expect("status link is an actionable Guide link");
         assert_eq!(target.kind, "status");
         let status_lines = resolve_details(&target).join("\n");
-        assert!(status_lines.lines().any(|line| line == "SC_BLESSING"), "{status_lines}");
+        assert!(
+            status_lines.lines().any(|line| line == "Source: server status SC_BLESSING."),
+            "{status_lines}"
+        );
         assert!(!status_lines.contains("status ID"), "no raw ids for players: {status_lines}");
-        assert!(status_lines.contains("@guide:skill:34|Associated skill: Blessing (AL_BLESSING)"));
+        assert!(status_lines.contains("@guide:skill:34|Applied by Blessing"));
     }
 
     #[test]
@@ -3885,7 +4227,7 @@ mod tests {
                 .expect("status icon row");
             let detail = status_details(status).join("\n");
             assert!(detail.contains(skill_name));
-            assert!(detail.contains(&format!("@guide:skill:{skill_id}|Skill database StatusChange:")));
+            assert!(detail.contains(&format!("@guide:skill:{skill_id}|Applied by")));
 
             let skill = data
                 .search_skills(skill_name, 10)
@@ -3895,7 +4237,7 @@ mod tests {
             assert!(
                 skill_details(skill)
                     .iter()
-                    .any(|line| line == &format!("@guide:status:{}|{} (icon {})", status.id, status.name, status.id))
+                    .any(|line| line == &format!("@guide:status:{}|{}", status.id, status.name))
             );
             assert_eq!(data.search_statuses(skill_name, 10)[0].id, status.id);
         }
@@ -3914,12 +4256,12 @@ mod tests {
         assert!(detail.iter().any(|line| line == "Map: prt_fild08"));
         assert!(detail.iter().any(|line| line.starts_with("Suggested level:")));
         assert!(detail.iter().any(|line| line.starts_with("Static population:")));
-        assert!(detail.iter().any(|line| line.starts_with("Verified outgoing portal connections:")));
+        assert!(detail.iter().any(|line| line.starts_with("Exits:")));
         assert!(detail.iter().any(|line| line.starts_with("Exit at (")));
         assert!(
             detail
                 .iter()
-                .any(|line| line.contains("Scripted spawn clues") || line.contains("No loaded scripted-spawn call"))
+                .any(|line| line.contains("Also placed by scripts") || line.contains("No script places a monster"))
         );
         assert!(detail.iter().any(|line| line == "@route:prt_fild08"));
         assert!(detail.iter().any(|line| line.starts_with("@route:")));
@@ -3971,7 +4313,7 @@ mod tests {
         // Malangdo cat fleet (2026-09-27), four Kafra teleport destinations
         // from `F_KafSet`'s Izlude branch, and the Jawaii honeymoon boat
         // (2026-10-03).
-        assert!(detail.iter().any(|line| line == "Verified NPC travel services: 7"));
+        assert!(detail.iter().any(|line| line == "Travel services: 7"));
         assert!(
             detail
                 .iter()
@@ -4035,14 +4377,17 @@ mod tests {
             .expect("Blessing status name");
         let details = super::status_details(blessing).join("\n");
         assert!(details.contains("How the server treats this status:"));
-        assert!(details.lines().any(|line| line == "SC_BLESSING"), "{details}");
+        assert!(
+            details.lines().any(|line| line == "Source: server status SC_BLESSING."),
+            "{details}"
+        );
         assert!(details.contains(
             "Server lifecycle rules: classified by the server as a buff; cannot be applied to boss monsters; not cleared when MADO Gear \
              is removed; cannot be applied while the target is in a no-magic state."
         ));
         assert!(details.contains("Server recalculates these stat groups when this status changes: DEX, HIT, INT, STR."));
-        assert!(details.contains("@guide:skill:34|Associated skill: Blessing (AL_BLESSING)"));
-        assert!(details.contains("Literal Hercules C sc_start call sites (not exhaustive"));
+        assert!(details.contains("@guide:skill:34|Applied by Blessing"));
+        assert!(details.contains("sc_start call sites are not exhaustive"));
         assert!(details.contains("src/map/skill.c:"));
         assert!(
             details
@@ -4134,17 +4479,24 @@ mod tests {
         let data = reference_data();
         let quest = data.quest_by_id(1100).expect("tracked reference quest");
         let detail = quest_reference_details(quest);
-        assert!(detail.iter().any(|line| line.contains("bundled hunt reference")));
+        assert_eq!(detail[0], quest.name);
         assert!(detail.iter().any(|line| line.starts_with("@guide:monster:")) || detail.iter().any(|line| line.starts_with("@route:")));
-        assert!(
-            detail
-                .iter()
-                .any(|line| line.contains("No NPC giver or turn-in has been source-reviewed"))
-        );
+        assert!(detail.iter().any(|line| line == "No quest giver or turn-in is listed."));
 
         let quest_link = parse_guide_link("@guide:quest:1100|Open quest").expect("quest links are supported");
         assert_eq!(quest_link.kind, "quest");
         assert!(!resolve_details(&quest_link).is_empty());
+    }
+
+    #[test]
+    fn first_step_towards_a_new_world_routes_to_hun() {
+        let quest = reference_data().quest_by_id(7472).expect("First step towards a new world");
+        let detail = quest_reference_details(quest).join("\n");
+        assert!(detail.contains("Turn in to: Hun on izlude at (122, 207)."), "{detail}");
+        assert!(detail.contains("@route-cell:izlude:122:207|Route to Hun — izlude"), "{detail}");
+        assert!(detail.contains("200 base EXP"), "{detail}");
+        assert!(!detail.contains("No NPC giver"), "{detail}");
+        assert!(crate::world::newbie_quest_guide(1).is_none());
     }
 
     #[test]
@@ -4186,7 +4538,7 @@ mod tests {
                 "Route to quest offer: Angelo#br — brasilis".to_owned()
             )
         );
-        assert!(detail.iter().any(|line| line.contains("Reviewed quest offer: Angelo#br")));
+        assert!(detail.iter().any(|line| line.contains("Offered by Angelo#br")));
         assert!(detail.iter().any(|line| line.contains("source lines [90]")));
         assert!(
             detail
@@ -4199,7 +4551,7 @@ mod tests {
     fn reviewed_quest_turn_in_routes_to_the_source_verified_npc() {
         let quest = reference_data().quest_by_id(9031).expect("tracked Lost Puppies turn-in quest");
         let detail = quest_reference_details(quest);
-        assert!(detail.iter().any(|line| line.contains("Reviewed quest turn-in: Angelo#br")));
+        assert!(detail.iter().any(|line| line.contains("Turn in to Angelo#br")));
         assert!(
             detail
                 .iter()
@@ -4301,7 +4653,7 @@ mod tests {
         assert!(
             skill_details(skill)
                 .iter()
-                .any(|line| line == &format!("@guide:status:{}|{} ({})", stone.id, stone.name, status_tag(stone))),
+                .any(|line| line == &format!("@guide:status:{}|{}", stone.id, stone.name)),
             "skill page must link the status"
         );
         assert!(
@@ -4617,10 +4969,76 @@ mod tests {
         let text = super::job_details(id, name).join("\n");
         assert!(text.contains("server group FirstClasses, maximum level 99"), "{text}");
         assert!(text.contains("1–2: 350"), "{text}");
+        assert!(!text.contains("1–2: 350; "), "milestones are one per line: {text}");
         assert!(text.contains("50–51: 47,000"), "{text}");
         assert!(text.contains("98–99: 3,300,000"), "{text}");
         assert!(text.contains("Total from level 1 to level 99:"), "{text}");
         assert!(text.contains("server group SecondClasses"), "{text}");
+        assert!(text.contains("Source: Hercules db/re/exp_group_db.conf"), "{text}");
+        let cap = text.find("Stat cap: 99").expect("stat cap");
+        let weight = text.find("Weight capacity:").expect("weight");
+        let exp = text.find("server group FirstClasses").expect("base exp");
+        let skills = text.find("Skill tree:").expect("skills");
+        assert!(cap < weight && weight < exp && exp < skills, "{text}");
+    }
+
+    #[test]
+    fn first_job_pages_name_the_academy_trainer_and_the_town_guild() {
+        let data = reference_data();
+        let page = |name: &str| {
+            let (id, listed) = job_names().find(|(_, listed)| *listed == name).unwrap_or_else(|| panic!("{name}"));
+            (id, super::job_details(id, listed))
+        };
+        let (swordman_id, swordman) = page("Swordman");
+        assert_eq!(swordman_id, 1);
+        let swordman_text = swordman.join("\n");
+        assert!(swordman_text.contains("Town for this class: Izlude."), "{swordman_text}");
+        assert!(swordman_text.contains("@route-cell:iz_ac02:60:51|Route to Swordman Trainer — iz_ac02"));
+        assert!(swordman_text.contains("@route-cell:izlude_in:74:172|Route to Swordman — izlude_in"));
+        assert!(!swordman_text.contains("62, 51"), "the sign cell is not the NPC");
+
+        let novice = page("Novice").1.join("\n");
+        for town in ["Izlude", "Geffen", "Payon", "Prontera", "Alberta", "Morocc"] {
+            assert!(
+                novice.contains(&format!("Town for this class: {town}.")),
+                "{town} missing: {novice}"
+            );
+        }
+        assert!(novice.contains("Thief Guide"));
+        assert!(novice.contains("@route-cell:moc_prydb1:42:133|Route to Thief Guildsman — moc_prydb1"));
+        assert!(novice.contains("Father Mareusis"));
+        assert!(novice.contains("@route-cell:prt_church:184:41|"));
+
+        let knight = page("Knight").1.join("\n");
+        assert!(!knight.contains("Town for this class"), "{knight}");
+        assert!(!knight.contains("Criatura Academy"), "{knight}");
+
+        for path in super::FIRST_JOBS {
+            for stop in [&path.academy, &path.guild].into_iter().chain(path.ceremony.as_ref()) {
+                let declared = data.npcs.iter().any(|npc| {
+                    npc.map == stop.map
+                        && npc.x == i32::from(stop.x)
+                        && npc.y == i32::from(stop.y)
+                        && npc.source.path == stop.source
+                        && npc.declared_type != "warp"
+                        && !npc.is_story()
+                        && (npc.display_name == stop.declared_name || npc.name.starts_with(stop.declared_name))
+                });
+                assert!(
+                    declared,
+                    "{} at {},{} is not the declared NPC",
+                    stop.declared_name, stop.map, stop.x
+                );
+            }
+        }
+
+        for query in ["trainer", "which town", "newbie", "first job", "academy"] {
+            let rows = search_all_categories(query, &DiscoveryState::default(), &[]);
+            assert!(
+                rows.iter().any(|row| row.kind == "job" && row.id == 0),
+                "{query} did not open the novice path: {rows:?}"
+            );
+        }
     }
 
     #[test]
@@ -4706,14 +5124,15 @@ mod tests {
         let text = super::job_details(id, name).join("\n");
         // Computed from the exported tables: HP[1] = 40, HP[50] = 2208, HP[99] = 7978,
         // then + 1% per VIT in integer steps (VIT 1 and VIT 99).
-        assert!(
-            text.contains("level 1: 40 / 79; level 50: 2,230 / 4,393; level 99: 8,057 / 15,876"),
-            "{text}"
-        );
-        assert!(
-            text.contains("Base max SP at INT 1 / INT 99: level 1: 13 / 25; level 50: 161 / 318; level 99: 310 / 610"),
-            "{text}"
-        );
+        assert!(text.contains("Base max HP at VIT 1 / VIT 99"), "{text}");
+        assert!(text.contains("level 1: 40 / 79"), "{text}");
+        assert!(text.contains("level 50: 2,230 / 4,393"), "{text}");
+        assert!(text.contains("level 99: 8,057 / 15,876"), "{text}");
+        assert!(!text.contains("level 1: 40 / 79; "), "HP levels are one per line: {text}");
+        assert!(text.contains("Base max SP at INT 1 / INT 99"), "{text}");
+        assert!(text.contains("level 1: 13 / 25"), "{text}");
+        assert!(text.contains("level 50: 161 / 318"), "{text}");
+        assert!(text.contains("level 99: 310 / 610"), "{text}");
         // job_db.conf BaseASPD for Knight, and the cap from MaxASPD.
         assert!(
             text.contains("Sword 45") && text.contains("Two Hand Sword 52") && text.contains("Shield 5"),
@@ -5052,7 +5471,7 @@ mod monster_page_and_route_offer_tests {
         let lines = monster_details(poring);
 
         assert!(lines.contains(&"EXP: base 36   job 20".to_owned()), "{lines:#?}");
-        assert!(lines.contains(&"Attack (database attack1 / attack2): 8 / 1   DEF 2   MDEF 5".to_owned()));
+        assert!(lines.contains(&"Attack: 1–8   DEF 2   MDEF 5".to_owned()));
         assert!(lines.contains(&"Attack range 1 cells   Sight range 10 cells".to_owned()));
         assert!(lines.iter().any(|line| line.starts_with("Move speed: 400 ms per cell")));
         assert!(lines.contains(&"Behavior: passive — fights back only when attacked; picks up items from the ground".to_owned()));
@@ -5068,8 +5487,9 @@ mod monster_page_and_route_offer_tests {
         assert!(layer.active, "this server's import config turns the pilot on");
 
         let elite = monster_details(reference_data().monster_by_id(20901).expect("the elite is exported"));
+        assert!(elite.iter().any(|line| line == "Uses the newer skill list on this server."));
         assert!(
-            elite.iter().any(|line| line.starts_with("AI pilot layer: mob_pilot_version = 1")),
+            elite.iter().any(|line| line.starts_with("Source: mob_pilot_version = 1")),
             "{elite:#?}"
         );
         let in_use = elite.iter().position(|line| line == "Pilot skills (in use):").expect("pilot list");
@@ -5085,7 +5505,7 @@ mod monster_page_and_route_offer_tests {
 
         // Monsters the pilot file does not touch keep the single list.
         let poring = monster_details(reference_data().monster_by_id(1002).expect("Poring is exported"));
-        assert!(poring.contains(&"Configured monster skills and trigger conditions:".to_owned()));
+        assert!(poring.contains(&"Skills:".to_owned()));
         assert!(!poring.iter().any(|line| line.starts_with("AI pilot layer")));
     }
 
@@ -5110,9 +5530,7 @@ mod monster_page_and_route_offer_tests {
 
         let eddga = monster_details(reference_data().monster_by_id(1115).expect("Eddga is exported"));
         assert!(
-            eddga
-                .iter()
-                .any(|line| line.starts_with("  Server record: MSS_") && line.contains("MSC_")),
+            eddga.iter().any(|line| line.starts_with("Source: MSS_") && line.contains("MSC_")),
             "{eddga:#?}"
         );
     }
@@ -5135,11 +5553,11 @@ mod monster_page_and_route_offer_tests {
     #[test]
     fn drop_rows_name_the_monster_and_its_level() {
         let line = drop_source_line(1002, "PORING", "normal", 150);
-        assert_eq!(line, "@guide:monster:1002|Poring (ID 1002, Lv 1) — normal drop 1.50%");
+        assert_eq!(line, "@guide:monster:1002|Poring (Lv 1) — normal drop 1.50%");
 
         // A monster missing from the bestiary keeps the database name.
         let unknown = drop_source_line(999_999, "NOT_EXPORTED", "mvp", 1);
-        assert_eq!(unknown, "@guide:monster:999999|NOT_EXPORTED (ID 999999) — MVP drop 0.01%");
+        assert_eq!(unknown, "@guide:monster:999999|NOT_EXPORTED — MVP drop 0.01%");
     }
 
     #[test]
@@ -5186,5 +5604,58 @@ mod monster_page_and_route_offer_tests {
         assert_eq!(drops, 2, "{lines:#?}");
         assert!(drops < recipes);
         assert!(lines[drops + 1].starts_with("@guide:monster:1002|Poring"), "{lines:#?}");
+        assert!(
+            lines
+                .iter()
+                .any(|line| line.starts_with("Source: drop rates are the database figures"))
+        );
+        assert!(
+            lines
+                .iter()
+                .filter(|line| line.starts_with("Makes ") || line.starts_with("Used to make "))
+                .all(|line| !line.contains(".txt")),
+            "{lines:#?}"
+        );
+    }
+
+    #[test]
+    fn item_page_leads_with_what_it_does_and_who_sells_it() {
+        let item = super::reference_data()
+            .items
+            .iter()
+            .find(|item| item.atk.unwrap_or(0) > 0 && item.shops.iter().any(|shop| shop.source.contains(".txt")))
+            .expect("a weapon sold from a written-out shop");
+        let lines = super::item_details(item, false);
+        let atk = lines.iter().position(|line| line.starts_with("ATK:")).expect("atk");
+        let sold = lines.iter().position(|line| line == "Sold by:").expect("sold by");
+        assert!(atk < sold, "{lines:#?}");
+        for header in ["Crafting", "May also be given", "Quest rewards", "Used as a turn-in", "Exchanges:"] {
+            if let Some(at) = lines.iter().position(|line| line.starts_with(header)) {
+                assert!(sold < at, "{header} should follow the shop\n{lines:#?}");
+            }
+        }
+        assert_eq!(lines.iter().filter(|line| line.starts_with("ATK:")).count(), 1);
+        assert_eq!(
+            lines.iter().filter(|line| line.starts_with("Buy price:")).count(),
+            usize::from(item.buy > 0)
+        );
+        let offer = lines
+            .iter()
+            .find(|line| line.starts_with("shop:") || line.starts_with("cash shop:"))
+            .expect("shop offer");
+        assert!(offer.contains(" for "), "{offer}");
+        assert!(!offer.contains(".txt"), "{offer}");
+        let shop = item.shops.iter().find(|shop| shop.source.contains(".txt")).expect("shop script");
+        assert!(
+            lines
+                .iter()
+                .any(|line| line.starts_with("Source:") && line.contains(shop.source.as_str())),
+            "{lines:#?}"
+        );
+        assert!(
+            !lines
+                .iter()
+                .any(|line| line.contains("Literal shop listings") || line.starts_with("Equipment location"))
+        );
     }
 }

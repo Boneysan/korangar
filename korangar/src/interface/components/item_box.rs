@@ -378,16 +378,6 @@ where
 
                 layout.add_texture(texture_area, texture.clone(), Color::WHITE, false);
 
-                if is_hovered {
-                    // Drag to equip/unequip (or rearrange). Double-click for quick equip/unequip.
-                    // Right-click opens drop/use actions for inventory items.
-                    layout.register_click_handler(MouseButton::Left, &self.handler);
-                    layout.register_click_handler(MouseButton::DoubleLeft, &self.double_click_handler);
-                    if matches!(self.right_click_handler.source, ItemSource::Inventory) {
-                        layout.register_click_handler(MouseButton::Right, &self.right_click_handler);
-                    }
-                }
-
                 // Draw the stack count for Regular items and for stackable ammo
                 // (Equippable with amount > 1). `amount_display.string` is only
                 // set in those cases, so require it rather than unwrap.
@@ -412,6 +402,29 @@ where
                         OverflowBehavior::Shrink,
                     );
                 }
+            }
+
+            // Drag, use, and the actions menu work even when the sprite has
+            // not loaded yet. A missing texture used to leave the slot inert.
+            if is_hovered {
+                layout.register_click_handler(MouseButton::Left, &self.handler);
+                layout.register_click_handler(MouseButton::DoubleLeft, &self.double_click_handler);
+                if matches!(self.right_click_handler.source, ItemSource::Inventory) {
+                    layout.register_click_handler(MouseButton::Right, &self.right_click_handler);
+                }
+            }
+
+            if item.is_equipped() {
+                layout.add_text(
+                    layout_info.area,
+                    "E",
+                    FontSize(12.0),
+                    Color::rgb_u8(255, 220, 120),
+                    Color::rgb_u8(255, 160, 60),
+                    HorizontalAlignment::Left { offset: 3.0, border: 3.0 },
+                    VerticalAlignment::Top { offset: 2.0 },
+                    OverflowBehavior::Shrink,
+                );
             }
         }
     }

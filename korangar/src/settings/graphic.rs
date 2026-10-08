@@ -35,6 +35,10 @@ pub struct GraphicsSettings {
     pub shadow_detail: ShadowDetail,
     pub sdsm: bool,
     pub high_quality_interface: bool,
+    /// Linear color grade applied when the frame is copied to the screen.
+    /// Missing from settings files written before the control existed.
+    #[serde(default)]
+    pub color_filter: ColorFilter,
 }
 
 impl Default for GraphicsSettings {
@@ -55,6 +59,7 @@ impl Default for GraphicsSettings {
             shadow_detail: ShadowDetail::Medium,
             sdsm: true,
             high_quality_interface: true,
+            color_filter: ColorFilter::Off,
         }
     }
 }
@@ -191,6 +196,48 @@ impl DropDownItem<DisplayMode> for DisplayMode {
     }
 }
 
+/// Screen-wide color grade. Off leaves the frame unchanged.
+///
+/// `grade` is xyz multiply and w saturation, applied in linear color before
+/// the frame is encoded for the screen. 1,1,1,1 is the identity.
+#[derive(Copy, Clone, Default, PartialEq, Eq, Serialize, Deserialize, StateElement)]
+pub enum ColorFilter {
+    #[default]
+    Off,
+    Warm,
+    Cool,
+    Night,
+    Mono,
+}
+
+impl ColorFilter {
+    pub const fn grade(self) -> [f32; 4] {
+        match self {
+            Self::Off => [1.0, 1.0, 1.0, 1.0],
+            Self::Warm => [1.08, 0.98, 0.86, 1.05],
+            Self::Cool => [0.88, 0.98, 1.12, 1.0],
+            Self::Night => [0.72, 0.82, 1.05, 0.75],
+            Self::Mono => [1.0, 1.0, 1.0, 0.0],
+        }
+    }
+}
+
+impl DropDownItem<ColorFilter> for ColorFilter {
+    fn text(&self) -> &str {
+        match self {
+            ColorFilter::Off => "Off",
+            ColorFilter::Warm => "Warm",
+            ColorFilter::Cool => "Cool",
+            ColorFilter::Night => "Night",
+            ColorFilter::Mono => "Mono",
+        }
+    }
+
+    fn value(&self) -> ColorFilter {
+        *self
+    }
+}
+
 #[derive(RustState, StateElement)]
 pub struct GraphicsSettingsCapabilities {
     display_modes: Vec<DisplayMode>,
@@ -201,6 +248,7 @@ pub struct GraphicsSettingsCapabilities {
     supported_msaa: Vec<Msaa>,
     ssaa_options: Vec<Ssaa>,
     screen_space_anti_aliasing_options: Vec<ScreenSpaceAntiAliasing>,
+    color_filter_options: Vec<ColorFilter>,
     shadow_method_options: Vec<ShadowMethod>,
     shadow_resolution_options: Vec<ShadowResolution>,
     shadow_detail_options: Vec<ShadowDetail>,
@@ -235,6 +283,13 @@ impl Default for GraphicsSettingsCapabilities {
             supported_msaa: Vec::new(),
             ssaa_options: vec![Ssaa::Off, Ssaa::X2, Ssaa::X3, Ssaa::X4],
             screen_space_anti_aliasing_options: vec![ScreenSpaceAntiAliasing::Off, ScreenSpaceAntiAliasing::Fxaa],
+            color_filter_options: vec![
+                ColorFilter::Off,
+                ColorFilter::Warm,
+                ColorFilter::Cool,
+                ColorFilter::Night,
+                ColorFilter::Mono,
+            ],
             shadow_method_options: vec![ShadowMethod::Hard, ShadowMethod::SoftPCF, ShadowMethod::SoftPCSS],
             shadow_resolution_options: vec![ShadowResolution::Normal, ShadowResolution::Ultra, ShadowResolution::Insane],
             shadow_detail_options: vec![ShadowDetail::Low, ShadowDetail::Medium, ShadowDetail::High, ShadowDetail::Ultra],
@@ -289,6 +344,7 @@ mod tests {
         assert!(matches!(settings.ssaa, Ssaa::X2));
         assert!(!settings.vsync);
         assert!(!settings.high_quality_interface);
+        assert!(matches!(settings.color_filter, ColorFilter::Off));
 
         // `GraphicsSettings` saves itself on drop, and `save` writes to a fixed
         // relative path. `cargo test` runs with the crate root as the working
@@ -296,5 +352,15 @@ mod tests {
         // real `client/graphics_settings.ron` with the fixture above — which is
         // exactly what happened the first time this test ran.
         std::mem::forget(settings);
+    }
+
+    #[test]
+    fn color_filter_off_is_identity_and_the_others_change_the_grade() {
+        assert_eq!(ColorFilter::Off.grade(), [1.0, 1.0, 1.0, 1.0]);
+        assert!(ColorFilter::Warm.grade() != ColorFilter::Off.grade());
+        assert!(ColorFilter::Cool.grade() != ColorFilter::Warm.grade());
+        assert_eq!(ColorFilter::Mono.grade()[3], 0.0);
+        let night = ColorFilter::Night.grade();
+        assert!(night[2] > night[0]);
     }
 }

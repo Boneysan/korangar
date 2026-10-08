@@ -154,14 +154,14 @@ impl Element<ClientState> for MinimapView {
             let party_path = client_state().party_state();
             let party = state.get(&party_path);
             for member in party.members().iter().filter(|_| game_settings.show_minimap_party) {
-                if !member.online() {
+                if !member.online() || party.is_local(member.account_id()) {
                     continue;
                 }
                 let Some(pos) = member.position() else {
                     continue;
                 };
-                let member_map = member.map_name().trim_end_matches(".gat").trim_end_matches(".GAT").to_lowercase();
-                if !member_map.is_empty() && member_map != current_map {
+                let member_map = member.reported_map().to_lowercase();
+                if !member_map.is_empty() && !member_map.eq_ignore_ascii_case(current_map) {
                     continue;
                 }
                 extra_blips.push(MinimapBlip {
@@ -386,7 +386,7 @@ impl Element<ClientState> for MinimapView {
         let poi_size = (side / DEFAULT_MINIMAP_SIDE * POI_ICON_SIZE).clamp(8.0, 20.0);
         let player_size = (side / DEFAULT_MINIMAP_SIDE * PLAYER_MARKER_SIZE).clamp(10.0, 22.0);
 
-        // Towninfo facility POIs (shops, kafra, guides, …).
+        // Server-checked facility POIs (shops, kafra, guides).
         // Layer toggle (GDD 10.12): "Show facility markers on minimap".
         // Must be textures — rectangles flush under the map bitmap and disappear.
         for poi in minimap.pois().iter().filter(|_| show_minimap_facilities) {
@@ -775,10 +775,7 @@ mod tests {
         let mut minimap = MinimapState::default();
         minimap.set_map("prt_fild08".into(), 200, 200, None, None, Vec::new());
         minimap.set_personal_waypoint(Some((120, 154)));
-        minimap.set_navigation_target(Some(NavigationTarget {
-            map_name: "prontera".to_owned(),
-            position: None,
-        }));
+        minimap.set_navigation_target(Some(NavigationTarget::fixed("prontera", None)));
 
         // ManuallyDrop: dropping a GameSettings writes client/game_settings.ron,
         // and tests run from the client's own directory, so a plain value here

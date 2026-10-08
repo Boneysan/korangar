@@ -709,6 +709,100 @@ impl Map {
         }
     }
 
+    /// Lines along every edge where a walkable cell meets a blocked one, near
+    /// `center`. Interior wall cells get no fill: only the boundary is drawn,
+    /// so the walkable floor stays visible.
+    ///
+    /// Uses the same flags as pathing, including a server re-type such as Ice
+    /// Wall. Cells the client still calls walkable are not outlined, even when
+    /// the server would refuse them.
+    #[cfg_attr(feature = "debug", korangar_debug::profile)]
+    pub fn render_walk_obstacle_outlines(&self, renderer: &mut EffectRenderer, texture: &Arc<Texture>, center: TilePosition) {
+        /// How far from the player the lines are drawn, in cells. Far enough
+        /// to cover a room you can see, short of stroking an entire city.
+        const RADIUS: i32 = 48;
+        /// Sits just above the walk cursor so the two do not z-fight.
+        const LIFT: f32 = 1.25;
+        /// Half the line's width. A full tile is [`GAT_TILE_SIZE`] (5).
+        const HALF_WIDTH: f32 = 0.22;
+        let color = Color::rgb_u8(220, 48, 48).multiply_alpha(0.9);
+
+        let width = i32::from(self.width);
+        let height = i32::from(self.height);
+        let edges = walk_obstacle_edges(width, height, i32::from(center.x), i32::from(center.y), RADIUS, |x, y| {
+            self.is_walkable(TilePosition { x: x as u16, y: y as u16 })
+        });
+
+        for edge in edges {
+            let Some((first_height, second_height)) = self.obstacle_edge_heights(edge) else {
+                continue;
+            };
+            let corners = obstacle_edge_corners(edge, first_height + LIFT, second_height + LIFT, HALF_WIDTH);
+            renderer.render_ground_decal(
+                corners,
+                texture.clone(),
+                GROUND_DECAL_TEXTURE_COORDINATES,
+                color,
+                GroundDecalBlend::Alpha,
+            );
+        }
+    }
+
+    /// Heights of the walkable side of `edge`, south-then-north or
+    /// west-then-east.
+    fn obstacle_edge_heights(&self, edge: ObstacleEdge) -> Option<(f32, f32)> {
+        let width = i32::from(self.width);
+        let height = i32::from(self.height);
+        let in_map = |x: i32, y: i32| x >= 0 && y >= 0 && x < width && y < height;
+        let walkable_at = |x: i32, y: i32| in_map(x, y) && self.is_walkable(TilePosition { x: x as u16, y: y as u16 });
+        let tile_at = |x: i32, y: i32| {
+            if !in_map(x, y) {
+                return None;
+            }
+            self.get_tile(TilePosition { x: x as u16, y: y as u16 })
+        };
+
+        let (x, y) = (edge.x, edge.y);
+        Some(match edge.side {
+            // East side of (x, y), shared with the west side of (x + 1, y).
+            ObstacleSide::East if walkable_at(x, y) => {
+                let tile = tile_at(x, y)?;
+                (tile.southeast_corner_height, tile.northeast_corner_height)
+            }
+            ObstacleSide::East => {
+                let tile = tile_at(x + 1, y)?;
+                (tile.southwest_corner_height, tile.northwest_corner_height)
+            }
+            // West side of (x, y), shared with the east side of (x - 1, y).
+            ObstacleSide::West if walkable_at(x, y) => {
+                let tile = tile_at(x, y)?;
+                (tile.southwest_corner_height, tile.northwest_corner_height)
+            }
+            ObstacleSide::West => {
+                let tile = tile_at(x - 1, y)?;
+                (tile.southeast_corner_height, tile.northeast_corner_height)
+            }
+            // North side of (x, y), shared with the south side of (x, y + 1).
+            ObstacleSide::North if walkable_at(x, y) => {
+                let tile = tile_at(x, y)?;
+                (tile.northwest_corner_height, tile.northeast_corner_height)
+            }
+            ObstacleSide::North => {
+                let tile = tile_at(x, y + 1)?;
+                (tile.southwest_corner_height, tile.southeast_corner_height)
+            }
+            // South side of (x, y), shared with the north side of (x, y - 1).
+            ObstacleSide::South if walkable_at(x, y) => {
+                let tile = tile_at(x, y)?;
+                (tile.southwest_corner_height, tile.southeast_corner_height)
+            }
+            ObstacleSide::South => {
+                let tile = tile_at(x, y - 1)?;
+                (tile.northwest_corner_height, tile.northeast_corner_height)
+            }
+        })
+    }
+
     #[cfg_attr(feature = "debug", korangar_debug::profile)]
     pub fn ambient_light_color(&self) -> Color {
         self.lighting.ambient_light_color()
@@ -1041,6 +1135,126 @@ impl Map {
     }
 }
 
+/// One side of a map cell. `East` of `(x, y)` is the same line as `West` of
+/// `(x + 1, y)`.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord)]
+enum ObstacleSide {
+    East,
+    North,
+    West,
+    South,
+}
+
+/// A boundary between a walkable cell and a blocked one. `(x, y)` is the cell
+/// the side belongs to.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord)]
+struct ObstacleEdge {
+    x: i32,
+    y: i32,
+    side: ObstacleSide,
+}
+
+/// Edges where walkability changes, within Chebyshev `radius` of the center.
+///
+/// Each shared line is reported once. A neighbor outside the radius is still
+/// compared, so a wall just past the window is included. A neighbor past the
+/// map is blocked. Two blocked cells, and two walkable cells, produce nothing.
+fn walk_obstacle_edges(
+    width: i32,
+    height: i32,
+    center_x: i32,
+    center_y: i32,
+    radius: i32,
+    walkable: impl Fn(i32, i32) -> bool,
+) -> Vec<ObstacleEdge> {
+    let in_map = |x: i32, y: i32| x >= 0 && y >= 0 && x < width && y < height;
+    let in_window = |x: i32, y: i32| (x - center_x).abs().max((y - center_y).abs()) <= radius;
+    let mut edges = Vec::new();
+
+    for y in (center_y - radius)..=(center_y + radius) {
+        for x in (center_x - radius)..=(center_x + radius) {
+            if !in_map(x, y) {
+                continue;
+            }
+            let here = walkable(x, y);
+            for (dx, dy, side) in [
+                (1, 0, ObstacleSide::East),
+                (0, 1, ObstacleSide::North),
+                (-1, 0, ObstacleSide::West),
+                (0, -1, ObstacleSide::South),
+            ] {
+                let neighbor_x = x + dx;
+                let neighbor_y = y + dy;
+                let neighbor_in_map = in_map(neighbor_x, neighbor_y);
+                // The other cell emits this same line when it is also inside
+                // the window. Keep the copy from the higher coordinate, and
+                // keep a line whose other cell is outside the window or the map.
+                if neighbor_in_map && in_window(neighbor_x, neighbor_y) && (dx < 0 || dy < 0) {
+                    continue;
+                }
+                let there = neighbor_in_map && walkable(neighbor_x, neighbor_y);
+                if here == there {
+                    continue;
+                }
+                edges.push(ObstacleEdge { x, y, side });
+            }
+        }
+    }
+
+    edges.sort_unstable();
+    edges
+}
+
+/// Quad for `edge`, lifted to `first_height` / `second_height` and thickened
+/// by `half_width` on either side of the line. Corner order matches
+/// [`GROUND_DECAL_TEXTURE_COORDINATES`]: `(-x, -z)`, `(+x, -z)`, `(-x, +z)`,
+/// `(+x, +z)`.
+fn obstacle_edge_corners(edge: ObstacleEdge, first_height: f32, second_height: f32, half_width: f32) -> [Point3<f32>; 4] {
+    let x0 = edge.x as f32 * GAT_TILE_SIZE;
+    let z0 = edge.y as f32 * GAT_TILE_SIZE;
+    let x1 = x0 + GAT_TILE_SIZE;
+    let z1 = z0 + GAT_TILE_SIZE;
+
+    match edge.side {
+        ObstacleSide::East => {
+            let edge_x = x1;
+            [
+                Point3::new(edge_x - half_width, first_height, z0),
+                Point3::new(edge_x + half_width, first_height, z0),
+                Point3::new(edge_x - half_width, second_height, z1),
+                Point3::new(edge_x + half_width, second_height, z1),
+            ]
+        }
+        ObstacleSide::West => {
+            let edge_x = x0;
+            [
+                Point3::new(edge_x - half_width, first_height, z0),
+                Point3::new(edge_x + half_width, first_height, z0),
+                Point3::new(edge_x - half_width, second_height, z1),
+                Point3::new(edge_x + half_width, second_height, z1),
+            ]
+        }
+        ObstacleSide::North => {
+            let edge_z = z1;
+            [
+                Point3::new(x0, first_height, edge_z - half_width),
+                Point3::new(x1, second_height, edge_z - half_width),
+                Point3::new(x0, first_height, edge_z + half_width),
+                Point3::new(x1, second_height, edge_z + half_width),
+            ]
+        }
+        ObstacleSide::South => {
+            let edge_z = z0;
+            [
+                Point3::new(x0, first_height, edge_z - half_width),
+                Point3::new(x1, second_height, edge_z - half_width),
+                Point3::new(x0, first_height, edge_z + half_width),
+                Point3::new(x1, second_height, edge_z + half_width),
+            ]
+        }
+    }
+}
+
 /// Gat cell type to [`TileFlags`], mirroring `FromBytes for TileFlags` in
 /// `ragnarok-formats`.
 ///
@@ -1110,5 +1324,110 @@ mod dynamic_cell_tests {
     fn unknown_cell_types_are_ignored() {
         assert_eq!(tile_flags_for_cell_type(7), None);
         assert_eq!(tile_flags_for_cell_type(u16::MAX), None);
+    }
+}
+
+#[cfg(test)]
+mod obstacle_outline_tests {
+    use super::{ObstacleEdge, ObstacleSide, obstacle_edge_corners, walk_obstacle_edges};
+
+    fn edges_of(width: i32, height: i32, blocked: &[(i32, i32)]) -> Vec<ObstacleEdge> {
+        walk_obstacle_edges(width, height, 1, 1, 8, |x, y| !blocked.contains(&(x, y)))
+    }
+
+    #[test]
+    fn open_floor_has_no_internal_lines_and_outlines_the_map_edge() {
+        let edges = edges_of(3, 3, &[]);
+
+        assert!(!edges.contains(&ObstacleEdge {
+            x: 0,
+            y: 0,
+            side: ObstacleSide::East
+        }));
+        assert!(!edges.contains(&ObstacleEdge {
+            x: 0,
+            y: 0,
+            side: ObstacleSide::North
+        }));
+        assert!(edges.contains(&ObstacleEdge {
+            x: 0,
+            y: 0,
+            side: ObstacleSide::West
+        }));
+        assert!(edges.contains(&ObstacleEdge {
+            x: 0,
+            y: 0,
+            side: ObstacleSide::South
+        }));
+        assert!(edges.contains(&ObstacleEdge {
+            x: 2,
+            y: 1,
+            side: ObstacleSide::East
+        }));
+        assert!(edges.contains(&ObstacleEdge {
+            x: 1,
+            y: 2,
+            side: ObstacleSide::North
+        }));
+    }
+
+    #[test]
+    fn a_blocked_cell_is_outlined_and_two_blocked_cells_share_no_line() {
+        let edges = edges_of(3, 3, &[(1, 1), (2, 1)]);
+
+        assert!(edges.contains(&ObstacleEdge {
+            x: 0,
+            y: 1,
+            side: ObstacleSide::East
+        }));
+        assert!(edges.contains(&ObstacleEdge {
+            x: 1,
+            y: 0,
+            side: ObstacleSide::North
+        }));
+        assert!(edges.contains(&ObstacleEdge {
+            x: 1,
+            y: 1,
+            side: ObstacleSide::North
+        }));
+        assert!(edges.contains(&ObstacleEdge {
+            x: 2,
+            y: 0,
+            side: ObstacleSide::North
+        }));
+        // The shared side of the two blocked cells is not a walking boundary.
+        assert!(!edges.contains(&ObstacleEdge {
+            x: 1,
+            y: 1,
+            side: ObstacleSide::East
+        }));
+    }
+
+    #[test]
+    fn a_wall_just_outside_the_window_is_still_drawn() {
+        let edges = walk_obstacle_edges(5, 5, 1, 1, 0, |x, y| (x, y) != (2, 1));
+
+        assert_eq!(edges, vec![ObstacleEdge {
+            x: 1,
+            y: 1,
+            side: ObstacleSide::East
+        }]);
+    }
+
+    #[test]
+    fn the_line_straddles_the_shared_edge() {
+        let edge = ObstacleEdge {
+            x: 1,
+            y: 2,
+            side: ObstacleSide::East,
+        };
+        let corners = obstacle_edge_corners(edge, 4.0, 6.0, 0.22);
+
+        assert_eq!(corners[0].x, 10.0 - 0.22);
+        assert_eq!(corners[1].x, 10.0 + 0.22);
+        assert_eq!(corners[0].z, 10.0);
+        assert_eq!(corners[2].z, 15.0);
+        assert_eq!(corners[0].y, 4.0);
+        assert_eq!(corners[2].y, 6.0);
     }
 }

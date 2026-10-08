@@ -60,6 +60,8 @@ pub struct GraphicsEngine {
     frame_pacer: FramePacer,
     cpu_stage: FrameStage<Instant>,
     limit_framerate: bool,
+    /// xyz multiply, w saturation. Identity until a color filter is applied.
+    color_grade: [f32; 4],
     previous_surface_texture_format: Option<TextureFormat>,
     texture_loader: Arc<TextureLoader>,
     engine_context: Option<EngineContext>,
@@ -157,6 +159,7 @@ impl GraphicsEngine {
             frame_pacer,
             cpu_stage,
             limit_framerate: false,
+            color_grade: [1.0, 1.0, 1.0, 1.0],
             previous_surface_texture_format: None,
             texture_loader: descriptor.texture_loader,
             engine_context: None,
@@ -595,6 +598,10 @@ impl GraphicsEngine {
                 .global_context
                 .update_texture_sampler(&self.device, &self.capabilities, texture_sampler_type);
         }
+    }
+
+    pub fn set_color_filter(&mut self, color_filter: crate::settings::ColorFilter) {
+        self.color_grade = color_filter.grade();
     }
 
     pub fn set_screen_space_anti_aliasing(&mut self, screen_space_anti_aliasing: ScreenSpaceAntiAliasing) {
@@ -1105,6 +1112,10 @@ impl GraphicsEngine {
         CommandBuffer,
     ) {
         let frame_view = &frame.texture.create_view(&TextureViewDescriptor::default());
+        let color_grade = self.color_grade;
+        if let Some(engine_context) = self.engine_context.as_ref() {
+            engine_context.screen_blit_blitter_drawer.prepare(&self.queue, color_grade);
+        }
         let engine_context = self.engine_context.as_mut().unwrap();
 
         let mut picker_encoder = self.device.create_command_encoder(&CommandEncoderDescriptor::default());

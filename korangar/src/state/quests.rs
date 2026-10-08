@@ -96,6 +96,17 @@ impl QuestEntry {
     }
 }
 
+/// One tracked quest as the HUD shows it. The first row is the primary.
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub struct HudQuestRow {
+    pub quest_id: u32,
+    pub title: String,
+    pub is_primary: bool,
+    pub map_name: Option<String>,
+    pub x: u16,
+    pub y: u16,
+}
+
 /// Active quests, in the order the server listed them.
 #[derive(Clone, Debug, Default, RustState, StateElement)]
 pub struct QuestLogState {
@@ -117,6 +128,36 @@ impl QuestLogState {
 
     pub fn tracked_quest_ids(&self) -> &[u32] {
         &self.tracked_quests
+    }
+
+    /// Tracked quests in the order the server listed them. The first is
+    /// primary.
+    pub fn hud_rows(&self) -> Vec<HudQuestRow> {
+        let mut rows = Vec::new();
+        for quest in &self.quests {
+            if !self.tracked_quests.contains(&quest.quest_id) {
+                continue;
+            }
+            let is_primary = rows.is_empty();
+            let title = if is_primary {
+                format!("Primary · {}", quest.name)
+            } else {
+                quest.name.clone()
+            };
+            let (map_name, x, y) = match &quest.location {
+                Some(location) => (Some(location.map_name.clone()), location.x, location.y),
+                None => (None, 0, 0),
+            };
+            rows.push(HudQuestRow {
+                quest_id: quest.quest_id,
+                title,
+                is_primary,
+                map_name,
+                x,
+                y,
+            });
+        }
+        rows
     }
 
     #[cfg(test)]
@@ -261,7 +302,8 @@ impl QuestLogState {
             .quests
             .iter()
             .filter(|quest| self.tracked_quests.contains(&quest.quest_id))
-            .map(|quest| {
+            .enumerate()
+            .map(|(index, quest)| {
                 let mut text = if quest.requirements.is_empty() {
                     quest.name.clone()
                 } else {
@@ -278,6 +320,9 @@ impl QuestLogState {
                         "\n  {}: {} / {}",
                         objective.monster_name, objective.current_count, objective.total_count
                     ));
+                }
+                if index == 0 {
+                    text = format!("Primary · {text}");
                 }
                 text
             })
@@ -306,7 +351,9 @@ impl QuestLogState {
 mod tests {
     use ragnarok_packets::ItemId;
 
-    use super::{ClientHuntingGoalEntry, QuestEntry, QuestHuntObjectiveEntry, QuestLogState, QuestRequirementEntry};
+    use super::{
+        ClientHuntingGoalEntry, HudQuestRow, QuestEntry, QuestHuntObjectiveEntry, QuestLocationEntry, QuestLogState, QuestRequirementEntry,
+    };
 
     fn entry(quest_id: u32, name: &str) -> QuestEntry {
         QuestEntry {
@@ -321,6 +368,40 @@ mod tests {
             location: None,
             guidance: Vec::new(),
         }
+    }
+
+    #[test]
+    fn the_first_tracked_quest_is_primary_and_a_quest_without_a_place_has_no_route() {
+        let mut log = QuestLogState::default();
+        log.add(entry(1, "First Step Towards a New World"));
+        let mut beginner = entry(2, "Beginner quest");
+        beginner.location = Some(QuestLocationEntry {
+            is_turn_in: false,
+            npc: "Hun".to_owned(),
+            map_name: "izlude".to_owned(),
+            x: 122,
+            y: 207,
+        });
+        log.add(beginner);
+
+        let rows = log.hud_rows();
+        assert_eq!(rows[0], HudQuestRow {
+            quest_id: 1,
+            title: "Primary · First Step Towards a New World".to_owned(),
+            is_primary: true,
+            map_name: None,
+            x: 0,
+            y: 0,
+        });
+        assert_eq!(rows[1].map_name.as_deref(), Some("izlude"));
+        assert!(!rows[1].is_primary);
+
+        log.toggle_tracking(1);
+        let rows = log.hud_rows();
+        assert_eq!(rows.len(), 1);
+        assert_eq!(rows[0].quest_id, 2);
+        assert!(rows[0].is_primary);
+        assert!(log.display_text().starts_with("Primary · Beginner quest"));
     }
 
     #[test]

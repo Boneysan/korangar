@@ -316,7 +316,7 @@ pub fn skill_tooltip_text(skill_id: u16, display_name: &str, level: u16, maximum
         .and_then(|value| value.at(level))
         .filter(|delay| *delay > 0)
     {
-        timing.push(format!("Configured aftercast delay {:.1}s", delay as f32 / 1000.0));
+        timing.push(format!("Aftercast delay {:.1}s", delay as f32 / 1000.0));
     }
     if let Some(walk_delay) = row
         .after_cast_walk_delay
@@ -332,7 +332,7 @@ pub fn skill_tooltip_text(skill_id: u16, display_name: &str, level: u16, maximum
         .and_then(|value| value.at(level))
         .filter(|cooldown| *cooldown > 0)
     {
-        timing.push(format!("Configured cooldown {:.1}s", cooldown as f32 / 1000.0));
+        timing.push(format!("Cooldown {:.1}s", cooldown as f32 / 1000.0));
     }
     if !timing.is_empty() {
         lines.push(timing.join(" · "));

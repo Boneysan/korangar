@@ -146,6 +146,18 @@ where
             split! {
                 children: (
                     text! {
+                        text: "Color filter",
+                        overflow_behavior: OverflowBehavior::Shrink,
+                    },
+                    drop_down! {
+                        selected: self.settings_path.color_filter(),
+                        options: self.capabilities_path.color_filter_options(),
+                    }
+                )
+            },
+            split! {
+                children: (
+                    text! {
                         text: "Shadow method",
                         overflow_behavior: OverflowBehavior::Shrink,
                     },

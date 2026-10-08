@@ -151,10 +151,12 @@ where
                                         disabled_tooltip: "Cannot navigate to offline member, empty map, or yourself",
                                         event: move |state: &State<ClientState>, queue: &mut EventQueue<ClientState>| {
                                             let member = state.get(&member_path);
+                                            let account_id = member.account_id();
                                             let character_name = member.name().to_owned();
-                                            let map_name = member.map_name().trim_end_matches(".gat").to_owned();
+                                            let map_name = member.reported_map().to_owned();
                                             let position = member.position().map(|p| (p.x, p.y));
                                             queue.queue(InputEvent::NavigateToPartyMember {
+                                                account_id,
                                                 character_name,
                                                 map_name,
                                                 position,
@@ -323,6 +325,14 @@ where
         let no_invite_for_reject =
             ComputedSelector::new_default(move |state: &ClientState| party_path.pending_invite_id().follow_safe(state).is_none());
         let not_in_party = ComputedSelector::new_default(move |state: &ClientState| party_path.members().follow_safe(state).is_empty());
+        // One selector per button. ComputedSelector is not Copy.
+        let ping_location = ComputedSelector::new_default(move |state: &ClientState| party_path.members().follow_safe(state).is_empty());
+        let ping_assist = ComputedSelector::new_default(move |state: &ClientState| party_path.members().follow_safe(state).is_empty());
+        let ping_danger = ComputedSelector::new_default(move |state: &ClientState| party_path.members().follow_safe(state).is_empty());
+        let ping_retreat = ComputedSelector::new_default(move |state: &ClientState| party_path.members().follow_safe(state).is_empty());
+        let ping_ready = ComputedSelector::new_default(move |state: &ClientState| party_path.members().follow_safe(state).is_empty());
+        let ping_on_my_way = ComputedSelector::new_default(move |state: &ClientState| party_path.members().follow_safe(state).is_empty());
+        let ping_share = ComputedSelector::new_default(move |state: &ClientState| party_path.members().follow_safe(state).is_empty());
 
         window! {
             title: "Party",
@@ -507,6 +517,65 @@ where
                         button! { text: "Ready", event: InputEvent::RespondPartyReadyCheck { ready: true } },
                         button! { text: "Not ready", event: InputEvent::RespondPartyReadyCheck { ready: false } },
                     ) },
+                    ),
+                },
+                collapsible! {
+                    text: "Party pings",
+                    initially_expanded: true,
+                    children: (
+                    split! { gaps: theme().window().gaps(), children: (
+                        button! {
+                            text: "Location",
+                            tooltip: "Share your current position",
+                            disabled: ping_location,
+                            disabled_tooltip: "Join a party before sending a party ping",
+                            event: InputEvent::SendPartyPing { kind: "location".to_owned() },
+                        },
+                        button! {
+                            text: "Assist",
+                            tooltip: "Ask party members for help here",
+                            disabled: ping_assist,
+                            disabled_tooltip: "Join a party before sending a party ping",
+                            event: InputEvent::SendPartyPing { kind: "assist".to_owned() },
+                        },
+                        button! {
+                            text: "Danger",
+                            tooltip: "Warn the party about danger here",
+                            disabled: ping_danger,
+                            disabled_tooltip: "Join a party before sending a party ping",
+                            event: InputEvent::SendPartyPing { kind: "danger".to_owned() },
+                        },
+                    ) },
+                    split! { gaps: theme().window().gaps(), children: (
+                        button! {
+                            text: "Retreat",
+                            tooltip: "Suggest regrouping or retreating here",
+                            disabled: ping_retreat,
+                            disabled_tooltip: "Join a party before sending a party ping",
+                            event: InputEvent::SendPartyPing { kind: "retreat".to_owned() },
+                        },
+                        button! {
+                            text: "Ready",
+                            tooltip: "Mark this location as ready",
+                            disabled: ping_ready,
+                            disabled_tooltip: "Join a party before sending a party ping",
+                            event: InputEvent::SendPartyPing { kind: "ready".to_owned() },
+                        },
+                        button! {
+                            text: "On my way",
+                            tooltip: "Tell the party you are moving here",
+                            disabled: ping_on_my_way,
+                            disabled_tooltip: "Join a party before sending a party ping",
+                            event: InputEvent::SendPartyPing { kind: "on-my-way".to_owned() },
+                        },
+                    ) },
+                    button! {
+                        text: "Share current route",
+                        tooltip: "Send your selected map route to party members; they choose whether to accept it",
+                        disabled: ping_share,
+                        disabled_tooltip: "Join a party before sharing a route",
+                        event: InputEvent::SharePartyDestination,
+                    },
                     ),
                 },
             )

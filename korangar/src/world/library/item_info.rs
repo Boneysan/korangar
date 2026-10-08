@@ -287,7 +287,11 @@ tbl = { [501] = {
     fn bundled_hercules_names_are_complete_and_human_readable() {
         let mut map = HashMap::new();
         let count = overlay_bundled_english_names(&mut map);
-        assert_eq!(count, 13_182);
+        assert_eq!(count, 13_183);
         assert_eq!(map.get(&ItemId(501)).expect("501").identified_name.to_string(), "Red Potion");
+        assert_eq!(
+            map.get(&ItemId(50002)).expect("50002").identified_name.to_string(),
+            "Rechargeable Potion"
+        );
     }
 }

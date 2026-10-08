@@ -59,6 +59,10 @@ impl CustomWindow<ClientState> for ItemActionsWindow {
         };
         let primary_label = primary_action_label(&self.item);
         let primary_event = ActionThenClose(primary_action_event(&self.item));
+        let add_to_hotbar = ActionThenClose(InputEvent::AssignItemToHotbar {
+            item_id: self.item.item_id,
+        });
+        let can_add_to_hotbar = consumable_can_be_assigned(&self.item);
 
         // One selector per button: `ComputedSelector` is not `Copy`.
         let trade_disabled =
@@ -116,6 +120,13 @@ impl CustomWindow<ClientState> for ItemActionsWindow {
                 button! {
                     text: primary_label,
                     event: primary_event,
+                },
+                button! {
+                    text: "Add to hotbar",
+                    tooltip: "Puts this consumable on the hotbar. If it is already there, that slot is replaced. Drag it onto a slot to replace a different one.",
+                    disabled: !can_add_to_hotbar,
+                    disabled_tooltip: "Only a usable item can be added from this menu. Drag it onto a slot to replace one.",
+                    event: add_to_hotbar,
                 },
                 button! {
                     text: protection_label,
@@ -186,6 +197,12 @@ impl CustomWindow<ClientState> for ItemActionsWindow {
     }
 }
 
+/// Right-click "Add to hotbar" is for usable stacks (potions and the like).
+/// Gear stays a drag onto the slot the player wants to replace.
+pub fn consumable_can_be_assigned(item: &InventoryItem<ResourceMetadata>) -> bool {
+    item.is_identified() && matches!(item.details, InventoryItemDetails::Regular { .. })
+}
+
 fn primary_action_label(item: &InventoryItem<ResourceMetadata>) -> &'static str {
     if !item.is_identified() {
         return "Identify";
@@ -241,5 +258,67 @@ pub fn inventory_item_amount(item: &InventoryItem<ResourceMetadata>) -> u16 {
     match &item.details {
         InventoryItemDetails::Regular { amount, .. } => *amount,
         InventoryItemDetails::Equippable { amount, .. } => *amount,
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use korangar_networking::{InventoryItem, InventoryItemDetails};
+    use ragnarok_packets::{EquipPosition, EquippableItemFlags, InventoryIndex, ItemId, ItemOptions, RegularItemFlags};
+
+    use super::consumable_can_be_assigned;
+    use crate::world::ResourceMetadata;
+
+    fn item(details: InventoryItemDetails) -> InventoryItem<ResourceMetadata> {
+        InventoryItem {
+            metadata: ResourceMetadata {
+                texture: None,
+                name: "Red Potion".to_owned(),
+            },
+            index: InventoryIndex(0),
+            item_id: ItemId(501),
+            item_type: 0,
+            slot: [0; 4],
+            hire_expiration_date: 0,
+            details,
+        }
+    }
+
+    fn identified_potion() -> InventoryItem<ResourceMetadata> {
+        item(InventoryItemDetails::Regular {
+            amount: 5,
+            equipped_position: EquipPosition::empty(),
+            flags: RegularItemFlags::IDENTIFIED,
+        })
+    }
+
+    #[test]
+    fn a_usable_stack_can_be_assigned_and_gear_cannot() {
+        assert!(consumable_can_be_assigned(&identified_potion()));
+
+        let mut hidden = RegularItemFlags::empty();
+        hidden.set(RegularItemFlags::IDENTIFIED, false);
+        let unidentified = item(InventoryItemDetails::Regular {
+            amount: 1,
+            equipped_position: EquipPosition::empty(),
+            flags: hidden,
+        });
+        assert!(!consumable_can_be_assigned(&unidentified));
+
+        let mut flags = EquippableItemFlags::empty();
+        flags.set(EquippableItemFlags::IDENTIFIED, true);
+        let sword = item(InventoryItemDetails::Equippable {
+            amount: 1,
+            equip_position: EquipPosition::RIGHT_HAND,
+            equipped_position: EquipPosition::empty(),
+            bind_on_equip_type: 0,
+            w_item_sprite_number: 0,
+            option_count: 0,
+            option_data: [ItemOptions::default(); 5],
+            refinement_level: 0,
+            enchantment_level: 0,
+            flags,
+        });
+        assert!(!consumable_can_be_assigned(&sword));
     }
 }

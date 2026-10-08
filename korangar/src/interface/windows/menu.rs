@@ -1,6 +1,5 @@
 use korangar_interface::window::{CustomWindow, Window};
 
-use crate::graphics::Color;
 use crate::input::InputEvent;
 use crate::interface::windows::WindowClass;
 #[cfg(feature = "debug")]
@@ -10,9 +9,6 @@ use crate::state::theme::InterfaceThemeType;
 #[cfg(feature = "debug")]
 use crate::state::theme::{DebugButtonThemePathExt, InterfaceThemePathExt};
 use crate::state::{ClientState, ClientStatePathExt, client_state};
-
-/// Group headings: quieter than the buttons they label.
-const MENU_HEADING: Color = Color::rgb_u8(150, 170, 200);
 
 #[derive(Default)]
 pub struct MenuWindow;
@@ -38,7 +34,7 @@ impl CustomWindow<ClientState> for MenuWindow {
                 },
                 text! {
                     text: "Adventure",
-                    color: MENU_HEADING,
+                    color: theme().window().title_color(),
                 },
                 split! {
                     gaps: theme().window().gaps(),
@@ -69,9 +65,24 @@ impl CustomWindow<ClientState> for MenuWindow {
                 },
                     ),
                 },
+                split! {
+                    gaps: theme().window().gaps(),
+                    children: (
+                        button! {
+                    text: "Save here",
+                    tooltip: "Set your respawn point to where you are standing (^000001@save^000000)",
+                    event: InputEvent::SendMessage { text: "@save".to_owned() },
+                },
+                        button! {
+                    text: "Warp to save",
+                    tooltip: "Return to your respawn point (^000001@load^000000)",
+                    event: InputEvent::SendMessage { text: "@load".to_owned() },
+                },
+                    ),
+                },
                 text! {
                     text: "Social",
-                    color: MENU_HEADING,
+                    color: theme().window().title_color(),
                 },
                 split! {
                     gaps: theme().window().gaps(),
@@ -95,7 +106,7 @@ impl CustomWindow<ClientState> for MenuWindow {
                 },
                 text! {
                     text: "Settings",
-                    color: MENU_HEADING,
+                    color: theme().window().title_color(),
                 },
                 split! {
                     gaps: theme().window().gaps(),
@@ -125,7 +136,7 @@ impl CustomWindow<ClientState> for MenuWindow {
                 },
                 text! {
                     text: "Dungeon Master",
-                    color: MENU_HEADING,
+                    color: theme().window().title_color(),
                 },
                 button! {
                     text: "GM / DM Commands",
@@ -135,7 +146,7 @@ impl CustomWindow<ClientState> for MenuWindow {
                 #[cfg(feature = "debug")]
                 text! {
                     text: "Developer",
-                    color: MENU_HEADING,
+                    color: theme().window().title_color(),
                 },
                 #[cfg(feature = "debug")]
                 button! {

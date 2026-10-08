@@ -446,6 +446,10 @@ where
         self.window_cache.cycle_combat_fade()
     }
 
+    pub fn cycle_window_opacity(&mut self) -> f32 {
+        self.window_cache.cycle_window_opacity()
+    }
+
     /// Cycle window-position snapping and return its new grid size.
     pub fn cycle_window_snap_grid(&mut self) -> Option<f32> {
         self.window_cache.cycle_snap_grid()
@@ -539,6 +543,23 @@ where
     pub fn close_top_window(&mut self, state: &State<App>) -> bool {
         if let Some(index_from_back) = self.windows.iter().rev().position(|wrapper| wrapper.window.is_closable(state)) {
             let index = self.windows.len() - 1 - index_from_back;
+            self.remove_window(index);
+            true
+        } else {
+            false
+        }
+    }
+
+    #[cfg_attr(feature = "debug", korangar_debug::profile)]
+    /// Closes the top closable window whose class is not in `exceptions`.
+    /// Returns whether a window was closed.
+    pub fn close_top_window_except(&mut self, state: &State<App>, exceptions: &[App::WindowClass]) -> bool {
+        let windows = self
+            .windows
+            .iter()
+            .map(|wrapper| (wrapper.window.is_closable(state), wrapper.window.get_class()));
+
+        if let Some(index) = top_closable_index_except(windows, exceptions) {
             self.remove_window(index);
             true
         } else {
@@ -1116,5 +1137,55 @@ impl<App: Application> Drop for InterfaceFrame<'_, App> {
         if let Some(layout) = self.overlay_layout {
             layout.clear();
         }
+    }
+}
+
+/// Index of the topmost window that is closable and not of an excepted class,
+/// given each window's `(closable, class)` from bottom to top.
+fn top_closable_index_except<Class: PartialEq>(
+    windows: impl DoubleEndedIterator<Item = (bool, Option<Class>)> + ExactSizeIterator,
+    exceptions: &[Class],
+) -> Option<usize> {
+    let count = windows.len();
+    windows
+        .rev()
+        .position(|(closable, class)| closable && !class.is_some_and(|class| exceptions.contains(&class)))
+        .map(|index_from_back| count - 1 - index_from_back)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::top_closable_index_except;
+
+    #[derive(Debug, PartialEq)]
+    enum Class {
+        Hud,
+        Inventory,
+        Menu,
+    }
+
+    fn top(windows: Vec<(bool, Option<Class>)>) -> Option<usize> {
+        top_closable_index_except(windows.into_iter(), &[Class::Hud])
+    }
+
+    #[test]
+    fn an_excepted_window_on_top_is_skipped_for_the_one_beneath() {
+        assert_eq!(top(vec![(true, Some(Class::Inventory)), (true, Some(Class::Hud))]), Some(0));
+    }
+
+    #[test]
+    fn unclosable_windows_are_skipped() {
+        assert_eq!(top(vec![(true, Some(Class::Menu)), (false, None)]), Some(0));
+    }
+
+    #[test]
+    fn a_closable_window_without_a_class_is_closed() {
+        assert_eq!(top(vec![(true, Some(Class::Menu)), (true, None)]), Some(1));
+    }
+
+    #[test]
+    fn nothing_to_close_when_only_excepted_or_unclosable_windows_remain() {
+        assert_eq!(top(vec![(true, Some(Class::Hud)), (false, Some(Class::Inventory))]), None);
+        assert_eq!(top(Vec::new()), None);
     }
 }

@@ -1,7 +1,7 @@
 use std::sync::Arc;
 
 use korangar_interface::element::StateElement;
-use ragnarok_packets::{ClientTick, ColorRGBA, MarkerType};
+use ragnarok_packets::{AccountId, ClientTick, ColorRGBA, MarkerType};
 use rust_state::RustState;
 
 use crate::graphics::Texture;
@@ -106,6 +106,65 @@ pub struct NavigationTarget {
     pub map_name: String,
     /// `None` represents a map-level destination with no exact cell exposed.
     pub position: Option<(u16, u16)>,
+    /// The cell belongs to a party member and can move. Arrival does not
+    /// clear this route. [`Self::retarget_party_member`] moves the cell.
+    pub follows_party_member: bool,
+    /// Set when [`Self::follows_party_member`] is tracking one roster row.
+    pub party_account_id: Option<AccountId>,
+}
+
+impl NavigationTarget {
+    pub fn fixed(map_name: impl Into<String>, position: Option<(u16, u16)>) -> Self {
+        Self {
+            map_name: map_name.into(),
+            position,
+            follows_party_member: false,
+            party_account_id: None,
+        }
+    }
+
+    pub fn follow_party_member(account_id: AccountId, map_name: impl Into<String>, position: Option<(u16, u16)>) -> Self {
+        Self {
+            map_name: map_name.into(),
+            position,
+            follows_party_member: true,
+            party_account_id: Some(account_id),
+        }
+    }
+
+    /// Move this route onto `account_id`'s latest map and cell.
+    ///
+    /// Returns false when this route follows someone else, or when the map and
+    /// cell are already current.
+    pub fn retarget_party_member(&mut self, account_id: AccountId, map_name: &str, position: Option<(u16, u16)>) -> bool {
+        if self.party_account_id != Some(account_id) {
+            return false;
+        }
+        if self.map_name.eq_ignore_ascii_case(map_name) && self.position == position {
+            return false;
+        }
+        self.map_name = map_name.to_owned();
+        self.position = position;
+        true
+    }
+}
+
+/// Tiles from a fixed destination at which the route counts as arrived.
+pub const NAVIGATION_ARRIVAL_RADIUS: u16 = 3;
+
+/// The player has reached a fixed cell destination.
+///
+/// Same map and Chebyshev distance at most `radius`. Another map is never
+/// arrival. A party-member route stays up, because that cell can move. A
+/// map-level target has no cell, so it does not arrive here.
+pub fn navigation_has_arrived(current_map: &str, player: (u16, u16), target: &NavigationTarget, radius: u16) -> bool {
+    if target.follows_party_member || !current_map.eq_ignore_ascii_case(&target.map_name) {
+        return false;
+    }
+    let Some((x, y)) = target.position else {
+        return false;
+    };
+    player.0.abs_diff(x).max(player.1.abs_diff(y)) <= radius
 }
 
 #[derive(RustState, StateElement)]
@@ -261,8 +320,19 @@ impl MinimapState {
         self.navigation_target.as_ref()
     }
 
+    pub fn navigation_target_mut(&mut self) -> Option<&mut NavigationTarget> {
+        self.navigation_target.as_mut()
+    }
+
     pub fn set_navigation_target(&mut self, target: Option<NavigationTarget>) {
         self.navigation_target = target;
+    }
+
+    /// Drop the route, its next-exit marker, and the breadcrumb line.
+    pub fn clear_navigation(&mut self) {
+        self.navigation_target = None;
+        self.navigation_marker = None;
+        self.navigation_breadcrumbs.clear();
     }
 
     pub fn set_navigation_marker(&mut self, marker: Option<(u16, u16)>) {
@@ -378,6 +448,8 @@ impl MinimapState {
 
 #[cfg(test)]
 mod tests {
+    use ragnarok_packets::AccountId;
+
     use super::*;
 
     #[test]
@@ -398,6 +470,59 @@ mod tests {
             "danger"
         );
         assert!(parse_party_ping("BigZ : [KORANGAR-PING:v2] arbitrary prt_fild08 120 154").is_none());
+    }
+
+    fn cell(map: &str, position: Option<(u16, u16)>, follows_party_member: bool) -> NavigationTarget {
+        NavigationTarget {
+            map_name: map.to_owned(),
+            position,
+            follows_party_member,
+            party_account_id: None,
+        }
+    }
+
+    #[test]
+    fn a_party_route_follows_that_member_and_ignores_everyone_else() {
+        let mut route = NavigationTarget::follow_party_member(AccountId(2), "izlude", Some((10, 10)));
+        assert!(!route.retarget_party_member(AccountId(9), "prontera", Some((1, 1))));
+        assert_eq!(route.map_name, "izlude");
+        assert!(route.retarget_party_member(AccountId(2), "prontera", Some((3, 4))));
+        assert_eq!(route.map_name, "prontera");
+        assert_eq!(route.position, Some((3, 4)));
+        assert!(route.follows_party_member);
+        assert!(!route.retarget_party_member(AccountId(2), "prontera", Some((3, 4))));
+
+        let mut fixed = NavigationTarget::fixed("izlude", Some((10, 10)));
+        assert!(!fixed.retarget_party_member(AccountId(2), "prontera", Some((3, 4))));
+        assert_eq!(fixed.map_name, "izlude");
+    }
+
+    #[test]
+    fn navigation_arrives_only_on_the_same_map_within_the_radius() {
+        let npc = cell("izlude", Some((120, 200)), false);
+        assert!(navigation_has_arrived("izlude", (120, 200), &npc, NAVIGATION_ARRIVAL_RADIUS));
+        assert!(navigation_has_arrived("izlude", (123, 200), &npc, NAVIGATION_ARRIVAL_RADIUS));
+        assert!(!navigation_has_arrived("izlude", (124, 200), &npc, NAVIGATION_ARRIVAL_RADIUS));
+        assert!(navigation_has_arrived("Izlude", (120, 200), &npc, NAVIGATION_ARRIVAL_RADIUS));
+        assert!(!navigation_has_arrived(
+            "prt_fild08",
+            (120, 200),
+            &npc,
+            NAVIGATION_ARRIVAL_RADIUS
+        ));
+        assert!(!navigation_has_arrived(
+            "izlude",
+            (120, 200),
+            &cell("izlude", None, false),
+            NAVIGATION_ARRIVAL_RADIUS
+        ));
+        let member = cell("izlude", Some((120, 200)), true);
+        assert!(!navigation_has_arrived(
+            "izlude",
+            (120, 200),
+            &member,
+            NAVIGATION_ARRIVAL_RADIUS
+        ));
     }
 
     #[test]

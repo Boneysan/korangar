@@ -181,6 +181,16 @@ impl From<JobId> for EntityType {
     }
 }
 
+/// Name drawn over an NPC. The unique suffix after `#` is not shown.
+/// Players, monsters, and warps are not labeled here.
+pub fn npc_overhead_name(entity_type: EntityType, details: Option<&str>) -> Option<&str> {
+    if entity_type != EntityType::Npc {
+        return None;
+    }
+    let visible = details?.split('#').next().unwrap_or("");
+    (!visible.is_empty()).then_some(visible)
+}
+
 /// Soft overweight: at or above the server's critical-weight percent (usually
 /// 50%), natural HP/SP recovery stops. An unknown maximum is never overweight.
 pub fn is_soft_overweight(weight: u32, maximum_weight: u32, critical_weight_percent: u32) -> bool {
@@ -201,11 +211,22 @@ pub fn is_hard_overweight(weight: u32, maximum_weight: u32) -> bool {
 mod entity_type_tests {
     use ragnarok_packets::{JobId, SkillId};
 
-    use super::{EntityType, native_impact_extra_delay_ms};
+    use super::{EntityType, native_impact_extra_delay_ms, npc_overhead_name};
 
     #[test]
     fn modern_hidden_warp_npc_is_not_rendered() {
         assert_eq!(EntityType::from(JobId(139)), EntityType::Hidden);
+    }
+
+    #[test]
+    fn npc_overhead_name_strips_the_unique_suffix() {
+        assert_eq!(npc_overhead_name(EntityType::Npc, Some("Hun#0")), Some("Hun"));
+        assert_eq!(npc_overhead_name(EntityType::Npc, Some("Sailor")), Some("Sailor"));
+        assert_eq!(npc_overhead_name(EntityType::Npc, Some("#hidden")), None);
+        assert_eq!(npc_overhead_name(EntityType::Npc, None), None);
+        assert_eq!(npc_overhead_name(EntityType::Player, Some("Hun#0")), None);
+        assert_eq!(npc_overhead_name(EntityType::Monster, Some("Poring")), None);
+        assert_eq!(npc_overhead_name(EntityType::Warp, Some("warp#1")), None);
     }
 
     #[test]
@@ -254,9 +275,11 @@ pub struct Common {
     /// Wire names, like `head` and `option` above, so the observer-parity
     /// audits can diff these field names against `EntityData`'s directly.
     ///
-    /// Stored but not yet drawn — sprite composition is still body + head +
-    /// weapon + shield. Rendering them needs accessory sprite paths and palette
-    /// files, which this tree does not have yet.
+    /// Drawn for every player, local and remote. `push_headgear_part_files`
+    /// stacks bottom → middle → top (`accessory`, `accessory3`, `accessory2`)
+    /// after the head and under the weapon. `0` is an empty slot. Hair and
+    /// clothes palettes, the robe, and the alternate body style stay stored
+    /// until a later slice draws them.
     pub accessory: u16,
     /// Upper headgear view id (`vd->head_top`).
     pub accessory2: u16,
@@ -2003,6 +2026,51 @@ impl Player {
         }
     }
 
+    /// A player whose only interesting state is the sprite `common` carries.
+    /// Stats stay at zero; part-file tests do not read them.
+    #[cfg(test)]
+    fn from_common_for_test(common: Common) -> Self {
+        Self {
+            common,
+            spell_points: 0,
+            activity_points: 0,
+            maximum_spell_points: 0,
+            maximum_activity_points: 0,
+            base_level: 1,
+            job_level: 1,
+            stat_points: 0,
+            strength: 1,
+            bonus_strength: 0,
+            strength_stat_points_cost: 0,
+            agility: 1,
+            bonus_agility: 0,
+            agility_stat_points_cost: 0,
+            vitality: 1,
+            bonus_vitality: 0,
+            vitality_stat_points_cost: 0,
+            intelligence: 1,
+            bonus_intelligence: 0,
+            intelligence_stat_points_cost: 0,
+            dexterity: 1,
+            bonus_dexterity: 0,
+            dexterity_stat_points_cost: 0,
+            luck: 1,
+            bonus_luck: 0,
+            luck_stat_points_cost: 0,
+            attack_speed: 0,
+            skill_points: 0,
+            weight: 0,
+            maximum_weight: 0,
+            critical_weight_percent: 50,
+            attack_range: AttackRange(1),
+            zeny: 0,
+            base_experience: 0,
+            job_experience: 0,
+            next_base_experience: 0,
+            next_job_experience: 0,
+        }
+    }
+
     pub fn clear_cast(&mut self) {
         self.common.clear_cast();
     }
@@ -2180,11 +2248,10 @@ impl Player {
     }
 
     pub fn get_entity_part_files(&self, library: &Library, game_file_loader: &GameFileLoader) -> Vec<String> {
-        let common = self.get_common();
-        let mut files = get_entity_part_files(library, common.entity_type, common.job_id, common.sex, Some(common.head));
-        push_weapon_part_file(&mut files, common, game_file_loader);
-        push_shield_part_file(&mut files, common, game_file_loader);
-        files
+        // Remote players are `Entity::Npc` and already go through `Common`.
+        // Delegating keeps the local player's hat on that same list: body,
+        // head, headgear, weapon, shield.
+        self.common.get_entity_part_files(library, game_file_loader)
     }
 }
 
@@ -3442,7 +3509,13 @@ mod weapon_layer_tests {
 
 #[cfg(test)]
 mod headgear_tests {
-    use super::headgear_sprite_path;
+    use cgmath::{EuclideanSpace, Point3};
+    use korangar_networking::EntityData;
+    use ragnarok_packets::{ClientTick, EntityId, JobId, Sex, TilePosition, WorldPosition};
+
+    use super::{Common, Player, headgear_sprite_path};
+    use crate::loaders::GameFileLoader;
+    use crate::world::Library;
     use crate::world::animation::{is_shield_part_path, is_weapon_part_path};
 
     #[test]
@@ -3467,6 +3540,56 @@ mod headgear_tests {
         let path = headgear_sprite_path("남", "_고글");
         assert!(!is_weapon_part_path(&path));
         assert!(!is_shield_part_path(&path));
+    }
+
+    #[test]
+    fn the_local_player_lists_the_same_hat_as_everyone_else() {
+        // View id 1 stands in for the goggles sprite. The stored name keeps
+        // the leading underscore from `accname.lub`. No GRF: the library and
+        // the loader only know this one name and this one sprite path.
+        let library = Library::with_accessory_names_for_test(&[(1, false, "_고글")]);
+        let hat = headgear_sprite_path("남", "_고글");
+        let loader = GameFileLoader::with_existing_files_for_test(&[&format!("data\\sprite\\{hat}.spr")]);
+        let entity_data = EntityData {
+            entity_id: EntityId(1),
+            movement_speed: 150,
+            job_id: JobId(0),
+            head: 1,
+            weapon: 0,
+            shield: 0,
+            position: WorldPosition::origin(),
+            destination: None,
+            health_points: 40,
+            maximum_health_points: 40,
+            head_direction: 0,
+            sex: Sex::Male,
+            body_state: 0,
+            health_state: 0,
+            option: 0,
+            is_pk_mode_on: false,
+            state: 0,
+            accessory: 1,
+            accessory2: 0,
+            accessory3: 0,
+            head_palette: 0,
+            body_palette: 0,
+            robe: 0,
+            body: 0,
+        };
+        let common = Common::new(
+            &library,
+            &entity_data,
+            TilePosition { x: 0, y: 0 },
+            Point3::origin(),
+            ClientTick(0),
+        );
+        let player = Player::from_common_for_test(common.clone());
+
+        let local = player.get_entity_part_files(&library, &loader);
+        let remote = common.get_entity_part_files(&library, &loader);
+
+        assert_eq!(local, remote);
+        assert_eq!(local.last().map(String::as_str), Some(hat.as_str()));
     }
 }
 

@@ -831,8 +831,13 @@ fn use_consumable(config: &Config) -> Result<(), String> {
     context.flush();
     context.net.use_item(index, context.account_id).map_err(|_| "disconnected")?;
 
-    context.wait_for("InventoryItemRemoved", |event| match event {
-        NetworkEvent::InventoryItemRemoved { index: removed_index, .. } if *removed_index == index => Some(()),
+    context.wait_for("UseItemAck removes the last potion", |event| match event {
+        NetworkEvent::UseItemAck {
+            index: used_index,
+            amount: 0,
+            success: true,
+            entity_id,
+        } if *used_index == index && *entity_id == player_id => Some(()),
         _ => None,
     })?;
 
@@ -1294,6 +1299,13 @@ fn use_drop_failures(config: &Config) -> Result<(), String> {
         matches!(
             event,
             NetworkEvent::InventoryItemRemoved { index: removed, .. } if *removed == index
+        ) || matches!(
+            event,
+            NetworkEvent::UseItemAck {
+                index: used,
+                success: true,
+                ..
+            } if *used == index
         )
     }) {
         return Err("use of invalid index removed a real stack".to_owned());

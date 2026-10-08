@@ -30,7 +30,9 @@ use tokio::task::JoinHandle;
 pub use self::entity::EntityData;
 pub use self::event::{DisconnectReason, NetworkEvent, QuestHuntObjective, QuestHuntProgress};
 pub use self::hotkey::HotkeyState;
-pub use self::items::{IT_AMMO, InventoryItem, InventoryItemDetails, ItemQuantity, NoMetadata, SellItem, ShopItem, sell_entries};
+pub use self::items::{
+    IT_AMMO, InventoryItem, InventoryItemDetails, ItemQuantity, NoMetadata, SellItem, ShopItem, apply_use_item_ack, sell_entries,
+};
 pub use self::message::MessageColor;
 pub use self::packet_versions::SupportedPacketVersion;
 pub use self::server::{

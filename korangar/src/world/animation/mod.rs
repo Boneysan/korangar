@@ -1347,8 +1347,18 @@ impl AnimationData {
         let delay = self.delays[body_action_index % self.delays.len()];
         let raw_motion = animation_frame_position(animation_state, delay, body_animation.frames.len());
 
-        // Player idle: suppress Doridori by always showing motion 0.
-        let body_motion = if self.entity_type == EntityType::Player && animation_state.action_type == AnimationActionType::Idle {
+        // Player idle and sit: later motions are the head look-around. The
+        // body sprite stays on the standing or seated frame (novice, knight,
+        // and mage bodies all use one sprite for the three sit motions; the
+        // head ACT swaps sprite 0 for sprite 1 on motions 1 and 2). Looping
+        // those motions turns the head the whole time the character sits.
+        // `head_direction` is stored from ZC_CHANGE_DIRECTION and is not read
+        // here; it is not what advances these frames.
+        let body_motion = if self.entity_type == EntityType::Player
+            && matches!(
+                animation_state.action_type,
+                AnimationActionType::Idle | AnimationActionType::Sit
+            ) {
             0
         } else if animation_state.looping {
             raw_motion % body_animation.frames.len()
@@ -2678,6 +2688,50 @@ mod runtime_compose_tests {
         assert_eq!(frame.frame_parts.len(), 2, "body + head parts");
         assert_eq!(frame.frame_parts[0].animation_index, 0);
         assert_eq!(frame.frame_parts[1].animation_index, 1);
+    }
+
+    /// Sit uses the same three-motion ACT as idle: motion 0 is the forward
+    /// head, and the later motions turn it. Sitting must hold motion 0.
+    /// Walking still advances, so the hold is not "freeze every looping pose."
+    #[test]
+    fn player_sit_holds_motion_zero_while_walk_still_advances() {
+        let frames: Vec<_> = (0..3)
+            .map(|motion| {
+                let mut frame = layer_frame(0);
+                frame.frame_parts[0].sprite_number = motion;
+                frame
+            })
+            .collect();
+        let data = AnimationData {
+            layers: vec![AnimationLayer {
+                path_key: Some("body".into()),
+                sprites: None,
+                actions: None,
+                animations: vec![Animation { frames }],
+            }],
+            delays: vec![4.0],
+            action_layouts: vec![ActionLayout {
+                min_top: 0,
+                max_bottom: 1,
+                min_left: 0,
+                max_right: 1,
+            }],
+            entity_type: EntityType::Player,
+        };
+
+        let mut sitting = AnimationState::new(EntityType::Player, ClientTick(0));
+        sitting.sit(EntityType::Player, ClientTick(0));
+        // Two frames later at the natural delay (4.0 × 24 ms).
+        sitting.time = 192;
+        let seated = data.compose_action_motion(&sitting, 2 * 8, 0);
+        assert_eq!(seated.frame_parts[0].sprite_number, 0, "sitting must stay on the forward head");
+
+        let mut walking = AnimationState::new(EntityType::Player, ClientTick(0));
+        walking.walk(EntityType::Player, 150, ClientTick(0));
+        // Walk delay factor for speed 150 is 20, so 4.0 × 20 ms per frame.
+        walking.time = 160;
+        let stepped = data.compose_action_motion(&walking, 1 * 8, 0);
+        assert_eq!(stepped.frame_parts[0].sprite_number, 2, "walking still plays the later frames");
     }
 
     #[test]

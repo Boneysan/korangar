@@ -1,8 +1,8 @@
 use std::sync::Arc;
 
 use korangar_interface::element::StateElement;
-use korangar_networking::{InventoryItem, InventoryItemDetails, NoMetadata};
-use ragnarok_packets::{EquipPosition, EquippableItemFlags, InventoryIndex, ItemId, RegularItemFlags};
+use korangar_networking::{InventoryItem, InventoryItemDetails, NoMetadata, apply_use_item_ack};
+use ragnarok_packets::{EntityId, EquipPosition, EquippableItemFlags, InventoryIndex, ItemId, RegularItemFlags};
 use rust_state::RustState;
 
 use crate::graphics::Texture;
@@ -104,6 +104,18 @@ impl Inventory {
         }
 
         self.items.remove(position);
+    }
+
+    /// Set one slot from `ZC_USE_ITEM_ACK`. See [`apply_use_item_ack`].
+    pub fn apply_use_item_ack(
+        &mut self,
+        local_entity_id: EntityId,
+        entity_id: EntityId,
+        index: InventoryIndex,
+        amount: i16,
+        success: bool,
+    ) {
+        apply_use_item_ack(&mut self.items, local_entity_id, entity_id, index, amount, success);
     }
 
     /// Equipment before other items, whether or not it is worn.

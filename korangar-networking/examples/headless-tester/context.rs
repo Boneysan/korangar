@@ -843,6 +843,14 @@ impl TestContext {
                     }
                 }
             }
+            NetworkEvent::UseItemAck {
+                entity_id,
+                index,
+                amount,
+                success,
+            } if *entity_id == self.player_id => {
+                korangar_networking::apply_use_item_ack(&mut self.inventory, self.player_id, *entity_id, *index, *amount, *success);
+            }
             NetworkEvent::SkillTree { skill_information } => {
                 self.skills = skill_information.clone();
             }
