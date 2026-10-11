@@ -155,7 +155,7 @@ impl CommissionBoardState {
             return "Loading the board from the server...".to_owned();
         }
         if self.rows.is_empty() {
-            return "No open commissions. Post one below.".to_owned();
+            return "No open requests yet. Open \"Post a request\" below to add one.".to_owned();
         }
         // Decision D7: every listed request carries the failure-risk disclosure.
         let mut lines: Vec<String> = self.rows.iter().map(CommissionRow::format_row).collect();
@@ -262,7 +262,7 @@ mod tests {
             "[CMB]{\"t\":\"end\",\"v\":1}".to_owned(),
         ]);
         assert!(board.rows().is_empty());
-        assert!(board.format_list().starts_with("No open commissions"));
+        assert!(board.format_list().starts_with("No open requests yet"));
     }
 
     #[test]

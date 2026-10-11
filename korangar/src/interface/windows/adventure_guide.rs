@@ -5,7 +5,6 @@
 use std::collections::HashSet;
 use std::sync::Arc;
 
-use korangar_interface::components::text_box::DefaultHandler;
 use korangar_interface::element::store::{ElementStore, ElementStoreMut};
 use korangar_interface::element::{Element, ElementBox, StateElement};
 use korangar_interface::layout::{Resolvers, WindowLayout, with_single_resolver};
@@ -254,9 +253,9 @@ fn push_monster_skills(
 fn monster_details(monster: &ReferenceMonster) -> Vec<String> {
     let data = reference_data();
     let mut lines = vec![
-        format!("{}  (ID {})", display_name(&monster.name, &monster.sprite_name), monster.id),
+        display_name(&monster.name, &monster.sprite_name),
         format!("Level {}   HP {}", monster.level, monster.hp),
-        format!("@hunting-goal:{}|Add to personal hunting goals (client-only)", monster.id),
+        format!("@hunting-goal:{}|Add to my hunting goals", monster.id),
     ];
     if let Some(element) = &monster.element {
         lines.push(format!("Element: {} {}", element.r#type, element.level));
@@ -379,7 +378,7 @@ fn monster_details(monster: &ReferenceMonster) -> Vec<String> {
         }
     }
     if !monster.scripted_spawn_references.is_empty() {
-        lines.push("Loaded-script spawn call sites (event/quest/instance conditions are not interpreted):".to_owned());
+        lines.push("Also placed by events or quests at (conditions not shown):".to_owned());
         for spawn in monster.scripted_spawn_references.iter().take(8) {
             let location = match (spawn.map.as_deref(), spawn.coordinates.as_slice()) {
                 (Some(map), [Some(x), Some(y)]) => format!("{map} at ({x}, {y})"),
@@ -454,8 +453,8 @@ fn drop_source_line(monster_id: u32, sprite_name: &str, kind: &str, rate_per_100
 fn item_details(item: &ReferenceItem, card: bool) -> Vec<String> {
     let kind = if card { "Card" } else { item.item_type.as_str() };
     let mut lines = vec![
-        format!("{}  (ID {})", display_name(&item.name, &item.aegis_name), item.id),
-        format!("Type: {kind}   Weight: {}", item.weight),
+        display_name(&item.name, &item.aegis_name),
+        format!("Type: {}   Weight: {}", item_type_label(kind), item.weight),
     ];
     let relevant = reference_data()
         .crafting_entries
@@ -746,9 +745,9 @@ fn item_details(item: &ReferenceItem, card: bool) -> Vec<String> {
                 .join(" + ");
             let effect_note = combo.effect_summary.as_deref().unwrap_or_else(|| {
                 if combo.effect_status == "scripted_not_translated" {
-                    "combo effect script not translated"
+                    "combo effect not described yet"
                 } else {
-                    "no combo script field in source"
+                    "no combo effect listed"
                 }
             });
             lines.push(format!("{members} — {effect_note}"));
@@ -836,13 +835,13 @@ fn item_details(item: &ReferenceItem, card: bool) -> Vec<String> {
                 .to_owned(),
         );
     } else if item.effect_status == "scripted_not_translated" {
-        lines.push("Script effect: not translated yet; conditions and interactions are not documented.".to_owned());
+        lines.push("Effect: not translated yet.".to_owned());
     } else if item.effect_status == "no_script_field" {
-        lines.push("No item script effect field is present in the loaded item record.".to_owned());
+        lines.push("No special effect listed.".to_owned());
     } else if !item.effect_status.is_empty() {
         lines.push(format!("Effect coverage: {}", item.effect_status.replace('_', " ")));
     } else {
-        lines.push("Detailed script effect: not documented yet.".to_owned());
+        lines.push("Effect details: not documented yet.".to_owned());
     }
     if !item.drops_from.is_empty() {
         lines.push("Monster database drop rates (server modifiers may change realized chances):".to_owned());
@@ -1143,7 +1142,7 @@ fn coverage_details() -> Vec<String> {
 /// established (a map flag, say) is still shown.
 fn player_source(path: &str, line: u32) -> String {
     match crate::dm::reference_data::is_campaign_source_path(path) {
-        true => "campaign script (source withheld)".to_owned(),
+        true => "campaign event".to_owned(),
         false => format!("{path}:{line}"),
     }
 }
@@ -1155,13 +1154,31 @@ fn is_graph_map(map_name: &str) -> bool {
         .any(|known| known.eq_ignore_ascii_case(map_name))
 }
 
+/// The server's item type constant in words ("IT_HEALING" -> "Healing").
+fn item_type_label(item_type: &str) -> String {
+    match item_type {
+        "IT_HEALING" => "Healing".to_owned(),
+        "IT_USABLE" => "Usable".to_owned(),
+        "IT_ETC" => "Miscellaneous".to_owned(),
+        "IT_WEAPON" => "Weapon".to_owned(),
+        "IT_ARMOR" => "Armor".to_owned(),
+        "IT_CARD" | "Card" => "Card".to_owned(),
+        "IT_PETEGG" => "Pet egg".to_owned(),
+        "IT_PETARMOR" => "Pet accessory".to_owned(),
+        "IT_AMMO" => "Ammunition".to_owned(),
+        "IT_DELAYCONSUME" => "Usable (delayed)".to_owned(),
+        "IT_CASH" => "Cash shop item".to_owned(),
+        other => other.strip_prefix("IT_").unwrap_or(other).replace('_', " ").to_lowercase(),
+    }
+}
+
 fn display_name(name: &str, fallback: &str) -> String {
     if name.is_empty() { fallback.to_owned() } else { name.to_owned() }
 }
 
 fn quest_details(quest: &crate::state::quests::QuestEntry) -> Vec<String> {
     let data = reference_data();
-    let mut lines = vec![format!("{}  (Quest ID {})", quest.name(), quest.quest_id)];
+    let mut lines = vec![quest.name().to_owned()];
     if quest.hunt_objectives().is_empty() && quest.requirements().is_empty() {
         lines.push("No objective details are available from the server or bundled campaign data.".to_owned());
     }
@@ -1254,7 +1271,7 @@ fn quest_reference_details(quest: &crate::dm::reference_data::ReferenceQuest) ->
                     target.monster_name
                 ));
             } else {
-                lines.push(format!("Monster ID {mob_id} has no matching bundled bestiary entry."));
+                lines.push("This monster has no Guide entry yet.".to_owned());
             }
         }
     }
@@ -1346,7 +1363,7 @@ fn quest_reference_details(quest: &crate::dm::reference_data::ReferenceQuest) ->
             let route_label = match npc.reviewed_role.as_deref() {
                 Some("offer") => "Route to quest offer",
                 Some("turn_in") => "Route to quest turn-in",
-                _ => "Route to related script NPC",
+                _ => "Route to related NPC",
             };
             lines.push(format!(
                 "@route-cell:{}:{}:{}|{route_label}: {} — {}",
@@ -1590,7 +1607,7 @@ fn map_details(map_name: &str, town_pois: &[TownPoi]) -> Vec<String> {
             let action = edge.action.as_deref().unwrap_or("Talk to the listed NPC.");
             let availability = if edge.availability == "conditional" { " (conditional)" } else { "" };
             lines.push(format!(
-                "Service at ({}, {}): {action}{availability} → {}",
+                "Service at ({}, {}): {action}{availability} › {}",
                 edge.from.x, edge.from.y, edge.to.map
             ));
             if let Some(requirements) = &edge.requirements {
@@ -1696,9 +1713,9 @@ fn npc_details(npc: &ReferenceNpc) -> Vec<String> {
     let kind = match npc.declared_type.as_str() {
         "shop" => "Static shop declaration",
         "cashshop" => "Cash shop declaration",
-        "trader" => "Trader declaration (stock may be script-driven)",
+        "trader" => "Trader (stock may change)",
         "warp" => "Warp declaration",
-        _ => "NPC script declaration (specific behavior not inferred)",
+        _ => "NPC",
     };
     let mut lines = vec![
         format!("{display}"),
@@ -1809,8 +1826,8 @@ fn service_details(service: &ReferenceNpcServiceReview) -> Vec<String> {
     ];
     if let Some(npc) = &service.npc {
         lines.push(format!(
-            "Primary NPC: {} on {} at ({}, {}) [ID {}]",
-            npc.internal_name, npc.map, npc.x, npc.y, npc.npc_id
+            "Primary NPC: {} on {} at ({}, {})",
+            npc.internal_name, npc.map, npc.x, npc.y
         ));
         lines.push(format!(
             "@route-cell:{}:{}:{}|Route to {} ({}, {})",
@@ -1993,7 +2010,7 @@ fn resolve_details_with_library(result: &GuideResult, library: &Library) -> Vec<
 }
 
 fn job_details(job_id: u16, name: &str) -> Vec<String> {
-    let mut lines = vec![format!("{name}  (Job ID {job_id})")];
+    let mut lines = vec![name.to_owned()];
     let data = reference_data();
     if let Some(bonuses) = data.job_bonuses_by_id(job_id) {
         append_job_bonus_details(&mut lines, bonuses);
@@ -2064,7 +2081,7 @@ fn append_exp_table(lines: &mut Vec<String>, label: &str, group_name: &str, grou
     }
     let steps = milestones
         .iter()
-        .filter_map(|level| Some(format!("{level}→{}: {}", level + 1, group_digits(group.exp_to_next(*level)?))))
+        .filter_map(|level| Some(format!("{level}–{}: {}", level + 1, group_digits(group.exp_to_next(*level)?))))
         .collect::<Vec<_>>();
     lines.push(format!("  {}", steps.join("; ")));
     if let Some(total) = group.total_to_reach(group.max_level) {
@@ -2307,7 +2324,6 @@ fn skill_details(skill: &ReferenceSkill) -> Vec<String> {
         .lines()
         .map(str::to_owned)
         .collect::<Vec<_>>();
-    lines.push(format!("Skill identifier: {} (ID {})", skill.name, skill.id));
     let data = reference_data();
 
     if !skill.prerequisites.is_empty() {
@@ -2432,7 +2448,7 @@ fn status_tag(status: &crate::dm::reference_data::ReferenceStatus) -> String {
 fn status_details(status: &crate::dm::reference_data::ReferenceStatus) -> Vec<String> {
     let mut lines = vec![match status.iconless {
         true => format!("{}  ({})", status.name, status_tag(status)),
-        false => format!("{}  (Status icon ID {})", status.name, status.id),
+        false => status.name.clone(),
     }];
     if status.iconless {
         lines.push("The client has no icon or name for this status; the name is derived from the server constant.".to_owned());
@@ -2440,9 +2456,9 @@ fn status_details(status: &crate::dm::reference_data::ReferenceStatus) -> Vec<St
     if status.statuses.is_empty() {
         lines.push("Verified reference: server status-icon name only; no matching sc_config record.".to_owned());
     } else {
-        lines.push("Verified server metadata from renewal sc_config.conf:".to_owned());
+        lines.push("How the server treats this status:".to_owned());
         for mechanic in &status.statuses {
-            lines.push(format!("{} (status ID {})", mechanic.constant, mechanic.id));
+            lines.push(mechanic.constant.clone());
             let flag_meanings = mechanic
                 .flags
                 .iter()
@@ -2739,6 +2755,36 @@ fn push_text_lines(elements: &mut Vec<ElementBox<ClientState>>, lines: Vec<Strin
     }
 }
 
+/// Whether a Guide page line is a note about where the data came from (file
+/// references, export revisions, internal names) rather than something a
+/// player reads for. Those collect into a folded section at the end of the
+/// page instead of interrupting it. `in_call_site_list` is true while the
+/// indented lines under a call-site header are being read.
+fn is_source_note(line: &str, in_call_site_list: bool) -> bool {
+    const PREFIXES: [&str; 14] = [
+        "Source:",
+        "Values are exported",
+        "Exported from Hercules",
+        "Job bonus source:",
+        "Internal script name:",
+        "Literal Hercules C",
+        "Related NPC script reference:",
+        "Script call evidence:",
+        "Formula: Unreviewed",
+        "Verified reference:",
+        "Spawn rosters are configured data",
+        "No job-level stat bonus schedule",
+        "No matching skill tree is present",
+        "No class table is defined",
+    ];
+    (in_call_site_list && line.starts_with("  "))
+        || PREFIXES.iter().any(|prefix| line.starts_with(prefix))
+        || line.contains("in Hercules job_db")
+        || line.ends_with("script clues omitted.")
+        || line.ends_with("NPC script references omitted.")
+        || line.contains("loaded-script directive(s) for this flag are superseded")
+}
+
 struct GuideLines<A> {
     path: A,
     elements: Vec<ElementBox<ClientState>>,
@@ -2772,16 +2818,29 @@ where
             self.elements.clear();
             let current_map = state.get(&client_state().minimap()).map_name().to_owned();
             let count = state.get(&self.path).len();
+            let mut source_notes: Vec<ElementBox<ClientState>> = Vec::new();
+            let mut in_call_site_list = false;
             for index in 0..count {
                 let line = self.path.index(index).manually_asserted();
                 let value = state.get(&line).clone();
+                let starts_call_sites = value.starts_with("Literal Hercules C");
+                if is_source_note(&value, in_call_site_list) {
+                    in_call_site_list = starts_call_sites || in_call_site_list;
+                    source_notes.push(ErasedElement::new(text! {
+                        text: value.trim_start().to_owned(),
+                        color: crate::graphics::Color::rgb_u8(150, 150, 150),
+                        overflow_behavior: OverflowBehavior::Shrink,
+                    }));
+                    continue;
+                }
+                in_call_site_list = false;
                 if let Some(monster_id) = value
                     .strip_prefix("@hunting-goal:")
                     .and_then(|link| link.split_once('|'))
                     .and_then(|(monster_id, _)| monster_id.parse::<u32>().ok())
                 {
                     self.elements.push(ErasedElement::new(button! {
-                        text: "Add to personal hunting goals (client-only)",
+                        text: "Add to my hunting goals",
                         tooltip: "Saved for this character. This is not a server quest and has no kill counter.",
                         event: InputEvent::AddClientHuntingGoal { monster_id },
                     }));
@@ -2822,6 +2881,13 @@ where
                     ));
                 }
             }
+            if !source_notes.is_empty() {
+                self.elements.push(ErasedElement::new(collapsible! {
+                    text: "Where this comes from",
+                    initially_expanded: false,
+                    children: (super::rows::Rows { elements: source_notes },),
+                }));
+            }
             for (index, element) in self.elements.iter_mut().enumerate() {
                 element.create_layout_info(state, store.child_store(index as u64), resolver);
             }
@@ -2841,12 +2907,66 @@ where
     }
 }
 
-fn run_search<A>(state: &State<ClientState>, path: A)
+/// The search text after one keystroke, or `None` when the key does nothing.
+/// Enter and Tab keep the text (and search again); Backspace removes the
+/// last character; other control keys are ignored; the length is capped.
+fn next_query(current: &str, character: char) -> Option<String> {
+    match character {
+        '\x09' | '\x0d' => Some(current.to_owned()),
+        '\x08' => {
+            let mut text = current.to_owned();
+            text.pop();
+            Some(text)
+        }
+        character if !character.is_control() && current.len() < MAX_QUERY => Some(format!("{current}{character}")),
+        _ => None,
+    }
+}
+
+/// The Guide's search box: edits the text like the default text box, and
+/// searches again after every change, so results narrow as you type. Enter
+/// still searches too.
+struct LiveSearchHandler<A> {
+    path: A,
+}
+
+impl<A> korangar_interface::event::InputHandler<ClientState> for LiveSearchHandler<A>
 where
     A: Path<ClientState, AdventureGuideWindowState> + Copy,
 {
-    let query = state.get(&path.query()).to_lowercase();
-    let category = state.get(&path.category()).clone();
+    fn handle_character(
+        &self,
+        state: &State<ClientState>,
+        queue: &mut korangar_interface::event::EventQueue<ClientState>,
+        character: char,
+    ) {
+        if character == '\x1b' {
+            queue.queue(korangar_interface::event::Event::Unfocus);
+            return;
+        }
+        let current = state.get(&self.path.query()).clone();
+        let Some(next) = next_query(&current, character) else {
+            return;
+        };
+        if next != current {
+            state.update_value(self.path.query(), next.clone());
+        }
+        let category = state.get(&self.path.category()).clone();
+        run_search_for(state, self.path, &next, &category);
+    }
+}
+
+/// Search with the query and category given, not read back from state.
+/// `rust_state` queues updates until the frame applies them, so a caller
+/// that has just changed the category or the text must pass the new value:
+/// reading it back gave the *previous* one (a category button searched the
+/// category you had left, and live search would lag a keystroke).
+fn run_search_for<A>(state: &State<ClientState>, path: A, query: &str, category: &str)
+where
+    A: Path<ClientState, AdventureGuideWindowState> + Copy,
+{
+    let query = query.to_lowercase();
+    let category = category.to_owned();
     let data = reference_data();
     let discovery_path = client_state().discovery();
     let discovery = state.get(&discovery_path);
@@ -2874,7 +2994,7 @@ where
         );
     } else if category == "Skills" {
         rows.extend(data.search_skills(&query, MAX_RESULTS).into_iter().map(|skill| GuideResult {
-            label: format!("{}  (ID {})", display_name(&skill.description, &skill.name), skill.id),
+            label: display_name(&skill.description, &skill.name),
             kind: "skill".to_owned(),
             id: skill.id as u32,
         }));
@@ -3057,9 +3177,8 @@ where
             .collect::<std::collections::HashSet<_>>();
         rows.extend(data.search_quests(&query, MAX_RESULTS).into_iter().map(|quest| GuideResult {
             label: format!(
-                "{}  (Quest {}){}",
+                "{}{}",
                 quest.name,
-                quest.id,
                 if active_ids.contains(&quest.id) { " — Active" } else { "" }
             ),
             kind: "quest".to_owned(),
@@ -3072,7 +3191,7 @@ where
             .filter(|quest| !listed_ids.contains(&quest.quest_id))
             .take(MAX_RESULTS.saturating_sub(rows.len()))
             .map(|quest| GuideResult {
-                label: format!("{}  (Quest {})", quest.name(), quest.quest_id),
+                label: quest.name().to_owned(),
                 kind: "quest".to_owned(),
                 id: quest.quest_id,
             });
@@ -3089,7 +3208,7 @@ where
                 .into_iter()
                 .filter(|item| cards_only || item.item_type != "IT_CARD")
                 .map(|item| GuideResult {
-                    label: format!("{}  (ID {})", display_name(&item.name, &item.aegis_name), item.id),
+                    label: display_name(&item.name, &item.aegis_name),
                     kind: if cards_only { "card" } else { "item" }.to_owned(),
                     id: item.id,
                 }),
@@ -3163,7 +3282,7 @@ fn search_all_categories(
             .filter(|item| item.item_type != "IT_CARD")
             .take(all_category_result_slots(&rows))
             .map(|item| GuideResult {
-                label: format!("{}  (Item, ID {})", display_name(&item.name, &item.aegis_name), item.id),
+                label: format!("{}  (Item)", display_name(&item.name, &item.aegis_name)),
                 kind: "item".to_owned(),
                 id: item.id,
             }),
@@ -3173,7 +3292,7 @@ fn search_all_categories(
             .into_iter()
             .take(all_category_result_slots(&rows))
             .map(|card| GuideResult {
-                label: format!("{}  (Card, ID {})", display_name(&card.name, &card.aegis_name), card.id),
+                label: format!("{}  (Card)", display_name(&card.name, &card.aegis_name)),
                 kind: "card".to_owned(),
                 id: card.id,
             }),
@@ -3182,7 +3301,7 @@ fn search_all_categories(
         data.search_skills(query, all_category_result_slots(&rows))
             .into_iter()
             .map(|skill| GuideResult {
-                label: format!("{}  (Skill, ID {})", display_name(&skill.description, &skill.name), skill.id),
+                label: format!("{}  (Skill)", display_name(&skill.description, &skill.name)),
                 kind: "skill".to_owned(),
                 id: skill.id as u32,
             }),
@@ -3246,7 +3365,7 @@ fn search_all_categories(
         data.search_quests(query, all_category_result_slots(&rows))
             .into_iter()
             .map(|quest| GuideResult {
-                label: format!("{}  (Quest {})", quest.name, quest.id),
+                label: format!("{}  (Quest)", quest.name),
                 kind: "quest".to_owned(),
                 id: quest.id,
             }),
@@ -3336,7 +3455,7 @@ where
     };
     state.update_value(path.category(), category.to_owned());
     state.update_value(path.query(), key.to_owned());
-    run_search(state, path);
+    run_search_for(state, path, key, category);
     state.update_value(path.detail(), detail);
 }
 
@@ -3347,8 +3466,15 @@ where
     A: Path<ClientState, AdventureGuideWindowState> + Copy,
 {
     state.update_value(path.category(), "Items".to_owned());
-    state.update_value(path.query(), item_id.to_string());
-    run_search(state, path);
+    // Search by name, so the box shows what the player would type, not "501".
+    let data = reference_data();
+    let query = data
+        .item_by_id(item_id)
+        .or_else(|| data.card_by_id(item_id))
+        .map(|item| display_name(&item.name, &item.aegis_name))
+        .unwrap_or_else(|| item_id.to_string());
+    run_search_for(state, path, &query, "Items");
+    state.update_value(path.query(), query);
     let data = reference_data();
     let detail = data
         .item_by_id(item_id)
@@ -3371,41 +3497,48 @@ where
         struct GuideSearchBox;
         let path = self.state_path;
         let library = self.library;
-        let search = move |state: &State<ClientState>, _queue: &mut EventQueue<ClientState>| run_search(state, path);
         let set_category = |category: &'static str| {
             move |state: &State<ClientState>, _queue: &mut EventQueue<ClientState>| {
                 state.update_value(path.category(), category.to_owned());
-                run_search(state, path);
+                let query = state.get(&path.query()).clone();
+                run_search_for(state, path, &query, category);
             }
         };
-        let revision = reference_data().source_revision.clone();
+        // A category button looks pressed while it is the open one, like tabs.
+        let category_button = |label: &'static str, category: &'static str| {
+            button! {
+                text: label,
+                event: set_category(category),
+                disabled: ComputedSelector::new_default(move |state: &ClientState| rust_state::PathExt::follow_safe(&path.category(), state) == category),
+            }
+        };
         window! {
             title: "Adventure Guide",
             class: Self::window_class(),
             theme: InterfaceThemeType::InGame,
             closable: true,
             elements: (
-                text! { text: format!("Open reference • data revision {} • discovery badges sync per account; mechanics remain open • untranslated scripts and missing spawn data are labeled", revision), overflow_behavior: OverflowBehavior::Shrink },
-                text_box! { ghost_text: "Search monsters, items, cards, skills, statuses, jobs, maps, NPCs, services, quests, rumors, refinement, rules…", state: path.query(), input_handler: DefaultHandler::<_, _, MAX_QUERY>::new(path.query(), search), focus_id: GuideSearchBox, overflow_behavior: OverflowBehavior::Shrink },
+                text_box! { ghost_text: "Search by name", state: path.query(), input_handler: LiveSearchHandler { path }, focus_id: GuideSearchBox, overflow_behavior: OverflowBehavior::Shrink },
                 split! { gaps: theme().window().gaps(), children: (
-                    button! { text: "All", event: set_category("All") },
-                    button! { text: "Monsters", event: set_category("Monsters") },
-                    button! { text: "Items", event: set_category("Items") },
-                    button! { text: "Cards", event: set_category("Cards") },
-                    button! { text: "Skills", event: set_category("Skills") },
-                    button! { text: "Status Effects", event: set_category("Status Effects") },
-                    button! { text: "Jobs", event: set_category("Jobs") },
-                    button! { text: "Maps", event: set_category("Maps") },
+                    category_button("All", "All"),
+                    category_button("Monsters", "Monsters"),
+                    category_button("Items", "Items"),
+                    category_button("Cards", "Cards"),
+                    category_button("Maps", "Maps"),
                 ) },
                 split! { gaps: theme().window().gaps(), children: (
-                    button! { text: "NPCs", event: set_category("NPCs") },
-                    button! { text: "Services", event: set_category("Services") },
-                    button! { text: "Quests", event: set_category("Quests") },
-                    button! { text: "Rumors", event: set_category("Rumors") },
-                    button! { text: "Refinement", event: set_category("Refinement") },
-                    button! { text: "Effective Rules", event: set_category("Effective Rules") },
-                    button! { text: "Mechanics", event: set_category("Mechanics") },
-                    button! { text: "Search", event: search },
+                    category_button("NPCs", "NPCs"),
+                    category_button("Quests", "Quests"),
+                    category_button("Services", "Services"),
+                    category_button("Rumors", "Rumors"),
+                    category_button("Jobs", "Jobs"),
+                ) },
+                split! { gaps: theme().window().gaps(), children: (
+                    category_button("Skills", "Skills"),
+                    category_button("Statuses", "Status Effects"),
+                    category_button("Refining", "Refinement"),
+                    category_button("Server rules", "Effective Rules"),
+                    category_button("How things work", "Mechanics"),
                 ) },
                 scroll_view! { children: GuideResultList { state_path: path, library: library.clone(), elements: Vec::new() } },
                 scroll_view! { children: GuideLines::new(path.detail()) },
@@ -3425,6 +3558,56 @@ mod tests {
     use crate::state::discovery::DiscoveryState;
     use crate::state::quests::{QuestEntry, QuestHuntObjectiveEntry, QuestRequirementEntry};
     use crate::world::{TownPoi, TownPoiKind};
+
+    #[test]
+    fn each_keystroke_yields_the_text_to_search_for() {
+        use super::{MAX_QUERY, next_query};
+        assert_eq!(next_query("pori", 'n').as_deref(), Some("porin"));
+        assert_eq!(next_query("poring", '\x08').as_deref(), Some("porin"));
+        assert_eq!(next_query("", '\x08').as_deref(), Some(""), "backspace on empty stays empty");
+        assert_eq!(
+            next_query("poring", '\x0d').as_deref(),
+            Some("poring"),
+            "Enter searches the same text"
+        );
+        assert_eq!(next_query("poring", '\x01'), None, "other control keys do nothing");
+        let full = "x".repeat(MAX_QUERY);
+        assert_eq!(next_query(&full, 'y'), None, "the length is capped");
+    }
+
+    #[test]
+    fn source_notes_are_told_apart_from_player_information() {
+        use super::is_source_note;
+        assert!(is_source_note(
+            "Source: bundled Hercules refine_db.conf (Armors) and npc/merchants/refine.txt.",
+            false
+        ));
+        assert!(is_source_note("Internal script name: Kafra#prt", false));
+        assert!(
+            is_source_note("  src/map/skill.c:1234", true),
+            "indented call sites under their header"
+        );
+        assert!(!is_source_note("  src/map/skill.c:1234", false));
+        // Player information stays on the page.
+        assert!(!is_source_note("persists through death", false));
+        assert!(!is_source_note(
+            "Also placed by events or quests at (conditions not shown):",
+            false
+        ));
+        assert!(!is_source_note("Level 1   HP 60", false));
+    }
+
+    #[test]
+    fn item_pages_show_a_name_and_a_type_in_words_not_ids_or_constants() {
+        let item = reference_data().item_by_id(501).expect("Red Potion");
+        let lines = item_details(item, false);
+        assert_eq!(lines[0], "Red Potion");
+        assert!(lines[1].starts_with("Type: Healing"), "{lines:?}");
+        assert!(
+            lines.iter().all(|line| !line.contains("(ID ") && !line.contains("IT_")),
+            "{lines:?}"
+        );
+    }
 
     #[test]
     fn guide_labels_untranslated_script_effects_and_missing_fields() {
@@ -3561,7 +3744,7 @@ mod tests {
         assert!(
             details
                 .iter()
-                .any(|line| line == &format!("@hunting-goal:{}|Add to personal hunting goals (client-only)", monster.id))
+                .any(|line| line == &format!("@hunting-goal:{}|Add to my hunting goals", monster.id))
         );
         let skill_link = details
             .iter()
@@ -3666,7 +3849,8 @@ mod tests {
         let target = parse_guide_link(status_link).expect("status link is an actionable Guide link");
         assert_eq!(target.kind, "status");
         let status_lines = resolve_details(&target).join("\n");
-        assert!(status_lines.contains("SC_BLESSING (status ID 30)"));
+        assert!(status_lines.lines().any(|line| line == "SC_BLESSING"), "{status_lines}");
+        assert!(!status_lines.contains("status ID"), "no raw ids for players: {status_lines}");
         assert!(status_lines.contains("@guide:skill:34|Associated skill: Blessing (AL_BLESSING)"));
     }
 
@@ -3834,8 +4018,8 @@ mod tests {
             .next()
             .expect("Blessing status name");
         let details = super::status_details(blessing).join("\n");
-        assert!(details.contains("Verified server metadata from renewal sc_config.conf"));
-        assert!(details.contains("SC_BLESSING (status ID 30)"));
+        assert!(details.contains("How the server treats this status:"));
+        assert!(details.lines().any(|line| line == "SC_BLESSING"), "{details}");
         assert!(details.contains(
             "Server lifecycle rules: classified by the server as a buff; cannot be applied to boss monsters; not cleared when MADO Gear \
              is removed; cannot be applied while the target is in a no-magic state."
@@ -3893,7 +4077,14 @@ mod tests {
             .find_map(|line| parse_guide_link(line))
             .expect("job skill must be clickable");
         assert_eq!(linked_skill.kind, "skill");
-        assert!(resolve_details(&linked_skill).iter().any(|line| line.contains("Skill identifier:")));
+        // The link resolves to that skill's own page (its tooltip header),
+        // not a fallback. Checked by content: the page no longer shows ids.
+        let skill = reference_data().skill_by_id(linked_skill.id).expect("linked skill exists");
+        let details = resolve_details(&linked_skill);
+        assert!(
+            details.first().is_some_and(|line| line.contains(&skill.description)),
+            "{details:?}"
+        );
     }
 
     #[test]
@@ -4409,9 +4600,9 @@ mod tests {
         let (id, name) = job_names().find(|(_, name)| *name == "Knight").expect("Knight job");
         let text = super::job_details(id, name).join("\n");
         assert!(text.contains("server group FirstClasses, maximum level 99"), "{text}");
-        assert!(text.contains("1→2: 350"), "{text}");
-        assert!(text.contains("50→51: 47,000"), "{text}");
-        assert!(text.contains("98→99: 3,300,000"), "{text}");
+        assert!(text.contains("1–2: 350"), "{text}");
+        assert!(text.contains("50–51: 47,000"), "{text}");
+        assert!(text.contains("98–99: 3,300,000"), "{text}");
         assert!(text.contains("Total from level 1 to level 99:"), "{text}");
         assert!(text.contains("server group SecondClasses"), "{text}");
     }
@@ -4958,7 +5149,7 @@ mod monster_page_and_route_offer_tests {
             panic!("eclage is routable through its locked entrance");
         };
         assert!(
-            notes.iter().any(|line| line.starts_with("Locked step ecl_fild01 → eclage")),
+            notes.iter().any(|line| line.starts_with("Locked step ecl_fild01 › eclage")),
             "{notes:#?}"
         );
 

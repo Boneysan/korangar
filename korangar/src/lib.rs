@@ -4757,7 +4757,7 @@ impl Client {
             character_server_information.server_port,
         );
         client_log!(
-            "[login] SelectServer '{}' → {address}",
+            "[login] SelectServer '{}' -> {address}",
             character_server_information.server_name
         );
 
@@ -5543,9 +5543,9 @@ impl Client {
                         if is_card || is_wishlisted {
                             let item_name = stats.as_ref().map(|s| s.name.as_str()).unwrap_or("Unknown Item");
                             let alert_msg = if is_card {
-                                format!("★ Rare Card Drop: {item_name}!")
+                                format!("Rare card drop: {item_name}!")
                             } else {
-                                format!("★ Wishlist Item Drop: {item_name}!")
+                                format!("Wishlist item drop: {item_name}!")
                             };
                             self.play_audio_cue(crate::state::audio_cues::AudioCue::CardDrop, None, client_tick);
                             self.client_state.follow_mut(client_state().toasts()).push(
@@ -8776,7 +8776,7 @@ impl Client {
                             self.client_state.follow_mut(client_state().toasts()).push(
                                 format!("personal-hunt:{monster_id}"),
                                 if added {
-                                    "Added to your personal, client-only hunting goals.".to_owned()
+                                    "Added to your hunting goals (Quest Log, My goals tab).".to_owned()
                                 } else {
                                     "Already listed, or the five-goal limit has been reached.".to_owned()
                                 },
@@ -11061,7 +11061,7 @@ impl Client {
                             self.client_state.follow_mut(client_state().toasts()).push(
                                 format!("personal-hunt:{monster_id}"),
                                 if added {
-                                    "Added to your personal, client-only hunting goals.".to_owned()
+                                    "Added to your hunting goals (Quest Log, My goals tab).".to_owned()
                                 } else {
                                     "Already listed, or the five-goal limit has been reached.".to_owned()
                                 },
@@ -12958,7 +12958,13 @@ impl Client {
             },
             None => QuestEntry {
                 quest_id,
-                name: format!("Quest {quest_id}"),
+                // The server's quest database names every quest (exported to
+                // docs/quests.v1.json); a player should never see "Quest 20004".
+                name: crate::dm::reference_data::reference_data()
+                    .quest_by_id(quest_id)
+                    .map(|quest| quest.name.clone())
+                    .filter(|name| !name.trim().is_empty())
+                    .unwrap_or_else(|| "Unnamed quest".to_owned()),
                 requirements: Vec::new(),
                 hunt_objectives: Vec::new(),
                 location,
@@ -14951,7 +14957,7 @@ impl<'a, 'm: 'a> MapRenderContext<'a, 'm> {
                             )
                             .map(|(destination, is_route)| {
                                 if is_route {
-                                    format!("→ Route portal: {destination}")
+                                    format!("› Route portal: {destination}")
                                 } else {
                                     format!("Portal to {destination}")
                                 }

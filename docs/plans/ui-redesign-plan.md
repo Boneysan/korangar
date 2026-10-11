@@ -1,0 +1,151 @@
+# Player interface once-over: audit and plan
+
+Status: **in progress, 2026-10-05.** Slice 1 (quest log) and a first pass of slice 2 (Adventure Guide: ids, header, categories) built and unit-tested, not yet seen on screen. Slices 4 (Menu, Game Settings) and 5 (Commission Board, Party, Minimap) built too, and slice 6 has started (Character Overview, Stats, Inventory, Storage, Trade). The Guide's side-by-side detail pane waits on the open window-width question; the World Map slice waits on screenshots. A glyph fix shipped first: see "Font coverage". Requested after the quest log was called "a confusing mess", widened by the owner to every searchable view and then the whole player interface. Nothing here is built yet. The quest log design below was agreed before this plan existed.
+
+## Why the interface feels messy
+
+About 60 windows were added feature by feature over several months, and no shared layout rules were ever written down. The result is the same problems in many places:
+
+- **Everything expanded at once.**
+  - The quest log shows every quest's guidance, every required item, and a route button for every map an item drops on, all in one flat scroll.
+  - Collapsible sections appear only in Party, Friends and two debug windows.
+- **No grouping.**
+  - Only the skill tree uses tabs.
+  - Game Settings has 45 buttons and Render Options 34, with no sections.
+  - The Adventure Guide has 15 category buttons in two rows plus a separate Search button.
+- **Action floods.** One button per map, per source, per item, instead of one action per thing.
+- **Numbers and developer text shown to players.**
+  - Story quests are named "Quest 20004".
+  - The Guide formats ids into player text in about 30 places, for example "(ID 501)", "Job ID", or "Monster ID … has no matching bundled bestiary entry".
+  - The Guide's header line is provenance jargon: "data revision …, discovery badges sync per account; mechanics remain open".
+- **List and details stacked.** The Guide puts results and details in two scroll views one above the other, so each competes for height.
+
+Evidence: a structural scan of `korangar/src/interface/windows/` (2026-10-05) for tabs, collapsible sections, scroll views, search boxes, buttons, and id formatting. The scan is a starting point, not a review; rows marked *needs a look* below have not been read closely.
+
+## Constraints
+
+- **I cannot see the screen.** Code that compiles and tests that pass do not prove a layout reads well. Every slice ends with the owner looking at it, ideally with a screenshot, before the next slice starts.
+- **Toolkit.** Use only what `korangar-interface` already provides: `tabs!`, `collapsible!` (with `initially_expanded`, state kept across frames), `drop_down!`, `scroll_view!`, `text_box!`, `split!`, `button!`, `state_button!`. No new widget work unless a slice proves it is needed.
+- **Rebaseability.** Fork-only windows stay in `interface/windows/dm/` and their own files. Upstream windows (inventory, equipment, chat, skill tree) get the lightest touch.
+- **Testability.** Each redesigned window builds its rows from a pure "row plan" function. One source then drives both the row count and the rows, so they cannot drift (the quest log currently counts and builds separately), and tests can assert the structure: what is collapsed, what is grouped, and that no raw id reaches the text.
+
+## Design rules (apply to every slice)
+
+1. **Summary first, details on demand.**
+   - Lists show one line per thing: name, kind, and a short state such as `2/3`, `✓` or `tracked ★`.
+   - Details sit in a collapsible section, or in a detail pane for searchable views.
+   - Collapsed by default, except the item the player is working on (for example, tracked quests).
+2. **Group distinct kinds with tabs.** Use tabs when a window holds two or more kinds of content, such as quests, hunts, goals and clues, or settings areas.
+3. **One primary action per thing.** Secondary actions live in the details. Never a button per map or per source; use one "Route" button plus a collapsed "Where to find (N)" section.
+4. **One layout for every searchable view.**
+   - A search box on top, searching as you type or on Enter, with no separate Search button.
+   - Category as a dropdown or a single row of tabs.
+   - Results as one-line rows (kind icon or tag, name, one-line summary), with details beside or below.
+   - Clicking a cross-link opens it in the same view, with a Back button.
+5. **No raw numbers or developer text for players.**
+   - Ids, schema revisions and provenance notes move to tooltips or a developer toggle.
+   - Unknown names say so in words ("Unnamed quest"), never as a number.
+6. **Consistent status language.** Green `✓` means done, grey means open, and amber means needs attention. Progress always reads `have / need`.
+7. **Settings in sections.** Use tabs or collapsible groups, each with a short heading, instead of long button walls.
+
+## Audit: player-facing windows
+
+Priority: **P1** means named by the owner or a clear mess; **P2** means visible clutter by the rules above; **P3** means checking only. Debug and inspector windows (frame, packet, theme, profiler, render options) are out of scope.
+
+| Window | Size | What is wrong (by the rules) | Priority |
+|---|---|---|---|
+| Quest Log | 501 lines | All quests expanded; route-button floods; story quests named by number; clues appended at the end; counting and building are separate code | **P1, slice 1** |
+| Adventure Guide | ~5,000 lines | 15 category buttons plus a Search button; developer header line; ids in player text (about 30 sites); results and details stacked | **P1, slice 2** |
+| World Map & Route Finder | 1,426 lines | One custom atlas view plus Clear Route; whatever is wrong is visual (*needs a look and a screenshot*) | **P1, slice 3** |
+| Minimap | 794 lines | 9 buttons on a map overlay (*needs a look*) | P2 |
+| Game Settings | 443 lines | 45 buttons, no sections | P2 |
+| Menu | small | 21 buttons in one list; group them (character / social / world / settings) | P2 |
+| Party | 495 lines | 22 buttons; has collapsible members (*needs a look*) | P2 |
+| Commission Board | small | Form, list and actions in one column; four text boxes | P2 |
+| Character Overview, Stats, Equipment, Inventory | small | Stats grew a "View" switch, Crafting odds and Build planner buttons (*needs a look*) | P3 |
+| Shop (Buy, Sell, Cart) | small | *needs a look* | P3 |
+| Trade, Storage, Chat, Hotbar, Skill Tree | — | Recently worked on or upstream; check only | P3 |
+| Character select and create, Login | — | *needs a look* | P3 |
+| DM windows (Bestiary, Loot, GM Commands with 66 buttons) | — | DM-only; GM Commands would benefit from sections | P3 |
+
+## Font coverage (found while building slice 1)
+
+The game font, NotoSans, comes from a pre-built atlas and has no check mark, star, arrows, triangles or block elements. The world map's visited marker (✓), the drop toasts' star, every route arrow, and the party text HP bar were drawing as missing-glyph boxes.
+- **Fixed:** commit `8d261b1a`.
+- **Kept fixed:** `tools/audits/glyph_coverage.py` now fails CI on any client string character the font cannot draw.
+- **What redesigns can use:** characters the font has, such as `•`, `›`, `»`, `–`, `×`, `…`, `·`, plus colour.
+- **Real icons:** they would need a symbol fallback font added to the atlas (the font README describes how).
+
+## Korean-derived text (owner request, 2026-10-05)
+
+Player-visible text that came from Korean sources gets its own review pass after the window slices. That covers:
+- message-table glosses (`messages_main.h`; 15 lines were already found misaligned on 2026-08-07);
+- item, monster and map names read from the game files;
+- NPC and script text the Guide labels "untranslated";
+- any remaining Korean shown raw.
+
+**Inventory, 2026-10-05 (step one done).** Measured with an opt-in census test, `korean_text_census` in `world/library/mod.rs`. It builds the client's data library exactly as the game does, then scans every display table for Hangul (the font has none, so Hangul draws as boxes). Results:
+- **Job names:** 0 of 3,896 contain Korean.
+- **Skill names:** 0 of 1,446.
+- **Town facility labels:** 0 of 247.
+- **Message table:** 0 of 3,577.
+- **Item names:** 2,866 of 29,232 strings, about 1,433 items, are still Korean (mostly cash-shop boxes). None of those items exists in the server's item database, so the server can never send them and players cannot see them.
+- **Item descriptions:** not loaded from the game files at all.
+- **Not covered by the census:** text the server sends at runtime (NPC dialogue, chat, monster names). It comes from Hercules data and scripts in English, plus the realigned message glosses.
+
+Step two is a review of English *quality* rather than leftover Korean: awkward or literal translations in item, skill and monster names, and NPC lines. That review needs your eyes on specific screens.
+
+Original plan for this section: Step two is fixing it at the source data, never by patching single strings in the UI. (The Korean literals in `korangar/src` are game-file paths, which are never drawn.)
+
+## Slices
+
+Each slice follows the same steps:
+1. Redesign behind a row-plan function, with structure tests.
+2. Add a GUI-pass row.
+3. The owner looks, plus a screenshot if possible.
+4. Adjust, then merge.
+
+Each slice is one PR.
+
+1. **Quest Log (design agreed 2026-10-05).**
+   - **Tabs:** Quests, Hunts, My goals, Clues.
+   - **Rows:** each quest is one collapsible line, `★ name   have/need ✓`, collapsed unless tracked.
+   - **Inside a quest:** guidance, objectives as `✓/✗ item  have / need  [Guide]`, one `Route` button, and drop sources collapsed under "Where to find (N maps)".
+   - **Quests vs Hunts:** a quest is a *Hunt* when it has item turn-ins (only the campaign hunting-contract table supplies them, `resolve_quest_entry`) or kill counts.
+   - **Story quests** get their names from the Guide's reference quest data instead of "Quest 20004".
+2. **Adventure Guide.**
+   - A category dropdown instead of 15 buttons; search on Enter.
+   - Results as one-line rows with a kind tag.
+   - Details in their own pane, with Back for cross-links.
+   - The developer header and ids move to tooltips.
+   - Split the 5,000-line file along category lines as part of the work.
+3. **World Map.** Start from owner screenshots and notes on what is confusing, then apply rules 1, 3 and 5 to its panels and labels.
+4. **Settings and Menu.** Game Settings in tabbed sections; Menu grouped.
+5. **Minimap, Party, Commission Board.**
+6. **P3 pass.** Short look at each remaining window with the owner, fixing only what fails a rule.
+
+## GUI testing (owner request, 2026-10-05)
+
+Unit tests on a row plan prove structure: what is grouped, collapsed, labelled or never shown. They cannot prove that a window reads well. So every slice also gets on-screen checks, and a slice counts as done only once those have been run.
+
+- **Where the checks live:** each slice adds one or more rows to section 8 of [`gui-verification-pass.md`](gui-verification-pass.md). A row names what to open, what to do, and what must be true on screen.
+- **Rows so far:**
+  - **8.12:** Quest Log.
+  - **8.13:** Adventure Guide.
+  - **8.14:** Menu and Game Settings.
+  - **8.15 onwards:** Commission Board, Party, Minimap and later slices, added as they land.
+- **Interface scale (owner request, 2026-10-05):** every redesigned window is also checked at 100%, 200%, 300% and 400%, the highest setting the client offers (row 8.23). Scaling enlarges the whole interface, not text alone, so wide rows of tabs and buttons are the main risk.
+- **Every row also checks three things:**
+  - no missing-glyph boxes;
+  - no raw ids or developer text;
+  - every control the window had before is still reachable.
+- **Who runs them:** the owner, in a normal client build against the dev server (`cargo run --release --bin korangar` in `korangar/korangar`).
+- **What counts as a result:** a screenshot per row is the best evidence, and it is the "before/after" record for the window.
+- **Failures:** a row that fails goes back to its slice before the next slice starts on the same window.
+- **Automation (later):** a headless screenshot harness (scripted login, open a window, capture) would let rows like these run unattended. It needs a client-side automation hook that does not exist yet; it is listed here as a possible follow-up, not planned work.
+
+
+
+- **Screenshots:** can you capture the windows as they look today, especially the World Map and the Guide? That gives each slice a before picture and gets the map slice started.
+- **Icons:** should the kind tags in lists be text (`[Item]`) or icons? Icons need sprite work.
+- **Window size:** is a wider default window acceptable for the Guide's details pane, or should details stay below the results?

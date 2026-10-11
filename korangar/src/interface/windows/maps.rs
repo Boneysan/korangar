@@ -735,7 +735,9 @@ impl Element<ClientState> for AtlasView {
             let visit_marker = if is_dangerous {
                 "!"
             } else if discovery.visited_map(node.location.map) {
-                "✓"
+                // The game font (NotoSans) has no check mark; "✓" drew as a
+                // missing-glyph box. A bullet reads as "been here".
+                "•"
             } else if discovery.map_snapshot_complete() {
                 "·"
             } else {
@@ -973,12 +975,12 @@ fn destination_detail_lines(
                     .unwrap_or_default();
                 let availability = if edge.availability == "conditional" { " (conditional)" } else { "" };
                 format!(
-                    "next: service at {} ({}, {}) — {action}{availability}{requirements} → {}",
+                    "next: service at {} ({}, {}) — {action}{availability}{requirements} › {}",
                     edge.from.map, edge.from.x, edge.from.y, edge.to.map
                 )
             } else {
                 format!(
-                    "next: portal at {} ({}, {}) → {}",
+                    "next: portal at {} ({}, {}) › {}",
                     edge.from.map, edge.from.x, edge.from.y, edge.to.map
                 )
             };

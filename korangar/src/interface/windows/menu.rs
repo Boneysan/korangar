@@ -1,5 +1,6 @@
 use korangar_interface::window::{CustomWindow, Window};
 
+use crate::graphics::Color;
 use crate::input::InputEvent;
 use crate::interface::windows::WindowClass;
 #[cfg(feature = "debug")]
@@ -9,6 +10,9 @@ use crate::state::theme::InterfaceThemeType;
 #[cfg(feature = "debug")]
 use crate::state::theme::{DebugButtonThemePathExt, InterfaceThemePathExt};
 use crate::state::{ClientState, ClientStatePathExt, client_state};
+
+/// Group headings: quieter than the buttons they label.
+const MENU_HEADING: Color = Color::rgb_u8(150, 170, 200);
 
 #[derive(Default)]
 pub struct MenuWindow;
@@ -27,50 +31,106 @@ impl CustomWindow<ClientState> for MenuWindow {
             theme: InterfaceThemeType::InGame,
             closable: true,
             elements: (
-                button! {
+                text! {
+                    text: "Adventure",
+                    color: MENU_HEADING,
+                },
+                split! {
+                    gaps: theme().window().gaps(),
+                    children: (
+                        button! {
+                    text: "World Map",
+                    tooltip: "View connected regions and follow a route to a destination",
+                    event: InputEvent::ToggleMapsWindow,
+                },
+                        button! {
                     text: client_state().localization().minimap_button_text(),
                     event: InputEvent::ToggleMinimapWindow,
                 },
-                button! {
-                    text: client_state().localization().game_settings_button_text(),
-                    event: InputEvent::ToggleGameSettingsWindow,
+                    ),
                 },
-                button! {
-                    text: client_state().localization().interface_settings_button_text(),
-                    event: InputEvent::ToggleInterfaceSettingsWindow,
-                },
-                button! {
-                    text: client_state().localization().graphics_settings_button_text(),
-                    event: InputEvent::ToggleGraphicsSettingsWindow,
-                },
-                button! {
-                    text: client_state().localization().audio_settings_button_text(),
-                    event: InputEvent::ToggleAudioSettingsWindow,
-                },
-                button! {
-                    text: "GM / DM Commands",
-                    tooltip: "Levels, zeny, heal, spawn, and Seal Cascade DM mode (^000001Ctrl+O^000000)",
-                    event: InputEvent::ToggleCommandsWindow,
-                },
-                button! {
-                    text: "Quest Journal",
+                split! {
+                    gaps: theme().window().gaps(),
+                    children: (
+                        button! {
+                    text: "Quest Log",
                     tooltip: "Search campaign and regular quests, pin favorites, and check collection progress (^000001Ctrl+Q^000000)",
                     event: InputEvent::ToggleQuestLogWindow,
+                },
+                        button! {
+                    text: "Adventure Guide",
+                    tooltip: "Search open monster, item, and card reference data",
+                    event: InputEvent::ToggleAdventureGuideWindow,
+                },
+                    ),
+                },
+                text! {
+                    text: "Social",
+                    color: MENU_HEADING,
+                },
+                split! {
+                    gaps: theme().window().gaps(),
+                    children: (
+                        button! {
+                    text: "Emotes",
+                    tooltip: "Choose an animated emote to display over your character (^000001Alt+L^000000)",
+                    event: InputEvent::ToggleEmoteWindow,
+                },
+                        button! {
+                    text: "Commission Board",
+                    tooltip: "Post or view peer crafting requests (/commission)",
+                    event: InputEvent::ToggleCommissionBoardWindow,
+                },
+                    ),
                 },
                 button! {
                     text: "Dice Roller",
                     tooltip: "Roll dice via @roll — standard dice, common combos, and custom NdX+mod (^000001Ctrl+D^000000)",
                     event: InputEvent::ToggleDiceWindow,
                 },
-                button! {
-                    text: "Commission Board",
-                    tooltip: "Post or view peer crafting requests (/commission)",
-                    event: InputEvent::ToggleCommissionBoardWindow,
+                text! {
+                    text: "Settings",
+                    color: MENU_HEADING,
+                },
+                split! {
+                    gaps: theme().window().gaps(),
+                    children: (
+                        button! {
+                    text: client_state().localization().game_settings_button_text(),
+                    event: InputEvent::ToggleGameSettingsWindow,
+                },
+                        button! {
+                    text: client_state().localization().interface_settings_button_text(),
+                    event: InputEvent::ToggleInterfaceSettingsWindow,
+                },
+                    ),
+                },
+                split! {
+                    gaps: theme().window().gaps(),
+                    children: (
+                        button! {
+                    text: client_state().localization().graphics_settings_button_text(),
+                    event: InputEvent::ToggleGraphicsSettingsWindow,
+                },
+                        button! {
+                    text: client_state().localization().audio_settings_button_text(),
+                    event: InputEvent::ToggleAudioSettingsWindow,
+                },
+                    ),
+                },
+                text! {
+                    text: "Dungeon Master",
+                    color: MENU_HEADING,
                 },
                 button! {
-                    text: "Emotes",
-                    tooltip: "Choose an animated emote to display over your character (^000001Alt+L^000000)",
-                    event: InputEvent::ToggleEmoteWindow,
+                    text: "GM / DM Commands",
+                    tooltip: "Levels, zeny, heal, spawn, and Seal Cascade DM mode (^000001Ctrl+O^000000)",
+                    event: InputEvent::ToggleCommandsWindow,
+                },
+                #[cfg(feature = "debug")]
+                text! {
+                    text: "Developer",
+                    color: MENU_HEADING,
                 },
                 #[cfg(feature = "debug")]
                 button! {
@@ -95,16 +155,6 @@ impl CustomWindow<ClientState> for MenuWindow {
                     event: InputEvent::ToggleClientStateInspectorWindow,
                     foreground_color: client_theme().debug_button().foreground_color(),
                     hovered_background_color: client_theme().debug_button().hovered_background_color(),
-                },
-                button! {
-                    text: "World Map",
-                    tooltip: "View connected regions and follow a route to a destination",
-                    event: InputEvent::ToggleMapsWindow,
-                },
-                button! {
-                    text: "Adventure Guide",
-                    tooltip: "Search open monster, item, and card reference data",
-                    event: InputEvent::ToggleAdventureGuideWindow,
                 },
                 #[cfg(feature = "debug")]
                 button! {
@@ -138,13 +188,18 @@ impl CustomWindow<ClientState> for MenuWindow {
                     foreground_color: client_theme().debug_button().foreground_color(),
                     hovered_background_color: client_theme().debug_button().hovered_background_color(),
                 },
-                button! {
+                split! {
+                    gaps: theme().window().gaps(),
+                    children: (
+                        button! {
                     text: client_state().localization().log_out_button_text(),
                     event: InputEvent::LogOut,
                 },
-                button! {
+                        button! {
                     text: client_state().localization().exit_button_text(),
                     event: InputEvent::Exit,
+                },
+                    ),
                 },
             ),
         }

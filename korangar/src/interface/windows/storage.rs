@@ -118,13 +118,65 @@ where
                     focus_id: StorageSearchBox,
                     overflow_behavior: OverflowBehavior::Shrink,
                 },
-                button! { text: "All", event: InputEvent::SetStorageTab(InventoryTab::All) },
-                button! { text: "Gear", event: InputEvent::SetStorageTab(InventoryTab::Gear) },
-                button! { text: "Items", event: InputEvent::SetStorageTab(InventoryTab::Items) },
-                button! { text: "Consumables", event: InputEvent::SetStorageTab(InventoryTab::Consumables) },
-                button! { text: "Etc", event: InputEvent::SetStorageTab(InventoryTab::Etc) },
-                button! { text: "Cards", event: InputEvent::SetStorageTab(InventoryTab::Cards) },
-                button! { text: "Ammo", event: InputEvent::SetStorageTab(InventoryTab::Ammo) },
+                split! {
+                    gaps: theme().window().gaps(),
+                    children: (
+                        button! {
+                            text: "All",
+                            event: InputEvent::SetStorageTab(InventoryTab::All),
+                            disabled: ComputedSelector::new_default(move |state: &ClientState| {
+                                *rust_state::PathExt::follow_safe(&tab_path, state) == InventoryTab::All
+                            }),
+                        },
+                        button! {
+                            text: "Gear",
+                            event: InputEvent::SetStorageTab(InventoryTab::Gear),
+                            disabled: ComputedSelector::new_default(move |state: &ClientState| {
+                                *rust_state::PathExt::follow_safe(&tab_path, state) == InventoryTab::Gear
+                            }),
+                        },
+                        button! {
+                            text: "Items",
+                            event: InputEvent::SetStorageTab(InventoryTab::Items),
+                            disabled: ComputedSelector::new_default(move |state: &ClientState| {
+                                *rust_state::PathExt::follow_safe(&tab_path, state) == InventoryTab::Items
+                            }),
+                        },
+                        button! {
+                            text: "Consumables",
+                            event: InputEvent::SetStorageTab(InventoryTab::Consumables),
+                            disabled: ComputedSelector::new_default(move |state: &ClientState| {
+                                *rust_state::PathExt::follow_safe(&tab_path, state) == InventoryTab::Consumables
+                            }),
+                        },
+                    ),
+                },
+                split! {
+                    gaps: theme().window().gaps(),
+                    children: (
+                        button! {
+                            text: "Etc",
+                            event: InputEvent::SetStorageTab(InventoryTab::Etc),
+                            disabled: ComputedSelector::new_default(move |state: &ClientState| {
+                                *rust_state::PathExt::follow_safe(&tab_path, state) == InventoryTab::Etc
+                            }),
+                        },
+                        button! {
+                            text: "Cards",
+                            event: InputEvent::SetStorageTab(InventoryTab::Cards),
+                            disabled: ComputedSelector::new_default(move |state: &ClientState| {
+                                *rust_state::PathExt::follow_safe(&tab_path, state) == InventoryTab::Cards
+                            }),
+                        },
+                        button! {
+                            text: "Ammo",
+                            event: InputEvent::SetStorageTab(InventoryTab::Ammo),
+                            disabled: ComputedSelector::new_default(move |state: &ClientState| {
+                                *rust_state::PathExt::follow_safe(&tab_path, state) == InventoryTab::Ammo
+                            }),
+                        },
+                    ),
+                },
                 std::array::from_fn::<_, STORAGE_ROWS, _>(|row| {
                     split! {
                         gaps: theme().window().gaps(),

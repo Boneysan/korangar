@@ -525,7 +525,8 @@ impl PartyMemberState {
                 Some((hp, max)) => {
                     let pct = ((hp as f32 / max as f32) * 100.0).round() as usize;
                     let bar_len = (pct / 10).min(10);
-                    let bar = "█".repeat(bar_len) + &"░".repeat(10 - bar_len);
+                    // NotoSans has no block elements (█ ░ drew as boxes).
+                    let bar = "|".repeat(bar_len) + &"·".repeat(10 - bar_len);
                     format!("  [^00FF66HP: {bar} {hp}/{max} ({pct}%)]^000000")
                 }
                 None => "  [^777777HP: ?/??^000000]".to_owned(),
@@ -1631,7 +1632,7 @@ mod tests {
         // Healer layout enabled: shows high-visibility bar and percentage
         state.set_healer_layout(true);
         assert!(state.healer_layout());
-        assert!(find_label(&state).contains("HP: ████████░░ 800/1000 (80%)"));
+        assert!(find_label(&state).contains("HP: ||||||||·· 800/1000 (80%)"));
         assert!(find_label(&state).contains("SP: 150/200 (75%)"));
     }
 

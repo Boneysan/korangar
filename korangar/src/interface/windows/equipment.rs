@@ -151,7 +151,11 @@ where
                 equip_box(self.items_path, EquipPosition::LEFT_HAND),
                 equip_box(self.items_path, EquipPosition::RIGHT_HAND),
                 equip_box(self.items_path, EquipPosition::AMMO),
-                split! {
+                collapsible! {
+                    text: "Equipment sets",
+                    initially_expanded: false,
+                    children: (
+                        split! {
                     gaps: theme().window().gaps(),
                     children: (
                         button! {
@@ -166,7 +170,7 @@ where
                         },
                     ),
                 },
-                split! {
+                        split! {
                     gaps: theme().window().gaps(),
                     children: (
                         button! {
@@ -179,6 +183,8 @@ where
                             tooltip: "Save currently equipped items as 'Set 2' [/saveset Set 2]",
                             event: crate::input::InputEvent::SaveEquipmentSet { name: "Set 2".to_owned() },
                         },
+                    ),
+                },
                     ),
                 },
             ),

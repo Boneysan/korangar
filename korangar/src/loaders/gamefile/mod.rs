@@ -608,7 +608,7 @@ mod resolve_map_name_tests {
                         motion
                             .event_id
                             .filter(|event_id| *event_id != -1)
-                            .map(|event_id| format!("motion {motion_index} → event {event_id}"))
+                            .map(|event_id| format!("motion {motion_index} -> event {event_id}"))
                     })
                     .collect();
                 println!(

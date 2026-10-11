@@ -111,16 +111,17 @@ impl QuestLogState {
         &self.quests
     }
 
-    pub fn is_empty(&self) -> bool {
-        self.quests.is_empty() && self.client_hunting_goals.is_empty()
-    }
-
     pub fn is_tracked(&self, quest_id: u32) -> bool {
         self.tracked_quests.contains(&quest_id)
     }
 
     pub fn tracked_quest_ids(&self) -> &[u32] {
         &self.tracked_quests
+    }
+
+    #[cfg(test)]
+    pub fn is_empty(&self) -> bool {
+        self.quests.is_empty() && self.client_hunting_goals.is_empty()
     }
 
     pub fn client_hunting_goals(&self) -> &[ClientHuntingGoalEntry] {

@@ -3168,7 +3168,7 @@ mod frame_event_cursor_tests {
         // Jump to motion 3 (288 ms): must fire events on 1, 2, and 3.
         state.time = 3 * MOTION_MS;
         let events = collect_crossed_events(&mut state, &anim, DELAY);
-        assert_eq!(event_count(&events), 3, "jump 0→3 must cross events on 1, 2, 3");
+        assert_eq!(event_count(&events), 3, "jump 0->3 must cross events on 1, 2, 3");
     }
 
     /// Looping actions continue the raw motion index past one cycle so the

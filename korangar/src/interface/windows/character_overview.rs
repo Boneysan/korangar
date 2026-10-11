@@ -119,23 +119,67 @@ where
                         },
                     ),
                 },
-                button! {
+                split! {
+                    gaps: theme().window().gaps(),
+                    children: (
+                        button! {
                     text: client_state().localization().inventory_button_text(),
                     event: InputEvent::ToggleInventoryWindow,
                 },
-                button! {
+                        button! {
                     text: client_state().localization().equipment_button_text(),
                     event: InputEvent::ToggleEquipmentWindow,
                 },
-                button! {
+                    ),
+                },
+                split! {
+                    gaps: theme().window().gaps(),
+                    children: (
+                        button! {
                     text: client_state().localization().skill_tree_button_text(),
                     event: InputEvent::ToggleSkillTreeWindow,
                 },
-                button! {
+                        button! {
                     text: client_state().localization().stats_button_text(),
                     event: InputEvent::ToggleStatsWindow,
                 },
-                // These are player commands on this fork, not DM tools. Keep
+                    ),
+                },
+                split! {
+                    gaps: theme().window().gaps(),
+                    children: (
+                        button! {
+                    text: client_state().localization().friend_list_button_text(),
+                    event: InputEvent::ToggleFriendListWindow,
+                },
+                        button! {
+                    text: "Party",
+                    event: InputEvent::TogglePartyWindow,
+                },
+                    ),
+                },
+                split! {
+                    gaps: theme().window().gaps(),
+                    children: (
+                        button! {
+                    text: client_state().localization().minimap_button_text(),
+                    event: InputEvent::ToggleMinimapWindow,
+                },
+                        button! {
+                    text: "HUD",
+                    event: InputEvent::ToggleHudWindow,
+                },
+                    ),
+                },
+                button! {
+                    text: client_state().localization().menu_button_text(),
+                    event: InputEvent::ToggleMenuWindow,
+                },
+                collapsible! {
+                    text: "Free resets",
+                    initially_expanded: false,
+                    children: (
+                        // These are player commands on this fork, not DM tools. Keep
                 // the two point pools separate and use the registered command
                 // names (`streset` / `skreset`) rather than upstream aliases.
                 button! {
@@ -143,30 +187,12 @@ where
                     tooltip: "Reset stat points only. Does not reset skills or cost Zeny. Uses @streset.",
                     event: InputEvent::SendMessage { text: "@streset".to_owned() },
                 },
-                button! {
+                        button! {
                     text: "Reset skills (free)",
                     tooltip: "Reset skill points only. Does not reset stats or cost Zeny. Uses @skreset.",
                     event: InputEvent::SendMessage { text: "@skreset".to_owned() },
                 },
-                button! {
-                    text: client_state().localization().friend_list_button_text(),
-                    event: InputEvent::ToggleFriendListWindow,
-                },
-                button! {
-                    text: "Party",
-                    event: InputEvent::TogglePartyWindow,
-                },
-                button! {
-                    text: "HUD",
-                    event: InputEvent::ToggleHudWindow,
-                },
-                button! {
-                    text: client_state().localization().minimap_button_text(),
-                    event: InputEvent::ToggleMinimapWindow,
-                },
-                button! {
-                    text: client_state().localization().menu_button_text(),
-                    event: InputEvent::ToggleMenuWindow,
+                    ),
                 },
             ),
         }

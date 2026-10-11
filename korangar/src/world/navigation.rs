@@ -154,7 +154,7 @@ pub struct MapPortalExit {
 impl MapPortalExit {
     pub fn label(&self) -> String {
         if self.is_route_exit {
-            format!("→ Route portal: {}", self.to_map)
+            format!("› Route portal: {}", self.to_map)
         } else {
             format!("Portal to {}", self.to_map)
         }
@@ -455,7 +455,7 @@ pub fn route_lock_notes(current_map: &str, target_map: &str) -> Vec<String> {
         let Some(locked_by) = &edge.locked_by else {
             continue;
         };
-        lines.push(format!("Locked step {} → {}: {locked_by}", edge.from.map, edge.to.map));
+        lines.push(format!("Locked step {} › {}: {locked_by}", edge.from.map, edge.to.map));
         lines.extend(
             edge.unlock_steps
                 .iter()
@@ -629,7 +629,7 @@ mod route_hop_count_tests {
         assert!(
             notes
                 .iter()
-                .any(|line| line.starts_with("Locked step ecl_fild01 → eclage: Eclage entry registration")),
+                .any(|line| line.starts_with("Locked step ecl_fild01 › eclage: Eclage entry registration")),
             "{notes:#?}"
         );
         assert!(
@@ -825,7 +825,7 @@ mod tests {
         // accent
         let route_exit = exits.iter().find(|e| e.to_map == "prontera").expect("exit to prontera");
         assert!(route_exit.is_route_exit, "prontera must be accented as route exit");
-        assert_eq!(route_exit.label(), "→ Route portal: prontera");
+        assert_eq!(route_exit.label(), "› Route portal: prontera");
 
         // Non-route exits are not accented
         let other_exit = exits.iter().find(|e| e.to_map == "izlude").expect("exit to izlude");

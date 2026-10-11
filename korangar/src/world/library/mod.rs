@@ -233,3 +233,96 @@ fn fix_encoding(broken: String) -> String {
 fn needs_ascii_fallback(value: &str) -> bool {
     !value.is_ascii()
 }
+
+/// Korean-text census (UI plan, "Korean-derived text"). The game font has no
+/// Hangul, so any display string that still holds Korean after the English
+/// overlays draws as boxes. Needs the configured game archives, so it is
+/// opt-in:
+///
+/// ```sh
+/// cargo test -p korangar --lib korean_text_census -- --ignored --nocapture
+/// ```
+#[cfg(test)]
+mod korean_census {
+    use crate::loaders::GameFileLoader;
+
+    fn has_hangul(text: &str) -> bool {
+        text.chars().any(|character| {
+            ('\u{AC00}'..='\u{D7A3}').contains(&character)
+                || ('\u{1100}'..='\u{11FF}').contains(&character)
+                || ('\u{3130}'..='\u{318F}').contains(&character)
+        })
+    }
+
+    fn report(table: &str, total: usize, korean: Vec<String>) {
+        println!("{table}: {} of {total} display strings contain Hangul", korean.len());
+        for sample in korean.iter().take(8) {
+            println!("    {sample}");
+        }
+    }
+
+    #[test]
+    #[ignore]
+    fn korean_text_census() {
+        let game_file_loader = GameFileLoader::default();
+        game_file_loader.load_archives_from_settings();
+        // Same recovery as the client: stale patched Lua is regenerated.
+        let library = super::Library::new(&game_file_loader).unwrap_or_else(|_| {
+            game_file_loader.remove_patched_lua_files();
+            game_file_loader.load_patched_lua_files();
+            super::Library::new(&game_file_loader).expect("library loads after re-patching")
+        });
+
+        let mut total = 0;
+        let mut korean = Vec::new();
+        for (id, info) in &library.item_info_table {
+            for (kind, name) in [
+                ("identified", info.identified_name.to_string()),
+                ("unidentified", info.unidentified_name.to_string()),
+            ] {
+                total += 1;
+                if has_hangul(&name) {
+                    korean.push(format!("item {} {kind}: {name}", id.0));
+                }
+            }
+        }
+        if let Ok(path) = std::env::var("KOREAN_CENSUS_ITEMS_OUT") {
+            let ids: Vec<String> = korean
+                .iter()
+                .filter_map(|line| line.split_whitespace().nth(1).map(str::to_owned))
+                .collect();
+            std::fs::write(path, ids.join("\n")).expect("write census item ids");
+        }
+        report("Item names (iteminfo + Hercules overlay)", total, korean);
+
+        let names: Vec<String> = library.job_name_table.values().map(ToString::to_string).collect();
+        report(
+            "Job names",
+            names.len(),
+            names.iter().filter(|name| has_hangul(name)).cloned().collect(),
+        );
+
+        let skills: Vec<&str> = library.skill_information_table.values().map(|skill| skill.name.as_str()).collect();
+        report(
+            "Skill names",
+            skills.len(),
+            skills.iter().filter(|name| has_hangul(name)).map(|name| name.to_string()).collect(),
+        );
+
+        let pois: Vec<&str> = library.towninfo_table.all_pois().map(|poi| poi.name.as_str()).collect();
+        report(
+            "Town facility names (map labels)",
+            pois.len(),
+            pois.iter().filter(|name| has_hangul(name)).map(|name| name.to_string()).collect(),
+        );
+
+        let messages: Vec<String> = (0..=u16::MAX)
+            .filter_map(|id| library.msgstringtable.get(id).map(|text| format!("{id}: {text}")))
+            .collect();
+        report(
+            "Message table",
+            messages.len(),
+            messages.iter().filter(|line| has_hangul(line)).cloned().collect(),
+        );
+    }
+}

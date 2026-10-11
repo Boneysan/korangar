@@ -180,37 +180,79 @@ where
                         }),
                     }
                 }),
-                button! {
-                    text: "All",
-                    event: InputEvent::SetInventoryTab(InventoryTab::All),
+                split! {
+                    gaps: theme().window().gaps(),
+                    children: (
+                        button! {
+                            text: "All",
+                            event: InputEvent::SetInventoryTab(InventoryTab::All),
+                            // The open filter reads as pressed, like the other tab rows.
+                            disabled: ComputedSelector::new_default(|state: &ClientState| {
+                                *rust_state::PathExt::follow_safe(&client_state().inventory().selected_tab(), state) == InventoryTab::All
+                            }),
+                        },
+                        button! {
+                            text: "Equipped",
+                            event: InputEvent::SetInventoryTab(InventoryTab::Equipped),
+                            // The open filter reads as pressed, like the other tab rows.
+                            disabled: ComputedSelector::new_default(|state: &ClientState| {
+                                *rust_state::PathExt::follow_safe(&client_state().inventory().selected_tab(), state) == InventoryTab::Equipped
+                            }),
+                        },
+                        button! {
+                            text: "Gear",
+                            event: InputEvent::SetInventoryTab(InventoryTab::Gear),
+                            // The open filter reads as pressed, like the other tab rows.
+                            disabled: ComputedSelector::new_default(|state: &ClientState| {
+                                *rust_state::PathExt::follow_safe(&client_state().inventory().selected_tab(), state) == InventoryTab::Gear
+                            }),
+                        },
+                        button! {
+                            text: "Items",
+                            event: InputEvent::SetInventoryTab(InventoryTab::Items),
+                            // The open filter reads as pressed, like the other tab rows.
+                            disabled: ComputedSelector::new_default(|state: &ClientState| {
+                                *rust_state::PathExt::follow_safe(&client_state().inventory().selected_tab(), state) == InventoryTab::Items
+                            }),
+                        },
+                    ),
                 },
-                button! {
-                    text: "Equipped",
-                    event: InputEvent::SetInventoryTab(InventoryTab::Equipped),
-                },
-                button! {
-                    text: "Gear",
-                    event: InputEvent::SetInventoryTab(InventoryTab::Gear),
-                },
-                button! {
-                    text: "Items",
-                    event: InputEvent::SetInventoryTab(InventoryTab::Items),
-                },
-                button! {
-                    text: "Consumables",
-                    event: InputEvent::SetInventoryTab(InventoryTab::Consumables),
-                },
-                button! {
-                    text: "Etc",
-                    event: InputEvent::SetInventoryTab(InventoryTab::Etc),
-                },
-                button! {
-                    text: "Cards",
-                    event: InputEvent::SetInventoryTab(InventoryTab::Cards),
-                },
-                button! {
-                    text: "Ammo",
-                    event: InputEvent::SetInventoryTab(InventoryTab::Ammo),
+                split! {
+                    gaps: theme().window().gaps(),
+                    children: (
+                        button! {
+                            text: "Consumables",
+                            event: InputEvent::SetInventoryTab(InventoryTab::Consumables),
+                            // The open filter reads as pressed, like the other tab rows.
+                            disabled: ComputedSelector::new_default(|state: &ClientState| {
+                                *rust_state::PathExt::follow_safe(&client_state().inventory().selected_tab(), state) == InventoryTab::Consumables
+                            }),
+                        },
+                        button! {
+                            text: "Etc",
+                            event: InputEvent::SetInventoryTab(InventoryTab::Etc),
+                            // The open filter reads as pressed, like the other tab rows.
+                            disabled: ComputedSelector::new_default(|state: &ClientState| {
+                                *rust_state::PathExt::follow_safe(&client_state().inventory().selected_tab(), state) == InventoryTab::Etc
+                            }),
+                        },
+                        button! {
+                            text: "Cards",
+                            event: InputEvent::SetInventoryTab(InventoryTab::Cards),
+                            // The open filter reads as pressed, like the other tab rows.
+                            disabled: ComputedSelector::new_default(|state: &ClientState| {
+                                *rust_state::PathExt::follow_safe(&client_state().inventory().selected_tab(), state) == InventoryTab::Cards
+                            }),
+                        },
+                        button! {
+                            text: "Ammo",
+                            event: InputEvent::SetInventoryTab(InventoryTab::Ammo),
+                            // The open filter reads as pressed, like the other tab rows.
+                            disabled: ComputedSelector::new_default(|state: &ClientState| {
+                                *rust_state::PathExt::follow_safe(&client_state().inventory().selected_tab(), state) == InventoryTab::Ammo
+                            }),
+                        },
+                    ),
                 },
                 button! {
                     text: "Sort",

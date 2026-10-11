@@ -143,7 +143,7 @@ impl CustomWindow<ClientState> for BuildPlannerWindow {
         }
 
         window! {
-            title: "Build Planner (simulation)",
+            title: "Build Planner",
             class: Self::window_class(),
             theme: InterfaceThemeType::InGame,
             closable: true,
@@ -158,30 +158,48 @@ impl CustomWindow<ClientState> for BuildPlannerWindow {
                 stat_row!(intelligence_text, Intelligence),
                 stat_row!(dexterity_text, Dexterity),
                 stat_row!(luck_text, Luck),
-                line!(hp_sp_text),
-                line!(hit_flee_text),
-                line!(def_text),
-                line!(atk_text),
-                line!(crit_text),
-                line!(cast_weight_text),
-                scroll_view! {
+                collapsible! {
+                    text: "Results",
+                    initially_expanded: true,
+                    children: (
+                        line!(hp_sp_text),
+                        line!(hit_flee_text),
+                        line!(def_text),
+                        line!(atk_text),
+                        line!(crit_text),
+                        line!(cast_weight_text),
+                    ),
+                },
+                collapsible! {
+                    text: "Skills",
+                    initially_expanded: false,
+                    children: (
+                        scroll_view! {
                     children: SkillList::new(client_state().build_planner().skill_rows()),
                 },
-                split! {
+                    ),
+                },
+                collapsible! {
+                    text: "Saved builds",
+                    initially_expanded: false,
+                    children: (
+                        split! {
                     children: (
                         button! { text: "Save 1", event: InputEvent::BuildPlannerSave { slot: 1 } },
                         button! { text: "Save 2", event: InputEvent::BuildPlannerSave { slot: 2 } },
                         button! { text: "Save 3", event: InputEvent::BuildPlannerSave { slot: 3 } },
                     ),
                 },
-                split! {
+                        split! {
                     children: (
                         button! { text: "Load 1", event: InputEvent::BuildPlannerLoad { slot: 1 } },
                         button! { text: "Load 2", event: InputEvent::BuildPlannerLoad { slot: 2 } },
                         button! { text: "Load 3", event: InputEvent::BuildPlannerLoad { slot: 3 } },
                     ),
                 },
-                button! { text: "Reset to current character", event: InputEvent::BuildPlannerReset },
+                        button! { text: "Reset to current character", event: InputEvent::BuildPlannerReset },
+                    ),
+                },
                 line!(status_text),
             ),
         }
